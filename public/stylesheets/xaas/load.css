@@ -1,0 +1,27 @@
+#servicebot-loader{
+    position: fixed;
+    height: 100vh;
+    width: 100%;
+    background-color: rgb(52, 73, 94);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    z-index: 99999999;
+
+    -webkit-transition: top 0.8s cubic-bezier(0.62, 0, 1, 0.26);
+    -moz-transition: top 0.8s cubic-bezier(0.62, 0, 1, 0.26);
+    -ms-transition: top 0.8s cubic-bezier(0.62, 0, 1, 0.26);
+    -o-transition: top 0.8s cubic-bezier(0.62, 0, 1, 0.26);
+    transition: top 0.8s cubic-bezier(0.62, 0, 1, 0.26);
+}
+#servicebot-loader img{
+    max-width: 200px;
+}
+#servicebot-loader{
+    top: 0px;
+}
+#servicebot-loader.move-out {
+    top: -100vh;
+}

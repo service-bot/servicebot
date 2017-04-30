@@ -1,0 +1,7 @@
+.user-widget-2 p {
+  margin-bottom: 5px;
+}
+
+.user-widget-2 li:nth-child(odd) {
+  background-color: #f5f5f5;
+}

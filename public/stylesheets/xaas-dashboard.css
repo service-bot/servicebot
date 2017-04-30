@@ -1,0 +1,234 @@
+.xaas-dashboard {
+    color: #6f6f6f;
+}
+.xaas-row {
+    margin-bottom: 20px;
+    border: 1px solid rgba(128, 128, 128, 0.28);
+    border-radius: 6px;
+    overflow: hidden;
+}
+.xaas-row.requested {
+    border: none;
+}
+.xaas-row.waiting {
+    margin-bottom:35px;
+    border: none;
+    box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12);
+}
+.xaas-row .btn{
+    margin-bottom:0px;
+}
+.xaas-row:first-child {
+    /*border-top: none;*/
+}
+
+.xaas-title {
+    font-size: 1.2em;
+}
+.xaas-title h5{
+    margin-bottom: 0px;
+    line-height: 36px;
+}
+
+.xaas-title, .xaas-body-row {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    padding: 12px 15px;
+}
+
+/* flex sizes*/
+/*.xaas-title .xaas-data {*/
+    /*flex: 1;*/
+/*}*/
+/*.xaas-title .xaas-category {*/
+    /*flex: 2;*/
+/*}*/
+/*.xaas-title .xaas-service {*/
+    /*flex: 7;*/
+/*}*/
+/*.xaas-title .xaas-price {*/
+    /*flex-grow: 2;*/
+/*}*/
+.xaas-title .xaas-data {
+    padding: 0px 8px;
+}
+.xaas-title .xaas-data:first-child, .xaas-title .xaas-data.xaas-service {
+    padding-left: 0px;
+}
+.xaas-title .xaas-data:last-child {
+    padding-right: 0px;
+}
+.xaas-title .xaas-status .status {
+    font-size: 0.95rem;
+    padding: 6px 0px;
+}
+.xaas-row.waiting .xaas-status, .xaas-row.requested .xaas-status {
+    display: none;
+}
+.xaas-title .xaas-category {
+    display: none;
+}
+.xaas-title .xaas-service-icon {
+    width: 20px;
+}
+.xaas-title .xaas-action {
+    flex: 2;
+    text-align: right;
+}
+.xaas-body .xaas-data {
+    flex: 1;
+}
+.xaas-body .xaas-charge {
+    flex: 9;
+}
+.xaas-body .xaas-price {
+    flex-grow: 2;
+    color: #212121;
+    font-weight: bold;
+}
+.xaas-body .xaas-action {
+    flex: 2;
+}
+.xaas-body .xaas-price, .xaas-body .xaas-action{
+    text-align: right;
+}
+
+/* colors */
+.xaas-title .xaas-data.xaas-price {
+    background-color: #f3f3f3;
+    border-radius: 5px;
+}
+.waiting .xaas-title .xaas-data.xaas-price {
+    background-color: #ef421c;
+}
+.requested .xaas-title .xaas-data.xaas-price {
+    background-color: #1955b5;
+}
+.xaas-row.cancelled .xaas-title, .xaas-row.cancelled .xaas-title .btn {
+    background-color: #f3f3f3;
+    color: #d4d4d4;
+}
+.xaas-row.running .xaas-title .xaas-status .status{
+    color: #38e478;
+}
+.xaas-row.stopped .xaas-title .xaas-status .status {
+    color: #fd4921;
+}
+.xaas-row.in_progress .xaas-title .xaas-status .status{
+    color: #1976d2;
+}
+
+.xaas-row .waiting{
+    color: #ffffff;
+}
+.xaas-title:hover {
+    color: #212121;
+    background-color: #f2f9ff;
+}
+.waiting .xaas-title {
+    background-color: #d83b18;
+    color: #ffffff;
+}
+.waiting .xaas-title:hover{
+    background-color: #c32b09;
+}
+.requested .xaas-title {
+    background-color: #0d47a1;
+    color: #ffffff;
+}
+.requested .xaas-title:hover {
+    background-color: #003490;
+}
+.waiting .xaas-body-row {
+    background-color: #fff1f1;
+}
+.waiting .xaas-body-row{
+    border-bottom: 1px solid #e2e2e2;
+}
+.waiting .xaas-body-row:last-child{
+    border-bottom: none;
+}
+
+
+/* buttons */
+.xaas-dashboard .btn .fa{
+    margin-left:2px;
+    font-size: 0.75rem;
+    border: 1px solid #0091ea;
+    padding: 1px 2px;
+    border-radius: 3px;
+}
+.xaas-row.cancelled .btn .fa{
+    border: 1px solid #d4d4d4;
+}
+.xaas-row.approval .btn .fa{
+    padding: 1px 1px;
+}
+.xaas-row.waiting .xaas-title .btn,
+.xaas-row.requested .xaas-title .btn{
+    color: #ffffff;
+}
+.xaas-row.waiting .xaas-title .btn .fa,
+.xaas-row.requested .xaas-title .btn .fa{
+    border-color: #ffffff;
+}
+/* button hovers */
+.xaas-dashboard .xaas-title:hover .btn .fa {
+    background-color: #0091ea;
+    color: #ffffff;
+    border-color: #0091ea;
+}
+.btn.btn-outline.btn-white:hover {
+    background-color: white;
+    color: #1976d2;
+}
+/*.xaas-row.waiting .xaas-title:hover .btn,*/
+/*.xaas-row.waiting .xaas-title:focus .btn,*/
+/*.xaas-row.waiting .xaas-title:active .btn,*/
+/*.xaas-row.requested .xaas-title:hover .btn,*/
+/*.xaas-row.requested .xaas-title:focus .btn,*/
+/*.xaas-row.requested .xaas-title:active .btn{*/
+    /*color: #0091ea !important;*/
+    /*background: #eeeeee !important;*/
+    /*box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12);*/
+/*}*/
+
+/* status dot */
+.xaas-row.requested .status,
+.xaas-row.waiting .status{
+    display: none;
+    padding: 0px;
+}
+
+
+/* Responsive */
+@media (max-width: 414px){
+    .xaas-title, .xaas-body-row{
+        -webkit-flex-flow: row wrap;
+    }
+    .xaas-data.xaas-service, .xaas-data.xaas-status{
+        width: 10%;
+    }
+    .xaas-data.xaas-service, .xaas-data.xaas-charge{
+        flex: auto;
+        width: 90%;
+    }
+    .xaas-title .xaas-data{
+        padding: 0px 0px;
+    }
+    .xaas-title .xaas-data.xaas-service {
+        padding-bottom: 8px;
+    }
+    .xaas-title .xaas-data.xaas-category{
+        display: none;
+    }
+    .xaas-title .xaas-data.xaas-interval{
+        padding-left: 10px;
+    }
+    .xaas-body .xaas-data.xaas-price{
+        text-align: left;
+    }
+
+
+}

@@ -1,0 +1,7 @@
+{
+  "internalApiKey": {
+    "type": "apiKey",
+    "in": "header",
+    "name": "Authorization"
+  }
+}

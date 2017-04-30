@@ -1,0 +1,193 @@
+/* moon */
+.sky-object{
+    position: fixed;
+    left: 10%;
+    top: 20%;
+}
+.themoon, .moon{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+}
+.themoon {
+    width: 280px;
+    height: 280px;
+    /* background: #ffe98f; */
+    border: 1px solid #ffe98f;
+    border-radius: 50%;
+    filter: blur(0.5px);
+    z-index: 11;
+}
+.moon {
+    width: 440px;
+    height: 440px;
+    background: rgba(255, 228, 115, 0.23);
+    border-radius: 50%;
+    filter: blur(40px);
+    z-index: 10;
+}
+.moon.two {
+    width: 1000px;
+    height: 1000px;
+    z-index: 6;
+    background: rgba(255, 228, 115, 0.07);
+}
+body.home .featured-overlay.sky {
+    z-index: 9;
+    opacity: 0.7;
+}
+
+/* Style */
+.sky-gradient {
+    position: relative;
+    z-index: 1;
+    float: left;
+    width: 4%; height: 20%;
+    cursor: pointer;
+    transition:
+            box-shadow 150ms,
+            z-index 0ms;
+}
+.sky-gradient:hover {
+    z-index: 2;
+    box-shadow: 0 -5px 10px black;
+}
+.sky-gradient::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    width: 2500%; height: 400%;
+    background: inherit;
+    transform: translateZ(0);
+    opacity: 0;
+    transition: opacity 0s 1s;
+}
+.sky-gradient:hover::after {
+    opacity: 1;
+    transition: opacity 1s 0s;
+}
+
+@for $i from 1 through 25 {
+    .sky-gradient:nth-child(#{$i})::after {
+        left: (-100% * $i) + 100;
+    }
+}
+
+
+/*!* original *!*/
+/*.sky-time0, .sky-time24 { background: #00000c; }*/
+/*.sky-time1 { background: linear-gradient(to bottom, #020111 85%,#191621 100%); }*/
+/*.sky-time2 { background: linear-gradient(to bottom, #020111 60%,#20202c 100%); }*/
+/*.sky-time3 { background: linear-gradient(to bottom, #020111 10%,#3a3a52 100%); }*/
+/*.sky-time4 { background: linear-gradient(to bottom, #20202c 0%,#515175 100%); }*/
+/*.sky-time5 { background: linear-gradient(to bottom, #40405c 0%,#6f71aa 80%,#8a76ab 100%); }*/
+/*.sky-time6 { background: linear-gradient(to bottom, #4a4969 0%,#7072ab 50%,#cd82a0 100%); }*/
+/*.sky-time7 { background: linear-gradient(to bottom, #757abf 0%,#8583be 60%,#eab0d1 100%); }*/
+/*.sky-time8 { background: linear-gradient(to bottom, #82addb 0%,#ebb2b1 100%); }*/
+/*.sky-time9 { background: linear-gradient(to bottom, #94c5f8 1%,#a6e6ff 70%,#b1b5ea 100%); }*/
+/*.sky-time10 { background: linear-gradient(to bottom, #b7eaff 0%,#94dfff 100%); }*/
+/*.sky-time11 { background: linear-gradient(to bottom, #9be2fe 0%,#67d1fb 100%); }*/
+/*.sky-time12 { background: linear-gradient(to bottom, #90dffe 0%,#38a3d1 100%); }*/
+/*.sky-time13 { background: linear-gradient(to bottom, #57c1eb 0%,#246fa8 100%); }*/
+/*.sky-time14 { background: linear-gradient(to bottom, #2d91c2 0%,#1e528e 100%); }*/
+/*.sky-time15 { background: linear-gradient(to bottom, #2473ab 0%,#1e528e 70%,#5b7983 100%); }*/
+/*.sky-time16 { background: linear-gradient(to bottom, #1e528e 0%,#265889 50%,#9da671 100%); }*/
+/*.sky-time17 { background: linear-gradient(to bottom, #1e528e 0%,#728a7c 50%,#e9ce5d 100%); }*/
+/*.sky-time18 { background: linear-gradient(to bottom, #154277 0%,#576e71 30%,#e1c45e 70%,#b26339 100%); }*/
+/*.sky-time19 { background: linear-gradient(to bottom, #163C52 0%,#4F4F47 30%,#C5752D 60%,#B7490F 80%, #2F1107 100%); }*/
+/*.sky-time20 { background: linear-gradient(to bottom, #071B26 0%,#071B26 30%,#8A3B12 80%,#240E03 100%); }*/
+/*.sky-time21 { background: linear-gradient(to bottom, #010A10 30%,#59230B 80%,#2F1107 100%); }*/
+/*.sky-time22 { background: linear-gradient(to bottom, #090401 50%,#4B1D06 100%); }*/
+/*.sky-time23 { background: linear-gradient(to bottom, #00000c 80%,#150800 100%); }*/
+
+/*!* body backgrounds *!*/
+/*.body-time0, .body-time24{ background-color: #00000c; }*/
+/*.body-time1{ background-color: #191621; }*/
+/*.body-time2{ background-color: #20202c; }*/
+/*.body-time3{ background-color: #3a3a52; }*/
+/*.body-time4{ background-color: #515175; }*/
+/*.body-time5{ background-color: #8a76ab; }*/
+/*.body-time6{ background-color: #cd82a0; }*/
+/*.body-time7{ background-color: #eab0d1; }*/
+/*.body-time8{ background-color: #ebb2b1; }*/
+/*.body-time9{ background-color: #b1b5ea; }*/
+/*.body-time10{ background-color: #94dfff; }*/
+/*.body-time11{ background-color: #67d1fb; }*/
+/*.body-time12{ background-color: #38a3d1; }*/
+/*.body-time13{ background-color: #246fa8; }*/
+/*.body-time14{ background-color: #1e528e; }*/
+/*.body-time15{ background-color: #5b7983; }*/
+/*.body-time16{ background-color: #9da671; }*/
+/*.body-time17{ background-color: #cdac51; }*/
+/*.body-time18{ background-color: #b26339; }*/
+/*.body-time19{ background-color: #2F1107; }*/
+/*.body-time20{ background-color: #240E03; }*/
+/*.body-time21{ background-color: #2F1107; }*/
+/*.body-time22{ background-color: #4B1D06; }*/
+/*.body-time23{ background-color: #150800; }*/
+
+/* Gradients */
+.sky-time0, .sky-time24 { background: #00000c; }
+.sky-time1 { background: linear-gradient(to bottom, #020111 85%,#191621 100%); }
+.sky-time2 { background: linear-gradient(to bottom, #020111 60%,#20202c 100%); }
+.sky-time3 { background: linear-gradient(to bottom, #020111 10%,#3a3a52 100%); }
+.sky-time4 { background: linear-gradient(to bottom, #20202c 0%,#515175 100%); }
+.sky-time5 { background: linear-gradient(to bottom, #40405c 0%,#6f71aa 80%,#8a76ab 100%); }
+.sky-time6 { background: linear-gradient(to bottom, #757abf 0%,#8583be 60%,#eab0d1 100%); }
+.sky-time7 { background: linear-gradient(to bottom, #82addb 0%,#ebb2b1 100%); }
+.sky-time8 { background: linear-gradient(to bottom, #94c5f8 1%,#a6e6ff 70%,#b1b5ea 100%); }
+.sky-time9 { background: linear-gradient(to bottom, #b7eaff 0%,#94dfff 100%); }
+.sky-time10 { background: linear-gradient(to bottom, #9be2fe 0%,#67d1fb 100%); }
+.sky-time11 { background: linear-gradient(to bottom, #9be2fe 0%,#67d1fb 100%); }
+.sky-time12 { background: linear-gradient(to bottom, #90dffe 0%,#38a3d1 100%); }
+.sky-time13 { background: linear-gradient(to bottom, #57c1eb 0%,#246fa8 100%); }
+.sky-time14 { background: linear-gradient(to bottom, #57c1eb 0%,#246fa8 100%); }
+.sky-time15 { background: linear-gradient(to bottom, #2d91c2 0%,#1e528e 100%); }
+.sky-time16 { background: linear-gradient(to bottom, #2473ab 0%,#1e528e 70%,#5b7983 100%); }
+.sky-time17 { background: linear-gradient(to bottom, #1e528e 0%,#265889 50%,#9da671 100%); }
+.sky-time18 { background: linear-gradient(to bottom, #1e528e 0%,#728a7c 50%, #cdac51 100%); }
+.sky-time19 { background: linear-gradient(to bottom, #154277 0%,#576e71 30%,#e1c45e 70%,#b26339 100%); }
+.sky-time20 { background: linear-gradient(to bottom, #163C52 0%,#4F4F47 30%,#C5752D 60%,#B7490F 80%, #2F1107 100%); }
+.sky-time21 { background: linear-gradient(to bottom, #071B26 0%,#071B26 30%,#8A3B12 80%,#240E03 100%); }
+.sky-time22 { background: linear-gradient(to bottom, #00000c 80%,#150800 100%); }
+.sky-time23 { background: linear-gradient(to bottom, #00000c 80%,#150800 100%); }
+
+/* body backgrounds */
+.body-time0, .body-time24{ background-color: #00000c; }
+.body-time1{ background-color: #020111; }
+.body-time2{ background-color: #020111; }
+.body-time3{ background-color: #020111; }
+.body-time4{ background-color: #20202c; }
+.body-time5{ background-color: #40405c; }
+.body-time6{ background-color: #757abf; }
+.body-time7{ background-color: #82addb; }
+.body-time8{ background-color: #94c5f8; }
+.body-time9{ background-color: #b7eaff; }
+.body-time10{ background-color: #9be2fe; }
+.body-time11{ background-color: #9be2fe; }
+.body-time12{ background-color: #90dffe; }
+.body-time13{ background-color: #57c1eb; }
+.body-time14{ background-color: #57c1eb; }
+.body-time15{ background-color: #2d91c2; }
+.body-time16{ background-color: #2473ab; }
+.body-time17{ background-color: #1e528e; }
+.body-time18{ background-color: #1e528e; }
+.body-time19{ background-color: #154277; }
+.body-time20{ background-color: #143365; }
+.body-time21{ background-color: #071B26; }
+.body-time22{ background-color: #00000c; }
+.body-time23{ background-color: #00000c; }
+
+/* featured overlay */
+body.home .featured-overlay.sky-time8,
+body.home .featured-overlay.sky-time9,
+body.home .featured-overlay.sky-time10,
+body.home .featured-overlay.sky-time11,
+body.home .featured-overlay.sky-time12{
+    opacity:0.5;
+}

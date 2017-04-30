@@ -1,0 +1,9 @@
+.invoice-widget{
+    padding: 20px;
+    padding-bottom: 40px;
+    background-color: #0d47a1;
+    color: rgba(255, 255, 255, 0.75);
+}
+.invoice-widget .fa{
+    margin-right: 10px;
+}

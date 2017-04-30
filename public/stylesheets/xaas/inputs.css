@@ -1,0 +1,129 @@
+.price-input{
+    position: relative;
+    height: 34px;
+    background-color: #ffffff;
+}
+.price-mask, .price-value{
+    position: absolute;
+}
+.price-value{
+    background-color: transparent;
+}
+.price-value, .price-value:focus{
+    z-index: 9;
+    color: rgba(255, 255, 255, 0);
+}
+.price-mask{
+    font-size: 14px;
+    line-height: 10px;
+    padding: 12px;
+    z-index: 18;
+}
+/* color picker */
+.twitter-picker{
+    position: absolute !important;
+    top: 82px;
+    left: 15px;
+    z-index: 100;
+}
+.sketch-picker {
+    position: absolute !important;
+    top: 82px;
+    left: 15px;
+    z-index: 101;
+}
+
+.color-picker-input .control-label{
+    display: block;
+}
+.color-picker-input .ColorPickerPreview,
+.color-picker-input .custom-color-picker {
+    float: left;
+}
+.color-picker-input .custom-color-picker {
+    margin-left: 10px;
+    color: #989898;
+}
+
+/* TagsInput tags input*/
+input.react-tagsinput-input::placeholder {
+    color: #0091ea;
+}
+input.react-tagsinput-input:before {content: "Add Available Values";position: relative;color: black;margin-top: 10px;}
+
+input.react-tagsinput-input {
+    margin-top: 0px;
+    padding: 0px;
+    margin-bottom: 0px;
+    /* padding: 0px; */
+}
+
+span.react-tagsinput-tag {
+    background: #0091ea;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    padding: 0px 6px;
+    margin: 0px 5px 0px 0px;
+}
+
+a.react-tagsinput-remove {
+    color: white;
+    font-size: 16px;
+}
+
+.react-tagsinput--focused{
+    border-color: #0091ea !important;
+}
+
+.form-group .form-control:nth-child(3n) {
+    margin-top: 9px;
+    margin-bottom: 12px;
+}
+
+/* flex form groups */
+.form-group-flex {
+    display: flex;
+}
+.form-group-flex.column{
+    flex-direction: column;
+}
+.form-group-flex.centered{
+    justify-content: center;
+    align-items: center;
+}
+
+/* image uploader */
+.image-uploader input {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    z-index: 100;
+}
+.image-uploader input:hover{
+    cursor: pointer;
+}
+.image-uploader, .image-uploader > div {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    align-content: center;
+}
+.template-image-upload{
+    width: 100%;
+    overflow: hidden;
+    height: 120px;
+    border-radius: 5px;
+}
+form#imgformtemplate-image img {
+    width: 100%;
+}
+.template-image-upload:after {
+    content: "Upload";
+    z-index: 1;
+}

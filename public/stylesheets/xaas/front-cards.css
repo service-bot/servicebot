@@ -1,0 +1,139 @@
+/* cards */
+.card-wrapper.service{
+    background-color: darkgray;
+}
+.card.service{
+    position: relative;
+    background: #fff;
+    color: #4a4a4a;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    overflow: hidden;
+    -webkit-transition: all 0.5s cubic-bezier(0, 0.86, 0.71, 1.18);
+    -moz-transition: all 0.5s cubic-bezier(0, 0.86, 0.71, 1.18);
+    transition: all 0.5s cubic-bezier(0, 0.86, 0.71, 1.18);
+}
+.card.service:hover{
+    /*-webkit-transform: translateY(-2px);*/
+    /*-moz-transform: translateY(-2px);*/
+    /*-ms-transform: translateY(-2px);*/
+    /*transform: translateY(-2px);*/
+    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.17),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+.card.service:hover img.service-icon {
+    -webkit-animation: jump 1.5s cubic-bezier(0, 0.86, 0.71, 1.18) 0s 1 normal ;
+    animation: jump 1.5s cubic-bezier(0, 0.86, 0.71, 1.18) 0s 1 normal ;
+}
+.with-icon .card-title-holder {
+    padding-left: 50px;
+}
+.card.service .card-title{
+    font-weight: bolder;
+    line-height: 1.75rem;
+    margin-bottom: 0px !important;
+}
+.card.service .card-subtitle{
+    margin-top: -0.15rem;
+    font-size: 1.1rem;
+}
+.card.service .text-muted, .bmd-help{
+    color: rgba(208, 208, 208, 0.81) !important;
+}
+.card.service.dark{
+    color: #fff;
+}
+.card.service .card-block, .card.service .card-body, .card.service .card-footer{
+    padding: 15px 30px;
+}
+.card.service .card-body{
+    height: 100%;
+    overflow: hidden;
+    padding-top: 0px;
+    padding-bottom: 7px;
+    margin-bottom: 65px;
+}
+.card-footer{
+    bottom: 0px !important;
+    width: 100% !important;
+    border-bottom-left-radius: 5px !important;
+    border-bottom-right-radius: 5px !important;
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #f3f3f3;
+    position: absolute;
+}
+.card-footer .seller, .card-footer .btn{
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    margin-bottom: 0px;
+    font-weight: bolder;
+}
+.card-footer .seller .price{
+    font-size: 1.50rem;
+    line-height: 32px;
+}
+.card-footer .btn{
+    margin-bottom: 0px !important;
+}
+
+.card.service .service-cover{
+    height: 135px;
+    overflow: hidden;
+}
+.card.service .service-cover img {
+    width: 100%;
+}
+.card.service .service-icon{
+    margin-right:15px;
+    width: 35px;
+}
+
+.card-image-holder{
+    padding: 30px;
+    display: flex;
+    align-content: flex-end;
+}
+.card-service-company{
+    font-weight: 900;
+    height: 100%;
+    width: 100%;
+    text-align: left;
+    display: flex;
+    align-items: flex-end;
+}
+.card-service-company .price {
+    padding-left: 30px;
+}
+
+.home .page-on-top{
+    position: relative;
+}
+.service-column{
+    position: inherit;
+}
+.card-backdrop{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.70);
+    z-index: 99;
+}
+
+
+
+body.no-scroll{
+    overflow: hidden;
+}
+
+.card.service.opened{
+    display: flex;
+    flex-direction: column;
+}
+.card.service.opened .card-body{
+    overflow: scroll;
+    margin-bottom: 80px;
+}

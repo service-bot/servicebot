@@ -1,0 +1,146 @@
+.breadcrumb {
+  border-radius: 0;
+  background-color: #e0e0e0;
+  white-space: nowrap;
+}
+
+.breadcrumb > li,
+.breadcrumbs > span{
+  float: left;
+  padding-right: 10px;
+}
+
+.breadcrumb.no-bg {
+  background: transparent;
+}
+
+.breadcrumb.breadcrumb-white {
+  background: #ffffff;
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-white a {
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-black {
+  background: #000000;
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-black a {
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-light {
+  background: #f5f5f5;
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-light a {
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-dark {
+  background: #212121;
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-dark a {
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-default {
+  background: #212121;
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-default a {
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-primary {
+  background: #0d47a1;
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-primary a {
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-secondary {
+  background: #c51162;
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-secondary a {
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-success {
+  background: #388e3c;
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-success a {
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-info {
+  background: #0091ea;
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-info a {
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-warning {
+  background: #ffa000;
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-warning a {
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-danger {
+  background: #d32f2f;
+  color: #fff;
+}
+
+.breadcrumb.breadcrumb-danger a {
+  color: #fff;
+}
+
+.breadcrumb.icon-home > li:first-child:before,
+.breadcrumbs > span:first-child:before{
+  font-family: FontAwesome;
+  content: "\f015";
+  padding-right: 10px;
+}
+
+.breadcrumb.icon-th > li:first-child:before {
+  font-family: FontAwesome;
+  content: "\f00a";
+  padding-right: 10px;
+}
+
+.breadcrumb.icon-th-large > li:first-child:before {
+  font-family: FontAwesome;
+  content: "\f009";
+  padding-right: 10px;
+}
+
+.breadcrumb.icon-angle-right > li + li:before,
+.breadcrumbs > span + span:before{
+  font-family: FontAwesome;
+  content: "\f105";
+  padding-right: 10px;
+}
+
+.breadcrumb.icon-angle-double-right > li + li:before {
+  font-family: FontAwesome;
+  content: "\f101";
+  padding-right: 10px;
+}

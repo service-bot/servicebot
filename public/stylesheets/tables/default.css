@@ -1,0 +1,209 @@
+.table th,
+.table td {
+  border-color: #bdbdbd;
+  border-width: 1px;
+}
+
+.table thead th, .table thead td,
+.table tbody th,
+.table tbody td {
+  border-color: #bdbdbd;
+  border-width: 1px;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.table tbody tr.table-active > th,
+.table tbody tr.table-active > td {
+  background-color: #bdbdbd;
+}
+
+.table tbody tr.table-white > th,
+.table tbody tr.table-white > td {
+  background-color: #ffffff;
+  color: #fff;
+}
+
+.table tbody tr.table-black > th,
+.table tbody tr.table-black > td {
+  background-color: #000000;
+  color: #fff;
+}
+
+.table tbody tr.table-light > th,
+.table tbody tr.table-light > td {
+  background-color: #f5f5f5;
+  color: #fff;
+}
+
+.table tbody tr.table-dark > th,
+.table tbody tr.table-dark > td {
+  background-color: #212121;
+  color: #fff;
+}
+
+.table tbody tr.table-default > th,
+.table tbody tr.table-default > td {
+  background-color: #212121;
+  color: #fff;
+}
+
+.table tbody tr.table-primary > th,
+.table tbody tr.table-primary > td {
+  background-color: #0d47a1;
+  color: #fff;
+}
+
+.table tbody tr.table-secondary > th,
+.table tbody tr.table-secondary > td {
+  background-color: #c51162;
+  color: #fff;
+}
+
+.table tbody tr.table-success > th,
+.table tbody tr.table-success > td {
+  background-color: #388e3c;
+  color: #fff;
+}
+
+.table tbody tr.table-info > th,
+.table tbody tr.table-info > td {
+  background-color: #0091ea;
+  color: #fff;
+}
+
+.table tbody tr.table-warning > th,
+.table tbody tr.table-warning > td {
+  background-color: #ffa000;
+  color: #fff;
+}
+
+.table tbody tr.table-danger > th,
+.table tbody tr.table-danger > td {
+  background-color: #d32f2f;
+  color: #fff;
+}
+
+.table .thead-white {
+  background-color: #ffffff;
+  color: #fff;
+}
+
+.table .thead-black {
+  background-color: #000000;
+  color: #fff;
+}
+
+.table .thead-light {
+  background-color: #f5f5f5;
+  color: #fff;
+}
+
+.table .thead-dark {
+  background-color: #212121;
+  color: #fff;
+}
+
+.table .thead-primary {
+  background-color: #0d47a1;
+  color: #fff;
+}
+
+.table .thead-secondary {
+  background-color: #c51162;
+  color: #fff;
+}
+
+.table .thead-success {
+  background-color: #388e3c;
+  color: #fff;
+}
+
+.table .thead-info {
+  background-color: #0091ea;
+  color: #fff;
+}
+
+.table .thead-warning {
+  background-color: #ffa000;
+  color: #fff;
+}
+
+.table .thead-danger {
+  background-color: #d32f2f;
+  color: #fff;
+}
+
+.table.table-unbordered thead th, .table.table-unbordered thead td, .table.table-unbordered thead tr,
+.table.table-unbordered tbody th,
+.table.table-unbordered tbody td,
+.table.table-unbordered tbody tr {
+  border: none !important;
+}
+
+.table.table-hover.table-hover-white tbody td:hover,
+.table.table-hover.table-hover-white tbody tr:hover {
+  background-color: #ffffff;
+  color: #fff;
+}
+
+.table.table-hover.table-hover-black tbody td:hover,
+.table.table-hover.table-hover-black tbody tr:hover {
+  background-color: #000000;
+  color: #fff;
+}
+
+.table.table-hover.table-hover-light tbody td:hover,
+.table.table-hover.table-hover-light tbody tr:hover {
+  background-color: #f5f5f5;
+  color: #fff;
+}
+
+.table.table-hover.table-hover-dark tbody td:hover,
+.table.table-hover.table-hover-dark tbody tr:hover {
+  background-color: #212121;
+  color: #fff;
+}
+
+.table.table-hover.table-hover-default tbody td:hover,
+.table.table-hover.table-hover-default tbody tr:hover {
+  background-color: #212121;
+  color: #fff;
+}
+
+.table.table-hover.table-hover-primary tbody td:hover,
+.table.table-hover.table-hover-primary tbody tr:hover {
+  background-color: #0d47a1;
+  color: #fff;
+}
+
+.table.table-hover.table-hover-secondary tbody td:hover,
+.table.table-hover.table-hover-secondary tbody tr:hover {
+  background-color: #c51162;
+  color: #fff;
+}
+
+.table.table-hover.table-hover-success tbody td:hover,
+.table.table-hover.table-hover-success tbody tr:hover {
+  background-color: #388e3c;
+  color: #fff;
+}
+
+.table.table-hover.table-hover-info tbody td:hover,
+.table.table-hover.table-hover-info tbody tr:hover {
+  background-color: #0091ea;
+  color: #fff;
+}
+
+.table.table-hover.table-hover-warning tbody td:hover,
+.table.table-hover.table-hover-warning tbody tr:hover {
+  background-color: #ffa000;
+  color: #fff;
+}
+
+.table.table-hover.table-hover-danger tbody td:hover,
+.table.table-hover.table-hover-danger tbody tr:hover {
+  background-color: #d32f2f;
+  color: #fff;
+}
+

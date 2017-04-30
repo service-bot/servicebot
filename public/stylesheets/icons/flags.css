@@ -1,0 +1,78 @@
+.flag-icons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
+.flag-icons .icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+  width: 180px;
+  height: 140px;
+  background: #fff;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  text-align: center;
+  margin: 5px;
+}
+
+.flag-icons .icon .icon-class {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #757575;
+}
+
+.flag-examples .flag-wrapper {
+  position: relative;
+  height: 40px;
+  width: 60px;
+  border: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+.flag-examples .flag-wrapper .flag {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+}
+
+.flag-examples .icon-class {
+  top: 20px;
+  left: 80px;
+}
+
+@media (max-width: 543px) {
+  .flag-icons .icon {
+    width: 160px;
+  }
+}

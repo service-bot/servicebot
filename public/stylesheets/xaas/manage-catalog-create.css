@@ -1,0 +1,115 @@
+
+/* catalog create page */
+.catalog-create-steps{
+    position: absolute;
+    top:100px;
+    right: -200px;
+    float: left;
+    opacity: 0;
+    z-index: 90;
+    width: 80%;
+    padding-top: 20px;
+}
+.catalog-create-steps.front{
+    z-index: 100
+}
+#catalog-create-step-1{
+    right: auto;
+}
+#catalog-create-container{
+    overflow: hidden;
+    min-height: 700px;
+    padding-bottom: 140px;
+}
+#catalog-create-container .service-header,
+#catalog-create-container .service-body{
+    padding: 20px 40px;
+}
+#catalog-create-container .service-body{
+    background-color: #fff;
+    padding: 40px 40px 60px;
+}
+#catalog-create-container .service-header .title{
+    text-transform: uppercase;
+    color: #fafafa;
+}
+#catalog-create-container .service-header .subtitle{
+    display: block;
+    color: #bdbdbd;
+}
+#catalog-create-buttons{
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+.catalog-item-property .bmd-form-group .bmd-label-floating{
+    left: 1rem;
+}
+.step-button-label{
+    padding: 10px;
+    padding-right: 30px;
+}
+.step-button-label:last-child{
+    padding-right: 0px;
+}
+.step-button.active + .step-button-label{
+    color: #0091ea;
+}
+#catalog-basic-info-container, #catalog-property-container{
+    border: 1px solid gainsboro;
+    padding: 0px 15px;
+}
+
+/* custom property */
+.catalog-item-property {
+    padding-right: 20px;
+}
+.advanced-prop{
+    display: none;
+}
+.advanced-btn{
+    position: absolute;
+    right: -12px;
+    top: 25px;
+}
+
+/* review content */
+.review-content-prop-item{
+    padding: 20px;
+}
+.review-content-prop-item{
+    border: 1px solid gainsboro;
+}
+.review-content-prop-item:nth-child(odd), .review-content-prop-item:nth-child(odd) h4{
+    background-color: #f5f5f5;
+}
+.review-content-prop-item {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+.review-content-prop-item>div {
+    display: table-row;
+    padding: 2px;
+}
+.review-content-prop-item span {
+    display: table-cell;
+    padding: 5px;
+}
+.review-content-prop-item span.value {
+    background-color: white;
+    border: 2px solid #ececec;
+    border-radius: 5px;
+    color: #676767;
+}
+.review-content-prop-item h4 {
+    display: table-caption;
+    line-height: 2rem;
+    padding: 10px 20px;
+    text-transform: capitalize;
+    border: 1px solid gainsboro;
+    margin: 10px 0px 5px;
+}
+.Review span.label{
+    color: black;
+}

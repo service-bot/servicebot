@@ -1,0 +1,23 @@
+#service-basic-info, #service-payment-info, #service-custom-props {
+    border: 1px solid #e4e4e4;
+    border-radius: 5px;
+}
+.button-box{
+    padding: 15px 0px;
+    display: flex;
+}
+.button-box.space-between{
+    justify-content: space-between;
+}
+.button-box.right{
+    justify-content: flex-end;
+}
+.button-box-left{
+    justify-content: flex-start;
+}
+.button-box.right > *{
+    margin-left: 5px;
+}
+.button-box.left > *{
+    margin-right: 5px;
+}

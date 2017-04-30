@@ -1,0 +1,10 @@
+{
+  "name": "stripe",
+  "version": "0.0.1",
+  "main": "stripe-init.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["app", "api", "knex", "stripe"],
+    "provides": []
+  }
+}

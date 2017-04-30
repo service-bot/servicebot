@@ -1,0 +1,15 @@
+.user-widget-9 {
+  min-height: 200px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0.2), 0px 7px 10px 1px rgba(0, 0, 0, 0.14), 0px 2px 16px 1px rgba(0, 0, 0, 0.12);
+}
+
+.user-widget-9 .row {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.user-widget-9 .img-circle {
+  border: 3px solid #fff;
+}

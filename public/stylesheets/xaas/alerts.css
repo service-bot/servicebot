@@ -1,0 +1,24 @@
+.alert{
+    min-height: 62px;
+}
+.alert i{
+    margin-right: 7px;
+}
+.alert-success{
+    color: #1b926c;
+}
+.alert-warning{
+    color: #ffa000;
+}
+.alert-danger{
+    color: #ff0015;
+}
+
+.s-alert-box {
+    width: 50%;
+    margin: 10px auto;
+    background: black;
+    border-radius: 4px;
+    color: white;
+    padding: 2px 15px;
+}

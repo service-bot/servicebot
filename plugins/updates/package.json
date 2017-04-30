@@ -1,0 +1,10 @@
+{
+  "name": "updates",
+  "version": "0.0.1",
+  "main": "updates.js",
+  "private": true,
+  "plugin": {
+    "consumes": ["knex"],
+    "provides": []
+  }
+}

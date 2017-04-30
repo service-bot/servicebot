@@ -1,0 +1,8 @@
+/public/build/*
+node_modules/*
+.env
+**/.DS_STORE
+.idea
+npm-debug.log*
+/uploads/*
+/env/.env
