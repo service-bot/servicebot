@@ -454,6 +454,9 @@ module.exports = function (initConfig) {
                 additionalPermissions.forEach(function (element) {
                     permissions.push(element);
                     initialRoleMap.admin.push(element);
+                    if(element === 'can_manage'){
+                        initialRoleMap.staff.push(element);
+                    }
                 });
 
                 let permission_data = permissions.map(permission => ({"permission_name": permission}));
