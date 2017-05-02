@@ -500,7 +500,7 @@ module.exports = function (initConfig) {
                                 //assign permissions to roles
                                 resolve(Promise.all(role_objects.map(assignPermissionPromise(initConfig, permission_objects, initialRoleMap))).then(function (roles) {
                                     //IMPORTANT: uncomment the line below if you want the installation with the test demo data.
-                                    //return require("../tests/demo");
+                                    return require("../tests/demo");
                                 }));
                             });
                         });
