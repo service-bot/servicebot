@@ -18,7 +18,7 @@ let _ = require("lodash");
 class ManageSubscriptions extends React.Component {
 
     constructor(props){
-        if(!isAuthorized({permissions:"can_administrate"})){
+        if(!isAuthorized({permissions:["can_administrate", "can_manage"]})){
             browserHistory.push("/my-services");
         }
 
@@ -220,7 +220,7 @@ class ManageSubscriptions extends React.Component {
             return (<Load/>);
         }else {
             return (
-                <Authorizer permissions="can_administrate">
+                <Authorizer permissions={["can_administrate", "can_manage"]}>
                     <div className="page-service-instance">
                         <Jumbotron pageName={pageName} location={this.props.location}/>
                         <Content>

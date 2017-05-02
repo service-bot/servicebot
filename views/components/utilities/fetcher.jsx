@@ -1,5 +1,6 @@
 import React from 'react';
 import Alert from 'react-s-alert';
+// import 'react-s-alert/dist/s-alert-default.css';
 import Alerts from '../elements/alerts.jsx';
 import 'whatwg-fetch';
 
@@ -29,8 +30,8 @@ let Fetcher = function(path, method="GET", body, init=null){
             if(response.status == 404){
                 throw response;
             }
-             return response.json();
-         })
+            return response.json();
+        })
         .then(function(response){
             if(response != null){
                 if(response.error){

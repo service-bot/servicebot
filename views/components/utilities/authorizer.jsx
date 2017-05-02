@@ -17,16 +17,18 @@ let isAuthorized = function(props) {
         // let user_perms = JSON.parse((cookie.load("permissions").slice(2)));
 
         let required_perms = props.permissions ? props.permissions : [];
+        console.log("permissions", props.permissions);
         if(typeof required_perms == "string"){
             required_perms = [required_perms];
         }
 
 
-        if(required_perms.every(permission => user_perms.includes(permission)) || user_perms.includes("can_administrate")){
+        if(required_perms.every(permission => user_perms.includes(permission)) || user_perms.includes("can_administrate") || user_perms.includes("can_manage")){
             //renders inner content if authorized
             return true;
         }
         else{
+            console.log("NOT PERMITTED")
         }
 
         //logic goes here for unauthorized component
@@ -70,7 +72,7 @@ let Authorizer = function(props) {
         }
 
 
-        if(required_perms.every(permission => user_perms.includes(permission)) || user_perms.includes("can_administrate")){
+        if(required_perms.every(permission => user_perms.includes(permission)) || user_perms.includes("can_administrate") || user_perms.includes("can_manage")){
             //renders inner content if authorized
             if(Array.isArray(props.children)){
                 return (<span>{props.children}</span>);

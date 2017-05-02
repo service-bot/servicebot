@@ -11,7 +11,7 @@ const AnonymousLinks = ({signUpEnabled}) => (
     <ul className="nav navbar-nav navbar-right">
         <li><Link to="login">Log In</Link></li>
         {signUpEnabled &&
-            <li><Link to="signup">Sign up</Link></li>
+        <li><Link to="signup">Sign up</Link></li>
         }
     </ul>
 
@@ -61,7 +61,7 @@ class NavBootstrap extends React.Component {
     }
 
     getMenuItems(){
-        if(isAuthorized({permissions: "can_administrate"})){
+        if(isAuthorized({permissions: ["can_administrate", "can_manage"]})){
             return(
                 <ul className="nav navbar-nav">
                     <li><Link to="/dashboard">Dashboard<span className="sr-only">(current)</span></Link></li>
@@ -150,9 +150,9 @@ class NavBootstrap extends React.Component {
                                 <li>
                                     <div className="nav-profile badge badge-sm">
                                         <Link to="/profile">
-                                        <img id="avatar-img" src={`/api/v1/users/${this.state.uid}/avatar`}
-                                             ref="avatar" className="img-circle" alt="badge"/>
-                                        {this.state.loadingImage && <Load/> }
+                                            <img id="avatar-img" src={`/api/v1/users/${this.state.uid}/avatar`}
+                                                 ref="avatar" className="img-circle" alt="badge"/>
+                                            {this.state.loadingImage && <Load/> }
                                         </Link>
                                     </div>
                                 </li>

@@ -22,7 +22,7 @@ class Dashboard extends React.Component {
     }
 
     componentDidMount(){
-        if(!isAuthorized({permissions:"can_administrate"})){
+        if(!isAuthorized({permissions:["can_administrate", "can_manage"]})){
             return browserHistory.push("/login");
         }else{
             this.fetchAnalytics();
@@ -53,7 +53,7 @@ class Dashboard extends React.Component {
             );
         }else{
             return(
-                <Authorizer permissions="can_administrate">
+                <Authorizer permissions={["can_administrate", "can_manage"]}>
                     <div className="page-service-instance">
                         <Jumbotron pageName={pageName} location={this.props.location}/>
                         <Content>
