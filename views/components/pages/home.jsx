@@ -17,10 +17,15 @@ class Home extends React.Component {
     }
 
     handleChange(event){
-        const target = event.target;
+        const target = event.currentTarget;
         const value = target.type === 'checkbox' ? target.checked : target.value;
-        console.log(value);
-        this.setState({serviceUrl : "/api/v1/service-templates/search?key=name&value=" + value, searchValue:value});
+        if(value != ''){
+            console.log("has value", value);
+            this.setState({serviceUrl : "/api/v1/service-templates/search?key=name&value=" + value, searchValue:value});
+        }else{
+            console.log("no value", value);
+            this.setState({serviceUrl : "/api/v1/service-templates", searchValue:""});
+        }
     }
 
     componentWillUnmount(){
