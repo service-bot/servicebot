@@ -279,14 +279,13 @@ module.exports = function(tableName, references=[], primaryKey='id') {
     };
 
     //gets results that contain the value
+
     Entity.search = function(key, value, callback){
-        let action = "LIKE";
-        let query = "%" + value + "%";
+        let query = "LOWER(" + key + ") LIKE '%' || LOWER(?) || '%' "
         if(value % 1 === 0){
-            query = value;
-            action = "="
+            query = key + " = ?";
         }
-        knex(Entity.table).where(key, action, query)
+        knex(Entity.table).whereRaw(query, value)
             .then(function (result) {
                 if (!result) {
                     result = [];
