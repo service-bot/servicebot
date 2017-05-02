@@ -1,6 +1,7 @@
 
 //let Announcement = require("../../../models/base/entity")("announcements");
 let async = require('async');
+let auth = require('../../../middleware/auth');
 let Logger = require('../models/logger');
 let User = require('../../../models/user');
 let Stripe = require('../../../config/stripe');
@@ -81,7 +82,7 @@ module.exports = function(router, knex, stripe) {
         });
     };
 
-    router.get(`/stripe/keys`, function (req, res) {
+    router.get(`/stripe/keys`, auth(), function (req, res) {
         SystemOptions.findOne('option', 'stripe_secret_key', function (option_secret_key) {
             SystemOptions.findOne('option', 'stripe_publishable_key', function (option_publishable_key) {
                 let secret_key = option_secret_key.data.value.substring(0,7) + '******' + option_secret_key.data.value.substring(option_secret_key.data.value.length-5,option_secret_key.data.value.length);
@@ -91,7 +92,7 @@ module.exports = function(router, knex, stripe) {
         });
     });
 
-    router.post(`/stripe/preconfigure`, function (req, res) {
+    router.post(`/stripe/preconfigure`, auth(), function (req, res) {
         let stripe_config = req.body;
         let stripe_publishable = stripe_config.stripe_public;
         let stripe_secret = stripe_config.stripe_secret;
@@ -111,7 +112,7 @@ module.exports = function(router, knex, stripe) {
     /**
      * This is the route to change Stripe API keys.
      */
-    router.post(`/stripe/reconfigure`, function(req, res){
+    router.post(`/stripe/reconfigure`, auth(), function(req, res){
         let stripe_config = req.body;
         let stripe_publishable = stripe_config.stripe_public;
         let stripe_secret = stripe_config.stripe_secret;
