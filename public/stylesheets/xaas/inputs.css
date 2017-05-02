@@ -119,6 +119,8 @@ a.react-tagsinput-remove {
     overflow: hidden;
     height: 120px;
     border-radius: 5px;
+    border: 1px dashed #abb8c3;
+    margin: 3px 0px 10px;
 }
 form#imgformtemplate-image img {
     width: 100%;
@@ -126,4 +128,7 @@ form#imgformtemplate-image img {
 .template-image-upload:after {
     content: "Upload";
     z-index: 1;
+}
+form#imgformtemplate-image .no-image-yet {
+    display: none;
 }

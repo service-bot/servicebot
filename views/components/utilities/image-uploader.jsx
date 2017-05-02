@@ -54,7 +54,9 @@ class ImageUploader extends React.Component {
 
         fileReader.addEventListener("load", function () {
             targetImg.src = fileReader.result;
-            self.setState({loadingImage: false, imageSelected: true});
+            self.setState({loadingImage: false, imageSelected: true}, function () {
+                targetImg.classList.remove("no-image-yet");
+            });
         }, false);
 
         fileReader.readAsDataURL(src.files[0]);
@@ -78,7 +80,8 @@ class ImageUploader extends React.Component {
             let objectURL = URL.createObjectURL(myBlob);
             myImage.src = objectURL;
         }).catch(function(error) {
-            myImage.src = '/assets/custom_icons/cloud-computing.png?' + new Date().getTime();
+            // myImage.src = '/assets/custom_icons/cloud-computing.png?' + new Date().getTime();
+            myImage.classList.add("no-image-yet");
         });
     }
 
