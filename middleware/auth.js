@@ -1,5 +1,4 @@
 let Role = require("../models/role.js");
-let permission_map = require("../config/permission-map");
 let _ = require("lodash");
 let swaggerJSON = require("../api-docs/api-paths.json");
 
@@ -22,7 +21,7 @@ let isAuthorized = function (user, permission, bypassPermissions, callback){
         role.getPermissions(function(permissions){
             let status = permissions.some(p => p.data.permission_name == permission || !permission);
             let shouldBypass = permissions.some(p => bypassPermissions.includes(p.data.permission_name));
-            console.log("status: " + status + " userName: " + user.get('email') + " permission: " + permission);
+            console.log("userName: " + user.get('email') + " has permission: " + permission + ". Ability to make api call: " + status);
             callback(status, shouldBypass, permissions)
         })
     })
@@ -73,28 +72,37 @@ let auth = function(permission=null, model=null, correlation_id="user_id", bypas
         }
         isAuthorized(req.user, permissionToCheck, bypassPermissions,  function (status, shouldBypass, permissions) {
             res.locals.permissions = permissions;
-            if (status || shouldBypass) {
-                //checks user ownership
-                if (model) {
-                    //TODO be able to handle other ids, not just 'id'
-                    id = req.params.id;
-                    model.findOne("id", id, function (result) {
-                        console.log("correlation id: " + correlation_id + " " + req.user.get("id"))
-                        if (result.get(correlation_id) == req.user.get("id") || shouldBypass) {
-                            return next();
-                        }
-                        return res.status(401).json({error: "Unauthorized user"});
-
-                    });
-                    return;
-                }
+            if(shouldBypass){
                 return next();
             }
-            return res.status(401).json({error: "Unauthorized user"});
+            else{
+                if(status){
+                    if (model) {
+                        //TODO be able to handle other ids, not just 'id'
+                        id = req.params.id;
+                        model.findOne("id", id, function (result) {
+                            console.log("correlation id: " + correlation_id + " " + req.user.get("id"));
+                            if (result.get(correlation_id) == req.user.get("id") || permissions.some(p => p.data.permission_name === 'can_manage')) {
+                                console.log("user owns id " + id + "or has can_manage")
+                                return next();
+                            }
+                            return res.status(401).json({error: "Unauthorized user"});
+
+                        });
+                        return;
+                    }
+                    else{
+                        return next();
+                    }
+                }
+                else{
+                    return res.status(401).json({error: "Unauthorized user"});
+                }
+            }
         });
 
     };
-}
+};
 module.exports = auth;
 
 

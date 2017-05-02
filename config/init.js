@@ -454,6 +454,9 @@ module.exports = function (initConfig) {
                 additionalPermissions.forEach(function (element) {
                     permissions.push(element);
                     initialRoleMap.admin.push(element);
+                    if(element === 'can_manage'){
+                        initialRoleMap.staff.push(element);
+                    }
                 });
 
                 let permission_data = permissions.map(permission => ({"permission_name": permission}));
@@ -497,7 +500,7 @@ module.exports = function (initConfig) {
                                 //assign permissions to roles
                                 resolve(Promise.all(role_objects.map(assignPermissionPromise(initConfig, permission_objects, initialRoleMap))).then(function (roles) {
                                     //IMPORTANT: uncomment the line below if you want the installation with the test demo data.
-                                    //return require("../tests/demo");
+                                    return require("../tests/demo");
                                 }));
                             });
                         });
