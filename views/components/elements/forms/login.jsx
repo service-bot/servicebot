@@ -27,6 +27,9 @@ class Login extends React.Component {
             if(!result.error) {
                 console.log(result);
                 localStorage.setItem("permissions", result.permissions);
+                if(that.props.location.state && that.props.location.state.fromSignup){
+                    return browserHistory.go(-2);
+                }
                 browserHistory.goBack();
 
 
