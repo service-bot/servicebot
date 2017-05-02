@@ -46,7 +46,7 @@ module.exports = function (router) {
                         return res.sendFile(path.resolve(__dirname, "../public/assets/logos/servicebot-logo.png"));
                     }
                     if(req.params.id == "front_page_image"){
-                           return res.sendFile(path.resolve(__dirname, "../public/assets/images/servicebot_homepage_white_withparachutes.png"));
+                           return res.sendFile(path.resolve(__dirname, "../public/assets/images/citybackground2.png"));
                     }
                     else {
                         res.status("400").send("no image");

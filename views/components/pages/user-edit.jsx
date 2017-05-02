@@ -1,31 +1,29 @@
 import React from 'react';
-import {Link, hashHistory, browserHistory} from 'react-router';
+import {browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
+import Fetcher from "../utilities/fetcher.jsx";
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
 import UserFormEdit from "../elements/forms/user-form-edit.jsx";
-import Fetcher from "../utilities/fetcher.jsx";
 
 class UserEdit extends React.Component {
 
     constructor(props){
         super(props);
         console.log("this.props.param", this.props.params);
-        this.state = {myUser:false, url:`/api/v1/users/${this.props.params.userId}`}
+        this.state = {myUser:false, url:`/api/v1/users/${this.props.params.userId}`};
 
         this.fetchUser = this.fetchUser.bind(this);
     }
 
-
     componentDidMount(){
-        if(!isAuthorized({permissions:"can_administrate"})){
+        if(!isAuthorized({permissions: ["can_administrate", "can_manage"]})){
             return browserHistory.push("/login");
+        }else{
+            this.fetchUser();
         }
-        this.fetchUser()
-
     }
-
 
     fetchUser(){
         let self = this;
@@ -42,10 +40,8 @@ class UserEdit extends React.Component {
         })
     }
 
-
     render () {
         let pageName = this.props.route.name;
-        let breadcrumbs = [{name: 'Home', link: 'home'}, {name: 'My Services', link: '/my-services'}, {name: 'Manage Users', link: '/manage-users'}, {name: pageName, link: null}];
 
         if(this.state.loading){
             return(

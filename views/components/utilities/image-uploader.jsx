@@ -68,7 +68,8 @@ class ImageUploader extends React.Component {
         let self = this;
         let myImage = document.getElementById(`edit-${this.state.elementID}-img`);
 
-        fetch(this.props.imageGETURL || self.state.imageURL).then(function(response) {
+        fetch(this.props.imageGETURL || self.state.imageURL,
+            {method: 'GET', header: new Headers({"Content-Type": "application/json"}), credentials: "include"}).then(function(response) {
             if(response.ok) {
                 return response.blob();
             }

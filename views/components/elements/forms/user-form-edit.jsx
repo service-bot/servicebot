@@ -1,12 +1,10 @@
 import React from 'react';
-import {Link, hashHistory, browserHistory} from 'react-router';
+import {Link} from 'react-router';
 import Load from '../../utilities/load.jsx';
 import Authorizer from "../../utilities/authorizer.jsx";
-import Fetcher from "../../utilities/fetcher.jsx"
 import Inputs from "../../utilities/inputs.jsx";
 import Buttons from "../buttons.jsx";
-import {DataForm, DataChild} from "../../utilities/data-form.jsx";
-let _ = require("lodash");
+import {DataForm} from "../../utilities/data-form.jsx";
 import DateFormat from '../../utilities/date-format.jsx';
 import ImageUploader from '../../utilities/image-uploader.jsx';
 
@@ -47,7 +45,7 @@ class UserFormEdit extends React.Component {
     handleResponse(response){
         console.log("inside handle response", response);
         if(!response.error){
-            this.setState({success: true, currentAction: '_VIEW', user: response});
+            this.setState({success: true, currentAction: '_VIEW', user: response.results.data});
         }
     }
 
@@ -100,7 +98,8 @@ class UserFormEdit extends React.Component {
                                         {/*<ImageUploader name="template-icon" elementID="template-image" imageStyle="badge badge-lg"*/}
                                                        {/*imageURL={`/api/v1/service-templates/25/icon`} />*/}
                                         <ImageUploader name="avatar" elementID="avatar" imageStyle="badge badge-lg"
-                                                       imageURL={`${this.state.url}/avatar`} imageGETURL={this.state.profileImage}/>
+                                                       imageURL={`${this.state.url}/avatar`} imageGETURL={`${this.state.url}/avatar`}
+                                                       uploadButton={true}/>
                                     </div>
                                     <div className="col-md-12">
                                         <div className="row">
