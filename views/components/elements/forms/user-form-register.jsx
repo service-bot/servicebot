@@ -27,6 +27,7 @@ class UserFormRegister extends React.Component {
             this.setState({success: true});
             // console.log("LOCATION!", that.props.location);
             if(this.props.location.state && this.props.location.state.fromLogin){
+                console.log("HELLO!!!!!!!!!!!!");
                 return browserHistory.go(-2);
             }
             browserHistory.goBack();
@@ -38,7 +39,7 @@ class UserFormRegister extends React.Component {
         if(this.state.loading){
             return ( <Load/> );
         }else if(this.state.success){
-            browserHistory.push("/");
+            browserHistory.goBack();
         }else{
             //TODO: Add validation functions and pass into DataForm as props
             return (
@@ -89,7 +90,7 @@ class UserFormRegister extends React.Component {
                         {!this.state.token ?
                             <div>
                                 <button className="btn btn-raised btn-lg btn-primary btn-block" type="submit" value="submit">Sign Up</button>
-                                <p className="sign-up-link p-t-15">I have an account <Link className="sign-up-link" to="login">Login Here</Link></p>
+                                <p className="sign-up-link p-t-15">I have an account <Link className="sign-up-link" to={{pathname:"/login", state:{fromSignup: true}}}>Login Here</Link></p>
                             </div> :
 
                             <button className="btn btn-raised btn-lg btn-primary btn-block" type="submit" value="submit">Finish</button>

@@ -18,7 +18,7 @@ class ServiceRequest extends React.Component {
 
     componentDidMount(){
         if(!isAuthorized({})){
-            return browserHistory.push("/login");
+            return browserHistory.push("/signup");
         }
     }
 
