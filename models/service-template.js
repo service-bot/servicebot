@@ -36,7 +36,8 @@ ServiceTemplate.prototype.requestPromise = function (uid, body = {}, permission_
         description: service_description,
         requested_by: uid,
         user_id: service_user_id,
-        service_id: self.get("id")
+        service_id: self.get("id"),
+        type: self.get("type")
     };
     let submittedProperties = null;
     if(body.references) {
