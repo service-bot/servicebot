@@ -11,6 +11,7 @@ import Fetcher from '../utilities/fetcher.jsx';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import _ from "lodash";
 import ModalInvoice from '../elements/modals/modal-invoice.jsx';
+import Price from '../utilities/price.jsx';
 
 class MyServices extends React.Component {
 
@@ -117,7 +118,9 @@ class MyServices extends React.Component {
                                 <div className="row m-b-20">
                                     <DashboardWidget widgetIcon="connectdevelop" widgetName="Active Services" widgetData={runningServiceCount || '0'} widgetColor="blue"/>
                                     <DashboardWidget widgetIcon="warning" widgetName="Awaiting for Approvals" widgetData={requestedServiceCount || '0'} widgetColor="blue"/>
-                                    <DashboardWidget widgetIcon="credit-card" widgetName="Upcoming Invoice" widgetData={`$${nextInvoiceAmountDue || '0'}`} widgetColor="blue" clickAction={self.onOpenInvoiceModal}/>
+                                    <DashboardWidget widgetIcon="credit-card" widgetName="Upcoming Invoice" widgetData={null} widgetColor="blue" clickAction={self.onOpenInvoiceModal}>
+                                        <Price value={nextInvoiceAmountDue}/>
+                                    </DashboardWidget>
                                     <DashboardWidget widgetIcon="check" widgetName="Account Status" widgetData="Good standing" widgetColor="green"/>
                                 </div>
                                 <div className="row">

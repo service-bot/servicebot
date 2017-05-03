@@ -19,7 +19,7 @@ class DashboardWidget extends React.Component {
                     </div>
                     <div className="text-widget-item col-xs-8">
                         <div className="title">{self.props.widgetName}</div>
-                        <div className="subtitle"><span className="">{self.props.widgetData}</span></div>
+                        <div className="subtitle"><span className="">{self.props.widgetData || this.props.children}</span></div>
                     </div>
                 </div>
             </div>

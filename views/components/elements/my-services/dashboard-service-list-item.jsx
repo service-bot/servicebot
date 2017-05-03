@@ -10,8 +10,8 @@ class DashboardServiceListItem extends React.Component {
     constructor(props){
         super(props);
         this.state = {  approveModal : false,
-                        cancelModal: false,
-                        undoCancelModal: false};
+            cancelModal: false,
+            undoCancelModal: false};
 
         this.mapIntervalString = this.mapIntervalString.bind(this);
         this.handleApprove = this.handleApprove.bind(this);
@@ -97,6 +97,28 @@ class DashboardServiceListItem extends React.Component {
         };
 
         if(self.props.service && self.props.service != null){
+            let myService = self.props.service;
+
+            let getPrice = ()=>{
+                let serType = myService.type;
+                console.log("the ser type", serType);
+                if (serType == "subscription"){
+                    return (
+                        <span>
+                        <Price value={myService.payment_plan.amount}/>
+                            {myService.payment_plan.interval_count == 1 ? ' /' : ' / ' + myService.payment_plan.interval_count} {' '+myService.payment_plan.interval}
+                    </span>
+                    );
+                }else if (serType == "one_time"){
+                    return (<span><Price value={myService.payment_plan.amount}/></span>);
+                }else if (serType == "custom"){
+                    return (<span/>);
+                }else{
+                    console.log("here", serType);
+                    return (<span><Price value={myService.payment_plan.amount}/></span>)
+                }
+            };
+
             return (
                 <div className={`xaas-row ${self.props.service.status}`}>
                     <Link to={self.props.viewPath}>
@@ -104,21 +126,21 @@ class DashboardServiceListItem extends React.Component {
                             <div className="xaas-data xaas-status"><span className="status"><i className="fa fa-circle"/></span></div>
                             <div className="xaas-data xaas-category"><img className="xaas-service-icon" src="assets/service-icons/dark/aws.png"/></div>
                             <div className="xaas-data xaas-service"><h5>{name}</h5></div>
-                            <div className="xaas-data xaas-price"><h5><Price value={amount}/></h5></div>
-                            <div className="xaas-data xaas-interval"><h5>{interval}</h5></div>
+                            <div className="xaas-data xaas-price"><h5>{getPrice()}</h5></div>
+                            {/*<div className="xaas-data xaas-interval"><h5>{interval}</h5></div>*/}
                             <div className="xaas-data xaas-action">
                                 {/*<buttom to="" className="btn btn-flat btn-info btn-rounded btn-sm">View <i className="fa fa-expand"/></buttom>*/}
                                 {status == "requested" &&
-                                    <buttom className="btn btn-outline btn-white btn-rounded btn-sm" onClick={self.handleApprove}>Approve</buttom>
+                                <buttom className="btn btn-outline btn-white btn-rounded btn-sm" onClick={self.handleApprove}>Approve</buttom>
                                 }
                                 {status == "waiting" &&
-                                    <buttom to="" className="btn btn-outline btn-white btn-rounded btn-sm">Pay All</buttom>
+                                <buttom to="" className="btn btn-outline btn-white btn-rounded btn-sm">Pay All</buttom>
                                 }
                                 {status == "running" &&
-                                    <buttom to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleCancel}>Cancel Request</buttom>
+                                <buttom to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleCancel}>Cancel Request</buttom>
                                 }
                                 {status == "waiting_cancellation" &&
-                                    <buttom to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleUndoCancel}>Undo Cancel Request</buttom>
+                                <buttom to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleUndoCancel}>Undo Cancel Request</buttom>
                                 }
                             </div>
                         </div>

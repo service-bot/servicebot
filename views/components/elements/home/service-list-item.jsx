@@ -141,26 +141,24 @@ class ServiceListItem extends React.Component {
         let serviceName = myService.name;
         let serviceDescription = myService.description;
         let serviceDetails = _.get(myService, "details", '');
-        let servicePrice = myService.amount;
-        let serviceInterval = _.get(myService,"interval",'');
         let category = _.get(myService, 'references.service_categories[0].name', '');
 
 
         let getPrice = ()=>{
-            if (myService.interval == 'day' && myService.interval_count == '1'){
-                // console.log("this is one time service");
-                if(myService.amount == 0){
-                    return ('Free');
-                }else{
-                    return (<span><Price value={myService.amount}/>
-                    <span className="one-time-charge-label"> One Time Charge</span></span>);
-                }
-            }else if (myService.interval == 'day' && (myService.interval_count == null || myService.interval_count == 'undefined')){
-                // console.log("this is custom service");
-                return ('Custom Pricing');
+            let serType = myService.type;
+            if (serType == "subscription"){
+                return (
+                    <span>
+                        <Price value={myService.amount}/>
+                        {myService.interval_count == 1 ? ' /' : ' / ' + myService.interval_count} {' '+myService.interval}
+                    </span>
+                );
+            }else if (serType == "one_time"){
+                return (<span><Price value={myService.amount}/></span>);
+            }else if (serType == "custom"){
+                return (<span/>);
             }else{
-                // console.log('this is subscription service or something else');
-                return (<span><Price value={myService.amount}/>/{myService.interval}</span>);
+                return (<span><Price value={myService.amount}/></span>)
             }
         };
 
@@ -187,7 +185,7 @@ class ServiceListItem extends React.Component {
                         <div className="card-body" ref="myCardBody">
                             <p>{serviceDescription}</p>
                             {this.state.opened &&
-                                <div className="service-details" dangerouslySetInnerHTML={this.createMarkup(serviceDetails)} ref="myCardDetails"/>
+                            <div className="service-details" dangerouslySetInnerHTML={this.createMarkup(serviceDetails)} ref="myCardDetails"/>
                             }
                         </div>
                         <div className="card-footer">
