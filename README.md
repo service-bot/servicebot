@@ -1,7 +1,22 @@
 # ServiceBot
 
 ServiceBot is an open source platform to manage the complexities involved with providing
-services. 
+services.
+
+## Demo
+**User Login Credentials:**
+
+Email: customer@servicebot.io
+
+Password: password
+
+**Admin Login Credentials:**
+
+Email: admin@servicebot.io
+
+Password: password
+
+[![alt text](https://servicebot.io/servicebot.png)](https://demo.servicebot.cloud)
 
 ## Installation
 
