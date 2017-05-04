@@ -8,13 +8,13 @@ services.
 
 Email: customer@servicebot.io
 
-Password: password
+Password: demo
 
 **Admin Login Credentials:**
 
 Email: admin@servicebot.io
 
-Password: password
+Password: demo
 
 [![alt text](https://servicebot.io/servicebot.png)](https://demo.servicebot.cloud)
 
