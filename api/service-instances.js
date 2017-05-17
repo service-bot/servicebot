@@ -172,7 +172,7 @@ module.exports = function(router) {
         })
     });
 
-    router.delete("/service-instances/:id/files/:fid", auth(), function(req, res, next){
+    router.delete("/service-instances/:id/files/:fid", validate(File, 'fid'), auth(), function(req, res, next){
         File.findOne("id", req.params.fid, function(file){
             file.delete(function(){
                 EventLogs.logEvent(req.user.get('id'), `service-instances ${req.params.id} had file ${req.params.fid} deleted by user ${req.user.get('email')}`);
@@ -181,7 +181,8 @@ module.exports = function(router) {
         })
     });
 
-    router.get("/service-instances/:id/files/:fid", auth(null, ServiceInstance), function(req, res, next){
+
+    router.get("/service-instances/:id/files/:fid", validate(File, 'fid'), auth(null, ServiceInstance), function(req, res, next){
         File.findOne("id", req.params.fid, function(file){
             let options = {
                 headers:{
