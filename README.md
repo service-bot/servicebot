@@ -1,4 +1,7 @@
-# ServiceBot
+
+<p align="center">
+<img width="200" heigth="200" src="https://servicebot.io/images/servicebot-beta-logo.png">
+</p>
 
 ServiceBot is an open source platform to manage the complexities involved with providing
 services.
