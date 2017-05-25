@@ -5,8 +5,9 @@
 </a>
 </p>
 
-ServiceBot is an open source platform to manage the complexities involved with providing
-services.
+___
+<p align="center">ServiceBot is an open source platform to manage the complexities involved with providing
+services.</p>
 
 ## Demo
 **User Login Credentials:**
