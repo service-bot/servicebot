@@ -1,7 +1,7 @@
 
 <p align="center">
 <a href="https://servicebot.io">
-<img width="200" heigth="200" src="https://servicebot.io/images/servicebot-beta-logo.png">
+<img width="250" heigth="250" src="https://servicebot.io/images/servicebot-beta-logo.png">
 </a>
 </p>
 
