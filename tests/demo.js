@@ -968,42 +968,6 @@ module.exports = new Promise(function (resolve_top, reject_top) {
 
 });
 
-/*
-
-
- User.batchCreate(demo_users, function (result) {
- console.log(result);
- ServiceCategory.batchCreate(demo_service_category, function (result) {
- console.log(result);
- ServiceTemplate.batchCreate(demo_service_template, function (result) {
- console.log(result);
- ServiceTemplateProperty.batchCreate(demo_service_template_properties, function (result) {
- console.log(result);
- //TODO call instance request here
- ServiceInstance.batchCreate(demo_service_instance, function (result) {
- console.log(result);
- //TODO Wont have to do this one
- ServiceInstanceProperty.batchCreate(demo_service_instance_properties, function (result) {
- console.log(result);
- Invoice.batchCreate(demo_invoices, function (result){
- console.log(result);
- Transaction.batchCreate(demo_transactions, function (result) {
- console.log(result);
- InvoiceLine.batchCreate(demo_invoice_lines, function (result) {
- console.log(result);
- resolve(result);
- });
- });
- });
- });
- });
- });
- });
- });
- });
- */
-
-
 //user
 //service template
     //service template properties
