@@ -6,8 +6,7 @@
 </p>
 
 ___
-<p align="center">ServiceBot is an open source platform to manage the complexities involved with providing
-services.</p>
+<p align="center">ServiceBot is a platform for a business to sell their services and automate the administrative tasks such as billing and invoicing.</p>
 
 ## Demo
 **User Login Credentials:**
