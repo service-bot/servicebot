@@ -42,7 +42,6 @@ import ServiceInstanceForm from "./components/elements/forms/service-instance-fo
 import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
-
 render((
     <Router history={browserHistory}>
         <Route name="Home" path="/" component={App} >
@@ -91,6 +90,7 @@ render((
             <Route name="Manage Subscriptions" path="/service-instance" component={ManageSubscriptions}/>
             <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
             <Route path="email-templates/:templateId" component={EmailTemplateForm}/>
+
         </Route>
         <Route name="Embed" path={"/service/:serviceId/embed"} component={Embed}/>
         <Route name="Automated Installation" path="setup" component={Setup}/>

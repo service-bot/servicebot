@@ -22,6 +22,11 @@ class DataChild extends React.Component {
 
 }
 
+DataChild.defaultProps = {
+    isDataChild : true
+}
+
+
 class DataInput extends React.Component{
     constructor(props){
         super(props)
@@ -93,7 +98,9 @@ class DataForm extends React.Component {
                 currModel = child.props.modelName || modelName;
                 currObject = child.props.objectName || objectName;
             }
-            if(child.type.name == "DataChild"){
+
+            //todo: fix dirty hack
+            if(child.props.isDataChild){
                 if(initialChildren[currModel] == null){
                     initialChildren[currModel] = {[currObject] : {}};
                 }else{

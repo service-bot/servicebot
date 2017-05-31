@@ -9,10 +9,11 @@ import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import {setOptions, SET_OPTIONS, SET_UID} from "./utilities/actions"
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import cookie from 'react-cookie';
 
 
 
-function appReducer(state = {options: {}, uid : 0}, action) {
+function appReducer(state = {options: {}, uid : cookie.load("uid")}, action) {
     switch(action.type){
         case SET_OPTIONS :
             return Object.assign({}, state, {
