@@ -8,7 +8,7 @@ import update from 'immutability-helper';
 import { connect } from 'react-redux';
 import Buttons from "../buttons.jsx";
 import ImageUploader from "../../utilities/image-uploader.jsx";
-
+import {setOptions} from "../../utilities/actions"
 class SystemSettingsForm extends React.Component {
 
     constructor(props){
@@ -166,12 +166,6 @@ class SystemSettingsForm extends React.Component {
                 </div>
             );
         }
-    }
-}
-function setOptions(options){
-    return {
-        type: "SET_OPTIONS",
-        options
     }
 }
 

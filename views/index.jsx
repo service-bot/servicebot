@@ -2,8 +2,6 @@ import React from 'react';
 import {render} from 'react-dom';
 import { Router, Route, IndexRoute, IndexRedirect, browserHistory } from 'react-router';
 import Promise from "promise-polyfill";
-let api = "/api/v1/users/bigman";
-let api2 = "/api/v1/uiser/asd";
 // App
 import App from "./components/app.jsx";
 import Home from "./components/pages/home.jsx";

@@ -2,21 +2,22 @@ import React from 'react';
 import cookie from 'react-cookie';
 import Link from 'react-router';
 import Authorizer from '../utilities/authorizer.jsx'
+import {connect } from "react-redux";
+
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid
+    }
+}
 
 class Avatar extends React.Component {
 
     constructor(props){
         super(props);
-        let uid = null;
-        if(!this.props.uid){
-            uid = cookie.load("uid");
-        }else{
-            uid = this.props.uid;
-        }
-
         this.state = {
             size: this.props.size,
-            avatarURL: `/api/v1/users/${uid}/avatar`
+            avatarURL: `/api/v1/users/${props.uid}/avatar`
         };
     }
 
@@ -24,7 +25,7 @@ class Avatar extends React.Component {
 
         return (
             <div className={`badge badge-${this.state.size}`}>
-                <img id="edit-avatar-img" src={this.state.avatarURL} ref="avatar" className="img-circle" alt="badge"/>
+                <img id="edit-avatar-img" src={`/api/v1/users/${this.props.uid}/avatar`} ref="avatar" className="img-circle" alt="badge"/>
             </div>
         );
 
@@ -32,4 +33,4 @@ class Avatar extends React.Component {
 
 }
 
-export default Avatar
+export default connect(mapStateToProps)(Avatar)

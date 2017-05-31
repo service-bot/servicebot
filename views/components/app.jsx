@@ -7,21 +7,21 @@ import PropTypes from 'prop-types';
 import {browserHistory} from 'react-router';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
+import {setOptions, SET_OPTIONS, SET_UID} from "./utilities/actions"
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
-function setOptions(options){
-    return {
-        type: "SET_OPTIONS",
-        options
-    }
-}
 
-function appReducer(state = {options: {}}, action) {
+
+function appReducer(state = {options: {}, uid : 0}, action) {
     switch(action.type){
-        case "SET_OPTIONS" :
+        case SET_OPTIONS :
             return Object.assign({}, state, {
                 options: action.options
-            })
+            });
+        case SET_UID :
+            return Object.assign({}, state, {
+                uid : action.uid
+            });
         default:
             return state;
     }
