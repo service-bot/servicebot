@@ -224,6 +224,11 @@ User.prototype.purgeData = function (callback) {
             ServiceInstance.findAll('user_id', self.data.id, function (services) {
                 Promise.all(services.map(function (service) {
                     return new Promise(function (resolve, reject) {
+                        service.deleteFiles(function(err){
+                            if(err){
+                                console.log(`ERROR removing files for Instance: ${service.data.id} - ${err}`);
+                            }
+                        });
                         service.delete(function (err, result) {
                             if(!err) {
                                 console.log(`Service Removed: ${service.data.id}`);
