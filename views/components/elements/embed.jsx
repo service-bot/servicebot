@@ -25,6 +25,8 @@ class Embed extends React.Component {
         for(let i = 0; i < attributeRemove.length; i++){
             document.body.removeAttribute(attributeRemove[i]);
         }
+
+        this.getCoverImage = this.getCoverImage.bind(this);
     }
 
     componentDidMount() {
@@ -37,6 +39,23 @@ class Embed extends React.Component {
             }
             self.setState({loading:false});
         })
+
+        this.getCoverImage();
+    }
+
+    getCoverImage(){
+        let self = this;
+        fetch(`/api/v1/service-templates/${this.props.params.serviceId}/image`).then(function(response) {
+            if(response.ok) {
+                return response.blob();
+            }
+            throw new Error('Network response was not ok.');
+        }).then(function(myBlob) {
+            let objectURL = URL.createObjectURL(myBlob);
+            self.setState({image: objectURL});
+        }).catch(function(error) {
+            // console.log("There was problem fetching your image:" + error.message);
+        });
     }
 
     getRandomColor(){
@@ -103,7 +122,7 @@ class Embed extends React.Component {
 
         let headerStyle = {}
         if(this.state.image){
-            headerStyle = {"background-image" : `url('${this.state.image}')`, "color": "#fff", "height": "150px"};
+            headerStyle = {"background-image" : `url('${this.state.image}')`, "background-size":"cover", "background-position":"center center", "color": "#fff", "height": "150px"};
         }else{
             headerStyle = {"backgroundColor" : urlQuery.headerColor || this.getRandomColor(), "color": "#fff", "height": "150px"};
         }
@@ -135,8 +154,7 @@ class Embed extends React.Component {
                     <div id={`service-${service.id}`} className="card service dark" style={cardStyle}>
 
                         <div className={`card-image-holder ${this.state.image ? 'image' : 'no-image'}`} style={headerStyle}>
-                            {this.state.image ? <img src={this.state.image}/> :
-                                <h3 className="card-service-company">{''}</h3>}
+
                                 {/*service.references.service_categories[0].name*/}
                         </div>
 
