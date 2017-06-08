@@ -1,14 +1,11 @@
 import React from 'react';
-import Alert from 'react-s-alert';
 import Fetcher from "./utilities/fetcher.jsx"
 import NavBootstrap from "./layouts/nav-bootstrap.jsx"
 import Footer from "./layouts/footer.jsx"
-import PropTypes from 'prop-types';
 import {browserHistory} from 'react-router';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import {setOptions, SET_OPTIONS, SET_UID} from "./utilities/actions"
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import cookie from 'react-cookie';
 
 
