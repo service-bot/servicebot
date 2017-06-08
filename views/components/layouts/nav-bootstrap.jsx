@@ -5,7 +5,14 @@ import cookie from 'react-cookie';
 import ModalInvoice from '../elements/modals/modal-invoice.jsx';
 import $ from "jquery";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
+
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid
+    }
+}
 
 const AnonymousLinks = ({signUpEnabled}) => (
     <ul className="nav navbar-nav navbar-right">
@@ -33,8 +40,7 @@ class NavBootstrap extends React.Component {
 
     constructor(props){
         super(props);
-        let uid = cookie.load("uid");
-        this.state = {InvoiceModal: false, uid: uid, sidebar: false};
+        this.state = {InvoiceModal: false, sidebar: false};
         this.onOpenInvoiceModal = this.onOpenInvoiceModal.bind(this);
         this.onClose = this.onClose.bind(this);
         this.getMenuItems = this.getMenuItems.bind(this);
@@ -95,8 +101,8 @@ class NavBootstrap extends React.Component {
                            role="button" aria-haspopup="true" aria-expanded="false">Billing <span className="caret"/></a>
                         <ul className="dropdown-menu">
                             <li><Link onClick={this.onOpenInvoiceModal}>Upcoming Invoice</Link></li>
-                            <li><Link to={`/billing-history/${this.state.uid}`}>Billing History</Link></li>
-                            <li><Link to={`/billing-settings/${this.state.uid}`}>Billing Settings</Link></li>
+                            <li><Link to={`/billing-history/${this.props.uid}`}>Billing History</Link></li>
+                            <li><Link to={`/billing-settings/${this.props.uid}`}>Billing Settings</Link></li>
                         </ul>
                     </li>
                 </ul>
@@ -150,7 +156,7 @@ class NavBootstrap extends React.Component {
                                 <li>
                                     <div className="nav-profile badge badge-sm">
                                         <Link to="/profile">
-                                            <img id="avatar-img" src={`/api/v1/users/${this.state.uid}/avatar`}
+                                            <img id="avatar-img" src={`/api/v1/users/${this.props.uid}/avatar`}
                                                  ref="avatar" className="img-circle" alt="badge"/>
                                             {this.state.loadingImage && <Load/> }
                                         </Link>
@@ -172,4 +178,4 @@ class NavBootstrap extends React.Component {
     }
 }
 
-export default NavBootstrap;
+export default connect(mapStateToProps)(NavBootstrap);

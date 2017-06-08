@@ -246,7 +246,7 @@ class ServiceTemplateForm extends React.Component {
     //This is for the input type selection for the custom fields
     inputTypesFilter(parentValue){
         return function(child){
-            if(child.type && child.type.name == 'TagsInput' && parentValue == 'select'){
+            if(child.type && child.props.isTags && parentValue == 'select'){
                 return true;
             }else if(child.type && child.props.type == 'select' && child.props.name == 'value' && parentValue == 'select') {
                 return true;
@@ -254,6 +254,8 @@ class ServiceTemplateForm extends React.Component {
                 return true;
             }else if(child.type && child.props.type == 'checkbox' && parentValue == 'checkbox'){
                 return true;
+            }else{
+                return false;
             }
         }
     }
@@ -298,13 +300,10 @@ class ServiceTemplateForm extends React.Component {
             let interval_count = templateData.interval_count;
 
             if (interval == 'day' && interval_count == '1'){
-                console.log("this is one time service");
                 return ('_ONE_TIME');
             }else if (interval == 'day' && (interval_count == null || interval_count == 'undefined')){
-                console.log("this is custom service");
                 return ('_CUSTOM');
             }else{
-                console.log('this is subscription service or something else');
                 return ('_SUBSCRIPTION');
             }
         }else{
@@ -497,11 +496,12 @@ class ServiceTemplateForm extends React.Component {
 
                                     let defaultOptions = null;
                                     if(prop.prop_input_type == "select"){
+                                        console.log("IN SELECT!");
                                         defaultOptions = (
                                             <div>
                                                 <label>Available Values</label>
                                                 <TagsInput onlyUnique={true} name="prop_values" value={prop.prop_values ? prop.prop_values : []}
-                                                           onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                                           isTags={true} onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
                                             </div>);
                                     }else{
                                         console.log("propblem getting the default options", prop);
@@ -562,13 +562,12 @@ class ServiceTemplateForm extends React.Component {
 
                                             <CustomPropNameField name="prop_label" objectName={prop.objectName}
                                                                  onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
                                             <Inputs type={'select'} name="prop_input_type" label="Input Type" defaultValue={'text'}
                                                     options={[{'Text Box':'text'},{'Select List':'select'},{'Check Box':'checkbox'}]} filter={self.inputTypesFilter}
                                                     onChange={function(){}} receiveOnChange={true} receiveValue={true} >
 
                                                 <TagsInput onlyUnique={true} name="prop_values" value={[]}
-                                                           onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                                           isTags={true} onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
 
 
                                                 <Inputs type="text" name="value" label="Default Value" defaultValue=""

@@ -1,27 +1,25 @@
 import React from 'react';
-import Alert from 'react-s-alert';
 import Fetcher from "./utilities/fetcher.jsx"
 import NavBootstrap from "./layouts/nav-bootstrap.jsx"
 import Footer from "./layouts/footer.jsx"
-import PropTypes from 'prop-types';
 import {browserHistory} from 'react-router';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import {setOptions, SET_OPTIONS, SET_UID} from "./utilities/actions"
+import cookie from 'react-cookie';
 
-function setOptions(options){
-    return {
-        type: "SET_OPTIONS",
-        options
-    }
-}
 
-function appReducer(state = {options: {}}, action) {
+
+function appReducer(state = {options: {}, uid : cookie.load("uid")}, action) {
     switch(action.type){
-        case "SET_OPTIONS" :
+        case SET_OPTIONS :
             return Object.assign({}, state, {
                 options: action.options
-            })
+            });
+        case SET_UID :
+            return Object.assign({}, state, {
+                uid : action.uid
+            });
         default:
             return state;
     }

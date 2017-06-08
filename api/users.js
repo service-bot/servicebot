@@ -38,8 +38,8 @@ module.exports = function(router, passport) {
     router.get('/users/:id/avatar', validate(), auth(), function(req, res, next){
         let id = req.params.id;
         File.findFile(avatarFilePath, id, function(avatar){
-            if(avatar){
-                let file = new File(avatar);
+            if(avatar.length > 0){
+                let file = avatar[0];
                 //todo: fix problem with file name containing a comma
                 let options = {
                     headers:{
@@ -62,8 +62,8 @@ module.exports = function(router, passport) {
         file.user_id = req.params.id;
         file.name = file.originalname;
         File.findFile(avatarFilePath, req.params.id, function(avatar){
-            if(avatar) {
-                let avatarToDelete = new File(avatar);
+            if(avatar.length > 0) {
+                let avatarToDelete = avatar[0];
                 avatarToDelete.delete(function () {
                 });
             }

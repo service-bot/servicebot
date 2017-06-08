@@ -4,6 +4,17 @@ import Fetcher from "../../utilities/fetcher.jsx";
 import update from "immutability-helper";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import Alert from 'react-s-alert';
+import {connect} from "react-redux";
+import {setUid} from "../../utilities/actions";
+import cookie from 'react-cookie';
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setUid: (uid) => {
+            dispatch(setUid(uid))
+        }
+    }
+}
 
 class Login extends React.Component {
 
@@ -27,6 +38,7 @@ class Login extends React.Component {
             if(!result.error) {
                 console.log(result);
                 localStorage.setItem("permissions", result.permissions);
+                that.props.setUid(cookie.load("uid"));
                 if(that.props.location.state && that.props.location.state.fromSignup){
                     return browserHistory.go(-2);
                 }
@@ -92,4 +104,4 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+export default connect(null, mapDispatchToProps)(Login);

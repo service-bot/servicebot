@@ -5,6 +5,17 @@ import Inputs from "../../utilities/inputs.jsx";
 import {Link, browserHistory} from 'react-router';
 import {DataForm, DataChild} from "../../utilities/data-form.jsx";
 let _ = require("lodash");
+import {setUid} from "../../utilities/actions";
+import {connect} from "react-redux";
+import cookie from 'react-cookie';
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setUid: (uid) => {
+            dispatch(setUid(uid))
+        }
+    }
+}
 
 class UserFormRegister extends React.Component {
 
@@ -24,10 +35,11 @@ class UserFormRegister extends React.Component {
         console.log("inside handle response", response);
         if(!response.error){
             localStorage.setItem("permissions", response.permissions);
+            this.props.setUid(cookie.load("uid"));
             this.setState({success: true});
+
             // console.log("LOCATION!", that.props.location);
             if(this.props.location.state && this.props.location.state.fromLogin){
-                console.log("HELLO!!!!!!!!!!!!");
                 return browserHistory.go(-2);
             }
             browserHistory.goBack();
@@ -104,4 +116,4 @@ class UserFormRegister extends React.Component {
     }
 }
 
-export default UserFormRegister;
+export default connect(mapDispatchToProps)(UserFormRegister);

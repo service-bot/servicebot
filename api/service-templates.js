@@ -58,8 +58,8 @@ module.exports = function (router) {
     router.get('/service-templates/:id/icon', validate(ServiceTemplate), function (req, res, next) {
         let id = req.params.id;
         File.findFile(iconFilePath, id, function (icon) {
-            if (icon) {
-                let file = new File(icon);
+            if (icon.length > 0) {
+                let file = icon[0];
                 let options = {
                     headers: {
                         'Content-Disposition': "inline; filename=" + file.get("name")
@@ -81,8 +81,8 @@ module.exports = function (router) {
         file.name = file.originalname;
         File.findFile(iconFilePath, req.params.id, function (templateIcon) {
             console.log(templateIcon)
-            if (templateIcon) {
-                let iconToDelete = new File(templateIcon);
+            if (templateIcon.length > 0) {
+                let iconToDelete = templateIcon[0];
                 iconToDelete.delete(function () {
                 });
             }
@@ -98,11 +98,10 @@ module.exports = function (router) {
 
 
     router.get('/service-templates/:id/image', validate(ServiceTemplate), function (req, res, next) {
-        console.log("we got into the image thing")
         let id = req.params.id;
         File.findFile(imageFilePath, id, function (image) {
-            if (image) {
-                let file = new File(image);
+            if (image.length > 0) {
+                let file = image[0];
                 let options = {
                     headers: {
                         'Content-Disposition': "inline; filename=" + file.get("name")
@@ -125,8 +124,8 @@ module.exports = function (router) {
         file.name = file.originalname;
         File.findFile(imageFilePath, req.params.id, function (image) {
             console.log(image)
-            if (image) {
-                let imageToDelete = new File(image);
+            if (image.length > 0) {
+                let imageToDelete = image[0];
                 imageToDelete.delete(function () {
                 });
             }

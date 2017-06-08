@@ -30,8 +30,8 @@ module.exports = function (router) {
     router.get(`/system-options/file/:id`, function (req, res, next) {
         if (systemFiles.indexOf(req.params.id) > -1) {
             File.findFile(systemFilePath, req.params.id, function (image) {
-                if (image) {
-                    let file = new File(image);
+                if (image.length > 0) {
+                    let file = image[0];
                     let options = {
                         headers: {
                             'Content-Disposition': "inline; filename=" + file.get("name")
@@ -94,8 +94,8 @@ module.exports = function (router) {
             file.name = file.originalname;
             file.user_id = req.user.get('id');
             File.findFile(systemFilePath, req.params.id, function (brandLogo) {
-                if (brandLogo) {
-                    let logoToDelete = new File(brandLogo);
+                if (brandLogo.length > 0) {
+                    let logoToDelete = brandLogo[0];
                     logoToDelete.delete(function () {
                     });
                 }
