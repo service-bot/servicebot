@@ -30,7 +30,7 @@ class ResetPassword extends React.Component {
             if(!result.error) {
                 console.log(result);
                 localStorage.setItem("permissions", result.permissions);
-                browserHistory.goBack();
+                browserHistory.push("/login");
             }
         })
     }
