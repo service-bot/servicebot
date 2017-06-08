@@ -3,6 +3,7 @@ import Fetcher from '../utilities/fetcher.jsx'
 import {Link} from 'react-router';
 import _ from "lodash";
 import Load from '../utilities/load.jsx';
+import Price from '../utilities/price.jsx';
 import DateFormat from '../utilities/date-format.jsx';
 
 // Accepts the following URL query
@@ -24,6 +25,8 @@ class Embed extends React.Component {
         for(let i = 0; i < attributeRemove.length; i++){
             document.body.removeAttribute(attributeRemove[i]);
         }
+
+        this.getCoverImage = this.getCoverImage.bind(this);
     }
 
     componentDidMount() {
@@ -36,6 +39,23 @@ class Embed extends React.Component {
             }
             self.setState({loading:false});
         })
+
+        this.getCoverImage();
+    }
+
+    getCoverImage(){
+        let self = this;
+        fetch(`/api/v1/service-templates/${this.props.params.serviceId}/image`).then(function(response) {
+            if(response.ok) {
+                return response.blob();
+            }
+            throw new Error('Network response was not ok.');
+        }).then(function(myBlob) {
+            let objectURL = URL.createObjectURL(myBlob);
+            self.setState({image: objectURL});
+        }).catch(function(error) {
+            // console.log("There was problem fetching your image:" + error.message);
+        });
     }
 
     getRandomColor(){
@@ -102,10 +122,28 @@ class Embed extends React.Component {
 
         let headerStyle = {}
         if(this.state.image){
-            headerStyle = {"background-image" : `url('${this.state.image}')`, "color": "#fff", "height": "150px"};
+            headerStyle = {"background-image" : `url('${this.state.image}')`, "background-size":"cover", "background-position":"center center", "color": "#fff", "height": "150px"};
         }else{
             headerStyle = {"backgroundColor" : urlQuery.headerColor || this.getRandomColor(), "color": "#fff", "height": "150px"};
         }
+
+        let getPrice = ()=>{
+            let serType = service.type;
+            if (serType == "subscription"){
+                return (
+                    <span>
+                        <Price value={service.amount}/>
+                        {service.interval_count == 1 ? ' /' : ' / ' + service.interval_count} {' '+service.interval}
+                    </span>
+                );
+            }else if (serType == "one_time"){
+                return (<span><Price value={service.amount}/></span>);
+            }else if (serType == "custom"){
+                return (<span/>);
+            }else{
+                return (<span><Price value={service.amount}/></span>)
+            }
+        };
 
 
         if(this.state.loading){
@@ -116,8 +154,7 @@ class Embed extends React.Component {
                     <div id={`service-${service.id}`} className="card service dark" style={cardStyle}>
 
                         <div className={`card-image-holder ${this.state.image ? 'image' : 'no-image'}`} style={headerStyle}>
-                            {this.state.image ? <img src={this.state.image}/> :
-                                <h3 className="card-service-company">{''}</h3>}
+
                                 {/*service.references.service_categories[0].name*/}
                         </div>
 
@@ -149,10 +186,11 @@ class Embed extends React.Component {
 
                             {typeof(urlQuery.noCost) === 'undefined' &&
                             <span className="seller pull-left" style={textColor}>
-                                <span className="price" style={textColor}>{service.amount}</span>/{service.interval}</span>
+                                <span className="price">{getPrice()}</span>
+                            </span>
                             }
 
-                            <Link style={textColor} to={`//${this.props.params.serviceId}/request`} className="btn btn-white btn-flat pull-right" target="_blank">{requestButton}</Link>
+                            <Link style={textColor} to={`/service-catalog/${this.props.params.serviceId}/request`} className="btn btn-white btn-flat pull-right" target="_blank">{requestButton}</Link>
                         </div>
                     </div>
                 </div>
