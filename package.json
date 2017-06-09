@@ -36,7 +36,6 @@
     "immutability-helper": "^2.1.1",
     "imports-loader": "^0.7.0",
     "install": "^0.8.6",
-    "jade": "~1.11.0",
     "jquery": "^3.1.1",
     "jsonwebtoken": "^7.2.1",
     "knex": "^0.12.6",
