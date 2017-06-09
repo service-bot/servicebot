@@ -122,7 +122,7 @@ class Embed extends React.Component {
 
         let headerStyle = {}
         if(this.state.image){
-            headerStyle = {"background-image" : `url('${this.state.image}')`, "background-size":"cover", "background-position":"center center", "color": "#fff", "height": "150px"};
+            headerStyle = {"backgroundImage" : `url('${this.state.image}')`, "backgroundSize":"cover", "backgroundPosition":"center center", "color": "#fff", "height": "150px"};
         }else{
             headerStyle = {"backgroundColor" : urlQuery.headerColor || this.getRandomColor(), "color": "#fff", "height": "150px"};
         }
