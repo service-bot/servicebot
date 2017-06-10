@@ -37,11 +37,36 @@ class Home extends React.Component {
     }
 
     render () {
-        var self = this;
+
+        let featuredAreaStyle = this.props.featuredAreaStyle || {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: '11',
+            textAlign: 'center',
+            color: 'white',
+        };
+
+        let featuredHeadingStyle = this.props.featuredHeadingStyle || {
+            fontSize: '90px',
+            marginBottom: '30px'
+        };
+
+        let featuredIntroStyle = this.props.featuredIntroStyle || {
+            fontSize: '34px'
+        };
+
         return(
             <div className="page-home">
                 <Featured>
-                    <SearchServiceBar searchValue={this.state.searchValue} handleChange={this.handleChange}/>
+                    <div className="featured-intro" style={featuredAreaStyle}>
+                        <h1 style={featuredHeadingStyle}>JD Photography</h1>
+                        <p style={featuredIntroStyle}>Looking for a local professional photographer? <br/> We offer a wide election of services at a reasonable price!</p>
+                        {this.state.searchBar &&
+                            <SearchServiceBar searchValue={this.state.searchValue} handleChange={this.handleChange}/>
+                        }
+                    </div>
                 </Featured>
                 <Content>
                     <ServiceList url={this.state.serviceUrl}/>

@@ -46,10 +46,6 @@ body.home .featured-bg{
 body.home #middle-column{
     z-index:20;
 }
-body.home .main .page-on-top{
-    margin-top: -50px;
-    z-index:100;
-}
 
 /* featured area */
 .featured-area {
