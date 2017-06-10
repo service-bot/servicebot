@@ -5,6 +5,7 @@ import Authorizer from "../utilities/authorizer.jsx"
 import {DataForm, DataChild} from "../utilities/data-form.jsx";
 import Featured from "../layouts/featured.jsx";
 import Content from "../layouts/content.jsx";
+import PageSection from "../layouts/page-section.jsx";
 import SearchServiceBar from "../elements/home/service-list-search.jsx";
 import ServiceList from "../elements/home/service-list.jsx";
 
@@ -69,11 +70,9 @@ class Home extends React.Component {
                     </div>
                 </Featured>
                 <Content>
-                    <div className="section">
-                        <div className="container">
-                            <ServiceList url={this.state.serviceUrl}/>
-                        </div>
-                    </div>
+                    <PageSection>
+                        <ServiceList url={this.state.serviceUrl}/>
+                    </PageSection>
                 </Content>
             </div>
         );

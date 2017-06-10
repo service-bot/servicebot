@@ -57,7 +57,9 @@ class ServiceList extends React.Component {
             let self = this;
             return(
                 <div className="all-services" ref="allServices">
-                    <h2 className="section-heading">{this.state.heading ? this.state.heading : "Featured Services"}</h2>
+                    <h2 className="section-heading">
+                        {this.state.heading ? this.state.heading : "Featured Services"}
+                    </h2>
                     <div className="row">
                         {this.state.services.map(service => (
                             <ServiceListItem key={`service-${service.id}`}
