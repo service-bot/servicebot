@@ -7,10 +7,6 @@ class FeaturedImage extends React.Component {
         super(props);
     }
 
-    componentDidMount(){
-
-    }
-
     render () {
 
         let style = {

@@ -33,9 +33,11 @@ h5{
     line-height: 1;
     text-align: left;
 }
-a:focus, a:hover{
-    color: #3498db;
+
+/*a:focus, a:hover{*/
+    /*color: #3498db;*/
 }
+
 span.capitalize{
     text-transform: capitalize;
 }
@@ -283,70 +285,12 @@ span.one-time-charge-label {
     background-color: #0d47a1;
 }
 
-/* nav */
-.navbar-default{
-    background-color: transparent;
-    border: none;
-}
-.navbar{
-    margin: 0px;
-    height: 90px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.11);
-    padding: 10px 40px 20px 40px;
-}
-.navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover{
-    color: white;
-}
-ul.nav.navbar-nav {
-    margin: 12px 0px;
-}
 
-.navbar-default .navbar-nav>li>a {
-    color: white;
-}
-
-.navbar-default .navbar-nav>li>a:hover {
-    color: #cecece;
-}
-.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
-    background-color: transparent;
-    color: white;
-}
-
-/* nav dropdown */
-.navbar .navbar-left-links a.dropdown-item{
-    font-weight: normal;
-    padding: 20px;
-    width: 180px;
-}
-.nav.nav-inline.navbar-left-icons{
-    display: none;
-}
-.navbar .dropdown-menu li a {
-    padding: 14px 15px;
-}
-.user-dropdown .badge:after {
-    content: " ";
-    position: absolute;
-    background: white;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    z-index: -10;
-}
 
 
 /* service template form review */
 #review-content .label{
     color: #212121;
-}
-
-
-.nav-logo {
-    padding-right: 20px;
-    margin: 4px 0px;
 }
 
 /* sweet alert */
@@ -595,10 +539,6 @@ body.login .footer{
     }
     #create-new-service, .data-table-top-button{
         position: absolute;
-    }
-    .navbar-nav>li>button {
-        margin-top: 8px;
-        margin-bottom: 8px;
     }
 }
 /* iPad or smaller */

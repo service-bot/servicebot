@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
-import cookie from 'react-cookie';
 import ModalInvoice from '../elements/modals/modal-invoice.jsx';
 import $ from "jquery";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
@@ -12,7 +11,7 @@ const mapStateToProps = (state, ownProps) => {
     return {
         uid: state.uid
     }
-}
+};
 
 const AnonymousLinks = ({signUpEnabled}) => (
     <ul className="nav navbar-nav navbar-right">
@@ -21,8 +20,7 @@ const AnonymousLinks = ({signUpEnabled}) => (
         <li><Link to="signup">Sign up</Link></li>
         }
     </ul>
-
-)
+);
 
 const getSignUpStatus = (state) => {
     if(!state.options || !state.options.allow_registration){
@@ -32,7 +30,7 @@ const getSignUpStatus = (state) => {
     return {
         signUpEnabled: (state.options.allow_registration.value == "true")
     }
-}
+};
 
 const VisibleAnonymousLinks = connect(getSignUpStatus)(AnonymousLinks);
 
@@ -111,7 +109,7 @@ class NavBootstrap extends React.Component {
     }
 
     toggleSideBar(){
-        let self = this
+        let self = this;
         this.setState({sidebar: !this.state.sidebar}, function () {
             if(self.state.sidebar){
                 document.body.classList.add('layout-collapsed');
@@ -163,7 +161,7 @@ class NavBootstrap extends React.Component {
                                     </div>
                                 </li>
                                 <li>
-                                    <button className="btn btn-rounded btn-outline btn-white btn-signout"
+                                    <button className="btn btn-link btn-signout"
                                             onClick={this.props.handleLogout}>Log Out</button>
                                 </li>
                             </ul>
