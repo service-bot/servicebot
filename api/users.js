@@ -164,7 +164,7 @@ module.exports = function(router, passport) {
                                 let apiUrl = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + result.get("token");
                                 let frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
                                 EventLogs.logEvent(req.user.get('id'), `users ${req.body.email} was invited by user ${req.user.get('email')}`);
-                                res.locals.json = {url: frontEndUrl, api:apiUrl};
+                                res.locals.json = {token: result.get("token"), url: frontEndUrl, api:apiUrl};
                                 result.set('url', frontEndUrl);
                                 result.set('api', apiUrl);
                                 res.locals.valid_object = result;
