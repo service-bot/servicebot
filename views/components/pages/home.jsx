@@ -69,7 +69,11 @@ class Home extends React.Component {
                     </div>
                 </Featured>
                 <Content>
-                    <ServiceList url={this.state.serviceUrl}/>
+                    <div className="section">
+                        <div className="container">
+                            <ServiceList url={this.state.serviceUrl}/>
+                        </div>
+                    </div>
                 </Content>
             </div>
         );

@@ -22,9 +22,7 @@ class ServiceList extends React.Component {
     componentDidMount() {
         let that = this;
         Fetcher(that.state.url).then(function(response){
-            // console.log(response);
             if(!response.error){
-                // console.log(response);
                 that.setState({services : response});
             }
             that.setState({loading:false});
@@ -49,7 +47,6 @@ class ServiceList extends React.Component {
     }
 
     render () {
-        // console.log(this.state.url);
 
         if(this.state.loading)
             return <Load/>;
@@ -60,7 +57,7 @@ class ServiceList extends React.Component {
             let self = this;
             return(
                 <div className="all-services" ref="allServices">
-                    <h2 className="bolder p-20 text-center">All Services</h2>
+                    <h2 className="section-heading">{this.state.heading ? this.state.heading : "Featured Services"}</h2>
                     <div className="row">
                         {this.state.services.map(service => (
                             <ServiceListItem key={`service-${service.id}`}

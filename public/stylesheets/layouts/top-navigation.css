@@ -103,12 +103,6 @@ ul.nav.navbar-nav.navbar-right > li > .badge{
   width: calc(100% - $left-sidebar-width);
 }
 
-[data-layout="top-navigation-1"] .main {
-  padding-left: 20px;
-  padding-right: 20px;
-  -ms-overflow-style: none;
-}
-
 [data-layout="top-navigation-1"] .left-sidebar-1 {
   position: fixed;
   top: 0;

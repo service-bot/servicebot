@@ -42,6 +42,30 @@ span.capitalize{
     text-transform: capitalize;
 }
 
+/* layouts */
+.main .section {
+    text-transform: uppercase;
+    padding: 60px 0px;
+    font-weight: bold;
+}
+
+.section-heading {
+    position: relative;
+    margin-bottom: 60px;
+    width: auto;
+    text-align: center;
+}
+
+.section-heading:after {
+    content: "";
+    width: 170px;
+    border-bottom: 6px solid black;
+    position: absolute;
+    left: 50%;
+    bottom: -24px;
+    transform: translateX(-50%);
+}
+
 /* forms */
 .form-control, .custom-file-control{
     color: rgba(0, 0, 0, 0.80);
