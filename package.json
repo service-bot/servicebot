@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "build": "./node_modules/.bin/webpack",
+    "dev-client": "./node_modules/.bin/webpack-dev-server --port 3002 --content-base public/",
     "fullStart": "./node_modules/.bin/webpack && node ./bin/www",
     "debug": "node $NODE_DEBUG_OPTION ./bin/www"
   },
