@@ -508,11 +508,12 @@ span.one-time-charge-label {
 /* footer */
 .footer {
     position: relative;
-    padding: 50px 0px 20px;
+    padding: 20px 0px;
     width: 100%;
     text-align: center;
     color: #b1b1b1;
     font-size: 0.7rem;
+    background-color: #000;
 }
 body.login .footer{
     /*position: absolute;*/

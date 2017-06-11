@@ -26,6 +26,7 @@
 .card.service .card-body p{
     font-size: 14px;
     font-weight: 100;
+    text-transform: initial;
 }
 .card-footer .price{
     width: 100%;
@@ -34,7 +35,7 @@
 .request-button {
     position: absolute;
     width: 100%;
-    bottom: -40px;
+    bottom: -50px;
 }
 .request-button a {
     width: 100%;
@@ -59,7 +60,7 @@
     color: #fff;
 }
 .card.service .card-block, .card.service .card-body, .card.service .card-footer{
-    padding: 10px 15px;
+    padding: 20px 15px 10px;
 }
 .card.service .card-body{
     height: 100%;
@@ -82,6 +83,7 @@
     line-height: 1.25rem;
     margin-bottom: 0px;
     font-weight: bolder;
+    padding: 15px;
 }
 .card-footer .btn{
     margin-bottom: 0px !important;

@@ -20,7 +20,8 @@ class ServiceListItem extends React.Component {
                 background: false,
                 category: false,
                 date: false,
-                cost: true
+                cost: true,
+                request_text: null
             },
             serviceOpened: {},
             opened: false,
@@ -141,9 +142,22 @@ class ServiceListItem extends React.Component {
             }else if (serType == "one_time"){
                 return (<span><Price value={myService.amount}/></span>);
             }else if (serType == "custom"){
-                return (<span/>);
+                return false;
             }else{
                 return (<span><Price value={myService.amount}/></span>)
+            }
+        };
+
+        let getRequestText = ()=>{
+            let serType = myService.type;
+            if (serType == "subscription"){
+                return ("Subscribe");
+            }else if (serType == "one_time"){
+                return ("Buy");
+            }else if (serType == "custom"){
+                return ("Request");
+            }else{
+                return ("")
             }
         };
 
@@ -172,7 +186,10 @@ class ServiceListItem extends React.Component {
                         <div className="card-footer">
                             <span className="price">{getPrice()}</span>
                             <div className="request-button">
-                                <Link to={this.props.url} className="btn btn-black">View</Link>
+                                <Link to={this.props.url} className="btn btn-black">
+                                    <span>{this.state.display_setting.request_text || getRequestText()} </span>
+                                    <span>{getPrice() ? getPrice() : ""}</span>
+                                </Link>
                             </div>
                         </div>
                     </div>

@@ -50,12 +50,12 @@ class Home extends React.Component {
         };
 
         let featuredHeadingStyle = this.props.featuredHeadingStyle || {
-            fontSize: '90px',
+            fontSize: '72px',
             marginBottom: '30px'
         };
 
         let featuredIntroStyle = this.props.featuredIntroStyle || {
-            fontSize: '34px'
+            fontSize: '26px'
         };
 
         return(
