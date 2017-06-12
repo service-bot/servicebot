@@ -9,8 +9,6 @@ class ServiceListItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            boxColor: false,
-            boxColor2: false,
             image: null,
             icon: null,
             imageColor: false,
@@ -25,12 +23,8 @@ class ServiceListItem extends React.Component {
                 request_text: null,
                 item_count: 6
             },
-            serviceOpened: {},
-            opened: false,
             height: 0
         };
-        this.openService = this.openService.bind(this);
-        this.closeService = this.closeService.bind(this);
         this.getCoverImage = this.getCoverImage.bind(this);
         this.getIcon = this.getIcon.bind(this);
     }
@@ -87,33 +81,6 @@ class ServiceListItem extends React.Component {
         return ReactDOM.findDOMNode(this.refs.myCard).getBoundingClientRect();
     }
 
-    openService(e){
-        e.preventDefault();
-        let myCard = this.getMyCardSize();
-        let windowWidth = window.innerWidth;
-        let myCardWidth = this.getMyCardSize().width*1.40;
-        // console.log(window);
-        // console.log('myCard', myCard);
-        // console.log('window size', windowWidth);
-
-        let cardOpenedStyle = {
-            "position": "fixed",
-            "height": "80vh",
-            "width": `${myCardWidth}px`,
-            "top": "50%",
-            "left": `${(windowWidth-(myCardWidth))/2}px`,
-            "zIndex": "100",
-            "transform": "translateY(-50%)"
-        };
-        document.body.classList.add(`no-scroll`);
-        this.setState({serviceOpened: cardOpenedStyle, opened: true});
-    }
-
-    closeService(e){
-        e.preventDefault();
-        document.body.classList.remove(`no-scroll`);
-        this.setState({serviceOpened: {}, opened: false});
-    }
 
     createMarkup(html) {
         return {__html: html};
