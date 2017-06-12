@@ -9,6 +9,7 @@ import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import ModalPaymentSetup from "../../elements/modals/modal-payment-setup.jsx"
 import Buttons from "../../elements/buttons.jsx";
 import Alerts from "../../elements/alerts.jsx";
+import IconHeading from "../../layouts/icon-heading.jsx";
 
 let _ = require("lodash");
 
@@ -118,7 +119,6 @@ class ServiceRequestForm extends React.Component {
         }else{
             this.setState({showPaymentInputs : true});
         }
-
     }
 
     showFundsModal(e){
@@ -262,7 +262,7 @@ class ServiceRequestForm extends React.Component {
                 const references = this.state.template.references.service_template_properties.length > 0 ? this.state.template.references.service_template_properties : false;
                 console.log("fields", fields);
 
-                let submitButton = <Buttons buttonClass="btn-primary" btnType="primary" text="Submit Request" type="submit" value="submit"/>;
+                let submitButton = <Buttons buttonClass="btn-primary btn-bar" size="lg" btnType="primary" text="Submit Request" type="submit" value="submit"/>;
                 if(this.state.template.amount > 0 && !this.state.hasFund){
                     submitButton = <Buttons buttonClass="btn-primary" btnType="primary" text="Submit Request" onClick={this.showFundsModal}/>
                 }
@@ -297,118 +297,119 @@ class ServiceRequestForm extends React.Component {
                                   url={`/api/v1/service-templates/${this.state.templateId}/request`}>
 
                             <div className="row">
-
-                                <div className="basic-info col-md-6 col-md-offset-3">
-                                    <h2>Service Details</h2>
-                                    <div dangerouslySetInnerHTML={{__html: this.state.template.details}}/>
-                                </div>
-
-                                <Authorizer permissions="can_administrate">
-                                <div className="basic-info col-md-6 col-md-offset-3">
-                                    <h2>Basic Info</h2>
-
-                                    <div className="basic-info-input-group">
-                                        <Inputs type="select" label="For Client" name="client_id"
-                                                value={sortedUsers.map(function (user) {
-                                                    return user.id
-                                                })[0]}
-                                                options={userOptionList}
-                                                onChange={function () {
-                                                }} receiveOnChange={true} receiveValue={true}/>
-
-                                        <Inputs type="text" label="Name" name="name" defaultValue={fields.name}
-                                                onChange={function () {
-                                                }} receiveOnChange={true} receiveValue={true}/>
-
-                                        <Inputs type="text" label="Description" name="description"
-                                                defaultValue={fields.description}
-                                                onChange={function () {
-                                                }} receiveOnChange={true} receiveValue={true}/>
+                                <div className="basic-info col-md-6">
+                                    <div className="service-request-details">
+                                        <IconHeading imgIcon="/assets/custom_icons/what_you_are_getting_icon.png" title="What you are getting"/>
+                                        <div dangerouslySetInnerHTML={{__html: this.state.template.details}}/>
                                     </div>
+                                </div>
+                                <div className="basic-info col-md-6">
+                                    <div className="service-request-form">
+                                        <IconHeading imgIcon="/assets/custom_icons/get_your_service_icon.png" title="Get your service"/>
 
-                                    {this.state.showPaymentInputs &&
-                                        <div className="payment-plan-input-group">
-                                            <h2>Payment Info</h2>
-
-                                            <Inputs type="text" maxLength="22" label="Statement Descriptor"
-                                                    name="statement_descriptor" defaultValue={fields.statement_descriptor}
-                                                    onChange={function () {
-                                                    }} receiveOnChange={true} receiveValue={true}/>
-
-                                            <Inputs type="number" label="Trial Period" name="trial_period_days"
-                                                    defaultValue={fields.trial_period_days}
-                                                    onChange={function () {
-                                                    }} receiveOnChange={true} receiveValue={true}/>
-
-                                            <Inputs disabled={subscriptionType != 'subscription'} type="price" label="Amount" name="amount" defaultValue={fields.amount}
-                                                    onChange={function () {
-                                                    }} receiveOnChange={true} receiveValue={true}/>
-
-                                            <Inputs type="hidden" disabled label="Currency" name="currency"
-                                                    defaultValue={fields.currency}
-                                                    onChange={function () {
-                                                    }} receiveOnChange={true} receiveValue={true}/>
-
-
-                                            {/* TODO: need frontend validation for monthly cannot be <= 12 */}
-
-                                            {subscriptionType == 'subscription' &&
-                                            <div>
-                                                <Inputs type="select" label="Interval" name="interval"
-                                                        defaultValue={fields.interval}
-                                                        options={[{'Daily': 'day'}, {'Weekly': 'week'}, {'Monthly': 'month'}, {'Yearly': 'year'}]}
+                                        <Authorizer permissions="can_administrate">
+                                            <div className="basic-info-input-group">
+                                                <Inputs type="select" label="For Client" name="client_id"
+                                                        value={sortedUsers.map(function (user) {
+                                                            return user.id
+                                                        })[0]}
+                                                        options={userOptionList}
                                                         onChange={function () {
                                                         }} receiveOnChange={true} receiveValue={true}/>
 
-                                                <Inputs type="number" label="Interval Count" name="interval_count"
-                                                        defaultValue={fields.interval_count}/>
+                                                <Inputs type="text" label="Name" name="name" defaultValue={fields.name}
+                                                        onChange={function () {
+                                                        }} receiveOnChange={true} receiveValue={true}/>
 
-                                                <Inputs type="select" label="Prorated?" name="subscription_prorate"
-                                                        defaultValue={fields.subscription_prorate}
-                                                        options={[{true: 'Yes'}, {false: 'No'}]}
+                                                <Inputs type="text" label="Description" name="description"
+                                                        defaultValue={fields.description}
                                                         onChange={function () {
                                                         }} receiveOnChange={true} receiveValue={true}/>
                                             </div>
-                                            }
 
-                                        </div>
-                                    }
-                                    <Buttons text={this.state.showPaymentInputs ? 'Basic' : 'Advanced'}
-                                             onClick={this.togglePaymentInputs}/>
-                                </div>
-                                </Authorizer>
+                                            {this.state.showPaymentInputs &&
+                                                <div className="payment-plan-input-group">
+                                                    <h4>Payment Info</h4>
 
-                                {references &&
-                                    <div className="col-md-6 col-md-offset-3">
-                                        <div className="additional-info-input-group">
-                                            <h2>Customer Information</h2>
-                                            {references.map(reference => (
-                                                (!reference.private || isAuthorized({permissions: 'can_administrate'})) &&
-                                                <div key={`custom-fields-${reference.prop_label}`}>
-                                                    <DataChild modelName="service_template_properties"
-                                                               objectName={reference.name}>
-                                                        <input type="hidden" name="id" value={reference.id}/>
-                                                        <Inputs type={reference.prop_input_type}
-                                                                label={reference.prop_label}
-                                                                name="value"
-                                                                disabled={!reference.prompt_user && !isAuthorized({permissions: 'can_administrate'})}
-                                                                defaultValue={reference.value}
-                                                                options={reference.prop_values}
+                                                    <Inputs type="text" maxLength="22" label="Statement Descriptor"
+                                                            name="statement_descriptor" defaultValue={fields.statement_descriptor}
+                                                            onChange={function () {
+                                                            }} receiveOnChange={true} receiveValue={true}/>
+
+                                                    <Inputs type="number" label="Trial Period" name="trial_period_days"
+                                                            defaultValue={fields.trial_period_days}
+                                                            onChange={function () {
+                                                            }} receiveOnChange={true} receiveValue={true}/>
+
+                                                    <Inputs disabled={subscriptionType != 'subscription'} type="price" label="Amount" name="amount" defaultValue={fields.amount}
+                                                            onChange={function () {
+                                                            }} receiveOnChange={true} receiveValue={true}/>
+
+                                                    <Inputs type="hidden" disabled label="Currency" name="currency"
+                                                            defaultValue={fields.currency}
+                                                            onChange={function () {
+                                                            }} receiveOnChange={true} receiveValue={true}/>
+
+
+                                                    {/* TODO: need frontend validation for monthly cannot be <= 12 */}
+
+                                                    {subscriptionType == 'subscription' &&
+                                                    <div>
+                                                        <Inputs type="select" label="Interval" name="interval"
+                                                                defaultValue={fields.interval}
+                                                                options={[{'Daily': 'day'}, {'Weekly': 'week'}, {'Monthly': 'month'}, {'Yearly': 'year'}]}
                                                                 onChange={function () {
                                                                 }} receiveOnChange={true} receiveValue={true}/>
-                                                    </DataChild>
+
+                                                        <Inputs type="number" label="Interval Count" name="interval_count"
+                                                                defaultValue={fields.interval_count}/>
+
+                                                        <Inputs type="select" label="Prorated?" name="subscription_prorate"
+                                                                defaultValue={fields.subscription_prorate}
+                                                                options={[{true: 'Yes'}, {false: 'No'}]}
+                                                                onChange={function () {
+                                                                }} receiveOnChange={true} receiveValue={true}/>
+                                                    </div>
+                                                    }
+
                                                 </div>
-                                            ))}
+                                            }
+                                            <Buttons text={this.state.showPaymentInputs ? 'Basic' : 'Advanced'}
+                                                     onClick={this.togglePaymentInputs}/>
+                                        </Authorizer>
+
+                                        {references &&
+                                            <div className="additional-info-input-group">
+                                                <Authorizer permissions="can_administrate">
+                                                    <h4>Customer Information</h4>
+                                                </Authorizer>
+                                                {references.map(reference => (
+                                                    (!reference.private || isAuthorized({permissions: 'can_administrate'})) &&
+                                                    <div key={`custom-fields-${reference.prop_label}`}>
+                                                        <DataChild modelName="service_template_properties"
+                                                                   objectName={reference.name}>
+                                                            <input type="hidden" name="id" value={reference.id}/>
+                                                            <Inputs type={reference.prop_input_type}
+                                                                    label={reference.prop_label}
+                                                                    name="value"
+                                                                    disabled={!reference.prompt_user && !isAuthorized({permissions: 'can_administrate'})}
+                                                                    defaultValue={reference.value}
+                                                                    options={reference.prop_values}
+                                                                    onChange={function () {
+                                                                    }} receiveOnChange={true} receiveValue={true}/>
+                                                        </DataChild>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        }
+
+
+                                        <div id="request-submission-box">
+                                            {submitButton}
                                         </div>
                                     </div>
-                                }
+                                </div>
                             </div>
-
-                            <div id="request-submission-box" className="col-md-6 col-md-offset-3 button-box right">
-                                <Buttons btnType="default" text="Go Back" onClick={browserHistory.goBack}/>
-                                {submitButton}
-                            </div>
-
                         </DataForm>
 
                         {(this.state.showFundsModal) &&

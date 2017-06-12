@@ -47,7 +47,7 @@ class ServiceListItem extends React.Component {
             if(response.ok) {
                 return response.blob();
             }
-            throw new Error('Network response was not ok.');
+            throw new Error('Network response was not ok.', response);
         }).then(function(myBlob) {
             let objectURL = URL.createObjectURL(myBlob);
             self.setState({image: objectURL});

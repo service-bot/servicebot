@@ -60,7 +60,7 @@ class Home extends React.Component {
 
         return(
             <div className="page-home">
-                <Featured>
+                <Featured imageURL="/api/v1/system-options/file/front_page_image">
                     <div className="featured-intro" style={featuredAreaStyle}>
                         <h1 style={featuredHeadingStyle}>JD Photography</h1>
                         <p style={featuredIntroStyle}>Looking for a local professional photographer? <br/> We offer a wide election of services at a reasonable price!</p>

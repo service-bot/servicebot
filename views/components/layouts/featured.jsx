@@ -3,11 +3,25 @@ import FeaturedImage from './featured-elements/featured-image.jsx';
 
 class Featured extends React.Component {
 
+    constructor(props){
+        super(props);
+
+        this.state = {
+            imageURL: this.props.imageURL
+        }
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.imageURL){
+            console.log("Featured Image got new image", nextProps.imageURL);
+            this.setState({imageURL: nextProps.imageURL});
+        }
+    }
+
     render () {
         return (
             <div className={`featured`}>
-                {/*<Skyline/>*/}
-                <FeaturedImage image="/api/v1/system-options/file/front_page_image"/>
+                <FeaturedImage image={this.state.imageURL}/>
                 {this.props.children}
             </div>
         );
