@@ -111,7 +111,13 @@
 .card-image-holder{
     padding: 30px;
     display: flex;
-    align-content: flex-end;
+    align-items: center;
+    justify-content: center;
+}
+.card-image-holder img {
+    max-width: 50%;
+    max-height: 58%;
+    margin: 10%;
 }
 .card-service-company{
     font-weight: 900;

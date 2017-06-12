@@ -6,12 +6,13 @@ let _ = require("lodash");
 
 class ServiceListItem extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             boxColor: false,
             boxColor2: false,
-            image: false,
+            image: null,
+            icon: null,
             imageColor: false,
             theme: 'light',
             company_name: 'ServiceBot',
@@ -31,16 +32,19 @@ class ServiceListItem extends React.Component {
         this.openService = this.openService.bind(this);
         this.closeService = this.closeService.bind(this);
         this.getCoverImage = this.getCoverImage.bind(this);
+        this.getIcon = this.getIcon.bind(this);
     }
 
-    componentDidMount(){
+
+    componentDidMount() {
 
         const height = document.getElementById(`service-card-${this.props.service.id}`).clientHeight;
         // console.log(`service-card-${this.props.service.id}`, height);
         this.props.handleSyncHeight(height);
-        this.setState({ height: height });
+        this.setState({height: height});
 
         this.getCoverImage();
+        this.getIcon();
     }
 
     getCoverImage(){
@@ -53,6 +57,21 @@ class ServiceListItem extends React.Component {
         }).then(function(myBlob) {
             let objectURL = URL.createObjectURL(myBlob);
             self.setState({image: objectURL});
+        }).catch(function(error) {
+            // console.log("There was problem fetching your image:" + error.message);
+        });
+    }
+
+    getIcon(){
+        let self = this;
+        fetch(`/api/v1/service-templates/${this.props.service.id}/icon`).then(function(response) {
+            if(response.ok) {
+                return response.blob();
+            }
+            throw new Error('Network response was not ok.');
+        }).then(function(myBlob) {
+            let objectURL = URL.createObjectURL(myBlob);
+            self.setState({icon: objectURL});
         }).catch(function(error) {
             // console.log("There was problem fetching your image:" + error.message);
         });
@@ -168,6 +187,10 @@ class ServiceListItem extends React.Component {
                     <div id={`service-${serviceId}`} className={`card service ${theme} ${this.state.opened && 'opened'}`}
                          style={this.state.opened ? this.state.serviceOpened : cardStyle} ref="myCard">
                         <div className={`card-image-holder ${this.state.image ? 'image' : 'no-image'}`} style={style}>
+                            {this.state.icon &&
+                                <img src={this.state.icon} alt="icon"/>
+                            }
+
                             {this.state.display_setting.category &&
                                 <h3 className="card-service-company">{category}</h3>
                             }

@@ -419,6 +419,20 @@ class ServiceTemplateForm extends React.Component {
                                                    name="template-image"/>
                                 </div>
 
+                                <div className="form-group form-group-flex column">
+                                    <label>Upload Icon</label>
+                                    <ImageUploader elementID="template-icon" imageStyle="template-image-upload"
+                                                   imageURL={`/api/v1/service-templates/${this.state.submissionResponse.id}/icon`}
+                                                   imageGETURL={this.state.templateId ?
+                                                       `/api/v1/service-templates/${this.state.templateId}/icon` :
+                                                       `/api/v1/service-templates/${this.state.submissionResponse.id}/icon`}
+                                                   uploadTrigger={this.state.uploadTrigger}
+                                                   uploadButton={false}
+                                                   handleSuccess={this.handleImageUploadSuccess}
+                                                   onChange={this.onImageChanged}
+                                                   name="template-icon"/>
+                                </div>
+
                                 <Inputs type="text" name="name" label="Service Name" defaultValue={templateData && templateData.name}
                                         onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
 
