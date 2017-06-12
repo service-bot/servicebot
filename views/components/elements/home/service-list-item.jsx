@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Link} from 'react-router';
+import {Link, browserHistory} from 'react-router';
 import Price from '../../utilities/price.jsx';
 let _ = require("lodash");
 
@@ -21,7 +21,8 @@ class ServiceListItem extends React.Component {
                 category: false,
                 date: false,
                 cost: true,
-                request_text: null
+                request_text: null,
+                item_count: 6
             },
             serviceOpened: {},
             opened: false,
@@ -163,7 +164,7 @@ class ServiceListItem extends React.Component {
 
         return (
             <div id={`service-card-${serviceId}`} className="service-column col-xs-12 col-sm-6 col-lg-4 col-xl-4" ref="myCardColumn">
-                <div className="card-wrapper service">
+                <div className="card-wrapper service" onClick={()=>{browserHistory.push(this.props.url)}}>
                     <div id={`service-${serviceId}`} className={`card service ${theme} ${this.state.opened && 'opened'}`}
                          style={this.state.opened ? this.state.serviceOpened : cardStyle} ref="myCard">
                         <div className={`card-image-holder ${this.state.image ? 'image' : 'no-image'}`} style={style}>
@@ -185,13 +186,15 @@ class ServiceListItem extends React.Component {
                         </div>
                         <div className="card-footer">
                             <span className="price">{getPrice()}</span>
-                            <div className="request-button">
-                                <Link to={this.props.url} className="btn btn-black">
-                                    <span>{this.state.display_setting.request_text || getRequestText()} </span>
-                                    <span>{getPrice() ? getPrice() : ""}</span>
-                                </Link>
-                            </div>
                         </div>
+                    </div>
+                    <div className="request-button">
+                        <Link to={this.props.url} className="btn btn-box">
+                            <div className="btn btn-black">
+                                <span>{this.state.display_setting.request_text || getRequestText()} </span>
+                                <span>{getPrice() ? getPrice() : ""}</span>
+                            </div>
+                        </Link>
                     </div>
                 </div>
             </div>

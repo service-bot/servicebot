@@ -1,6 +1,8 @@
 /* cards */
 .card-wrapper.service{
-    background-color: darkgray;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
 }
 .card.service{
     position: relative;
@@ -8,7 +10,7 @@
     border: 1px solid #f3f3f3;
     color: #4a4a4a;
     font-size: 1rem;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     overflow: hidden;
     -webkit-transition: all 0.5s cubic-bezier(0, 0.86, 0.71, 1.18);
     -moz-transition: all 0.5s cubic-bezier(0, 0.86, 0.71, 1.18);
@@ -34,19 +36,24 @@
 }
 .request-button {
     position: absolute;
+    margin-top: 100%;
     width: 100%;
     bottom: -50px;
 }
 .request-button a {
+    padding: 0px;
     width: 100%;
-    margin-left: -15px;
     border-radius: 0px;
 }
+.request-button a .btn.btn-black{
+    width: 100%;
+    border-radius: 0px;
+    padding: 12px 0px;
+}
 .card-wrapper.service .request-button{
-    animation: bottom 1s;
+    transition: bottom 300ms;
 }
 .card-wrapper.service:hover .request-button {
-    animation: bottom 1s;
     bottom: 0px;
 }
 .card.service .card-subtitle{
