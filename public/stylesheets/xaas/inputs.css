@@ -132,3 +132,6 @@ form#imgformtemplate-image img {
 form#imgformtemplate-image .no-image-yet {
     display: none;
 }
+form#imgformtemplate-icon .no-image-yet {
+    display: none;
+}
