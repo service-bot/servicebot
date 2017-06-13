@@ -2,6 +2,7 @@
 body{
     font-family: 'Roboto', sans-serif;
     font-size: 1.05rem;
+    line-height: 1.9rem;
 }
 h1, h2, h3, h4, h5, h6, .card-title{
     font-family: 'Roboto Slab', "Helvetica", sans-serif;

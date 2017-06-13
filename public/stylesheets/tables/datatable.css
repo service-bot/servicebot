@@ -269,9 +269,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 
 /* xaas customized */
 .table{
-  border: 1px solid #ebebeb !important;
   background-color: white;
-  border-radius: 6px;
   overflow: hidden;
 }
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
