@@ -61,9 +61,9 @@ module.exports = function (router) {
     });
 
 
-    router.get(`/system-options/:id(\\d+)`, validate(SystemOption, 'id', 'option'), auth(), function (req, res, next) {
-        res.json(res.locals.valid_object.data);
-    });
+    // router.get(`/system-options/:id(\\d+)`, validate(SystemOption, 'id', 'option'), auth(), function (req, res, next) {
+    //     res.json(res.locals.valid_object.data);
+    // });
 
 
     router.get(`/system-options/public`, function (req, res, next) {
@@ -76,17 +76,17 @@ module.exports = function (router) {
     });
 
 
-    router.get('/system-options', function (req, res, next) {
-        let key = req.query.key;
-        let value = req.query.value;
-        if (!key || !value) {
-            key = undefined;
-            value = undefined;
-        }
-        SystemOption.findAll(key, value, function (results) {
-            res.json(results.map(entity => entity.data));
-        });
-    });
+    // router.get('/system-options', function (req, res, next) {
+    //     let key = req.query.key;
+    //     let value = req.query.value;
+    //     if (!key || !value) {
+    //         key = undefined;
+    //         value = undefined;
+    //     }
+    //     SystemOption.findAll(key, value, function (results) {
+    //         res.json(results.map(entity => entity.data));
+    //     });
+    // });
 
     router.put('/system-options/file/:id', auth(), multer({storage: systemStorage }).single('file'), function (req, res, next) {
         if (systemFiles.indexOf(req.params.id) > -1) {
@@ -113,14 +113,14 @@ module.exports = function (router) {
     });
 
 
-    router.put('/system-options/:id(\\d+)', validate(SystemOption, 'id', 'option'), auth(), function (req, res, next) {
-        let entity = res.locals.valid_object;
-        entity.data.value = req.body.value;
-        entity.update(function (err, result) {
-            EventLogs.logEvent(req.user.get('id'), `system-options ${req.params.id} was updated by user ${req.user.get('email')}`);
-            res.json(result.data);
-        })
-    });
+    // router.put('/system-options/:id(\\d+)', validate(SystemOption, 'id', 'option'), auth(), function (req, res, next) {
+    //     let entity = res.locals.valid_object;
+    //     entity.data.value = req.body.value;
+    //     entity.update(function (err, result) {
+    //         EventLogs.logEvent(req.user.get('id'), `system-options ${req.params.id} was updated by user ${req.user.get('email')}`);
+    //         res.json(result.data);
+    //     })
+    // });
 
     router.put('/system-options', auth(), function (req, res, next) {
         let updateData = req.body;
