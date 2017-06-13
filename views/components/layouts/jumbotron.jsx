@@ -21,20 +21,22 @@ class Jumbotron extends React.Component {
 
     render () {
 
-        let style = {};
+        let style = {jumbotron:{}, breadcrumbs:{}};
 
         if(this.state.systemOptions) {
             let options = this.state.systemOptions;
-            style.color = _.get(options, 'breadcrumb_color.value', "#000000");
+            style.jumbotron.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
+            style.jumbotron.color = _.get(options, 'primary_theme_text_color.value', '#ffffff');
+            style.breadcrumbs.color = _.get(options, 'breadcrumb_color.value', "#000000");
         }
 
         return (
             <div className="servicetron">
-                <div className="jumbotron jumbotron-fluid">
+                <div className="jumbotron jumbotron-fluid" style={style.jumbotron}>
                     <div className="top-navigation">
                         <div className="nav nav-inline top-navigation-links">
-                            <h1 className="display-3" style={style}>{this.props.pageName}</h1>
-                            <Breadcrumbs location={this.props.location} color={style}/>
+                            <h3 className="display-3" style={style.jumbotron}>{this.props.pageName}</h3>
+                            <Breadcrumbs location={this.props.location} color={style.breadcrumbs}/>
                         </div>
                         {/*<SearchDashboard/>*/}
                     </div>

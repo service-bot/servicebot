@@ -43,6 +43,9 @@ span.capitalize{
 }
 
 /* layouts */
+.main {
+    min-height: 80vh;
+}
 .main .section {
     padding: 60px 0px;
 }
@@ -65,8 +68,7 @@ span.capitalize{
 }
 
 .page-service-instance{
-    padding-left: 50px;
-    padding-right: 50px;
+    padding:30px 45px;
 }
 
 /* forms */
@@ -411,10 +413,6 @@ span.one-time-charge-label {
 .datatable thead th {
     position: relative;
 }
-.datatable thead th:hover {
-    cursor: pointer;
-    background: #f5f5f5;
-}
 .datatable th.sorted:after {
     font-family: FontAwesome;
     content: "\f0d8";
@@ -635,4 +633,9 @@ body.login .footer{
     .nav.nav-inline.navbar-left-icons{
         display: block;
     }
+}
+
+
+#content-title{
+    display: none;
 }

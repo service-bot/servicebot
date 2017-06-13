@@ -239,8 +239,8 @@ class ServiceInstance extends React.Component {
         if(this.state.loading){
             return (
                 <Authorizer>
+                    <Jumbotron pageName={pageName} location={this.props.location}/>
                     <div className="page-service-instance">
-                        <Jumbotron pageName={pageName} location={this.props.location}/>
                         <Content key={Object.id}>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'}
                                                      transitionAppear={true} transitionEnter={true} transitionLeave={true}
@@ -296,8 +296,8 @@ class ServiceInstance extends React.Component {
 
             return(
                 <Authorizer>
+                    <Jumbotron pageName={pageName} location={this.props.location}/>
                     <div className="page-service-instance">
-                        <Jumbotron pageName={pageName} location={this.props.location}/>
                         <Content>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'}
                                                      transitionAppear={true} transitionEnter={true} transitionLeave={true}

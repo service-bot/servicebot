@@ -24,8 +24,8 @@ class ManageCatalog extends React.Component {
         let breadcrumbs = [{name:'Home', link:'home'},{name:'My Services', link:'/my-services'},{name:pageName, link:'/manage-catalog/list'}];
         return(
             <Authorizer permissions="can_administrate">
+                <Jumbotron pageName={pageName} location={this.props.location}/>
                 <div className="page-service-instance">
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
                     <Content>
                         <div className="row m-b-20">
                             {this.props.children}

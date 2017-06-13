@@ -80,15 +80,17 @@ class MyServices extends React.Component {
 
         if(self.state.loading){
             return (
-                <div className="page-dashboard">
+                <div>
                     <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <Content>
-                        <ReactCSSTransitionGroup component='div' transitionName={'fade'}
-                                                 transitionAppear={true} transitionAppearTimeout={1000}
-                                                 transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
-                            <Load/>
-                        </ReactCSSTransitionGroup>
-                    </Content>
+                    <div className="page-dashboard">
+                        <Content>
+                            <ReactCSSTransitionGroup component='div' transitionName={'fade'}
+                                                     transitionAppear={true} transitionAppearTimeout={1000}
+                                                     transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
+                                <Load/>
+                            </ReactCSSTransitionGroup>
+                        </Content>
+                    </div>
                 </div>
             );
         }else{
@@ -109,13 +111,13 @@ class MyServices extends React.Component {
 
             return(
                 <Authorizer>
-                    <div className="page-dashboard">
-                        <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <div className="page-service-instance">
                         <Content>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'}
                                                      transitionAppear={true} transitionAppearTimeout={1000}
                                                      transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
-                                <div className="row m-b-20">
+                                <div className="row">
                                     <DashboardWidget widgetIcon="connectdevelop" widgetName="Active Services" widgetData={runningServiceCount || '0'} widgetColor="blue"/>
                                     <DashboardWidget widgetIcon="warning" widgetName="Awaiting for Approvals" widgetData={requestedServiceCount || '0'} widgetColor="blue"/>
                                     <DashboardWidget widgetIcon="credit-card" widgetName="Upcoming Invoice" widgetData={null} widgetColor="blue" clickAction={self.onOpenInvoiceModal}>

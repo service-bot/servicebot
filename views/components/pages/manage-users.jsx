@@ -145,8 +145,8 @@ class ManageUsers extends React.Component {
 
         return(
             <Authorizer permissions="can_administrate">
+                <Jumbotron pageName={pageName} location={this.props.location}/>
                 <div className="page-service-instance">
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
                     <Content>
                         <div className="row m-b-20">
                             <div className="col-xs-12">

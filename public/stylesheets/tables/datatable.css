@@ -297,3 +297,17 @@ table.dataTable thead .sorting_desc_disabled:after {
 .table.condensed thead td{
   font-weight: bold;
 }
+
+.table thead {
+  background: #3e3e3e;
+  color: #ffffff;
+}
+
+.table th.sorted {
+  background: #292929;
+}
+
+.datatable thead th:hover {
+  background: #292929;
+  cursor: pointer;
+}
