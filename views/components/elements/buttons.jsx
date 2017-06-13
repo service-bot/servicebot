@@ -47,6 +47,8 @@ class Buttons extends React.Component {
         }else{
             this.setState({success: false});
         }
+
+
     }
 
     handleClick(e){
@@ -83,8 +85,8 @@ class Buttons extends React.Component {
     render(){
 
         let btnStyle = {border: 'none'};
-        if(this.state.systemOptions) {
-            let options = this.state.systemOptions;
+        if(this.props.options) {
+            let options = this.props.options;
             let hover = this.state.hover;
             if (this.state.btnType == 'default') {
                 if(!hover){
