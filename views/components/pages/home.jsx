@@ -8,12 +8,19 @@ import Content from "../layouts/content.jsx";
 import PageSection from "../layouts/page-section.jsx";
 import SearchServiceBar from "../elements/home/service-list-search.jsx";
 import ServiceList from "../elements/home/service-list.jsx";
+import { connect } from 'react-redux';
+let _ = require("lodash");
+
 
 class Home extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {serviceUrl : "/api/v1/service-templates", searchValue : ""};
+        this.state = {
+            serviceUrl : "/api/v1/service-templates",
+            searchValue : "",
+            systemOptions: this.props.options || {},
+        };
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -29,13 +36,20 @@ class Home extends React.Component {
         }
     }
 
-    componentWillUnmount(){
-        document.body.classList.remove('home')
+    componentWillReceiveProps(nextProps){
+        if(nextProps.options){
+            this.setState({systemOptions: nextProps.options});
+        }
     }
 
     componentDidMount(){
         document.body.classList.add('home')
     }
+
+    componentWillUnmount(){
+        document.body.classList.remove('home')
+    }
+
 
     render () {
 
@@ -58,12 +72,21 @@ class Home extends React.Component {
             fontSize: '26px'
         };
 
+        let featuredHeading = "";
+        let featuredDescription = "";
+
+        if(this.state.systemOptions) {
+            let options = this.state.systemOptions;
+            featuredHeading = _.get(options, 'home_featured_heading.value', '"You can set this heading in system options');
+            featuredDescription = _.get(options, 'home_featured_description.value', "You can set this text in system options");
+        }
+
         return(
             <div className="page-home">
                 <Featured imageURL="/api/v1/system-options/file/front_page_image">
                     <div className="featured-intro" style={featuredAreaStyle}>
-                        <h1 style={featuredHeadingStyle}>JD Photography</h1>
-                        <p style={featuredIntroStyle}>Looking for a local professional photographer? <br/> We offer a wide election of services at a reasonable price!</p>
+                        <h1 style={featuredHeadingStyle}>{featuredHeading}</h1>
+                        <p style={featuredIntroStyle}>{featuredDescription}</p>
                         {this.state.searchBar &&
                             <SearchServiceBar searchValue={this.state.searchValue} handleChange={this.handleChange}/>
                         }
@@ -79,4 +102,4 @@ class Home extends React.Component {
     }
 }
 
-export default Home;
+export default connect((state) => {return {options:state.options}})(Home);

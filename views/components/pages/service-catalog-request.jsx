@@ -6,6 +6,8 @@ import PageSection from "../layouts/page-section.jsx";
 import Featured from "../layouts/featured.jsx";
 import Fetcher from "../utilities/fetcher.jsx"
 import Price from "../utilities/price.jsx";
+import { connect } from 'react-redux';
+let _ = require("lodash");
 
 
 class ServiceRequest extends React.Component {
@@ -18,13 +20,20 @@ class ServiceRequest extends React.Component {
             id: this.props.params.templateId,
             image: null,
             icon: null,
-            service: null
+            service: null,
+            systemOptions: this.props.options || {},
         };
 
         this.getService = this.getService.bind(this);
         this.getCoverImage = this.getCoverImage.bind(this);
         this.getIcon = this.getIcon.bind(this);
         this.createMarkup = this.createMarkup.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.options){
+            this.setState({systemOptions: nextProps.options});
+        }
     }
 
     componentDidMount(){
@@ -131,4 +140,5 @@ class ServiceRequest extends React.Component {
     }
 }
 
-export default ServiceRequest;
+export default connect((state) => {return {options:state.options}})(ServiceRequest);
+

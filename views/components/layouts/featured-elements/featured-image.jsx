@@ -8,14 +8,16 @@ class FeaturedImage extends React.Component {
 
         this.state = {
             image: this.props.image,
-            bgColor: this.props.bgColor || '#000000'
+            bgColor: this.props.bgColor.backgroundColor || '#000000'
         }
     }
 
     componentWillReceiveProps(nextProps){
         if(nextProps.image){
-            console.log("Featured Image got new image", nextProps.image);
             this.setState({image: nextProps.image});
+        }
+        if(nextProps.bgColor){
+            this.setState({bgColor: nextProps.bgColor});
         }
     }
 

@@ -8,8 +8,6 @@ import { Provider } from 'react-redux'
 import {setOptions, SET_OPTIONS, SET_UID} from "./utilities/actions"
 import cookie from 'react-cookie';
 
-
-
 function appReducer(state = {options: {}, uid : cookie.load("uid")}, action) {
     switch(action.type){
         case SET_OPTIONS :

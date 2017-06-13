@@ -5,11 +5,12 @@ import ModalInvoice from '../elements/modals/modal-invoice.jsx';
 import $ from "jquery";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import { connect } from "react-redux";
-
+let _ = require("lodash");
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        uid: state.uid
+        uid: state.uid,
+        options: state.options
     }
 };
 
@@ -38,11 +39,22 @@ class NavBootstrap extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {InvoiceModal: false, sidebar: false};
+        this.state = {
+            InvoiceModal: false,
+            sidebar: false,
+            systemOptions: this.props.options || {}
+        };
+
         this.onOpenInvoiceModal = this.onOpenInvoiceModal.bind(this);
         this.onClose = this.onClose.bind(this);
         this.getMenuItems = this.getMenuItems.bind(this);
         this.toggleSideBar = this.toggleSideBar.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.options){
+            this.setState({systemOptions: nextProps.options});
+        }
     }
 
     componentDidMount(){
@@ -60,52 +72,9 @@ class NavBootstrap extends React.Component {
     onOpenInvoiceModal(){
         this.setState({InvoiceModal: true});
     }
+
     onClose(){
         this.setState({InvoiceModal: false});
-    }
-
-    getMenuItems(){
-        if(isAuthorized({permissions: ["can_administrate", "can_manage"]})){
-            return(
-                <ul className="nav navbar-nav">
-                    <li><Link to="/dashboard">Dashboard<span className="sr-only">(current)</span></Link></li>
-                    {/*<li><Link to="/service-catalog">Service Catalog</Link></li>*/}
-                    <li className="dropdown">
-                        <a href="#" className="dropdown-toggle" ref="dropdownToggle2" data-toggle="dropdown"
-                           role="button" aria-haspopup="true" aria-expanded="false">Manage Services <span className="caret"/></a>
-                        <ul className="dropdown-menu">
-                            <li><Link to="/manage-catalog/list">Manage Catalog</Link></li>
-                            <li><Link to="/manage-subscriptions">Manage Subscriptions</Link></li>
-                            <li><Link to="/manage-users">Manage Users</Link></li>
-                        </ul>
-                    </li>
-                    <li className="dropdown">
-                        <a href="#" className="dropdown-toggle" ref="dropdownToggle3" data-toggle="dropdown"
-                           role="button" aria-haspopup="true" aria-expanded="false">Manage System <span className="caret"/></a>
-                        <ul className="dropdown-menu">
-                            <li><Link to="/manage-permission">Manage Permission</Link></li>
-                            <li><Link to="/stripe-settings">Stripe Settings</Link></li>
-                            <li><Link to="/system-settings">System Settings</Link></li>
-                        </ul>
-                    </li>
-                </ul>
-            )
-        }else{
-            return(
-                <ul className="nav navbar-nav">
-                    <li><Link to="/my-services">My Services<span className="sr-only">(current)</span></Link></li>
-                    <li className="dropdown">
-                        <a href="#" className="dropdown-toggle" ref="dropdownToggle" data-toggle="dropdown"
-                           role="button" aria-haspopup="true" aria-expanded="false">Billing <span className="caret"/></a>
-                        <ul className="dropdown-menu">
-                            <li><Link onClick={this.onOpenInvoiceModal}>Upcoming Invoice</Link></li>
-                            <li><Link to={`/billing-history/${this.props.uid}`}>Billing History</Link></li>
-                            <li><Link to={`/billing-settings/${this.props.uid}`}>Billing Settings</Link></li>
-                        </ul>
-                    </li>
-                </ul>
-            )
-        }
     }
 
     toggleSideBar(){
@@ -119,6 +88,50 @@ class NavBootstrap extends React.Component {
         });
     }
 
+    getMenuItems(style){
+        if(isAuthorized({permissions: ["can_administrate", "can_manage"]})){
+            return(
+                <ul className="nav navbar-nav">
+                    <li><Link to="/dashboard" style={style}>Dashboard<span className="sr-only">(current)</span></Link></li>
+                    {/*<li><Link to="/service-catalog">Service Catalog</Link></li>*/}
+                    <li className="dropdown">
+                        <a href="#" className="dropdown-toggle" ref="dropdownToggle2" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false" style={style}>Manage Services <span className="caret"/></a>
+                        <ul className="dropdown-menu">
+                            <li><Link to="/manage-catalog/list">Manage Catalog</Link></li>
+                            <li><Link to="/manage-subscriptions">Manage Subscriptions</Link></li>
+                            <li><Link to="/manage-users">Manage Users</Link></li>
+                        </ul>
+                    </li>
+                    <li className="dropdown">
+                        <a href="#" className="dropdown-toggle" ref="dropdownToggle3" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false" style={style}>Manage System <span className="caret"/></a>
+                        <ul className="dropdown-menu">
+                            <li><Link to="/manage-permission">Manage Permission</Link></li>
+                            <li><Link to="/stripe-settings">Stripe Settings</Link></li>
+                            <li><Link to="/system-settings">System Settings</Link></li>
+                        </ul>
+                    </li>
+                </ul>
+            )
+        }else{
+            return(
+                <ul className="nav navbar-nav">
+                    <li><Link to="/my-services" style={style}>My Services<span className="sr-only">(current)</span></Link></li>
+                    <li className="dropdown">
+                        <a href="#" className="dropdown-toggle" ref="dropdownToggle" data-toggle="dropdown"
+                           role="button" aria-haspopup="true" aria-expanded="false" style={style}>Billing <span className="caret"/></a>
+                        <ul className="dropdown-menu">
+                            <li><Link onClick={this.onOpenInvoiceModal}>Upcoming Invoice</Link></li>
+                            <li><Link to={`/billing-history/${this.props.uid}`}>Billing History</Link></li>
+                            <li><Link to={`/billing-settings/${this.props.uid}`}>Billing Settings</Link></li>
+                        </ul>
+                    </li>
+                </ul>
+            )
+        }
+    }
+
     render () {
         let self = this;
         const currentModal = ()=> {
@@ -128,8 +141,17 @@ class NavBootstrap extends React.Component {
                 );
             }
         };
+
+        let navigationBarStyle = {};
+        let linkTextStyle = {};
+        if(this.state.systemOptions){
+            let options = this.state.systemOptions;
+            navigationBarStyle.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
+            linkTextStyle.color = _.get(options, 'primary_theme_text_color.value', '#000000');
+        }
+
         return (
-            <nav className="navbar navbar-default">
+            <nav className="navbar navbar-default" style={navigationBarStyle}>
                 <div className="container">
                     <div className="navbar-header">
                         <button type="button" className="navbar-toggle collapsed" data-toggle="collapse"
@@ -144,7 +166,7 @@ class NavBootstrap extends React.Component {
 
                     <div className="collapse navbar-collapse">
                         <Authorizer>
-                            {this.getMenuItems()}
+                            {this.getMenuItems(linkTextStyle)}
                         </Authorizer>
                         <Authorizer anonymous={true}>
                             <VisibleAnonymousLinks/>
@@ -162,7 +184,7 @@ class NavBootstrap extends React.Component {
                                 </li>
                                 <li>
                                     <button className="btn btn-link btn-signout"
-                                            onClick={this.props.handleLogout}>Log Out</button>
+                                            onClick={this.props.handleLogout} style={linkTextStyle}>Log Out</button>
                                 </li>
                             </ul>
                         </Authorizer>
