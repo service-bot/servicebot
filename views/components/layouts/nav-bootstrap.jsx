@@ -152,7 +152,7 @@ class NavBootstrap extends React.Component {
 
         return (
             <nav className="navbar navbar-default" style={navigationBarStyle}>
-                <div className="container">
+                <div className="container-fluid">
                     <div className="navbar-header">
                         <button type="button" className="navbar-toggle collapsed" data-toggle="collapse"
                                 data-target="#bs-example-navbar-collapse-1" aria-expanded="false" onClick={this.toggleSideBar}>

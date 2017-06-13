@@ -8,6 +8,7 @@ import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
 import {DashboardWidgets} from "../elements/dashboard/dashboard-widgets.jsx";
 import {ServiceOverTimeChart, ServiceStatusChart} from "../elements/dashboard/dashboard-chart.jsx";
+import PageSection from "../layouts/page-section.jsx";
 
 class Dashboard extends React.Component {
 
@@ -38,7 +39,6 @@ class Dashboard extends React.Component {
 
     render () {
         let pageName = this.props.route.name;
-        let breadcrumbs = [{name:'Home', link:'home'},{name:'Dashboard', link: null}];
 
         if(this.state.loading){
             return(
@@ -57,7 +57,7 @@ class Dashboard extends React.Component {
                     <div className="page-service-instance">
                         <Jumbotron pageName={pageName} location={this.props.location}/>
                         <Content>
-                            <div className="row m-b-20">
+                            <div className="row m-b-60">
                                 <ContentTitle title="Welcome to your dashboard"/>
                                 <DashboardWidgets data={this.state.analytics}/>
                                 <div id="dashboard-charts">

@@ -119,7 +119,7 @@ class ServiceRequest extends React.Component {
 
             return (
 
-                <div className="page-service-instance">
+                <div className="page-service-request">
                     <Featured imageURL={this.state.image}>
                         {this.state.icon ?
                             <img className="featured-icon" src={this.state.icon} alt="icon"/> :

@@ -64,6 +64,11 @@ span.capitalize{
     transform: translateX(-50%);
 }
 
+.page-service-instance{
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
 /* forms */
 .form-control, .custom-file-control{
     color: rgba(0, 0, 0, 0.80);

@@ -15,44 +15,63 @@ let CleanBreadcrumbLink = function (link) {
     return newLink;
 }
 
-let breadcrumbs = function (props) {
+class Breadcrumb extends React.Component {
 
-    let path = props.location.pathname;
+    constructor(props){
+        super(props);
 
-    let pathArray = path.split('/');
+        this.state = {
+            color: this.props.color
+        }
+    }
 
-    if(pathArray.length){
-        if(pathArray.length == 2 && pathArray[1] == ''){
-            return(
-                <li>
-                    <Link to="/">Home</Link>
-                </li>
-            );
-        }else if(pathArray.length >= 2){
-            let breadcrumbLink = '';
-            let count = 0;
-            return(
-                <ol className="breadcrumb icon-home icon-angle-right no-bg">
-                    {pathArray.map((breadcrumb)=>
-                        <li data={breadcrumbLink = breadcrumbLink + breadcrumb + '/'}
-                            key={`breadcrumb-${breadcrumb}-${count++}`}>
-                            {breadcrumb == '' ?
-                                count == 1 && <Link to="/">Home</Link> :
-                                count+1 == pathArray.length ?
-                                <Link to={CleanBreadcrumbLink(breadcrumbLink)}>{CleanBreadcrumb(breadcrumb)}</Link> : <span>{CleanBreadcrumb(breadcrumb)}</span>
-                            }
-                        </li>
-                    )}
-                </ol>
-            );
-        }else{
-            return(
-                <li>
-                    <Link to="/">Home</Link>
-                </li>
-            );
+    componentWillReceiveProps(nextProps){
+        if(nextProps.color){
+            this.setState({color: nextProps.color});
+        }
+    }
+
+
+    render() {
+        let path = this.props.location.pathname;
+
+        let pathArray = path.split('/');
+
+        if (pathArray.length) {
+            if (pathArray.length == 2 && pathArray[1] == '') {
+                return (
+                    <li style={this.state.color}>
+                        <Link to="/" style={this.state.color}>Home</Link>
+                    </li>
+                );
+            } else if (pathArray.length >= 2) {
+                let breadcrumbLink = '';
+                let count = 0;
+                return (
+                    <ol className="breadcrumb icon-home icon-angle-right no-bg">
+                        {pathArray.map((breadcrumb) =>
+                            <li data={breadcrumbLink = breadcrumbLink + breadcrumb + '/'}
+                                key={`breadcrumb-${breadcrumb}-${count++}`} style={this.state.color}>
+                                {breadcrumb == '' ?
+                                    count == 1 && <Link to="/" style={this.state.color}>Home</Link> :
+                                    count + 1 == pathArray.length ?
+                                        <Link style={this.state.color}
+                                              to={CleanBreadcrumbLink(breadcrumbLink)}>{CleanBreadcrumb(breadcrumb)}</Link> :
+                                        <span style={this.state.color}>{CleanBreadcrumb(breadcrumb)}</span>
+                                }
+                            </li>
+                        )}
+                    </ol>
+                );
+            } else {
+                return (
+                    <li style={this.state.color}>
+                        <Link to="/" style={this.state.color}>Home</Link>
+                    </li>
+                );
+            }
         }
     }
 };
 
-export default breadcrumbs
+export default Breadcrumb;
