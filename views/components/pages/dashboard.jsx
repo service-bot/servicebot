@@ -73,6 +73,26 @@ class Dashboard extends React.Component {
                                                    headingText="Cancellation Requests"
                                                    descriptionText="Services with cancellation request from customers."
                                                    className="dashboard-charts"
+                                                   dropdown={[{
+                                                       name: 'Actions', direction: 'right', buttons: [
+                                                           {id: 1, name: 'View', link: '/service-instance/:id'},
+                                                           {id: 2, name: 'divider'},
+                                                           {
+                                                               id: 4,
+                                                               name: 'View Invoices',
+                                                               link: '#',
+                                                               onClick: (dataObj)=>{return function(e) {
+                                                                   e.preventDefault();
+                                                                   browserHistory.push(`/billing-history/${dataObj.user_id}`);
+                                                               }}
+                                                           },
+                                                           {
+                                                               id: 5,
+                                                               name: this.dropdownStatus,
+                                                               link: '#',
+                                                               onClick: this.onOpenActionModal
+                                                           }]
+                                                   }]}
                                         />
                                         <DataTable parentState={this.state}
                                                    get={'/api/v1/service-instances/search?key=status&value=requested'}

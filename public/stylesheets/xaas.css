@@ -132,9 +132,6 @@ span.capitalize{
 }
 
 /* service details table */
-.table th, .table td{
-    padding:15px !important;
-}
 table td.service-description{
     min-width: 300px;
 }
@@ -429,10 +426,6 @@ span.one-time-charge-label {
     margin-bottom: 15px;
     display: flex;
     align-items: baseline;
-}
-.datatable {
-    border-top: 1.5px solid #cecece;
-    border-bottom: 1.5px solid #cecece;
 }
 .datatable thead th {
     position: relative;
