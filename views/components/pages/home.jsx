@@ -18,7 +18,7 @@ class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            serviceUrl : "/api/v1/service-templates",
+            serviceUrl : "/api/v1/service-templates/public?order_by=created_at&limit=6&order=desc",
             searchValue : "",
         };
         this.handleChange = this.handleChange.bind(this);

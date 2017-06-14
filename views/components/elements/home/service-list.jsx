@@ -10,7 +10,7 @@ class ServiceList extends React.Component {
         super(props);
         this.state = {
             services: [],
-            url: "/api/v1/service-templates/public",
+            url: this.props.url || "/api/v1/service-templates/public",
             loading:true,
             width: 0,
             cardHeight: 0,
