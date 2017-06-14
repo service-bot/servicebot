@@ -19,7 +19,7 @@ class Buttons extends React.Component {
             loading: this.props.loading || false,
             success: this.props.success || false,
             disabled: this.props.disabled || false,
-            systemOptions: this.props.options || {},
+            style: this.props.style || {},
             hover: false
         };
 
@@ -130,7 +130,8 @@ class Buttons extends React.Component {
                 {this.state.loading === true && <Load type="button"/>}
                 {this.state.success === true && this.success()}
                 <button className={`${this.state.buttonClass} btn-${this.state.size}`}
-                        style={btnStyle} onClick={this.handleClick}
+                        style={this.state.style ? _.merge(this.state.style, btnStyle) : btnStyle}
+                        onClick={this.handleClick}
                         type={this.props.type} value={this.props.value}
                         onMouseEnter={this.hover} onMouseLeave={this.unHover}>{this.state.text}</button>
             </div>

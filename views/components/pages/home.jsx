@@ -1,11 +1,12 @@
 import React from 'react';
-import {Link, hashHistory} from 'react-router';
+import {Link, hashHistory, browserHistory} from 'react-router';
 import Alert from 'react-s-alert';
 import Authorizer from "../utilities/authorizer.jsx"
 import {DataForm, DataChild} from "../utilities/data-form.jsx";
 import Featured from "../layouts/featured.jsx";
 import Content from "../layouts/content.jsx";
 import PageSection from "../layouts/page-section.jsx";
+import Buttons from "../elements/buttons.jsx";
 import SearchServiceBar from "../elements/home/service-list-search.jsx";
 import ServiceList from "../elements/home/service-list.jsx";
 import { connect } from 'react-redux';
@@ -65,13 +66,14 @@ class Home extends React.Component {
             fontSize: '26px'
         };
 
-        let featuredHeading = "";
-        let featuredDescription = "";
+        let featuredHeading, featuredDescription, featuredServicesHeading, featuredServicesShowAllButton = "";
 
         if(this.props.options) {
             let options = this.props.options;
             featuredHeading = _.get(options, 'home_featured_heading.value', '"You can set this heading in system options');
             featuredDescription = _.get(options, 'home_featured_description.value', "You can set this text in system options");
+            featuredServicesHeading = _.get(options, 'featured_service_heading.value', "Featured Services");
+            featuredServicesShowAllButton = _.get(options, 'featured_service_show_all_button_text.value', "Show All Services");
         }
 
         return(
@@ -87,10 +89,14 @@ class Home extends React.Component {
                 </Featured>
                 <Content>
                     <PageSection>
-                        <h2 className="section-heading">
-                            {this.state.heading ? this.state.heading : "Featured Services"}
-                        </h2>
+                        <h2 className="section-heading">{featuredServicesHeading}</h2>
                         <ServiceList url={this.state.serviceUrl}/>
+                        <Buttons
+                            text={featuredServicesShowAllButton}
+                            size="lg" position="center" btnType="primary"
+                            style={{marginTop: '15px'}}
+                            onClick={()=>{browserHistory.push('/all-services')}}
+                        />
                     </PageSection>
                 </Content>
             </div>
