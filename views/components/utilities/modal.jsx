@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { connect } from "react-redux";
+let _ = require("lodash");
 
 class Modal extends React.Component {
 
@@ -21,6 +23,14 @@ class Modal extends React.Component {
             top: top, position: position, left: left, transform: transform, transition: transition,
             width: width, height: height, maxHeight: '90vh', overflowY: 'scroll' };
 
+
+        let modalBarStyle = {};
+        if(this.props.options){
+            let options = this.props.options;
+            modalBarStyle.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
+            modalBarStyle.color = _.get(options, 'primary_theme_text_color.value', '#000000');
+        }
+
         return(
             <div className={`modal-wrapper`}>
                 <div className={`modal ${this.props.titleColor ? this.props.titleColor : 'modal-primary'}`} id="modal" tabIndex="-1" role="dialog">
@@ -30,7 +40,7 @@ class Modal extends React.Component {
                         transitionName={'modal'} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                         <div key={Object.id} className="modal-dialog modal-lg" role="document" style={modalDialogStyle}>
                             <div className="modal-content">
-                                <div className="modal-header">
+                                <div className="modal-header" style={modalBarStyle}>
                                     <button onClick={this.props.hide} className="close">
                                         <span>×</span>
                                     </button>
@@ -55,4 +65,4 @@ class Modal extends React.Component {
     }
 }
 
-export default Modal;
+export default connect((state) => {return {options:state.options}})(Modal);

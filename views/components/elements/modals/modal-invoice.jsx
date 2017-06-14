@@ -6,6 +6,8 @@ import Fetcher from "../../utilities/fetcher.jsx";
 import Modal from '../../utilities/modal.jsx';
 import DateFormat from '../../utilities/date-format.jsx';
 import Price from '../../utilities/price.jsx';
+import { connect } from "react-redux";
+let _ = require("lodash");
 
 class ModalInvoice extends React.Component {
 
@@ -96,10 +98,16 @@ class ModalInvoice extends React.Component {
                     last4 = fund[0].source.card.last4;
                 }
 
+                let modalHeadingStyle = {};
+                if(this.props.options){
+                    let options = this.props.options;
+                    modalHeadingStyle.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
+                }
+
                 return(
                     <Modal modalTitle={pageName} show={this.props.show} hide={this.props.hide}>
                         <div id="invoice-modal" className="table-responsive">
-                            <div className="invoice-widget">
+                            <div className="invoice-widget" style={modalHeadingStyle}>
                                 <div className="row">
                                     <div className="col-xs-12 col-sm-4">
                                         <div className="address">
@@ -163,4 +171,4 @@ class ModalInvoice extends React.Component {
     }
 }
 
-export default ModalInvoice;
+export default connect((state) => {return {options:state.options}})(ModalInvoice);
