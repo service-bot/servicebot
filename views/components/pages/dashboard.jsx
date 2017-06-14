@@ -69,28 +69,22 @@ class Dashboard extends React.Component {
                                                    col={['references.users.0.name', 'name', 'created_at']}
                                                    colNames={['Customer Name', 'Service Name', 'Created On']}
                                                    statusCol="status"
-                                                   mod_created_at={(data)=>{return <DateFormat date={data}/>}}
                                                    headingText="Cancellation Requests"
                                                    descriptionText="Services with cancellation request from customers."
                                                    className="dashboard-charts"
+                                                   mod_name={(data, resObj)=>{
+                                                       return ( <Link to={`/service-instance/${resObj.id}`}>{data}</Link> );
+                                                   }}
+                                                   mod_created_at={(data)=>{return <DateFormat date={data}/>}}
                                                    dropdown={[{
                                                        name: 'Actions', direction: 'right', buttons: [
                                                            {id: 1, name: 'View', link: '/service-instance/:id'},
-                                                           {id: 2, name: 'divider'},
                                                            {
-                                                               id: 4,
-                                                               name: 'View Invoices',
-                                                               link: '#',
+                                                               id: 2, name: 'View Invoices', link: '#',
                                                                onClick: (dataObj)=>{return function(e) {
                                                                    e.preventDefault();
                                                                    browserHistory.push(`/billing-history/${dataObj.user_id}`);
                                                                }}
-                                                           },
-                                                           {
-                                                               id: 5,
-                                                               name: this.dropdownStatus,
-                                                               link: '#',
-                                                               onClick: this.onOpenActionModal
                                                            }]
                                                    }]}
                                         />
@@ -99,10 +93,17 @@ class Dashboard extends React.Component {
                                                    col={['references.users.0.name', 'name', 'created_at']}
                                                    colNames={['Customer Name', 'Service Name', 'Created On']}
                                                    statusCol="status"
-                                                   mod_created_at={(data)=>{return <DateFormat date={data}/>}}
                                                    headingText="Requested Services"
                                                    descriptionText="Services requested for customer and awaiting the customer to approve."
                                                    className="dashboard-charts"
+                                                   mod_name={(data, resObj)=>{
+                                                       return ( <Link to={`/service-instance/${resObj.id}`}>{data}</Link> );
+                                                   }}
+                                                   mod_created_at={(data)=>{return <DateFormat date={data}/>}}
+                                                   dropdown={[{
+                                                       name: 'Actions', direction: 'right', buttons: [
+                                                           {id: 1, name: 'View', link: '/service-instance/:id'}]
+                                                   }]}
                                         />
                                     </div>
                                     <div className="col-md-4">
