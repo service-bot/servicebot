@@ -19,7 +19,6 @@ class Home extends React.Component {
         this.state = {
             serviceUrl : "/api/v1/service-templates",
             searchValue : "",
-            systemOptions: this.props.options || {},
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -33,12 +32,6 @@ class Home extends React.Component {
         }else{
             console.log("no value", value);
             this.setState({serviceUrl : "/api/v1/service-templates", searchValue:""});
-        }
-    }
-
-    componentWillReceiveProps(nextProps){
-        if(nextProps.options){
-            this.setState({systemOptions: nextProps.options});
         }
     }
 
@@ -75,8 +68,8 @@ class Home extends React.Component {
         let featuredHeading = "";
         let featuredDescription = "";
 
-        if(this.state.systemOptions) {
-            let options = this.state.systemOptions;
+        if(this.props.options) {
+            let options = this.props.options;
             featuredHeading = _.get(options, 'home_featured_heading.value', '"You can set this heading in system options');
             featuredDescription = _.get(options, 'home_featured_description.value', "You can set this text in system options");
         }
@@ -94,6 +87,9 @@ class Home extends React.Component {
                 </Featured>
                 <Content>
                     <PageSection>
+                        <h2 className="section-heading">
+                            {this.state.heading ? this.state.heading : "Featured Services"}
+                        </h2>
                         <ServiceList url={this.state.serviceUrl}/>
                     </PageSection>
                 </Content>

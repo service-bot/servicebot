@@ -37,8 +37,10 @@ class ServiceList extends React.Component {
 
     componentWillReceiveProps(nextProps){
         let self = this;
-        if(nextProps.url){
+        if(nextProps.url != this.props.url){
+            console.log("updated props url", nextProps.url);
             Fetcher(nextProps.url).then(function(response){
+                console.log("url response", response);
                 if(!response.error){
                     self.setState({services : response});
                 }
@@ -57,9 +59,6 @@ class ServiceList extends React.Component {
             let self = this;
             return(
                 <div className="all-services" ref="allServices">
-                    <h2 className="section-heading">
-                        {this.state.heading ? this.state.heading : "Featured Services"}
-                    </h2>
                     <div className="row">
                         {this.state.services.map(service => (
                             <ServiceListItem key={`service-${service.id}`}

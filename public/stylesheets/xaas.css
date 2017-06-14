@@ -354,6 +354,23 @@ span.one-time-charge-label {
     color: #a0a0a0;
 }
 
+/* service listing page */
+.page-all-services .icon-heading{
+    margin-bottom: 50px;
+}
+.category-filter .form-group {
+    display: flex;
+    margin: 4px 0px;
+}
+.category-filter label {
+    width: 35%;
+    text-align: right;
+    padding-right: 15px;
+}
+.category-filter .form-control {
+    width: 65%;
+}
+
 /* service request page */
 .service-icon{
     width: 50px;

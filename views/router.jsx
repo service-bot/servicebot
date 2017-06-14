@@ -5,6 +5,7 @@ import Promise from "promise-polyfill";
 // App
 import App from "./components/app.jsx";
 import Home from "./components/pages/home.jsx";
+import AllServices from "./components/pages/all-services.jsx";
 // Dashboard (My Services)
 import MyServices from './components/pages/my-services.jsx';
 import ModalInvoice from './components/elements/modals/modal-invoice.jsx';
@@ -49,6 +50,7 @@ let AppRouter = function(props) {
             <Route name="Home" path="/" component={App}>
                 <IndexRoute component={Home}/>
                 <Route name="Home" path="home" component={Home}/>
+                <Route name="All Services" path="all-services" component={AllServices}/>
                 <Route name="User Login" path="login" component={Login}/>
                 <Route name="Forgot Password" path="forgot-password" component={ForgotPassword}/>
                 <Route name="Reset Password" path="reset-password/:uid/:token" component={ResetPassword}/>
