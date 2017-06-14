@@ -47,14 +47,15 @@ class Widget extends React.Component {
 
             let darkened = getDarkenedRGB(hexToRgb(_.get(options, 'primary_theme_background_color.value', '#000000')));
             let darkenedHex = rgbToHex(darkened.r, darkened.g, darkened.b);
+            console.log("the new dark color", darkened);
             style.widgetLabel.backgroundColor = darkenedHex;
             style.widgetLabel.color = _.get(options, 'primary_theme_text_color.value', '#ffffff');
         }
 
         return (
-            <div className={`dashboard-widget ${this.getCSSClass()}`} onClick={this.goTo}>
+            <div className={`dashboard-widget ${this.getCSSClass()}`} onClick={this.goTo} style={style.widgetData}>
                 <div className="widget-label" style={style.widgetLabel}>{this.state.data.label}</div>
-                <div className="widget-data" style={style.widgetData}>{this.getFormatted(this.state.data.value)}</div>
+                <div className="widget-data">{this.getFormatted(this.state.data.value)}</div>
             </div>
         );
     }
