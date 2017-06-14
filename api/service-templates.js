@@ -1,4 +1,3 @@
-
 let async = require('async');
 let auth = require('../middleware/auth');
 let mailer = require('../middleware/mailer');
@@ -48,8 +47,8 @@ let imageStorage = multer.diskStorage({
 module.exports = function (router) {
 
     //strips out possible xss
-    router.post(function(req, res, next){
-        if(req.body && req.body.details != null){
+    router.post(function (req, res, next) {
+        if (req.body && req.body.details != null) {
             req.body.details = xss(req.body.details);
         }
         next();
@@ -149,6 +148,7 @@ module.exports = function (router) {
             if (!req.isAuthenticated()) {
                 let publicProps = _.filter(props, (prop => !prop.data.private));
                 serviceTemplate.data.references[ServiceTemplateProperty.table] = publicProps.map(entity => entity.data);
+                delete serviceTemplate.data.overhead;
                 res.json(serviceTemplate.data);
             }
             else {
@@ -162,7 +162,7 @@ module.exports = function (router) {
     });
 
     /**
-     * The request function will request a new service instance
+     * The request function will request a new service instance for an authenticated user
      */
     router.post("/service-templates/:id/request", validate(ServiceTemplate), auth(), function (req, res, next) {
         let serviceTemplate = res.locals.valid_object;
@@ -174,23 +174,24 @@ module.exports = function (router) {
             .then(function (service) {
                 //Send the main based on the requester
                 return new Promise(function (resolve, reject) {
-                    if(service.data.user_id == req_uid) {
-                        mailer('request_service_instance_user','user_id', service)(req,res,next);
+                    if (service.data.user_id == req_uid) {
+                        mailer('request_service_instance_user', 'user_id', service)(req, res, next);
                     } else {
-                        mailer('request_service_instance_admin','user_id', service)(req,res,next);
+                        mailer('request_service_instance_admin', 'user_id', service)(req, res, next);
                     }
                     return resolve(service);
                 });
             }).then(function (service) {
-                return new Promise(function (resolve, reject) {
-                    EventLogs.logEvent(req.user.get('id'), `service-templates ${req.params.id} was requested by user ${req.user.get('email')} and service-instance was created`);
-                    res.status(200).json(service);
-                    return resolve(service);
-                });
-            }).catch(function (err) {
-                res.status(400).json({error: err});
+            return new Promise(function (resolve, reject) {
+                EventLogs.logEvent(req.user.get('id'), `service-templates ${req.params.id} was requested by user ${req.user.get('email')} and service-instance was created`);
+                res.status(200).json(service);
+                return resolve(service);
             });
+        }).catch(function (err) {
+            res.status(400).json({error: err});
+        });
     });
+
 
     router.post("/service-templates", auth(), function (req, res, next) {
         req.body.created_by = req.user.get("id");
@@ -198,30 +199,82 @@ module.exports = function (router) {
     });
 
     router.get("/service-templates/public", function (req, res, next) {
-        console.log("getting service templates")
         let key = "published";
         let value = true;
-        let updatedTemplates = [];
-        ServiceTemplate.findAll(key, value, function (templates) {
-            if(templates.length == 0){
-                return res.json([]);
+
+        new Promise((resolve, reject)=>{
+            //Get the list of templates and apply order from query if requested
+            if(req.query.order_by) {
+                console.log(`Query sent with order by ${req.query.order_by}`);
+                let order = 'ASC';
+                if (req.query.order) {
+                    console.log(`Query sent with order ${req.query.order}`);
+                    if(req.query.order.toUpperCase() === 'DESC') {
+                        order = 'DESC';
+                    }
+                }
+                ServiceTemplate.findAllByOrder(key, value, req.query.order_by, order, templates=>{
+                    if(templates.length == 0){
+                        reject('No published templates found')
+                    }
+                    else{
+                        resolve(templates);
+                    }
+                })
             }
-            templates.forEach(template => {
-                template.data.references = {};
-                template.getRelated(ServiceCategory, function (props) {
-                    template.data.references[ServiceCategory.table] = props.map(entity => entity.data);
-                    updatedTemplates.push(template);
-                    if (updatedTemplates.length == templates.length) {
-                        res.json(updatedTemplates.map(function (entity) {
-                            delete entity.data.overhead;
-                            return entity.data
-                        }))
+            else{
+                ServiceTemplate.findAll(key, value, templates=>{
+                    if(templates.length == 0){
+                        reject('No published templates found')
+                    }
+                    else{
+                        resolve(templates);
+                    }
+                })
+            }
+        })
+            .then((templates)=>{
+            //Apply the query limit to the array of templates
+                return new Promise((resolve, reject)=>{
+                    if(req.query.limit){
+                        console.log(`Query sent with limit ${req.query.limit}`);
+                        if(isNaN(req.query.limit)){
+                            console.log(`limit ${req.query.limit} is not a number`);
+                            reject(`limit ${req.query.limit} must be a number`)
+                        }
+                        else {
+                            resolve(templates.slice(0, req.query.limit));
+                        }
+                    }
+                    else{
+                        resolve(templates);
                     }
                 });
+            })
+            .then(templates=>{
+                //Attach references to templates
+                return Promise.all(templates.map(template=>{
+                    return new Promise((resolve, reject)=>{
+                        template.attachReferences(updatedParent=>{
+                            resolve(updatedParent);
+                        })
+                    })
+                }))
+            })
+            .then(templates=>{
+                //send response
+                res.json(templates.map(function (entity) {
+                    delete entity.data.overhead;
+                    return entity.data
+                }))
+            })
+            .catch(err=>{
+                //send error response
+                console.error('Error with Get public templates request: ', err);
+                res.status(400).json({error: err});
             });
-
-        });
     });
+
 
     router.get(`/service-templates/search`, function (req, res, next) {
         if (!req.isAuthenticated()) {
