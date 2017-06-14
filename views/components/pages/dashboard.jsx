@@ -6,6 +6,8 @@ import Load from '../utilities/load.jsx';
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
+import DataTable from "../elements/datatable/datatable.jsx";
+import DateFormat from "../utilities/date-format.jsx";
 import {DashboardWidgets} from "../elements/dashboard/dashboard-widgets.jsx";
 import {ServiceOverTimeChart, ServiceStatusChart} from "../elements/dashboard/dashboard-chart.jsx";
 import PageSection from "../layouts/page-section.jsx";
@@ -60,9 +62,33 @@ class Dashboard extends React.Component {
                             <div>
                                 <ContentTitle title="Welcome to your dashboard"/>
                                 <DashboardWidgets data={this.state.analytics}/>
-                                <div id="dashboard-charts">
-                                    <ServiceOverTimeChart/>
-                                    <ServiceStatusChart/>
+                                <div className="row">
+                                    <div className="col-md-8">
+                                        <DataTable parentState={this.state}
+                                                   get={'/api/v1/service-instances/search?key=status&value=waiting_cancellation'}
+                                                   col={['references.users.0.name', 'name', 'created_at']}
+                                                   colNames={['Customer Name', 'Service Name', 'Created On']}
+                                                   statusCol="status"
+                                                   mod_created_at={(data)=>{return <DateFormat date={data}/>}}
+                                                   headingText="Cancellation Requests"
+                                                   descriptionText="Services with cancellation request from customers."
+                                                   className="dashboard-charts"
+                                        />
+                                        <DataTable parentState={this.state}
+                                                   get={'/api/v1/service-instances/search?key=status&value=requested'}
+                                                   col={['references.users.0.name', 'name', 'created_at']}
+                                                   colNames={['Customer Name', 'Service Name', 'Created On']}
+                                                   statusCol="status"
+                                                   mod_created_at={(data)=>{return <DateFormat date={data}/>}}
+                                                   headingText="Requested Services"
+                                                   descriptionText="Services requested for customer and awaiting the customer to approve."
+                                                   className="dashboard-charts"
+                                        />
+                                    </div>
+                                    <div className="col-md-4">
+                                        <ServiceStatusChart className="dashboard-charts"/>
+                                        <ServiceOverTimeChart className="dashboard-charts"/>
+                                    </div>
                                 </div>
                             </div>
                         </Content>

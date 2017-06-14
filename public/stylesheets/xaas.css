@@ -396,6 +396,12 @@ span.one-time-charge-label {
     font-size: 1rem;
     font-weight: normal;
 }
+.dashboard-charts{
+    padding: 30px 15px;
+    border: 1px solid #efefef;
+    border-radius: 5px;
+    margin: 30px 0px;
+}
 
 /* manage catalog page */
 .catalog-item-description{

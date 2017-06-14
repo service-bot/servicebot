@@ -279,12 +279,13 @@ table.dataTable thead .sorting_desc_disabled:after {
   max-width: 100%;
   overflow-x: scroll;
   overflow-y: visible;
-  padding-bottom: 100px;
+  /*padding-bottom: 100px;*/
 }
 
 #tables-datatable .table{
   padding-bottom: 90px !important;
-  overflow-y: visible;
+  border-radius: 5px;
+  /*overflow-y: visible;*/
 }
 
 /* condensed */

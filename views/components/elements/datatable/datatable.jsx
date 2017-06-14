@@ -31,7 +31,10 @@ class DataTable extends React.Component {
     //----------------------------------------------------------------------------------------------------------------------------------------------
     constructor(props){
         super(props);
-        this.state = { resObjs: [], url: this.props.get, col: this.props.col, colNames: this.props.colNames, loading:true };
+        this.state = {
+            resObjs: [], url: this.props.get, col: this.props.col, colNames: this.props.colNames,
+            searchbar: this.props.searchbar, headingText: this.props.headingText || null, descriptionText: this.props.descriptionText || null, loading:true
+        };
 
         this.fetchData = this.fetchData.bind(this);
         this.handleSort = this.handleSort.bind(this);
@@ -137,11 +140,19 @@ class DataTable extends React.Component {
         }else {
             if(this.state.resObjs.length) {
                 return (
-                    <div id="tables-datatable" className="table-responsive">
-                        <div className="data-table-search">
-                            <label>Quick Search: </label>
-                            <input className="form-control" onChange={this.handleSearch}/>
-                        </div>
+                    <div id="tables-datatable" className={`table-responsive ${this.props.className}`}>
+                        {this.state.headingText &&
+                            <h3>{this.state.headingText}</h3>
+                        }
+                        {this.state.descriptionText &&
+                            <p>{this.state.descriptionText}</p>
+                        }
+                        {this.state.searchbar &&
+                            <div className="data-table-search">
+                                <label>Quick Search: </label>
+                                <input className="form-control" onChange={this.handleSearch}/>
+                            </div>
+                        }
                         <table className="table datatable table-striped table-hover">
                             <thead>
                             <tr>
