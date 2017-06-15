@@ -5,7 +5,7 @@ import Footer from "./layouts/footer.jsx"
 import {browserHistory} from 'react-router';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-import {setOptions, SET_OPTIONS, SET_UID} from "./utilities/actions"
+import {setOptions,setUid, SET_OPTIONS, SET_UID} from "./utilities/actions"
 import cookie from 'react-cookie';
 
 function appReducer(state = {options: {}, uid : cookie.load("uid")}, action) {
@@ -63,6 +63,7 @@ class App extends React.Component {
 
         Fetcher("/api/v1/auth/session/clear").then(function(result){
             that.setState({uid: null})
+            store.dispatch(setUid(null));
             browserHistory.push('/');
         })
     }
