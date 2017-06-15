@@ -6,6 +6,7 @@ let ServiceCategory = require('../models/service-category');
 let ServiceTemplate = require('../models/service-template');
 let ServiceInstance = require("../models/service-instance");
 let ServiceTemplateProperty = require("../models/service-template-property");
+let Role = require('../models/role');
 let EventLogs = require('../models/event-log');
 let multer = require("multer");
 let File = require("../models/file");
@@ -202,43 +203,43 @@ module.exports = function (router) {
         let key = "published";
         let value = true;
 
-        new Promise((resolve, reject)=>{
+        new Promise((resolve, reject) => {
             //Get the list of templates and apply order from query if requested
-            if(req.query.order_by) {
+            if (req.query.order_by) {
                 console.log(`Query sent with order by ${req.query.order_by}`);
                 let order = 'ASC';
                 if (req.query.order) {
                     console.log(`Query sent with order ${req.query.order}`);
-                    if(req.query.order.toUpperCase() === 'DESC') {
+                    if (req.query.order.toUpperCase() === 'DESC') {
                         order = 'DESC';
                     }
                 }
-                ServiceTemplate.findAllByOrder(key, value, req.query.order_by, order, templates=>{
-                    if(templates.length == 0){
+                ServiceTemplate.findAllByOrder(key, value, req.query.order_by, order, templates => {
+                    if (templates.length == 0) {
                         reject('No published templates found')
                     }
-                    else{
+                    else {
                         resolve(templates);
                     }
                 })
             }
-            else{
-                ServiceTemplate.findAll(key, value, templates=>{
-                    if(templates.length == 0){
+            else {
+                ServiceTemplate.findAll(key, value, templates => {
+                    if (templates.length == 0) {
                         reject('No published templates found')
                     }
-                    else{
+                    else {
                         resolve(templates);
                     }
                 })
             }
         })
-            .then((templates)=>{
-            //Apply the query limit to the array of templates
-                return new Promise((resolve, reject)=>{
-                    if(req.query.limit){
+            .then((templates) => {
+                //Apply the query limit to the array of templates
+                return new Promise((resolve, reject) => {
+                    if (req.query.limit) {
                         console.log(`Query sent with limit ${req.query.limit}`);
-                        if(isNaN(req.query.limit)){
+                        if (isNaN(req.query.limit)) {
                             console.log(`limit ${req.query.limit} is not a number`);
                             reject(`limit ${req.query.limit} must be a number`)
                         }
@@ -246,29 +247,29 @@ module.exports = function (router) {
                             resolve(templates.slice(0, req.query.limit));
                         }
                     }
-                    else{
+                    else {
                         resolve(templates);
                     }
                 });
             })
-            .then(templates=>{
+            .then(templates => {
                 //Attach references to templates
-                return Promise.all(templates.map(template=>{
-                    return new Promise((resolve, reject)=>{
-                        template.attachReferences(updatedParent=>{
+                return Promise.all(templates.map(template => {
+                    return new Promise((resolve, reject) => {
+                        template.attachReferences(updatedParent => {
                             resolve(updatedParent);
                         })
                     })
                 }))
             })
-            .then(templates=>{
+            .then(templates => {
                 //send response
                 res.json(templates.map(function (entity) {
                     delete entity.data.overhead;
                     return entity.data
                 }))
             })
-            .catch(err=>{
+            .catch(err => {
                 //send error response
                 console.error('Error with Get public templates request: ', err);
                 res.status(400).json({error: err});
@@ -277,28 +278,66 @@ module.exports = function (router) {
 
 
     router.get(`/service-templates/search`, function (req, res, next) {
-        if (!req.isAuthenticated()) {
-            let updatedTemplates = [];
-            ServiceTemplate.search(req.query.key, req.query.value, function (templates) {
-                templates.forEach(template => {
-                    template.data.references = {};
-                    template.getRelated(ServiceCategory, function (props) {
-                        template.data.references[ServiceCategory.table] = props.map(entity => entity.data);
-                        updatedTemplates.push(template);
-                        if (updatedTemplates.length == templates.length) {
-                            res.json(updatedTemplates.map(function (entity) {
-                                delete entity.data.overhead;
-                                return entity.data
-                            }))
-                        }
+        function getPublicSearch() {
+            new Promise((resolve, reject) => {
+                ServiceTemplate.search(req.query.key, req.query.value, function (templates) {
+                    if (templates.length == 0) {
+                        reject('No published templates found with search criteria')
+                    }
+                    else {
+                        resolve(templates);
+                    }
+                })
+            })
+                .then(templates => {
+                    //filter for published templates
+                    return new Promise((resolve, reject) => {
+                        resolve(_.filter(templates, 'data.published'));
                     });
+                })
+                .then(templates => {
+                    //Attach references to templates
+                    return Promise.all(templates.map(template => {
+                        return new Promise((resolve, reject) => {
+                            template.attachReferences(updatedParent => {
+                                resolve(updatedParent);
+                            })
+                        })
+                    }))
+                })
+                .then(templates => {
+                    //send response
+                    res.json(templates.map(function (entity) {
+                        delete entity.data.overhead;
+                        return entity.data
+                    }))
+                })
+                .catch(err => {
+                    //send error response
+                    console.error('Error with Get public templates request: ', err);
+                    res.status(400).json({error: err});
                 });
-            });
+        }
 
+        if (!req.isAuthenticated()) {
+            getPublicSearch();
         }
         else {
-            console.log("authorized person, go on");
-            next();
+            //If the user is authenticated and has the role 'user' allow to see public templates
+            new Promise((resolve, reject) => {
+                Role.findOne("id", req.user.get("role_id"), function(role) {
+                    resolve(role.get('role_name') === 'user');
+                })
+            })
+                .then(function (isUser) {
+                    if(isUser){
+                        getPublicSearch();
+                    }
+                    else{
+                        //admin or staff go to entity route
+                        next();
+                    }
+                });
         }
 
     });
