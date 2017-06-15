@@ -153,20 +153,22 @@ class ServiceListItem extends React.Component {
                                 <h3 className="card-service-company">{category}</h3>
                             }
                         </div>
-                        <div className={`card-block ${this.state.display_setting.icon && 'with-icon'}`} style={style.body}>
-                            <div className="card-title-holder">
-                                <h3 className="card-title">{serviceName}</h3>
-                                {this.state.display_setting.date &&
-                                <small className="meta">Published
-                                    on: {new Date(this.props.created).toDateString()}</small>
-                                }
+                        <div className="card-block-wrapper">
+                            <div className={`card-block ${this.state.display_setting.icon && 'with-icon'}`} style={style.body}>
+                                <div className="card-title-holder">
+                                    <h3 className="card-title">{serviceName}</h3>
+                                    {this.state.display_setting.date &&
+                                    <small className="meta">Published
+                                        on: {new Date(this.props.created).toDateString()}</small>
+                                    }
+                                </div>
+                                <div className="card-body" ref="myCardBody" style={style.body}>
+                                    <p>{serviceDescription}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div className="card-body" ref="myCardBody" style={style.body}>
-                            <p>{serviceDescription}</p>
-                        </div>
-                        <div className="card-footer" style={style.body}>
-                            <span className="price">{getPrice()}</span>
+                            <div className="card-footer" style={style.body}>
+                                <span className="price">{getPrice()}</span>
+                            </div>
                         </div>
                     </div>
                     <div className="request-button" style={{"backgroundColor": style.header.backgroundColor, "color": style.header.color}}>

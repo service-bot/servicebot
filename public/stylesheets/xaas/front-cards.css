@@ -8,7 +8,7 @@
     position: relative;
     height: 100%;
     background: #fff;
-    border: 1px solid #f3f3f3;
+    /*border: 1px solid #f3f3f3;*/
     color: #4a4a4a;
     font-size: 1rem;
     margin-bottom: 0px;
@@ -16,6 +16,17 @@
     -webkit-transition: all 0.5s cubic-bezier(0, 0.86, 0.71, 1.18);
     -moz-transition: all 0.5s cubic-bezier(0, 0.86, 0.71, 1.18);
     transition: all 0.5s cubic-bezier(0, 0.86, 0.71, 1.18);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.card-block-wrapper {
+    flex-grow: 2;
+    border: 1px solid #f3f3f3;
+    border-top: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: inherit;
 }
 .with-icon .card-title-holder {
     padding-left: 50px;
@@ -67,7 +78,7 @@
 .card.service.dark{
     color: #fff;
 }
-.card.service .card-block, .card.service .card-body, .card.service .card-footer{
+.card.service .card-title-holder, .card.service .card-body, .card.service .card-footer {
     padding: 20px 15px 10px;
 }
 .card.service .card-body{
@@ -75,16 +86,11 @@
     overflow: hidden;
     padding-top: 0px;
     padding-bottom: 7px;
-    margin-bottom: 65px;
 }
 .card-footer{
-    bottom: 0px !important;
-    width: 100% !important;
-    border-bottom-left-radius: 5px !important;
-    border-bottom-right-radius: 5px !important;
-    display: flex;
-    justify-content: space-between;
-    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
 }
 .card-footer .seller, .card-footer .btn{
     font-size: 0.875rem;
