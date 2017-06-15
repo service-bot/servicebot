@@ -62,21 +62,19 @@ module.exports = function(tableName, references=[], primaryKey='id') {
 
 
     Entity.prototype.create = function (callback) {
-        console.log("CREATE");
         let self = this;
         knex(Entity.table).columnInfo()
             .then(function (info) {
                 return _.pick(self.data, _.keys(info));
             })
             .then(function(data){
-                knex(Entity.table).returning('id').insert(data)
+                knex(Entity.table).returning(primaryKey).insert(data)
                     .then(function(result){
-                        self.set("id", result[0]);
+                        self.set(primaryKey, result[0]);
                         callback(null, self);
                     })
                     .catch(function(err){
-                        console.error(err);
-                        callback(err.detail);
+                        callback(err);
                     });
             })
     };
