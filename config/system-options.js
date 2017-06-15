@@ -60,7 +60,7 @@ let systemOptions =
             "type": "theme",
             "data_type": "color_picker"
         },
-        {"option": "background_color", "value": "#30468a", public: true, "type": "theme", "data_type": "color_picker"},
+        {"option": "background_color", "value": "#ffffff", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "page_link_color", "value": "#30468a", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "header_text_color", "value": "#30468a", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "text_size", "value": "12", public: true, "type": "theme", "data_type": "number"},
@@ -83,6 +83,7 @@ let systemOptions =
         {"option": "primary_theme_background_color", "value": "#30468A", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "home_featured_description", "value": "Start Selling Your Services Now!", public: true, "type": "content", "data_type": "text"},
         {"option": "home_featured_heading", "value": "Welcome To ServiceBot!", public: true, "type": "content", "data_type": "text"},
+        {"option": "breadcrumb_color", "value": "#FFFFFF", public: true, "type": "theme", "data_type": "color_picker"},
 
     ],
         populateOptions: function(options=systemOptions.options){
