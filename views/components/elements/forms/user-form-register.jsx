@@ -116,4 +116,4 @@ class UserFormRegister extends React.Component {
     }
 }
 
-export default connect(mapDispatchToProps)(UserFormRegister);
+export default connect(null, mapDispatchToProps)(UserFormRegister);
