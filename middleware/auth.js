@@ -44,7 +44,7 @@ let auth = function(permission=null, model=null, correlation_id="user_id", bypas
     return function (req, res, next) {
         // if user is authenticated in the session, call the next() to call the next request handler
         // Passport adds this method to request object. A middleware is allowed to add properties to
-        // request and respons   e object
+        // request and response object
 
 
         let permissionToCheck = permission;
@@ -79,7 +79,7 @@ let auth = function(permission=null, model=null, correlation_id="user_id", bypas
                 if(status){
                     if (model) {
                         //TODO be able to handle other ids, not just 'id'
-                        id = req.params.id;
+                        let id = req.params.id;
                         model.findOne("id", id, function (result) {
                             console.log("correlation id: " + correlation_id + " " + req.user.get("id"));
                             if (result.get(correlation_id) == req.user.get("id") || permissions.some(p => p.data.permission_name === 'can_manage')) {
@@ -103,6 +103,9 @@ let auth = function(permission=null, model=null, correlation_id="user_id", bypas
 
     };
 };
+
+auth.isAuthorized = isAuthorized;
+
 module.exports = auth;
 
 
