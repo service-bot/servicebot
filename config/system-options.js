@@ -69,7 +69,20 @@ let systemOptions =
         {"option": "company_address", public: true, "type": "system", "data_type": "text"},
         {"option": "company_phone_number", public: true, "type": "system", "data_type": "text"},
         {"option": "company_email", public: true, "type": "system", "data_type": "text"},
-        {"option": "pigkey", public: true, "type": "system", "data_type": "text"}
+        {"option": "featured_service_heading", "value": "Featured Services", public: true, "type": "featured services", "data_type": "text"},
+        {"option": "services_listing_page_heading_text", "value": "All Products and Services", public: true, "type": "services listing page", "data_type": "text"},
+        {"option": "featured_service_list_count", "value": "6", public: true, "type": "featured services", "data_type": "number"},
+        {"option": "service_box_body_text_color", "value": "#414141", public: true, "type": "service box", "data_type": "color_picker"},
+        {"option": "service_box_body_background_color", "value": "#FFFFFF", public: true, "type": "service box", "data_type": "color_picker"},
+        {"option": "service_box_icon_display", "value": true, public: true, "type": "service box", "data_type": "bool"},
+        {"option": "service_box_request_button_text", "value": "default", public: true, "type": "service box", "data_type": "text"},
+        {"option": "service_box_category_display", "value": true, public: true, "type": "service box", "data_type": "bool"},
+        {"option": "service_box_header_text_color", "value": "#FFFFFF", public: true, "type": "service box", "data_type": "color_picker"},
+        {"option": "service_box_header_background_color", "value": "#30468A", public: true, "type": "service box", "data_type": "color_picker"},
+        {"option": "primary_theme_text_color", "value": "#FFFFFF", public: true, "type": "theme", "data_type": "color_picker"},
+        {"option": "primary_theme_background_color", "value": "#30468A", public: true, "type": "theme", "data_type": "color_picker"},
+        {"option": "home_featured_description", "value": "Start Selling Your Services Now!", public: true, "type": "content", "data_type": "text"},
+        {"option": "home_featured_heading", "value": "Welcome To ServiceBot!", public: true, "type": "content", "data_type": "text"},
 
     ],
         populateOptions: function(options=systemOptions.options){
