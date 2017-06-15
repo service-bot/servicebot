@@ -6,6 +6,7 @@
 }
 .card.service{
     position: relative;
+    height: 100%;
     background: #fff;
     border: 1px solid #f3f3f3;
     color: #4a4a4a;

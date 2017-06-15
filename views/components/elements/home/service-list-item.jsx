@@ -14,7 +14,6 @@ class ServiceListItem extends React.Component {
             image: null,
             icon: null,
             imageColor: false,
-            company_name: 'ServiceBot',
             display_setting: {
                 icon: false,
                 background: false,
@@ -24,27 +23,13 @@ class ServiceListItem extends React.Component {
                 cost: true,
                 request_text: null,
                 item_count: 6
-            },
-            systemOptions: this.props.options || {},
-            height: 0
+            }
         };
         this.getCoverImage = this.getCoverImage.bind(this);
         this.getIcon = this.getIcon.bind(this);
     }
 
-    componentWillReceiveProps(nextProps){
-        if(nextProps.options){
-            this.setState({systemOptions: nextProps.options});
-        }
-    }
-
     componentDidMount() {
-
-        const height = document.getElementById(`service-card-${this.props.service.id}`).clientHeight;
-        // console.log(`service-card-${this.props.service.id}`, height);
-        this.props.handleSyncHeight(height);
-        this.setState({height: height});
-
         this.getCoverImage();
         this.getIcon();
     }
@@ -79,31 +64,13 @@ class ServiceListItem extends React.Component {
         });
     }
 
-    componentWillReceiveProps(nextProps){
-        if(nextProps.height > 0 && nextProps.height != this.state.height){
-            this.setState({height: nextProps.height});
-        }
-    }
-
-    getMyCardSize(){
-        return ReactDOM.findDOMNode(this.refs.myCard).getBoundingClientRect();
-    }
-
-
     createMarkup(html) {
         return {__html: html};
     }
 
-    detailsOverflowed() {
-        let myCardBody = ReactDOM.findDOMNode(this.refs.myCardBody).getBoundingClientRect();
-        let myCardDetails = ReactDOM.findDOMNode(this.refs.myCardDetails).getBoundingClientRect();
-
-        return myCardBody.height < myCardDetails;
-    }
-
     render(){
         let style = {};
-        let options = this.state.systemOptions;
+        let options = this.props.options;
         if(this.state.image){
             style.header = {
                 "backgroundImage" : `url('${this.state.image}')`,
@@ -174,9 +141,9 @@ class ServiceListItem extends React.Component {
         };
 
         return (
-            <div id={`service-card-${serviceId}`} className="service-column col-xs-12 col-sm-6 col-lg-4 col-xl-4" ref="myCardColumn">
-                <div className="card-wrapper service" onClick={()=>{browserHistory.push(this.props.url)}}>
-                    <div id={`service-${serviceId}`} className={`card service`} style={style.body} ref="myCard">
+            <div id={`service-card-${serviceId}`} className="service-column col-xs-12 col-sm-6 col-lg-4 col-xl-4">
+                <div className="card-wrapper service" onClick={()=>{browserHistory.push(this.props.url)}} style={{height: this.props.height}}>
+                    <div id={`service-${serviceId}`} className={`card service`} style={style.body}>
                         <div className={`card-image-holder ${this.state.image ? 'image' : 'no-image'}`} style={style.header}>
                             {this.state.icon &&
                                 <img src={this.state.icon} alt="icon"/>

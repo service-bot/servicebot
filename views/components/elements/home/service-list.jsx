@@ -3,6 +3,7 @@ import Load from '../../utilities/load.jsx';
 import Fetcher from "../../utilities/fetcher.jsx"
 import ServiceListItem from "./service-list-item.jsx"
 import ReactDOM from 'react-dom';
+let _ = require("lodash");
 
 class ServiceList extends React.Component {
 
@@ -13,10 +14,7 @@ class ServiceList extends React.Component {
             url: this.props.url || "/api/v1/service-templates/public",
             loading:true,
             width: 0,
-            cardHeight: 0,
         };
-
-        this.handleSyncHeight = this.handleSyncHeight.bind(this);
     }
 
     componentDidMount() {
@@ -29,9 +27,17 @@ class ServiceList extends React.Component {
         });
     }
 
-    handleSyncHeight(height){
-        if(this.state.cardHeight < height){
-            this.setState({cardHeight: height});
+    componentDidUpdate(){
+        let myItemsList = document.getElementsByClassName('card-wrapper');
+        let max = 0;
+        for(let i = 0; i < myItemsList.length; i++){
+            if(myItemsList[i].clientHeight > max){
+                max = myItemsList[i].clientHeight;
+            }
+        }
+
+        if(this.state.height != max) {
+            this.setState({height: max});
         }
     }
 
@@ -56,21 +62,19 @@ class ServiceList extends React.Component {
             return <p className="help-block center-align">There are no services</p>;
         }
         else {
-            let self = this;
             return(
                 <div className="all-services" ref="allServices">
-                    <div className="row">
+                    <div className="row" ref="hello">
                         {this.state.services.map(service => (
                             <ServiceListItem key={`service-${service.id}`}
-                                             handleSyncHeight={self.handleSyncHeight}
-                                             height={self.state.cardHeight}
                                              service={service}
+                                             height={this.state.height || 'auto'}
                                              name={service.name}
                                              created={service.created}
                                              description={service.description}
                                              amount={service.amount}
                                              interval={service.interval}
-                                             url={`/service-catalog/${service.id}/request`}/>
+                                             url={`/service-catalog/${service.id}/request`} />
                         ))}
                     </div>
                 </div>
