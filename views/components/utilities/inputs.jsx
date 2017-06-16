@@ -276,7 +276,7 @@ class Inputs extends React.Component {
             console.log("color picker color:", this.state.value);
             return (
                 <div key={`color_picker_${this.state.name}`} id={`color_picker_${this.state.name}`}
-                     className={`form-group color-picker-input col-md-3 ${error ? 'has-error' : ''}`}>
+                     className={`form-group color-picker-input ${error ? 'has-error' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}
                     <div className="ColorPickerPreview"
                          style={{backgroundColor: this.state.value, width: 50+'px', height: 50+'px', cursor: 'pointer', borderRadius: 5+'px'}}
@@ -294,6 +294,7 @@ class Inputs extends React.Component {
                                   onChange={this.handleColorPickerChange}/>
                     }
                     {this.props.error && <span className="help-block">{this.props.error}</span> }
+                    <div className="clearfix"/>
                 </div>
             );
         }else if(type =="creditcard"){

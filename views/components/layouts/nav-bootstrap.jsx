@@ -6,6 +6,7 @@ import $ from "jquery";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import { connect } from "react-redux";
 let _ = require("lodash");
+import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -42,13 +43,17 @@ class NavBootstrap extends React.Component {
         this.state = {
             InvoiceModal: false,
             sidebar: false,
-            systemOptions: this.props.options || {}
+            systemOptions: this.props.options || {},
+            editingMode: false,
+            editingGear: false
         };
 
         this.onOpenInvoiceModal = this.onOpenInvoiceModal.bind(this);
         this.onClose = this.onClose.bind(this);
         this.getMenuItems = this.getMenuItems.bind(this);
+        this.toggleEditingMode = this.toggleEditingMode.bind(this);
         this.toggleSideBar = this.toggleSideBar.bind(this);
+        this.toggleEditingGear = this.toggleEditingGear.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
@@ -75,6 +80,22 @@ class NavBootstrap extends React.Component {
 
     onClose(){
         this.setState({InvoiceModal: false});
+    }
+
+    toggleEditingMode(){
+        if(this.state.editingMode){
+            this.setState({editingMode: false})
+        }else{
+            this.setState({editingMode: true})
+        }
+    }
+
+    toggleEditingGear(){
+        if(this.state.editingGear){
+            this.setState({editingGear: false})
+        }else{
+            this.setState({editingGear: true})
+        }
     }
 
     toggleSideBar(){
@@ -151,7 +172,7 @@ class NavBootstrap extends React.Component {
         }
 
         return (
-            <nav className="navbar navbar-default" style={navigationBarStyle}>
+            <nav className="navbar navbar-default" style={navigationBarStyle} onMouseEnter={this.toggleEditingGear} onMouseLeave={this.toggleEditingGear}>
                 <div className="container-fluid">
                     <div className="navbar-header">
                         <button type="button" className="navbar-toggle collapsed" data-toggle="collapse"
@@ -192,6 +213,12 @@ class NavBootstrap extends React.Component {
                 </div>
                 {/* app-wide modals */}
                 {currentModal()}
+                {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
+                {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
+                                                                filter = {["primary_theme_background_color",
+                                                                             "primary_theme_text_color"]
+                                                                }/>
+                }
             </nav>
 
         );

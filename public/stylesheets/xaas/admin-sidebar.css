@@ -1,0 +1,55 @@
+.admin-editing-sidebar.bar-mode {
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    height: 100%;
+    width: 30%;
+    background-color: rgba(255, 255, 255, 0.92);
+    overflow-y: scroll;
+}
+.close-editing-sidebar{
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    padding: 11px;
+    cursor: pointer;
+}
+.admin-editing-gear{
+    position: absolute;
+    right: 12px;
+    top: 12px;
+}
+.admin-editing-gear span{
+    padding: 11px;
+    color: #ffffff;
+    cursor: pointer;
+}
+.admin-editing-sidebar h4{
+    margin: 0px;
+}
+.admin-editing-sidebar .system-settings-group{
+    margin-bottom: 0px;
+}
+.sidebar-section{
+    padding: 15px;
+    border-bottom: 1px solid gray;
+}
+.sidebar-section.heading{
+    padding: 17px 15px 18px;
+    background-color: white;
+}
+
+/* form elements */
+.admin-editing-sidebar label {
+    font-size: 12px;
+    font-weight: 300;
+}
+.admin-editing-sidebar .ColorPickerPreview {
+    width: 30px !important;
+    height: 30px !important;
+}
+.admin-editing-sidebar button.btn{
+    width: 100%;
+    font-size: 12px;
+    margin-top: 30px;
+}
