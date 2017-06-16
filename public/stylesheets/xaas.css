@@ -48,6 +48,7 @@ span.capitalize{
 }
 .main .section {
     padding: 60px 0px;
+    position: relative;
 }
 
 .section-heading {

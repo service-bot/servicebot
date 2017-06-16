@@ -21,7 +21,6 @@ class ServiceListItem extends React.Component {
                 category: false,
                 date: false,
                 cost: true,
-                request_text: null,
                 item_count: 6
             }
         };
@@ -129,23 +128,29 @@ class ServiceListItem extends React.Component {
 
         let getRequestText = ()=>{
             let serType = myService.type;
-            if (serType == "subscription"){
-                return ("Subscribe");
-            }else if (serType == "one_time"){
-                return ("Buy");
-            }else if (serType == "custom"){
-                return ("Request");
+            if(_.get(this.props.options, 'service_box_request_button_text.value') == "default"){
+
+                if (serType == "subscription"){
+                    return ("Subscribe");
+                }else if (serType == "one_time"){
+                    return ("Buy");
+                }else if (serType == "custom"){
+                    return ("Request");
+                }else{
+                    return ("")
+                }
             }else{
-                return ("")
+                return(_.get(this.props.options, 'service_box_request_button_text.value'));
             }
         };
 
+        console.log("icon display?", _.get(this.props.options, 'service_box_icon_display.value'));
         return (
             <div id={`service-card-${serviceId}`} className="service-column col-xs-12 col-sm-6 col-lg-4 col-xl-4">
                 <div className="card-wrapper service" onClick={()=>{browserHistory.push(this.props.url)}} style={{height: this.props.height}}>
                     <div id={`service-${serviceId}`} className={`card service`} style={style.body}>
                         <div className={`card-image-holder ${this.state.image ? 'image' : 'no-image'}`} style={style.header}>
-                            {this.state.icon &&
+                            {this.state.icon && _.get(this.props.options, 'service_box_icon_display.value') == "true" &&
                                 <img src={this.state.icon} alt="icon"/>
                             }
 
@@ -174,7 +179,7 @@ class ServiceListItem extends React.Component {
                     <div className="request-button" style={{"backgroundColor": style.header.backgroundColor, "color": style.header.color}}>
                         <Link to={this.props.url} className="btn btn-box">
                             <div className="btn btn-black" style={{"backgroundColor": style.header.backgroundColor, "color": style.header.color}}>
-                                <span>{this.state.display_setting.request_text || getRequestText()} </span>
+                                <span>{getRequestText() + " "}</span>
                                 <span>{getPrice() ? getPrice() : ""}</span>
                             </div>
                         </Link>

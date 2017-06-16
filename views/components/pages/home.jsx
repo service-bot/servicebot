@@ -9,6 +9,7 @@ import PageSection from "../layouts/page-section.jsx";
 import Buttons from "../elements/buttons.jsx";
 import SearchServiceBar from "../elements/home/service-list-search.jsx";
 import ServiceList from "../elements/home/service-list.jsx";
+import {AdminEditingGear, AdminEditingSidebar}from "../layouts/admin-sidebar.jsx";
 import { connect } from 'react-redux';
 let _ = require("lodash");
 
@@ -20,8 +21,14 @@ class Home extends React.Component {
         this.state = {
             serviceUrl : "/api/v1/service-templates/public?order_by=created_at&limit=6&order=desc",
             searchValue : "",
+            editingMode: false,
+            editingGear: false
         };
+
         this.handleChange = this.handleChange.bind(this);
+        this.toggleEditingMode = this.toggleEditingMode.bind(this);
+        this.toggleOnEditingGear = this.toggleOnEditingGear.bind(this);
+        this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
     }
 
     handleChange(event){
@@ -44,6 +51,19 @@ class Home extends React.Component {
         document.body.classList.remove('home')
     }
 
+    toggleEditingMode(){
+        if(this.state.editingMode){
+            this.setState({editingMode: false})
+        }else{
+            this.setState({editingMode: true})
+        }
+    }
+    toggleOnEditingGear(){
+        this.setState({editingGear: true})
+    }
+    toggleOffEditingGear(){
+        this.setState({editingGear: false})
+    }
 
     render () {
 
@@ -89,6 +109,7 @@ class Home extends React.Component {
                 </Featured>
                 <Content>
                     <PageSection>
+                        <div onMouseEnter={this.toggleOnEditingGear}>
                         <h2 className="section-heading">{featuredServicesHeading}</h2>
                         <ServiceList url={this.state.serviceUrl}/>
                         <Buttons
@@ -97,6 +118,19 @@ class Home extends React.Component {
                             style={{marginTop: '15px'}}
                             onClick={()=>{browserHistory.push('/all-services')}}
                         />
+                        {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
+                        {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
+                                                                        filter = {["featured_service_heading",
+                                                                            "service_box_body_text_color",
+                                                                            "service_box_body_background_color",
+                                                                            "service_box_icon_display",
+                                                                            "service_box_request_button_text",
+                                                                            "service_box_category_display",
+                                                                            "service_box_header_text_color",
+                                                                            "service_box_header_background_color"]
+                                                                        }/>
+                        }
+                        </div>
                     </PageSection>
                 </Content>
             </div>

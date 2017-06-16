@@ -15,7 +15,7 @@ body.front  .main .page-on-top{
 /* background override */
 body.home .featured{
     position: relative;
-    height: 90vh;
+    height: 80vh;
     min-height: 650px;
     /*margin-top: -90px;*/
     margin-top: 0px;

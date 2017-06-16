@@ -216,7 +216,10 @@ class NavBootstrap extends React.Component {
                 {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
                                                                 filter = {[ "brand_logo",
                                                                             "primary_theme_background_color",
-                                                                            "primary_theme_text_color"]
+                                                                            "primary_theme_text_color",
+                                                                            "button_primary_color",
+                                                                            "button_primary_hover_color",
+                                                                            "button_primary_text_color"]
                                                                 }/>
                 }
             </nav>

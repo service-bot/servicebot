@@ -17,7 +17,6 @@ class Featured extends React.Component {
         };
 
         this.toggleEditingMode = this.toggleEditingMode.bind(this);
-        this.toggleSideBar = this.toggleSideBar.bind(this);
         this.toggleOnEditingGear = this.toggleOnEditingGear.bind(this);
         this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
     }
@@ -44,17 +43,6 @@ class Featured extends React.Component {
     }
     toggleOffEditingGear(){
         this.setState({editingGear: false})
-    }
-
-    toggleSideBar(){
-        let self = this;
-        this.setState({sidebar: !this.state.sidebar}, function () {
-            if(self.state.sidebar){
-                document.body.classList.add('layout-collapsed');
-            }else{
-                document.body.classList.remove('layout-collapsed');
-            }
-        });
     }
 
     render () {
