@@ -2,14 +2,17 @@ let async = require('async');
 let auth = require('../middleware/auth');
 let mailer = require('../middleware/mailer');
 let validate = require('../middleware/validate');
+let EventLogs = require('../models/event-log');
+let File = require("../models/file");
+let Fund = require('../models/fund');
+let Invitation = require('../models/invitation');
 let ServiceCategory = require('../models/service-category');
 let ServiceTemplate = require('../models/service-template');
 let ServiceInstance = require("../models/service-instance");
 let ServiceTemplateProperty = require("../models/service-template-property");
 let Role = require('../models/role');
-let EventLogs = require('../models/event-log');
+let User = require('../models/user');
 let multer = require("multer");
-let File = require("../models/file");
 let mkdirp = require("mkdirp");
 let path = require("path");
 let _ = require("lodash");
@@ -161,6 +164,129 @@ module.exports = function (router) {
         console.log("authenticated user");
         res.json(res.locals.valid_object.data);
     });
+
+
+    /**
+     * The request function will request a new service instance for an unauthenticated user
+     * Creates a new user and adds payment information
+     * Requires:
+     * user email
+     * service template request details
+     *
+     */
+    router.post("/service-templates/:id/request", validate(ServiceTemplate), function (req, res, next) {
+        if (!req.isAuthenticated()) {
+            let serviceTemplate = res.locals.valid_object;
+            let req_body = req.body;
+            let permission_array = res.locals.permissions;
+            let req_body_email, req_body_token_id;
+            if (req_body.hasOwnProperty("email")) {
+                let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                if (req_body.email.match(mailFormat)) {
+                    req_body_email = req_body.email;
+                }
+                else {
+                    res.status(400).json({error: 'Invalid email format'});
+                }
+            }
+            else {
+                res.status(400).json({error: 'Must have property: email'});
+            }
+            if (req_body.hasOwnProperty("token_id")) {
+                if (req_body.token_id != '') {
+                    req_body_token_id = req_body.token_id;
+                }
+                else {
+                    res.status(400).json({error: 'token_id can not be empty'});
+                }
+            }
+            else {
+                res.status(400).json({error: 'Must have property: token_id'});
+            }
+            let newUser = new User({"email": req_body_email, "role_id": 3, "status": "invited"});
+            new Promise((resolve, reject) => {
+                //Check for existing user email
+                User.findAll("email", req_body_email, foundUsers => {
+                    if (foundUsers.length != 0) {
+                        reject('This email already exists in the system');
+                    }
+                    else {
+                        resolve()
+                    }
+                });
+            })
+                .then(() => {
+                    //create new user
+                    return new Promise((resolve, reject) => {
+                        newUser.createWithStripe((err, resultUser) => {
+                            if (!err) {
+                                resolve(resultUser);
+                            }
+                            else {
+                                reject(err);
+                            }
+                        });
+                    });
+                })
+                .then(resultUser => {
+                    //create invitation
+                    return new Promise((resolve, reject) => {
+                        let invite = new Invitation({"user_id": resultUser.get("id")});
+                        invite.create((err, result) => {
+                            if (!err) {
+                                //let apiUrl = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + result.get("token");
+                                //let frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
+                                EventLogs.logEvent(resultUser.get('id'), `user ${resultUser.get('email')} was created by self request`);
+                                //res.locals.json = {url: frontEndUrl, api: apiUrl};
+                                //result.set('url', frontEndUrl);
+                                //result.set('api', apiUrl);
+                                //res.locals.valid_object = result;
+                                //TODO call mailer here with special invitation email
+                                resolve(resultUser);
+                            } else {
+                                reject(err);
+                            }
+                        });
+                    });
+                })
+                .then(resultUser => {
+                    //create fund
+                    return Fund.promiseFundCreateOrUpdate(resultUser.get('id'), req_body_token_id);
+                })
+                .then(fund => {
+                    //create service instance
+                    return serviceTemplate.requestPromise(fund.get('user_id'), req_body, permission_array);
+                })
+                .then(service => {
+                    //Send the mail based on the requester
+                    return new Promise((resolve, reject) => {
+                        /*                if (service.data.user_id == req_uid) {
+                         mailer('request_service_instance_user', 'user_id', service)(req, res, next);
+                         } else {
+                         mailer('request_service_instance_admin', 'user_id', service)(req, res, next);
+                         }*/
+                        console.log("would be sending email to user")
+                        return resolve(service);
+                    });
+                })
+                .then(service => {
+                    //create event log
+                    return new Promise((resolve, reject) => {
+                        EventLogs.logEvent(service.get('user_id'), `service-templates ${service.get('service_id')} was requested by user ${service.get('user_id')} and service-instance was created`);
+                        res.status(200).json(service.data);
+                        return resolve(service);
+                    });
+                })
+                .catch(err => {
+                    console.error('Service template request from new user error: ', err);
+                    res.status(400).json({error: err});
+                });
+        }
+        else {
+            next();
+        }
+    });
+
 
     /**
      * The request function will request a new service instance for an authenticated user
@@ -325,15 +451,15 @@ module.exports = function (router) {
         else {
             //If the user is authenticated and has the role 'user' allow to see public templates
             new Promise((resolve, reject) => {
-                Role.findOne("id", req.user.get("role_id"), function(role) {
+                Role.findOne("id", req.user.get("role_id"), function (role) {
                     resolve(role.get('role_name') === 'user');
                 })
             })
                 .then(function (isUser) {
-                    if(isUser){
+                    if (isUser) {
                         getPublicSearch();
                     }
-                    else{
+                    else {
                         //admin or staff go to entity route
                         next();
                     }
