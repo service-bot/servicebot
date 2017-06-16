@@ -1,8 +1,5 @@
 import React from 'react';
-import {Link, hashHistory, browserHistory} from 'react-router';
-import Alert from 'react-s-alert';
-import Authorizer from "../utilities/authorizer.jsx"
-import {DataForm, DataChild} from "../utilities/data-form.jsx";
+import {browserHistory} from 'react-router';
 import Featured from "../layouts/featured.jsx";
 import Content from "../layouts/content.jsx";
 import PageSection from "../layouts/page-section.jsx";
@@ -86,7 +83,7 @@ class Home extends React.Component {
             fontSize: '26px'
         };
 
-        let featuredHeading, featuredDescription, featuredServicesHeading, featuredServicesShowAllButton = "";
+        let featuredHeading, featuredDescription, featuredServicesHeading, featuredServicesShowAllButton, featuredServiceSectionBackgroundColor = "";
 
         if(this.props.options) {
             let options = this.props.options;
@@ -94,6 +91,7 @@ class Home extends React.Component {
             featuredDescription = _.get(options, 'home_featured_description.value', "You can set this text in system options");
             featuredServicesHeading = _.get(options, 'featured_service_heading.value', "Featured Services");
             featuredServicesShowAllButton = _.get(options, 'featured_service_show_all_button_text.value', "Show All Services");
+            featuredServiceSectionBackgroundColor = _.get(options, 'featured_service_section_background_color.value', "Show All Services");
         }
 
         return(
@@ -108,28 +106,30 @@ class Home extends React.Component {
                     </div>
                 </Featured>
                 <Content>
-                    <PageSection>
+                    <PageSection style={{background: featuredServiceSectionBackgroundColor}}>
                         <div onMouseEnter={this.toggleOnEditingGear}>
-                        <h2 className="section-heading">{featuredServicesHeading}</h2>
-                        <ServiceList url={this.state.serviceUrl}/>
-                        <Buttons
-                            text={featuredServicesShowAllButton}
-                            size="lg" position="center" btnType="primary"
-                            style={{marginTop: '15px'}}
-                            onClick={()=>{browserHistory.push('/all-services')}}
-                        />
-                        {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
-                        {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
-                                                                        filter = {["featured_service_heading",
-                                                                            "service_box_body_text_color",
-                                                                            "service_box_body_background_color",
-                                                                            "service_box_icon_display",
-                                                                            "service_box_request_button_text",
-                                                                            "service_box_category_display",
-                                                                            "service_box_header_text_color",
-                                                                            "service_box_header_background_color"]
-                                                                        }/>
-                        }
+                            <h2 className="section-heading">{featuredServicesHeading}</h2>
+                            <ServiceList url={this.state.serviceUrl}/>
+                            <Buttons
+                                text={featuredServicesShowAllButton}
+                                size="lg" position="center" btnType="primary"
+                                style={{marginTop: '15px'}}
+                                onClick={()=>{browserHistory.push('/all-services')}}
+                            />
+                            {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
+                            {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
+                                                                            filter = {["featured_service_heading",
+                                                                                "service_box_body_text_color",
+                                                                                "service_box_body_background_color",
+                                                                                "service_box_icon_display",
+                                                                                "service_box_request_button_text",
+                                                                                "service_box_category_display",
+                                                                                "service_box_header_text_color",
+                                                                                "service_box_header_background_color",
+                                                                                "featured_service_show_all_button_text",
+                                                                                "featured_service_section_background_color"]
+                                                                            }/>
+                            }
                         </div>
                     </PageSection>
                 </Content>
