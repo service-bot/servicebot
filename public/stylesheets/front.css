@@ -17,7 +17,8 @@ body.home .featured{
     position: relative;
     height: 90vh;
     min-height: 650px;
-    margin-top: -90px;
+    /*margin-top: -90px;*/
+    margin-top: 0px;
 }
 body.home .featured-overlay, body.home .featured-bg{
     position: absolute;

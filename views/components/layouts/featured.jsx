@@ -2,6 +2,7 @@ import React from 'react';
 import FeaturedImage from './featured-elements/featured-image.jsx';
 import { connect } from 'react-redux'
 let _ = require("lodash");
+import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
 
 class Featured extends React.Component {
 
@@ -11,7 +12,14 @@ class Featured extends React.Component {
         this.state = {
             imageURL: this.props.imageURL,
             systemOptions: this.props.options || {},
-        }
+            editingMode: false,
+            editingGear: false
+        };
+
+        this.toggleEditingMode = this.toggleEditingMode.bind(this);
+        this.toggleSideBar = this.toggleSideBar.bind(this);
+        this.toggleOnEditingGear = this.toggleOnEditingGear.bind(this);
+        this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
@@ -24,8 +32,29 @@ class Featured extends React.Component {
         }
     }
 
-    componentDidMount(){
-        // console.log("system options: ", this.state.options);
+    toggleEditingMode(){
+        if(this.state.editingMode){
+            this.setState({editingMode: false})
+        }else{
+            this.setState({editingMode: true})
+        }
+    }
+    toggleOnEditingGear(){
+        this.setState({editingGear: true})
+    }
+    toggleOffEditingGear(){
+        this.setState({editingGear: false})
+    }
+
+    toggleSideBar(){
+        let self = this;
+        this.setState({sidebar: !this.state.sidebar}, function () {
+            if(self.state.sidebar){
+                document.body.classList.add('layout-collapsed');
+            }else{
+                document.body.classList.remove('layout-collapsed');
+            }
+        });
     }
 
     render () {
@@ -38,9 +67,17 @@ class Featured extends React.Component {
         }
 
         return (
-            <div className={`featured`}>
+            <div className={`featured`} onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
                 <FeaturedImage image={this.state.imageURL} bgColor={featuredBackgroundColor}/>
                 {this.props.children}
+
+                {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
+                {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
+                                                                filter = {["home_hero_image",
+                                                                    "home_featured_heading",
+                                                                    "home_featured_description"]
+                                                                }/>
+                }
             </div>
         );
     }

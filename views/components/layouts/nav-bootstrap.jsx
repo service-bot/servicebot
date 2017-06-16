@@ -53,7 +53,8 @@ class NavBootstrap extends React.Component {
         this.getMenuItems = this.getMenuItems.bind(this);
         this.toggleEditingMode = this.toggleEditingMode.bind(this);
         this.toggleSideBar = this.toggleSideBar.bind(this);
-        this.toggleEditingGear = this.toggleEditingGear.bind(this);
+        this.toggleOnEditingGear = this.toggleOnEditingGear.bind(this);
+        this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
@@ -89,13 +90,11 @@ class NavBootstrap extends React.Component {
             this.setState({editingMode: true})
         }
     }
-
-    toggleEditingGear(){
-        if(this.state.editingGear){
-            this.setState({editingGear: false})
-        }else{
-            this.setState({editingGear: true})
-        }
+    toggleOnEditingGear(){
+        this.setState({editingGear: true})
+    }
+    toggleOffEditingGear(){
+        this.setState({editingGear: false})
     }
 
     toggleSideBar(){
@@ -172,11 +171,11 @@ class NavBootstrap extends React.Component {
         }
 
         return (
-            <nav className="navbar navbar-default" style={navigationBarStyle} onMouseEnter={this.toggleEditingGear} onMouseLeave={this.toggleEditingGear}>
+            <nav className="navbar navbar-default" style={navigationBarStyle} onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
                 <div className="container-fluid">
                     <div className="navbar-header">
                         <button type="button" className="navbar-toggle collapsed" data-toggle="collapse"
-                                data-target="#bs-example-navbar-collapse-1" aria-expanded="false" onClick={this.toggleSideBar}>
+                                data-target="#bs-example-navbar-collapse-1" aria-expanded="false" onClick={this.toggleSideBar}  >
                             <span className="sr-only">Toggle navigation</span>
                             <span className="icon-bar"/>
                             <span className="icon-bar"/>
@@ -215,8 +214,9 @@ class NavBootstrap extends React.Component {
                 {currentModal()}
                 {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
                 {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
-                                                                filter = {["primary_theme_background_color",
-                                                                             "primary_theme_text_color"]
+                                                                filter = {[ "brand_logo",
+                                                                            "primary_theme_background_color",
+                                                                            "primary_theme_text_color"]
                                                                 }/>
                 }
             </nav>

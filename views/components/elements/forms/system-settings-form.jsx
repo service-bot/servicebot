@@ -118,6 +118,24 @@ class SystemSettingsForm extends React.Component {
             if(this.props.filter){
                 return(
                     <div>
+                        {_.indexOf(this.props.filter, 'brand_logo') != -1 &&
+                        <div className="image-upload-box form-group-flex column">
+                            <label className="control-label">Brand Logo</label>
+                            <ImageUploader name="file" elementID="brand-logo"
+                                           imageURL="/api/v1/system-options/file/brand_logo"
+                                           imageStyle="badge badge-lg" uploadButton={true}/>
+                        </div>
+                        }
+
+                        {_.indexOf(this.props.filter, 'home_hero_image') != -1 &&
+                            <div className="image-upload-box form-group-flex column">
+                                <label className="control-label">Front Page Hero Image</label>
+                                <ImageUploader name="file" elementID="front-page-image"
+                                               imageURL="/api/v1/system-options/file/front_page_image"
+                                               imageStyle="badge badge-lg" uploadButton={true}/>
+                            </div>
+                        }
+
                         {types.map((type) => {
                             return (
                                 <div key={`setting_type_${type}`} className={`system-settings-group setting-type-${type}`}>
