@@ -5,10 +5,10 @@ import Footer from "./layouts/footer.jsx"
 import {browserHistory} from 'react-router';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-import {setOptions,setUid, SET_OPTIONS, SET_UID} from "./utilities/actions"
+import {setOptions,setUid,SET_FORM_DATA, SET_OPTIONS, SET_UID} from "./utilities/actions"
 import cookie from 'react-cookie';
 
-function appReducer(state = {options: {}, uid : cookie.load("uid")}, action) {
+function appReducer(state = {allForms : {}, options: {}, uid : cookie.load("uid")}, action) {
     switch(action.type){
         case SET_OPTIONS :
             return Object.assign({}, state, {
@@ -18,6 +18,15 @@ function appReducer(state = {options: {}, uid : cookie.load("uid")}, action) {
             return Object.assign({}, state, {
                 uid : action.uid
             });
+        case SET_FORM_DATA:
+            console.log("IM HERE")
+            return {
+                ...state,
+                allForms : {
+                    ...state.allForms,
+                    [action.name] : action.formData
+                }
+            }
         default:
             return state;
     }

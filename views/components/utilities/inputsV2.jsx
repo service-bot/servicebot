@@ -6,6 +6,8 @@ let values = require('object.values');
 if(!Object.values){
     values.shim();
 }
+
+
 class Inputs extends React.Component {
 
     //TODO: make default value get set in dataform on mounting component
@@ -23,8 +25,6 @@ class Inputs extends React.Component {
             }
         }
 
-        this.manageDependency = this.manageDependency.bind(this);
-        this.renderChildren = this.renderChildren.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handlePriceChange = this.handlePriceChange.bind(this);
         this.handleColorPickerChange = this.handleColorPickerChange.bind(this);
@@ -54,10 +54,6 @@ class Inputs extends React.Component {
     }
 
     componentWillUnmount(){
-        if(this.props.onChange && this.props.unmountValue != null){
-            this.props.onChange(this.props.unmountValue.toString());
-        }
-
         if(this.state.type == 'color_picker'){
             console.log("trying to remove listener on unmount");
             document.removeEventListener('click', this.clickInsideListener);
@@ -73,56 +69,8 @@ class Inputs extends React.Component {
         }
     }
 
-    //process dependency
-    manageDependency(){
-        let self = this;
-        let dependencies = this.props.manageDependency;
-        if(dependencies) {
-            return React.Children.map(self.props.children, child => {
-                  let newProps = dependencies.map(dep =>{
-                    if(child.props.name == dep.dependsOn){
-                        let dependentChild = React.Children.map(self.props.children, child =>{if(child.props.name == dep.name){return child}})[0]
-                        return {dependentFunction: dep.valFun, dependent: dependentChild};
-                    }
-                })[0];
-                  if(newProps){
-                      return React.cloneElement(child, newProps)
-                  }
-                  else{
-                      return child;
-                  }
-            });
-        }
-    }
-
-    //filters children based on the this component's props' filter function's result.
-    //will show child elements based on parent value.
-    renderChildren(parentValue) {
-        let myChildren = this.props.children;
-        if(this.props.manageDependency){
-            myChildren = this.manageDependency();
-        }
-        if(this.props.filter){
-            return React.Children.toArray(myChildren).filter(this.props.filter(parentValue.toString()));
-        }
-        return myChildren;
-    }
-
     handleChange(e){
-        // console.log("input event: ", e);
-
-        let value = e.target.value || e.target.defaultValue;
-        if(this.props.dependentFunction){
-            this.props.dependentFunction(value, this.props.dependent);
-        }
-
-        //we will not need to do this for props.formLess when we move everything to the new way of submitting forms
-        if(this.props.onChange && this.props.formLess === true){
-            this.props.onChange(e, this);
-            this.setState({value: value});
-        }else{
-            this.props.onChange(e);
-        }
+        this.setState({value: value});
     }
 
     handlePriceChange(e){
@@ -182,10 +130,8 @@ class Inputs extends React.Component {
         let label           = this.props.label ? this.props.label : false;
         let defaultValue    = this.props.value || this.props.defaultValue;
         let placeholder     = this.props.placeholder;
-        let disabled        = this.props.disabled ? true : false;
-        let error           = this.props.errors && this.props.errors.length ? this.props.errors[0].message :
-                                this.props.error ? this.props.error :
-                                    this.state.error ? this.state.error : false;
+        let disabled        = this.props.disabled;
+        let error           = this.props.errors && this.props.errors.length && this.props.errors[0].message;
         let warning         = this.props.warning ? this.props.warning : false;
 
         //error checking props
@@ -198,12 +144,19 @@ class Inputs extends React.Component {
         if(type == "text" || type == "number" || type == "hidden"){
             // console.log("passed in value", defaultValue);
             return (
-                <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''} ${type == 'hidden' ? 'hidden' : ''}`}>
-                    {label && <label className="control-label text-capitalize">{label}</label>}
-                    <input className="form-control" maxLength={maxLength} type={type} placeholder={placeholder}
-                           disabled={disabled} name={name} defaultValue={defaultValue} onChange={this.handleChange}/>
+                <div className={`form-group ${error ? 'has-error' : ''} ${type == 'hidden' ? 'hidden' : ''}`}>
+                    {label &&
+                    <label className="control-label text-capitalize">{label}</label>
+                    }
+                    <input className="form-control"
+                           maxLength={maxLength}
+                           type={type}
+                           placeholder={placeholder}
+                           disabled={disabled}
+                           name={name}
+                           defaultValue={defaultValue}
+                           onChange={this.handleChange}/>
                     {error && <span className="help-block">{error}</span> }
-                    {warning && <span className="help-block">{warning}</span> }
                 </div>
             );
         }else if(type == "price"){
@@ -218,7 +171,6 @@ class Inputs extends React.Component {
                                disabled={disabled} name={name} defaultValue={defaultValue} onChange={this.handlePriceChange}/>
                     </div>
                     {error && <span className="help-block">{error}</span> }
-                    {warning && <span className="help-block">{warning}</span> }
                 </div>
             )
         }else if(type == "textarea"){
@@ -228,7 +180,6 @@ class Inputs extends React.Component {
                     {label && <label className="control-label text-capitalize">{label}</label>}
                     <textarea className="form-control" name={name} defaultValue={defaultValue} rows={row} onChange={this.handleChange}/>
                     {error && <span className="help-block">{error}</span> }
-                    {warning && <span className="help-block">{warning}</span> }
                 </div>
             )
         }else if(type == "select"){
@@ -240,17 +191,15 @@ class Inputs extends React.Component {
                             <option value={null}>{''}</option> : ''
                         }
                         {(_.isArray(this.props.options) && this.props.options) ?
-                          this.props.options.map( option => (
-                             <option key={`option-${typeof(option) == 'object' ? Object.keys(option)[0] : option}`}
-                                     value={typeof(option) == 'object' ? Object.values(option)[0] : option}>
+                            this.props.options.map( option => (
+                                <option key={`option-${typeof(option) == 'object' ? Object.keys(option)[0] : option}`}
+                                        value={typeof(option) == 'object' ? Object.values(option)[0] : option}>
                                     {typeof(option) == 'object' ? Object.keys(option)[0] : option}</option>
-                          )) :
-                          <span className="help-block">Options format is not accepted. Must be an array or array of objects</span>
+                            )) :
+                            <span className="help-block">Options format is not accepted. Must be an array or array of objects</span>
                         }
                     </select>
                     {error && <span className="help-block">{error}</span> }
-                    {warning && <span className="help-block">{warning}</span> }
-                    {this.renderChildren(this.props.value || defaultValue)}
                 </div>
             );
         }else if(type == "bool" || type == "boolean") {
@@ -263,7 +212,6 @@ class Inputs extends React.Component {
                         <option value={false}>False</option>
                     </select>
                     {error && <span className="help-block">{error}</span> }
-                    {warning && <span className="help-block">{warning}</span> }
                 </div>
             );
 

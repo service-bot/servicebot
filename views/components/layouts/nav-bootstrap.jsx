@@ -28,7 +28,6 @@ const getSignUpStatus = (state) => {
     if(!state.options || !state.options.allow_registration){
         return {signUpEnabled: true};
     }
-    console.log("SIGN UP", state.options);
     return {
         signUpEnabled: (state.options.allow_registration.value == "true")
     }

@@ -43,12 +43,17 @@ import ServiceInstanceForm from "./components/elements/forms/service-instance-fo
 import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
+//Tests
+import ServiceRequestFormV2 from "./components/elements/forms/service-instance-form-request-v2.jsx";
+import FormTest from "./components/elements/forms/redux-form-test.jsx";
 let AppRouter = function(props) {
 
     return (
         <Router history={browserHistory}>
             <Route name="Home" path="/" component={App}>
                 <IndexRoute component={Home}/>
+                <Route path="test" component={ServiceRequestFormV2}/>
+                <Route path="test2" component={FormTest}/>
                 <Route name="Home" path="home" component={Home}/>
                 <Route name="All Services" path="all-services" component={AllServices}/>
                 <Route name="User Login" path="login" component={Login}/>

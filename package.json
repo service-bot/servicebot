@@ -15,6 +15,7 @@
     "babel": "^6.5.2",
     "babel-core": "^6.21.0",
     "babel-loader": "^6.2.10",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-react": "^6.16.0",
     "bcryptjs": "^2.3.0",
@@ -85,9 +86,9 @@
     "xss": "^0.3.3"
   },
   "devDependencies": {
-    "tape": "^4.6.3",
-    "supertest": "^3.0.0",
     "react-hot-loader": "^3.0.0-beta.6",
+    "supertest": "^3.0.0",
+    "tape": "^4.6.3",
     "webpack-dev-server": "^1.14.1"
   }
 }

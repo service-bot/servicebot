@@ -6,10 +6,12 @@ import Inputs from "../../utilities/inputs.jsx";
 import {DataForm, DataChild} from "../../utilities/data-form.jsx";
 import DateFormat from "../../utilities/date-format.jsx";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
-import ModalPaymentSetup from "../../elements/modals/modal-payment-setup.jsx"
+import ModalPaymentSetup from "../../elements/modals/modal-payment-setup.jsx";
 import Buttons from "../../elements/buttons.jsx";
 import Alerts from "../../elements/alerts.jsx";
+import BillingSettingsForm from "../../elements/forms/billing-settings-form.jsx";
 import IconHeading from "../../layouts/icon-heading.jsx";
+import { connect } from 'react-redux';
 
 let _ = require("lodash");
 
@@ -19,6 +21,7 @@ class ServiceRequestForm extends React.Component {
         super(props);
         let templateId = this.props.templateId;
         this.state = {
+            uid: this.props.uid,
             templateId: templateId,
             template: {},
             url: "/api/v1/service-templates/" + templateId + "/request",
@@ -32,6 +35,8 @@ class ServiceRequestForm extends React.Component {
             showFundsModal : false,
             hasFund : true,
         };
+
+        console.log("the uid", this.state.uid);
 
         this.getValidators = this.getValidators.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
@@ -92,6 +97,7 @@ class ServiceRequestForm extends React.Component {
             let y = errorInputs[0].offsetParent.offsetTop;
             window.scrollTo(0, y);
         }
+        console.log("request forrm state updated", this.state);
     }
 
     handleResponse(response){
@@ -143,7 +149,7 @@ class ServiceRequestForm extends React.Component {
     getValidators(references){
         //This function dynamically generates validators depending on what custom properties the instance has.
         //requires references: the service template's references.service_template_properties
-        //Defining general validators
+        //Defining generic validators
         let validateRequired        = (val) => { return val === 0 || val === false || val != '' && val != null};
         let validateEmptyString     = (val) => { return (val.trim() != '')};
         let validateNumber          = (val) => { return !isNaN(parseFloat(val)) && isFinite(val) };
@@ -195,12 +201,6 @@ class ServiceRequestForm extends React.Component {
         }
         return validatorJSON;
     }
-
-    //example of how to use data form's before submit function, this function will be passed into dataform as a prop
-    // submit(callback){
-    //     this.setState({ajaxLoad: true});
-    //     callback();
-    // }
 
     getConfirmationPageButtons(responseObj){
         if(!isAuthorized({permissions: "can_administrate"})){
@@ -260,9 +260,10 @@ class ServiceRequestForm extends React.Component {
                 const fields = this.state.template;
                 const subscriptionType = this.state.template.type;
                 const references = this.state.template.references.service_template_properties.length > 0 ? this.state.template.references.service_template_properties : false;
-                console.log("fields", fields);
+                // console.log("fields", fields);
 
                 let submitButton = <Buttons buttonClass="btn-primary btn-bar" size="lg" btnType="primary" text="Submit Request" type="submit" value="submit"/>;
+
                 if(this.state.template.amount > 0 && !this.state.hasFund){
                     submitButton = <Buttons buttonClass="btn-primary" btnType="primary" text="Submit Request" onClick={this.showFundsModal}/>
                 }
@@ -285,15 +286,14 @@ class ServiceRequestForm extends React.Component {
                     }
                 };
 
-                console.log("stripe errors xxxxx", this.state.stripeError);
+                // console.log("stripe errors xxxxx", this.state.stripeError);
                 return (
                     <div>
-
                         {getAlerts()}
-
                         <DataForm validators={this.getValidators(references)}
                                   handleResponse={this.handleResponse}
                                   onUpdate={this.onUpdate}
+                                  beforeSubmit={this.getStripeToken}
                                   url={`/api/v1/service-templates/${this.state.templateId}/request`}>
 
                             <div className="row">
@@ -378,6 +378,16 @@ class ServiceRequestForm extends React.Component {
                                                      onClick={this.togglePaymentInputs}/>
                                         </Authorizer>
 
+                                        {!this.state.uid &&
+                                            <Inputs type="text" label="Email Address" name="email" onChange={function () {
+                                            }} receiveOnChange={true} receiveValue={true}/>
+                                        }
+
+                                        {this.state.stripToken &&
+                                            <Inputs type="hidden" name="token_id" value={this.state.stripToken} onChange={function () {
+                                            }} receiveOnChange={true} receiveValue={true}/>
+                                        }
+
                                         {references &&
                                             <div className="additional-info-input-group">
                                                 <Authorizer permissions="can_administrate">
@@ -403,6 +413,9 @@ class ServiceRequestForm extends React.Component {
                                             </div>
                                         }
 
+                                        {
+                                            <BillingSettingsForm context="SERVICE_REQUEST"/>
+                                        }
 
                                         <div id="request-submission-box">
                                             {submitButton}
@@ -411,6 +424,8 @@ class ServiceRequestForm extends React.Component {
                                 </div>
                             </div>
                         </DataForm>
+
+
 
                         {(this.state.showFundsModal) &&
                             <ModalPaymentSetup hide={this.hideFundsModal}
@@ -427,4 +442,4 @@ class ServiceRequestForm extends React.Component {
     }
 }
 
-export default ServiceRequestForm;
+export default connect((state) => {return {uid:state.uid}})(ServiceRequestForm);
