@@ -176,7 +176,7 @@ class ServiceRequestFormV2 extends React.Component {
 
         let self = this;
 
-        let payload = self.props.validateForm(self.state.formData);
+        let payload = self.props.validateForm(self.props.formData);
 
         if(!payload.hasErrors) {
             self.setState({ajaxLoad: true});
@@ -273,4 +273,4 @@ class ServiceRequestFormV2 extends React.Component {
 }
 
 // export default connect((state) => {return {uid:state.uid}})(ServiceRequestFormV2);
-export default connect((state) => {return {uid:state.uid}})(formBuilder(FORM_NAME)(ServiceRequestFormV2))
+export default formBuilder(FORM_NAME, (state) => {return {uid:state.uid}})(ServiceRequestFormV2)

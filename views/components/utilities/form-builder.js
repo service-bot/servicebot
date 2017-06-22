@@ -54,11 +54,12 @@ function handleValidation(stateFormData, newFormData = null, refModel = null, re
 
 
 
-let mapStateToProps = function(name){
+let mapStateToProps = function(name, mapState){
 
-    return function(state, ownProps){
-        console.log(state.allForms);
-        return {"formData" : state.allForms[name]}
+    return function(state, ownProps) {
+        if (state.allForms[name]) {
+            return {...mapState(state), "formData": state.allForms[name]};
+        }
     }
 };
 
@@ -72,8 +73,8 @@ let mapDispatchToProps = function(name){
             setFormData: (newFormData) => {
                 dispatch(setFormData(name, newFormData))
             },
-            validateForm: () => {
-                let validatedForm = handleValidation(ownProps.formData)
+            validateForm: (formData) => {
+                let validatedForm = handleValidation(formData)
                 dispatch(setFormData(name, validatedForm));
                 return validatedForm;
             }
@@ -82,27 +83,22 @@ let mapDispatchToProps = function(name){
 };
 
 let buildFormData = function(name, value, formData, refName = null, refID = null, validator = null){
-    console.log("DATA", formData);
     if(refName && refID){
 
 
-        console.log("updating formData for references");
         let refIndex = _.findIndex(formData.references[refName], ['id', refID]);
         const newData = update(this.state.formData, {
             references: { [refName]:{ [refIndex]:{ [name]: {$set: value}, "validators": {$set: [{[name]:validator}]}}}},
         });
-        console.log("updated references", newData);
 
         return update(formData, {$set: newData});
 
     }else{
 
-        console.log("updating formData for parent");
         const newData = update(formData, {
             [name]: {$set: value},
             "validators": {$set: [{[name]:validator}]}
         });
-        console.log("updated parent", newData);
 
         return update(formData, {$set: newData});
 
@@ -111,7 +107,7 @@ let buildFormData = function(name, value, formData, refName = null, refID = null
 
 
 
-let formBuilder =  function(name){
+let formBuilder =  function(name, mapState = null, mapDispatch = null){
     return function(Component){
 
         class FormWrapper extends React.Component {
@@ -127,8 +123,6 @@ let formBuilder =  function(name){
                 this.props.setFormData(buildFormData(component.props.name, component.props.defaultValue, self.props.formData || {}, component.props.refName || null, component.props.refID || null, component.props.validator));
             }
             handleInputsChange(e = null, component){
-                console.log(this.props.formData);
-                console.log(component.props);
                 let self = this;
                 if(e) {
                     if(component.props.onChange){
@@ -154,7 +148,6 @@ let formBuilder =  function(name){
 
 
             render(){
-                console.log(Component);
                 return <Component {...this.props} />
             }
 
@@ -172,7 +165,7 @@ let formBuilder =  function(name){
         };
 
 
-        return connect(mapStateToProps(name), mapDispatchToProps(name))(FormWrapper)
+        return connect(mapStateToProps(name, mapState), mapDispatchToProps(name, mapDispatch))(FormWrapper)
     }
 };
 
