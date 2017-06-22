@@ -2,6 +2,8 @@ import React from 'react';
 import { TwitterPicker, SketchPicker } from 'react-color';
 let _ = require("lodash");
 let values = require('object.values');
+const PropTypes = require('prop-types');
+
 
 if(!Object.values){
     values.shim();
@@ -34,13 +36,7 @@ class Inputs extends React.Component {
     }
 
     componentDidMount(){
-        if(this.props.onChange && this.props.receiveOnChange === true){
-            this.props.onChange(this.props.defaultValue || this.props.value);
-        }
-        if(this.props.buildFormData && this.props.validator){
-            console.log("mounted input, has buildFormData and validator");
-            this.props.buildFormData(this.props.name, this.props.defaultValue, this.props.refName || null, this.props.refID || null, this.props.validator);
-        }
+        this.context.initializeInput(this);
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -70,7 +66,7 @@ class Inputs extends React.Component {
     }
 
     handleChange(e){
-        this.setState({value: value});
+        this.context.handleInputsChange(e, this);
     }
 
     handlePriceChange(e){
@@ -254,5 +250,13 @@ class Inputs extends React.Component {
     }
 
 }
+
+Inputs.contextTypes = {
+    formName: PropTypes.string,
+    handleInputsChange : PropTypes.func,
+    initializeInput : PropTypes.func
+};
+
+
 
 export default Inputs;

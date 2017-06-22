@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import _ from "lodash";
 import update from 'immutability-helper';
 import React from 'react';
+import PropTypes from 'prop-types';
+
 
 function handleValidation(stateFormData, newFormData = null, refModel = null, refIndex = null){
 
@@ -60,47 +62,9 @@ let mapStateToProps = function(name){
     }
 };
 
-let handleInputsChange = function(e = null, component){
-    if(e) {
-        if(component.props.onChange){
-            component.props.onChange(e);
-        }
-        if (component.props.refName) {
-            buildFormData(component.props.name, e.target.value, component.props.refName, component.props.refID, component.props.validator || null);
-        } else {
-            buildFormData(component.props.name, e.target.value, null, null, component.props.validator || null);
-        }
-    }
-}
 
 
-let buildFormData = function(name, value, formData, refName = null, refID = null, validator = null){
 
-    if(refName && refID){
-
-
-            console.log("updating formData for references");
-            let refIndex = _.findIndex(formData.references[refName], ['id', refID]);
-            const newData = update(this.state.formData, {
-                references: { [refName]:{ [refIndex]:{ [name]: {$set: value}, "validators": {$set: [{[name]:validator}]}}}},
-            });
-            console.log("updated references", newData);
-
-            return update(formData, {$set: newData});
-
-    }else{
-
-            console.log("updating formData for parent");
-            const newData = update(formData, {
-                [name]: {$set: value},
-                "validators": {$set: [{[name]:validator}]}
-            });
-            console.log("updated parent", newData);
-
-            return update(formData, {$set: newData});
-
-    }
-};
 
 let mapDispatchToProps = function(name){
     return (dispatch, ownProps) => {
@@ -117,21 +81,100 @@ let mapDispatchToProps = function(name){
     }
 };
 
-
-let formBuilder =  function(name){
-    return function(component){
-
-        class FormWrapper extends React.component {
-            constructor(props) {
-                super(props);
-            }
+let buildFormData = function(name, value, formData, refName = null, refID = null, validator = null){
+    console.log("DATA", formData);
+    if(refName && refID){
 
 
-        }
+        console.log("updating formData for references");
+        let refIndex = _.findIndex(formData.references[refName], ['id', refID]);
+        const newData = update(this.state.formData, {
+            references: { [refName]:{ [refIndex]:{ [name]: {$set: value}, "validators": {$set: [{[name]:validator}]}}}},
+        });
+        console.log("updated references", newData);
 
-        return connect(mapStateToProps(name), mapDispatchToProps(name))(component)
+        return update(formData, {$set: newData});
+
+    }else{
+
+        console.log("updating formData for parent");
+        const newData = update(formData, {
+            [name]: {$set: value},
+            "validators": {$set: [{[name]:validator}]}
+        });
+        console.log("updated parent", newData);
+
+        return update(formData, {$set: newData});
+
     }
 };
 
 
-export { formBuilder, buildFormData}
+
+let formBuilder =  function(name){
+    return function(Component){
+
+        class FormWrapper extends React.Component {
+            constructor(props) {
+                super(props);
+                this.handleInputsChange = this.handleInputsChange.bind(this);
+                this.initializeInput = this.initializeInput.bind(this);
+
+            }
+
+            initializeInput(component){
+                let self = this;
+                this.props.setFormData(buildFormData(component.props.name, component.props.defaultValue, self.props.formData || {}, component.props.refName || null, component.props.refID || null, component.props.validator));
+            }
+            handleInputsChange(e = null, component){
+                console.log(this.props.formData);
+                console.log(component.props);
+                let self = this;
+                if(e) {
+                    if(component.props.onChange){
+                        component.props.onChange(e);
+                    }
+                    if (component.props.refName) {
+                        this.props.setFormData(buildFormData(component.props.name, e.target.value, self.props.formData, component.props.refName, component.props.refID, component.props.validator || null));
+                    } else {
+                        this.props.setFormData(buildFormData(component.props.name, e.target.value, self.props.formData, null, null, component.props.validator || null));
+                    }
+                }
+            }
+
+            getChildContext() {
+                return {
+                    formName : name,
+                    handleInputsChange : this.handleInputsChange,
+                    initializeInput : this.initializeInput
+
+
+                };
+            }
+
+
+            render(){
+                console.log(Component);
+                return <Component {...this.props} />
+            }
+
+
+
+
+
+
+        }
+        FormWrapper.childContextTypes = {
+            formName: PropTypes.string,
+            handleInputsChange : PropTypes.func,
+            initializeInput : PropTypes.func
+
+        };
+
+
+        return connect(mapStateToProps(name), mapDispatchToProps(name))(FormWrapper)
+    }
+};
+
+
+export { formBuilder}

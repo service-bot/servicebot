@@ -32,7 +32,7 @@ class ServiceRequestFormV2 extends React.Component {
         };
 
         this.buildFormData = this.buildFormData.bind(this);
-        this.handleInputsChange = this.handleInputsChange.bind(this);
+            this.handleInputsChange = this.handleInputsChange.bind(this);
         // this.handleValidation = this.handleValidation.bind(this);
         this.handleSubmission = this.handleSubmission.bind(this);
     }
@@ -196,7 +196,6 @@ class ServiceRequestFormV2 extends React.Component {
     }
 
     render(){
-
         if(this.state.loading){
             return ( <Load type="content"/> );
         }else{
@@ -217,24 +216,25 @@ class ServiceRequestFormV2 extends React.Component {
                 let validateRequired   = (val) => { return (val.trim() != '' || 'This field is required')};
                 let validateNumber     = (val) => { return !isNaN(parseFloat(val)) && isFinite(val) || 'This field must be a number'};
                 let validateBoolean    = (val) => { return (val === true || val === false || val === 'true' || val === 'false') || 'This field must be a boolean'};
-
                 return (
                     <div>
+
+                        <pre>{JSON.stringify(this.props.formData, null, '\t')}</pre>
                         <h3>Service</h3>
 
                         <Authorizer permissions="can_administrate">
                         <Inputs type="select" label="For Client" name="client_id"
                                 value={sortedUsers.map(function (user) {return user.id })[0]}
                                 options={userOptionList}
-                                onChange={this.handleInputsChange} formLess={true}/>
+                                formLess={true}/>
                         </Authorizer>
 
                         {!this.state.uid &&
-                        <Inputs type="text" label="Email Address" name="email" onChange={this.handleInputsChange} formLess={true} buildFormData={this.buildFormData} validator={validateEmail} errors={this.state.formData.errors}/>
+                        <Inputs type="text" label="Email Address" name="email" onChange={console.log("OK")} formLess={true} buildFormData={this.buildFormData} validator={validateEmail} errors={this.state.formData.errors}/>
                         }
 
                         {this.state.stripToken &&
-                        <Inputs type="hidden" name="token_id" value={this.state.stripToken} onChange={this.handleInputsChange} formLess={true}/>
+                        <Inputs type="hidden" name="token_id" value={this.state.stripToken} onChange={console.log("YO")} formLess={true}/>
                         }
 
                         {this.state.formData.references.service_template_properties.length > 0 &&
@@ -246,7 +246,6 @@ class ServiceRequestFormV2 extends React.Component {
                                     disabled={!reference.prompt_user && !isAuthorized({permissions: 'can_administrate'})}
                                     defaultValue={reference.value}
                                     options={reference.prop_values}
-                                    onChange={this.handleInputsChange} formLess={true}
                                     refName="service_template_properties" refID={reference.id}
                                     buildFormData={this.buildFormData}
                                     validator={reference.required && validateRequired}
@@ -274,4 +273,4 @@ class ServiceRequestFormV2 extends React.Component {
 }
 
 // export default connect((state) => {return {uid:state.uid}})(ServiceRequestFormV2);
-export default formBuilder(FORM_NAME)(ServiceRequestFormV2)
+export default connect((state) => {return {uid:state.uid}})(formBuilder(FORM_NAME)(ServiceRequestFormV2))
