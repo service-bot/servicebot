@@ -19,7 +19,7 @@ function appReducer(state = {allForms : {}, options: {}, uid : cookie.load("uid"
                 uid : action.uid
             });
         case SET_FORM_DATA:
-            console.log("IM HERE")
+            console.log("SET FORM DATA", state);
             return {
                 ...state,
                 allForms : {

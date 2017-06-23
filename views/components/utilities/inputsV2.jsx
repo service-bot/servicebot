@@ -37,6 +37,7 @@ class Inputs extends React.Component {
 
     componentDidMount(){
         this.context.initializeInput(this);
+        console.log("didmount v2 inputs")
     }
 
     componentDidUpdate(prevProps, prevState){

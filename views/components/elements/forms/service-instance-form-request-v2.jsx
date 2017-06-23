@@ -31,7 +31,7 @@ class ServiceRequestFormV2 extends React.Component {
             loading: true
         };
 
-        this.buildFormData = this.buildFormData.bind(this);
+        // this.buildFormData = this.buildFormData.bind(this);
             this.handleInputsChange = this.handleInputsChange.bind(this);
         // this.handleValidation = this.handleValidation.bind(this);
         this.handleSubmission = this.handleSubmission.bind(this);
@@ -94,35 +94,35 @@ class ServiceRequestFormV2 extends React.Component {
         }
     }
 
-    buildFormData(name, value, refName = null, refID = null, validator = null){
-
-        if(refName && refID){
-
-            this.setState(currentState => {
-
-                console.log("updating formData for references");
-                let refIndex = _.findIndex(currentState.formData.references[refName], ['id', refID]);
-                const newData = update(this.state.formData, {
-                    references: { [refName]:{ [refIndex]:{ [name]: {$set: value}, "validators": {$set: [{[name]:validator}]}}}},
-                });
-                console.log("updated references", newData);
-
-                return update(currentState, {"formData": {$set: newData}});
-            });
-        }else{
-            this.setState(currentState => {
-
-                console.log("updating formData for parent");
-                const newData = update(currentState.formData, {
-                    [name]: {$set: value},
-                    "validators": {$set: [{[name]:validator}]}
-                });
-                console.log("updated parent", newData);
-
-                return update(currentState, {"formData": {$set: newData}});
-            });
-        }
-    }
+    // buildFormData(name, value, refName = null, refID = null, validator = null){
+    //
+    //     if(refName && refID){
+    //
+    //         this.setState(currentState => {
+    //
+    //             console.log("updating formData for references");
+    //             let refIndex = _.findIndex(currentState.formData.references[refName], ['id', refID]);
+    //             const newData = update(this.state.formData, {
+    //                 references: { [refName]:{ [refIndex]:{ [name]: {$set: value}, "validators": {$set: [{[name]:validator}]}}}},
+    //             });
+    //             console.log("updated references", newData);
+    //
+    //             return update(currentState, {"formData": {$set: newData}});
+    //         });
+    //     }else{
+    //         this.setState(currentState => {
+    //
+    //             console.log("updating formData for parent");
+    //             const newData = update(currentState.formData, {
+    //                 [name]: {$set: value},
+    //                 "validators": {$set: [{[name]:validator}]}
+    //             });
+    //             console.log("updated parent", newData);
+    //
+    //             return update(currentState, {"formData": {$set: newData}});
+    //         });
+    //     }
+    // }
 
     // handleValidation(stateFormData, newFormData = null, refModel = null, refIndex = null){
     //
@@ -230,7 +230,7 @@ class ServiceRequestFormV2 extends React.Component {
                         </Authorizer>
 
                         {!this.state.uid &&
-                        <Inputs type="text" label="Email Address" name="email" onChange={console.log("OK")} formLess={true} buildFormData={this.buildFormData} validator={validateEmail} errors={this.state.formData.errors}/>
+                        <Inputs type="text" label="Email Address" name="email" defaultValue="asdfs" onChange={console.log("OK")} validator={validateEmail} errors={this.state.formData.errors}/>
                         }
 
                         {this.state.stripToken &&
@@ -247,7 +247,6 @@ class ServiceRequestFormV2 extends React.Component {
                                     defaultValue={reference.value}
                                     options={reference.prop_values}
                                     refName="service_template_properties" refID={reference.id}
-                                    buildFormData={this.buildFormData}
                                     validator={reference.required && validateRequired}
                                     errors={reference.errors}
                             />
@@ -273,4 +272,4 @@ class ServiceRequestFormV2 extends React.Component {
 }
 
 // export default connect((state) => {return {uid:state.uid}})(ServiceRequestFormV2);
-export default formBuilder(FORM_NAME, (state) => {return {uid:state.uid}})(ServiceRequestFormV2)
+export default formBuilder(FORM_NAME, null, (state) => {return {uid:state.uid}})(ServiceRequestFormV2)
