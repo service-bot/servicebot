@@ -11,6 +11,8 @@ let mapStateToProps = function(name, mapState){
     return function(state, ownProps) {
         if (state.allForms[name]) {
             return {...mapState(state), "formData": state.allForms[name]};
+        }else{
+            return {};
         }
     }
 };
@@ -67,7 +69,7 @@ let handleValidation = function(stateFormData, newFormData = null, refModel = nu
         if(currentDataset.references && Object.keys(currentDataset.references).length){
             _.map(currentDataset.references, (refModel, key)=>{
                 refModel.map((refField, index)=>{
-                    formData = self.handleValidation(refField, formData, key, index);
+                    formData = handleValidation(refField, formData, key, index);
                 });
             });
         }
@@ -79,46 +81,58 @@ let handleValidation = function(stateFormData, newFormData = null, refModel = nu
 };
 
 
-let buildFormData = function(name, value, formData, refName = null, refID = null, validator = null){
-    if(refName && refID){
+let buildFormData = function(name, value, refName = null, refID = null, validator = null){
+   return function(formData) {
+       if (refName && refID) {
 
-        console.log("inital formData in buildFormData", formData);
-        let refIndex = _.findIndex(formData.references[refName], ['id', refID]);
-        if(refIndex == -1){
-            console.log("refIndex is -1", refIndex);
-            refIndex = formData.references[refName].length;
-        }
-        const newData = update(formData, {references: { [refName]:{ [refIndex]:{ [name]: {$set: value}, "validators": {$set: [{[name]:validator}]}}}}});
-        return update(formData, {$set: newData});
+           let refIndex = _.findIndex(formData.references[refName], ['id', refID]);
+           if (refIndex == -1) {
+               refIndex = formData.references[refName].length;
+           }
+           const newData = update(formData, {
+               references: {
+                   [refName]: {
+                       [refIndex]: {
+                           [name]: {$set: value},
+                           "validators": {$set: [{[name]: validator}]}
+                       }
+                   }
+               }
+           });
+           return update(formData, {$set: newData});
 
-    }else{
+       } else {
 
-        const newData = update(formData, {
-            [name]: {$set: value},
-            "validators": {$set: [{[name]:validator}]}
-        });
-        return update(formData, {$set: newData});
+           const newData = update(formData, {
+               [name]: {$set: value},
+               "validators": {$set: [{[name]: validator}]}
+           });
+           return update(formData, {$set: newData});
 
-    }
+       }
+   }
 };
 
 
-let buildFormRefsData = function (formData, refName, refID) {
-    console.log("initial formData", formData);
-    if((!refName && !refID) || !refName){
-        return formData
-    }
-    if(formData.references && !formData.references[refName]){
-        console.log("setting up refName", formData);
-        formData = update(formData, {"references" :
-            {$set: {[refName]:[]}}});
-        console.log("inserted refName", formData);
-    if(formData.references && !formData.references[refName][refID])
-        formData = update(formData, {"references": {[refName]: {$push: [{id: refID}]}}});
-    }
+let buildFormRefsData = function (name, value, refName, refID, validator) {
+    return function (formData) {
+        if ((!refName && !refID) || !refName) {
+            return buildFormData(name, value, refName, refID, validator)(formData)
+        }
+        if (formData.references && !formData.references[refName]) {
+            formData = update(formData, {
+                "references": {$merge: {[refName]: []}}
+            });
+        }
+
+        if (formData.references && !formData.references[refName][refID]) {
+
+            formData = update(formData, {"references": {[refName]: {$push: [{id: refID}]}}});
+        }
 
 
-    return formData;
+        return buildFormData(name, value, refName, refID, validator)(formData)
+    }
 };
 
 
@@ -137,8 +151,7 @@ let formBuilder =  function(formName, defaultFormData=null, mapState = null, map
             initializeInput(component){
                 let self = this;
                 console.log("inputs component", self);
-                let formData = buildFormRefsData(this.props.formData, component.props.refName, component.props.refID);
-                this.props.setFormData(buildFormData(component.props.name, component.props.defaultValue, formData || {}, component.props.refName || null, component.props.refID || null, component.props.validator));
+                this.props.setFormData(buildFormRefsData(component.props.name, component.props.defaultValue, component.props.refName || null, component.props.refID || null, component.props.validator));
             }
 
             handleInputsChange(e = null, component){
@@ -148,9 +161,9 @@ let formBuilder =  function(formName, defaultFormData=null, mapState = null, map
                         component.props.onChange(e);
                     }
                     if (component.props.refName) {
-                        this.props.setFormData(buildFormData(component.props.name, e.target.value, self.props.formData, component.props.refName, component.props.refID, component.props.validator || null));
+                        this.props.setFormData(buildFormData(component.props.name, e.target.value, component.props.refName, component.props.refID, component.props.validator || null));
                     } else {
-                        this.props.setFormData(buildFormData(component.props.name, e.target.value, self.props.formData, null, null, component.props.validator || null));
+                        this.props.setFormData(buildFormData(component.props.name, e.target.value, null, null, component.props.validator || null));
                     }
                 }
             }

@@ -232,6 +232,9 @@ class ServiceRequestFormV2 extends React.Component {
                         {!this.state.uid &&
                         <Inputs type="text" label="Email Address" name="email" defaultValue="asdfs" onChange={console.log("OK")} validator={validateEmail} errors={this.state.formData.errors}/>
                         }
+                        <Inputs refName="dogbig" refID="rexxo" type="text" label="Email Addre2ss" name="asd" defaultValue="bbb" onChange={console.log("OK")} validator={validateEmail} errors={this.state.formData.errors}/>
+                        <Inputs refName="dogbig" refID="rexxo2" type="text" label="Email asd" name="nbas" defaultValue="1212" onChange={console.log("OK")} validator={validateEmail} errors={this.state.formData.errors}/>
+                        <Inputs refName="dogbig2" refID="rexxo3" type="text" label="Email bbbb" name="bigboy" defaultValue="44" onChange={console.log("OK")} validator={validateEmail} errors={this.state.formData.errors}/>
 
                         {this.state.stripToken &&
                         <Inputs type="hidden" name="token_id" value={this.state.stripToken} onChange={console.log("YO")} formLess={true}/>
