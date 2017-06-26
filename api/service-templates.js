@@ -206,11 +206,19 @@ module.exports = function (router) {
             let newUser = new User({"email": req_body_email, "role_id": 3, "status": "invited"});
             new Promise((resolve, reject) => {
                 //Check for existing user email
-                User.findAll("email", req_body_email, foundUsers => {
-                    if (foundUsers.length != 0) {
-                        reject('This email already exists in the system');
+                User.findOne("email", req_body_email, foundUser => {
+                    if(foundUser.data) {
+                        let userId = foundUser.get('id');
+                        Invitation.findOne("user_id", userId, foundInvitation => {
+                            if(foundInvitation.data){
+                                reject('Invitation already exists for this user')
+                            }
+                            else{
+                                reject('This email already exists in the system')
+                            }
+                        })
                     }
-                    else {
+                    else{
                         resolve()
                     }
                 });
