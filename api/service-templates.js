@@ -234,14 +234,9 @@ module.exports = function (router) {
                         let invite = new Invitation({"user_id": resultUser.get("id")});
                         invite.create((err, result) => {
                             if (!err) {
-                                //let apiUrl = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + result.get("token");
-                                //let frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
+                                res.locals.apiUrl = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + result.get("token");
+                                res.locals.frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
                                 EventLogs.logEvent(resultUser.get('id'), `user ${resultUser.get('email')} was created by self request`);
-                                //res.locals.json = {url: frontEndUrl, api: apiUrl};
-                                //result.set('url', frontEndUrl);
-                                //result.set('api', apiUrl);
-                                //res.locals.valid_object = result;
-                                //TODO call mailer here with special invitation email
                                 resolve(resultUser);
                             } else {
                                 reject(err);
@@ -260,12 +255,9 @@ module.exports = function (router) {
                 .then(service => {
                     //Send the mail based on the requester
                     return new Promise((resolve, reject) => {
-                        /*                if (service.data.user_id == req_uid) {
-                         mailer('request_service_instance_user', 'user_id', service)(req, res, next);
-                         } else {
-                         mailer('request_service_instance_admin', 'user_id', service)(req, res, next);
-                         }*/
-                        console.log("would be sending email to user")
+                        service.set('api', res.locals.apiUrl);
+                        service.set('url', res.locals.frontEndUrl);
+                        mailer('request_service_instance_new_user', 'user_id', service)(req, res, next);
                         return resolve(service);
                     });
                 })
