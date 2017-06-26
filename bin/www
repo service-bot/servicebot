@@ -32,7 +32,7 @@ let startApp = function(app, callback=null){
     }
     let server = http.createServer(app);
     let httpsServer = https.createServer(config, app);
-    httpsServer.listen(3000);
+    httpsServer.listen(process.env.SSL_PORT || 3000);
     httpsServer.on('error', onError);
     httpsServer.on('listening', onListening);
 
@@ -173,7 +173,7 @@ let startApp = function(app, callback=null){
                 sslConfig = {key:key, cert:cert, ca:ca};
             }
 
-            let httpsServer = https.createServer(sslConfig, app).listen(443);
+            let httpsServer = https.createServer(sslConfig, app).listen(process.env.SSL_PORT || 3000);
             enableDestroy(server);
             enableDestroy(httpsServer);
             api.post("/api/v1/check-db", function(req,res,next){
