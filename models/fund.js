@@ -54,11 +54,13 @@ Fund.prototype.renewFund = function (token, callback) {
 
 Fund.promiseFundCreateOrUpdate = function (user_id, token_id) {
     //Make sure the user is validated with Stripe prior to adding fund
+    let tmpUser;
     return new Promise(function (resolve, reject) {
         let User = require('../models/user');
         User.findOne('id', user_id, function (user) {
             if(user.data) {
                 user.promiseValid().then(function () {
+                    tmpUser = user;
                     return resolve(user_id);
                 }).catch(function (err) {
                     return reject(err);
@@ -111,6 +113,18 @@ Fund.promiseFundCreateOrUpdate = function (user_id, token_id) {
             } else {
                 return reject('token_id is not passed!');
             }
+        });
+    }).then(function (fund) {
+        //Set the user to active
+        return new Promise(function (resolve, reject) {
+            tmpUser.set('status', 'active');
+            tmpUser.update((err, result)=>{
+                if(!err) {
+                    return resolve(fund);
+                } else {
+                    return reject(err);
+                }
+            });
         });
     });
 };
