@@ -7,11 +7,11 @@ let async = require('async');
 let fs = require("fs");
 let path =require("path");
 let enableDestroy = require('server-destroy');
+let https = require('https');
+let http = require('http');
 
 let startApp = function(app, callback=null){
     let debug = require('debug')('testpassport:server');
-    let https = require('https');
-    let http = require('http');
 
     /**
      * Get port from environment and store in Express.
@@ -165,8 +165,17 @@ let startApp = function(app, callback=null){
 
             let server = app.listen((process.env.PORT || 3001), function () {
             });
-            enableDestroy(server);
+            let sslConfig = {}
+            if(process.env.CERTIFICATES){
+                var key = fs.readFileSync(process.env.CERTIFICATES + "servicebot.key");
+                var cert = fs.readFileSync(process.env.CERTIFICATES + "servicebot.crt");
+                var ca = fs.readFileSync(process.env.CERTIFICATES + "servicebot_bundle.crt");
+                sslConfig = {key:key, cert:cert, ca:ca};
+            }
 
+            let httpsServer = https.createServer(sslConfig, app).listen(443);
+            enableDestroy(server);
+            enableDestroy(httpsServer);
             api.post("/api/v1/check-db", function(req,res,next){
                 let dbconfig = req.body;
 
@@ -228,6 +237,7 @@ let startApp = function(app, callback=null){
                     require("../bin/setup")(conf, function (env) {
                         res.json({"message": "setup-initialized"});
                         server.destroy();
+                        httpsServer.destroy();
                         require("../app")(conf).then(startApp);
                     });
                 }catch(e){
