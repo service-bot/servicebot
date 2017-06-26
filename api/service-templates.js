@@ -303,7 +303,7 @@ module.exports = function (router) {
             }).then(function (service) {
             return new Promise(function (resolve, reject) {
                 EventLogs.logEvent(req.user.get('id'), `service-templates ${req.params.id} was requested by user ${req.user.get('email')} and service-instance was created`);
-                res.status(200).json(service);
+                res.status(200).json(service.data);
                 return resolve(service);
             });
         }).catch(function (err) {
