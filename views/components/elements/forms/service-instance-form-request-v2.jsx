@@ -1,13 +1,17 @@
 import React from 'react';
 import Load from '../../utilities/load.jsx';
+import {Link, browserHistory} from 'react-router';
 import Fetcher from "../../utilities/fetcher.jsx";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import Inputs from "../../utilities/inputsV2.jsx";
-import update from 'immutability-helper';
+import BillingSettingsForm from "../../elements/forms/billing-settings-form.jsx";
 import Buttons from "../../elements/buttons.jsx";
-import { connect } from 'react-redux';
 let _ = require("lodash");
 import { formBuilder } from "../../utilities/form-builder";
+import IconHeading from "../../layouts/icon-heading.jsx";
+import ModalUserLogin from "../modals/modal-user-login.jsx";
+import ModalUserInvitationAlert from "../modals/modal-user-invitation-alert.jsx";
+import Price from "../../utilities/price.jsx";
 
 const FORM_NAME = "reqForm";
 
@@ -26,15 +30,19 @@ class ServiceRequestFormV2 extends React.Component {
             formData: null,
             formURL: "/api/v1/service-templates/" + templateId + "/request",
             formResponseData: null,
+            formResponseError: null,
+            serviceCreated: null,
             usersData: {},
             usersURL: "/api/v1/users",
+            hasCard: null,
             loading: true
         };
 
-        // this.buildFormData = this.buildFormData.bind(this);
-            this.handleInputsChange = this.handleInputsChange.bind(this);
-        // this.handleValidation = this.handleValidation.bind(this);
+        this.closeUserLoginModal = this.closeUserLoginModal.bind(this);
+        this.closeInvitationAlertModal = this.closeInvitationAlertModal.bind(this);
         this.handleSubmission = this.handleSubmission.bind(this);
+        this.retrieveStripeToken = this.retrieveStripeToken.bind(this);
+        this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
     }
 
     componentWillMount(){
@@ -68,7 +76,6 @@ class ServiceRequestFormV2 extends React.Component {
         let self = this;
         Fetcher(self.state.formURL).then(function (response) {
             if (!response.error) {
-                console.log("Service Template", response);
                 self.setState({loading: false, templateData: response, formData: response});
             } else {
                 console.log("Error", response.error);
@@ -78,127 +85,147 @@ class ServiceRequestFormV2 extends React.Component {
             console.log("ERROR!", err);
         });
 
+        if(this.props.uid) {
+            this.checkIfUserHasCard();
+        }
+
     }
 
-    componentDidUpdate(){
-        console.log("formData did update", this.state.formData);
+    componentDidUpdate(nextProps, nextState){
+        if(nextState.stripToken != this.state.stripToken){
+            console.log(nextState.stripToken, this.state.stripToken);
+        }
+        if(nextProps.uid && this.state.hasCard === null){
+            console.log("user is logged in", nextProps.uid);
+            this.checkIfUserHasCard();
+        }
     }
 
-    handleInputsChange(e = null, component){
-        if(e) {
-            if (component.props.refName) {
-                this.buildFormData(component.props.name, e.target.value, component.props.refName, component.props.refID, component.props.validator || null);
-            } else {
-                this.buildFormData(component.props.name, e.target.value, null, null, component.props.validator || null);
+    retrieveStripeToken(stripeForm, token = null){ //getToken is the getToken function, token is the token
+        let self = this;
+        if(stripeForm){
+            this.setState({stripeForm: stripeForm});
+        }
+        if(token) {
+            this.setState({stripToken: token}, function () {
+                self.handleSubmission();
+            });
+        }
+    }
+
+    handleSubmission(){
+        let self = this;
+        let payload = self.props.validateForm(self.props.formData);
+
+        if(!this.state.hasCard && this.state.stripeForm && !this.state.stripToken){
+            this.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
+        }else{
+            if(!payload.hasErrors) {
+                self.setState({ajaxLoad: true});
+
+                console.log("submitting the payload", payload);
+
+                Fetcher(this.state.formURL, 'POST', payload).then(function (response) {
+                    if (!response.error) {
+                        console.log('submission response', response);
+                        if(self.props.uid) {
+                            browserHistory.push(`/service-instance/${response.id}`);
+                            self.setState({ajaxLoad: false, success: true});
+                        }else if(response.url && response.api){ //this is a case where the user is new and has invitation
+                            self.setState({emailExists: true, invitationExists: true, serviceCreated: response, ajaxLoad: false, success: true});
+                        }else{
+                            self.setState({ajaxLoad: false, success: true, serviceCreated: response});
+                        }
+
+                    } else {
+                        self.setState({ajaxLoad: false});
+                        console.log(`Server Error:`, response.error);
+                        if(response.error == "This email already exists in the system"){
+                            self.setState({emailExists: true, formResponseError: response.error});
+                        }else if(response.error == "Invitation already exists for this user"){
+                            self.setState({emailExists: true, invitationExists: true, formResponseError: response.error});
+                        }
+                    }
+                });
+            }else{
+                console.log("errors found by validators", payload);
             }
         }
     }
 
-    // buildFormData(name, value, refName = null, refID = null, validator = null){
-    //
-    //     if(refName && refID){
-    //
-    //         this.setState(currentState => {
-    //
-    //             console.log("updating formData for references");
-    //             let refIndex = _.findIndex(currentState.formData.references[refName], ['id', refID]);
-    //             const newData = update(this.state.formData, {
-    //                 references: { [refName]:{ [refIndex]:{ [name]: {$set: value}, "validators": {$set: [{[name]:validator}]}}}},
-    //             });
-    //             console.log("updated references", newData);
-    //
-    //             return update(currentState, {"formData": {$set: newData}});
-    //         });
-    //     }else{
-    //         this.setState(currentState => {
-    //
-    //             console.log("updating formData for parent");
-    //             const newData = update(currentState.formData, {
-    //                 [name]: {$set: value},
-    //                 "validators": {$set: [{[name]:validator}]}
-    //             });
-    //             console.log("updated parent", newData);
-    //
-    //             return update(currentState, {"formData": {$set: newData}});
-    //         });
-    //     }
-    // }
+    closeUserLoginModal(){
+        this.setState({emailExists: false});
+    }
+    closeInvitationAlertModal(){
+        this.setState({invitationExists: false});
+    }
 
-    // handleValidation(stateFormData, newFormData = null, refModel = null, refIndex = null){
-    //
-    //     let self = this;
-    //     let errors = false;
-    //     let currentDataset = stateFormData;
-    //     let formData = newFormData || stateFormData;
-    //     if(refModel === null && refIndex === null){
-    //         formData = update(formData, { "hasErrors": {$set: false} });
-    //         self.setState({"formData": formData});
-    //     }
-    //     if(currentDataset.validators && currentDataset.validators.length) {
-    //         currentDataset.validators.map((validator) => {
-    //             let key = Object.keys(validator)[0];
-    //             let result = typeof(validator[key]) === "function" ? validator[key](currentDataset[key]) : true;
-    //             if (result !== true) {
-    //                 errors = true;
-    //                 if(refModel === null && refIndex === null) {
-    //                     formData = update(formData, { "errors": { $set: [{ "field": key, "message": result }] } });
-    //                 }else{
-    //                     formData = update(formData, { "references" : { [refModel] : { [refIndex]: { "errors": { $set: [{ "field": key, "message": result }] } } } } });
-    //                     return(formData);
-    //                 }
-    //             }else{ //the error is corrected, remove item from the error object
-    //                 if(refModel === null && refIndex === null) {
-    //                     let filteredErrors = _.filter(formData.errors, (obj)=>{ return obj.field != key });
-    //                     formData = update(formData, { "errors": {$set: filteredErrors} });
-    //                 }else{
-    //                     let filteredErrors = _.filter(currentDataset.errors, (obj)=>{ return obj.field != key });
-    //                     formData = update(formData, { "references" : { [refModel] : { [refIndex]: { "errors": { $set: filteredErrors } } } } });
-    //                     return(formData);
-    //                 }
-    //             }
-    //         });
-    //         if(currentDataset.references && Object.keys(currentDataset.references).length){
-    //             _.map(currentDataset.references, (refModel, key)=>{
-    //                 refModel.map((refField, index)=>{
-    //                     formData = self.handleValidation(refField, formData, key, index);
-    //                 });
-    //             });
-    //         }
-    //     }
-    //     if(errors){
-    //         formData = update(formData, { "hasErrors": {$set: true} });
-    //     }
-    //     self.setState({"formData": formData});
-    //     return formData;
-    // }
-
-    handleSubmission(){
-
+    checkIfUserHasCard(){
         let self = this;
-
-        let payload = self.props.validateForm(self.props.formData);
-
-        if(!payload.hasErrors) {
-            self.setState({ajaxLoad: true});
-
-            Fetcher(this.state.formURL, 'POST', payload).then(function (response) {
-                if (!response.error) {
-                    console.log('submission response', response);
-                    self.setState({ajaxLoad: false, success: true});
-                } else {
-                    self.setState({ajaxLoad: false});
-                    console.log(`Problem PUT ${self.state.formURL}`, response.error);
+        Fetcher(`/api/v1/users/${self.props.uid}`).then(function (response) {
+            if(!response.error){
+                console.log("current state's uid", response);
+                if(_.has(response, 'references.funds[0]') && _.has(response, 'references.funds[0].source.card')){
+                    let fund = _.get(response, 'references.funds[0]');
+                    let card = _.get(response, 'references.funds[0].source.card');
+                    console.log("found card in response", card);
+                    self.setState({
+                        loading: false,
+                        hasCard: true,
+                        fund: fund,
+                        card: card,
+                        personalInformation: {
+                            name: card.name,
+                            address_line1: card.address_line1,
+                            address_line2: card.address_line2,
+                            address_city: card.address_city,
+                            address_state: card.address_state,
+                        }
+                    }, function(){
+                        console.log("checked user and found card, state is set to", self.state);
+                        return true;
+                    });
                 }
-            });
-        }else{
-            console.log("errors found by validators", payload);
-        }
+            }else{
+                self.setState({loading: false, hasCard: false});
+                return false;
+            }
+        });
     }
 
     render(){
+
         if(this.state.loading){
             return ( <Load type="content"/> );
         }else{
+
+            let myService = this.state.formData;
+            let getPrice = ()=>{
+                let serType = myService.type;
+                if (serType == "subscription"){
+                    return (<span><Price value={myService.amount}/>{myService.interval_count == 1 ? ' /' : ' / ' + myService.interval_count} {' '+myService.interval}</span>);
+                }else if (serType == "one_time"){
+                    return (<span><Price value={myService.amount}/></span>);
+                }else if (serType == "custom"){
+                    return false;
+                }else{
+                    return (<span><Price value={myService.amount}/></span>)
+                }
+            };
+
+            let getRequestText = ()=>{
+                let serType = myService.type;
+                console.log("service type",myService.type);
+                if (serType == "subscription"){
+                    return ("Subscribe");
+                }else if (serType == "one_time"){
+                    return ("Buy");
+                }else if (serType == "custom"){
+                    return ("Request");
+                }else{
+                    return ("")
+                }
+            };
 
             if(this.state.formResponseData){
                 return ( <h3>Got request</h3> );
@@ -213,53 +240,86 @@ class ServiceRequestFormV2 extends React.Component {
 
                 //define validation functions
                 let validateEmail      = (val) => { return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val) || 'Email format is not validate'};
-                let validateRequired   = (val) => { return (val.trim() != '' || 'This field is required')};
+                let validateRequired   = (val) => { return (val != null && val.trim() != '' || 'This field is required')};
                 let validateNumber     = (val) => { return !isNaN(parseFloat(val)) && isFinite(val) || 'This field must be a number'};
                 let validateBoolean    = (val) => { return (val === true || val === false || val === 'true' || val === 'false') || 'This field must be a boolean'};
                 return (
                     <div>
 
-                        <pre>{JSON.stringify(this.props.formData, null, '\t')}</pre>
-                        <h3>Service</h3>
+                        {/*<pre>{JSON.stringify(this.props.formData, null, '\t')}</pre>*/}
 
-                        <Authorizer permissions="can_administrate">
-                        <Inputs type="select" label="For Client" name="client_id"
-                                value={sortedUsers.map(function (user) {return user.id })[0]}
-                                options={userOptionList}
-                                formLess={true}/>
-                        </Authorizer>
+                        <div className="row">
+                            <div className="basic-info col-md-6">
+                                <div className="service-request-details">
+                                    <IconHeading imgIcon="/assets/custom_icons/what_you_are_getting_icon.png" title="What you are getting"/>
+                                    <div dangerouslySetInnerHTML={{__html: this.state.templateData.details}}/>
+                                </div>
+                            </div>
+                            <div className="basic-info col-md-6">
+                                <div className="service-request-form">
+                                    <IconHeading imgIcon="/assets/custom_icons/get_your_service_icon.png" title="Get your service"/>
 
-                        {!this.state.uid &&
-                        <Inputs type="text" label="Email Address" name="email" defaultValue="asdfs" onChange={console.log("OK")} validator={validateEmail} errors={this.state.formData.errors}/>
-                        }
-                        <Inputs refName="dogbig" refID="rexxo" type="text" label="Email Addre2ss" name="asd" defaultValue="bbb" onChange={console.log("OK")} validator={validateEmail} errors={this.state.formData.errors}/>
-                        <Inputs refName="dogbig" refID="rexxo2" type="text" label="Email asd" name="nbas" defaultValue="1212" onChange={console.log("OK")} validator={validateEmail} errors={this.state.formData.errors}/>
-                        <Inputs refName="dogbig2" refID="rexxo3" type="text" label="Email bbbb" name="bigboy" defaultValue="44" onChange={console.log("OK")} validator={validateEmail} errors={this.state.formData.errors}/>
+                                    <Authorizer permissions="can_administrate">
+                                    <Inputs type="select" label="For Client" name="client_id"
+                                            value={sortedUsers.map(function (user) {return user.id })[0]}
+                                            options={userOptionList}
+                                            formLess={true}/>
+                                    </Authorizer>
 
-                        {this.state.stripToken &&
-                        <Inputs type="hidden" name="token_id" value={this.state.stripToken} onChange={console.log("YO")} formLess={true}/>
-                        }
+                                    {!this.props.uid &&
+                                        <div>
+                                        <Inputs type="text" label="Email Address" name="email" defaultValue="" onChange={console.log("OK")} validator={validateEmail} errors={this.props.formData.errors}/>
+                                            {this.state.emailExists &&
+                                                <ModalUserLogin hide={this.closeUserLoginModal} email={this.props.formData.email} invitationExists={this.state.invitationExists} width="640px" serviceCreated={this.state.serviceCreated}/>
+                                            }
+                                        </div>
+                                    }
 
-                        {this.state.formData.references.service_template_properties.length > 0 &&
-                        this.state.formData.references.service_template_properties.map(reference => ((!reference.private || isAuthorized({permissions: 'can_administrate'})) &&
-                        <div key={`custom-fields-${reference.prop_label}`}>
-                            <Inputs type="hidden" name="id" value={reference.id}
-                                    refName="service_template_properties" refID={reference.id}/>
-                            <Inputs type={reference.prop_input_type} label={reference.prop_label} name="value"
-                                    disabled={!reference.prompt_user && !isAuthorized({permissions: 'can_administrate'})}
-                                    defaultValue={reference.value}
-                                    options={reference.prop_values}
-                                    refName="service_template_properties" refID={reference.id}
-                                    validator={reference.required && validateRequired}
-                                    errors={reference.errors}
-                            />
+                                    {this.state.stripToken &&
+                                    <Inputs type="hidden" name="token_id" defaultValue={this.state.stripToken.id} onChange={console.log("YO")} validator={validateRequired} errors={this.props.formData.errors}/>
+                                    }
+
+                                    {this.state.formData.references.service_template_properties.length > 0 &&
+                                    this.state.formData.references.service_template_properties.map(reference => ((!reference.private || isAuthorized({permissions: 'can_administrate'})) &&
+                                    <div key={`custom-fields-${reference.prop_label}`}>
+                                        {/*<Inputs type="hidden" name="id" value={reference.id}*/}
+                                                {/*refName="service_template_properties" refID={reference.id}/>*/}
+                                        <Inputs type={reference.prop_input_type} label={reference.prop_label} name="value"
+                                                disabled={!reference.prompt_user && !isAuthorized({permissions: 'can_administrate'})}
+                                                defaultValue={reference.value}
+                                                onChange={console.log("OK")}
+                                                options={reference.prop_values}
+                                                refName="service_template_properties" refID={reference.id}
+                                                validator={reference.required && validateRequired}
+                                                errors={reference.errors}
+                                        />
+                                    </div>
+                                    ))}
+
+
+                                    {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
+                                        <BillingSettingsForm context="SERVICE_REQUEST" retrieveStripeToken={this.retrieveStripeToken}/>
+                                    }
+
+                                    {this.state.hasCard &&
+                                        <div>
+                                            {this.state.stripToken ?
+                                                <div>
+                                                    <p className="help-block">You {this.state.card.funding} card in your account ending in: {this.state.card.last4} will be used.</p>
+                                                    <span className="help-block">If you wish to use a different card, you can update your card under <Link to="/billing-settings">billing settings.</Link></span>
+                                                </div> :
+                                                <p className="help-block">Using {this.state.card.funding} card ending in: {this.state.card.last4}</p>
+                                            }
+                                        </div>
+                                    }
+
+                                    <Buttons buttonClass="btn-primary btn-bar" size="lg" position="center" btnType="primary" value="submit"
+                                             onClick={this.handleSubmission} loading={this.state.ajaxLoad}>
+                                        <span>{getRequestText()} {getPrice()}</span>
+                                    </Buttons>
+                                </div>
+                            </div>
                         </div>
-                        ))}
-
-                        <Buttons buttonClass="btn-primary btn-bar" size="lg" position="center"
-                                 btnType="primary" text="Submit Request" value="submit"
-                                 onClick={this.handleSubmission}
-                        />
 
                     </div>
                 );
@@ -274,5 +334,4 @@ class ServiceRequestFormV2 extends React.Component {
 
 }
 
-// export default connect((state) => {return {uid:state.uid}})(ServiceRequestFormV2);
 export default formBuilder(FORM_NAME, null, (state) => {return {uid:state.uid}})(ServiceRequestFormV2)

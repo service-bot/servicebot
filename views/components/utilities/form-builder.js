@@ -36,6 +36,8 @@ let mapDispatchToProps = function(name){
 
 let handleValidation = function(stateFormData, newFormData = null, refModel = null, refIndex = null){
 
+    console.log("validator called");
+
     let self = this;
     let errors = false; //this is used to check and set the boolean error at the top level of formData object.
     let currentDataset = stateFormData; //this will be a subset of the original formData when it's in the recursive call.
@@ -151,19 +153,30 @@ let formBuilder =  function(formName, defaultFormData=null, mapState = null, map
             initializeInput(component){
                 let self = this;
                 console.log("inputs component", self);
-                this.props.setFormData(buildFormRefsData(component.props.name, component.props.defaultValue, component.props.refName || null, component.props.refID || null, component.props.validator));
+                this.props.setFormData(buildFormRefsData(
+                    component.props.name,
+                    component.props.defaultValue || null,
+                    component.props.refName || null,
+                    component.props.refID || null,
+                    component.props.validator));
             }
 
             handleInputsChange(e = null, component){
-                let self = this;
                 if(e) {
                     if(component.props.onChange){
                         component.props.onChange(e);
                     }
                     if (component.props.refName) {
-                        this.props.setFormData(buildFormData(component.props.name, e.target.value, component.props.refName, component.props.refID, component.props.validator || null));
+                        this.props.setFormData(buildFormData(
+                            component.props.name,
+                            e.target.value,
+                            component.props.refName,
+                            component.props.refID,
+                            component.props.validator || null));
                     } else {
-                        this.props.setFormData(buildFormData(component.props.name, e.target.value, null, null, component.props.validator || null));
+                        this.props.setFormData(buildFormData(
+                            component.props.name, e.target.value, null, null,
+                            component.props.validator || null));
                     }
                 }
             }

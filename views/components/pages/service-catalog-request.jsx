@@ -1,7 +1,7 @@
 import React from 'react';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Content from "../layouts/content.jsx";
-import ServiceRequestForm from "../elements/forms/service-instance-form-request.jsx"
+import ServiceRequestForm from "../elements/forms/service-instance-form-request-v2.jsx"
 import PageSection from "../layouts/page-section.jsx";
 import Featured from "../layouts/featured.jsx";
 import Fetcher from "../utilities/fetcher.jsx"
