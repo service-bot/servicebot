@@ -220,7 +220,16 @@ module.exports = function (router) {
                     return new Promise((resolve, reject) => {
                         newUser.createWithStripe((err, resultUser) => {
                             if (!err) {
-                                resolve(resultUser);
+                                req.logIn(resultUser, {session:true}, function(err) {
+                                    if(!err){
+                                        console.log("user logged in!");
+                                        resolve(resultUser);
+                                    }else{
+                                        console.error("Issue logging in: ", err)
+                                        resolve(resultUser);
+                                    }
+
+                                });
                             }
                             else {
                                 reject(err);
