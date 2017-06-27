@@ -18,9 +18,10 @@ let mapStateToProps = function(name, mapState){
 };
 
 
-let mapDispatchToProps = function(name){
+let mapDispatchToProps = function(name, mapDispatch){
     return (dispatch, ownProps) => {
         return {
+            ...mapDispatch(dispatch),
             setFormData: (newFormData) => {
                 dispatch(setFormData(name, newFormData))
             },

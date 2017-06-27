@@ -22,10 +22,8 @@ class ModalAddCategory extends React.Component {
         let self = this;
         let pageName = "User Login";
 
-        console.log("created services", this.props.serviceCreated);
-
         return(
-            <Modal modalTitle={pageName} hideCloseBtn={true} show={self.props.show} hide={this.props.hide} serviceCreated={this.props.serviceCreated} hideFooter={true} width={this.props.width}>
+            <Modal modalTitle={pageName} hideCloseBtn={true} show={self.props.show} hide={this.props.hide} hideFooter={true} width={this.props.width}>
                 <div className="table-responsive">
                     <Login hide={self.props.hide} email={this.state.email} invitationExists={this.props.invitationExists} modal={true}/>
                 </div>

@@ -48,9 +48,6 @@ class Login extends React.Component {
                         return browserHistory.go(-2);
                     }
                     browserHistory.goBack();
-                }else if(that.props.serviceCreated){
-                    console.log("service created, redirecting");
-                    browserHistory.push(`/service-instance/${this.props.serviceCreated.id}`);
                 }else{
                     console.log("hiding it");
                     that.props.hide();

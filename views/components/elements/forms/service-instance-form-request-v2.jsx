@@ -11,6 +11,7 @@ import { formBuilder } from "../../utilities/form-builder";
 import IconHeading from "../../layouts/icon-heading.jsx";
 import ModalUserLogin from "../modals/modal-user-login.jsx";
 import ModalUserInvitationAlert from "../modals/modal-user-invitation-alert.jsx";
+import {setUid} from "../../utilities/actions";
 import Price from "../../utilities/price.jsx";
 
 const FORM_NAME = "reqForm";
@@ -39,7 +40,6 @@ class ServiceRequestFormV2 extends React.Component {
         };
 
         this.closeUserLoginModal = this.closeUserLoginModal.bind(this);
-        this.closeInvitationAlertModal = this.closeInvitationAlertModal.bind(this);
         this.handleSubmission = this.handleSubmission.bind(this);
         this.retrieveStripeToken = this.retrieveStripeToken.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
@@ -92,12 +92,17 @@ class ServiceRequestFormV2 extends React.Component {
     }
 
     componentDidUpdate(nextProps, nextState){
+        console.log("next props", nextProps);
+        console.log("next state", nextState);
         if(nextState.stripToken != this.state.stripToken){
             console.log(nextState.stripToken, this.state.stripToken);
         }
         if(nextProps.uid && this.state.hasCard === null){
             console.log("user is logged in", nextProps.uid);
             this.checkIfUserHasCard();
+        }
+        if(nextProps.uid && nextState.serviceCreated){
+            browserHistory.push(`/service-instance/${nextState.serviceCreated.id}`);
         }
     }
 
@@ -108,6 +113,7 @@ class ServiceRequestFormV2 extends React.Component {
         }
         if(token) {
             this.setState({stripToken: token}, function () {
+                console.log("stripe token", self.state.stripToken);
                 self.handleSubmission();
             });
         }
@@ -119,7 +125,7 @@ class ServiceRequestFormV2 extends React.Component {
 
         if(!this.state.hasCard && this.state.stripeForm && !this.state.stripToken){
             this.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
-        }else{
+        }else if(this.state.hasCard || this.state.stripToken || isAuthorized({permissions: "can_administrate"})){
             if(!payload.hasErrors) {
                 self.setState({ajaxLoad: true});
 
@@ -132,11 +138,11 @@ class ServiceRequestFormV2 extends React.Component {
                             browserHistory.push(`/service-instance/${response.id}`);
                             self.setState({ajaxLoad: false, success: true});
                         }else if(response.url && response.api){ //this is a case where the user is new and has invitation
+                            self.props.setUid(response.user_id);
                             self.setState({emailExists: true, invitationExists: true, serviceCreated: response, ajaxLoad: false, success: true});
                         }else{
                             self.setState({ajaxLoad: false, success: true, serviceCreated: response});
                         }
-
                     } else {
                         self.setState({ajaxLoad: false});
                         console.log(`Server Error:`, response.error);
@@ -150,14 +156,13 @@ class ServiceRequestFormV2 extends React.Component {
             }else{
                 console.log("errors found by validators", payload);
             }
+        }else{
+            console.log("user doesn't have card nor a stripe token");
         }
     }
 
     closeUserLoginModal(){
         this.setState({emailExists: false});
-    }
-    closeInvitationAlertModal(){
-        this.setState({invitationExists: false});
     }
 
     checkIfUserHasCard(){
@@ -334,4 +339,13 @@ class ServiceRequestFormV2 extends React.Component {
 
 }
 
-export default formBuilder(FORM_NAME, null, (state) => {return {uid:state.uid}})(ServiceRequestFormV2)
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setUid: (uid) => {
+            dispatch(setUid(uid))
+        }
+    }
+}
+
+
+export default formBuilder(FORM_NAME, null, (state) => {return {uid:state.uid}}, mapDispatchToProps )(ServiceRequestFormV2)
