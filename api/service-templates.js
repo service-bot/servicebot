@@ -206,11 +206,19 @@ module.exports = function (router) {
             let newUser = new User({"email": req_body_email, "role_id": 3, "status": "invited"});
             new Promise((resolve, reject) => {
                 //Check for existing user email
-                User.findAll("email", req_body_email, foundUsers => {
-                    if (foundUsers.length != 0) {
-                        reject('This email already exists in the system');
+                User.findOne("email", req_body_email, foundUser => {
+                    if(foundUser.data) {
+                        let userId = foundUser.get('id');
+                        Invitation.findOne("user_id", userId, foundInvitation => {
+                            if(foundInvitation.data){
+                                reject('Invitation already exists for this user')
+                            }
+                            else{
+                                reject('This email already exists in the system')
+                            }
+                        })
                     }
-                    else {
+                    else{
                         resolve()
                     }
                 });
@@ -243,14 +251,9 @@ module.exports = function (router) {
                         let invite = new Invitation({"user_id": resultUser.get("id")});
                         invite.create((err, result) => {
                             if (!err) {
-                                //let apiUrl = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + result.get("token");
-                                //let frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
+                                res.locals.apiUrl = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + result.get("token");
+                                res.locals.frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
                                 EventLogs.logEvent(resultUser.get('id'), `user ${resultUser.get('email')} was created by self request`);
-                                //res.locals.json = {url: frontEndUrl, api: apiUrl};
-                                //result.set('url', frontEndUrl);
-                                //result.set('api', apiUrl);
-                                //res.locals.valid_object = result;
-                                //TODO call mailer here with special invitation email
                                 resolve(resultUser);
                             } else {
                                 reject(err);
@@ -269,12 +272,9 @@ module.exports = function (router) {
                 .then(service => {
                     //Send the mail based on the requester
                     return new Promise((resolve, reject) => {
-                        /*                if (service.data.user_id == req_uid) {
-                         mailer('request_service_instance_user', 'user_id', service)(req, res, next);
-                         } else {
-                         mailer('request_service_instance_admin', 'user_id', service)(req, res, next);
-                         }*/
-                        console.log("would be sending email to user")
+                        service.set('api', res.locals.apiUrl);
+                        service.set('url', res.locals.frontEndUrl);
+                        mailer('request_service_instance_new_user', 'user_id', service)(req, res, next);
                         return resolve(service);
                     });
                 })
@@ -320,7 +320,7 @@ module.exports = function (router) {
             }).then(function (service) {
             return new Promise(function (resolve, reject) {
                 EventLogs.logEvent(req.user.get('id'), `service-templates ${req.params.id} was requested by user ${req.user.get('email')} and service-instance was created`);
-                res.status(200).json(service);
+                res.status(200).json(service.data);
                 return resolve(service);
             });
         }).catch(function (err) {

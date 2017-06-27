@@ -1695,6 +1695,7 @@
     },
     "post": {
       "summary": "Requests a service-instance",
+      "description": "Can make this call unauthorized, but must also send 'email' and 'token_id' in the request JSON",
       "tags": [
         "service-templates"
       ],

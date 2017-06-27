@@ -36,6 +36,7 @@ class BillingSettingForm extends React.Component {
                     };
         this.getStripeToken = this.getStripeToken.bind(this);
         this.stripeTokenHandler = this.stripeTokenHandler.bind(this);
+        this.addStripeEventListener = this.addStripeEventListener.bind(this);
         this.handleStripeResponse = this.handleStripeResponse.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
         this.handleStripeOptionsInputChange = this.handleStripeOptionsInputChange.bind(this);
@@ -112,39 +113,57 @@ class BillingSettingForm extends React.Component {
         });
 
         // Store the card instance in self.state for later use
-        self.setState({stripeCard: card});
+        self.setState({stripeCard: card}, function () {
+            self.addStripeEventListener();
+        });
+
+
         if(this.props.setCardElement){
             this.props.setCardElement(card);
         }
+
+        if(this.props.retrieveStripeToken){
+            let form = document.getElementById('payment-form');
+            console.log("giving the stripe form to request form");
+            this.props.retrieveStripeToken(form, null);
+        }
+    }
+
+    addStripeEventListener(){
+        // Create a token or display an error the form is submitted.
+        let self = this;
+        let stripe = self.state.stripe;
+        let card = self.state.stripeCard;
+
+        let form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            console.log("got submit event, personal information", self.state.personalInformation);
+            stripe.createToken(card, self.state.personalInformation).then(function(result) {
+                if (result.error || result.err) {
+                    // Inform the user if there was an error
+                    self.setState({ajaxLoad: false}, function(){
+                        let errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = result.error.message || result.err;
+                        console.log("get token error",result);
+                    });
+                } else {
+                    // Send the token to your server
+                    if(self.props.retrieveStripeToken){
+                        self.props.retrieveStripeToken(form, result.token);
+                    }else{
+                        console.log("else result token, use stripe token handler");
+                        self.stripeTokenHandler(result.token);
+                    }
+                }
+            });
+        });
     }
 
     getStripeToken(){
         this.setState({ajaxLoad: true}, function(){
-
-            let self = this;
-            let stripe = self.state.stripe;
-            let card = self.state.stripeCard;
-
-            // Create a token or display an error the form is submitted.
             let form = document.getElementById('payment-form');
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                stripe.createToken(card, self.state.personalInformation).then(function(result) {
-                    if (result.error || result.err) {
-                        // Inform the user if there was an error
-                        self.setState({ajaxLoad: false}, function(){
-                            console.log("getStripeToken error s", result);
-                            let errorElement = document.getElementById('card-errors');
-                            errorElement.textContent = result.error.message || result.err;
-                        });
-                    } else {
-                        // Send the token to your server
-                        console.log("getStripeToken success", result);
-                        self.stripeTokenHandler(result.token);
-                    }
-                });
-            });
+            form.dispatchEvent(new Event('submit', {'bubble': true}));
         });
     }
 
@@ -153,11 +172,10 @@ class BillingSettingForm extends React.Component {
         let uid = self.state.uid;
         let hasCard = self.state.hasCard;
         let fundID = self.state.fund.id;
-        let apiMethod = hasCard ? 'PUT' : 'POST';
-        let apiURL = hasCard ? '/api/v1/funds/' + fundID : '/api/v1/funds';
+        let apiMethod = 'POST';
+        let apiURL = '/api/v1/funds';
         let myTokenJSON = {'user_id': uid, 'token_id': token.id};
 
-        console.log("mytokenJSON", myTokenJSON);
         // send the token off to db
         Fetcher(apiURL, apiMethod, myTokenJSON).then(function (response) {
             self.setState({ajaxLoad: false});

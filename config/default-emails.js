@@ -8,6 +8,10 @@ default_emails.templates = [
         email_body:"Hello [[references.users.name]], \r\nYour service request for [[name]] has been completed. Please login to your account to view and access your <a href='[[_hostname]]/service-instance/[[id]]'>service</a>. \r\nThank you, \r\n [[_company_name]]",
         email_subject:"ServiceBot Instance requested",
         model:"service-instance"},
+    {name:"request_service_instance_new_user",
+        email_body:"Hello [[references.users.name]], \r\nYour service request for [[name]] has been completed. Please click the link to complete user <a href='[[url]]'>registration</a> in order to view your services. Once registered you can access your <a href='[[_hostname]]/service-instance/[[id]]'>service</a>. \r\nThank you, \r\n [[_company_name]]",
+        email_subject:"ServiceBot Instance requested",
+        model:"service-instance"},
     {name:"service_requires_payment_approval",
         email_body:"Hello [[references.users.name]], \r\nThere are additional charges added to your service, [[name]]. Please login to your account and approve the <a href='[[_hostname]]/my-services'>charges</a>. \r\nThank you, \r\n [[_company_name]]",
         email_subject:"ServiceBot Instance has additional charges",
@@ -57,9 +61,10 @@ default_emails.templates = [
         email_subject:"ServiceBot Payment Failure",
         model:"user"}
 ];
+//Setting the registration_admin role to admin
 default_emails.templates_to_roles = [
     {
-        email_template_id:11,
+        email_template_id:12,
         role_id:1
     },
 ];

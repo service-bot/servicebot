@@ -23,8 +23,8 @@ ServiceTemplate.prototype.requestPromise = function (uid, body = {}, permission_
     if (permission_array.some(p => p.get("permission_name") == "can_administrate" || p.get("permission_name") == "can_manage")) {
         if (body.client_id) {
             service_user_id = body.client_id;
-            service_description = body.description;
-            service_name = body.name;
+            service_description = body.description || service_description;
+            service_name = body.name || service_name;
         }
     }
     if(self.data.detail) {

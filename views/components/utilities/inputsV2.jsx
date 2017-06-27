@@ -37,7 +37,7 @@ class Inputs extends React.Component {
 
     componentDidMount(){
         this.context.initializeInput(this);
-        console.log("didmount v2 inputs")
+        console.log("didmount v2 inputs", this)
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -128,7 +128,7 @@ class Inputs extends React.Component {
         let defaultValue    = this.props.value || this.props.defaultValue;
         let placeholder     = this.props.placeholder;
         let disabled        = this.props.disabled;
-        let error           = this.props.errors && this.props.errors.length && this.props.errors[0].message;
+        let error           = this.props.errors && this.props.errors.length && this.props.errors[0].message || null;
         let warning         = this.props.warning ? this.props.warning : false;
 
         //error checking props
