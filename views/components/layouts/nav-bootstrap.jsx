@@ -11,6 +11,7 @@ import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
 const mapStateToProps = (state, ownProps) => {
     return {
         uid: state.uid,
+        user: state.user || null,
         options: state.options
     }
 };
@@ -54,12 +55,7 @@ class NavBootstrap extends React.Component {
         this.toggleSideBar = this.toggleSideBar.bind(this);
         this.toggleOnEditingGear = this.toggleOnEditingGear.bind(this);
         this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
-    }
-
-    componentWillReceiveProps(nextProps){
-        if(nextProps.options){
-            this.setState({systemOptions: nextProps.options});
-        }
+        this.getAppMessages = this.getAppMessages.bind(this);
     }
 
     componentDidMount(){
@@ -151,6 +147,22 @@ class NavBootstrap extends React.Component {
         }
     }
 
+    getAppMessages(){
+        let message = null;
+        if(this.props.user) {
+            if(this.props.user.status == "invited") {
+                message = "Please check your email and set your password to complete your account.";
+            }
+        }
+
+        if(message){
+            return ( <div className="app-messages"><p>{message}</p></div> );
+        }else{
+            return <span/>;
+        }
+
+    }
+
     render () {
         let self = this;
         const currentModal = ()=> {
@@ -163,8 +175,8 @@ class NavBootstrap extends React.Component {
 
         let navigationBarStyle = {};
         let linkTextStyle = {};
-        if(this.state.systemOptions){
-            let options = this.state.systemOptions;
+        if(this.props.options){
+            let options = this.props.options;
             navigationBarStyle.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
             linkTextStyle.color = _.get(options, 'primary_theme_text_color.value', '#000000');
         }
@@ -221,6 +233,7 @@ class NavBootstrap extends React.Component {
                                                                             "button_primary_text_color"]
                                                                 }/>
                 }
+                {this.getAppMessages()}
             </nav>
 
         );

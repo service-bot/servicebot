@@ -37,7 +37,6 @@ class Inputs extends React.Component {
 
     componentDidMount(){
         this.context.initializeInput(this);
-        console.log("didmount v2 inputs", this)
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -52,7 +51,6 @@ class Inputs extends React.Component {
 
     componentWillUnmount(){
         if(this.state.type == 'color_picker'){
-            console.log("trying to remove listener on unmount");
             document.removeEventListener('click', this.clickInsideListener);
         }
     }
@@ -71,7 +69,7 @@ class Inputs extends React.Component {
     }
 
     handlePriceChange(e){
-        console.log("handlePriceChange", e);
+        // console.log("handlePriceChange", e);
         let self = this;
         let value = e.target.value || e.target.defaultValue;
 
@@ -94,8 +92,6 @@ class Inputs extends React.Component {
     }
 
     handleColorPickerChange(color, e){
-        console.log(color);
-
         //change the color picker colors
         let currentColor = this.state.value;
         let currentColors = this.state.colors;

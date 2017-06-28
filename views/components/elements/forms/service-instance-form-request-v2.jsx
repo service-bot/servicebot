@@ -1,18 +1,17 @@
 import React from 'react';
-import Load from '../../utilities/load.jsx';
 import {Link, browserHistory} from 'react-router';
-import Fetcher from "../../utilities/fetcher.jsx";
-import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
+import Load from '../../utilities/load.jsx';
 import Inputs from "../../utilities/inputsV2.jsx";
 import BillingSettingsForm from "../../elements/forms/billing-settings-form.jsx";
-import Buttons from "../../elements/buttons.jsx";
-let _ = require("lodash");
 import { formBuilder } from "../../utilities/form-builder";
+import Buttons from "../../elements/buttons.jsx";
+import Price from "../../utilities/price.jsx";
+import Fetcher from "../../utilities/fetcher.jsx";
 import IconHeading from "../../layouts/icon-heading.jsx";
 import ModalUserLogin from "../modals/modal-user-login.jsx";
-import ModalUserInvitationAlert from "../modals/modal-user-invitation-alert.jsx";
-import {setUid} from "../../utilities/actions";
-import Price from "../../utilities/price.jsx";
+import {setUid, setUser, fetchUsers} from "../../utilities/actions";
+import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
+let _ = require("lodash");
 
 const FORM_NAME = "reqForm";
 
@@ -52,10 +51,10 @@ class ServiceRequestFormV2 extends React.Component {
         if(isAuthorized({permissions: "can_administrate"})) {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
-                    console.log('User Data', response);
+                    // console.log('User Data', response);
                     self.setState({usersData: response});
                 } else {
-                    console.log('error getting users', response);
+                    console.log('Error getting users', response);
                 }
             });
         }
@@ -92,13 +91,12 @@ class ServiceRequestFormV2 extends React.Component {
     }
 
     componentDidUpdate(nextProps, nextState){
-        console.log("next props", nextProps);
-        console.log("next state", nextState);
+        // console.log("next props", nextProps);
+        // console.log("next state", nextState);
         if(nextState.stripToken != this.state.stripToken){
             console.log(nextState.stripToken, this.state.stripToken);
         }
         if(nextProps.uid && this.state.hasCard === null){
-            console.log("user is logged in", nextProps.uid);
             this.checkIfUserHasCard();
         }
         if(nextProps.uid && nextState.serviceCreated){
@@ -113,7 +111,7 @@ class ServiceRequestFormV2 extends React.Component {
         }
         if(token) {
             this.setState({stripToken: token}, function () {
-                console.log("stripe token", self.state.stripToken);
+                // console.log("Stripe token", self.state.stripToken);
                 self.handleSubmission();
             });
         }
@@ -129,16 +127,15 @@ class ServiceRequestFormV2 extends React.Component {
             if(!payload.hasErrors) {
                 self.setState({ajaxLoad: true});
 
-                console.log("submitting the payload", payload);
-
                 Fetcher(this.state.formURL, 'POST', payload).then(function (response) {
                     if (!response.error) {
-                        console.log('submission response', response);
                         if(self.props.uid) {
                             browserHistory.push(`/service-instance/${response.id}`);
                             self.setState({ajaxLoad: false, success: true});
                         }else if(response.url && response.api){ //this is a case where the user is new and has invitation
                             self.props.setUid(response.user_id);
+                            self.props.setUser(response.user_id);
+                            localStorage.setItem("permissions", response.permissions);
                             self.setState({emailExists: true, invitationExists: true, serviceCreated: response, ajaxLoad: false, success: true});
                         }else{
                             self.setState({ajaxLoad: false, success: true, serviceCreated: response});
@@ -154,10 +151,10 @@ class ServiceRequestFormV2 extends React.Component {
                     }
                 });
             }else{
-                console.log("errors found by validators", payload);
+                console.log("Errors found by validators", payload);
             }
         }else{
-            console.log("user doesn't have card nor a stripe token");
+            console.log("User doesn't have card nor a stripe token");
         }
     }
 
@@ -169,11 +166,9 @@ class ServiceRequestFormV2 extends React.Component {
         let self = this;
         Fetcher(`/api/v1/users/${self.props.uid}`).then(function (response) {
             if(!response.error){
-                console.log("current state's uid", response);
                 if(_.has(response, 'references.funds[0]') && _.has(response, 'references.funds[0].source.card')){
                     let fund = _.get(response, 'references.funds[0]');
                     let card = _.get(response, 'references.funds[0].source.card');
-                    console.log("found card in response", card);
                     self.setState({
                         loading: false,
                         hasCard: true,
@@ -187,7 +182,7 @@ class ServiceRequestFormV2 extends React.Component {
                             address_state: card.address_state,
                         }
                     }, function(){
-                        console.log("checked user and found card, state is set to", self.state);
+                        console.log("Checked user and found card, state is set to", self.state);
                         return true;
                     });
                 }
@@ -220,7 +215,7 @@ class ServiceRequestFormV2 extends React.Component {
 
             let getRequestText = ()=>{
                 let serType = myService.type;
-                console.log("service type",myService.type);
+                // console.log("service type",myService.type);
                 if (serType == "subscription"){
                     return ("Subscribe");
                 }else if (serType == "one_time"){
@@ -343,9 +338,12 @@ const mapDispatchToProps = (dispatch) => {
     return {
         setUid: (uid) => {
             dispatch(setUid(uid))
+        },
+        setUser: (uid) => {
+            fetchUsers( uid, (err, user) => dispatch(setUser(user)));
         }
     }
-}
+};
 
 
 export default formBuilder(FORM_NAME, null, (state) => {return {uid:state.uid}}, mapDispatchToProps )(ServiceRequestFormV2)

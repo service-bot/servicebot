@@ -6,16 +6,8 @@ import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import Alert from 'react-s-alert';
 import Buttons from '../buttons.jsx';
 import {connect} from "react-redux";
-import {setUid} from "../../utilities/actions";
+import {setUid, setUser, fetchUsers} from "../../utilities/actions";
 import cookie from 'react-cookie';
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setUid: (uid) => {
-            dispatch(setUid(uid))
-        }
-    }
-}
 
 class Login extends React.Component {
 
@@ -32,28 +24,30 @@ class Login extends React.Component {
     }
 
     handleLogin(e){
-        console.log(e);
         e.preventDefault();
         let that = this;
 
         Fetcher("/api/v1/auth/session", "POST", that.state.form).then(function(result){
             if(!result.error) {
-                console.log(result);
+
                 localStorage.setItem("permissions", result.permissions);
+
+                fetchUsers(cookie.load("uid"), (err, user) => (that.props.setUser(user)));
+
+                //update redux store with the uid
                 that.props.setUid(cookie.load("uid"));
 
+                //if the user came from a modal, close the modal, else send user back 2 pages
                 if(that.props.modal !== true) {
-                    console.log("no modal prop");
                     if (that.props.location.state && that.props.location.state.fromSignup) {
                         return browserHistory.go(-2);
                     }
                     browserHistory.goBack();
                 }else{
-                    console.log("hiding it");
                     that.props.hide();
                 }
             }else{
-                console.log("login error", result.error);
+                console.log("Login error", result.error);
                 that.setState({errors: result.error});
             }
         })
@@ -64,7 +58,6 @@ class Login extends React.Component {
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
         const formState = update(this.state, { form: {[name]: {$set: value}}});
-        console.log(formState);
         this.setState(formState);
     }
 
@@ -88,7 +81,7 @@ class Login extends React.Component {
     }
 
     componentDidUpdate(){
-        console.log("updated state", this.state);
+        // console.log("updated state", this.state);
     }
 
     goToLogin(){
@@ -158,5 +151,16 @@ class Login extends React.Component {
         }
     }
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setUid: (uid) => {
+            dispatch(setUid(uid))
+        },
+        setUser: (uid) => {
+            dispatch(setUser(uid))
+        }
+    }
+};
 
 export default connect(null, mapDispatchToProps)(Login);

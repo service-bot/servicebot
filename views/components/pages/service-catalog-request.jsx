@@ -49,7 +49,7 @@ class ServiceRequest extends React.Component {
             if(!response.error){
                 self.setState({service : response});
             }else{
-                console.log("get template request data error", response);
+                console.log("Error getting template request data", response);
             }
             self.setState({loading:false});
         });
@@ -91,10 +91,6 @@ class ServiceRequest extends React.Component {
     }
 
     render () {
-
-        console.log("Image url api", this.state.id);
-        console.log("Image url", this.state.image);
-
         if(this.state.loading){
             return(<span>loading</span>);
         }else {

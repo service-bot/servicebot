@@ -1,21 +1,11 @@
 import React from 'react';
 import Load from '../../utilities/load.jsx';
-import Fetcher from "../../utilities/fetcher.jsx";
-import Inputs from "../../utilities/inputs.jsx";
 import {Link, browserHistory} from 'react-router';
-import {DataForm, DataChild} from "../../utilities/data-form.jsx";
-let _ = require("lodash");
-import {setUid} from "../../utilities/actions";
+import {DataForm} from "../../utilities/data-form.jsx";
+import {setUid, fetchUsers, setUser} from "../../utilities/actions";
 import {connect} from "react-redux";
 import cookie from 'react-cookie';
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        setUid: (uid) => {
-            dispatch(setUid(uid))
-        }
-    }
-}
+let _ = require("lodash");
 
 class UserFormRegister extends React.Component {
 
@@ -32,10 +22,11 @@ class UserFormRegister extends React.Component {
     }
 
     handleResponse(response){
-        console.log("inside handle response", response);
+        // console.log("inside handle response", response);
         if(!response.error){
             localStorage.setItem("permissions", response.permissions);
             this.props.setUid(cookie.load("uid"));
+            this.props.setUser(cookie.load("uid"));
             this.setState({success: true});
 
             // console.log("LOCATION!", that.props.location);
@@ -115,5 +106,16 @@ class UserFormRegister extends React.Component {
         }
     }
 }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setUid: (uid) => {
+            dispatch(setUid(uid))
+        },
+        setUser: (uid) => {
+            fetchUsers( uid, (err, user) => dispatch(setUser(user)));
+        }
+    }
+};
 
 export default connect(null, mapDispatchToProps)(UserFormRegister);

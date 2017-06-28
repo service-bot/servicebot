@@ -5,44 +5,25 @@ import Footer from "./layouts/footer.jsx"
 import {browserHistory} from 'react-router';
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
-import {setOptions,setUid,SET_FORM_DATA, SET_OPTIONS, SET_UID} from "./utilities/actions"
+import {setOptions,setUid, setUser, fetchUsers} from "./utilities/actions"
 import cookie from 'react-cookie';
+import { store } from "../store"
 
-function appReducer(state = {allForms : {}, options: {}, uid : cookie.load("uid")}, action) {
-    switch(action.type){
-        case SET_OPTIONS :
-            return Object.assign({}, state, {
-                options: action.options
-            });
-        case SET_UID :
-            return Object.assign({}, state, {
-                uid : action.uid
-            });
-        case SET_FORM_DATA:
-            let newFormData = action.formData;
-            if(typeof newFormData === "function"){
-                newFormData = newFormData(state.allForms[action.name]);
-            }
-            return {
-                ...state,
-                allForms : {
-                    ...state.allForms,
-                    [action.name] : newFormData
-                }
-            }
-        default:
-            return state;
-    }
-}
 
-let store = createStore(appReducer);
 Fetcher("/api/v1/system-options/public").then(function(response) {
     store.dispatch(setOptions(response));
+}).then(function() {
+    // console.log("app will dispatch setUser function", cookie.load("uid"));
+    fetchUsers(cookie.load("uid"), (err, user) => store.dispatch(setUser(user)));
 }).catch(function (error) {
-    console.log("error", error);
+    console.log("Error", error);
     store.dispatch(setOptions(
         {backgroundColor: '#000000'}
     ));
+});
+
+store.subscribe(()=>{
+    // console.log("store changed", store.getState());
 });
 
 
@@ -55,7 +36,6 @@ class App extends React.Component {
     }
 
     componentDidMount(){
-        console.log('ready');
         let self = this;
         let options = null;
         store.subscribe(function(){
@@ -75,8 +55,11 @@ class App extends React.Component {
 
         Fetcher("/api/v1/auth/session/clear").then(function(result){
             that.setState({uid: null})
+            localStorage.removeItem("permissions");
             store.dispatch(setUid(null));
             browserHistory.push('/');
+        }).then(function () {
+            store.dispatch(setUser(null));
         })
     }
 

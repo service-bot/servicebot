@@ -275,7 +275,12 @@ module.exports = function (router) {
                         service.set('api', res.locals.apiUrl);
                         service.set('url', res.locals.frontEndUrl);
                         mailer('request_service_instance_new_user', 'user_id', service)(req, res, next);
-                        return resolve(service);
+                        let user_role = new Role({"id" : 3});
+                        user_role.getPermissions(function(perms){
+                            let permission_names = perms.map(perm => perm.data.permission_name);
+                            service.set("permissions", permission_names)
+                            return resolve(service);
+                        });
                     });
                 })
                 .then(service => {

@@ -8,7 +8,6 @@ class Buttons extends React.Component {
     constructor(props) {
         super(props);
 
-        console.log("my options", this.props.options);
         this.state = {
             containerClass: this.props.containerClass || '',
             buttonClass: `btn btn-default btn-rounded ${this.props.buttonClass}` || 'btn btn-default btn-rounded',
@@ -56,7 +55,6 @@ class Buttons extends React.Component {
             e.preventDefault();
         }
         if(this.props.onClick) {
-            console.log("handle click in button");
             this.props.onClick(e);
         }
     }

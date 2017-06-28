@@ -644,6 +644,23 @@ body.login .footer{
     color: whitesmoke;
 }
 
+/* app messages */
+.app-messages {
+    position: absolute;
+    width: 96%;
+    height: auto;
+    padding: 10px 20px;
+    background: #dc3535;
+    top: 68px;
+    left: 0px;
+    margin: 0px 2%;
+    color: white;
+    font-size: 14px;
+}
+.app-messages p {
+    margin: 0px;
+}
+
 /* desktops only */
 /* top navigation bar */
 @media (min-width: 769px){
