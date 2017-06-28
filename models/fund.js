@@ -115,16 +115,22 @@ Fund.promiseFundCreateOrUpdate = function (user_id, token_id) {
             }
         });
     }).then(function (fund) {
-        //Set the user to active
+        //Set the user to active if user was flagged
         return new Promise(function (resolve, reject) {
-            tmpUser.set('status', 'active');
-            tmpUser.update((err, result)=>{
-                if(!err) {
-                    return resolve(fund);
-                } else {
-                    return reject(err);
-                }
-            });
+            let userStatus = tmpUser.get('status');
+            if(userStatus == 'flagged'){
+                tmpUser.set('status', 'active');
+                tmpUser.update((err, result)=>{
+                    if(!err) {
+                        return resolve(fund);
+                    } else {
+                        return reject(err);
+                    }
+                });
+            }
+            else{
+                resolve(fund);
+            }
         });
     });
 };

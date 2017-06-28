@@ -1,6 +1,6 @@
 
 let SystemOptions = require("../models/system-options");
-let Template = require("../models/email-template");
+let EmailTemplate = require("../models/email-template");
 let transporter = require("../config/transporter");
 let User = require("../models/user");
 
@@ -21,7 +21,7 @@ var mailer = function(templateName, userCorrelator="user_id", targetObject=null)
         targetObject = targetObject || res.locals.valid_object;
         console.log(targetObject);
         let globalProps = res.locals.sysprops;
-        Template.findOne("name", templateName, function(template){
+        EmailTemplate.findOne("name", templateName, function(template){
             //get additional addresses to send emails to
             let additional_recipients = template.get("additional_recipients") || [];
             targetObject.attachReferences(function(data){
