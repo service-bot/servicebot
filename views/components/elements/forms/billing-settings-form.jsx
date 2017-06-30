@@ -14,13 +14,14 @@ class BillingSettingForm extends React.Component {
         let uid = cookie.load("uid");
         if(this.props.ownerId){
             uid = this.props.ownerId;
-            console.log("billingSettingForm: owner", uid);
+        }else if(this.props.forUID){
+            uid = this.props.forUID;
         }
         let username = cookie.load("username");
         let spk = cookie.load("spk");
         let stripe = Stripe(spk);
         let elements = stripe.elements();
-        this.state = {  loading: false,
+        this.state = {  loading: true,
                         uid: uid,
                         email: username,
                         spk: spk,
@@ -237,11 +238,6 @@ class BillingSettingForm extends React.Component {
     render(){
         let self = this;
 
-        if(self.state.loading){
-            return(
-                <Load/>
-            );
-        }else {
             let hasCard = self.state.hasCard;
             let success = self.state.success;
             let brand, last4, exp_month, exp_year = '';
@@ -252,6 +248,8 @@ class BillingSettingForm extends React.Component {
                 exp_month = self.state.card.exp_month;
                 exp_year = self.state.card.exp_year;
             }
+            let displayName = this.props.user && this.props.user.name || 'You';
+            console.log("the user", this.props.user);
 
             if(this.state.context === "PAGE_BILLING_SETTINGS") {
                 return (
@@ -263,12 +261,15 @@ class BillingSettingForm extends React.Component {
 
                         {hasCard &&
                         <div>
-                            <h3>{hasCard && !success ? 'You already have' : 'Added'} a {brand} card in your account
-                                ending in <span className="last4">{last4}</span></h3>
+                            <h3>{hasCard && !success ? `${displayName} have` : 'Added'} a {brand} card in your account
+                                    ending in <span className="last4">{last4}</span></h3>
+
                             <p>Expiration: <span className="exp_month">{exp_month}</span> / <span
                                 className="exp_year">{exp_year}</span></p>
+
                             <hr/>
-                            {(hasCard && !success) && <p>Would you like to update your current payment method?</p>}
+
+                            {(hasCard && !success) && <p>Would you like to update {displayName} current payment method?</p>}
                         </div>
                         }
 
@@ -279,22 +280,25 @@ class BillingSettingForm extends React.Component {
                                 <div id="card-errors"></div>
                             </div>
 
+                            {!this.state.loading &&
+                                <div>
                             <Inputs type="text" label="Name" name="name"
                                     defaultValue={this.state.personalInformation.name}
                                     onChange={this.handleStripeOptionsInputChange}/>
-                            <Inputs type="text" label="Address Line 1" name="address_line1"
-                                    defaultValue={this.state.personalInformation.address_line1}
-                                    onChange={this.handleStripeOptionsInputChange}/>
-                            <Inputs type="text" label="Address Line 2" name="address_line2"
-                                    defaultValue={this.state.personalInformation.address_line2}
-                                    onChange={this.handleStripeOptionsInputChange}/>
-                            <Inputs type="text" label="City" name="address_city"
-                                    defaultValue={this.state.personalInformation.address_city}
-                                    onChange={this.handleStripeOptionsInputChange}/>
-                            <Inputs type="text" label="State" name="address_state"
-                                    defaultValue={this.state.personalInformation.address_state}
-                                    onChange={this.handleStripeOptionsInputChange}/>
-
+                            < Inputs type="text" label="Address Line 1" name="address_line1"
+                                defaultValue={this.state.personalInformation.address_line1}
+                                onChange={this.handleStripeOptionsInputChange}/>
+                                <Inputs type="text" label="Address Line 2" name="address_line2"
+                                defaultValue={this.state.personalInformation.address_line2}
+                                onChange={this.handleStripeOptionsInputChange}/>
+                                <Inputs type="text" label="City" name="address_city"
+                                defaultValue={this.state.personalInformation.address_city}
+                                onChange={this.handleStripeOptionsInputChange}/>
+                                <Inputs type="text" label="State" name="address_state"
+                                defaultValue={this.state.personalInformation.address_state}
+                                onChange={this.handleStripeOptionsInputChange}/>
+                                </div>
+                            }
                             <Buttons btnType="primary"
                                      text={hasCard ? 'Update Payment Method' : 'Add Payment Method'}
                                      preventDefault={false}
@@ -322,7 +326,7 @@ class BillingSettingForm extends React.Component {
                     <div>PLEASE MAKE SURE YOUR CONTEXT IS CORRECT</div>
                 )
             }
-        }
+
     }
 }
 

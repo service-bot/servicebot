@@ -10,6 +10,7 @@ import DateFormat from "../utilities/date-format.jsx";
 import ModalInviteUser from "../elements/modals/modal-invite-user.jsx";
 import ModalSuspendUser from "../elements/modals/modal-suspend-user.jsx";
 import ModalDeleteUser from "../elements/modals/modal-delete-user.jsx";
+import ModalAddFund from "../elements/modals/modal-add-fund.jsx";
 
 class ManageUsers extends React.Component {
 
@@ -30,11 +31,10 @@ class ManageUsers extends React.Component {
         this.closeSuspendUser = this.closeSuspendUser.bind(this);
         this.openDeleteUser = this.openDeleteUser.bind(this);
         this.closeDeleteUser = this.closeDeleteUser.bind(this);
+        this.openEditCreditCard = this.openEditCreditCard.bind(this);
+        this.closeEditCreditCard = this.closeEditCreditCard.bind(this);
     }
 
-    handleUnauthorized(){
-        browserHistory.push("/login");
-    }
     modID(data){
         return (
             <div className="badge badge-xs">
@@ -66,7 +66,18 @@ class ManageUsers extends React.Component {
         if(!isAuthorized({permissions:"can_administrate"})){
             return browserHistory.push("/login");
         }
+    }
 
+    openEditCreditCard(dataObject){
+        let self = this;
+        return function(e) {
+            // console.log("clicked on unpub button", dataObject);
+            e.preventDefault();
+            self.setState({ openEditCreditCard: true, currentDataObject: dataObject });
+        }
+    }
+    closeEditCreditCard(){
+        this.setState({ openEditCreditCard: false, currentDataObject: {}, lastFetch: Date.now()});
     }
 
     openInviteUserModal(dataObject){
@@ -141,6 +152,11 @@ class ManageUsers extends React.Component {
                     <ModalDeleteUser uid={this.state.currentDataObject.id} show={this.state.openDeleteUserModal} hide={this.closeDeleteUser}/>
                 )
             }
+            if(this.state.openEditCreditCard){
+                return (
+                    <ModalAddFund uid={this.state.currentDataObject.id} user={this.state.currentDataObject} show={this.state.openDeleteUserModal} hide={this.closeEditCreditCard}/>
+                )
+            }
         };
 
         return(
@@ -148,35 +164,34 @@ class ManageUsers extends React.Component {
                 <Jumbotron pageName={pageName} location={this.props.location}/>
                 <div className="page-service-instance">
                     <Content>
-                        <div className="row m-b-20">
-                            <div className="col-xs-12">
-                                <ContentTitle icon="cog" title="Manage all your users here"/>
-                                <Dropdown name="Actions"
-                                          dropdown={[
-                                              {id: 'invitenewuser', name: 'Invite New User', link: '#', onClick: this.openInviteUserModal}
-                                              ]}/>
-                                <DataTable get="/api/v1/users"
-                                           col={['id', 'name', 'email', 'phone', 'references.user_roles.0.role_name', 'status', 'last_login', 'created_at']}
-                                           colNames={['', 'Name', 'Email', 'Phone', 'Role', 'Status', 'Last Login', 'Created']}
-                                           mod_id={this.modID}
-                                           mod_name={this.modName}
-                                           mod_last_login={this.modLastLogin}
-                                           mod_created_at={this.modCreated}
-                                           lastFetch={this.state.lastFetch}
-                                           dropdown={
-                                               [{name:'Actions', direction: 'right',
-                                                   buttons:[
-                                                       {id: 1, name: 'Edit User', link: '#', onClick: this.viewUser},
-                                                       {id: 2, name: 'Manage Services', link: '#', onClick: this.viewUserServices},
-                                                       {id: 3, name: 'divider'},
-                                                       {id: 4, name: 'Suspend User', link: '#', onClick: this.openSuspendUser},
-                                                       {id: 5, name: 'Delete User', link: '#', onClick: this.openDeleteUser}
-                                                       ]}
-                                               ]
-                                           }
-                                />
-                            </div>
-                        </div>
+                        <ContentTitle icon="cog" title="Manage all your users here"/>
+                        <Dropdown name="Actions"
+                                  dropdown={[
+                                      {id: 'invitenewuser', name: 'Invite New User', link: '#', onClick: this.openInviteUserModal}
+                                  ]}/>
+                        <DataTable get="/api/v1/users"
+                                   col={['id', 'name', 'email', 'phone', 'references.user_roles.0.role_name', 'status', 'last_login', 'created_at']}
+                                   colNames={['', 'Name', 'Email', 'Phone', 'Role', 'Status', 'Last Login', 'Created']}
+                                   mod_id={this.modID}
+                                   mod_name={this.modName}
+                                   mod_last_login={this.modLastLogin}
+                                   mod_created_at={this.modCreated}
+                                   lastFetch={this.state.lastFetch}
+                                   dropdown={
+                                       [{
+                                           name:'Actions',
+                                           direction: 'right',
+                                           buttons:[
+                                               {id: 5, name: 'Edit Credit Card', link: '#', onClick: this.openEditCreditCard},
+                                               {id: 1, name: 'Edit User', link: '#', onClick: this.viewUser},
+                                               {id: 2, name: 'Manage Services', link: '#', onClick: this.viewUserServices},
+                                               {id: 3, name: 'divider'},
+                                               {id: 4, name: 'Suspend User', link: '#', onClick: this.openSuspendUser},
+                                               {id: 5, name: 'Delete User', link: '#', onClick: this.openDeleteUser},
+                                           ]}
+                                       ]
+                                   }
+                        />
                         {getModals()}
                     </Content>
                 </div>

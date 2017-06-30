@@ -262,8 +262,7 @@ class ServiceRequestFormV2 extends React.Component {
                                     <Authorizer permissions="can_administrate">
                                     <Inputs type="select" label="For Client" name="client_id"
                                             value={sortedUsers.map(function (user) {return user.id })[0]}
-                                            options={userOptionList}
-                                            formLess={true}/>
+                                            options={userOptionList} formLess={true}/>
                                     </Authorizer>
 
                                     {!this.props.uid &&
