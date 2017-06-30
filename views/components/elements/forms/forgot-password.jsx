@@ -9,24 +9,30 @@ class ForgotPassword extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            form : {}
+            form : {},
+            submitted: 0
         };
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleReset = this.handleReset.bind(this);
 
     }
 
-    handleReset(e){
+    handleReset(e) {
         console.log(e);
         e.preventDefault();
         let that = this;
-        Fetcher("/api/v1/auth/reset-password", "POST", that.state.form).then(function(result){
-            if(!result.error) {
-                console.log(result);
-                localStorage.setItem("permissions", result.permissions);
-                browserHistory.goBack();
-            }
-        })
+        if (!that.state.form.email) {
+            this.setState({submitted: that.state.submitted+1});
+            console.log("email field is required", this.state.submitted);
+        }else{
+            Fetcher("/api/v1/auth/reset-password", "POST", that.state.form).then(function (result) {
+                if (!result.error) {
+                    console.log(result);
+                    localStorage.setItem("permissions", result.permissions);
+                    browserHistory.goBack();
+                }
+            })
+        }
     }
 
     handleInputChange(event) {
@@ -63,10 +69,11 @@ class ForgotPassword extends React.Component {
                     <p>
                         Please enter your email address to reset your password. You will receive an emil with password reset instructions.
                     </p>
-                    <div className="form-group">
+                    <div className={`form-group ${!this.state.form.email && this.state.submitted && 'has-error'}`}>
                         <label htmlFor="sign-in-2-email" className="bmd-label-floating">Email address</label>
                         <input onChange={this.handleInputChange} id="email" type="text" name="email" className="form-control"/>
                         <span className="bmd-help">Please enter your email</span>
+                        {!this.state.form.email && this.state.submitted && <span className="help-block">Email is required</span> }
                     </div>
                     <button onClick={this.handleReset} type='submit' className="btn btn-raised btn-lg btn-primary btn-block">Reset Password</button>
                     <p className="sign-up-link">Don't have an account? <Link to={{pathname:"/signup", state:{fromLogin: true}}}>Sign up here</Link></p>
