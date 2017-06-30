@@ -24,6 +24,10 @@ var config = {
             '^/api/**': {
                 target: 'http://localhost:3001',
                 secure: false
+            },
+            '^/setup': {
+                target: 'http://localhost:3001',
+                secure: false
             }
         }
     },

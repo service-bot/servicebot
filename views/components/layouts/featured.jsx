@@ -11,7 +11,6 @@ class Featured extends React.Component {
 
         this.state = {
             imageURL: this.props.imageURL,
-            systemOptions: this.props.options || {},
             editingMode: false,
             editingGear: false
         };
@@ -25,9 +24,6 @@ class Featured extends React.Component {
         if(nextProps.imageURL){
             // console.log("Featured Image got new image", nextProps.imageURL);
             this.setState({imageURL: nextProps.imageURL});
-        }
-        if(nextProps.options){
-            this.setState({systemOptions: nextProps.options});
         }
     }
 
@@ -49,8 +45,8 @@ class Featured extends React.Component {
 
         let featuredBackgroundColor = {};
 
-        if(this.state.systemOptions) {
-            let options = this.state.systemOptions;
+        if(this.props.options) {
+            let options = this.props.options;
             featuredBackgroundColor.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
         }
 

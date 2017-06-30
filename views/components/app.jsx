@@ -20,7 +20,8 @@ class App extends React.Component {
         store.subscribe(function(){
             let storeState = store.getState();
             if (storeState.options) {
-                self.setState({backgroundColor: storeState.options.background_color ? storeState.options.background_color.value : '#0d47a1'});
+                console.log("app.jsx did mount has options", storeState.options);
+                self.setState({backgroundColor: storeState.options.background_color ? storeState.options.background_color.value : '#ffffff'});
             }
             if(!options && storeState.options){
                 options = store.getState().options;

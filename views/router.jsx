@@ -6,6 +6,7 @@ import {setOptions,setUid, setUser, fetchUsers} from "./components/utilities/act
 import { store } from "./store"
 import { Provider } from 'react-redux'
 import Fetcher from "./components/utilities/fetcher.jsx";
+import cookie from 'react-cookie';
 // App
 import App from "./components/app.jsx";
 import Home from "./components/pages/home.jsx";
