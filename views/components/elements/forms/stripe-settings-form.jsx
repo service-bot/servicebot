@@ -146,6 +146,14 @@ class SystemSettingsForm extends React.Component {
                                 ServiceBot will remove all subscription, invoices, and user funds, and will register
                                 every user in the new Stripe account!
                             </p>
+                            <p>
+                                Follow these steps to change keys:<br/>
+                                1. <a href="https://dashboard.stripe.com/register" target="_blank">Create a Stripe Account</a>. Note: If you already have a stripe account you can skip this step<br/>
+                                2. Log in and go to <a href="https://dashboard.stripe.com/account/apikeys" target="_blank">the stripe api page</a>.<br/>
+                                3. Ensure that your system is in the mode you want your ServiceBot to be in (Test or Live).<br/>
+                                4. Copy and enter here the Publishable Key and Secret Key.<br/>
+                                <a href="https://docs.servicebot.io/getting_started/" target="_blank">For more detailed instructions follow this link</a>.<br/>
+                            </p>
                             <br/>
                         </div>
                         {getAlerts()}
