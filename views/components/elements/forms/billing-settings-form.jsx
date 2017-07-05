@@ -249,9 +249,11 @@ class BillingSettingForm extends React.Component {
                 exp_year = self.state.card.exp_year;
             }
 
+            let {user} = this.props;
+
             if(this.state.context === "PAGE_BILLING_SETTINGS") {
 
-                let displayName = this.props.user && this.props.user.name || this.props.user.email || 'You';
+                let displayName = user && (user.id || user.email) || "You";
 
                 return (
                     <div>
