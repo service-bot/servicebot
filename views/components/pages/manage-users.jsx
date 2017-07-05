@@ -182,12 +182,12 @@ class ManageUsers extends React.Component {
                                            name:'Actions',
                                            direction: 'right',
                                            buttons:[
-                                               {id: 5, name: 'Edit Credit Card', link: '#', onClick: this.openEditCreditCard},
-                                               {id: 1, name: 'Edit User', link: '#', onClick: this.viewUser},
-                                               {id: 2, name: 'Manage Services', link: '#', onClick: this.viewUserServices},
-                                               {id: 3, name: 'divider'},
-                                               {id: 4, name: 'Suspend User', link: '#', onClick: this.openSuspendUser},
-                                               {id: 5, name: 'Delete User', link: '#', onClick: this.openDeleteUser},
+                                               {id: 1, name: 'Edit Credit Card', link: '#', onClick: this.openEditCreditCard},
+                                               {id: 2, name: 'Edit User', link: '#', onClick: this.viewUser},
+                                               {id: 3, name: 'Manage Services', link: '#', onClick: this.viewUserServices},
+                                               {id: 4, name: 'divider'},
+                                               {id: 5, name: 'Suspend User', link: '#', onClick: this.openSuspendUser},
+                                               {id: 6, name: 'Delete User', link: '#', onClick: this.openDeleteUser},
                                            ]}
                                        ]
                                    }

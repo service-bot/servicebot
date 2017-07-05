@@ -41,6 +41,7 @@ import ManageCatalogList from "./components/pages/manage-catalog-list.jsx";
 import ManageCatalogCreate from "./components/pages/manage-catalog-create.jsx";
 import ManageCatalogEdit from "./components/pages/manage-catalog-edit.jsx";
 import UserEdit from "./components/pages/user-edit.jsx";
+import ManageCategories from "./components/pages/manage-categories.jsx";
 // Elements
 import EmailTemplateForm from "./components/elements/email-template.jsx";
 import ServiceTemplateForm from "./components/elements/forms/service-template-form-review.jsx";
@@ -106,6 +107,7 @@ let AppRouter = function(props) {
                     <Route name="Manage Users" path="manage-users" component={ManageUsers}/>
                     <Route name="Edit User" path="manage-users/:userId" components={UserEdit}/>
                     <Route name="Manage Subscriptions" path="manage-subscriptions" component={ManageSubscriptions}/>
+                    <Route name="Manage Categories" path="manage-categories" component={ManageCategories}/>
                     <Route name="Manage Permission" path="manage-permission" component={ManagePermission}/>
                     <Route name="Manage Catalog" path="manage-catalog" component={ManageCatalog}>
                         <IndexRoute component={ManageCatalogList}/>
