@@ -9,7 +9,7 @@ let _ = require("lodash");
 
 class UserFormRegister extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         let token = this.props.token;
         this.state = {
@@ -19,35 +19,50 @@ class UserFormRegister extends React.Component {
             success: false,
         };
         this.handleResponse = this.handleResponse.bind(this);
+        this.getValidators = this.getValidators.bind(this);
     }
 
-    handleResponse(response){
+    handleResponse(response) {
         // console.log("inside handle response", response);
-        if(!response.error){
+        if (!response.error) {
             localStorage.setItem("permissions", response.permissions);
             this.props.setUid(cookie.load("uid"));
             this.props.setUser(cookie.load("uid"));
             this.setState({success: true});
 
             // console.log("LOCATION!", that.props.location);
-            if(this.props.location.state && this.props.location.state.fromLogin){
+            if (this.props.location.state && this.props.location.state.fromLogin) {
                 return browserHistory.go(-2);
             }
             browserHistory.goBack();
         }
     }
 
-    render () {
+    getValidators() {
+        //optional references: the service template's references.service_template_properties
+        //Defining general validators
+        let validateEmail = (val) => {
+            let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            return val.match(mailFormat) || {error:"Invalid email format"}
 
-        if(this.state.loading){
+        };
+        let validatorJSON = {
+            'email': validateEmail
+        };
+        return validatorJSON;
+    }
+
+    render() {
+
+        if (this.state.loading) {
             return ( <Load/> );
-        }else if(this.state.success){
+        } else if (this.state.success) {
             browserHistory.goBack();
-        }else{
+        } else {
             //TODO: Add validation functions and pass into DataForm as props
             return (
                 <div className="sign-up">
-                    <DataForm handleResponse={this.handleResponse} url={this.state.url} method={'POST'}>
+                    <DataForm validators={this.getValidators()} handleResponse={this.handleResponse} url={this.state.url} method={'POST'}>
 
                         {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
                         {this.state.token ?
@@ -85,18 +100,28 @@ class UserFormRegister extends React.Component {
                         <div className="agreement-checkbox checkbox">
                             <label>
                                 <input name="agree" type="checkbox"/>
-                                By clicking on create account, you agree to our terms of service and that you have read our privacy policy,
+                                By clicking on create account, you agree to our terms of service and that you have read
+                                our
+                                privacy policy,
                                 including our cookie use policy
                             </label>
                         </div>
 
                         {!this.state.token ?
                             <div>
-                                <button className="btn btn-raised btn-lg btn-primary btn-block" type="submit" value="submit">Sign Up</button>
-                                <p className="sign-up-link p-t-15">I have an account <Link className="sign-up-link" to={{pathname:"/login", state:{fromSignup: true}}}>Login Here</Link></p>
+                                <button className="btn btn-raised btn-lg btn-primary btn-block" type="submit"
+                                        value="submit">Sign Up
+                                </button>
+                                <p className="sign-up-link p-t-15">I have an account <Link className="sign-up-link"
+                                                                                           to={{
+                                                                                               pathname: "/login",
+                                                                                               state: {fromSignup: true}
+                                                                                           }}>Login Here</Link></p>
                             </div> :
 
-                            <button className="btn btn-raised btn-lg btn-primary btn-block" type="submit" value="submit">Finish</button>
+                            <button className="btn btn-raised btn-lg btn-primary btn-block" type="submit"
+                                    value="submit">
+                                Finish</button>
                         }
                         <p className="copyright">&copy; Copyright 2017</p>
 
@@ -113,7 +138,7 @@ const mapDispatchToProps = (dispatch) => {
             dispatch(setUid(uid))
         },
         setUser: (uid) => {
-            fetchUsers( uid, (err, user) => dispatch(setUser(user)));
+            fetchUsers(uid, (err, user) => dispatch(setUser(user)));
         }
     }
 };
