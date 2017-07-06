@@ -4,3 +4,4 @@
 
 
 //notification table
+//email-template table

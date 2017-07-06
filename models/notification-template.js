@@ -56,6 +56,8 @@ Template.prototype.build = function(map, callback){
 };
 
 Template.prototype.createNotification = function(data){
+    let self = this;
+    console.log(`NOTIFICATION ${this.data.name} on ${this.data.event_name}`);
     return new Promise((resolve, reject) => {
         return resolve("YEA!");
         }

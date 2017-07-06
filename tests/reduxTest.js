@@ -4,8 +4,9 @@ let store = require("../config/redux/store");
 let triggerEvent = require("../config/redux/actions").triggerEvent;
 
 
-store.buildEventReducer(store).then((result) => {
+store.initialize().then((result) => {
     console.log(result);
+    console.log("HUH")
     store.dispatch(triggerEvent("great_event", {"asdasd" : "p"}));
 });
 

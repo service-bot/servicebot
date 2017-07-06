@@ -4,7 +4,7 @@ let thunk = require('redux-thunk').default;
 let sagaMiddleware = require("./saga");
 let { call, put, takeEvery } = require('redux-saga/effects')
 let { delay } = require('redux-saga')
-
+let Settings =  require('../../models/system-options');
 
 let { createStore, applyMiddleware, combineReducers } = require('redux');
 let { EVENT, SET_EVENT_REDUCER,SET_EVENT_SAGAS, INIT_STORE, setEventReducer,setEventSagas, initializeStore, triggerEvent}  =  require("./actions");
@@ -18,17 +18,8 @@ function appReducer(state = defaultAppState , action) {
     //change the store state based on action.type
     console.log(`action ${action.type}`);
     switch(action.type){
-        case EVENT :
-            console.log("EVENT!");
-            if(state.eventReducer) {
-                //sending empty state here --- we don't really care about this...
-                //we don't want events to mutate state in the reducer - they should dispatch events
-                state.eventReducer({}, action);
-                return state
-            }else{
-                console.log("no event reducer");
-                return state;
-            }
+        case INIT_STORE:
+            return action.initialStore;
         case SET_EVENT_REDUCER :
             console.log("SET EVENT REDUCER!")
             return Object.assign({}, state, {
@@ -46,7 +37,7 @@ function appReducer(state = defaultAppState , action) {
 
 
 //creates a new set of reducers based on the notification templates
-function buildEventReducer(store){
+function buildEventReducer(){
     return new Promise(function(resolve, reject) {
         NotificationTemplate.findAll(true, true, function (templates) {
             let notificationTemplateReducers = templates.reduce((reducers, template) => {
@@ -55,7 +46,7 @@ function buildEventReducer(store){
                     switch (action.event_name) {
                         case template.data.event_name:
                             template.createNotification(action.event_object).then((result) => {
-                                console.log(`template ${template.data.name} triggered for event ${action.event_name} - - - ${result}`)
+                                // console.log(`template ${template.data.name} triggered for event ${action.event_name} - - - ${result}`)
                             }).catch(err => {console.log("err", err)});
                             return state;
                         default:
@@ -67,8 +58,7 @@ function buildEventReducer(store){
             //let pluginEventReducer = codeToGetPluginReducer();
             //combines the reducers created
             let eventReducer = combineReducers(notificationTemplateReducers)
-            store.dispatch(setEventReducer(eventReducer));
-            resolve("event reducer generated");
+            resolve(eventReducer);
             //todo: add part which adds plugin reducers to event
         })
     });
@@ -78,9 +68,7 @@ function buildEventReducer(store){
 
 let store = createStore(appReducer,applyMiddleware(thunk), applyMiddleware(sagaMiddleware));
 
-
 store.subscribe(()=>{
-    console.log("store changed", store.getState());
 });
 
 
@@ -111,8 +99,27 @@ function* mySaga() {
  and only the latest one will be run.
  */
 
+store.initialize = function(){
+    let initialState = {};
+    return new Promise((resolve, reject) => {
+        Settings.findAll(true, true, (result) => {
+            resolve(result.reduce((settings, setting)=>{
+                settings[setting.data.option] = setting.data.value;
+                return settings;
+            }, {}))
+        })
+    }).then((result) => {
+        initialState["options"] = result;
+        return sagaMiddleware.initialize()
+        /*return sagaMiddleware.initialize()*/
+    }).then((result) => {
+        // initialState["eventReducer"] = result;
 
-sagaMiddleware.run(mySaga);
-
-
+        return store.dispatch(initializeStore(initialState))
+    }).catch((err) => {
+        console.error(err)
+        reject(err);
+    })
+}
+store.sagaMiddleware = sagaMiddleware;
 module.exports = store;
