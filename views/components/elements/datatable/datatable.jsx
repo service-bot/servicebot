@@ -43,16 +43,25 @@ class DataTable extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchData()
+        if(this.props.get){
+            this.fetchData()
+        }else if(this.props.dataObj){
+            console.log("I got data obj", this.props.dataObj);
+            this.setState({loading: false, resObjs: this.props.dataObj});
+        }
     }
 
     componentWillReceiveProps(nextProps){
         //this component will update if the calling component(parent component)'s state has changed.
         if(this.props.parentState != nextProps.parentState){
-            this.fetchData();
+            if(this.props.get) {
+                this.fetchData();
+            }
         }
         if(this.props.lastFetch != nextProps.lastFetch){
-            this.fetchData();
+            if(this.props.get) {
+                this.fetchData();
+            }
         }
     }
 
