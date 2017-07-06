@@ -175,11 +175,11 @@ class DataTable extends React.Component {
                             </tr>
                             </thead>
                             <tbody>
-                            {this.state.resObjs.map(resObj => (
-                                <tr key={"row-" + resObj.id}>
+                            {this.state.resObjs.map((resObj, index) => (
+                                <tr key={"row-" + index}>
                                     {/*{console.log("The resObj: ", resObj)}*/}
                                     {this.state.col.map(column => (
-                                        <td key={`row-${resObj.id}-cell-${column}`}>
+                                        <td key={`row-${index}-cell-${column}`}>
                                             {/* dynamic function call from props based on column name,
                                                 if column is accessed using a dot, replace the . with a - then call the function*/}
                                             {this.props[`mod_${column.replace(".", "-")}`] ? this.props[`mod_${column.replace(".", "-")}`](this.recursiveAccess(column.split("."), resObj), resObj) :
@@ -190,7 +190,7 @@ class DataTable extends React.Component {
                                     <td>
                                         {this.props.dropdown &&
                                         this.props.dropdown.map(dd => (
-                                            <Dropdown key={`dropdown-${resObj.id}-${dd.name}`}
+                                            <Dropdown key={`dropdown-${index}-${dd.name}`}
                                                       dataObject={resObj}
                                                       name={dd.name}
                                                       direction={dd.direction}
@@ -205,7 +205,7 @@ class DataTable extends React.Component {
                                                      dataObject={resObj}
                                                      name={b.name}
                                                      link={b.link}
-                                                     id={resObj.id}
+                                                     id={index}
                                                      active={resObj[this.props.statusCol]}/>
                                         ))
                                         }
