@@ -5,6 +5,7 @@ import {DataForm} from "../../utilities/data-form.jsx";
 import {setUid, fetchUsers, setUser} from "../../utilities/actions";
 import {connect} from "react-redux";
 import cookie from 'react-cookie';
+import Inputs from '../../utilities/inputs.jsx';
 let _ = require("lodash");
 
 class UserFormRegister extends React.Component {
@@ -43,7 +44,8 @@ class UserFormRegister extends React.Component {
         //Defining general validators
         let validateEmail = (val) => {
             let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            return val.match(mailFormat) || {error:"Invalid email format"}
+            console.log("validating email", val.match(mailFormat));
+            return val.match(mailFormat) ? true : {error:"Invalid email format"};
 
         };
         let validatorJSON = {
@@ -87,8 +89,8 @@ class UserFormRegister extends React.Component {
                         </div>
                         {!this.state.token &&
                         <div className="form-group">
-                            <label className="control-label">Email address</label>
-                            <input type="email" name="email" className="form-control"/>
+                            <Inputs type="email" name="email" label="Email Address"
+                                    onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
                             <span className="bmd-help">Please enter your email</span>
                         </div>
                         }
