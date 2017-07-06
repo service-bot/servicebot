@@ -114,9 +114,10 @@ class ManageCategories extends React.Component {
                                               {id: 'addnewcategory', name: 'Add New Category', link: '#', onClick: this.openAddCategoryModal}
                                               ]}/>
                                 <DataTable get="/api/v1/service-categories"
-                                           col={['id', 'name', 'description', 'created_at']}
-                                           colNames={['', 'Name', 'Description', 'Created']}
+                                           col={['id', 'name', 'description', 'created_at', 'updated_at']}
+                                           colNames={['', 'Name', 'Description', 'Created', 'Updated']}
                                            mod_created_at={this.modCreated}
+                                           mod_updated_at={this.modCreated}
                                            lastFetch={this.state.lastFetch}
                                            dropdown={
                                                [{
