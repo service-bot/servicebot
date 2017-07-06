@@ -49,7 +49,7 @@ class SignUp extends React.Component {
         document.body.classList.remove('login')
     }
     componentDidMount(){
-        console.log("HSITORY", browserHistory);
+        console.log("HISTORY", browserHistory);
         if(!isAuthorized({anonymous:true})){
             return browserHistory.push("/");
         }
