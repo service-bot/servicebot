@@ -55,4 +55,12 @@ Template.prototype.build = function(map, callback){
 
 };
 
+Template.prototype.createNotification = function(data){
+    return new Promise((resolve, reject) => {
+        return resolve("YEA!");
+        }
+    )
+}
+
+
 module.exports = Template;

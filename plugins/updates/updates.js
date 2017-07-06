@@ -2,6 +2,7 @@
 module.exports = function setup(options, imports, register) {
     let analytics = require("../../lib/analytics");
     let request = require("request");
+    let semver = require("semver");
     let _ = require("lodash");
     console.log(process.env.npm_package_version);
     //logic for creating tables

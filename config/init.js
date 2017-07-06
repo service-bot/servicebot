@@ -156,6 +156,7 @@ module.exports = function (initConfig) {
             }).createTable('email_templates', function (table) {
                 table.increments();
                 table.string('name');
+                table.string('event_name');
                 table.text('email_body', 'longtext');
                 table.string('email_subject');
                 table.string("model");
@@ -348,13 +349,17 @@ module.exports = function (initConfig) {
                 console.log("Created 'user_upcoming_invoice' table.");
 
             }).createTable('notifications', function (table) {
-                table.integer("source_id").primary();
+                table.increments();
+                table.string("source_id");
                 table.string('message');
                 table.string("type");
+                table.integer("user_id").references("users.id")
                 table.string("subject");
-                table.string("affected_versions");
-                table.boolean("read");
-                table.dateTime("created_at");
+                table.string("affected_versions").defaultTo("*");
+                table.boolean("read").defaultTo(false);
+                table.boolean("email_delivered").defaultTo(false);
+                table.boolean("email_read").defaultTo(false);
+                table.timestamp('created_at').defaultTo(knex.fn.now());
                 console.log("created nortifications table");
 
             }).createTable('password_reset_request', function (table) {
