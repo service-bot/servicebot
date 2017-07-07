@@ -5,7 +5,7 @@ var Permission = require("../models/permission");
 var SystemOption = require("../models/system-options");
 let options = require("./system-options");
 let DefaultTemplates = require("./default-emails");
-let EmailTemplate = require("../models/email-template");
+let NotificationTemplate = require("../models/notification-template");
 let Notification = require("../models/notifications");
 let fs = require("fs");
 let request = require("request");
@@ -154,23 +154,39 @@ module.exports = function (initConfig) {
                 table.timestamps(true, true);
                 console.log("Created 'files' table.");
 
-            }).createTable('email_templates', function (table) {
+            }).createTable('notification_templates', function (table) {
                 table.increments();
                 table.string('name');
                 table.string('event_name');
-                table.text('email_body', 'longtext');
-                table.string('email_subject');
+                table.text('message', 'longtext');
+                table.string('subject');
                 table.string("model");
                 table.specificType('additional_recipients', 'text[]');
+                table.boolean("send_email").defaultTo(false);
+                table.boolean("send_to_owner").defaultTo(true);
                 table.timestamps(true, true);
-                console.log("Created 'email_templates' table.");
+                console.log("Created 'notification_templates' table.");
 
-            }).createTable("email_templates_to_roles", function (table) {
+            }).createTable("notification_templates_to_roles", function (table) {
                 table.increments();
-                table.integer("email_template_id").references("email_templates.id");
+                table.integer("notification_template_id").references("notification_templates.id");
                 table.integer("role_id").references("user_roles.id");
                 table.timestamps(true, true);
-                console.log("Created 'email_templates_to_roles' table.");
+                console.log("Created 'notification_templates_to_roles' table.");
+
+            }).createTable('notifications', function (table) {
+                table.increments();
+                table.string("source_id");
+                table.string('message');
+                table.string("type");
+                table.integer("user_id").references("users.id")
+                table.string("subject");
+                table.string("affected_versions").defaultTo("*");
+                table.boolean("read").defaultTo(false);
+                table.boolean("email_delivered").defaultTo(false);
+                table.boolean("email_read").defaultTo(false);
+                table.timestamp('created_at').defaultTo(knex.fn.now());
+                console.log("created notifications table");
 
             }).createTable('service_categories', function (table) {
                 table.increments();
@@ -349,20 +365,6 @@ module.exports = function (initConfig) {
                 table.timestamps(true, true);
                 console.log("Created 'user_upcoming_invoice' table.");
 
-            }).createTable('notifications', function (table) {
-                table.increments();
-                table.string("source_id");
-                table.string('message');
-                table.string("type");
-                table.integer("user_id").references("users.id")
-                table.string("subject");
-                table.string("affected_versions").defaultTo("*");
-                table.boolean("read").defaultTo(false);
-                table.boolean("email_delivered").defaultTo(false);
-                table.boolean("email_read").defaultTo(false);
-                table.timestamp('created_at').defaultTo(knex.fn.now());
-                console.log("created nortifications table");
-
             }).createTable('password_reset_request', function (table) {
                 table.increments();
                 table.integer('user_id').references('users.id').onDelete('cascade');
@@ -438,12 +440,12 @@ module.exports = function (initConfig) {
                 SystemOption.batchCreate(systemOptions, function (optionResult) {
 
                     //create default email templates
-                    EmailTemplate.batchCreate(DefaultTemplates.templates, function (emailResult) {
+                    NotificationTemplate.batchCreate(DefaultTemplates.templates, function (emailResult) {
 
                         //create roles
                         Role.batchCreate(role_data, function (result) {
 
-                            let EmailTemplateToRoles = require("../models/base/entity")("email_templates_to_roles");
+                            let EmailTemplateToRoles = require("../models/base/entity")("notification_templates_to_roles");
                             EmailTemplateToRoles.batchCreate(DefaultTemplates.templates_to_roles, function (emailToRolesResult) {})
 
                             //create role objects from results of inserts

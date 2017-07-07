@@ -131,7 +131,7 @@ module.exports = function (initConfig = null) {
             require('./api/system-options')(api);
             require('./api/charge')(api);
             require('./api/event-logs')(api);
-            require('./api/email-templates')(api);
+            require('./api/notification-templates')(api);
             require('./api/permissions')(api);
             require('./api/roles')(api);
             require('./api/analytics')(api);

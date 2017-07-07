@@ -1,5 +1,6 @@
 let ServiceTemplateProperty = require("./service-template-property");
 let ServiceCategory = require('./service-category');
+let ServiceInstance = require('./service-instance');
 let User = require('./user');
 let File = require("./file");
 
@@ -43,7 +44,6 @@ ServiceTemplate.prototype.requestPromise = function (uid, body = {}, permission_
     if(body.references) {
         submittedProperties = body.references.service_template_properties;
     }
-    let ServiceInstance = require('./service-instance');
     let newInstance = new ServiceInstance(instanceAttributes);
     return new Promise(function (resolve_all, reject_all) {
         newInstance.create(function (err, service) {

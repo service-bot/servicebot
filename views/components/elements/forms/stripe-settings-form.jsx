@@ -176,6 +176,16 @@ class SystemSettingsForm extends React.Component {
                             </div>
                             {confirm_reconfigure()}
                         </div>
+                        <p>
+                            In order to have ServiceBot and Stripe communicate with each other we need to create webhooks in stripe. Follow these steps to enable this:<br/>
+                            1. Login and navigate to <a href="https://dashboard.stripe.com/account/webhooks" target="_blank">the webhook page</a>.<br/>
+                            2. In the section "Endpoints receiving events from your account" click "Add endpoint".<br/>
+                            3. Copy your system url below and enter it in the "URL to be called" field.<br/>
+                            <input className="form-control" value={`https://${window.location.hostname}/api/v1/stripe/webhook`} name="webhook-url" disabled/>
+                            4. Select the mode chosen during the previous steps (Test or Live) and select "Send all event types".<br/>
+                            5. Click "Add endpoint" and we have complete stripe set up.<br/>
+                            <a href="https://docs.servicebot.io/getting_started/" target="_blank">For more detailed instructions follow this link</a>.<br/>
+                        </p>
                     </div>
                 </div>
             );

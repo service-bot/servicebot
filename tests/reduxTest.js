@@ -7,7 +7,7 @@ let triggerEvent = require("../config/redux/actions").triggerEvent;
 store.initialize().then((result) => {
     console.log(result);
     console.log("HUH")
-    store.dispatch(triggerEvent("great_event", {"asdasd" : "p"}));
+    store.dispatch(triggerEvent("request_service_instance_admin", {"asdasd" : "p"}));
 });
 
 
