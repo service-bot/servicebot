@@ -60,8 +60,6 @@ class Dropdown extends React.Component {
     getButton(button){
         let self = this;
 
-        console.log("a dropdown button", button);
-
         if(button.name === "divider"){
             if(button.permission){
                 if(isAuthorized({permissions: button.permission})){
