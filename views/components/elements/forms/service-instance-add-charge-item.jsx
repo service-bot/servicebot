@@ -52,8 +52,7 @@ class ServiceInstanceFormEdit extends React.Component {
         let validateAmount          = (val) => { return (validateRequired(val) && validateEmptyString(val) && validateNumber(val) && val >= 0) || {error:"Field amount is required and must be a number greater than or equal 0"}};
 
         let validatorJSON = {
-            'description' : validateDescription,
-            'amount'      : validateAmount
+            'description' : validateDescription
         };
 
         console.log("validatorJSON", validatorJSON);

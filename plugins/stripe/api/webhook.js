@@ -1,6 +1,5 @@
 
 //let Announcement = require("../../../models/base/entity")("announcements");
-
 let mailer = require("../../../middleware/mailer");
 let async = require('async');
 let Logger = require('../models/logger');
@@ -25,9 +24,13 @@ module.exports = function(router, knex, stripe) {
             if(user.data) {
                 Invoice.findOne('invoice_id', event.data.object.id, function (invoice) {
                     if(!invoice.data) {
-                        Invoice.insertInvoice(event.data.object, user, function (result) {
+                        Invoice.insertInvoice(event.data.object, user).then(function (result) {
                             Logger.log(event.id,'Invoice Created - Webhook from Stripe. Insert new Invoice.');
                             callback(result);
+                        }).catch(function (err) {
+                            console.log(err);
+                            Logger.log(event.id,'FAILED => Invoice Creation - Webhook from Stripe. Insert new Invoice.');
+                            callback(err);
                         });
                     } else {
                         callback('Invoice already exists.');
@@ -42,9 +45,13 @@ module.exports = function(router, knex, stripe) {
     let invoiceUpdatedEvent = function (event, callback) {
         Invoice.findOne('invoice_id', event.data.object.id, function (invoice) {
             if(invoice.data) {
-                invoice.sync(event.data.object, function (result) {
+                invoice.sync(event.data.object).then(function (result) {
                     Logger.log(event.id,'Invoice Updated - Webhook from Stripe. Invoice Updated.');
                     callback(result);
+                }).catch(function (err) {
+                    console.log(err);
+                    Logger.log(event.id,'FAILED => Invoice Updated - Webhook from Stripe. Invoice Updated.');
+                    callback(err);
                 });
             } else {
                 callback('This invoice does not exist in the database.');

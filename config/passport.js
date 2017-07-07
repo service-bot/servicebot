@@ -134,8 +134,12 @@ module.exports = function(passport) {
             Invoices.fetchUpcomingInvoice(result, function (upcoming_invoice) {
             	console.log(`Upcoming Invoice Updated for user: ${result.data.email}`);
             });
-            Invoices.fetchUserInvoices(result, function (updated_invoices) {
+
+            Invoices.fetchUserInvoices(result).then(function (updated_invoices) {
                 console.log(`Invoices Updated for user: ${result.data.email}`);
+            }).catch(function (err) {
+                console.log(`Invoices FAILED for user: ${result.data.email}`);
+                console.log(err);
             });
 
             return done(null, result);
