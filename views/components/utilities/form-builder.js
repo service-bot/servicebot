@@ -139,7 +139,7 @@ let buildFormRefsData = function (name, value, refName, refID, validator) {
 };
 
 
-let formBuilder =  function(formName, defaultFormData=null, mapState = null, mapDispatch = null){
+let formBuilder =  function(formName, defaultFormData=null, mapState = ()=>{}, mapDispatch = ()=>{}){
     return function(Component){
 
         class FormWrapper extends React.Component {
