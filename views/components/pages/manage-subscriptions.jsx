@@ -254,7 +254,8 @@ class ManageSubscriptions extends React.Component {
                                                            id: 5,
                                                            name: this.dropdownStatus,
                                                            link: '#',
-                                                           onClick: this.onOpenActionModal
+                                                           onClick: this.onOpenActionModal,
+                                                           style: {color: "#ff3535"}
                                                        }]
                                                }]}
                                     />

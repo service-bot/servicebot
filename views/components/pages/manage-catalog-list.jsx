@@ -100,7 +100,7 @@ class ManageCatalogList extends React.Component {
                                         {id: 1, name: 'Edit', link: '/manage-catalog/:id/edit'},
                                         {id: 2, name: 'divider'},
                                         {id: 3, name: this.dropdownPublish, link: '#', onClick: this.onOpenPublishingModal},
-                                        {id: 4, name: 'Delete', link: '#', onClick: this.onOpenDeleteModal}]
+                                        {id: 4, name: 'Delete Service', link: '#', onClick: this.onOpenDeleteModal, style: {color: "#ff3535"}}]
                                     }]}/>
                 {currentModal()}
             </div>

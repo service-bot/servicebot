@@ -187,7 +187,7 @@ class ManageUsers extends React.Component {
                                                {id: 3, name: 'Manage Services', link: '#', onClick: this.viewUserServices},
                                                {id: 4, name: 'divider'},
                                                {id: 5, name: 'Suspend User', link: '#', onClick: this.openSuspendUser},
-                                               {id: 6, name: 'Delete User', link: '#', onClick: this.openDeleteUser},
+                                               {id: 6, name: 'Delete User', link: '#', onClick: this.openDeleteUser, style: {color: "#ff3535"}},
                                            ]}
                                        ]
                                    }

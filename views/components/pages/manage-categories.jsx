@@ -125,7 +125,7 @@ class ManageCategories extends React.Component {
                                                    direction: 'right',
                                                    buttons:[
                                                        {id: 1, name: 'Edit Category', link: '#', onClick: this.openEditCategoryModal},
-                                                       {id: 2, name: 'Delete Category', link: '#', onClick: this.openDeleteCategoryModal},
+                                                       {id: 2, name: 'Delete Category', link: '#', onClick: this.openDeleteCategoryModal, style: {color: "#ff3535"}},
                                                    ]}
                                                ]
                                            }
