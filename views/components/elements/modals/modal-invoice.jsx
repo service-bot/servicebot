@@ -5,7 +5,7 @@ import cookie from 'react-cookie';
 import Fetcher from "../../utilities/fetcher.jsx";
 import Modal from '../../utilities/modal.jsx';
 import DateFormat from '../../utilities/date-format.jsx';
-import Price from '../../utilities/price.jsx';
+import {Price} from '../../utilities/price.jsx';
 import { connect } from "react-redux";
 let _ = require("lodash");
 

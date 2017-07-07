@@ -10,4 +10,36 @@ let Price = function(props){
     );
 };
 
-export default Price;
+let getPrice = (myService, serviceType = null)=>{
+    let serType = myService.type || serviceType;
+    if (serType == "subscription"){
+        return (
+            <span>
+                <Price value={myService.amount}/>
+                {myService.interval_count == 1 ? ' /' : ' / ' + myService.interval_count} {' '+myService.interval}
+            </span>
+        );
+    }else if (serType == "one_time"){
+        return (<span><Price value={myService.amount}/></span>);
+    }else if (serType == "custom"){
+        return false;
+    }else{
+        return (<span><Price value={myService.amount}/></span>)
+    }
+};
+
+let getBillingType = (myService)=>{
+    let serType = myService.type;
+
+    if (serType == "subscription"){
+        return ("Subscription");
+    }else if (serType == "one_time"){
+        return ("One Time Charge");
+    }else if (serType == "custom"){
+        return ("Custom Billing");
+    }else{
+        return ("Other")
+    }
+};
+
+export {Price, getPrice, getBillingType};

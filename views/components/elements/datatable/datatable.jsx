@@ -63,6 +63,10 @@ class DataTable extends React.Component {
                 this.fetchData();
             }
         }
+        if(this.props.dataObj != nextProps.dataObj){
+            console.log("dataObj updated", nextProps.dataObj);
+            this.setState({resObjs: nextProps.dataObj});
+        }
     }
 
     fetchData(){
@@ -218,15 +222,7 @@ class DataTable extends React.Component {
                     </div>
                 );
             }else{
-                if(this.props.nullMessage){
-                    return(
-                        <p>{this.props.nullMessage}</p>
-                    );
-                }else{
-                    return(
-                        <p>No record in response.</p>
-                    );
-                }
+                return (this.props.nullMessage ? <p className="help-block">{this.props.nullMessage}</p> : <p>No record</p>);
             }
         }
     }

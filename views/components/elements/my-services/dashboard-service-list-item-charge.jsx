@@ -1,7 +1,7 @@
 import React from 'react';
 import Load from '../../utilities/load.jsx';
 import Fetcher from '../../utilities/fetcher.jsx';
-import Price from '../../utilities/price.jsx';
+import {Price} from '../../utilities/price.jsx';
 
 class DashboardServiceListItemCharge extends React.Component {
 

@@ -22,7 +22,6 @@ class SignUp extends React.Component {
         e.preventDefault();
         var that = this;
 
-
         Fetcher("/api/v1/auth/session", "POST", that.state.form)
             .then(function(result){
                 if(!result.error) {

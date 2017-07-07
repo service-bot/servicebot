@@ -1,5 +1,6 @@
 import React from 'react';
-import Price from '../../utilities/price.jsx';
+import {Price} from '../../utilities/price.jsx';
+import Buttons from "../../elements/buttons.jsx";
 
 class ServiceInstanceWaitingChargesItem extends React.Component {
 
@@ -23,9 +24,7 @@ class ServiceInstanceWaitingChargesItem extends React.Component {
                 <div className="xaas-data xaas-charge"><span>{self.state.chargeItem.description}</span></div>
                 <div className="xaas-data xaas-price"><span><Price value={self.state.chargeItem.amount}/></span></div>
                 <div className="xaas-data xaas-action">
-                    <button className="btn btn-primary btn-rounded" onClick={self.onPayCharge}>
-                        Pay Now <i className="fa fa-credit-card"/>
-                    </button>
+                    <Buttons btnType="primary" text="Make Payment" onClick={self.onPayCharge}/>
                 </div>
             </div>
         );

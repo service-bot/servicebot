@@ -5,7 +5,7 @@ import Fetcher from "../../utilities/fetcher.jsx"
 import {browserHistory} from 'react-router';
 import Modal from '../../utilities/modal.jsx';
 import ModalPaymentSetup from './modal-payment-setup.jsx';
-import Price from '../../utilities/price.jsx';
+import {Price} from '../../utilities/price.jsx';
 let _ = require("lodash");
 
 class ModalDeleteRequest extends React.Component {

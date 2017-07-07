@@ -4,7 +4,7 @@ import Inputs from "../../utilities/inputs.jsx";
 import {DataForm} from "../../utilities/data-form.jsx";
 import Buttons from "../buttons.jsx";
 import Alerts from "../alerts.jsx";
-import Price from "../../utilities/price.jsx";
+import {Price} from "../../utilities/price.jsx";
 import DateFormat from "../../utilities/date-format.jsx";
 import Fetcher from "../../utilities/fetcher.jsx";
 let _ = require("lodash");

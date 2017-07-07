@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Link, browserHistory} from 'react-router';
-import Price from '../../utilities/price.jsx';
+import {Price} from '../../utilities/price.jsx';
 import { connect } from 'react-redux';
 let _ = require("lodash");
 

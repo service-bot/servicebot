@@ -2,8 +2,10 @@ import React from 'react';
 import {Link} from 'react-router';
 import Fetcher from '../../utilities/fetcher.jsx';
 import Load from '../../utilities/load.jsx';
+import {isAuthorized} from '../../utilities/authorizer.jsx';
 import ServiceInstanceMessageForm from '../../elements/forms/service-instance-message-form.jsx';
 import DateFormat from '../../utilities/date-format.jsx';
+import Avatar from '../../elements/avatar.jsx';
 
 class ServiceInstanceMessage extends React.Component {
 
@@ -55,23 +57,30 @@ class ServiceInstanceMessage extends React.Component {
                 </div>);
         }else{
             let messages = self.state.messages;
+            let getUserURL = (id)=>{
+                if(isAuthorized({permissions: "can_administrate"})){
+                    return `/manage-users/${id}`;
+                }else{
+                    return "#";
+                }
+            };
             console.log("the messages", messages);
             if(messages.length > 0){
                 return (
-                    <div id="service-instance-message" className="row">
-                        <div className="col-xs-12 service-comments service-block">
-                            <h5 className="m-b-20">Have questions?</h5>
+                    <div className="service-instance-section">
+                        <div className="service-comments service-block">
+                            <span className="service-instance-section-label">Have questions?</span>
                             <div className="comments">
                                 <ul className="comments-list">
                                     {messages.map((message)=>{
                                         return(
                                             <li key={message.id} className="comment">
-                                                <div className="comment-icon badge badge-sm">
-                                                    <Link to="#"><img className="avatar-img" src={`/api/v1/users/${message.user_id}/avatar`} alt="..."/></Link>
+                                                <div className="comment-icon">
+                                                    <Avatar size="sm" uid={message.user_id}/>
                                                 </div>
                                                 <div className="media-body">
-                                                    <small className="message-date"><DateFormat time date={message.created_at}/></small>
-                                                    <h4 className="media-heading"><strong>{message.references.users[0].name}</strong></h4>
+                                                    <h4 className="media-heading text-capitalize"><small>{message.references.users[0].name}</small></h4>
+                                                    <h4 className="message-date"><small><DateFormat time date={message.created_at}/></small></h4>
                                                     <span className="message-content">{message.message}</span>
                                                 </div>
                                             </li>
@@ -87,9 +96,9 @@ class ServiceInstanceMessage extends React.Component {
                 );
             }else{
                 return(
-                    <div id="service-instance-message" className="row">
-                        <div className="col-xs-12 service-comments service-block">
-                            <h5>Have questions?</h5>
+                    <div className="service-instance-section">
+                        <span className="service-instance-section-label">Have questions?</span>
+                        <div className="service-comments service-block">
                             <div>
                                 <ServiceInstanceMessageForm instanceId={self.state.instanceId} handleComponentUpdating={self.handleComponentUpdating}/>
                             </div>

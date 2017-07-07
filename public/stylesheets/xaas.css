@@ -1,7 +1,7 @@
 /* Text */
 body{
     font-family: 'Helvetica', sans-serif;
-    font-size: 1.05rem;
+    font-size: 16px;
     line-height: 1.9rem;
 }
 h1, h2, h3, h4, h5, h6, .card-title{
@@ -125,10 +125,23 @@ label, .help-block, .bmd-help{
 }
 .page-service-instance .page-on-top>div {
 }
+.service-instance-section{
+    border: 1px solid #f1f1f1;
+    border-radius: 3px;
+    padding: 20px 15px 15px;
+    margin: 20px 0px;
+}
+.service-instance-section-label {
+    margin-top: -35px;
+    position: absolute;
+    background: white;
+    padding: 0px 7px;
+    margin-left: -7px;
+    font-weight: bold;
+    color: #73d3ff;
+}
 #payment-plan-box, #instance-owner{
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 20px;
+
 }
 .payment-plan-fields{
     margin-bottom: 7px;
@@ -184,7 +197,7 @@ span.comment-message {
 }
 .message-date {
     position: absolute;
-    right: 20px;
+    right: 0px;
     color: #c7c7c7;
 }
 .comments li {
@@ -193,13 +206,12 @@ span.comment-message {
 .comments .media-body, .media-left, .media-right {
     display: flex;
     flex-direction: column;
+    position: relative;
 }
 
 /* service action block */
 .service-block, p.catalog-description {
-    padding-top: 25px;
-    padding-bottom: 20px;
-    border-top: 1px dashed #c7c7c7;
+
 }
 .service-block:last-child{
     /*border-bottom: 1px dashed #c7c7c7;*/

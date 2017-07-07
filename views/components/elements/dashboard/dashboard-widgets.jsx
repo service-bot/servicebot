@@ -1,7 +1,7 @@
 import React from 'react';
 import './css/style.css';
 import {browserHistory} from 'react-router';
-import Price from '../../utilities/price.jsx';
+import {Price} from '../../utilities/price.jsx';
 import { connect } from 'react-redux';
 let _ = require("lodash");
 import {hexToRgb, rgbToHex, getDarkenedRGB} from '../../utilities/color-converter.js';

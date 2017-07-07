@@ -18,7 +18,7 @@ class ServiceInstanceMessageForm extends React.Component {
         };
         this.handleResponse = this.handleResponse.bind(this);
         this.getValidators = this.getValidators.bind(this);
-        this.loading = this.loading.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleResponse(response){
@@ -43,7 +43,7 @@ class ServiceInstanceMessageForm extends React.Component {
         return validatorJSON;
     }
 
-    loading(){
+    handleSubmit(){
         this.setState({ajaxLoad: true});
     }
 
@@ -61,11 +61,11 @@ class ServiceInstanceMessageForm extends React.Component {
 
                         {/*TODO: Reset Inputs after submission*/}
                         <Inputs type="textarea" name="message" defaultValue="" rows="4"
-                                label="You can leave your comments or questions here directly, we will respond as soon as we can!"
+                                label="Leave your comments or questions and we will respond as soon as we can!"
                                 onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
                     </div>
                     <div className="text-right">
-                        <Buttons btnType="primary" text="Comment" onClick={this.loading}
+                        <Buttons btnType="primary" text="Comment" onClick={this.handleSubmit}
                                  type="submit" value="submit" loading={this.state.ajaxLoad}/>
                     </div>
                 </DataForm>

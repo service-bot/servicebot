@@ -7,7 +7,7 @@ import DataTable from "../elements/datatable/datatable.jsx";
 import ContentTitle from "../layouts/content-title.jsx"
 import Fetcher from "../utilities/fetcher.jsx";
 import Load from "../utilities/load.jsx";
-import Price from "../utilities/price.jsx";
+import {Price} from "../utilities/price.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import ModalRequestCancellation from "../elements/modals/modal-request-cancellation.jsx";
 import ModalManageCancellation from "../elements/modals/modal-manage-cancellation.jsx";

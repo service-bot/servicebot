@@ -2,7 +2,7 @@ import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import DataTable from "../elements/datatable/datatable.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
-import Price from "../utilities/price.jsx";
+import {Price} from "../utilities/price.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import {isAuthorized} from "../utilities/authorizer.jsx";
 import ModalRefund from "../elements/modals/modal-refund.jsx";

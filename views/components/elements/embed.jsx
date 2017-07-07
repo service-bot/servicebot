@@ -3,7 +3,7 @@ import Fetcher from '../utilities/fetcher.jsx'
 import {Link} from 'react-router';
 import _ from "lodash";
 import Load from '../utilities/load.jsx';
-import Price from '../utilities/price.jsx';
+import {Price} from '../utilities/price.jsx';
 import DateFormat from '../utilities/date-format.jsx';
 
 // Accepts the following URL query

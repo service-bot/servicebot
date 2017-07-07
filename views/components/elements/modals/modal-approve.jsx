@@ -5,7 +5,7 @@ import Fetcher from "../../utilities/fetcher.jsx"
 import {browserHistory} from 'react-router';
 import Modal from '../../utilities/modal.jsx';
 import ModalPaymentSetup from './modal-payment-setup.jsx';
-import Price from '../../utilities/price.jsx';
+import {Price} from '../../utilities/price.jsx';
 import Alerts from '../alerts.jsx';
 import Buttons from '../buttons.jsx';
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
