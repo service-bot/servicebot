@@ -10,6 +10,7 @@ let ResetRequest = require("../models/password-reset-request")
 let User = require("../models/user");
 let mailer = require("../middleware/mailer")
 let Alert = require("react-s-alert").default;
+let store = require("../config/redux/store");
 
 module.exports = function(app, passport) {
 
@@ -51,6 +52,7 @@ module.exports = function(app, passport) {
                                 res.json({message: "Success"});
                                 newReset.set("token", token);
                                 newReset.set("url", frontEndUrl);
+                                store.dispatchEvent("password_reset", newReset);
                                 mailer('password_reset', 'user_id', newReset)(req, res, next);
                             })
                         });
