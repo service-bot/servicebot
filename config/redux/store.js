@@ -13,18 +13,13 @@ const defaultAppState = {
     "eventSagas" : {}
 };
 
-//todo: handle events using sagas instead of reducer
+//todo: store sagas in store
 function appReducer(state = defaultAppState , action) {
     //change the store state based on action.type
     console.log(`action ${action.type}`);
     switch(action.type){
         case INIT_STORE:
             return action.initialStore;
-        case SET_EVENT_REDUCER :
-            console.log("SET EVENT REDUCER!")
-            return Object.assign({}, state, {
-                "eventReducer" : action.event_reducer
-            });
         case SET_EVENT_SAGAS :
             console.log("SET EVENT SAGAS!")
             return Object.assign({}, state, {
@@ -36,33 +31,6 @@ function appReducer(state = defaultAppState , action) {
 }
 
 
-//creates a new set of reducers based on the notification templates
-function buildEventReducer(){
-    return new Promise(function(resolve, reject) {
-        NotificationTemplate.findAll(true, true, function (templates) {
-            let notificationTemplateReducers = templates.reduce((reducers, template) => {
-
-                reducers[template.data.name] = function (state={}, action) {
-                    switch (action.event_name) {
-                        case template.data.event_name:
-                            template.createNotification(action.event_object).then((result) => {
-                                // console.log(`template ${template.data.name} triggered for event ${action.event_name} - - - ${result}`)
-                            }).catch(err => {console.log("err", err)});
-                            return state;
-                        default:
-                            return state;
-                    }
-                }
-                return reducers;
-            }, {})
-            //let pluginEventReducer = codeToGetPluginReducer();
-            //combines the reducers created
-            let eventReducer = combineReducers(notificationTemplateReducers)
-            resolve(eventReducer);
-            //todo: add part which adds plugin reducers to event
-        })
-    });
-}
 
 
 
@@ -72,32 +40,10 @@ store.subscribe(()=>{
 });
 
 
-
-store.buildEventReducer = buildEventReducer;
-
-function* handleEvent(action) {
-        console.log(1)
-        yield call(delay, 1000)
-        console.log(2);
-        console.log(action);
-
+function dispatchEvent(eventName, eventObject){
+   return store.dispatch(triggerEvent(eventName, eventObject));
 }
 
-/*
- Starts fetchUser on each dispatched `USER_FETCH_REQUESTED` action.
- Allows concurrent fetches of user.
- */
-function* mySaga() {
-    yield takeEvery("EVENT", handleEvent);
-}
-
-/*
- Alternatively you may use takeLatest.
-
- Does not allow concurrent fetches of user. If "USER_FETCH_REQUESTED" gets
- dispatched while a fetch is already pending, that pending fetch is cancelled
- and only the latest one will be run.
- */
 
 store.initialize = function(){
     let initialState = {};
@@ -111,15 +57,12 @@ store.initialize = function(){
     }).then((result) => {
         initialState["options"] = result;
         return sagaMiddleware.initialize()
-        /*return sagaMiddleware.initialize()*/
-    }).then((result) => {
-        // initialState["eventReducer"] = result;
-
-        return store.dispatch(initializeStore(initialState))
-    }).catch((err) => {
+    }).then(store.dispatch(initializeStore(initialState))
+     ).catch((err) => {
         console.error(err)
         reject(err);
     })
-}
+};
 store.sagaMiddleware = sagaMiddleware;
+store.dispatchEvent = dispatchEvent;
 module.exports = store;

@@ -27,8 +27,6 @@ actions.initializeStore = function(initialStore) {
 }
 
 actions.triggerEvent = function(event_name, event_object) {
-    console.log("SUP");
-    console.log(event_name, event_object, actions.EVENT);
     return { type: actions.EVENT, event_name, event_object}
 }
 
