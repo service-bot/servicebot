@@ -4,6 +4,7 @@ let NotificationTemplate = require("./base/entity")("notification_templates");
 let Notification = require("./notifications");
 let Role = require("./role");
 let knex = require('../config/db');
+let mailer = require('../lib/mailer');
 
 /**
  *
@@ -54,13 +55,13 @@ NotificationTemplate.prototype.build = function (map, callback) {
 
 };
 
-NotificationTemplate.prototype.createNotification = function (data) {
+NotificationTemplate.prototype.createNotification = function (object) {
     let self = this;
 
     console.log(`NOTIFICATION ${this.data.name} on ${this.data.event_name}`);
-    console.log("this is the data thing ");
-    console.log(data);
-    let userId = self.get("model") === 'user' ? data.get('id') : data.get('user_id');
+    console.log("this is the passed object thing ");
+    console.log(object);
+    let userId = self.get("model") === 'user' ? object.get('id') : object.get('user_id');
 
     return new Promise(function (resolve, reject) {
         let notificationAttributes = {
@@ -82,7 +83,8 @@ NotificationTemplate.prototype.createNotification = function (data) {
         return new Promise(function (resolve, reject) {
             //Send Mail if send_email is true, return promise
             console.log("Gunna saind mail now")
-            return resolve(null);
+            mailer(self, userId, object)
+            return resolve();
         });
     })
 
