@@ -93,7 +93,6 @@ let systemOptions =
                 return new Promise((resolve, reject) => {
                     new SystemOption(option).create((err, result) => {
                         if(err){
-                            console.log(err)
                             if(err.code == 23505) {
                                 resolve(`option ${option.option} already exists`);
                             }else{

@@ -5,10 +5,7 @@ let saga = require("redux-saga").default;
 let { call, put, takeEvery, all } = require('redux-saga/effects')
 let sagaMiddleware = saga();
 let NotificationTemplate = require("../../models/notification-template");
-
-//wrapper function to pass createNotification the object it expects
-//action object -> event_object (Entity)
-
+let setOptions = require("./actions").setOptions;
 let unsubscribe = {};
 function getNotificationSagas(){
     return new Promise(function(resolve, reject) {
@@ -27,17 +24,22 @@ function getNotificationSagas(){
         })
     });
 }
+
+let setOptionSaga = function*(action){
+    console.log("options changed")
+    yield put(setOptions(action.event_object));
+}
 function initialize(){
     return getNotificationSagas().then(result => {
-        unsubscribe = sagaMiddleware.run(function*(){
+        let notificationSaga = sagaMiddleware.run(function*(){
             yield all(result);
         });
-        unsubscribe.cancel();
-        console.log(unsubscribe.isCancelled());
-        let task2 = sagaMiddleware.run(function*(){
-            yield all(result);
+        let optionSaga = sagaMiddleware.run(function*(){
+            yield takeEvery(action => {
+                return action.type == "EVENT" && action.event_name == "system_options_updated"
+            }, setOptionSaga)
         })
-        console.log(task2.isRunning())
+
     })
 }
 

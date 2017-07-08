@@ -467,8 +467,8 @@ module.exports = function (initConfig) {
                     });
                 });
             }
-        });
-    }).then(store.initialize());
+        }).then(store.initialize());
+    });
 };
 
 
