@@ -74,9 +74,14 @@ class Inputs extends React.Component {
         let value = e.target.value || e.target.defaultValue;
 
         if(!isNaN(value)){
-            if(value > 0.01 && value != '' && value != null) {
+            if(value != '' && value != null) {
                 self.setState({priceValue: (value / 100).toFixed(2)});
                 this.props.onChange(e);
+            }else if(value == 0){
+                self.setState({priceValue: 0});
+                let newEvent = e;
+                newEvent.target.value = 0;
+                this.props.onChange(newEvent);
             }else{
                 self.setState({priceValue: 0});
                 let newEvent = e;
@@ -161,7 +166,7 @@ class Inputs extends React.Component {
                         <span className="price-mask">{!isNaN(this.state.priceValue) && this.state.priceValue >= 0 ?
                             `$${this.state.priceValue}` : `$${this.props.value/100}`}</span>
                         <input className="form-control price-value" autoComplete="off" maxLength={maxLength} type="number" placeholder={placeholder}
-                               disabled={disabled} name={name} defaultValue={defaultValue} onChange={this.handlePriceChange}/>
+                               disabled={disabled} name={name} defaultValue={defaultValue || 0} onChange={this.handlePriceChange}/>
                     </div>
                     {error && <span className="help-block">{error}</span> }
                 </div>
