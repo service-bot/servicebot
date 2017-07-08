@@ -102,7 +102,7 @@ class ServiceInstanceFormEdit extends React.Component {
                                     <Inputs type="text" name="description" label="Description" defaultValue={''}
                                             onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
 
-                                    <Inputs type="price" name="amount" label="Price" defaultValue={''}
+                                    <Inputs type="price" name="amount" label="Price" defaultValue={0}
                                             onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
                                 </div>
                             </div>
