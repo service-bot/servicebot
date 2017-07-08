@@ -115,7 +115,7 @@ class ManageCategories extends React.Component {
                                               ]}/>
                                 <DataTable get="/api/v1/service-categories"
                                            col={['id', 'name', 'description', 'created_at', 'updated_at']}
-                                           colNames={['', 'Name', 'Description', 'Created', 'Updated']}
+                                           colNames={['', 'Name', 'Description', 'Created At', 'Updated At']}
                                            mod_created_at={this.modCreated}
                                            mod_updated_at={this.modCreated}
                                            lastFetch={this.state.lastFetch}

@@ -72,7 +72,7 @@ class ManageSubscriptions extends React.Component {
                 return user.id == data
             });
             if(user!= undefined){
-                return user.name;
+                return user.name || user.email;
             }
             return data;
         }
@@ -86,7 +86,7 @@ class ManageSubscriptions extends React.Component {
     modCreated(data){
         // console.log("created data", data);
         return (
-            <DateFormat date={data}/>
+            <DateFormat date={data} time/>
         );
     }
     modStatus(data){
@@ -230,7 +230,7 @@ class ManageSubscriptions extends React.Component {
                                     <DataTable parentState={this.state}
                                                get={url}
                                                col={['user_id', 'references.users.0.name', 'name', 'subscription_id', 'status', 'requested_by', 'payment_plan.amount', 'payment_plan.interval', 'created_at']}
-                                               colNames={['', 'User', 'Instance', ' ', 'Status', 'Requested By', 'Amount', 'Interval', 'Created']}
+                                               colNames={['', 'User ID', 'Instance', ' ', 'Status', 'Requested By', 'Amount', 'Interval', 'Created At']}
                                                statusCol="status"
                                                mod_user_id={this.modUserId}
                                                mod_name={this.modName}

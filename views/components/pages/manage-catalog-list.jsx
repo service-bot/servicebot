@@ -92,7 +92,7 @@ class ManageCatalogList extends React.Component {
                 <DataTable parentState={this.state}
                            get="/api/v1/service-templates"
                            col={['id', 'name', 'references.service_categories.0.name', 'published', 'references.users.0.name', 'created_at']}
-                           colNames={['ID', 'Name', 'Category', 'Published', 'Created By', 'Created']}
+                           colNames={['ID', 'Name', 'Category', 'Published', 'Created By', 'Created At']}
                            statusCol="published"
                            mod_name={this.modName}
                            mod_created_at={this.modCreated}
