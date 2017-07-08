@@ -80,13 +80,23 @@ class ModalInvoice extends React.Component {
                 let lineItemCount = myNextInvoice.lines.total_count || 0;
                 let lineItems = myNextInvoice.lines.data; //data is an array of objects
 
+                let item_name = (item)=>{
+                    if(item.description) {
+                        return item.description;
+                    } else if (item.plan) {
+                        return item.plan.name;
+                    } else {
+                        return item.type;
+                    }
+                };
+
                 let items = ()=>{
                     return(
                         lineItems.map((item)=>
                             <tr key={item.id}>
-                                <td>{item.plan.name}</td>
+                                <td>{item_name(item)}</td>
                                 <td><DateFormat date={nextPaymentAttempt}/></td>
-                                <td><Price value={item.plan.amount}/></td>
+                                <td><Price value={item.amount}/></td>
                             </tr>
                         )
                     );
