@@ -113,13 +113,17 @@ class DataTable extends React.Component {
         let self = this;
         let array = self.state.resObjs;
         let colString = _.toLower(column.toString());
+        // console.log("column name", column, colString);
         colString = _.replace(colString, ' ', '_');
         // console.log("Sorting By: ", colString);
+        // console.log("before sort", array[0]);
         if(self.state.sortOrder == "desc"){
             let newObjs = _.orderBy(array, [colString], ['asc']);
+            // console.log("after sort asc", newObjs[0]);
             self.setState({resObjs: newObjs, sortedBy: column, sortOrder: 'asc'});
         }else{
             let newObjs = _.orderBy(array, [colString], ['desc']);
+            // console.log("after sort desc", newObjs[0]);
             self.setState({resObjs: newObjs, sortedBy: column, sortOrder: 'desc'});
         }
     }
@@ -152,6 +156,7 @@ class DataTable extends React.Component {
             return ( <Load/> );
         }else {
             if(this.state.resObjs.length) {
+                console.log("FIRST", this.state.resObjs[0]);
                 return (
                     <div id="tables-datatable" className={`table-responsive ${this.props.className}`}>
                         {this.state.headingText &&
@@ -169,21 +174,22 @@ class DataTable extends React.Component {
                         <table className="table datatable table-striped table-hover">
                             <thead>
                             <tr>
-                                { this.state.colNames.map(column => (
-                                    <th key={"column-" + column}
+                                { this.state.colNames.map((column, index) => (
+                                    <th key={"column-" + index}
                                         onClick={() => this.handleSort(column)}
                                         className={this.state.sortedBy == column && (this.state.sortOrder == "asc" ? 'sorted' : 'sorted desc')}>{column}</th>
                                 ))}
                                 {/* render the action column if parent passed in an action Object */}
-                                { (this.props.dropdown || this.props.buttons) && <th/>}
+                                { (this.props.dropdown || this.props.buttons) && <th key="dropdown-column"/>}
                             </tr>
                             </thead>
                             <tbody>
                             {this.state.resObjs.map((resObj, index) => (
                                 <tr key={"row-" + index}>
-                                    {/*{console.log("The resObj: ", resObj)}*/}
+                                    {console.log("The resObj: ", resObj)}
                                     {this.state.col.map(column => (
                                         <td key={`row-${index}-cell-${column}`}>
+
                                             {/* dynamic function call from props based on column name,
                                                 if column is accessed using a dot, replace the . with a - then call the function*/}
                                             {this.props[`mod_${column.replace(".", "-")}`] ? this.props[`mod_${column.replace(".", "-")}`](this.recursiveAccess(column.split("."), resObj), resObj) :
@@ -194,7 +200,7 @@ class DataTable extends React.Component {
                                     <td>
                                         {this.props.dropdown &&
                                         this.props.dropdown.map(dd => (
-                                            <Dropdown key={`dropdown-${index}-${dd.name}`}
+                                            <Dropdown key={`dropdown-${index}-${dd.name}-${resObj.id}`}
                                                       dataObject={resObj}
                                                       name={dd.name}
                                                       direction={dd.direction}
