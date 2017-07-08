@@ -6,15 +6,22 @@ let { call, put, takeEvery, all } = require('redux-saga/effects')
 let sagaMiddleware = saga();
 let NotificationTemplate = require("../../models/notification-template");
 
+//wrapper function to pass createNotification the object it expects
+//action object -> event_object (Entity)
+
 let unsubscribe = {};
 function getNotificationSagas(){
     return new Promise(function(resolve, reject) {
         NotificationTemplate.findAll(true, true, function (templates) {
             resolve(templates.map( (template) => {
+                let callCreateNotification = function(action){
+                    return template.createNotification(action.event_object);
+                };
+
                 return call(function*(){
                     yield takeEvery((action) => {
-                        return action.event_name == template.data.event_name
-                    }, template.createNotification.bind(template))});
+                        return action.event_name === template.data.event_name
+                    }, callCreateNotification)});
                 })
             )
         })

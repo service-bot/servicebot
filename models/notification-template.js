@@ -58,30 +58,32 @@ NotificationTemplate.prototype.createNotification = function (data) {
     let self = this;
 
     console.log(`NOTIFICATION ${this.data.name} on ${this.data.event_name}`);
-    return new Promise((resolve, reject) => {
+    console.log("this is the data thing ");
+    console.log(data);
+    let userId = self.get("model") === 'user' ? data.get('id') : data.get('user_id');
+
+    return new Promise(function (resolve, reject) {
+        let notificationAttributes = {
+            message: self.get("message"),
+            user_id: userId,
+            subject: self.get("subject")
+        };
+        //Create Notification
+        let newNotification = new Notification(notificationAttributes);
+        newNotification.create(function (err, notification) {
+            if(!err) {
+                console.log("notification created: " + notification.get("id"));
+                return resolve(notification);
+            } else {
+                return reject(err);
+            }
+        });
+    }).then(function () {
         return new Promise(function (resolve, reject) {
-            let notificationAttributes = {
-                message: self.get("message"),
-                user_id: 1,
-                subject: self.get("subject")
-            };
-            //Create Notification
-            let newNotification = new Notification(notificationAttributes);
-            newNotification.create(function (err, notification) {
-                if(!err) {
-                    console.log("notification created: " + notification.get("id"));
-                    return resolve(notification);
-                } else {
-                    return reject(err);
-                }
-            });
-        }).then(function () {
-            return new Promise(function (resolve, reject) {
-                //Send Mail
-                console.log("Gunna saind mail now")
-                return resolve(null);
-            });
-        })
+            //Send Mail if send_email is true, return promise
+            console.log("Gunna saind mail now")
+            return resolve(null);
+        });
     })
 
 };
