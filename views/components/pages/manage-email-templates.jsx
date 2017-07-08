@@ -28,6 +28,9 @@ class ManageEmailTempaltes extends React.Component {
 
     }
 
+    modName(data, dataObj){
+        return( <Link to={`email-templates/${dataObj.id}`}>{data}</Link>);
+    }
     modCreatedAt(data, dataObj){
         return (<DateFormat date={data} time/>);
     }
@@ -61,6 +64,7 @@ class ManageEmailTempaltes extends React.Component {
                                 <DataTable get="/api/v1/email-templates"
                                            col={['id', 'name', 'model', 'created_at', 'updated_at']}
                                            colNames={['ID', 'Name', 'Model', 'Created At', 'Updated At']}
+                                           mod_name={this.modName}
                                            mod_created_at={this.modCreatedAt}
                                            mod_updated_at={this.modUpdatedAt}
                                            lastFetch={this.state.lastFetch}
