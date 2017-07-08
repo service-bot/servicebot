@@ -12,8 +12,12 @@ module.exports = function(router) {
      */
     router.get("/invoices/own", auth(), function(req, res, next) {
         user = req.user;
-        Invoice.fetchUserInvoices(user, function (result) {
+        Invoice.fetchUserInvoices(user).then(function (result) {
             next();
+        }).catch(function (err) {
+            console.log(err);
+            next();
+            //res.status(400).json({error: err});
         });
     });
 
@@ -27,8 +31,12 @@ module.exports = function(router) {
         if(key == 'user_id'){
             let value = req.query.value;
             User.findOne('id', value, function (user) {
-                Invoice.fetchUserInvoices(user, function (result) {
+                Invoice.fetchUserInvoices(user).then(function (result) {
                     next();
+                }).catch(function (err) {
+                    console.log(err);
+                    next();
+                    //res.status(400).json({error: err});
                 });
             });
         } else {

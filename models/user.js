@@ -242,6 +242,9 @@ User.prototype.purgeData = function (callback) {
                 })).then(function () {
                     console.log(`All User ${self.data.id} services have been removed!`);
                     return resolveall(`All User ${self.data.id} services have been removed!`);
+                }).catch(function (err) {
+                    console.log(err);
+                    return rejectall(`FAILED => All User ${self.data.id} services have been removed!`);
                 });
             });
         });
@@ -264,6 +267,9 @@ User.prototype.purgeData = function (callback) {
                 })).then(function () {
                     console.log(`All User ${self.data.id} funds have been removed!`);
                     return resolveall(`All User ${self.data.id} funds have been removed!`);
+                }).catch(function (err) {
+                    console.log(err);
+                    return rejectall(`FAILED => All User ${self.data.id} funds have been removed!`);
                 });
             });
         });

@@ -264,7 +264,7 @@ module.exports = function (initConfig) {
                 table.increments();
                 table.integer('user_id').references('users.id');
                 table.integer('service_instance_id').references('service_instances.id');
-                table.string('invoice_id');
+                table.string('invoice_id').unique();
                 table.string('subscription');
                 table.string('charge');
                 table.string('description');
