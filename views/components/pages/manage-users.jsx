@@ -60,9 +60,9 @@ class ManageUsers extends React.Component {
             return 'Never';
         }
     }
-    modCreated(data){
+    modCreatedAt(data, dataObj){
         return (
-            <DateFormat date={data} time/>
+            <DateFormat date={dataObj.created_at} time={true}/>
         );
     }
 
@@ -192,11 +192,11 @@ class ManageUsers extends React.Component {
                                   ]}/>
                         <DataTable get="/api/v1/users"
                                    col={['id', 'name', 'email', 'phone', 'references.user_roles.0.role_name', 'status', 'last_login', 'created_at']}
-                                   colNames={['', 'Name', 'Email', 'Phone', 'Role', 'Status', 'Last Login', 'Created']}
+                                   colNames={['', 'Name', 'Email', 'Phone', 'Role', 'Status', 'Last Login', 'Created At']}
                                    mod_id={this.modID}
                                    mod_name={this.modName}
                                    mod_last_login={this.modLastLogin}
-                                   mod_created_at={this.modCreated}
+                                   mod_created_at={this.modCreatedAt}
                                    lastFetch={this.state.lastFetch}
                                    dropdown={
                                        [{
