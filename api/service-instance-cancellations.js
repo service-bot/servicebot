@@ -5,7 +5,6 @@ let ServiceInstance = require('../models/service-instance');
 let EventLogs = require('../models/event-log');
 let validate = require('../middleware/validate');
 let auth = require('../middleware/auth');
-let mailer = require('../middleware/mailer');
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
 module.exports = function(router) {
 

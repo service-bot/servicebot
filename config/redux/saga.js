@@ -4,10 +4,10 @@
 let saga = require("redux-saga").default;
 let { call, put, takeEvery, all } = require('redux-saga/effects')
 let sagaMiddleware = saga();
-let NotificationTemplate = require("../../models/notification-template");
 let setOptions = require("./actions").setOptions;
 let unsubscribe = {};
 function getNotificationSagas(){
+    let NotificationTemplate = require("../../models/notification-template");
     return new Promise(function(resolve, reject) {
         NotificationTemplate.findAll(true, true, function (templates) {
             resolve(templates.map( (template) => {
@@ -24,10 +24,14 @@ function getNotificationSagas(){
         })
     });
 }
-
 let setOptionSaga = function*(action){
     console.log("options changed")
     yield put(setOptions(action.event_object));
+}
+let sagaEventPattern = function(event_name){
+    return function(action){
+        return action.type == "EVENT" && action.event_name == event_name
+    }
 }
 function initialize(){
     return getNotificationSagas().then(result => {
@@ -35,9 +39,7 @@ function initialize(){
             yield all(result);
         });
         let optionSaga = sagaMiddleware.run(function*(){
-            yield takeEvery(action => {
-                return action.type == "EVENT" && action.event_name == "system_options_updated"
-            }, setOptionSaga)
+            yield takeEvery(sagaEventPattern("system_options_updated"), setOptionSaga)
         })
 
     })

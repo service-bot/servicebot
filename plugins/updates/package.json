@@ -4,7 +4,7 @@
   "main": "updates.js",
   "private": true,
   "plugin": {
-    "consumes": ["knex"],
+    "consumes": ["knex", "store"],
     "provides": []
   }
 }

@@ -8,7 +8,6 @@ let NotificationTemplate = require("../models/notification-template");
 let Role = require("../models/role");
 let ResetRequest = require("../models/password-reset-request")
 let User = require("../models/user");
-let mailer = require("../middleware/mailer")
 let Alert = require("react-s-alert").default;
 let store = require("../config/redux/store").dispatchEvent;
 

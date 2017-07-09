@@ -1,6 +1,5 @@
 let auth = require('../middleware/auth');
 let validate = require('../middleware/validate');
-let mailer = require('../middleware/mailer');
 let User = require('../models/user');
 let Invitation = require('../models/invitation');
 let EventLogs = require('../models/event-log');
@@ -10,6 +9,7 @@ let path = require("path");
 let mkdirp = require("mkdirp");
 let bcrypt = require("bcryptjs");
 let Role = require("../models/role");
+let dispatchEvent = require("../config/redux/store").dispatchEvent;
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 let avatarFilePath = "uploads/avatars";
 
@@ -139,9 +139,10 @@ module.exports = function(router, passport) {
         user_role.getPermissions(function(perms){
             let permission_names = perms.map(perm => perm.data.permission_name);
             res.locals.json = {"message" : "successful signup", "permissions" : permission_names };
+            dispatchEvent("user_registered", req.user);
             next();
         });
-    }, mailer('registration_user', 'id'), mailer('registration_admin', null));
+    });
 
 
 
@@ -169,6 +170,7 @@ module.exports = function(router, passport) {
                                 result.set('api', apiUrl);
                                 res.locals.valid_object = result;
                                 next();
+                                dispatchEvent("user_invited", newUser);
                             } else {
                                 res.status(403).json({error : err});
                             }
@@ -179,7 +181,7 @@ module.exports = function(router, passport) {
                 });
             }
         })
-    }, mailer('invitation', 'user_id'));
+    });
 
     //Override post route to hide adding users
     router.post(`/users`, function(req,res,next){
@@ -216,8 +218,8 @@ module.exports = function(router, passport) {
         let user = res.locals.valid_object;
         user.suspend(function (err, updated_user) {
             if(!err) {
+                dispatchEvent("user_suspended", updated_user);
                 res.status(200).json(updated_user);
-                mailer('user_suspension', 'id')(req, res, next);
             } else {
                 res.status(400).json({error: err});
             }
@@ -229,7 +231,7 @@ module.exports = function(router, passport) {
         user.deleteWithStripe(function (err, completed_msg) {
             if(!err) {
                 res.status(200).json({message: completed_msg});
-                mailer('user_deletion', 'id')(req, res, next);
+                dispatchEvent("user_deleted", user);
             } else {
                 res.status(400).json({error: err});
             }

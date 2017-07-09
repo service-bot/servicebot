@@ -1,6 +1,5 @@
 let async = require('async');
 let auth = require('../middleware/auth');
-let mailer = require('../middleware/mailer');
 let validate = require('../middleware/validate');
 let EventLogs = require('../models/event-log');
 let File = require("../models/file");

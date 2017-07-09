@@ -8,7 +8,6 @@ let File = require("../models/file");
 let mkdirp = require("mkdirp");
 let path = require("path");
 let multer= require("multer");
-let mailer = require("../middleware/mailer");
 let _ = require('lodash');
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column

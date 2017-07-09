@@ -33,6 +33,9 @@ module.exports = function setup(options, imports, register) {
                     console.log(error);
                 }else{
                     console.log(body);
+                    imports.store.dispatchEvent("master_notifications_received", body);
+
+
                 }
             })
 

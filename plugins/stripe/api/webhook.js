@@ -1,13 +1,12 @@
 
 //let Announcement = require("../../../models/base/entity")("announcements");
 
-let mailer = require("../../../middleware/mailer");
 let async = require('async');
 let Logger = require('../models/logger');
 let User = require('../../../models/user');
 let ServiceInstance = require('../../../models/service-instance');
 let Invoice = require('../../../models/invoice');
-
+let dispatchEvent = require("../../../config/redux/store").dispatchEvent;
 module.exports = function(router, knex, stripe) {
 
     /**
@@ -164,8 +163,7 @@ module.exports = function(router, knex, stripe) {
                         case 'invoice.payment_failed':
                             invoiceFailedEvent(event, function (user) {
                                 console.log(user);
-                                //TODO need a way to get user from this
-                                mailer("payment_failure", "id", user)(req, res, next);
+                                dispatchEvent("payment_failure", user);
                             });
                             break;
                         default:
