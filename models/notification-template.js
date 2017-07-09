@@ -71,18 +71,17 @@ NotificationTemplate.prototype.createNotification =  function* (object) {
     console.log(`trying to send message: ${notificationContent.message} to ---------->`);
     console.log(usersToNotify)
 
-    return Promise.all(createNotifications(usersToNotify, notificationContent.message, notificationContent.subject),
-        createEmailNotifications(usersToNotify, notificationContent.message, notificationContent.subject, self))
+    return Promise.all([createNotifications(usersToNotify, notificationContent.message, notificationContent.subject),
+        createEmailNotifications(usersToNotify, notificationContent.message, notificationContent.subject, self)])
 };
 
 let getNotificationContents = function(template, targetObject){
     return new Promise(function (resolve, reject) {
         //Attach references
         targetObject.attachReferences(updatedObject => {
-            //TODO add global props to the target Object
-            let globalProps = store.getState().options
+            let store = require('../config/redux/store');
+            let globalProps = store.getState().options;
             Object.keys(globalProps).forEach(key => updatedObject.set("_" + key, globalProps[key]));
-            console.log("Attached References and global props")
             return resolve(updatedObject)
         });
     }).then(updatedObject => {
@@ -101,17 +100,18 @@ let getNotificationContents = function(template, targetObject){
 let getRoleUsers = function(template){
     return new Promise(function (resolve, reject) {
         template.getRoles(function (roles) {
+            console.log(roles)
             resolve(roles)
         })
     }).then((result) => Promise.all(result.map(role => {
-            return new Promise(resolve => {
-                role.getUsers(users => resolve)
+        return new Promise(resolve => {
+            role.getUsers(users => {
+                return resolve(users)
+            })
             })
         })
     )).then(usersInRoles => {
         let users = usersInRoles.reduce((allUsers, userInRole) => allUsers.concat(userInRole), []);
-        console.log("GOT these gere users!!!!!")
-        console.log(users)
         return users
     }).catch(e => {
         console.log('error when getting list of users from roles: ', e);
@@ -136,24 +136,31 @@ let createNotifications = function(recipients, message, subject){
                     return reject(err);
                 }
             });
+        }).catch(e => {
+            console.log('error when creating notification: ', e)
         })
     }))
 };
 
 let createEmailNotifications = function(recipients, message, subject, notificationTemplate){
-    if(notificationTemplate.get('send_mail')){
+    if(notificationTemplate.get('send_email')){
         let additionalRecipients = notificationTemplate.get('additional_recipients');
         let emailArray = recipients.map(recipient => recipient.get('email'));
-        emailArray = _.union(emailArray, additionalRecipients)
+        emailArray = _.union(emailArray, additionalRecipients);
+        console.log("email array")
+        console.log(emailArray)
         return Promise.all(emailArray.map(email => {
             return new Promise(resolve => {
                 mailer(email, message, subject);
                 return resolve();
             })
-        }))
+        })).catch(e => {
+            console.log("error sending email notifications", e)
+        })
     }
     else{
-        return Promise.resolve(true);
+        console.log("no emails to send sir")
+        return true;
     }
 }
 
