@@ -9,7 +9,7 @@ let Role = require("../models/role");
 let ResetRequest = require("../models/password-reset-request")
 let User = require("../models/user");
 let Alert = require("react-s-alert").default;
-let store = require("../config/redux/store").dispatchEvent;
+let dispatchEvent = require("../config/redux/store").dispatchEvent;
 
 module.exports = function(app, passport) {
 
@@ -51,7 +51,7 @@ module.exports = function(app, passport) {
                                 res.json({message: "Success"});
                                 newReset.set("token", token);
                                 newReset.set("url", frontEndUrl);
-                                store.dispatchEvent("password_reset_request_created", newReset);
+                                dispatchEvent("password_reset_request_created", newReset);
                                 next();
                                 // mailer('password_reset', 'user_id', newReset)(req, res, next);
                             })

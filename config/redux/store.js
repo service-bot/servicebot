@@ -7,13 +7,14 @@ let { delay } = require('redux-saga')
 let Settings =  require('../../models/system-options');
 
 let { createStore, applyMiddleware, combineReducers } = require('redux');
+
+
 let { EVENT, SET_OPTIONS,SET_EVENT_SAGAS, INIT_STORE, setOptions ,setEventSagas, initializeStore, triggerEvent}  =  require("./actions");
 const defaultAppState = {
     "eventReducer" : null,
     "eventSagas" : {},
     "options" : {}
 };
-
 //todo: store sagas in store
 function appReducer(state = defaultAppState , action) {
     //change the store state based on action.type

@@ -9,7 +9,7 @@ module.exports = function setup(options, imports, register) {
     let knex = imports.knex;
     let master = options.master;
     let interval = options.interval; //24 hours
-
+    let Notification = require("../../models/notifications");
 
     let salt = process.env.INSTANCE_SALT
     // let hash = require("bcryptjs").hashSync(salt, 10).toString("hex");
@@ -32,7 +32,9 @@ module.exports = function setup(options, imports, register) {
                     console.log("error");
                     console.log(error);
                 }else{
-                    console.log(body);
+                    body.notifications.map((body) => {
+
+                    })
                     imports.store.dispatchEvent("master_notifications_received", body);
 
 

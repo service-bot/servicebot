@@ -23,7 +23,7 @@ module.exports = function(router) {
                             res.status(200).json(unsub_obj);
 
                             // mailer('instance_cancellation_approved')(req, res, next);
-                            store.dispatchEvent("service_instance_cancellation_approved", unsub_obj);
+                            dispatchEvent("service_instance_cancellation_approved", unsub_obj);
                             next();
                         } else {
                             res.status(400).json(err);
