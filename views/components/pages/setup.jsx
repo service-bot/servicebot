@@ -90,6 +90,10 @@ class SetupAdmin extends React.Component{
                     <label className="control-label">Business Email:</label>
                     <input className="form-control" value={this.props.state.company_email} onChange={this.props.inputChange} name="company_email"/>
                 </div>
+                <div className="row">
+                    <label className="control-label">Site URL:</label>
+                    <input className="form-control" value={this.props.state.hostname} onChange={this.props.inputChange} name="hostname"/>
+                </div>
             </div>
         )
     }
