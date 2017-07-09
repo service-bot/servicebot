@@ -69,6 +69,7 @@ let systemOptions =
         {"option": "company_address", public: true, "type": "system", "data_type": "text"},
         {"option": "company_phone_number", public: true, "type": "system", "data_type": "text"},
         {"option": "company_email", public: true, "type": "system", "data_type": "text"},
+        {"option": "hostname", public: true, "type": "system", "data_type": "text"},
         {"option": "featured_service_heading", "value": "Featured Services", public: true, "type": "featured services", "data_type": "text"},
         {"option": "services_listing_page_heading_text", "value": "All Products and Services", public: true, "type": "services listing page", "data_type": "text"},
         {"option": "featured_service_list_count", "value": "6", public: true, "type": "featured services", "data_type": "number"},

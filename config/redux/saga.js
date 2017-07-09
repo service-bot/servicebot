@@ -16,9 +16,7 @@ function getNotificationSagas(){
                 };
 
                 return call(function*(){
-                    yield takeEvery((action) => {
-                        return action.event_name === template.data.event_name
-                    }, callCreateNotification)});
+                    yield takeEvery(sagaEventPattern(template.get('event_name')), callCreateNotification)});
                 })
             )
         })

@@ -1,9 +1,11 @@
 let _ = require("lodash")
-
+let async = require("async");
 let NotificationTemplate = require("./base/entity")("notification_templates");
 let Notification = require("./notifications");
+let User = require("./user");
 let Role = require("./role");
 let knex = require('../config/db');
+let store = require('../config/redux/store');
 let mailer = require('../lib/mailer');
 
 /**
@@ -35,9 +37,6 @@ NotificationTemplate.prototype.setRoles = function (roleIds, callback) {
 };
 NotificationTemplate.prototype.build = function (map, callback) {
     let parseTemplate = function (match, replaceString, offset, string) {
-        console.log(map);
-        console.log(replaceString);
-        console.log(_.get(map.data, replaceString));
         let splitStr = replaceString.split(".");
         if (splitStr.length > 1) {
             splitStr[1] += "[0]";
@@ -55,40 +54,114 @@ NotificationTemplate.prototype.build = function (map, callback) {
 
 };
 
-NotificationTemplate.prototype.createNotification = function (object) {
+NotificationTemplate.prototype.createNotification =  function* (object) {
     let self = this;
+    let notificationContent = yield getNotificationContents(self, object);
+    let usersToNotify = yield getRoleUsers(self);
 
-    console.log(`NOTIFICATION ${this.data.name} on ${this.data.event_name}`);
-    console.log("this is the passed object thing ");
-    console.log(object);
-    let userId = self.get("model") === 'user' ? object.get('id') : object.get('user_id');
-
-    return new Promise(function (resolve, reject) {
-        let notificationAttributes = {
-            message: self.get("message"),
-            user_id: userId,
-            subject: self.get("subject")
-        };
-        //Create Notification
-        let newNotification = new Notification(notificationAttributes);
-        newNotification.create(function (err, notification) {
-            if(!err) {
-                console.log("notification created: " + notification.get("id"));
-                return resolve(notification);
-            } else {
-                return reject(err);
-            }
+    if(self.get('send_to_owner')) {
+        let owner = yield new Promise((resolve, reject) => {
+            let userId = self.get("model") === 'user' ? object.get('id') : object.get('user_id');
+            User.findOne("id", userId, function (user) {
+                resolve(user);
+            })
         });
-    }).then(function () {
-        return new Promise(function (resolve, reject) {
-            //Send Mail if send_email is true, return promise
-            console.log("Gunna saind mail now")
-            mailer(self, userId, object)
-            return resolve();
-        });
-    })
+        usersToNotify.push(owner);
+    }
+    console.log(`trying to send message: ${notificationContent.message} to ---------->`);
+    console.log(usersToNotify)
 
+    return Promise.all([createNotifications(usersToNotify, notificationContent.message, notificationContent.subject),
+        createEmailNotifications(usersToNotify, notificationContent.message, notificationContent.subject, self)])
 };
 
+let getNotificationContents = function(template, targetObject){
+    return new Promise(function (resolve, reject) {
+        //Attach references
+        targetObject.attachReferences(updatedObject => {
+            let store = require('../config/redux/store');
+            let globalProps = store.getState().options;
+            Object.keys(globalProps).forEach(key => updatedObject.set("_" + key, globalProps[key]));
+            return resolve(updatedObject)
+        });
+    }).then(updatedObject => {
+        return new Promise(function (resolve, reject) {
+            //Build Message and Subject from template
+            template.build(updatedObject, function (message, subject) {
+                console.log("Built Notification message")
+                return resolve({message: message, subject: subject})
+            });
+        });
+    }).catch(e => {
+        console.log('error when getting notification contents: ', e);
+    });
+};
+
+let getRoleUsers = function(template){
+    return new Promise(function (resolve, reject) {
+        template.getRoles(function (roles) {
+            console.log(roles)
+            resolve(roles)
+        })
+    }).then((result) => Promise.all(result.map(role => {
+        return new Promise(resolve => {
+            role.getUsers(users => {
+                return resolve(users)
+            })
+            })
+        })
+    )).then(usersInRoles => {
+        let users = usersInRoles.reduce((allUsers, userInRole) => allUsers.concat(userInRole), []);
+        return users
+    }).catch(e => {
+        console.log('error when getting list of users from roles: ', e);
+    });
+};
+
+let createNotifications = function(recipients, message, subject){
+    return Promise.all(recipients.map(recipient => {
+        return new Promise((resolve, reject) => {
+            let notificationAttributes = {
+                message: message,
+                user_id: recipient.get('id'),
+                subject: subject
+            };
+            //Create Notification
+            let newNotification = new Notification(notificationAttributes);
+            newNotification.create(function (err, notification) {
+                if(!err) {
+                    console.log("notification created: " + notification.get("id"));
+                    return resolve(notification);
+                } else {
+                    return reject(err);
+                }
+            });
+        }).catch(e => {
+            console.log('error when creating notification: ', e)
+        })
+    }))
+};
+
+let createEmailNotifications = function(recipients, message, subject, notificationTemplate){
+    if(notificationTemplate.get('send_email')){
+        let additionalRecipients = notificationTemplate.get('additional_recipients');
+        let emailArray = recipients.map(recipient => recipient.get('email'));
+        emailArray = _.union(emailArray, additionalRecipients);
+        console.log("email array")
+        console.log(emailArray)
+        return Promise.all(emailArray.map(email => {
+            return new Promise(resolve => {
+                mailer(email, message, subject);
+                return resolve();
+            })
+        })).catch(e => {
+            console.log("error sending email notifications", e)
+        })
+    }
+    else{
+        console.log("no emails to send sir")
+        return true;
+    }
+}
 
 module.exports = NotificationTemplate;
