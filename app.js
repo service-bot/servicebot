@@ -132,6 +132,7 @@ module.exports = function (initConfig = null) {
             require('./api/charge')(api);
             require('./api/event-logs')(api);
             require('./api/notification-templates')(api);
+            require('./api/notifications')(api);
             require('./api/permissions')(api);
             require('./api/roles')(api);
             require('./api/analytics')(api);

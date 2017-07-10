@@ -177,7 +177,7 @@ module.exports = function (initConfig) {
 
             }).createTable('notifications', function (table) {
                 table.increments();
-                table.string("source_id");
+                table.string("source_id").unique();
                 table.string('message');
                 table.string("type");
                 table.integer("user_id").references("users.id")

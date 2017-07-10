@@ -60,18 +60,17 @@ module.exports = function(tableName, references=[], primaryKey='id') {
 
     };
 
-    Entity.promiseCreate =function(entityData){
+    Entity.createPromise =function(entityData){
         let self = this
         return knex(Entity.table).columnInfo()
                 .then(function (info) {
                     return _.pick(entityData, _.keys(info));
                 })
                 .then(function(data){
-                    return knex(Entity.table).returning(primaryKey).insert(data)
+                    return knex(Entity.table).returning("*").insert(data)
                 })
                 .then(function(result){
-                    self.set(primaryKey, result[0]);
-                    return self;
+                    return result[0];
                 })
                 .catch(function(err){
                     throw err

@@ -7,6 +7,7 @@ import Fetcher from '../utilities/fetcher.jsx';
 export const SET_OPTIONS = 'SET_OPTIONS';
 export const SET_UID = 'SET_UID';
 export const SET_USER = "SET_USER";
+export const SET_NOTIFICATIONS = "SET_NOTIFICATIONS";
 export const SET_FORM_DATA = "SET_FORM_DATA";
 /*
  * other constants
@@ -37,6 +38,11 @@ export function fetchUsers(uid = null, callback){
 export function setOptions(options){
     return { type: SET_OPTIONS, options }
 }
+
+export function setNotifications(notifications){
+    return { type: SET_NOTIFICATIONS, notifications }
+}
+
 
 export function setUid(uid) {
     return { type: SET_UID, uid }

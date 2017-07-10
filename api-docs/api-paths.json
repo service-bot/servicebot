@@ -6006,5 +6006,41 @@
         }
       }
     }
+  },
+  "/notifications/own": {
+    "get": {
+      "summary": "Gets the notification objects of the user",
+      "tags": [
+        "notifications"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff",
+        "user"
+      ],
+      "operationId": "get_notifications_own",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "A list of the users notifications",
+          "schema": {
+            "$ref": "#/definitions/notifications"
+          }
+        },
+        "default": {
+          "description": "Unexpected error",
+          "schema": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { createStore } from 'redux'
-import {SET_FORM_DATA, SET_OPTIONS, SET_UID, SET_USER} from "./components/utilities/actions"
+import {SET_FORM_DATA, SET_OPTIONS, SET_UID, SET_USER, SET_NOTIFICATIONS} from "./components/utilities/actions"
 import cookie from 'react-cookie';
 
 const defaultAppState = {
@@ -11,6 +11,11 @@ const defaultAppState = {
 function appReducer(state = defaultAppState , action) {
     //change the store state based on action.type
     switch(action.type){
+        case SET_NOTIFICATIONS :
+            return {
+                ...state,
+                notifications : action.notifications
+            }
         case SET_OPTIONS :
             return Object.assign({}, state, {
                 options: action.options
