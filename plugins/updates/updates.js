@@ -32,12 +32,7 @@ module.exports = function setup(options, imports, register) {
                     console.log("error");
                     console.log(error);
                 }else{
-                    body.notifications.map((body) => {
-
-                    })
-                    imports.store.dispatchEvent("master_notifications_received", body);
-
-
+                    console.log(body);
                 }
             })
 

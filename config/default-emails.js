@@ -2,7 +2,7 @@ let default_notifications = {};
 default_notifications.templates = [
     {name:"request_service_instance_admin",
         event_name:"service_instance_requested_for_user",
-        message:"Hello [[references.users.name]],\r\nYour service [[name]] has been requested for you. Please login to your account and approve the <a href='[[_hostname]]/my-services'>service</a>. \r\nThank you, \r\n [[_company_name]]",
+        message:"Your service [[name]] has been requested for you. Please login to your account and approve the <a href='[[_hostname]]/my-services'>service</a>. \r\nThank you, \r\n [[_company_name]]",
         subject:"ServiceBot Instance needs approval",
         model:"service-instance",
         send_email:true

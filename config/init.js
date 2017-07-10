@@ -164,6 +164,7 @@ module.exports = function (initConfig) {
                 table.specificType('additional_recipients', 'text[]');
                 table.boolean("send_email").defaultTo(false);
                 table.boolean("send_to_owner").defaultTo(true);
+                table.boolean("create_notification").default(true);
                 table.timestamps(true, true);
                 console.log("Created 'notification_templates' table.");
 

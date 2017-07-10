@@ -49,9 +49,9 @@ module.exports = function(app, passport) {
                             reset.create(function(err, newReset){
                                 let frontEndUrl = `${req.protocol}://${req.get('host')}/reset-password/${user.get("id")}/${token}`;
                                 res.json({message: "Success"});
-                                newReset.set("token", token);
-                                newReset.set("url", frontEndUrl);
-                                dispatchEvent("password_reset_request_created", newReset);
+                                user.set("token", token);
+                                user.set("url", frontEndUrl);
+                                dispatchEvent("password_reset_request_created", user);
                                 next();
                                 // mailer('password_reset', 'user_id', newReset)(req, res, next);
                             })

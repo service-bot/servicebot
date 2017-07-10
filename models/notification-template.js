@@ -71,7 +71,7 @@ NotificationTemplate.prototype.createNotification =  function* (object) {
     console.log(`trying to send message: ${notificationContent.message} to ---------->`);
     console.log(usersToNotify)
 
-    return Promise.all([createNotifications(usersToNotify, notificationContent.message, notificationContent.subject),
+    return Promise.all([createNotifications(usersToNotify, notificationContent.message, notificationContent.subject, self),
         createEmailNotifications(usersToNotify, notificationContent.message, notificationContent.subject, self)])
 };
 
@@ -118,28 +118,34 @@ let getRoleUsers = function(template){
     });
 };
 
-let createNotifications = function(recipients, message, subject){
-    return Promise.all(recipients.map(recipient => {
-        return new Promise((resolve, reject) => {
-            let notificationAttributes = {
-                message: message,
-                user_id: recipient.get('id'),
-                subject: subject
-            };
-            //Create Notification
-            let newNotification = new Notification(notificationAttributes);
-            newNotification.create(function (err, notification) {
-                if(!err) {
-                    console.log("notification created: " + notification.get("id"));
-                    return resolve(notification);
-                } else {
-                    return reject(err);
-                }
-            });
-        }).catch(e => {
-            console.log('error when creating notification: ', e)
-        })
-    }))
+let createNotifications = function(recipients, message, subject, notificationTemplate){
+    if(notificationTemplate.get('create_notification')) {
+        return Promise.all(recipients.map(recipient => {
+            return new Promise((resolve, reject) => {
+                let notificationAttributes = {
+                    message: message,
+                    user_id: recipient.get('id'),
+                    subject: subject
+                };
+                //Create Notification
+                let newNotification = new Notification(notificationAttributes);
+                newNotification.create(function (err, notification) {
+                    if (!err) {
+                        console.log("notification created: " + notification.get("id"));
+                        return resolve(notification);
+                    } else {
+                        return reject(err);
+                    }
+                });
+            }).catch(e => {
+                console.log('error when creating notification: ', e)
+            })
+        }))
+    }
+    else{
+        console.log("no notifications to create")
+        return true;
+    }
 };
 
 let createEmailNotifications = function(recipients, message, subject, notificationTemplate){
@@ -159,7 +165,7 @@ let createEmailNotifications = function(recipients, message, subject, notificati
         })
     }
     else{
-        console.log("no emails to send sir")
+        console.log("no emails to send")
         return true;
     }
 }
