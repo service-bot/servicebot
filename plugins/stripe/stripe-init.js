@@ -16,6 +16,7 @@ module.exports = function setup(options, imports, register) {
     }).then(function(result){
         require("./api/webhook")(api, knex, stripe);
         require("./api/reconfigure")(api, knex, stripe);
+        require("./api/import")(api, knex, stripe);
         console.log(result);
     });
 

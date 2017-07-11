@@ -1,6 +1,7 @@
 import React from 'react';
 import DateFormat from '../../utilities/date-format.jsx';
-import Price from '../../utilities/price.jsx';
+import {Price} from '../../utilities/price.jsx';
+import Datatable from '../../elements/datatable/datatable.jsx';
 
 class ServiceInstanceApprovedCharges extends React.Component {
 
@@ -21,36 +22,31 @@ class ServiceInstanceApprovedCharges extends React.Component {
         );
     }
 
-    render () {
-        let self = this;
+    modAmount(data){
+        return( <Price value={data}/> );
+    }
 
+    modUpdatedAt(data){
+        return( <DateFormat date={data} time/> );
+    }
+
+    modApproved(data){
+        return( data ? 'Paid' : 'Unpaid' );
+    }
+
+    render () {
         return (
-            <div id="service-instance-approved-charges" className="row">
+            <div className="service-instance-section">
+                <span className="service-instance-section-label">Approved Line Items</span>
                 <div className="table-responsive service-block">
-                    <h5>Service Line Items</h5>
-                    <span className="m-t-5 m-b-20 block label color-grey-600">Service line items are one time charges for standalone services performed related to this service within current pay period.</span>
-                    <div className="table-responsive">
-                        <table className="table table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <td className="service-description p-l-20"><strong>Service Line Items</strong></td>
-                                    <td className="service-price text-center"><strong>Price</strong></td>
-                                    <td className="service-date"><strong>Payment Date</strong></td>
-                                    <td className="service-status text-right"><strong>Status</strong></td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.props.instanceApprovedItems.map(item => (
-                                    <tr key={"item-" + item.id}>
-                                        <td className="p-l-20">{item.description}</td>
-                                        <td className="text-center"><Price value={item.amount}/></td>
-                                        <td><DateFormat date={item.updated_at}/></td>
-                                        <td className="text-right p-r-20">{self.getStatus(item.approved)}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                    <p>Service line items are one time charges for standalone services performed related to this service within current pay period.</p>
+                    <Datatable dataObj={this.props.instanceApprovedItems}
+                               col={['description', 'amount', 'updated_at', 'approved']}
+                               mod_amount={this.modAmount}
+                               mod_updated_at={this.modUpdatedAt}
+                               mod_approved={this.modApproved}
+                               colNames={['Line Item Description', 'Amount', 'Paid On', 'Status']}
+                    />
                 </div>
             </div>
         );

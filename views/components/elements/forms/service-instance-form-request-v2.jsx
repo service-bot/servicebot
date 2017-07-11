@@ -5,7 +5,7 @@ import Inputs from "../../utilities/inputsV2.jsx";
 import BillingSettingsForm from "../../elements/forms/billing-settings-form.jsx";
 import { formBuilder } from "../../utilities/form-builder";
 import Buttons from "../../elements/buttons.jsx";
-import Price from "../../utilities/price.jsx";
+import {Price} from "../../utilities/price.jsx";
 import Fetcher from "../../utilities/fetcher.jsx";
 import IconHeading from "../../layouts/icon-heading.jsx";
 import ModalUserLogin from "../modals/modal-user-login.jsx";

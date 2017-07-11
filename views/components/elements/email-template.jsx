@@ -16,7 +16,7 @@ class EmailTemplateForm extends React.Component {
         this.state = {
             loading : true,
             template : {},
-            url : "/api/v1/email-templates/" + props.params.templateId,
+            url : "/api/v1/email-templates/" + props.params.id,
             roleUrl : "/api/v1/roles",
             roles : []
 

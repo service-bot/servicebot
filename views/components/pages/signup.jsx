@@ -22,7 +22,6 @@ class SignUp extends React.Component {
         e.preventDefault();
         var that = this;
 
-
         Fetcher("/api/v1/auth/session", "POST", that.state.form)
             .then(function(result){
                 if(!result.error) {
@@ -49,7 +48,7 @@ class SignUp extends React.Component {
         document.body.classList.remove('login')
     }
     componentDidMount(){
-        console.log("HSITORY", browserHistory);
+        console.log("HISTORY", browserHistory);
         if(!isAuthorized({anonymous:true})){
             return browserHistory.push("/");
         }

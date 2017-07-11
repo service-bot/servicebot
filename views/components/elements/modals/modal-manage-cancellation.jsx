@@ -4,7 +4,7 @@ import Fetcher from "../../utilities/fetcher.jsx"
 import Authorizer from "../../utilities/authorizer.jsx";
 import {browserHistory} from 'react-router';
 import Modal from '../../utilities/modal.jsx';
-import Price from '../../utilities/price.jsx';
+import {Price} from '../../utilities/price.jsx';
 let _ = require("lodash");
 
 class ModalManageCancellation extends React.Component {

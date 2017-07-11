@@ -200,7 +200,7 @@ module.exports = function (initConfig) {
                 table.increments();
                 table.integer('category_id').references('service_categories.id');
                 table.integer('created_by').references('users.id');
-                table.string('name');
+                table.string('name').notNullable().unique();
                 table.string('description');
                 table.text('details', 'longtext');
                 table.boolean('published').defaultTo(false);
@@ -283,7 +283,7 @@ module.exports = function (initConfig) {
                 table.increments();
                 table.integer('user_id').references('users.id');
                 table.integer('service_instance_id').references('service_instances.id');
-                table.string('invoice_id');
+                table.string('invoice_id').unique();
                 table.string('subscription');
                 table.string('charge');
                 table.string('description');
@@ -461,7 +461,7 @@ module.exports = function (initConfig) {
                                 //assign permissions to roles
                                 resolve(Promise.all(role_objects.map(assignPermissionPromise(initConfig, permission_objects, initialRoleMap))).then(function (roles) {
                                     //IMPORTANT: uncomment the line below if you want the installation with the test demo data.
-                                    return require("../tests/demo");
+                                    //return require("../tests/demo");
                                 }));
                             });
                         });

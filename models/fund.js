@@ -86,7 +86,7 @@ Fund.promiseFundCreateOrUpdate = function (user_id, token_id) {
             if(!fund) {
                 let fund_obj = {};
                 fund_obj.user_id = user_id;
-                fund_obj.flagged = true;
+                fund_obj.flagged = false;
                 let fund = new Fund(fund_obj);
                 fund.create(function (err, new_fund) {
                     if(!err) {

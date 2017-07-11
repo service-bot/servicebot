@@ -44,13 +44,13 @@ class Dropdown extends React.Component {
             let myData = self.state.dataObject;
             // console.log("the onclick function", myFunction);
             return(
-              <Link to={this.processDropDownButtons(button.link, this.props.id)} onClick={myFunction(myData)}>
+              <Link to={this.processDropDownButtons(button.link, this.props.id)} style={button.style} onClick={myFunction(myData)}>
                   { _.isFunction(button.name) ? button.name(myData) : button.name }
               </Link>
             );
         }else{
             return(
-                <Link to={this.processDropDownButtons(button.link, this.props.id)}>
+                <Link to={this.processDropDownButtons(button.link, this.props.id)} style={button.style}>
                     { _.isFunction(button.name) ? button.name(this.props.active) : button.name }
                 </Link>
             );
@@ -73,18 +73,17 @@ class Dropdown extends React.Component {
         }else{
             if(button.permission){
                 if(isAuthorized({permissions: button.permission})){
-                    return ( <li key={`button-${button.id}-${self.props.id}`}>{self.processLink(button)}</li> );
+                    return ( <li key={`button-${button.id}-${self.props.id}`} style={button.style}>{self.processLink(button)}</li> );
                 }else{
                     return null;
                 }
             }else{
-                return ( <li key={`button-${button.id}-${self.props.id}`}>{self.processLink(button)}</li> );
+                return ( <li key={`button-${button.id}-${self.props.id}`} style={button.style}>{self.processLink(button)}</li> );
             }
         }
     }
 
     render () {
-        let self = this;
         return(
             <div id="action-buttons" className="btn-group">
                 <button type="button" className="btn btn-default dropdown-toggle" ref="dropdownToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -8,22 +8,17 @@ class DateFormat extends React.Component {
         let dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
         let monthNames = ["January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"];
-        let timestamp = new Date(this.props.date * 1000);
-
-        if(timestamp == 'Invalid Date'){
-            timestamp = new Date(this.props.date);
-        }
 
         this.state={
             dayNames: dayNames,
             monthNames: monthNames,
-            timestamp: timestamp
         };
 
         this.getFormattedDate = this.getFormattedDate.bind(this);
     }
 
     getFormattedDate(date){
+
         let dayNames = this.state.dayNames;
         let monthNames = this.state.monthNames;
 
@@ -50,8 +45,12 @@ class DateFormat extends React.Component {
         );
     }
     render(){
-        let date = this.state.timestamp;
         // console.log("my date", date);
+        let date = new Date(this.props.date * 1000);
+        if(date == 'Invalid Date'){
+            date = new Date(this.props.date);
+        }
+
         return(
             this.getFormattedDate(date)
         );

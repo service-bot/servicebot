@@ -43,16 +43,29 @@ class DataTable extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchData()
+        if(this.props.get){
+            this.fetchData()
+        }else if(this.props.dataObj){
+            console.log("I got data obj", this.props.dataObj);
+            this.setState({loading: false, resObjs: this.props.dataObj});
+        }
     }
 
     componentWillReceiveProps(nextProps){
         //this component will update if the calling component(parent component)'s state has changed.
         if(this.props.parentState != nextProps.parentState){
-            this.fetchData();
+            if(this.props.get) {
+                this.fetchData();
+            }
         }
         if(this.props.lastFetch != nextProps.lastFetch){
-            this.fetchData();
+            if(this.props.get) {
+                this.fetchData();
+            }
+        }
+        if(this.props.dataObj != nextProps.dataObj){
+            console.log("dataObj updated", nextProps.dataObj);
+            this.setState({resObjs: nextProps.dataObj});
         }
     }
 
@@ -100,13 +113,17 @@ class DataTable extends React.Component {
         let self = this;
         let array = self.state.resObjs;
         let colString = _.toLower(column.toString());
+        // console.log("column name", column, colString);
         colString = _.replace(colString, ' ', '_');
         // console.log("Sorting By: ", colString);
+        // console.log("before sort", array[0]);
         if(self.state.sortOrder == "desc"){
             let newObjs = _.orderBy(array, [colString], ['asc']);
+            // console.log("after sort asc", newObjs[0]);
             self.setState({resObjs: newObjs, sortedBy: column, sortOrder: 'asc'});
         }else{
             let newObjs = _.orderBy(array, [colString], ['desc']);
+            // console.log("after sort desc", newObjs[0]);
             self.setState({resObjs: newObjs, sortedBy: column, sortOrder: 'desc'});
         }
     }
@@ -139,6 +156,7 @@ class DataTable extends React.Component {
             return ( <Load/> );
         }else {
             if(this.state.resObjs.length) {
+                console.log("FIRST", this.state.resObjs[0]);
                 return (
                     <div id="tables-datatable" className={`table-responsive ${this.props.className}`}>
                         {this.state.headingText &&
@@ -156,21 +174,22 @@ class DataTable extends React.Component {
                         <table className="table datatable table-striped table-hover">
                             <thead>
                             <tr>
-                                { this.state.colNames.map(column => (
-                                    <th key={"column-" + column}
+                                { this.state.colNames.map((column, index) => (
+                                    <th key={"column-" + index}
                                         onClick={() => this.handleSort(column)}
                                         className={this.state.sortedBy == column && (this.state.sortOrder == "asc" ? 'sorted' : 'sorted desc')}>{column}</th>
                                 ))}
                                 {/* render the action column if parent passed in an action Object */}
-                                { (this.props.dropdown || this.props.buttons) && <th/>}
+                                { (this.props.dropdown || this.props.buttons) && <th key="dropdown-column"/>}
                             </tr>
                             </thead>
                             <tbody>
-                            {this.state.resObjs.map(resObj => (
-                                <tr key={"row-" + resObj.id}>
-                                    {/*{console.log("The resObj: ", resObj)}*/}
+                            {this.state.resObjs.map((resObj, index) => (
+                                <tr key={"row-" + index}>
+                                    {console.log("The resObj: ", resObj)}
                                     {this.state.col.map(column => (
-                                        <td key={`row-${resObj.id}-cell-${column}`}>
+                                        <td key={`row-${index}-cell-${column}`}>
+
                                             {/* dynamic function call from props based on column name,
                                                 if column is accessed using a dot, replace the . with a - then call the function*/}
                                             {this.props[`mod_${column.replace(".", "-")}`] ? this.props[`mod_${column.replace(".", "-")}`](this.recursiveAccess(column.split("."), resObj), resObj) :
@@ -181,7 +200,7 @@ class DataTable extends React.Component {
                                     <td>
                                         {this.props.dropdown &&
                                         this.props.dropdown.map(dd => (
-                                            <Dropdown key={`dropdown-${resObj.id}-${dd.name}`}
+                                            <Dropdown key={`dropdown-${index}-${dd.name}-${resObj.id}`}
                                                       dataObject={resObj}
                                                       name={dd.name}
                                                       direction={dd.direction}
@@ -196,7 +215,7 @@ class DataTable extends React.Component {
                                                      dataObject={resObj}
                                                      name={b.name}
                                                      link={b.link}
-                                                     id={resObj.id}
+                                                     id={index}
                                                      active={resObj[this.props.statusCol]}/>
                                         ))
                                         }
@@ -209,15 +228,7 @@ class DataTable extends React.Component {
                     </div>
                 );
             }else{
-                if(this.props.nullMessage){
-                    return(
-                        <p>{this.props.nullMessage}</p>
-                    );
-                }else{
-                    return(
-                        <p>No record in response.</p>
-                    );
-                }
+                return (this.props.nullMessage ? <p className="help-block">{this.props.nullMessage}</p> : <p>No record</p>);
             }
         }
     }

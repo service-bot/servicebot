@@ -11,7 +11,7 @@ import Fetcher from '../utilities/fetcher.jsx';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import _ from "lodash";
 import ModalInvoice from '../elements/modals/modal-invoice.jsx';
-import Price from '../utilities/price.jsx';
+import {Price} from '../utilities/price.jsx';
 
 class MyServices extends React.Component {
 
