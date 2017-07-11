@@ -96,7 +96,6 @@ User.prototype.promiseStripeReconnect = function () {
     }).then(function (customer_id) {
         return new Promise(function (resolve, reject) {
             self.data.customer_id = customer_id;
-            self.data.status = 'flagged';
             self.update(function (err, result) {
                 if(!err) {
                     console.log(`User ${self.data.id} is now reconnected to Stripe`);
