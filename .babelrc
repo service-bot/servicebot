@@ -1,4 +1,7 @@
 {
   "presets" : ["es2015", "react"],
-  "plugins" : ["react-hot-loader/babel", "transform-object-rest-spread"]
+  "plugins" : ["react-hot-loader/babel", "transform-object-rest-spread",["transform-runtime", {
+    "polyfill": false,
+    "regenerator": true
+  }], "transform-async-to-generator"]
 }

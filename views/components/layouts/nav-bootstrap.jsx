@@ -7,6 +7,7 @@ import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import { connect } from "react-redux";
 let _ = require("lodash");
 import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
+import {NavNotification} from "../pages/notifications.jsx";
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -205,6 +206,7 @@ class NavBootstrap extends React.Component {
                         </Authorizer>
                         <Authorizer>
                             <ul className="nav navbar-nav navbar-right">
+                                <NavNotification/>
                                 <li>
                                     <div className="nav-profile badge badge-sm">
                                         <Link to="/profile">
