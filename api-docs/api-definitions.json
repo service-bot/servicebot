@@ -800,7 +800,7 @@
     }
   },
 
-  "email_templates":{
+  "notification_templates":{
     "type":"object",
     "properties":{
       "id":{
@@ -814,13 +814,19 @@
         "required":false,
         "description":"FILL ME OUT!!!!"
       },
-      "email_body":{
+      "event_name":{
         "type":"string",
         "maxLength":255,
         "required":false,
         "description":"FILL ME OUT!!!!"
       },
-      "email_subject":{
+      "message":{
+        "type":"string",
+        "maxLength":255,
+        "required":false,
+        "description":"FILL ME OUT!!!!"
+      },
+      "subject":{
         "type":"string",
         "maxLength":255,
         "required":false,
@@ -832,7 +838,31 @@
         "required":false,
         "description":"FILL ME OUT!!!!"
       },
-      "created":{
+      "additional_recipients":{
+        "type": "array",
+        "description": "Additional Emails to send Notifications to",
+        "items": [
+          {
+            "type": "string"
+          }
+        ]
+      },
+      "send_email":{
+        "type":"boolean",
+        "required":false,
+        "description":"Set true if Emails should be sent"
+      },
+      "send_to_owner":{
+        "type":"boolean",
+        "required":false,
+        "description":"Set true if notifications should be sent to the owner of the object"
+      },
+      "create_notification":{
+        "type":"boolean",
+        "required":false,
+        "description":"Set true if notifications should be created"
+      },
+      "created_at":{
         "type":"string",
         "required":true,
         "description":"FILL ME OUT!!!!"
