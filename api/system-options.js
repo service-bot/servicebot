@@ -128,7 +128,6 @@ module.exports = function (router) {
             })
 
             SystemOption.batchUpdate(filteredUpdates, function (result) {
-                console.log(`UPD RED`, result);
                 let updated = result.reduce((settings, setting)=>{
                     console.log(setting);
                     settings[setting[0].option] = setting[0].value;

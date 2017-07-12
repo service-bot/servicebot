@@ -30,9 +30,9 @@ function appReducer(state = defaultAppState , action) {
                 "eventSagas" : action.event_sagas
             });
         case SET_OPTIONS :
-            console.log(action.options, state.options);
             return Object.assign({}, state, {
-                "options" : action.options
+                "options" : {...state.options,
+                    ...action.options}
             })
         default:
             return state;

@@ -60,6 +60,14 @@ let systemOptions =
             "type": "theme",
             "data_type": "color_picker"
         },
+
+        {
+            "option": "app_version",
+            "value": process.env.npm_package_version,
+            public: false,
+            "type": "system",
+            "data_type": "system"
+        },
         {"option": "background_color", "value": "#ffffff", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "page_link_color", "value": "#30468a", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "header_text_color", "value": "#30468a", public: true, "type": "theme", "data_type": "color_picker"},

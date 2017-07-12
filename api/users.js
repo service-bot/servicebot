@@ -153,6 +153,26 @@ module.exports = function (router, passport) {
 
     //TODO add the registration url to the email
     router.post('/users/invite', auth(), function (req, res, next) {
+        function reinviteUser(user){
+
+            let invite = new Invitation({"user_id": user.get("id")});
+            invite.create(function (err, result) {
+                if (!err) {
+                    let apiUrl = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + result.get("token");
+                    let frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
+                    EventLogs.logEvent(req.user.get('id'), `users ${req.body.email} was reinvited by user ${req.user.get('email')}`);
+                    res.locals.json = {token: result.get("token"), url: frontEndUrl, api: apiUrl};
+                    result.set('url', frontEndUrl);
+                    result.set('api', apiUrl);
+                    res.locals.valid_object = result;
+                    next();
+                    dispatchEvent("user_invited", user);
+                } else {
+                    res.status(403).json({error: err});
+                }
+            });
+
+        }
         if (req.body.hasOwnProperty("email")) {
             let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             if (!req.body.email.match(mailFormat)) {
@@ -163,7 +183,16 @@ module.exports = function (router, passport) {
                 let newUser = new User({"email": req.body.email, "role_id": 3, "status": "invited"});
                 User.findAll("email", req.body.email, function (foundUsers) {
                     if (foundUsers.length != 0) {
-                        res.status(400).json({error: 'This email already exists in the system'});
+                        Invitation.findOne("user_id", foundUsers[0].get("id"), invite => {
+                            if(invite && invite.data){
+                                invite.delete(()=>{
+                                    reinviteUser(foundUsers[0]);
+                                })
+                            }else{
+                                res.status(400).json({error: 'This email already exists in the system'});
+
+                            }
+                        })
                     }
                     else {
                         newUser.createWithStripe(function (err, resultUser) {
