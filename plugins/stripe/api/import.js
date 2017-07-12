@@ -1,45 +1,13 @@
-/**
- * Created by shar on 7/8/17.
- */
 
-/**
- * Pseudo code for Stripe import process:
- *
- * USERS:
- * - Check if customer exists in database
- *  - If yes, move to SERVICE TEMPLATES section
- *  - If No:
- *      - Invite the user with the customer ID (make sure it send invite)
- *          - Pass in role for now. will automate this soon
- *      - FUND (Get fund from customer object):
- *          - Create a fund JSON
- *          - Create a fund and attach to user
- * SERVICE TEMAPLTES
- * - Loop through customer objects subscription and for each subscription do the following:
- *  - Check if there is a service instance with the subscription.id available
- *      - If no, perform the following actions
- *          - Check if there is a serviceTemplate category with name "uncategorized"
- *              - If yes, grab its id
- *              - If no, create it, then grab its id
- *          - Check the subscription.plan.name and see if any Service templates with that name exist
- *              - If yes, grab it
- *              - If no, create the service template, then grab its id
- *          SERVICE INSTANCES:
- *          - Create the service instance.
- *              - set the requested_by to the current user
- *              - set service instance status to running
- */
-
-let mailer = require("../../../middleware/mailer");
 let async = require('async');
 let Logger = require('../models/logger');
 let User = require('../../../models/user');
 let ServiceInstance = require('../../../models/service-instance');
-let Invoice = require('../../../models/invoice');
 let Invitation = require('../../../models/invitation');
 let Fund = require('../../../models/fund');
 let ServiceTemplate = require('../../../models/service-template');
 let ServiceCategory = require('../../../models/service-category');
+let Invoice = require('../../../models/invoice');
 
 module.exports = function(router, knex, stripe) {
 
@@ -59,7 +27,7 @@ module.exports = function(router, knex, stripe) {
                         return importUser(customer).catch(function (err) {
                             console.log(err);
                             return Promise.resolve(true);
-                        });;
+                        });
                     })).then(function () {
                         // Check for more, and recursively call importStripeUsers
                         if (customers.has_more) {
@@ -98,7 +66,6 @@ module.exports = function(router, knex, stripe) {
                         })).then(function () {
                             // Check for more, and recursively call importStripePlans
                             if (plans.has_more) {
-                                console.log(plans.data[plans.data.length - 1]);
                                 let last_plan = plans.data[plans.data.length - 1].id;
                                 console.log(`Parsed all plans until Plan ID ${last_plan}`);
                                 return setTimeout(resolve,1000,importStripePlans(last_plan));
@@ -155,7 +122,6 @@ module.exports = function(router, knex, stripe) {
     let importUser = function (customer) {
         return new Promise(function (resolve, reject) {
             User.findOne('customer_id', customer.id, function (user) {
-                console.log(`Processing Customer ID: ${customer.id}`);
                 if(!user.data) {
                     User.findOne('email', customer.email, function (user_by_email) {
                         let new_user = new User({
@@ -164,9 +130,6 @@ module.exports = function(router, knex, stripe) {
                             "role_id": 3,
                             "status": "invited"
                         });
-                        if(user_by_email.data) {
-                            new_user.data.email = `${customer.email}-DUPLICATE-${customer.id}`;
-                        }
                         //Create the user entity
                         new_user.create(function (err, user) {
                             if(!err) {
@@ -176,8 +139,15 @@ module.exports = function(router, knex, stripe) {
                                     return resolve(user);
                                 });
                             } else {
-                                //Reject if the user object cannot be obtained or created
-                                return reject(err);
+                                new_user.data.email = `${customer.email}-DUPLICATE-${customer.id}`;
+                                new_user.create(function (err, user_retry) {
+                                    if(!err) {
+                                        return resolve(user_retry);
+                                    } else {
+                                        //Reject if the user object cannot be obtained or created
+                                        return reject(err);
+                                    }
+                                });
                             }
                         });
                     });
@@ -187,12 +157,6 @@ module.exports = function(router, knex, stripe) {
             });
         }).then(function (user) {
             return importFund(user, customer.sources);
-        }).catch(function (err) {
-            return new Promise(function (resolve, reject) {
-                console.log(`FAILED => import user:`);
-                console.log(err);
-                return resolve(false);
-            });
         });
     };
 
@@ -271,15 +235,26 @@ module.exports = function(router, knex, stripe) {
     
     let importServiceInstance = function (subscription) {
         return new Promise(function (resolve, reject) {
-            if(!subscription.plan) {
-                let plan = subscription.items.data[0].plan;
-                subscription.items.data.map(function (item_plan) {
-                    plan.amount = parseInt(plan.amount) + parseInt(item_plan.plan.amount);
-                });
-                return resolve(plan);
-            } else {
-                return resolve(subscription.plan);
-            }
+            //Make sure service does not already exist
+            ServiceInstance.findOne('subscription_id', subscription.id, function (service) {
+                if(!service.data) {
+                    return resolve(true);
+                } else {
+                    return reject('Service already exists in ServiceBot!');
+                }
+            });
+        }).then(function () {
+            return new Promise(function (resolve, reject) {
+                if(!subscription.plan) {
+                    let plan = subscription.items.data[0].plan;
+                    subscription.items.data.map(function (item_plan) {
+                        plan.amount = parseInt(plan.amount) + parseInt(item_plan.plan.amount);
+                    });
+                    return resolve(plan);
+                } else {
+                    return resolve(subscription.plan);
+                }
+            })
         }).then(function (plan) {
             return new Promise(function (resolve, reject) {
                 let service = { payment_plan: plan };
@@ -314,12 +289,29 @@ module.exports = function(router, knex, stripe) {
         });
     };
 
+    let getAllUserInvoices = function () {
+        return new Promise(function (resolve, reject) {
+            User.findAll(true, true, function (users) {
+                Promise.all(users.map(function (user) {
+                    return Invoice.fetchUserInvoices(user);
+                })).then(function () {
+                    return resolve(true);
+                }).catch(function (err) {
+                    console.log(err);
+                    return resolve(err);
+                });
+            });
+        });
+    };
+
 
     router.post(`/stripe/import`, function(req, res, next){
         importStripeUsers(null).then(function () {
             return importStripePlans();
         }).then(function () {
             return importStripeSubscriptions();
+        }).then(function () {
+            return getAllUserInvoices();
         }).then(function (result) {
             console.log(result);
             res.status(200).json(result);

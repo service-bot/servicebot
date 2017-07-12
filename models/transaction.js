@@ -50,9 +50,11 @@ Transaction.fetchCharge = function (charge_id, callback) {
             function (callback) {
                 //Retrieve the charge from Stripe
                 Stripe().connection.charges.retrieve(charge_id, function (err, charge) {
-                    charge.charge_id = charge.id;
-                    delete charge.id;
-                    delete charge.created;
+                    if(!err) {
+                        charge.charge_id = charge.id;
+                        delete charge.id;
+                        delete charge.created;
+                    }
                     callback(err, charge);
                 });
             },

@@ -141,8 +141,8 @@ module.exports = function(tableName, references=[], primaryKey='id') {
         }
         else {
             referenceData.forEach(newChild => (newChild[reference.referenceField] = this.get(primaryKey)));
-            console.log("referenceDate");
-            console.log(referenceData);
+            //console.log("referenceDate");
+            //console.log(referenceData);
             reference.model.batchCreate(referenceData, function (response) {
                 if (reference.direction == "to") {
                     self.set(reference.referenceField, response[0][reference.model.primaryKey]);

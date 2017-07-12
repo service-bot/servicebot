@@ -127,7 +127,6 @@ Invoice.fetchUserInvoices = function (user_object) {
             Promise.all(invoices.data.map(function (raw_invoice) {
                 return Invoice.insertInvoice(raw_invoice, user_object);
             })).then(function () {
-                console.log('Invoices imported');
                 return resolveall('Invoices imported');
             }).catch(function (err) {
                 return rejectall(err);
@@ -208,7 +207,7 @@ Invoice.insertInvoice = function (raw_invoice, user) {
                 if(reference_data[reference.model.table] && reference_data[reference.model.table].length > 0){
                     let referenceData = reference_data[reference.model.table];
                     invoice.createReferences(referenceData, reference, function (modifiedEntity) {
-                        console.log('Invoice references created!');
+                        //console.log('Invoice references created!');
                     });
                 }
             }
