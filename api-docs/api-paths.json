@@ -4478,11 +4478,11 @@
       }
     }
   },
-  "/email-templates": {
+  "/notification-templates": {
     "get": {
-      "summary": "Gets all Email Templates",
+      "summary": "Gets all Notification Templates",
       "tags": [
-        "email-templates"
+        "notification-templates"
       ],
       "produces": [
         "application/json"
@@ -4491,7 +4491,7 @@
         "admin",
         "staff"
       ],
-      "operationId": "get_email_templates",
+      "operationId": "get_notification_templates",
       "security": [
         {
           "internalApiKey": []
@@ -4499,11 +4499,11 @@
       ],
       "responses": {
         "200": {
-          "description": "An array of Email Templates",
+          "description": "An array of Notification Templates",
           "schema": {
             "type": "array",
             "items": {
-              "$ref": "#/definitions/email_templates"
+              "$ref": "#/definitions/notification_templates"
             }
           }
         },
@@ -4516,9 +4516,9 @@
       }
     },
     "post": {
-      "summary": "Create new Email Template",
+      "summary": "Create new Notification Template",
       "tags": [
-        "email-templates"
+        "notification-templates"
       ],
       "produces": [
         "application/json"
@@ -4527,7 +4527,7 @@
         "admin",
         "staff"
       ],
-      "operationId": "post_email_templates",
+      "operationId": "post_notification_templates",
       "security": [
         {
           "internalApiKey": []
@@ -4535,22 +4535,22 @@
       ],
       "parameters": [
         {
-          "name": "Email Template",
+          "name": "Notification Template",
           "in": "body",
-          "description": "Email Template to create",
+          "description": "Notification Template to create",
           "required": true,
           "schema": {
-            "$ref": "#/definitions/email_templates"
+            "$ref": "#/definitions/notification_templates"
           }
         }
       ],
       "responses": {
         "200": {
-          "description": "An array of Email Templates",
+          "description": "An array of Notification Templates",
           "schema": {
             "type": "array",
             "items": {
-              "$ref": "#/definitions/email_templates"
+              "$ref": "#/definitions/notification_templates"
             }
           }
         },
@@ -4563,11 +4563,11 @@
       }
     }
   },
-  "/email-templates/search": {
+  "/notification-templates/search": {
     "get": {
-      "summary": "Gets all Email Templates by search",
+      "summary": "Gets all Notification Templates by search",
       "tags": [
-        "email-templates"
+        "notification-templates"
       ],
       "produces": [
         "application/json"
@@ -4576,7 +4576,7 @@
         "admin",
         "staff"
       ],
-      "operationId": "get_email_templates_search",
+      "operationId": "get_notification_templates_search",
       "security": [
         {
           "internalApiKey": []
@@ -4600,11 +4600,11 @@
       ],
       "responses": {
         "200": {
-          "description": "An array of Email Templates",
+          "description": "An array of Notification Templates",
           "schema": {
             "type": "array",
             "items": {
-              "$ref": "#/definitions/email_templates"
+              "$ref": "#/definitions/notification_templates"
             }
           }
         },
@@ -4617,11 +4617,11 @@
       }
     }
   },
-  "/email-templates/{id}": {
+  "/notification-templates/{id}": {
     "get": {
-      "summary": "Gets all Email Templates",
+      "summary": "Gets all Notification Templates",
       "tags": [
-        "email-templates"
+        "notification-templates"
       ],
       "produces": [
         "application/json"
@@ -4630,7 +4630,7 @@
         "admin",
         "staff"
       ],
-      "operationId": "get_email_templates_id",
+      "operationId": "get_notification_templates_id",
       "security": [
         {
           "internalApiKey": []
@@ -4640,7 +4640,7 @@
         {
           "name": "id",
           "in": "path",
-          "description": "Email Template id",
+          "description": "Notification Template id",
           "required": true,
           "type": "number",
           "format": "double"
@@ -4648,9 +4648,9 @@
       ],
       "responses": {
         "200": {
-          "description": "A Email Templates",
+          "description": "A Notification Templates",
           "schema": {
-            "$ref": "#/definitions/email_templates"
+            "$ref": "#/definitions/notification_templates"
           }
         },
         "default": {
@@ -4662,9 +4662,9 @@
       }
     },
     "put": {
-      "summary": "Updates a Email Template",
+      "summary": "Updates a Notification Template",
       "tags": [
-        "email-templates"
+        "notification-templates"
       ],
       "produces": [
         "application/json"
@@ -4673,7 +4673,7 @@
         "admin",
         "staff"
       ],
-      "operationId": "put_email_templates_id",
+      "operationId": "put_notification_templates_id",
       "security": [
         {
           "internalApiKey": []
@@ -4683,28 +4683,28 @@
         {
           "name": "id",
           "in": "path",
-          "description": "Email Template id",
+          "description": "Notification Template id",
           "required": true,
           "type": "number",
           "format": "double"
         },
         {
-          "name": "Email Template",
+          "name": "Notification Template",
           "in": "body",
-          "description": "Email Template to create",
+          "description": "Notification Template to create",
           "required": true,
           "schema": {
-            "$ref": "#/definitions/email_templates"
+            "$ref": "#/definitions/notification_templates"
           }
         }
       ],
       "responses": {
         "200": {
-          "description": "An array of Email Templates",
+          "description": "An array of Notification Templates",
           "schema": {
             "type": "array",
             "items": {
-              "$ref": "#/definitions/email_templates"
+              "$ref": "#/definitions/notification_templates"
             }
           }
         },
@@ -4717,9 +4717,9 @@
       }
     },
     "delete": {
-      "summary": "Deletes a Email Template",
+      "summary": "Deletes a Notification Template",
       "tags": [
-        "email-templates"
+        "notification-templates"
       ],
       "produces": [
         "application/json"
@@ -4728,7 +4728,7 @@
         "admin",
         "staff"
       ],
-      "operationId": "delete_email_templates_id",
+      "operationId": "delete_notification_templates_id",
       "security": [
         {
           "internalApiKey": []
@@ -4738,7 +4738,7 @@
         {
           "name": "id",
           "in": "path",
-          "description": "Email Template id",
+          "description": "Notification Template id",
           "required": true,
           "type": "number",
           "format": "double"
@@ -4746,9 +4746,9 @@
       ],
       "responses": {
         "200": {
-          "description": "A Email Templates",
+          "description": "A Notification Templates",
           "schema": {
-            "$ref": "#/definitions/email_templates"
+            "$ref": "#/definitions/notification_templates"
           }
         },
         "default": {
@@ -4760,11 +4760,11 @@
       }
     }
   },
-  "/email-templates/{id}/roles": {
+  "/notification-templates/{id}/roles": {
     "get": {
-      "summary": "Gets Email Template Roles",
+      "summary": "Gets Notification Template Roles",
       "tags": [
-        "email-templates"
+        "notification-templates"
       ],
       "produces": [
         "application/json"
@@ -4772,7 +4772,7 @@
       "x-roles": [
         "admin"
       ],
-      "operationId": "get_email_templates_id_roles",
+      "operationId": "get_notification_templates_id_roles",
       "security": [
         {
           "internalApiKey": []
@@ -4782,7 +4782,7 @@
         {
           "name": "id",
           "in": "path",
-          "description": "Email Template id",
+          "description": "Notification Template id",
           "required": true,
           "type": "number",
           "format": "double"
@@ -4802,9 +4802,9 @@
       }
     },
     "put": {
-      "summary": "Updates an Email Template Role",
+      "summary": "Updates an Notification Template Role",
       "tags": [
-        "email-templates"
+        "notification-templates"
       ],
       "produces": [
         "application/json"
@@ -4812,7 +4812,7 @@
       "x-roles": [
         "admin"
       ],
-      "operationId": "put_email_templates_id_roles",
+      "operationId": "put_notification_templates_id_roles",
       "security": [
         {
           "internalApiKey": []
@@ -4822,15 +4822,15 @@
         {
           "name": "id",
           "in": "path",
-          "description": "Email Template id",
+          "description": "Notification Template id",
           "required": true,
           "type": "number",
           "format": "double"
         },
         {
-          "name": "Email-Template-To-Role",
+          "name": "Notification-Template-To-Role",
           "in": "body",
-          "description": "Email Template to Role",
+          "description": "Notification Template to Role",
           "required": true,
           "type": "object"
         }
