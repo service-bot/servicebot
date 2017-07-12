@@ -7,6 +7,7 @@ let multer = require("multer");
 let File = require("../models/file");
 let mkdirp = require("mkdirp");
 let path = require("path");
+let dispatchEvent = require("../config/redux/store").dispatchEvent;
 
 let systemFilePath = "uploads/system-options";
 
@@ -127,6 +128,12 @@ module.exports = function (router) {
             })
 
             SystemOption.batchUpdate(filteredUpdates, function (result) {
+                let updated = result.reduce((settings, setting)=>{
+                    console.log(setting);
+                    settings[setting[0].option] = setting[0].value;
+                    return settings;
+                }, {});
+                dispatchEvent("system_options_updated", updated);
                 EventLogs.logEvent(req.user.get('id'), `system-options were updated by user ${req.user.get('email')}`);
                 res.json(result);
             })

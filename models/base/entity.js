@@ -60,7 +60,22 @@ module.exports = function(tableName, references=[], primaryKey='id') {
 
     };
 
-
+    Entity.createPromise =function(entityData){
+        let self = this
+        return knex(Entity.table).columnInfo()
+                .then(function (info) {
+                    return _.pick(entityData, _.keys(info));
+                })
+                .then(function(data){
+                    return knex(Entity.table).returning("*").insert(data)
+                })
+                .then(function(result){
+                    return result[0];
+                })
+                .catch(function(err){
+                    throw err
+                });
+    };
     Entity.prototype.create = function (callback) {
         let self = this;
         knex(Entity.table).columnInfo()

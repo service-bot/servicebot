@@ -1,6 +1,5 @@
 let auth = require('../middleware/auth');
 let validate = require('../middleware/validate');
-let mailer = require('../middleware/mailer');
 let User = require('../models/user');
 let Invitation = require('../models/invitation');
 let EventLogs = require('../models/event-log');
@@ -10,6 +9,7 @@ let path = require("path");
 let mkdirp = require("mkdirp");
 let bcrypt = require("bcryptjs");
 let Role = require("../models/role");
+let dispatchEvent = require("../config/redux/store").dispatchEvent;
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 let avatarFilePath = "uploads/avatars";
 
@@ -144,14 +144,35 @@ module.exports = function (router, passport) {
         let user_role = new Role({"id": req.user.data.role_id});
         user_role.getPermissions(function (perms) {
             let permission_names = perms.map(perm => perm.data.permission_name);
-            res.locals.json = {"message": "successful signup", "permissions": permission_names};
+            res.locals.json = {"message" : "successful signup", "permissions" : permission_names };
+            dispatchEvent("user_registered", req.user);
             next();
         });
-    }, mailer('registration_user', 'id'), mailer('registration_admin', null));
+    });
 
 
     //TODO add the registration url to the email
     router.post('/users/invite', auth(), function (req, res, next) {
+        function reinviteUser(user){
+
+            let invite = new Invitation({"user_id": user.get("id")});
+            invite.create(function (err, result) {
+                if (!err) {
+                    let apiUrl = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + result.get("token");
+                    let frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
+                    EventLogs.logEvent(req.user.get('id'), `users ${req.body.email} was reinvited by user ${req.user.get('email')}`);
+                    res.locals.json = {token: result.get("token"), url: frontEndUrl, api: apiUrl};
+                    result.set('url', frontEndUrl);
+                    result.set('api', apiUrl);
+                    res.locals.valid_object = result;
+                    next();
+                    dispatchEvent("user_invited", user);
+                } else {
+                    res.status(403).json({error: err});
+                }
+            });
+
+        }
         if (req.body.hasOwnProperty("email")) {
             let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             if (!req.body.email.match(mailFormat)) {
@@ -162,7 +183,16 @@ module.exports = function (router, passport) {
                 let newUser = new User({"email": req.body.email, "role_id": 3, "status": "invited"});
                 User.findAll("email", req.body.email, function (foundUsers) {
                     if (foundUsers.length != 0) {
-                        res.status(400).json({error: 'This email already exists in the system'});
+                        Invitation.findOne("user_id", foundUsers[0].get("id"), invite => {
+                            if(invite && invite.data){
+                                invite.delete(()=>{
+                                    reinviteUser(foundUsers[0]);
+                                })
+                            }else{
+                                res.status(400).json({error: 'This email already exists in the system'});
+
+                            }
+                        })
                     }
                     else {
                         newUser.createWithStripe(function (err, resultUser) {
@@ -178,6 +208,7 @@ module.exports = function (router, passport) {
                                         result.set('api', apiUrl);
                                         res.locals.valid_object = result;
                                         next();
+                                        dispatchEvent("user_invited", newUser);
                                     } else {
                                         res.status(403).json({error: err});
                                     }
@@ -193,7 +224,7 @@ module.exports = function (router, passport) {
         else {
             res.status(400).json({error: 'Must have property: email'});
         }
-    }, mailer('invitation', 'user_id'));
+    });
 
     //Override post route to hide adding users
     router.post(`/users`, function (req, res, next) {
@@ -229,9 +260,9 @@ module.exports = function (router, passport) {
     router.post("/users/:id(\\d+)/suspend", validate(User), auth(null, User, "id"), function (req, res) {
         let user = res.locals.valid_object;
         user.suspend(function (err, updated_user) {
-            if (!err) {
+            if(!err) {
+                dispatchEvent("user_suspended", updated_user);
                 res.status(200).json(updated_user);
-                mailer('user_suspension', 'id')(req, res, next);
             } else {
                 res.status(400).json({error: err});
             }
@@ -243,7 +274,7 @@ module.exports = function (router, passport) {
         user.deleteWithStripe(function (err, completed_msg) {
             if (!err) {
                 res.status(200).json({message: completed_msg});
-                mailer('user_deletion', 'id')(req, res, next);
+                dispatchEvent("user_deleted", user);
             } else {
                 res.status(400).json({error: err});
             }

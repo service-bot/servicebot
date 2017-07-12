@@ -1,6 +1,5 @@
 let async = require('async');
 let auth = require('../middleware/auth');
-let mailer = require('../middleware/mailer');
 let validate = require('../middleware/validate');
 let EventLogs = require('../models/event-log');
 let File = require("../models/file");
@@ -17,6 +16,7 @@ let mkdirp = require("mkdirp");
 let path = require("path");
 let _ = require("lodash");
 let xss = require('xss');
+let dispatchEvent = require("../config/redux/store").dispatchEvent;
 
 //todo: generify single file upload for icon, image, avatar, right now duplicate code
 let iconFilePath = ServiceTemplate.iconFilePath;
@@ -274,7 +274,8 @@ module.exports = function (router) {
                     return new Promise((resolve, reject) => {
                         service.set('api', res.locals.apiUrl);
                         service.set('url', res.locals.frontEndUrl);
-                        mailer('request_service_instance_new_user', 'user_id', service)(req, res, next);
+                        dispatchEvent("service_instance_requested_new_user", service);
+                        // mailer('request_service_instance_new_user', 'user_id', service)(req, res, next);
                         let user_role = new Role({"id" : 3});
                         user_role.getPermissions(function(perms){
                             let permission_names = perms.map(perm => perm.data.permission_name);
@@ -310,15 +311,14 @@ module.exports = function (router) {
         let req_uid = req.user.get("id");
         let req_body = req.body;
         let permission_array = res.locals.permissions;
-
         serviceTemplate.requestPromise(req_uid, req_body, permission_array)
             .then(function (service) {
                 //Send the main based on the requester
                 return new Promise(function (resolve, reject) {
                     if (service.data.user_id == req_uid) {
-                        mailer('request_service_instance_user', 'user_id', service)(req, res, next);
+                        dispatchEvent("service_instance_requested_by_user", service);
                     } else {
-                        mailer('request_service_instance_admin', 'user_id', service)(req, res, next);
+                        dispatchEvent("service_instance_requested_for_user", service);
                     }
                     return resolve(service);
                 });
