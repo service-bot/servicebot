@@ -56,7 +56,10 @@ module.exports = function(router, knex, stripe) {
             stripe().connection.customers.list(req_params, function (err, customers) {
                 if(!err) {
                     Promise.all(customers.data.map(function (customer) {
-                        return importUser(customer);
+                        return importUser(customer).catch(function (err) {
+                            console.log(err);
+                            return Promise.resolve(true);
+                        });;
                     })).then(function () {
                         // Check for more, and recursively call importStripeUsers
                         if (customers.has_more) {
@@ -88,14 +91,17 @@ module.exports = function(router, knex, stripe) {
                 stripe().connection.plans.list(req_params, function (err, plans) {
                     if(!err) {
                         Promise.all(plans.data.map(function (plan) {
-                            return importServiceTemplate(category, plan);
+                            return importServiceTemplate(category, plan).catch(function (err) {
+                                console.log(err);
+                                return Promise.resolve(true);
+                            });;
                         })).then(function () {
                             // Check for more, and recursively call importStripePlans
                             if (plans.has_more) {
                                 console.log(plans.data[plans.data.length - 1]);
                                 let last_plan = plans.data[plans.data.length - 1].id;
                                 console.log(`Parsed all plans until Plan ID ${last_plan}`);
-                                return resolve(importStripePlans(last_plan));
+                                return setTimeout(resolve,1000,importStripePlans(last_plan));
                             } else {
                                 console.log(`All plans have been imported.`);
                                 return resolve(true);
@@ -124,13 +130,16 @@ module.exports = function(router, knex, stripe) {
             stripe().connection.subscriptions.list(req_params, function (err, subscriptions) {
                 if(!err) {
                     Promise.all(subscriptions.data.map(function (subscription) {
-                        return importServiceInstance(subscription);
+                        return importServiceInstance(subscription).catch(function (err) {
+                            console.log(err);
+                            return Promise.resolve(true);
+                        });
                     })).then(function () {
                         // Check for more, and recursively call importStripePlans
                         if (subscriptions.has_more) {
                             let last_subscription = subscriptions["data"][subscriptions["data"].length - 1].id;
                             console.log(`Parsed all subscriptions until Plan ID ${last_subscription}`);
-                            return resolve(importStripeSubscriptions(last_subscription));
+                            return setTimeout(resolve,1000,importStripeSubscriptions(last_subscription));
                         } else {
                             console.log(`All subscriptions have been imported.`);
                             return resolve(true);
@@ -225,13 +234,18 @@ module.exports = function(router, knex, stripe) {
         }).then(function (template) {
             return new Promise(function (resolve, reject) {
                 if(!template) {
-                    plan.category_id = category.data.id;
-                    plan.created_by = 1;
-                    plan.description = plan.name;
-                    plan.name = plan.id;
-                    delete plan.id;
-                    let template = new ServiceTemplate(plan);
-                    template.create((err, template) => { return resolve(template); });
+                    let newPlan = Object.assign({}, plan);
+                    delete newPlan.id;
+                    newPlan.category_id = category.data.id;
+                    newPlan.created_by = 1;
+                    newPlan.description = plan.name;
+                    newPlan.name = plan.id;
+                    let template = new ServiceTemplate(newPlan);
+                    template.create((err, template) => {
+                        if(err){
+                            console.error(err);
+                        }
+                        return resolve(template); });
                 } else {
                     return resolve(template);
                 }
@@ -307,6 +321,7 @@ module.exports = function(router, knex, stripe) {
         }).then(function () {
             return importStripeSubscriptions();
         }).then(function (result) {
+            console.log(result);
             res.status(200).json(result);
         }).catch(function (err) {
             console.log('ERROR => Stripe import');
