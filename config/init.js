@@ -14,6 +14,7 @@ let User = require("../models/user");
 let Stripe = require("./stripe");
 let store = require("./redux/store");
 let migrate = require("./migrations/migrate");
+let setOptions = require("./redux/actions").setOptions;
 //DO NOT MODIFY THE CORE SCHEMA!
 //If you do, make sure you know exactly what you are doing!
 
@@ -34,10 +35,10 @@ let assignPermissionPromise = function (initConfig, permission_objects, initialR
                 if (role.get("role_name") == "admin" && initConfig && initConfig.admin_user && initConfig.admin_password) {
                     //insert user in config
                     console.log("admin!", role);
-                    Stripe.setKeys({
+                    store.dispatch(setOptions({
                         stripe_secret_key: initConfig.stripe_secret,
                         stripe_publishable_key: initConfig.stripe_public
-                    });
+                    }))
                     let admin = new User({
                         email: initConfig.admin_user,
                         password: require("bcryptjs").hashSync(initConfig.admin_password, 10),

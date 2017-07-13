@@ -1,4 +1,3 @@
-require('dotenv').config({path: require("path").join(__dirname, '../../env/.env')});
 let knex = require("../db");
 let semver = require("semver")
 let semver_sort = require("semver-sort")

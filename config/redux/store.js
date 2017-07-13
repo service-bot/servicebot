@@ -18,10 +18,8 @@ const defaultAppState = {
 //todo: store sagas in store
 function appReducer(state = defaultAppState , action) {
     //change the store state based on action.type
-    console.log(`action ${action.type}`);
     switch(action.type) {
         case EVENT:
-            console.log("NEW EVENT", action);
             return state;
         case INIT_STORE:
             return action.initialStore;

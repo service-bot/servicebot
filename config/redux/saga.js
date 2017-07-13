@@ -23,7 +23,6 @@ function getNotificationSagas(){
     });
 }
 let setOptionSaga = function*(action){
-    console.log("options changed")
     yield put(setOptions(action.event_object));
 }
 let sagaEventPattern = function(event_name){

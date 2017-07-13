@@ -188,10 +188,10 @@ module.exports = function (router) {
                 else {
                     res.status(400).json({error: 'Invalid email format'});
                 }
-            }
-            else {
+            } else {
                 res.status(400).json({error: 'Must have property: email'});
             }
+
             if (req_body.hasOwnProperty("token_id")) {
                 if (req_body.token_id != '') {
                     req_body_token_id = req_body.token_id;
@@ -199,10 +199,10 @@ module.exports = function (router) {
                 else {
                     res.status(400).json({error: 'token_id can not be empty'});
                 }
-            }
-            else {
+            } else {
                 res.status(400).json({error: 'Must have property: token_id'});
             }
+
             let newUser = new User({"email": req_body_email, "role_id": 3, "status": "invited"});
             new Promise((resolve, reject) => {
                 //Check for existing user email
@@ -263,6 +263,7 @@ module.exports = function (router) {
                 })
                 .then(resultUser => {
                     //create fund
+                    console.log("TOKEN", req_body_token_id);
                     return Fund.promiseFundCreateOrUpdate(resultUser.get('id'), req_body_token_id);
                 })
                 .then(fund => {
@@ -311,10 +312,24 @@ module.exports = function (router) {
         let req_uid = req.user.get("id");
         let req_body = req.body;
         let permission_array = res.locals.permissions;
-        serviceTemplate.requestPromise(req_uid, req_body, permission_array)
+        new Promise((resolve, reject) => {
+            if (req_body.hasOwnProperty("token_id")) {
+                if (req_body.token_id != '') {
+                    return resolve(Fund.promiseFundCreateOrUpdate(req_uid, req_body.token_id))
+                }
+                else {
+                    return resolve();
+                }
+            } else {
+                return resolve();
+            }
+        })
+            .then(() => serviceTemplate.requestPromise(req_uid, req_body, permission_array))
             .then(function (service) {
+
                 //Send the main based on the requester
                 return new Promise(function (resolve, reject) {
+                    console.log(service);
                     if (service.data.user_id == req_uid) {
                         dispatchEvent("service_instance_requested_by_user", service);
                     } else {
@@ -322,13 +337,15 @@ module.exports = function (router) {
                     }
                     return resolve(service);
                 });
-            }).then(function (service) {
-            return new Promise(function (resolve, reject) {
-                EventLogs.logEvent(req.user.get('id'), `service-templates ${req.params.id} was requested by user ${req.user.get('email')} and service-instance was created`);
-                res.status(200).json(service.data);
-                return resolve(service);
-            });
-        }).catch(function (err) {
+            })
+            .then(function (service) {
+                return new Promise(function (resolve, reject) {
+                    // EventLogs.logEvent(req.user.get('id'), `service-templates ${req.params.id} was requested by user ${req.user.get('email')} and service-instance was created`);
+                    res.status(200).json(service.data);
+                    return resolve(service);
+                });
+            }).catch(function (err) {
+                console.log(err);
             res.status(400).json({error: err});
         });
     });
