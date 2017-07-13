@@ -44,6 +44,7 @@ ServiceTemplate.prototype.requestPromise = function (uid, body = {}, permission_
     if(body.references) {
         submittedProperties = body.references.service_template_properties;
     }
+    let ServiceInstance = require('../models/service-instance');
     let newInstance = new ServiceInstance(instanceAttributes);
     return new Promise(function (resolve_all, reject_all) {
         newInstance.create(function (err, service) {

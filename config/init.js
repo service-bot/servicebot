@@ -4,7 +4,7 @@ var Role = require("../models/role");
 var Permission = require("../models/permission");
 var SystemOption = require("../models/system-options");
 let options = require("./system-options");
-let DefaultTemplates = require("./default-emails");
+let DefaultTemplates = require("./default-notifications");
 let NotificationTemplate = require("../models/notification-template");
 let Notification = require("../models/notifications");
 let fs = require("fs");
@@ -178,7 +178,7 @@ module.exports = function (initConfig) {
             }).createTable('notifications', function (table) {
                 table.increments();
                 table.string("source_id").unique();
-                table.string('message');
+                table.text('message', 'longtext');
                 table.string("type");
                 table.integer("user_id").references("users.id")
                 table.string("subject");
