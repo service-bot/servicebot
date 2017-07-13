@@ -41,7 +41,7 @@ module.exports = function setup(options, imports, register) {
                             })
                             .catch((err) =>{
                                 if(err.code != '23505'){
-                                    console.error(`Error inserting notificaiton`, notification, err);
+                                    console.error(`Error inserting notification`, notification, err);
                                 }
                              })
                     }))

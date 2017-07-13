@@ -13,6 +13,7 @@ let swaggerJSON = require("../api-docs/api-paths.json");
 let User = require("../models/user");
 let Stripe = require("./stripe");
 let store = require("./redux/store");
+let migrate = require("./migrations/migrate");
 //DO NOT MODIFY THE CORE SCHEMA!
 //If you do, make sure you know exactly what you are doing!
 
@@ -468,7 +469,7 @@ module.exports = function (initConfig) {
                     });
                 });
             }
-        }).then(store.initialize());
+        }).then(migrate()).then(store.initialize());
     });
 };
 

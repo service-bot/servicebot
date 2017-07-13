@@ -54,19 +54,9 @@ function dispatchEvent(eventName, eventObject){
    return store.dispatch(triggerEvent(eventName, eventObject));
 }
 
-let getOptions = function(){
-    return new Promise((resolve, reject) => {
-        Settings.findAll(true, true, (result) => {
-            resolve(result.reduce((settings, setting)=>{
-                settings[setting.data.option] = setting.data.value;
-                return settings;
-            }, {}))
-        })
-    })
-}
 store.initialize = function(){
     let initialState = {};
-    return getOptions().then((result) => {
+    return Settings.getOptions().then((result) => {
         initialState["options"] = result;
         return sagaMiddleware.initialize()
     }).then(store.dispatch(initializeStore(initialState))
@@ -77,4 +67,5 @@ store.initialize = function(){
 };
 store.sagaMiddleware = sagaMiddleware;
 store.dispatchEvent = dispatchEvent;
+
 module.exports = store;
