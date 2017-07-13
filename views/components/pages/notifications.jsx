@@ -80,7 +80,7 @@ class Notifications extends React.Component{
                 }
             })
             .then(response => {
-                if(isAuthorized({permissions: "put_email_templates_id"})){
+                if(isAuthorized({permissions: "put_notification_templates_id"})){
                     console.log("system")
                     return Fetcher(self.state.url + "/system")
 
@@ -95,7 +95,7 @@ class Notifications extends React.Component{
     render(){
 
         return (<div>
-            {isAuthorized({permissions: "put_email_templates_id"}) && <SystemNotificationList/>}
+            {isAuthorized({permissions: "put_notification_templates_id"}) && <SystemNotificationList/>}
             <NotificationList/></div>)
     }
 }

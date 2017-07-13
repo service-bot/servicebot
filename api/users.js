@@ -204,8 +204,8 @@ module.exports = function (router, passport) {
                                         let frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
                                         EventLogs.logEvent(req.user.get('id'), `users ${req.body.email} was invited by user ${req.user.get('email')}`);
                                         res.locals.json = {token: result.get("token"), url: frontEndUrl, api: apiUrl};
-                                        result.set('url', frontEndUrl);
-                                        result.set('api', apiUrl);
+                                        newUser.set('url', frontEndUrl);
+                                        newUser.set('api', apiUrl);
                                         res.locals.valid_object = result;
                                         next();
                                         dispatchEvent("user_invited", newUser);
@@ -261,7 +261,7 @@ module.exports = function (router, passport) {
         let user = res.locals.valid_object;
         user.suspend(function (err, updated_user) {
             if(!err) {
-                dispatchEvent("user_suspended", updated_user);
+                dispatchEvent("user_suspended", user);
                 res.status(200).json(updated_user);
             } else {
                 res.status(400).json({error: err});
