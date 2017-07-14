@@ -92,13 +92,6 @@ default_notifications.templates = [
         model:"user",
         send_email:true
     },
-    {name:"user_deletion",
-        event_name:"user_deleted",
-        message:"Your ServiceBot account has been deleted.",
-        subject:"ServiceBot Account Deleted",
-        model:"user",
-        send_email:true
-    },
     {name:"payment_failure",
         event_name:"payment_failure",
         message:"Your payment failed. Please log into your account and check your <a href='[[_hostname]]/billing-settings'>payment plan</a>.",
