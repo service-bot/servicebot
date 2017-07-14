@@ -271,10 +271,11 @@ module.exports = function (router, passport) {
 
     router.delete(`/users/:id(\\d+)`, validate(User), auth(null, User, "id"), function (req, res, next) {
         let user = res.locals.valid_object;
+        let notifyUser = new User({id:user.get('id'), email:user.get('email')});
         user.deleteWithStripe(function (err, completed_msg) {
             if (!err) {
                 res.status(200).json({message: completed_msg});
-                dispatchEvent("user_deleted", user);
+                dispatchEvent("user_deleted", notifyUser);
             } else {
                 res.status(400).json({error: err});
             }
