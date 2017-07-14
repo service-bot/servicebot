@@ -182,7 +182,7 @@ module.exports = function (initConfig) {
                 table.string("source_id").unique();
                 table.text('message', 'longtext');
                 table.string("type");
-                table.integer("user_id").references("users.id")
+                table.integer("user_id").references("users.id").onDelete('cascade');
                 table.string("subject");
                 table.string("affected_versions").defaultTo("*");
                 table.boolean("read").defaultTo(false);
