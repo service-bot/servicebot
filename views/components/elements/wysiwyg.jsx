@@ -43,44 +43,15 @@ class Wysiwyg extends React.Component {
 class WysiwygTemplater extends React.Component{
     constructor(props){
         super(props)
-        this.insertString = this.insertString.bind(this);
-
-
     }
-
-    insertString(html) {
-        let self = this;
-        return function (e){
-            e.preventDefault();
-            self.refs.wysiwyg.insert(html);
-        }
-    }
-
 
     render(){
         if(!this.props.schema){
             return <div>h</div>
         }
-        let references = this.props.schema.references;
         return (
             <div>
                 <Wysiwyg name={this.props.name} value={this.props.value || this.props.defaultValue} ref="wysiwyg" onChange={this.props.onChange}/>
-                <ul className = "templateList">
-                {Object.keys(this.props.schema).map(field => {
-                    if(field == "references"){
-                        return Object.keys(references).map(reference => {
-                            return (<ul key={reference} className="referenceList">references{Object.keys(references[reference]).map(referenceColumn => {
-                                return <li key={referenceColumn} className="column reference-column"> <button onClick={this.insertString(`[[references.${reference}.${referenceColumn}]]`)}>{referenceColumn}</button></li>
-                            })}
-                            </ul>)
-                        })
-                    }else{
-                        return <li key={field} className="column" ><button onClick={this.insertString(`[[${field}]]`)}>{field}</button></li>
-                    }
-                })}
-
-
-                </ul>
             </div>
         )
     }

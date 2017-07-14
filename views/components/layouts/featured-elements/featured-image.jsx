@@ -6,36 +6,20 @@ class FeaturedImage extends React.Component {
     constructor(props){
         super(props);
 
-        this.state = {
-            image: this.props.image,
-            bgColor: this.props.bgColor.backgroundColor || '#000000'
-        }
-    }
 
-    componentWillReceiveProps(nextProps){
-        if(nextProps.image){
-            this.setState({image: nextProps.image});
-        }
-        if(nextProps.bgColor){
-            this.setState({bgColor: nextProps.bgColor});
-        }
     }
-
     render () {
+        console.log("initial bg color", this.props.bgColor);
 
         let style = {
             backgroundSize: "cover",
             backgroundPosition: "center",
             height: "100%",
             width: "100%",
-            position: "absolute"
+            position: "absolute",
+            backgroundImage: `url(${this.props.image})`,
+            backgroundColor: this.props.bgColor.backgroundColor || '#000000'
         };
-
-        if(this.state.image){
-            style.backgroundImage = `url(${this.state.image})`;
-        }else{
-            style.backgroundColor = this.state.bgColor;
-        }
 
         return (
             <div className="featured-image">

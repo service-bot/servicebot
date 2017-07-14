@@ -10,7 +10,7 @@ import DateFormat from "../utilities/date-format.jsx";
 import ModalAddCategory from "../elements/modals/modal-add-category.jsx";
 import ModalDeleteCategory from "../elements/modals/modal-delete-category.jsx";
 
-class ManageEmailTempaltes extends React.Component {
+class ManageNotificationTemplates extends React.Component {
 
     constructor(props){
         super(props);
@@ -29,7 +29,7 @@ class ManageEmailTempaltes extends React.Component {
     }
 
     modName(data, dataObj){
-        return( <Link to={`email-templates/${dataObj.id}`}>{data}</Link>);
+        return( <Link to={`notification-templates/${dataObj.id}`}>{data}</Link>);
     }
     modCreatedAt(data, dataObj){
         return (<DateFormat date={data} time/>);
@@ -56,12 +56,12 @@ class ManageEmailTempaltes extends React.Component {
                     <Content>
                         <div className="row m-b-20">
                             <div className="col-xs-12">
-                                <ContentTitle icon="cog" title="Manage Email Templates"/>
+                                <ContentTitle icon="cog" title="Manage Notification Templates"/>
                                 <Dropdown name="Actions"
                                           dropdown={[
                                               {id: 'addnewcategory', name: 'Add New Category', link: '#', onClick: this.openAddCategoryModal}
                                           ]}/>
-                                <DataTable get="/api/v1/email-templates"
+                                <DataTable get="/api/v1/notification-templates"
                                            col={['id', 'name', 'model', 'created_at', 'updated_at']}
                                            colNames={['ID', 'Name', 'Model', 'Created At', 'Updated At']}
                                            mod_name={this.modName}
@@ -73,7 +73,7 @@ class ManageEmailTempaltes extends React.Component {
                                                    name:'Actions',
                                                    direction: 'right',
                                                    buttons:[
-                                                       {id: 1, name: 'Edit Email Template', link: '/email-templates/:id'},
+                                                       {id: 1, name: 'Edit Template', link: '/notification-templates/:id'},
                                                    ]}
                                                ]
                                            }
@@ -88,4 +88,4 @@ class ManageEmailTempaltes extends React.Component {
     }
 }
 
-export default ManageEmailTempaltes;
+export default ManageNotificationTemplates;

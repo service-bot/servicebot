@@ -124,7 +124,7 @@ class NavBootstrap extends React.Component {
                            role="button" aria-haspopup="true" aria-expanded="false" style={style}>Manage System <span className="caret"/></a>
                         <ul className="dropdown-menu">
                             <li><Link to="/manage-users">Manage Users</Link></li>
-                            <li><Link to="/manage-email-templates">Manage Email Templates</Link></li>
+                            <li><Link to="/notification-templates">Manage Notification Templates</Link></li>
                             <li><Link to="/manage-permission">Manage Permission</Link></li>
                             <li><Link to="/stripe-settings">Stripe Settings</Link></li>
                             <li><Link to="/system-settings">System Settings</Link></li>

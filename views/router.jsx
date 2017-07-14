@@ -44,9 +44,9 @@ import ManageCatalogCreate from "./components/pages/manage-catalog-create.jsx";
 import ManageCatalogEdit from "./components/pages/manage-catalog-edit.jsx";
 import UserEdit from "./components/pages/user-edit.jsx";
 import ManageCategories from "./components/pages/manage-categories.jsx";
-import ManageEmailTemplates from "./components/pages/manage-email-templates.jsx";
+import ManageNotificationTemplates from "./components/pages/manage-notification-templates.jsx";
 // Elements
-import EmailTemplateForm from "./components/elements/email-template.jsx";
+import NotificationTemplateForm from "./components/elements/forms/notification-template-form.jsx";
 import ServiceTemplateForm from "./components/elements/forms/service-template-form-review.jsx";
 import ServiceInstanceForm from "./components/elements/forms/service-instance-form-example.jsx";
 import Embed from "./components/elements/embed.jsx";
@@ -146,8 +146,8 @@ let AppRouter = function(props) {
                     <Route name="Manage Subscriptions" path="manage-subscriptions" component={ManageSubscriptions}/>
                     <Route name="Manage Categories" path="manage-categories" component={ManageCategories}/>
                     <Route name="Manage Permission" path="manage-permission" component={ManagePermission}/>
-                    <Route name="Manage Email Templates" path="manage-email-templates" components={ManageEmailTemplates}/>
-                    <Route name="Email Template" path="email-templates/:id" component={EmailTemplateForm}/>
+                    <Route name="Manage Notification Templates" path="notification-templates" components={ManageNotificationTemplates}/>
+                    <Route name="Notification Template" path="notification-templates/:id" component={NotificationTemplateForm}/>
                     <Route name="Manage Catalog" path="manage-catalog" component={ManageCatalog}>
                         <IndexRoute component={ManageCatalogList}/>
                         <Route name="Manage Catalog" path="list" component={ManageCatalogList}/>
