@@ -138,13 +138,14 @@ class NotificationTemplateForm extends React.Component {
                         <div className="page-service-instance">
                             <Content>
                                 <div className="row m-b-20">
-                                    <div className="col-sm-9 col-md-9">
+                                    <div className="col-sm-8 col-md-9">
                                         <div className="service-instance-section">
                                             <span className="service-instance-section-label"><strong>Editing Notification Template</strong></span>
                                             <h4>{template.data.name}</h4>
                                         </div>
                                         <div className="service-instance-section">
                                             <span className="service-instance-section-label"><strong>Select the roles you want this email to be sent to</strong></span>
+                                            <span className="help-block">The notification will be sent to all users with the roles.</span>
                                         {allRoles.map(role => {
                                             console.log(role);
                                             console.log(roles);
@@ -159,12 +160,19 @@ class NotificationTemplateForm extends React.Component {
                                                 <div key={role.id}>
                                                     <input onChange={this.handleRole(role.id)} type="checkbox" defaultChecked={checked}/>
                                                     <span> {role.role_name}</span>
-                                                    <span>{role.role_name == "user" && " - email will be sent to the user related to this event."}</span>
+                                                    <span>{role.role_name == "user" && " - email will be sent to all users"}</span>
                                                 </div>
                                             )
                                         })}
                                         </div>
                                         <DataForm handleResponse={this.handleResponse} url={this.state.url} method="PUT">
+                                            <div className="service-instance-section notification-settings-section">
+                                                <span className="service-instance-section-label"><strong>Notification Settings</strong></span>
+
+                                                <input name="create_notification" type="checkbox" defaultChecked={template.data.create_notification}/> <span>Create Notification</span><br/>
+                                                <input name="send_email" type="checkbox" defaultChecked={template.data.send_email}/> <span className="inline"> Send Email</span><br/>
+                                                <input name="send_to_owner" type="checkbox" defaultChecked={template.data.send_to_owner}/> <span className="inline"> Send Email To Owner</span>
+                                            </div>
                                             <div className="service-instance-section">
                                                 <span className="service-instance-section-label"><strong>Additional Recipients</strong></span>
                                                 <span className="help-block">Add recipients directly, these will be people who will also get this email notification for this event.</span>
@@ -184,7 +192,7 @@ class NotificationTemplateForm extends React.Component {
                                             </div>
                                         </DataForm>
                                     </div>
-                                    <div className="col-sm-3 col-md-3">
+                                    <div className="col-sm-4 col-md-3">
                                         <div className="service-instance-section">
                                             <span className="service-instance-section-label"><strong>Data Fields</strong></span>
                                             <span className="help-block">Available data fields, you can insert data fields related to this event ({this.humanString(template.data.name)}) into the body of your notification.</span>

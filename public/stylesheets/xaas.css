@@ -157,6 +157,16 @@ label, .help-block, .bmd-help{
     margin-right: 7px;
 }
 
+/* notification templates */
+.notification-settings-section .form-control {
+    display: inline;
+    width: auto;
+    height: auto;
+}
+ul.templateList {
+    padding-left: 0px;
+}
+
 /* service details table */
 table td.service-description{
     min-width: 300px;
