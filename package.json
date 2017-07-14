@@ -90,6 +90,7 @@
     "xss": "^0.3.3"
   },
   "devDependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
     "react-hot-loader": "^3.0.0-beta.6",
     "supertest": "^3.0.0",
     "tape": "^4.6.3",
