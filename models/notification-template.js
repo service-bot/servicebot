@@ -55,7 +55,6 @@ NotificationTemplate.prototype.build = function (map, callback) {
 };
 
 NotificationTemplate.prototype.createNotification =  function* (object) {
-    console.log("IN CREATE NOTIFICATION")
     let self = this;
     let notificationContent = yield getNotificationContents(self, object);
     let usersToNotify = yield getRoleUsers(self);
@@ -77,12 +76,10 @@ NotificationTemplate.prototype.createNotification =  function* (object) {
 };
 
 let getNotificationContents = function(template, targetObject){
-    console.log("IN CREATE GET NOTIFICATION CONTENTS")
 
     return new Promise(function (resolve, reject) {
         //Attach references
         targetObject.attachReferences(updatedObject => {
-            console.log("in attach references")
             let store = require('../config/redux/store');
             let globalProps = store.getState().options;
             Object.keys(globalProps).forEach(key => updatedObject.set("_" + key, globalProps[key]));
