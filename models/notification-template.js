@@ -76,6 +76,7 @@ NotificationTemplate.prototype.createNotification =  function* (object) {
 };
 
 let getNotificationContents = function(template, targetObject){
+
     return new Promise(function (resolve, reject) {
         //Attach references
         targetObject.attachReferences(updatedObject => {

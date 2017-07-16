@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 let _ = require("lodash");
 import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
 import {NavNotification} from "../pages/notifications.jsx";
+import cookie from 'react-cookie';
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -57,6 +58,7 @@ class NavBootstrap extends React.Component {
         this.toggleOnEditingGear = this.toggleOnEditingGear.bind(this);
         this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
         this.getAppMessages = this.getAppMessages.bind(this);
+        this.getLivemode = this.getLivemode.bind(this);
     }
 
     componentDidMount(){
@@ -166,6 +168,15 @@ class NavBootstrap extends React.Component {
 
     }
 
+    getLivemode(){
+        let livemode = cookie.load("spk").substring(3, 7);
+        if(livemode.toUpperCase() == "TEST") {
+            return ( <div className="app-messages"><p>All payments are currently on Test Mode</p></div> );
+        } else {
+            return <span/>;
+        }
+    }
+
     render () {
         let self = this;
         const currentModal = ()=> {
@@ -195,6 +206,7 @@ class NavBootstrap extends React.Component {
                             <span className="icon-bar"/>
                             <span className="icon-bar"/>
                         </button>
+                        {}
                         <Link to="/" className="navbar-brand nav-logo"><img src="/api/v1/system-options/file/brand_logo"/></Link>
                     </div>
 
@@ -238,6 +250,7 @@ class NavBootstrap extends React.Component {
                                                                 }/>
                 }
                 {this.getAppMessages()}
+                {this.getLivemode()}
             </nav>
 
         );
