@@ -26,27 +26,31 @@ module.exports = function setup(options, imports, register) {
             }).join("&");
             let url = master + "?instance_hash=" + salt + "&version=" + version + "&" + query;
             console.log(url);
+
             request(url, function(error, response, body){
                 //console.log(response);
                 if(error){
                     console.log("error");
                     console.log(error);
                 }else{
-                    return Promise.all(JSON.parse(body).notifications.map((notification) => {
-                        let data = notification.data;
-                        return Notification.createPromise(data)
-                            .then((result) => {
-                                 dispatchEvent("master_notification_created", result);
-                                 return result;
-                            })
-                            .catch((err) =>{
-                                if(err.code != '23505'){
-                                    console.error(`Error inserting notification`, notification, err);
-                                }
-                             })
-                    }))
+                   try {
+                       return Promise.all(JSON.parse(body).notifications.map((notification) => {
+                           let data = notification.data;
+                           return Notification.createPromise(data)
+                               .then((result) => {
+                                   dispatchEvent("master_notification_created", result);
+                                   return result;
+                               })
+                               .catch((err) => {
+                                   if (err.code != '23505') {
+                                       console.error(`Error inserting notification`, notification, err);
+                                   }
+                               })
+                       }))
 
-
+                   }catch(e){
+                       console.error("error connecting to hub: " + e);
+                   }
                 }
             })
 

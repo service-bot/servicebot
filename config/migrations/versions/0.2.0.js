@@ -12,7 +12,7 @@ module.exports = {
             })
             .alterTable("notifications", t => {
                 t.dropPrimary();
-                t.integer("user_id").references("users.id");
+                t.integer("user_id").references("users.id").onDelete('cascade');
                 t.boolean("email_delivered").defaultTo(false);
                 t.boolean("email_read").defaultTo(false);
 
