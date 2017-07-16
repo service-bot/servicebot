@@ -8,6 +8,7 @@ class Buttons extends React.Component {
         super(props);
 
         this.processButton = this.processButton.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     processButton(link, id){
@@ -27,10 +28,20 @@ class Buttons extends React.Component {
         return myLink;
     }
 
+    handleClick(e){
+        console.log("clicked button");
+        e.preventDefault();
+        if(this.props.onClick){
+            console.log("handling chick");
+            this.props.onClick(this.props.dataObject);
+        }
+    }
+
     render () {
         return(
             <div id="action-buttons" className="btn-group" role="group" aria-label="Some Label">
                 <Link to={this.processButton(this.props.link, this.props.id)}
+                      onClick={this.handleClick}
                       type="button"
                       className="btn btn-default btn-rounded">
                         { _.isFunction(this.props.name) ? this.props.name(this.props.active) : this.props.name }</Link>
