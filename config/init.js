@@ -60,10 +60,10 @@ let assignPermissionPromise = function (initConfig, permission_objects, initialR
             //Assign all system settings
             return new Promise(function (resolve, reject) {
                 let options = [
-                    {"option": "company_name", "value":initConfig.company_name},
-                    {"option": "company_address", "value":initConfig.company_address},
-                    {"option": "company_phone_number", "value":initConfig.company_phone_number},
-                    {"option": "company_email", "value":initConfig.company_email}
+                    {"option": "company_name", "value": initConfig.company_name},
+                    {"option": "company_address", "value": initConfig.company_address},
+                    {"option": "company_phone_number", "value": initConfig.company_phone_number},
+                    {"option": "company_email", "value": initConfig.company_email}
                 ];
                 SystemOption.batchUpdate(options, function (result) {
                     console.log(result);
@@ -385,7 +385,7 @@ module.exports = function (initConfig) {
             if (!isInit) {
                 //ensure required system-options exist in database
                 console.log("database initialized - checking to see if system-options exist")
-                options.populateOptions(systemOptions).then((result)=> {
+                options.populateOptions(systemOptions).then((result) => {
                     console.log(result);
                     resolve(false);
                 });
@@ -417,7 +417,7 @@ module.exports = function (initConfig) {
                 additionalPermissions.forEach(function (element) {
                     permissions.push(element);
                     initialRoleMap.admin.push(element);
-                    if(element === 'can_manage'){
+                    if (element === 'can_manage') {
                         initialRoleMap.staff.push(element);
                     }
                 });
@@ -439,20 +439,32 @@ module.exports = function (initConfig) {
                         public: false
                     })
                 }
-                //create options
-                SystemOption.batchCreate(systemOptions, function (optionResult) {
 
-                    //create default email templates
-                    NotificationTemplate.batchCreate(DefaultTemplates.templates, function (emailResult) {
 
-                        //create roles
-                        Role.batchCreate(role_data, function (result) {
+                //create default email templates
+                NotificationTemplate.batchCreate(DefaultTemplates.templates, function (emailResult) {
+
+                    //create roles
+                    Role.batchCreate(role_data, function (roles) {
+                        //get the User role id for default_user_role
+                        let userRole = roles.filter(role => role['role_name'] == 'user')[0];
+                        systemOptions.push({
+                            "option": "default_user_role",
+                            public: false,
+                            "type": "system",
+                            "data_type": "number",
+                            "value": userRole['id']
+                            }
+                        );
+                        //create options
+                        SystemOption.batchCreate(systemOptions, function (optionResult) {
 
                             let EmailTemplateToRoles = require("../models/base/entity")("notification_templates_to_roles");
-                            EmailTemplateToRoles.batchCreate(DefaultTemplates.templates_to_roles, function (emailToRolesResult) {})
+                            EmailTemplateToRoles.batchCreate(DefaultTemplates.templates_to_roles, function (emailToRolesResult) {
+                            });
 
                             //create role objects from results of inserts
-                            let role_objects = result.map(role => new Role(role));
+                            let role_objects = roles.map(role => new Role(role));
 
                             //create permissions
                             Permission.batchCreate(permission_data, function (result) {

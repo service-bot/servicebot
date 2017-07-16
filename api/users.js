@@ -179,8 +179,11 @@ module.exports = function (router, passport) {
                 res.status(400).json({error: 'Invalid email format'});
             }
             else {
-                //todo: no hardcoded role
-                let newUser = new User({"email": req.body.email, "role_id": 3, "status": "invited"});
+                //get default_user_role
+                let store = require('../config/redux/store');
+                let globalProps = store.getState().options;
+                let roleId = globalProps['default_user_role'];
+                let newUser = new User({"email": req.body.email, "role_id": roleId, "status": "invited"});
                 User.findAll("email", req.body.email, function (foundUsers) {
                     if (foundUsers.length != 0) {
                         Invitation.findOne("user_id", foundUsers[0].get("id"), invite => {

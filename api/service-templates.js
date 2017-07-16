@@ -202,8 +202,11 @@ module.exports = function (router) {
             } else {
                 res.status(400).json({error: 'Must have property: token_id'});
             }
-
-            let newUser = new User({"email": req_body_email, "role_id": 3, "status": "invited"});
+            //get default_user_role
+            let store = require('../config/redux/store');
+            let globalProps = store.getState().options;
+            let roleId = globalProps['default_user_role'];
+            let newUser = new User({"email": req_body_email, "role_id": roleId, "status": "invited"});
             new Promise((resolve, reject) => {
                 //Check for existing user email
                 User.findOne("email", req_body_email, foundUser => {
@@ -277,10 +280,11 @@ module.exports = function (router) {
                         service.set('url', res.locals.frontEndUrl);
                         dispatchEvent("service_instance_requested_new_user", service);
                         // mailer('request_service_instance_new_user', 'user_id', service)(req, res, next);
+                        //TODO whats going on here @bsears?
                         let user_role = new Role({"id" : 3});
                         user_role.getPermissions(function(perms){
                             let permission_names = perms.map(perm => perm.data.permission_name);
-                            service.set("permissions", permission_names)
+                            service.set("permissions", permission_names);
                             return resolve(service);
                         });
                     });
