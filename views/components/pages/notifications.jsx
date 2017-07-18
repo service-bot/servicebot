@@ -88,7 +88,6 @@ class NotificationList extends React.Component{
         Fetcher(`/api/v1/notifications/${dataObj.id}`, 'PUT', read).then(function (response) {
             if(!response.error){
                 self.setState({lastFetch: Date.now()});
-                self.props.setNotifications({...self.props.notifications, })
             }
         })
     }
