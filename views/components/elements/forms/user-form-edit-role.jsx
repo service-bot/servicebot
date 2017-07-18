@@ -84,9 +84,7 @@ class UserFormEditRole extends React.Component {
                         <div className="p-20">
                             <p>Change user {this.props.user.email}'s role.</p>
                             <Inputs type="select" label="User role" name="role_id" defaultValue={this.props.user.role_id}
-                                    options={roleOptionList} formLess={true}/>
-
-
+                                    options={roleOptionList} />
 
                         </div>
                         <div className={`modal-footer text-right p-b-20`}>

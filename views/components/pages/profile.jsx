@@ -35,7 +35,6 @@ class Profile extends React.Component {
 
     render () {
         let pageName = this.props.route.name;
-        let breadcrumbs = [{name: 'Home', link: 'home'}, {name: 'My Services', link: '/my-services'}, {name: pageName, link: null}];
 
         if(this.state.loading){
             return(

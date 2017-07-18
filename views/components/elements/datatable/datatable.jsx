@@ -1,6 +1,7 @@
 import React from 'react';
 import Fetcher from '../../utilities/fetcher.jsx';
 import Load from '../../utilities/load.jsx';
+import {Link, browserHistory} from 'react-router';
 import _ from "lodash";
 import Dropdown from "./datatable-dropdown.jsx";
 import Buttons from "./datatable-button.jsx";
@@ -40,6 +41,7 @@ class DataTable extends React.Component {
         this.handleSort = this.handleSort.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
         this.handleReFetch = this.handleReFetch.bind(this);
+        this.rowClasses = this.rowClasses.bind(this);
     }
 
     componentDidMount() {
@@ -63,8 +65,8 @@ class DataTable extends React.Component {
                 this.fetchData();
             }
         }
-        if(this.props.dataObj != nextProps.dataObj){
-            console.log("dataObj updated", nextProps.dataObj);
+        if(this.props.dataObj !== nextProps.dataObj){
+            console.log("dataObj updated!!", nextProps.dataObj);
             this.setState({resObjs: nextProps.dataObj});
         }
     }
@@ -151,12 +153,20 @@ class DataTable extends React.Component {
         });
     }
 
+    rowClasses(dataObj){
+        // console.log('Dt rowClasses', dataObj);
+        if(this.props.rowClasses && _.isFunction(this.props.rowClasses)){
+            // console.log("DT has rowClassses in prop and is function");
+            return(this.props.rowClasses(dataObj));
+        }
+    }
+
     render () {
         if(this.state.loading){
             return ( <Load/> );
         }else {
             if(this.state.resObjs.length) {
-                console.log("FIRST", this.state.resObjs[0]);
+                // console.log("FIRST", this.state.resObjs[0]);
                 return (
                     <div id="tables-datatable" className={`table-responsive ${this.props.className}`}>
                         {this.state.headingText &&
@@ -185,8 +195,8 @@ class DataTable extends React.Component {
                             </thead>
                             <tbody>
                             {this.state.resObjs.map((resObj, index) => (
-                                <tr key={"row-" + index}>
-                                    {console.log("The resObj: ", resObj)}
+                                <tr key={"row-" + index} className={this.rowClasses(resObj) || ''}>
+                                    {/*{console.log("The resObj: ", resObj)}*/}
                                     {this.state.col.map(column => (
                                         <td key={`row-${index}-cell-${column}`}>
 
@@ -216,7 +226,9 @@ class DataTable extends React.Component {
                                                      name={b.name}
                                                      link={b.link}
                                                      id={index}
-                                                     active={resObj[this.props.statusCol]}/>
+                                                     active={resObj[this.props.statusCol]}
+                                                     onClick={b.onClick}
+                                            />
                                         ))
                                         }
                                     </td>

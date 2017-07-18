@@ -36,10 +36,35 @@ h5{
 
 /*a:focus, a:hover{*/
     /*color: #3498db;*/
-}
+/*}*/
 
 span.capitalize{
     text-transform: capitalize;
+}
+span.trimmed-text, .trimmed-text p {
+    position: relative;
+    display: inline;
+}
+span.trimmed-text:after, p.trimmed-text:after, trimmed-text p:after {
+    background: -webkit-linear-gradient(0deg, rgba(249, 249, 249, 0) ,rgba(249, 249, 249, 0.73), rgb(249, 249, 249) 25px);
+    content: '';
+    position: absolute;
+    height: 20px;
+    width: 30px;
+    bottom: -1px;
+    right: 0px;
+}
+span.btn-link{
+    cursor: pointer;
+    text-decoration: none;
+    color: #00a9f1;
+}
+.read span.btn-link{
+    color: #333;
+}
+span.btn-link:hover{
+    text-decoration: none;
+    color: #0097f1;
 }
 
 /* layouts */
@@ -165,6 +190,11 @@ label, .help-block, .bmd-help{
 }
 ul.templateList {
     padding-left: 0px;
+}
+
+/* notification */
+.datatable tr.unread{
+    font-weight: bold;
 }
 
 /* service details table */

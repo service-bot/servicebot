@@ -67,7 +67,6 @@ import ServiceRequestFormV2 from "./components/elements/forms/service-instance-f
 //     ));
 // });
 
-
 let initializedState = async function(dispatch){
     let initialState = {
         allForms : {},
@@ -75,34 +74,28 @@ let initializedState = async function(dispatch){
         notifications: [],
         system_notifications: [],
         uid : cookie.load("uid")
-    }
+    };
     initialState.options = await Fetcher("/api/v1/system-options/public");
     try {
-        if (cookie.load("uid")) {
+        if (cookie.load("uid")) { // if user is logged in
             initialState.user = (await Fetcher("/api/v1/users/own"))[0];
             initialState.notifications = await Fetcher("/api/v1/notifications/own");
             if(isAuthorized({permissions: "put_email_templates_id"})){
                 initialState.system_notifications = await Fetcher("/api/v1/notifications/system");
             }
-
         }
     }
     catch(err){
         initialState.options.backgroundColor = "#000000";
     }
     return dispatch(initializeState(initialState));
-}
+};
 
 store.dispatch(initializedState);
-
-
 
 store.subscribe(()=>{
     // console.log("store changed", store.getState());
 });
-
-
-
 
 let AppRouter = function(props) {
 
