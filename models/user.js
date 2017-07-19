@@ -96,7 +96,6 @@ User.prototype.promiseStripeReconnect = function () {
     }).then(function (customer_id) {
         return new Promise(function (resolve, reject) {
             self.data.customer_id = customer_id;
-            self.data.status = 'flagged';
             self.update(function (err, result) {
                 if(!err) {
                     console.log(`User ${self.data.id} is now reconnected to Stripe`);
@@ -242,6 +241,9 @@ User.prototype.purgeData = function (callback) {
                 })).then(function () {
                     console.log(`All User ${self.data.id} services have been removed!`);
                     return resolveall(`All User ${self.data.id} services have been removed!`);
+                }).catch(function (err) {
+                    console.log(err);
+                    return rejectall(`FAILED => All User ${self.data.id} services have been removed!`);
                 });
             });
         });
@@ -264,6 +266,9 @@ User.prototype.purgeData = function (callback) {
                 })).then(function () {
                     console.log(`All User ${self.data.id} funds have been removed!`);
                     return resolveall(`All User ${self.data.id} funds have been removed!`);
+                }).catch(function (err) {
+                    console.log(err);
+                    return rejectall(`FAILED => All User ${self.data.id} funds have been removed!`);
                 });
             });
         });

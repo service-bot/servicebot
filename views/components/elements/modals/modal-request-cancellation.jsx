@@ -3,7 +3,7 @@ import cookie from 'react-cookie';
 import Fetcher from "../../utilities/fetcher.jsx"
 import {browserHistory} from 'react-router';
 import Modal from '../../utilities/modal.jsx';
-import Price from '../../utilities/price.jsx';
+import {Price} from '../../utilities/price.jsx';
 
 class ModalRequestCancellation extends React.Component {
 

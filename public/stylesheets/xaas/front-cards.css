@@ -1,38 +1,72 @@
 /* cards */
 .card-wrapper.service{
-    background-color: darkgray;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
 }
 .card.service{
     position: relative;
+    height: 100%;
     background: #fff;
+    /*border: 1px solid #f3f3f3;*/
     color: #4a4a4a;
     font-size: 1rem;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     overflow: hidden;
     -webkit-transition: all 0.5s cubic-bezier(0, 0.86, 0.71, 1.18);
     -moz-transition: all 0.5s cubic-bezier(0, 0.86, 0.71, 1.18);
     transition: all 0.5s cubic-bezier(0, 0.86, 0.71, 1.18);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
-.card.service:hover{
-    /*-webkit-transform: translateY(-2px);*/
-    /*-moz-transform: translateY(-2px);*/
-    /*-ms-transform: translateY(-2px);*/
-    /*transform: translateY(-2px);*/
-    box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.17),
-    0 3px 1px -2px rgba(0, 0, 0, 0.2),
-    0 1px 5px 0 rgba(0, 0, 0, 0.12);
-}
-.card.service:hover img.service-icon {
-    -webkit-animation: jump 1.5s cubic-bezier(0, 0.86, 0.71, 1.18) 0s 1 normal ;
-    animation: jump 1.5s cubic-bezier(0, 0.86, 0.71, 1.18) 0s 1 normal ;
+.card-block-wrapper {
+    flex-grow: 2;
+    border: 1px solid #f3f3f3;
+    border-top: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: inherit;
 }
 .with-icon .card-title-holder {
     padding-left: 50px;
 }
-.card.service .card-title{
+.card.service .card-title, .card-footer .price{
+    font-size: 16px;
     font-weight: bolder;
     line-height: 1.75rem;
     margin-bottom: 0px !important;
+}
+.card.service .card-body p{
+    font-size: 14px;
+    font-weight: 100;
+    text-transform: initial;
+}
+.card-footer .price{
+    width: 100%;
+    text-align: center;
+}
+.request-button {
+    position: absolute;
+    margin-top: 100%;
+    width: 100%;
+    bottom: -50px;
+}
+.request-button a {
+    padding: 0px;
+    width: 100%;
+    border-radius: 0px;
+}
+.request-button a .btn.btn-black{
+    width: 100%;
+    border-radius: 0px;
+    padding: 12px 0px;
+}
+.card-wrapper.service .request-button{
+    transition: bottom 300ms;
+}
+.card-wrapper.service:hover .request-button {
+    bottom: 0px;
 }
 .card.service .card-subtitle{
     margin-top: -0.15rem;
@@ -44,35 +78,26 @@
 .card.service.dark{
     color: #fff;
 }
-.card.service .card-block, .card.service .card-body, .card.service .card-footer{
-    padding: 15px 30px;
+.card.service .card-title-holder, .card.service .card-body, .card.service .card-footer {
+    padding: 20px 15px 10px;
 }
 .card.service .card-body{
     height: 100%;
     overflow: hidden;
     padding-top: 0px;
     padding-bottom: 7px;
-    margin-bottom: 65px;
 }
 .card-footer{
-    bottom: 0px !important;
-    width: 100% !important;
-    border-bottom-left-radius: 5px !important;
-    border-bottom-right-radius: 5px !important;
-    display: flex;
-    justify-content: space-between;
-    border-top: 1px solid #f3f3f3;
-    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
 }
 .card-footer .seller, .card-footer .btn{
     font-size: 0.875rem;
     line-height: 1.25rem;
     margin-bottom: 0px;
     font-weight: bolder;
-}
-.card-footer .seller .price{
-    font-size: 1.50rem;
-    line-height: 32px;
+    padding: 15px;
 }
 .card-footer .btn{
     margin-bottom: 0px !important;
@@ -93,7 +118,13 @@
 .card-image-holder{
     padding: 30px;
     display: flex;
-    align-content: flex-end;
+    align-items: center;
+    justify-content: center;
+}
+.card-image-holder img {
+    max-width: 50%;
+    max-height: 58%;
+    margin: 10%;
 }
 .card-service-company{
     font-weight: 900;

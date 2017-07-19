@@ -1,13 +1,3 @@
-.servicetron {
-  border-radius: 0;
-  position: relative;
-  height: 165px;
-}
-
-.servicetron .jumbotron {
-  padding: 25px 55px;
-}
-
 .servicetron .jumbotron h1 {
   font-size: 1.8rem;
   font-weight: 100;
@@ -100,7 +90,12 @@
 
 
 
-
+@media screen and (min-width: 768px) {
+  .jumbotron {
+    padding: 30px 45px 45px;
+    margin-bottom: 0px;
+  }
+}
 
 @media (max-width: 543px) {
   .servicetron .btn-outline {

@@ -79,6 +79,3 @@
     margin: auto;
     margin-top: 20px;
 }
-.card.service .card-block, .card.service .card-body, .card.service .card-footer{
-    padding: 15px 30px !important;
-}

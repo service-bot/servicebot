@@ -1,14 +1,13 @@
 import React from 'react';
-import {Link, hashHistory} from 'react-router';
-import Alert from 'react-s-alert';
-import cookie from 'react-cookie';
-
+import { connect } from "react-redux";
+import { store } from "../../store";
 //TODO : Consider server side, there are implications handling this auth client side, possible attack vector, APIs should block attacker from getting any useful data
 
 
 let isAuthorized = function(props) {
     //check if logged in
-    if(cookie.load("uid") && localStorage.getItem("permissions")) {
+    let storeState = store.getState();
+    if( storeState.uid && localStorage.getItem("permissions")) {
 
         if(props.anonymous){
             return false;
@@ -17,7 +16,7 @@ let isAuthorized = function(props) {
         // let user_perms = JSON.parse((cookie.load("permissions").slice(2)));
 
         let required_perms = props.permissions ? props.permissions : [];
-        console.log("permissions", props.permissions);
+        // console.log("permissions", props.permissions);
         if(typeof required_perms == "string"){
             required_perms = [required_perms];
         }
@@ -55,7 +54,7 @@ let isAuthorized = function(props) {
  */
 let Authorizer = function(props) {
     //check if logged in
-    if(cookie.load("uid") && localStorage.getItem("permissions")) {
+    if(props.uid && localStorage.getItem("permissions")) {
 
         if(props.anonymous){
             if(props.handleUnauthorized){
@@ -106,6 +105,16 @@ let Authorizer = function(props) {
 
 };
 
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid,
+        user: state.user || null,
+        options: state.options
+    }
+};
+
+
+Authorizer = connect(mapStateToProps)(Authorizer);
 
 export {Authorizer, isAuthorized};
 export default Authorizer;

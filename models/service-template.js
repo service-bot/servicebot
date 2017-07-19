@@ -1,5 +1,6 @@
 let ServiceTemplateProperty = require("./service-template-property");
 let ServiceCategory = require('./service-category');
+let ServiceInstance = require('./service-instance');
 let User = require('./user');
 let File = require("./file");
 
@@ -23,8 +24,8 @@ ServiceTemplate.prototype.requestPromise = function (uid, body = {}, permission_
     if (permission_array.some(p => p.get("permission_name") == "can_administrate" || p.get("permission_name") == "can_manage")) {
         if (body.client_id) {
             service_user_id = body.client_id;
-            service_description = body.description;
-            service_name = body.name;
+            service_description = body.description || service_description;
+            service_name = body.name || service_name;
         }
     }
     if(self.data.detail) {
@@ -43,7 +44,7 @@ ServiceTemplate.prototype.requestPromise = function (uid, body = {}, permission_
     if(body.references) {
         submittedProperties = body.references.service_template_properties;
     }
-    let ServiceInstance = require('./service-instance');
+    let ServiceInstance = require('../models/service-instance');
     let newInstance = new ServiceInstance(instanceAttributes);
     return new Promise(function (resolve_all, reject_all) {
         newInstance.create(function (err, service) {

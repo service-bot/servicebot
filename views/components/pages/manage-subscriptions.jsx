@@ -7,7 +7,7 @@ import DataTable from "../elements/datatable/datatable.jsx";
 import ContentTitle from "../layouts/content-title.jsx"
 import Fetcher from "../utilities/fetcher.jsx";
 import Load from "../utilities/load.jsx";
-import Price from "../utilities/price.jsx";
+import {Price, getBillingType} from "../utilities/price.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import ModalRequestCancellation from "../elements/modals/modal-request-cancellation.jsx";
 import ModalManageCancellation from "../elements/modals/modal-manage-cancellation.jsx";
@@ -66,13 +66,18 @@ class ManageSubscriptions extends React.Component {
             <InfoToolTip title={data} text="i" placement="left"/>
         );
     }
+    modType(data, dataObj){
+        return (
+            getBillingType(dataObj)
+        );
+    }
     modRequestedBy(data){
         if(data && data != null){
             let user = _.find(this.state.allUsers, function (user) {
                 return user.id == data
             });
             if(user!= undefined){
-                return user.name;
+                return user.name || user.email;
             }
             return data;
         }
@@ -86,7 +91,7 @@ class ManageSubscriptions extends React.Component {
     modCreated(data){
         // console.log("created data", data);
         return (
-            <DateFormat date={data}/>
+            <DateFormat date={data} time/>
         );
     }
     modStatus(data){
@@ -221,20 +226,21 @@ class ManageSubscriptions extends React.Component {
         }else {
             return (
                 <Authorizer permissions={["can_administrate", "can_manage"]}>
+                    <Jumbotron pageName={pageName} location={this.props.location}/>
                     <div className="page-service-instance">
-                        <Jumbotron pageName={pageName} location={this.props.location}/>
                         <Content>
                             <div className="row m-b-20">
                                 <div className="col-xs-12">
                                     <ContentTitle icon="cog" title={pageTitle}/>
                                     <DataTable parentState={this.state}
                                                get={url}
-                                               col={['user_id', 'references.users.0.name', 'name', 'subscription_id', 'status', 'requested_by', 'payment_plan.amount', 'payment_plan.interval', 'created_at']}
-                                               colNames={['', 'User', 'Instance', ' ', 'Status', 'Requested By', 'Amount', 'Interval', 'Created']}
+                                               col={['user_id', 'references.users.0.name', 'name', 'subscription_id', 'type', 'status', 'requested_by', 'payment_plan.amount', 'payment_plan.interval', 'created_at']}
+                                               colNames={['', 'User ID', 'Instance', ' ', 'Type', 'Status', 'Requested By', 'Amount', 'Interval', 'Created At']}
                                                statusCol="status"
                                                mod_user_id={this.modUserId}
                                                mod_name={this.modName}
                                                mod_subscription_id={this.modSubscriptionId}
+                                               mod_type={this.modType}
                                                mod_requested_by={this.modRequestedBy}
                                                mod_created_at={this.modCreated}
                                                mod_payment_plan-amount={this.modAmount}
@@ -254,7 +260,8 @@ class ManageSubscriptions extends React.Component {
                                                            id: 5,
                                                            name: this.dropdownStatus,
                                                            link: '#',
-                                                           onClick: this.onOpenActionModal
+                                                           onClick: this.onOpenActionModal,
+                                                           style: {color: "#ff3535"}
                                                        }]
                                                }]}
                                     />

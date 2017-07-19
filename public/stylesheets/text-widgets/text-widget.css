@@ -7,8 +7,7 @@
   margin: 10px 0;
   height: auto;
   overflow: hidden;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
+  border-radius: 5px;
 }
 
 .text-widget-1 .row {

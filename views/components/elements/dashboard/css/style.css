@@ -8,7 +8,6 @@
 .dashboard-widget {
     flex-grow: 1;
     margin: 5px;
-    background-color: #c3c3c3;
     color: white;
     border-radius: 5px;
     overflow: hidden;
@@ -21,12 +20,10 @@
 .dashboard-widget .widget-label, .dashboard-widget .widget-data {
     text-align: center;
     padding: 10px 0px;
-    background: #0288D1;
 }
 
 .dashboard-widget .widget-data {
     font-size: 2em;
     font-weight: 100;
     padding: 20px 0px;
-    background: #039BE5;
 }

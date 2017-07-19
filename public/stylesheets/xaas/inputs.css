@@ -36,6 +36,9 @@
 .color-picker-input .control-label{
     display: block;
 }
+.color-picker-input .ColorPickerPreview{
+    border: 1px solid #d4d4d4;
+}
 .color-picker-input .ColorPickerPreview,
 .color-picker-input .custom-color-picker {
     float: left;
@@ -130,5 +133,8 @@ form#imgformtemplate-image img {
     z-index: 1;
 }
 form#imgformtemplate-image .no-image-yet {
+    display: none;
+}
+form#imgformtemplate-icon .no-image-yet {
     display: none;
 }

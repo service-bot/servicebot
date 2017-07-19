@@ -23,35 +23,41 @@ class ManagePermission extends React.Component {
 
         if(isAuthorized({permissions: ["can_administrate"]})){
             return(
-                <div className="page-service-instance">
+                <div>
                     <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <Content>
-                        <div className="row m-b-20">
-                            <ManagePermissionForm />
-                        </div>
-                    </Content>
+                    <div className="page-service-instance">
+                        <Content>
+                            <div className="row m-b-20">
+                                <ManagePermissionForm />
+                            </div>
+                        </Content>
+                    </div>
                 </div>
             );
         }else if(isAuthorized({permissions: ["can_manage"]})){
             return(
-                <div className="page-service-instance">
+                <div>
                     <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <Content>
-                        <div className="row m-b-20">
-                            <p>This feature is turned off for this demo.</p>
-                        </div>
-                    </Content>
+                    <div className="page-service-instance">
+                        <Content>
+                            <div className="row m-b-20">
+                                <p>This feature is turned off for this demo.</p>
+                            </div>
+                        </Content>
+                    </div>
                 </div>
             );
         }else{
             return(
-                <div className="page-service-instance">
+                <div>
                     <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <Content>
-                        <div className="row m-b-20">
-                            <p>Unauthorized</p>
-                        </div>
-                    </Content>
+                    <div className="page-service-instance">
+                        <Content>
+                            <div className="row m-b-20">
+                                <p>Unauthorized</p>
+                            </div>
+                        </Content>
+                    </div>
                 </div>
             )
         }

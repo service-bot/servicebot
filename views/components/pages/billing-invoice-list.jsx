@@ -5,7 +5,7 @@ import Fetcher from "../utilities/fetcher.jsx";
 import cookie from 'react-cookie';
 import Load from "../utilities/load.jsx";
 import DataTable from "../elements/datatable/datatable.jsx";
-import Price from "../utilities/price.jsx";
+import {Price} from "../utilities/price.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import _ from "lodash";
 

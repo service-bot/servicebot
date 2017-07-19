@@ -24,7 +24,7 @@ class Avatar extends React.Component {
     render(){
 
         return (
-            <div className={`badge badge-${this.state.size}`}>
+            <div className={`badge badge-${this.state.size} badge-avatar`}>
                 <img id="edit-avatar-img" src={`/api/v1/users/${this.props.uid}/avatar`} ref="avatar" className="img-circle" alt="badge"/>
             </div>
         );

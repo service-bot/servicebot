@@ -35,35 +35,38 @@ class Profile extends React.Component {
 
     render () {
         let pageName = this.props.route.name;
-        let breadcrumbs = [{name: 'Home', link: 'home'}, {name: 'My Services', link: '/my-services'}, {name: pageName, link: null}];
 
         if(this.state.loading){
             return(
-                <div className="page-service-instance">
+                <div>
                     <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <Content>
-                        <div className="row m-b-20">
-                            <div className="col-xs-12">
-                                <ContentTitle icon="user" title="My Profile"/>
-                                <Load/>
+                    <div className="page-service-instance">
+                        <Content>
+                            <div className="row m-b-20">
+                                <div className="col-xs-12">
+                                    <ContentTitle icon="user" title="My Profile"/>
+                                    <Load/>
+                                </div>
                             </div>
-                        </div>
-                    </Content>
+                        </Content>
+                    </div>
                 </div>
             );
         }else {
             console.log("rendering content");
             return (
-                <div className="page-service-instance">
+                <div>
                     <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <Content>
-                        <div className="row m-b-20">
-                            <div className="col-xs-12">
-                                <ContentTitle icon="user" title="My Profile"/>
-                                <UserFormEdit myUser={this.state.myUser}/>
+                    <div className="page-service-instance">
+                        <Content>
+                            <div className="row m-b-20">
+                                <div className="col-xs-12">
+                                    <ContentTitle icon="user" title="My Profile"/>
+                                    <UserFormEdit myUser={this.state.myUser}/>
+                                </div>
                             </div>
-                        </div>
-                    </Content>
+                        </Content>
+                    </div>
                 </div>
             );
         }

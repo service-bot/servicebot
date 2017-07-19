@@ -14,13 +14,14 @@ class BillingSettingForm extends React.Component {
         let uid = cookie.load("uid");
         if(this.props.ownerId){
             uid = this.props.ownerId;
-            console.log("billingSettingForm: owner", uid);
+        }else if(this.props.forUID){
+            uid = this.props.forUID;
         }
         let username = cookie.load("username");
         let spk = cookie.load("spk");
         let stripe = Stripe(spk);
         let elements = stripe.elements();
-        this.state = {  loading: false,
+        this.state = {  loading: true,
                         uid: uid,
                         email: username,
                         spk: spk,
@@ -31,10 +32,12 @@ class BillingSettingForm extends React.Component {
                         stripe: stripe,
                         elements: elements,
                         stripeCard: null,
-                        success: false
+                        success: false,
+                        context: this.props.context || "PAGE_BILLING_SETTINGS"
                     };
         this.getStripeToken = this.getStripeToken.bind(this);
         this.stripeTokenHandler = this.stripeTokenHandler.bind(this);
+        this.addStripeEventListener = this.addStripeEventListener.bind(this);
         this.handleStripeResponse = this.handleStripeResponse.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
         this.handleStripeOptionsInputChange = this.handleStripeOptionsInputChange.bind(this);
@@ -111,36 +114,57 @@ class BillingSettingForm extends React.Component {
         });
 
         // Store the card instance in self.state for later use
-        self.setState({stripeCard: card});
+        self.setState({stripeCard: card}, function () {
+            self.addStripeEventListener();
+        });
+
+
+        if(this.props.setCardElement){
+            this.props.setCardElement(card);
+        }
+
+        if(this.props.retrieveStripeToken){
+            let form = document.getElementById('payment-form');
+            console.log("giving the stripe form to request form");
+            this.props.retrieveStripeToken(form, null);
+        }
+    }
+
+    addStripeEventListener(){
+        // Create a token or display an error the form is submitted.
+        let self = this;
+        let stripe = self.state.stripe;
+        let card = self.state.stripeCard;
+
+        let form = document.getElementById('payment-form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            console.log("got submit event, personal information", self.state.personalInformation);
+            stripe.createToken(card, self.state.personalInformation).then(function(result) {
+                if (result.error || result.err) {
+                    // Inform the user if there was an error
+                    self.setState({ajaxLoad: false}, function(){
+                        let errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = result.error.message || result.err;
+                        console.log("get token error",result);
+                    });
+                } else {
+                    // Send the token to your server
+                    if(self.props.retrieveStripeToken){
+                        self.props.retrieveStripeToken(form, result.token);
+                    }else{
+                        console.log("else result token, use stripe token handler");
+                        self.stripeTokenHandler(result.token);
+                    }
+                }
+            });
+        });
     }
 
     getStripeToken(){
         this.setState({ajaxLoad: true}, function(){
-
-            let self = this;
-            let stripe = self.state.stripe;
-            let card = self.state.stripeCard;
-
-            // Create a token or display an error the form is submitted.
             let form = document.getElementById('payment-form');
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                stripe.createToken(card, self.state.personalInformation).then(function(result) {
-                    if (result.error || result.err) {
-                        // Inform the user if there was an error
-                        self.setState({ajaxLoad: false}, function(){
-                            console.log("getStripeToken error s", result);
-                            let errorElement = document.getElementById('card-errors');
-                            errorElement.textContent = result.error.message || result.err;
-                        });
-                    } else {
-                        // Send the token to your server
-                        console.log("getStripeToken success", result);
-                        self.stripeTokenHandler(result.token);
-                    }
-                });
-            });
+            form.dispatchEvent(new Event('submit', {'bubble': true}));
         });
     }
 
@@ -149,11 +173,10 @@ class BillingSettingForm extends React.Component {
         let uid = self.state.uid;
         let hasCard = self.state.hasCard;
         let fundID = self.state.fund.id;
-        let apiMethod = hasCard ? 'PUT' : 'POST';
-        let apiURL = hasCard ? '/api/v1/funds/' + fundID : '/api/v1/funds';
+        let apiMethod = 'POST';
+        let apiURL = '/api/v1/funds';
         let myTokenJSON = {'user_id': uid, 'token_id': token.id};
 
-        console.log("mytokenJSON", myTokenJSON);
         // send the token off to db
         Fetcher(apiURL, apiMethod, myTokenJSON).then(function (response) {
             self.setState({ajaxLoad: false});
@@ -215,11 +238,6 @@ class BillingSettingForm extends React.Component {
     render(){
         let self = this;
 
-        if(self.state.loading){
-            return(
-                <Load/>
-            );
-        }else {
             let hasCard = self.state.hasCard;
             let success = self.state.success;
             let brand, last4, exp_month, exp_year = '';
@@ -230,47 +248,88 @@ class BillingSettingForm extends React.Component {
                 exp_month = self.state.card.exp_month;
                 exp_year = self.state.card.exp_year;
             }
-            console.log('render billing setting form ');
-            return(
-                <div>
-                    { self.state.alerts &&
-                        <Alerts type={self.state.alerts.type} message={self.state.alerts.message} icon={self.state.alerts.icon}/>
-                    }
 
-                    {hasCard &&
+            let {user} = this.props;
+
+            if(this.state.context === "PAGE_BILLING_SETTINGS") {
+
+                let displayName = user && (user.id || user.email) || "You";
+
+                return (
+                    <div>
+                        { self.state.alerts &&
+                        <Alerts type={self.state.alerts.type} message={self.state.alerts.message}
+                                icon={self.state.alerts.icon}/>
+                        }
+
+                        {hasCard &&
                         <div>
-                            <h3>{hasCard && !success ? 'You already have' : 'Added'} a {brand} card in your account ending in <span className="last4">{last4}</span></h3>
+                            <h3>{hasCard && !success ? `${displayName} have` : 'Added'} a {brand} card in your account
+                                    ending in <span className="last4">{last4}</span></h3>
+
                             <p>Expiration: <span className="exp_month">{exp_month}</span> / <span
-                              className="exp_year">{exp_year}</span></p>
+                                className="exp_year">{exp_year}</span></p>
+
                             <hr/>
-                            {(hasCard && !success) && <p>Would you like to update your current payment method?</p>}
+
+                            {(hasCard && !success) && <p>Would you like to update {displayName} current payment method?</p>}
                         </div>
-                    }
+                        }
 
-                    <form id="payment-form">
-                        <div className="form-row">
-                            <label htmlFor="card-element">Credit or debit card</label>
-                            <div className="p-20 form-group" id="card-element"></div>
-                            <div id="card-errors"></div>
-                        </div>
+                        <form id="payment-form">
+                            <div className="form-row">
+                                <label htmlFor="card-element">Credit or debit card</label>
+                                <div className="p-20 form-group" id="card-element"></div>
+                                <div id="card-errors"></div>
+                            </div>
 
-                        <Inputs type="text" label="Name" name="name" defaultValue={this.state.personalInformation.name} onChange={this.handleStripeOptionsInputChange}/>
-                        <Inputs type="text" label="Address Line 1" name="address_line1" defaultValue={this.state.personalInformation.address_line1} onChange={this.handleStripeOptionsInputChange}/>
-                        <Inputs type="text" label="Address Line 2" name="address_line2" defaultValue={this.state.personalInformation.address_line2} onChange={this.handleStripeOptionsInputChange}/>
-                        <Inputs type="text" label="City" name="address_city" defaultValue={this.state.personalInformation.address_city} onChange={this.handleStripeOptionsInputChange}/>
-                        <Inputs type="text" label="State" name="address_state" defaultValue={this.state.personalInformation.address_state} onChange={this.handleStripeOptionsInputChange}/>
+                            {!this.state.loading &&
+                                <div>
+                            <Inputs type="text" label="Name" name="name"
+                                    defaultValue={this.state.personalInformation.name}
+                                    onChange={this.handleStripeOptionsInputChange}/>
+                            < Inputs type="text" label="Address Line 1" name="address_line1"
+                                defaultValue={this.state.personalInformation.address_line1}
+                                onChange={this.handleStripeOptionsInputChange}/>
+                                <Inputs type="text" label="Address Line 2" name="address_line2"
+                                defaultValue={this.state.personalInformation.address_line2}
+                                onChange={this.handleStripeOptionsInputChange}/>
+                                <Inputs type="text" label="City" name="address_city"
+                                defaultValue={this.state.personalInformation.address_city}
+                                onChange={this.handleStripeOptionsInputChange}/>
+                                <Inputs type="text" label="State" name="address_state"
+                                defaultValue={this.state.personalInformation.address_state}
+                                onChange={this.handleStripeOptionsInputChange}/>
+                                </div>
+                            }
+                            <Buttons btnType="primary"
+                                     text={hasCard ? 'Update Payment Method' : 'Add Payment Method'}
+                                     preventDefault={false}
+                                     onClick={this.getStripeToken}
+                                     loading={this.state.ajaxLoad}
+                                     success={this.state.success}
+                                     disabled={this.state.ajaxLoad}/>
+                        </form>
+                    </div>
+                );
+            }else if(this.state.context === "SERVICE_REQUEST"){
+                return(
+                    <div>
+                        <form id="payment-form">
+                            <div className="form-row">
+                                <label htmlFor="card-element">Credit or debit card</label>
+                                <div className="p-20 form-group" id="card-element"></div>
+                                <div id="card-errors"></div>
+                            </div>
+                        </form>
+                    </div>
+                );
+            }else{
+                return(
+                    <div>PLEASE MAKE SURE YOUR CONTEXT IS CORRECT</div>
+                )
+            }
 
-                        <Buttons btnType="primary"
-                             text={hasCard ? 'Update Payment Method' : 'Add Payment Method'}
-                             preventDefault={false}
-                             onClick={this.getStripeToken}
-                             loading={this.state.ajaxLoad}
-                             success={this.state.success}
-                             disabled={this.state.ajaxLoad}/>
-                    </form>
-                </div>
-            );
-        }
     }
 }
 

@@ -1,5 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router';
+import { connect } from 'react-redux';
+let _ = require("lodash");
+import {hexToRgb, rgbToHex, getDarkenedRGB} from '../../utilities/color-converter.js';
 
 class DashboardWidget extends React.Component {
 
@@ -8,13 +11,25 @@ class DashboardWidget extends React.Component {
     }
 
     render () {
-
         let self = this;
+
+        let style = {widget:{}, widgetDark:{}};
+
+        if(this.props.options) {
+            let options = this.props.options;
+            style.widget.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
+
+            let darkened = getDarkenedRGB(hexToRgb(_.get(options, 'primary_theme_background_color.value', '#000000')));
+            let darkenedHex = rgbToHex(darkened.r, darkened.g, darkened.b);
+            style.widgetDark.backgroundColor = darkenedHex;
+            style.widgetDark.color = _.get(options, 'primary_theme_text_color.value', '#ffffff');
+        }
+
         const widgetContent = (
 
-            <div className="text-widget-1 color-white">
-                <div className={`text-widget-wrapper bg-${self.props.widgetColor}-900`}>
-                    <div className={`text-widget-item col-xs-4 bg-${self.props.widgetColor}-700`}>
+            <div className="text-widget-1 color-white" style={style.widgetDark}>
+                <div className={`text-widget-wrapper`} style={style.widgetDark}>
+                    <div className={`text-widget-item col-xs-4`} style={style.widget}>
                         <i className={`fa fa-${self.props.widgetIcon} fa-2x`}/>
                     </div>
                     <div className="text-widget-item col-xs-8">
@@ -52,4 +67,4 @@ class DashboardWidget extends React.Component {
     }
 }
 
-export default DashboardWidget;
+export default connect((state) => {return {options:state.options}})(DashboardWidget);

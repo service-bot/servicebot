@@ -269,23 +269,30 @@ table.dataTable thead .sorting_desc_disabled:after {
 
 /* xaas customized */
 .table{
-  border: 1px solid #ebebeb !important;
   background-color: white;
-  border-radius: 6px;
   overflow: hidden;
 }
+
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
-  border-top: 0px;
+    border-top: 0px;
+    line-height: 2rem;
 }
+
+.table th, .table td{
+    padding: 10px 15px !important;
+}
+
 #tables-datatable{
-  max-width: 100%;
-  overflow-x: scroll;
-  overflow-y: visible;
-  padding-bottom: 100px;
+    max-width: 100%;
+    overflow-x: scroll;
+    overflow: visible;
+    position: initial;
+  /*padding-bottom: 100px;*/
 }
 
 #tables-datatable .table{
   padding-bottom: 90px !important;
+  border-radius: 5px;
   overflow-y: visible;
 }
 
@@ -296,4 +303,31 @@ table.dataTable thead .sorting_desc_disabled:after {
 }
 .table.condensed thead td{
   font-weight: bold;
+}
+.table>thead>tr>th, .table>tbody>tr>td{
+    font-size: 0.94rem;
+    border: none;
+}
+.table thead {
+    color: #ffffff;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.table thead th{
+    background: #3e3e3e;
+}
+.table th.sorted {
+    background: #292929;
+}
+.table thead th:first-child{
+    border-top-left-radius: 5px;
+}
+.table thead th:last-child{
+    border-top-right-radius: 5px;
+}
+
+.datatable thead th:hover {
+  background: #292929;
+  cursor: pointer;
 }

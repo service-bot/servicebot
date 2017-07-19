@@ -2,7 +2,7 @@ import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import DataTable from "../elements/datatable/datatable.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
-import Price from "../utilities/price.jsx";
+import {Price} from "../utilities/price.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import {isAuthorized} from "../utilities/authorizer.jsx";
 import ModalRefund from "../elements/modals/modal-refund.jsx";
@@ -92,8 +92,8 @@ class BillingHistoryList extends React.Component {
                            dropdown={[{name:'Actions', direction: 'right', buttons:[
                                {id: 1, name: 'View Invoice', link: '#', onClick: this.onViewInvoice},
                                {id: 2, name: 'View Service Page', link: '#', onClick: this.onViewInstance},
-                               {id: 3, name: 'divider'},
-                               {id: 4, name: 'Make Refund', link: '#', onClick: this.openRefundModal},
+                               {id: 3, name: 'divider', permission: ["can_administrate", "can_manage"]},
+                               {id: 4, name: 'Make Refund', link: '#', onClick: this.openRefundModal, permission: ["can_administrate", "can_manage"]},
                            ]}]}
                            nullMessage="You do not have any invoices at the moment."/>
                 {currentModal()}

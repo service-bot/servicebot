@@ -115,56 +115,126 @@ class SystemSettingsForm extends React.Component {
             colorSettings = _.union(colorSettings, ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#F78DA7', '#9900EF']);
             console.log("colorSettings", colorSettings);
 
-            return (
-                <div className="col-xs-12">
-                    <ContentTitle icon="cog" title="Customize your system options here."/>
-
+            if(this.props.filter){
+                return(
                     <div>
-                        <h3 className="p-t-20 p-b-20 text-capitalize">Branding</h3>
-                        <div className="row">
-                            <div className="col-md-3 form-group-flex column centered">
-                                <label className="control-label">Upload Brand Logo</label>
-                                <ImageUploader name="file" elementID="brand-logo" imageURL="/api/v1/system-options/file/brand_logo" imageStyle="badge badge-lg" uploadButton={true}/>
+                        {_.indexOf(this.props.filter, 'brand_logo') != -1 &&
+                        <div className="image-upload-box form-group-flex column">
+                            <label className="control-label">Brand Logo</label>
+                            <ImageUploader name="file" elementID="brand-logo"
+                                           imageURL="/api/v1/system-options/file/brand_logo"
+                                           imageStyle="badge badge-lg" uploadButton={true}/>
+                        </div>
+                        }
+
+                        {_.indexOf(this.props.filter, 'home_hero_image') != -1 &&
+                            <div className="image-upload-box form-group-flex column">
+                                <label className="control-label">Front Page Hero Image</label>
+                                <ImageUploader name="file" elementID="front-page-image"
+                                               imageURL="/api/v1/system-options/file/front_page_image"
+                                               imageStyle="badge badge-lg" uploadButton={true}/>
                             </div>
-                            <div className="col-md-3 form-group-flex column centered">
-                                <label className="control-label">Front Page Featured Image</label>
-                                <ImageUploader name="file" elementID="front-page-image" imageURL="/api/v1/system-options/file/front_page_image" imageStyle="badge badge-lg" uploadButton={true}/>
+                        }
+
+                        {types.map((type) => {
+                            return (
+                                <div key={`setting_type_${type}`} className={`system-settings-group setting-type-${type}`}>
+                                    {group[type].map((group) => {
+                                        if (this.props.filter && _.indexOf(this.props.filter, group.option) != -1) {
+                                            if (group.data_type == 'color_picker') {
+                                                return (
+                                                    <div key={`option_${group.option}`}>
+                                                        <Input type={group.data_type} name={group.option}
+                                                               label={group.option.replace(/_+/g, ' ')}
+                                                               colors={colorSettings} defaultValue={group.value}
+                                                               onChange={self.handleOnChange}/>
+                                                    </div>
+                                                );
+                                            } else {
+                                                return (
+                                                    <div key={`option_${group.option}`}>
+                                                        <Input type={group.data_type} name={group.option}
+                                                               label={group.option.replace(/_+/g, ' ')}
+                                                               defaultValue={group.value}
+                                                               onChange={self.handleOnChange}/>
+                                                    </div>
+                                                );
+                                            }
+                                        }
+                                    })}
+                                    <div className="clearfix"/>
+                                </div>
+                            );
+                        })}
+                        <div className="text-right">
+                            <Buttons btnType="primary" text="Update Settings" onClick={self.handleUpdateSettings}
+                                     loading={this.state.ajaxLoad} success={this.state.success}/>
+                        </div>
+                    </div>
+                )
+            }else {
+                return (
+                    <div className="row">
+                        <div className="col-md-12">
+                            <ContentTitle icon="cog" title="Customize your system options here."/>
+
+                            <div>
+                                <h4 className="text-capitalize">Branding</h4>
+                                <div className="row">
+                                    <div className="col-md-6 form-group-flex column centered">
+                                        <label className="control-label">Upload Brand Logo</label>
+                                        <ImageUploader name="file" elementID="brand-logo"
+                                                       imageURL="/api/v1/system-options/file/brand_logo"
+                                                       imageStyle="badge badge-lg" uploadButton={true}/>
+                                    </div>
+                                    <div className="col-md-6 form-group-flex column centered">
+                                        <label className="control-label">Front Page Featured Image</label>
+                                        <ImageUploader name="file" elementID="front-page-image"
+                                                       imageURL="/api/v1/system-options/file/front_page_image"
+                                                       imageStyle="badge badge-lg" uploadButton={true}/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {types.map((type) => {
+                                return (
+                                    <div key={`setting_type_${type}`}
+                                         className={`system-settings-group setting-type-${type}`}>
+                                        <h4 className="text-capitalize">{type}</h4>
+                                        {group[type].map((group) => {
+                                            if (group.data_type == 'color_picker') {
+                                                return (
+                                                    <div key={`option_${group.option}`}>
+                                                        <Input type={group.data_type} name={group.option}
+                                                               label={group.option.replace(/_+/g, ' ')}
+                                                               colors={colorSettings} defaultValue={group.value}
+                                                               onChange={self.handleOnChange}/>
+                                                    </div>
+                                                );
+                                            } else {
+                                                return (
+                                                    <div key={`option_${group.option}`}>
+                                                        <Input type={group.data_type} name={group.option}
+                                                               label={group.option.replace(/_+/g, ' ')}
+                                                               defaultValue={group.value}
+                                                               onChange={self.handleOnChange}/>
+                                                    </div>
+                                                );
+                                            }
+                                        })}
+                                        <div className="clearfix"/>
+                                    </div>
+                                );
+                            })}
+
+                            <div className="text-right">
+                                <Buttons btnType="primary" text="Update Settings" onClick={self.handleUpdateSettings}
+                                         loading={this.state.ajaxLoad} success={this.state.success}/>
                             </div>
                         </div>
                     </div>
-
-                    {types.map((type)=>{
-                        return(
-                            <div key={`setting_type_${type}`} className={`system-settings-group setting-type-${type}`}>
-                                <h3 className="p-t-20 p-b-20 text-capitalize">{type}</h3>
-                                    {group[type].map((group)=>{
-                                        if(group.data_type == 'color_picker'){
-                                            return(
-                                                <div key={`option_${group.option}`}>
-                                                    <Input type={group.data_type} name={group.option} label={group.option.replace(/_+/g, ' ')}
-                                                           colors={colorSettings} defaultValue={group.value} onChange={self.handleOnChange}/>
-                                                </div>
-                                            );
-                                        }else{
-                                            return(
-                                                <div key={`option_${group.option}`}>
-                                                    <Input type={group.data_type} name={group.option} label={group.option.replace(/_+/g, ' ')}
-                                                           defaultValue={group.value} onChange={self.handleOnChange}/>
-                                                </div>
-                                            );
-                                        }
-                                    })}
-                                    <div className="clearfix" />
-                            </div>
-                        );
-                    })}
-
-                    <div className="text-right">
-                        <Buttons btnType="primary" text="Update Settings" onClick={self.handleUpdateSettings}
-                                 loading={this.state.ajaxLoad} success={this.state.success}/>
-                    </div>
-                </div>
-            );
+                );
+            }
         }
     }
 }

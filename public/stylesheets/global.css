@@ -58,19 +58,12 @@ input:-moz-focusring {
   margin-bottom: 30px;
 }
 
-::-moz-selection{
-  background-color: transparent;
-}
-::selection{
-  background-color: transparent;
-}
-
-#content *::-moz-selection, input-moz-selection {
+::-moz-selection, input-moz-selection {
   background-color: #5f5f5f;
   color: #f3f3f3;
 }
 
-#content *::selection, input::selection {
+::selection {
   background-color: #5f5f5f;
   color: #f3f3f3;
 }

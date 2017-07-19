@@ -3,7 +3,7 @@ import {Link} from 'react-router';
 import ModalApprove from '../modals/modal-approve.jsx';
 import ModalRequestCancellation from '../modals/modal-request-cancellation.jsx';
 import ModalManageCancellation from '../modals/modal-manage-cancellation.jsx';
-import Price from '../../utilities/price.jsx';
+import {Price} from '../../utilities/price.jsx';
 
 class DashboardServiceListItem extends React.Component {
 

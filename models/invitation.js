@@ -1,12 +1,10 @@
-var knex = require('../config/db');
-//TODO - figure something about schema... probably should define schema in code somewhere to create tables and pull that and validate any fields there.
-
+let knex = require('../config/db');
 
 let Invitation = require("./base/entity")("invitations");
 
-//requires a usert_id
+//requires a user_id
 Invitation.prototype.create = function (callback) {
-    var self = this;
+    let self = this;
     //this.data = this.sanitize(this.data);
 
     require('crypto').randomBytes(20, function(err, buffer) {
@@ -23,18 +21,6 @@ Invitation.prototype.create = function (callback) {
     	});
 		
 	});
-}
-
-
-
-
-
-
-
-
-
-
-
-
+};
 
 module.exports = Invitation;

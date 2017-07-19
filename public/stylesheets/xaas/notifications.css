@@ -1,0 +1,79 @@
+ul.nav.navbar-nav.navbar-right {
+    display: flex;
+    align-items: initial;
+}
+li.nav-notification {
+    margin-right: 28px;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    padding: 0px;
+    cursor: pointer;
+}
+li.nav-notification i{
+    color: white;
+    line-height: 14px;
+}
+span.notification-badge {
+    background: #dc3535;
+    color: white;
+    border-radius: 50px;
+    padding: 3px 10px 3px 8px;
+    text-align: center;
+    margin-left: 5px;
+    font-weight: 100;
+    font-size: 0.9em;
+    line-height: 14px;
+}
+
+/* mini dropdown */
+.mini-notification-list {
+    position: absolute;
+    width: 300px;
+    background: white;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 55px;
+    border-radius: 3px;
+    z-index: 10000;
+    font-size: 14px;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.06);
+    margin-left: -16px;
+}
+.mini-notification-list:before {
+    content: '';
+    height: 0px;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #ffffff;
+    margin: 0 0 15px 0;
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.mini-notification-list li {
+    list-style: none;
+    padding: 10px 20px 10px;
+    line-height: 1.5em;
+}
+
+.mini-notification-list ul {
+    padding: 0px;
+}
+
+.mini-notification-list li:hover {
+    background: #f3f3f3;
+}
+
+.mini-notification-list li:first-child, .mini-notification-list li:last-child {
+    padding-top: 20px;
+}
+.mini-notification-backdrop{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+}

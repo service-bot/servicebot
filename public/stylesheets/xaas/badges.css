@@ -1,5 +1,5 @@
 .badge {
-    background-color: white;
+    background-color: #e4e4e4;
     border: 2px solid white;
     border-radius: 50%;
     padding: 13px;
@@ -49,3 +49,6 @@
     border-radius: 50%;
 }
 
+.badge-avatar{
+    background-color: #ffffff;
+}

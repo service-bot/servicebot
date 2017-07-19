@@ -1,22 +1,16 @@
 
 let System = require('../models/system-options');
 let Stripe = require('../config/stripe');
-
+let store = require("../config/redux/store");
 let _ = require("lodash")
 let injectProperties = function () {
     return function (req, res, next) {
-        System.findAll(true, true, function(properties){
-            res.locals.sysprops = properties.reduce(function(acc, val){
-                acc[val.get("option")] = val.get("value");
-                //Set the Stripe API keys
-                Stripe.setKeys(acc);
+        let options = store.getState().options;
 
-                //todo: move this to redux store
-                res.cookie("spk", acc.stripe_publishable_key);
-                return acc;
-            },{});
-            next();
-        })
+        Object.defineProperty(res.locals, 'sysprops', { get: function() { return store.getState().options } });
+        res.cookie("spk", options.stripe_publishable_key);
+        Stripe.setKeys(options);
+        next()
     }
 }
 

@@ -2,14 +2,14 @@
     margin: 50px 0px;
 }
 #dashboard-charts > div{
-    float: left;
+    /*float: left;*/
 }
 #dashboard-charts h3{
     text-align: center;
 }
 .service-by-status-chart{
-    width: 33.33333%;
+    /*width: 33.33333%;*/
 }
 .service-created-cancelled-overtime-chart{
-    width: 66.66666%;
+    /*width: 66.66666%;*/
 }

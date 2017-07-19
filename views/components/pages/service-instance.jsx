@@ -22,6 +22,7 @@ import ModalEditPaymentPlan from '../elements/modals/modal-edit-payment-plan.jsx
 import ModalAddChargeItem from '../elements/modals/modal-add-charge-item.jsx';
 import ModalPayChargeItem from '../elements/modals/modal-pay-charge-item.jsx';
 import ModalPayAllCharges from '../elements/modals/modal-pay-all-charges.jsx';
+import ServiceInstanceFiles from '../elements/service-instance/service-instance-files.jsx';
 import $ from "jquery";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import _ from "lodash";
@@ -106,6 +107,7 @@ class ServiceInstance extends React.Component {
     }
 
     handleApprove(event){
+        console.log("hi");
         event.preventDefault();
         this.setState({ approveModal : true});
     }
@@ -239,8 +241,8 @@ class ServiceInstance extends React.Component {
         if(this.state.loading){
             return (
                 <Authorizer>
+                    <Jumbotron pageName={pageName} location={this.props.location}/>
                     <div className="page-service-instance">
-                        <Jumbotron pageName={pageName} location={this.props.location}/>
                         <Content key={Object.id}>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'}
                                                      transitionAppear={true} transitionEnter={true} transitionLeave={true}
@@ -255,6 +257,7 @@ class ServiceInstance extends React.Component {
             const myInstance = this.state.instance;
             const myInstanceChargeItems = _.groupBy(myInstance.references.charge_items, 'approved');
             let id, name, amount, interval, owner, ownerId = null;
+            pageName = myInstance.name;
 
             //Gather data first
             if( self.state.instance){
@@ -296,11 +299,10 @@ class ServiceInstance extends React.Component {
 
             return(
                 <Authorizer>
+                    <Jumbotron pageName={pageName} location={this.props.location}/>
                     <div className="page-service-instance">
-                        <Jumbotron pageName={pageName} location={this.props.location}/>
                         <Content>
-                            <ReactCSSTransitionGroup component='div' transitionName={'fade'}
-                                                     transitionAppear={true} transitionEnter={true} transitionLeave={true}
+                            <ReactCSSTransitionGroup component='div' transitionName={'fade'} transitionAppear={true} transitionEnter={true} transitionLeave={true}
                                                      transitionAppearTimeout={1000} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                                 <div className="row">
                                     <div className="col-xs-10">
@@ -322,28 +324,53 @@ class ServiceInstance extends React.Component {
                                     </div>
                                 </div>
                                 }
-                                {/* render instance description block */}
-                                <div id="service-instance-description" className="row p-b-20">
-                                    <ServiceInstanceDescription instanceDescription={myInstance.description}/>
-                                    <ServiceInstancePaymentPlan key={Object.id} owner={owner} instancePaymentPlan={myInstance.payment_plan} status={myInstance.status}/>
+
+                                {(myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) &&
+                                <div id="service-instance-waiting" className="row">
+                                    <div className="col-md-8 col-md-offset-2">
+                                        <ServiceInstanceWaitingCharges handlePayAllCharges={self.handlePayAllChargesModal} handlePayChargeItem={self.handlePayChargeItemModal} instanceWaitingItems={myInstanceChargeItems.false}/>
+                                    </div>
+                                </div>
+                                }
+
+                                <div id="service-instance-description" className="row">
+                                    <div className="col-md-8 col-md-offset-2">
+                                        <ServiceInstanceDescription service={myInstance} instanceDescription={myInstance.description}/>
+                                        <ServiceInstancePaymentPlan key={Object.id} owner={owner}
+                                                                    service={myInstance}
+                                                                    instancePaymentPlan={myInstance.payment_plan}
+                                                                    status={myInstance.status}
+                                                                    approval={this.handleApprove}/>
+                                    </div>
                                 </div>
 
-                                {/* render waiting charge items */}
-                                {(myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) &&
-                                <ServiceInstanceWaitingCharges handlePayAllCharges={self.handlePayAllChargesModal} handlePayChargeItem={self.handlePayChargeItemModal} instanceWaitingItems={myInstanceChargeItems.false}/>
-                                }
-                                {/* render instance property fields */}
                                 {myInstance.references.service_instance_properties.length > 0 &&
-                                <ServiceInstanceFields instanceProperties={myInstance.references.service_instance_properties}/>
+                                <div id="service-instance-fields" className="row">
+                                    <div className="col-md-8 col-md-offset-2">
+                                        <ServiceInstanceFields instanceProperties={myInstance.references.service_instance_properties}/>
+                                    </div>
+                                </div>
                                 }
 
-                                {/* render approved charge items */}
                                 {(myInstanceChargeItems.true && myInstanceChargeItems.true.length > 0) &&
-                                <ServiceInstanceApprovedCharges instanceApprovedItems={myInstanceChargeItems.true}/>
+                                <div id="service-instance-approved-charges" className="row">
+                                    <div className="col-md-8 col-md-offset-2">
+                                        <ServiceInstanceApprovedCharges instanceApprovedItems={myInstanceChargeItems.true}/>
+                                    </div>
+                                </div>
                                 }
 
-                                {/* render instance message block*/}
-                                <ServiceInstanceMessage instanceId={self.state.instanceId}/>
+                                <div id="service-instance-files" className="row">
+                                    <div className="col-md-8 col-md-offset-2">
+                                        <ServiceInstanceFiles instanceId={self.state.instanceId}/>
+                                    </div>
+                                </div>
+
+                                <div id="service-instance-message" className="row">
+                                    <div className="col-md-8 col-md-offset-2">
+                                        <ServiceInstanceMessage instanceId={self.state.instanceId}/>
+                                    </div>
+                                </div>
                             </ReactCSSTransitionGroup>
                         </Content>
                         {currentModal()}

@@ -43,20 +43,17 @@ class ServiceInstanceDescription extends React.Component {
 
         console.log('height', this.state.descriptionHeight);
         return (
-            <div className="col-xs-12 col-md-7">
-                <div className="row">
-                    <div id="service-description-container" className="col-xs-12 col-md-11">
-                        <h5>Service Description</h5>
-                        <div id="service-description" style={this.getToggleStyle()}
-                             className="instance-details"
-                             dangerouslySetInnerHTML={this.createMarkup(this.props.instanceDescription)}/>
-                        { this.state.descriptionHeight > 315 &&
-                            <div className="instance-details-toggle">
-                                <span onClick={this.handleToggle}
-                                  className="btn btn-info btn-outline btn-rounded btn-sm">{!this.state.opened ? 'Show More' : 'Show Less'}</span>
-                            </div>
-                        }
-                    </div>
+            <div className="">
+                <div className="service-instance-section">
+                    <span className="service-instance-section-label">{this.props.service.name}</span>
+                    <div id="service-description" className="instance-details" style={this.getToggleStyle()}
+                         dangerouslySetInnerHTML={this.createMarkup(this.props.instanceDescription)}/>
+                    { this.state.descriptionHeight > 315 &&
+                        <div className="instance-details-toggle">
+                            <span onClick={this.handleToggle}
+                              className="btn btn-info btn-outline btn-rounded btn-sm">{!this.state.opened ? 'Show More' : 'Show Less'}</span>
+                        </div>
+                    }
                 </div>
             </div>
         );

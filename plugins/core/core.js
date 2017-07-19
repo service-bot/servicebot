@@ -8,6 +8,7 @@ module.exports = function setup(options, imports, register) {
         knex: require("../../config/db"),
         app : options.app,
         api : options.api,
-        stripe : require('../../config/stripe')
+        stripe : require('../../config/stripe'),
+        store : require("../../config/redux/store")
     });
 };

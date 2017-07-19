@@ -46,8 +46,8 @@ class UserEdit extends React.Component {
         if(this.state.loading){
             return(
                 <Authorizer permissions="can_administrate">
+                    <Jumbotron pageName={pageName} location={this.props.location}/>
                     <div className="page-service-instance">
-                        <Jumbotron pageName={pageName} location={this.props.location}/>
                         <Content>
                             <div className="row m-b-20">
                                 <div className="col-xs-12">
@@ -63,8 +63,8 @@ class UserEdit extends React.Component {
             console.log("rendering content");
             return (
                 <Authorizer permissions="can_administrate">
+                    <Jumbotron pageName={pageName} location={this.props.location}/>
                     <div className="page-service-instance">
-                        <Jumbotron pageName={pageName} location={this.props.location}/>
                         <Content>
                             <div className="row m-b-20">
                                 <div className="col-xs-12">

@@ -8,7 +8,6 @@ class Buttons extends React.Component {
     constructor(props) {
         super(props);
 
-        console.log("my options", this.props.options);
         this.state = {
             containerClass: this.props.containerClass || '',
             buttonClass: `btn btn-default btn-rounded ${this.props.buttonClass}` || 'btn btn-default btn-rounded',
@@ -19,7 +18,7 @@ class Buttons extends React.Component {
             loading: this.props.loading || false,
             success: this.props.success || false,
             disabled: this.props.disabled || false,
-            systemOptions: this.props.options || {},
+            style: this.props.style || {},
             hover: false
         };
 
@@ -47,6 +46,8 @@ class Buttons extends React.Component {
         }else{
             this.setState({success: false});
         }
+
+
     }
 
     handleClick(e){
@@ -54,7 +55,6 @@ class Buttons extends React.Component {
             e.preventDefault();
         }
         if(this.props.onClick) {
-            console.log("handle click in button");
             this.props.onClick(e);
         }
     }
@@ -83,8 +83,8 @@ class Buttons extends React.Component {
     render(){
 
         let btnStyle = {border: 'none'};
-        if(this.state.systemOptions) {
-            let options = this.state.systemOptions;
+        if(this.props.options) {
+            let options = this.props.options;
             let hover = this.state.hover;
             if (this.state.btnType == 'default') {
                 if(!hover){
@@ -128,9 +128,11 @@ class Buttons extends React.Component {
                 {this.state.loading === true && <Load type="button"/>}
                 {this.state.success === true && this.success()}
                 <button className={`${this.state.buttonClass} btn-${this.state.size}`}
-                        style={btnStyle} onClick={this.handleClick}
+                        disabled={this.state.loading}
+                        style={this.state.style ? _.merge(this.state.style, btnStyle) : btnStyle}
+                        onClick={this.handleClick}
                         type={this.props.type} value={this.props.value}
-                        onMouseEnter={this.hover} onMouseLeave={this.unHover}>{this.state.text}</button>
+                        onMouseEnter={this.hover} onMouseLeave={this.unHover}>{this.state.text || this.props.children}</button>
             </div>
         );
 

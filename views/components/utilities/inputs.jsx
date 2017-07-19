@@ -12,12 +12,7 @@ class Inputs extends React.Component {
     constructor(props){
         super(props);
         this.state = {type: this.props.type, value: null};
-        if(this.props.type == 'creditcard'){
-            this.state = {  type: this.props.type,
-                            value: this.props.defaultValue || this.props.value || null,
-                            cardParts: ['','','',''], card: '',
-                            priceValue: 0};
-        }else if(this.props.type == 'color_picker'){
+        if(this.props.type == 'color_picker'){
             this.state = {
                 type: this.props.type,
                 name: this.props.name,
@@ -36,15 +31,15 @@ class Inputs extends React.Component {
         this.handleShowPicker = this.handleShowPicker.bind(this);
         this.handleShowCustomPicker = this.handleShowCustomPicker.bind(this);
         this.clickInsideListener = this.clickInsideListener.bind(this);
-        //helpers
-        this.onEnterCreditCard = this.onEnterCreditCard.bind(this);
-        this.getCardParts = this.getCardParts.bind(this);
     }
-    componentDidMount(){
-        let self = this;
 
+    componentDidMount(){
         if(this.props.onChange && this.props.receiveOnChange === true){
             this.props.onChange(this.props.defaultValue || this.props.value);
+        }
+        if(this.props.buildFormData && this.props.validator){
+            console.log("mounted input, has buildFormData and validator");
+            this.props.buildFormData(this.props.name, this.props.defaultValue, this.props.refName || null, this.props.refID || null, this.props.validator);
         }
     }
 
@@ -53,6 +48,8 @@ class Inputs extends React.Component {
             if(this.state.showPicker || this.state.showCustomPicker){
                 document.addEventListener('click', this.clickInsideListener);
             }
+        }if(this.props.onChange && this.props.formLess === true){
+            this.props.onChange(null, this);
         }
     }
 
@@ -119,8 +116,13 @@ class Inputs extends React.Component {
             this.props.dependentFunction(value, this.props.dependent);
         }
 
-        this.props.onChange(e);
-        // this.setState({value: value});
+        //we will not need to do this for props.formLess when we move everything to the new way of submitting forms
+        if(this.props.onChange && this.props.formLess === true){
+            this.props.onChange(e, this);
+            this.setState({value: value});
+        }else{
+            this.props.onChange(e);
+        }
     }
 
     handlePriceChange(e){
@@ -129,9 +131,14 @@ class Inputs extends React.Component {
         let value = e.target.value || e.target.defaultValue;
 
         if(!isNaN(value)){
-            if(value > 0.01 && value != '' && value != null) {
+            if(value != '' && value != null) {
                 self.setState({priceValue: (value / 100).toFixed(2)});
                 this.props.onChange(e);
+            }else if(value == 0){
+                self.setState({priceValue: 0});
+                let newEvent = e;
+                newEvent.target.value = 0;
+                this.props.onChange(newEvent);
             }else{
                 self.setState({priceValue: 0});
                 let newEvent = e;
@@ -181,7 +188,9 @@ class Inputs extends React.Component {
         let defaultValue    = this.props.value || this.props.defaultValue;
         let placeholder     = this.props.placeholder;
         let disabled        = this.props.disabled ? true : false;
-        let error           = this.props.error ? this.props.error : this.state.error ? this.state.error : false;
+        let error           = this.props.errors && this.props.errors.length ? this.props.errors[0].message :
+                                this.props.error ? this.props.error :
+                                    this.state.error ? this.state.error : false;
         let warning         = this.props.warning ? this.props.warning : false;
 
         //error checking props
@@ -191,13 +200,13 @@ class Inputs extends React.Component {
             error = "Component requires a label passed in props.";
         }
 
-        if(type == "text" || type == "number" || type == "hidden"){
-            console.log("passed in value", defaultValue);
+        if(type == "text" || type == "number" || type == "hidden" || type == "email"){
+            // console.log("passed in value", defaultValue);
             return (
                 <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''} ${type == 'hidden' ? 'hidden' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}
                     <input className="form-control" maxLength={maxLength} type={type} placeholder={placeholder}
-                           disabled={disabled} name={name} defaultValue={defaultValue} onChange={this.props.onChange}/>
+                           disabled={disabled} name={name} defaultValue={defaultValue} onChange={this.handleChange}/>
                     {error && <span className="help-block">{error}</span> }
                     {warning && <span className="help-block">{warning}</span> }
                 </div>
@@ -211,7 +220,7 @@ class Inputs extends React.Component {
                         <span className="price-mask">{!isNaN(this.state.priceValue) && this.state.priceValue >= 0 ?
                             `$${this.state.priceValue}` : `$${this.props.value/100}`}</span>
                         <input className="form-control price-value" autoComplete="off" maxLength={maxLength} type="number" placeholder={placeholder}
-                               disabled={disabled} name={name} defaultValue={defaultValue} onChange={this.handlePriceChange}/>
+                               disabled={disabled} name={name} defaultValue={defaultValue || 0} onChange={this.handlePriceChange}/>
                     </div>
                     {error && <span className="help-block">{error}</span> }
                     {warning && <span className="help-block">{warning}</span> }
@@ -222,7 +231,7 @@ class Inputs extends React.Component {
             return (
                 <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}
-                    <textarea className="form-control" name={name} defaultValue={defaultValue} rows={row} onChange={this.props.onChange}/>
+                    <textarea className="form-control" name={name} defaultValue={defaultValue} rows={row} onChange={this.handleChange}/>
                     {error && <span className="help-block">{error}</span> }
                     {warning && <span className="help-block">{warning}</span> }
                 </div>
@@ -267,7 +276,7 @@ class Inputs extends React.Component {
             return (
                 <div className={`form-group ${error ? 'has-error' : ''}`}>
                     {label && <label className="control-label">{label}</label>}
-                    <input className="form-control" type={type} name={this.props.name} defaultChecked={this.props.defaultValue == 'true'} onChange={this.props.onChange}/>
+                    <input className="form-control" type={type} name={this.props.name} defaultChecked={this.props.defaultValue == 'true'} onChange={this.handleChange}/>
                     {this.props.error && <span className="help-block">{this.props.error}</span> }
                 </div>
             );
@@ -276,7 +285,7 @@ class Inputs extends React.Component {
             console.log("color picker color:", this.state.value);
             return (
                 <div key={`color_picker_${this.state.name}`} id={`color_picker_${this.state.name}`}
-                     className={`form-group color-picker-input col-md-3 ${error ? 'has-error' : ''}`}>
+                     className={`form-group color-picker-input ${error ? 'has-error' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}
                     <div className="ColorPickerPreview"
                          style={{backgroundColor: this.state.value, width: 50+'px', height: 50+'px', cursor: 'pointer', borderRadius: 5+'px'}}
@@ -294,51 +303,13 @@ class Inputs extends React.Component {
                                   onChange={this.handleColorPickerChange}/>
                     }
                     {this.props.error && <span className="help-block">{this.props.error}</span> }
-                </div>
-            );
-        }else if(type =="creditcard"){
-            console.log('creditcard input name', name);
-            return(
-                <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''}`}>
-                    {label && <label className="control-label">{label}</label>}
-                    <input className="form-control" type="text" name={name} value={this.getCardParts()} maxLength="16" onChange={this.props.onChange}/>
-                    <div className="row">
-                        <div className="col-xs-3"><input className="form-control" type="number" id='card0' maxLength="4" value={this.state.cardParts[0]} onChange={this.onEnterCreditCard}/></div>
-                        <div className="col-xs-3"><input className="form-control" type="number" id='card1' maxLength="4" value={this.state.cardParts[1]} onChange={this.onEnterCreditCard}/></div>
-                        <div className="col-xs-3"><input className="form-control" type="number" id='card2' maxLength="4" value={this.state.cardParts[2]} onChange={this.onEnterCreditCard}/></div>
-                        <div className="col-xs-3"><input className="form-control" type="number" id='card3' maxLength="4" value={this.state.cardParts[3]} onChange={this.onEnterCreditCard}/></div>
-                    </div>
+                    <div className="clearfix"/>
                 </div>
             );
         }
-
         return( <p>Error: Check your Inputs type</p> );
     }
 
-    //helper functions
-    onEnterCreditCard(event){
-        let index = parseInt(event.target.id.slice(-1));
-        let myCardParts = this.state.cardParts;
-        let val = event.target.value.toString();
-        if(val >= 0){
-            if(myCardParts[index].length < 4) {
-                myCardParts[index] = val;
-                this.setState({cardParts: myCardParts});
-            }else{
-                if(val.length < myCardParts[index].length){
-                    myCardParts[index] = val;
-                    this.setState({cardParts: myCardParts});
-                }
-            }
-        }
-    }
-    getCardParts(){
-        if(this.state.cardParts) {
-            let cardParts = this.state.cardParts;
-            return cardParts[0] + cardParts[1] + cardParts[2] + cardParts[3];
-        }
-        return '';
-    }
 }
 
 export default Inputs;

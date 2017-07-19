@@ -29,53 +29,66 @@ Invoice.prototype.refund = function (amount=null, reason=null, callback) {
 
 }
 
-Invoice.prototype.sync = function (new_invoice, callback) {
+Invoice.prototype.sync = function (new_invoice) {
     let self = this;
     let user_id = self.data.user_id;
-    async.waterfall([
-        //Remove the Transaction item
-        function (callback) {
-            if(self.data.charge) {
-                Transactions.findOne('charge_id', self.data.charge, function (trans) {
-                    if(trans.data) {
-                        trans.delete(function (result) {
-                            callback(null, result);
+    //Remove the transaction item
+    return new Promise(function (resolve, reject) {
+        if(self.data.charge) {
+            Transactions.findOne('charge_id', self.data.charge, function (trans) {
+                if(trans.data) {
+                    trans.delete(function (err, result) {
+                        if(!err) {
+                            return resolve(result);
+                        } else {
+                            return reject(err);
+                        }
+                    });
+                } else {
+                    return resolve('No charge was found');
+                }
+            });
+        } else {
+            return resolve('No charge to be processed.');
+        }
+    }).then(function (result) {
+        //Remove all invoice lines
+        return new Promise(function (resolveall, rejectall) {
+            InvoiceLines.findAll('invoice_id', self.data.id, function (invoice_lines) {
+                Promise.all(invoice_lines.map(function (invoice_line) {
+                    return new Promise(function (resolve, reject) {
+                        invoice_line.delete(function (err, result) {
+                            if(!err) {
+                                return resolve(result);
+                            } else {
+                                return reject(err);
+                            }
                         });
+                    });
+                })).then(function () {
+                    console.log('Invoice lines deleted');
+                    return resolveall('Invoice lines deleted');
+                }).catch(function (err) {
+                    return rejectall(err);
+                });
+            });
+        });
+    }).then(function (result) {
+        //Remove the old invoice and insert the new one
+        return new Promise(function (resolve, reject) {
+            Users.findOne('id', user_id, function (user) {
+                //Update the invoice
+                new_invoice.invoice_id = new_invoice.id;
+                new_invoice.user_id = user_id;
+                self.delete(function (err, result) {
+                    if(!err) {
+                        return Invoice.insertInvoice(new_invoice, user);
                     } else {
-                        callback(null, "No charge to be processed.");
+                        return reject(err);
                     }
                 });
-            } else {
-                callback(null, "No charge to be processed.");
-            }
-        },
-        //Remove all invoice lines
-        function (result, callback) {
-            InvoiceLines.findAll('invoice_id', self.data.id, function (invoice_lines) {
-                invoice_lines.map(function (invoice_line) {
-                    invoice_line.delete(function (result) { return null; });
-                });
-                callback(null, invoice_lines);
             });
-        },
-        //Get the user object
-        function (result, callback) {
-            Users.findOne('id', user_id, function (user) {
-                callback(null, user);
-            });
-        },
-        function (user, callback) {
-            //Update the invoice
-            new_invoice.invoice_id = new_invoice.id;
-            new_invoice.user_id = user_id;
-            self.delete(function (result) {
-                Invoice.insertInvoice(new_invoice, user, function (inserted) {
-                    callback(null, inserted);
-                });
-            });
-        }
-    ], function (err, results) {
-        callback(err, results);
+        });
     });
 }
 
@@ -85,15 +98,14 @@ Invoice.prototype.sync = function (new_invoice, callback) {
  * @param user_object - User Entity
  * @param callback - callback function
  */
-Invoice.fetchUserInvoices = function (user_object, callback) {
-    async.waterfall([
-        function(callback) {
-            //Getting the last inserted invoice
-            Invoice.findAllByOrder('user_id', user_object.get('id'), 'date', 'desc', function (all_invoice_result) {
-                callback(null, all_invoice_result);
-            });
-        },
-        function(all_invoices, callback){
+Invoice.fetchUserInvoices = function (user_object) {
+    return new Promise(function (resolve, reject) {
+        //Getting the last inserted invoice
+        Invoice.findAllByOrder('user_id', user_object.get('id'), 'date', 'desc', function (all_invoice_result) {
+            return resolve(all_invoice_result);
+        });
+    }).then(function (all_invoices) {
+        return new Promise(function (resolve, reject) {
             //Stripe object to retrieve new invoices
             let invoice_obj = {
                 customer : user_object.get('customer_id'),
@@ -103,53 +115,64 @@ Invoice.fetchUserInvoices = function (user_object, callback) {
                 invoice_obj.ending_before = all_invoices[0].get('invoice_id');
             }
             Stripe().connection.invoices.list(invoice_obj, function(err, invoices) {
-                callback(err, invoices);
+                if(!err) {
+                    return resolve(invoices);
+                } else {
+                    return reject(err);
+                }
             });
-        },
-        function(invoices, callback){
-            let err_array = [];
-            invoices.data.forEach(raw_invoice => {
-                Invoice.insertInvoice(raw_invoice, user_object, function (err, result) {
-                    if(!err){
-                        return;
-                    } else {
-                        err_array.push(err);
-                        return;
-                    }
-                });
+        });
+    }).then(function (invoices) {
+        return new Promise(function (resolveall, rejectall) {
+            Promise.all(invoices.data.map(function (raw_invoice) {
+                return Invoice.insertInvoice(raw_invoice, user_object);
+            })).then(function () {
+                return resolveall('Invoices imported');
+            }).catch(function (err) {
+                return rejectall(err);
             });
-            callback(err_array, invoices);
-        }
-    ], function(err, result) {
-        callback(err, result);
+        });
     });
-}
+};
 
-Invoice.insertInvoice = function (raw_invoice, user, callback) {
-    //The given invoice is a Stripe formatted invoice.
-    async.waterfall([
-        function (callback) {
-            //Add the service instance ID if the invoice is attached to an existing service.
-            if(raw_invoice.subscription) {
-                ServiceInstances.findOne('subscription_id', raw_invoice.subscription, function (service) {
-                    if(service.data) {
+Invoice.insertInvoice = function (raw_invoice, user) {
+    return new Promise(function(resolve, reject) {
+        //Set the service instance id
+        if(raw_invoice.subscription) {
+            ServiceInstances.findOne('subscription_id', raw_invoice.subscription, function (service) {
+                if(service.data) {
+                    //Dont import the invoice if its the custom daily invoice with 0 value
+                    if(service.data.type != "subscription" && raw_invoice.total == 0 && raw_invoice.lines.data.length == 1) {
+                        return reject('Invoice belogs to a non-subscription service and has no value. Not imported!');
+                    } else {
                         raw_invoice.service_instance_id = service.data.id;
+                        return resolve(raw_invoice);
                     }
-                    callback(null, raw_invoice);
-                });
-            }
-        },
-        function (raw_invoice, callback) {
+                } else {
+                    return reject('Invoice does not belong to a ServiceBot service!');
+                }
+            });
+        } else {
+            return reject('Invoice does not belong to a ServiceBot service!');
+        }
+    }).then(function (raw_invoice) {
+        //Create the invoice object in the database
+        return new Promise(function (resolve, reject) {
             raw_invoice.invoice_id = raw_invoice.id;
             delete raw_invoice.id;
             raw_invoice.user_id = user.data.id;
             let invoice_entity = new Invoice(raw_invoice);
             invoice_entity.create(function (err, created_invoice) {
-                created_invoice.data.references = {};
-                callback(null, created_invoice);
+                if(!err) {
+                    created_invoice.data.references = {};
+                    return resolve(created_invoice);
+                } else {
+                    return reject(err);
+                }
             });
-        },
-        function (invoice, callback) {
+        });
+    }).then(function (invoice) {
+        return new Promise(function (resolve, reject) {
             //Add Transaction array
             let transaction_array = [];
             Transactions.fetchCharge(invoice.data.charge, function (err, charge) {
@@ -158,11 +181,14 @@ Invoice.insertInvoice = function (raw_invoice, user, callback) {
                         transaction_array.push(charge);
                     }
                     invoice.data.references.transactions = transaction_array;
+                    return resolve(invoice);
+                } else {
+                    return reject(err);
                 }
-                callback(err, invoice);
             });
-        },
-        function (invoice, callback) {
+        });
+    }).then(function (invoice) {
+        return new Promise(function (resolve, reject) {
             //Add all lines as reference
             let invoice_line_array = [];
             raw_invoice.lines.data.forEach(invoice_line => {
@@ -171,24 +197,22 @@ Invoice.insertInvoice = function (raw_invoice, user, callback) {
                 invoice_line_array.push(invoice_line);
             });
             invoice.data.references.user_invoice_lines = invoice_line_array;
-            callback(null, invoice);
-        },
-        function (invoice, callback) {
+            return resolve(invoice);
+        })
+    }).then(function (invoice) {
+        //Insert all line items
+        return new Promise(function (resolve, reject) {
             let reference_data = invoice.data.references;
             for (let reference of references){
-                if(!reference_data[reference.model.table] || reference_data[reference.model.table].length == 0){
-                    return;
-                } else {
+                if(reference_data[reference.model.table] && reference_data[reference.model.table].length > 0){
                     let referenceData = reference_data[reference.model.table];
                     invoice.createReferences(referenceData, reference, function (modifiedEntity) {
-                        return;
+                        //console.log('Invoice references created!');
                     });
                 }
             }
-            callback(null, invoice);
-        }
-    ], function (err, result) {
-        callback(err, result);
+            return resolve(invoice);
+        });
     });
 }
 

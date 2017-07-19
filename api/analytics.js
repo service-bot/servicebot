@@ -5,9 +5,12 @@ let ServiceTemplate = require('../models/service-template');
 let serviceInstanceProperty = require("../models/service-instance-property");
 let auth = require('../middleware/auth');
 
-
 module.exports = function(router) {
-
+    router.get(`/analytics/version`, function(req,res,next){
+        console.log(res.locals.sysprops);
+        res.locals.json = {"version" : res.locals.sysprops.app_version}
+        next();
+    })
     router.get(`/analytics/data`, auth(), function(req, res, next){
         analytics.getAnalyticsData(function(data){
             res.json(data);

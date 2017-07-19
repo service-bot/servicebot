@@ -8,8 +8,8 @@ let File = require("../models/file");
 let mkdirp = require("mkdirp");
 let path = require("path");
 let multer= require("multer");
-let mailer = require("../middleware/mailer");
 let _ = require('lodash');
+let dispatchEvent = require("../config/redux/store").dispatchEvent;
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 
 let serviceFilePath = "uploads/services/files";
@@ -83,7 +83,9 @@ module.exports = function(router) {
         ], function (err, result) {
             if(!err){
                 res.json(result);
-                mailer('service_instance_update')(req, res, next);
+                dispatchEvent("service_instance_updated", result);
+                next();
+                // mailer('service_instance_update')(req, res, next);
             } else {
                 res.json(err);
             }
@@ -107,8 +109,9 @@ module.exports = function(router) {
         instance_object.requestCancellation(function(result){
             res.locals.json = result;
             next();
+            dispatchEvent("service_instance_cancellation_requested", instance_object);
         });
-    }, mailer('service_cancellation_submitted'));
+    });
 
 
     router.post('/service-instances/:id/add-charge', validate(ServiceInstance), auth(), function(req, res, next) {
@@ -124,7 +127,8 @@ module.exports = function(router) {
             let charge = new Charge(charge_obj);
             charge.create(function (err, charge_item) {
                 res.json(charge_item);
-                mailer('service_requires_payment_approval')(req, res, next);
+                dispatchEvent("service_instance_charge_added", instance_object);
+                next();
             });
         } else {
             res.json({'error':'Payment plan is required prior to adding charges.'});
@@ -207,7 +211,9 @@ module.exports = function(router) {
     /**
      * Used to send mail for instance update
      */
-    router.put(`/service-instances/:id(\\d+)`, mailer('service_instance_update'));
-
+    // router.put(`/service-instances/:id(\\d+)`, (req, res, next) => {
+    //     dispatchEvent(`${model.table}_created`)
+    // });
+    //
     return router;
 };

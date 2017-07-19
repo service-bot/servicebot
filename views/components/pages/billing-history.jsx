@@ -24,8 +24,8 @@ class BillingHistory extends React.Component {
         let uid = cookie.load("uid");
         return(
             <Authorizer>
+                <Jumbotron pageName={pageName} location={this.props.location}/>
                 <div className="page-service-instance">
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
                     <Content>
                         <div className="row m-b-20">
                             <BillingHistoryList uid={this.props.params.uid || uid}/>

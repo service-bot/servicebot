@@ -4,7 +4,7 @@
 .xaas-row {
     margin-bottom: 20px;
     border: 1px solid rgba(128, 128, 128, 0.28);
-    border-radius: 6px;
+    border-radius: 3px;
     overflow: hidden;
 }
 .xaas-row.requested {
@@ -13,7 +13,6 @@
 .xaas-row.waiting {
     margin-bottom:35px;
     border: none;
-    box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12);
 }
 .xaas-row .btn{
     margin-bottom:0px;
@@ -22,9 +21,6 @@
     /*border-top: none;*/
 }
 
-.xaas-title {
-    font-size: 1.2em;
-}
 .xaas-title h5{
     margin-bottom: 0px;
     line-height: 36px;
@@ -83,15 +79,13 @@
     flex: 9;
 }
 .xaas-body .xaas-price {
-    flex-grow: 2;
-    color: #212121;
-    font-weight: bold;
+    flex-grow: 3;
 }
 .xaas-body .xaas-action {
     flex: 2;
 }
 .xaas-body .xaas-price, .xaas-body .xaas-action{
-    text-align: right;
+    text-align: left;
 }
 
 /* colors */

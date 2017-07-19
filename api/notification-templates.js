@@ -1,11 +1,11 @@
 
-let Template = require("../models/email-template");
+let NotificationTemplate = require("../models/notification-template");
 let validate = require('../middleware/validate');
 let auth = require('../middleware/auth');
 
 module.exports = function(router) {
 
-    router.get("/email-templates/:id(\\d+)", validate(Template), auth(), function(req, res, next){
+    router.get("/notification-templates/:id(\\d+)", validate(NotificationTemplate), auth(), function(req, res, next){
         let modelName = res.locals.valid_object.get("model");
         let model =  require("../models/" + modelName);
         model.getSchema(true, false, function(result){
@@ -16,7 +16,7 @@ module.exports = function(router) {
         });
     });
 
-    router.get("/email-templates/:id(\\d+)/roles", validate(Template), auth(), function(req, res, next){
+    router.get("/notification-templates/:id(\\d+)/roles", validate(NotificationTemplate), auth(), function(req, res, next){
         res.locals.valid_object.getRoles(function(roles){
             console.log(roles);
             res.locals.json = roles;
@@ -24,7 +24,7 @@ module.exports = function(router) {
         })
     });
 
-    router.put("/email-templates/:id(\\d+)/roles", validate(Template), auth(), function(req, res, next) {
+    router.put("/notification-templates/:id(\\d+)/roles", validate(NotificationTemplate), auth(), function(req, res, next) {
         res.locals.valid_object.setRoles(req.body, function(result){
             console.log(result);
             res.locals.json = result;
@@ -33,7 +33,7 @@ module.exports = function(router) {
 
     });
 
-    require("./entity")(router, Template, "email-templates");
+    require("./entity")(router, NotificationTemplate, "notification-templates");
 
 
     return router;

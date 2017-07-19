@@ -3,76 +3,25 @@ var _ = require("lodash");
 var Role = require("../models/role");
 var Permission = require("../models/permission");
 var SystemOption = require("../models/system-options");
-let DefaultTemplates = require("./default-emails");
-let EmailTemplate = require("../models/email-template");
+let options = require("./system-options");
+let DefaultTemplates = require("./default-notifications");
+let NotificationTemplate = require("../models/notification-template");
 let Notification = require("../models/notifications");
 let fs = require("fs");
 let request = require("request");
 let swaggerJSON = require("../api-docs/api-paths.json");
 let User = require("../models/user");
 let Stripe = require("./stripe");
+let store = require("./redux/store");
+let migrate = require("./migrations/migrate");
+let setOptions = require("./redux/actions").setOptions;
 //DO NOT MODIFY THE CORE SCHEMA!
 //If you do, make sure you know exactly what you are doing!
 
 //defining initial roles and
 //TODO: Change the initialRoleMap to have actual permissions
+let systemOptions = options.options;
 
-let systemOptions = [
-    {"option": "button_default_color", "value": "#FFFFFF", public: true, "type": "theme", "data_type": "color_picker"},
-    {
-        "option": "button_default_hover_color",
-        "value": "#EEEEEE",
-        public: true,
-        "type": "theme",
-        "data_type": "color_picker"
-    },
-    {
-        "option": "button_default_text_color",
-        "value": "#000000",
-        public: true,
-        "type": "theme",
-        "data_type": "color_picker"
-    },
-    {"option": "button_info_color", "value": "#03A9F4", public: true, "type": "theme", "data_type": "color_picker"},
-    {
-        "option": "button_info_hover_color",
-        "value": "#039BE5",
-        public: true,
-        "type": "theme",
-        "data_type": "color_picker"
-    },
-    {
-        "option": "button_info_text_color",
-        "value": "#ffffff",
-        public: true,
-        "type": "theme",
-        "data_type": "color_picker"
-    },
-    {"option": "button_primary_color", "value": "#2979FF", public: true, "type": "theme", "data_type": "color_picker"},
-    {
-        "option": "button_primary_hover_color",
-        "value": "#448AFF",
-        public: true,
-        "type": "theme",
-        "data_type": "color_picker"
-    },
-    {
-        "option": "button_primary_text_color",
-        "value": "#ffffff",
-        public: true,
-        "type": "theme",
-        "data_type": "color_picker"
-    },
-    {"option": "background_color", "value": "#30468a", public: true, "type": "theme", "data_type": "color_picker"},
-    {"option": "page_link_color", "value": "#30468a", public: true, "type": "theme", "data_type": "color_picker"},
-    {"option": "header_text_color", "value": "#30468a", public: true, "type": "theme", "data_type": "color_picker"},
-    {"option": "text_size", "value": "12", public: true, "type": "theme", "data_type": "number"},
-    {"option": "allow_registration", "value": "true", public: true, "type": "system", "data_type": "bool"},
-    {"option": "company_name", public: true, "type": "system", "data_type": "text"},
-    {"option": "company_address", public: true, "type": "system", "data_type": "text"},
-    {"option": "company_phone_number", public: true, "type": "system", "data_type": "text"},
-    {"option": "company_email", public: true, "type": "system", "data_type": "text"}
-];
 
 let additionalPermissions = ["can_administrate", "can_manage"];
 
@@ -86,10 +35,10 @@ let assignPermissionPromise = function (initConfig, permission_objects, initialR
                 if (role.get("role_name") == "admin" && initConfig && initConfig.admin_user && initConfig.admin_password) {
                     //insert user in config
                     console.log("admin!", role);
-                    Stripe.setKeys({
+                    store.dispatch(setOptions({
                         stripe_secret_key: initConfig.stripe_secret,
                         stripe_publishable_key: initConfig.stripe_public
-                    });
+                    }))
                     let admin = new User({
                         email: initConfig.admin_user,
                         password: require("bcryptjs").hashSync(initConfig.admin_password, 10),
@@ -111,10 +60,10 @@ let assignPermissionPromise = function (initConfig, permission_objects, initialR
             //Assign all system settings
             return new Promise(function (resolve, reject) {
                 let options = [
-                    {"option": "company_name", "value":initConfig.company_name},
-                    {"option": "company_address", "value":initConfig.company_address},
-                    {"option": "company_phone_number", "value":initConfig.company_phone_number},
-                    {"option": "company_email", "value":initConfig.company_email}
+                    {"option": "company_name", "value": initConfig.company_name},
+                    {"option": "company_address", "value": initConfig.company_address},
+                    {"option": "company_phone_number", "value": initConfig.company_phone_number},
+                    {"option": "company_email", "value": initConfig.company_email}
                 ];
                 SystemOption.batchUpdate(options, function (result) {
                     console.log(result);
@@ -207,22 +156,40 @@ module.exports = function (initConfig) {
                 table.timestamps(true, true);
                 console.log("Created 'files' table.");
 
-            }).createTable('email_templates', function (table) {
+            }).createTable('notification_templates', function (table) {
                 table.increments();
                 table.string('name');
-                table.text('email_body', 'longtext');
-                table.string('email_subject');
+                table.string('event_name');
+                table.text('message', 'longtext');
+                table.string('subject');
                 table.string("model");
                 table.specificType('additional_recipients', 'text[]');
+                table.boolean("send_email").defaultTo(false);
+                table.boolean("send_to_owner").defaultTo(true);
+                table.boolean("create_notification").default(true);
                 table.timestamps(true, true);
-                console.log("Created 'email_templates' table.");
+                console.log("Created 'notification_templates' table.");
 
-            }).createTable("email_templates_to_roles", function (table) {
+            }).createTable("notification_templates_to_roles", function (table) {
                 table.increments();
-                table.integer("email_template_id").references("email_templates.id");
+                table.integer("notification_template_id").references("notification_templates.id");
                 table.integer("role_id").references("user_roles.id");
                 table.timestamps(true, true);
-                console.log("Created 'email_templates_to_roles' table.");
+                console.log("Created 'notification_templates_to_roles' table.");
+
+            }).createTable('notifications', function (table) {
+                table.increments();
+                table.string("source_id").unique();
+                table.text('message', 'longtext');
+                table.string("type");
+                table.integer("user_id").references("users.id").onDelete('cascade');
+                table.string("subject");
+                table.string("affected_versions").defaultTo("*");
+                table.boolean("read").defaultTo(false);
+                table.boolean("email_delivered").defaultTo(false);
+                table.boolean("email_read").defaultTo(false);
+                table.timestamp('created_at').defaultTo(knex.fn.now());
+                console.log("created notifications table");
 
             }).createTable('service_categories', function (table) {
                 table.increments();
@@ -235,7 +202,7 @@ module.exports = function (initConfig) {
                 table.increments();
                 table.integer('category_id').references('service_categories.id');
                 table.integer('created_by').references('users.id');
-                table.string('name');
+                table.string('name').notNullable().unique();
                 table.string('description');
                 table.text('details', 'longtext');
                 table.boolean('published').defaultTo(false);
@@ -318,7 +285,7 @@ module.exports = function (initConfig) {
                 table.increments();
                 table.integer('user_id').references('users.id');
                 table.integer('service_instance_id').references('service_instances.id');
-                table.string('invoice_id');
+                table.string('invoice_id').unique();
                 table.string('subscription');
                 table.string('charge');
                 table.string('description');
@@ -401,16 +368,6 @@ module.exports = function (initConfig) {
                 table.timestamps(true, true);
                 console.log("Created 'user_upcoming_invoice' table.");
 
-            }).createTable('notifications', function (table) {
-                table.integer("source_id").primary();
-                table.string('message');
-                table.string("type");
-                table.string("subject");
-                table.string("affected_versions");
-                table.boolean("read");
-                table.dateTime("created_at");
-                console.log("created nortifications table");
-
             }).createTable('password_reset_request', function (table) {
                 table.increments();
                 table.integer('user_id').references('users.id').onDelete('cascade');
@@ -426,7 +383,12 @@ module.exports = function (initConfig) {
     }).then(function (isInit) {
         return new Promise(function (resolve, reject) {
             if (!isInit) {
-                resolve(false);
+                //ensure required system-options exist in database
+                console.log("database initialized - checking to see if system-options exist")
+                options.populateOptions(systemOptions).then((result) => {
+                    console.log(result);
+                    resolve(false);
+                });
             } else {
                 let initialRoleMap = {
                     "admin": [],
@@ -455,7 +417,7 @@ module.exports = function (initConfig) {
                 additionalPermissions.forEach(function (element) {
                     permissions.push(element);
                     initialRoleMap.admin.push(element);
-                    if(element === 'can_manage'){
+                    if (element === 'can_manage') {
                         initialRoleMap.staff.push(element);
                     }
                 });
@@ -477,20 +439,32 @@ module.exports = function (initConfig) {
                         public: false
                     })
                 }
-                //create options
-                SystemOption.batchCreate(systemOptions, function (optionResult) {
 
-                    //create default email templates
-                    EmailTemplate.batchCreate(DefaultTemplates.templates, function (emailResult) {
 
-                        //create roles
-                        Role.batchCreate(role_data, function (result) {
+                //create default email templates
+                NotificationTemplate.batchCreate(DefaultTemplates.templates, function (emailResult) {
 
-                            let EmailTemplateToRoles = require("../models/base/entity")("email_templates_to_roles");
-                            EmailTemplateToRoles.batchCreate(DefaultTemplates.templates_to_roles, function (emailToRolesResult) {})
+                    //create roles
+                    Role.batchCreate(role_data, function (roles) {
+                        //get the User role id for default_user_role
+                        let userRole = roles.filter(role => role['role_name'] == 'user')[0];
+                        systemOptions.push({
+                            "option": "default_user_role",
+                            public: false,
+                            "type": "system",
+                            "data_type": "number",
+                            "value": userRole['id']
+                            }
+                        );
+                        //create options
+                        SystemOption.batchCreate(systemOptions, function (optionResult) {
+
+                            let EmailTemplateToRoles = require("../models/base/entity")("notification_templates_to_roles");
+                            EmailTemplateToRoles.batchCreate(DefaultTemplates.templates_to_roles, function (emailToRolesResult) {
+                            });
 
                             //create role objects from results of inserts
-                            let role_objects = result.map(role => new Role(role));
+                            let role_objects = roles.map(role => new Role(role));
 
                             //create permissions
                             Permission.batchCreate(permission_data, function (result) {
@@ -501,14 +475,14 @@ module.exports = function (initConfig) {
                                 //assign permissions to roles
                                 resolve(Promise.all(role_objects.map(assignPermissionPromise(initConfig, permission_objects, initialRoleMap))).then(function (roles) {
                                     //IMPORTANT: uncomment the line below if you want the installation with the test demo data.
-                                    return require("../tests/demo");
+                                    //return require("../tests/demo");
                                 }));
                             });
                         });
                     });
                 });
             }
-        });
+        }).then(migrate()).then(store.initialize());
     });
 };
 

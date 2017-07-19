@@ -1,4 +1,4 @@
-
+//big todo: switch functions to return promises instead of callbacks
 let File = require("./file");
 let async = require('async');
 let ServiceTemplates = require("./service-template");
@@ -8,6 +8,7 @@ let ServiceInstanceMessages = require("./service-instance-message");
 let ServiceInstanceCharges = require("./charge");
 let ServiceInstanceCancellations = require("./service-instance-cancellation");
 let Charges = require("./charge");
+let dispatchEvent = require("../config/redux/store").dispatchEvent;
 
 let User = require('./user');
 let _ = require("lodash");
@@ -102,7 +103,7 @@ ServiceInstance.prototype.deletePayPlan = function (callback) {
         callback('Service is has no current payment plan!');
     }
 }
-
+//todo: have this function return a promise instead of using callbacks.
 ServiceInstance.prototype.subscribe = function (callback) {
     let self = this;
     if(!self.data.subscription_id) {
@@ -177,8 +178,8 @@ ServiceInstance.prototype.subscribe = function (callback) {
                 });
             })
         }).then(function (updated_instance) {
-            let emitter = require("../config/emitter");
-            emitter.emit("subscription", self);
+            //todo: move this piece out of model layer into route layer
+            dispatchEvent("service_instance_subscribed", updated_instance);
             callback(null, updated_instance);
         }).catch(function (err) {
             callback(err, null);

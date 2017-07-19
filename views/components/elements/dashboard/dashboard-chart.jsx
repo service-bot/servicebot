@@ -80,8 +80,8 @@ class ServiceOverTimeChart extends React.Component {
             );
         }else{
             return(
-                <div className="service-created-cancelled-overtime-chart">
-                    <h3 className="chart-title">Performance Over Time</h3>
+                <div className={`service-created-cancelled-overtime-chart ${this.props.className}`}>
+                    <h3 className="chart-title">Running Services Overtime</h3>
                     <RC2 data={this.state.chartData} options={this.state.chartOptions} type='line'/>
                 </div>
             );
@@ -150,8 +150,8 @@ class ServiceStatusChart extends React.Component {
                 );
         }else{
             return(
-                <div className="service-by-status-chart">
-                    <h3 className="chart-title">Service by Status</h3>
+                <div className={`service-by-status-chart ${this.props.className}`}>
+                    <h3 className="chart-title">Services by Status</h3>
                     <RC2 data={this.state.chartData} options={this.state.chartOptions} type='pie'/>
                 </div>
             );

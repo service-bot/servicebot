@@ -5,8 +5,7 @@ let ServiceInstance = require('../models/service-instance');
 let EventLogs = require('../models/event-log');
 let validate = require('../middleware/validate');
 let auth = require('../middleware/auth');
-let mailer = require('../middleware/mailer');
-
+let dispatchEvent = require("../config/redux/store").dispatchEvent;
 module.exports = function(router) {
 
     //TODO add updated time stamp thingy
@@ -22,7 +21,10 @@ module.exports = function(router) {
                         if(!err) {
                             EventLogs.logEvent(req.user.get('id'), `service-instance-cancellations ${req.params.id} was approved by user ${req.user.get('email')}`);
                             res.status(200).json(unsub_obj);
-                            mailer('instance_cancellation_approved')(req, res, next);
+
+                            // mailer('instance_cancellation_approved')(req, res, next);
+                            dispatchEvent("service_instance_cancellation_approved", unsub_obj);
+                            next();
                         } else {
                             res.status(400).json(err);
                         }
@@ -46,7 +48,8 @@ module.exports = function(router) {
                     service_instance.update(function (err, instance_obj) {
                         EventLogs.logEvent(req.user.get('id'), `service-instance-cancellations ${req.params.id} was rejected by user ${req.user.get('email')}`);
                         res.status(200).json(instance_obj);
-                        mailer('instance_cancellation_rejected')(req, res, next);
+                        dispatchEvent("service_instance_cancellation_rejected", result);
+                        next();
 
                     });
                 });

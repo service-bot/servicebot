@@ -4,12 +4,12 @@ let validate = require('../middleware/validate');
 let async = require("async")
 let jwt = require('jsonwebtoken');
 let bcrypt = require("bcryptjs");
-let EmailTemplate = require("../models/email-template");
+let NotificationTemplate = require("../models/notification-template");
 let Role = require("../models/role");
 let ResetRequest = require("../models/password-reset-request")
 let User = require("../models/user");
-let mailer = require("../middleware/mailer")
 let Alert = require("react-s-alert").default;
+let dispatchEvent = require("../config/redux/store").dispatchEvent;
 
 module.exports = function(app, passport) {
 
@@ -49,9 +49,11 @@ module.exports = function(app, passport) {
                             reset.create(function(err, newReset){
                                 let frontEndUrl = `${req.protocol}://${req.get('host')}/reset-password/${user.get("id")}/${token}`;
                                 res.json({message: "Success"});
-                                newReset.set("token", token);
-                                newReset.set("url", frontEndUrl);
-                                mailer('password_reset', 'user_id', newReset)(req, res, next);
+                                user.set("token", token);
+                                user.set("url", frontEndUrl);
+                                dispatchEvent("password_reset_request_created", user);
+                                next();
+                                // mailer('password_reset', 'user_id', newReset)(req, res, next);
                             })
                         });
                     });

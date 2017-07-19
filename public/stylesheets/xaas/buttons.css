@@ -18,7 +18,7 @@
     float: left;
     margin-right: 5px;
 }
-.react-buttons.inline.center {
+.react-buttons.inline.center, .react-buttons.center {
     justify-content: center;
 }
 .image-upload-message{
@@ -41,4 +41,10 @@
     margin: 10px;
     height: 20px;
     width: 20px;
+}
+
+/* buttons */
+.btn-bar{
+    margin-top: 15px;
+    width: 100%;
 }

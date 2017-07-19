@@ -1,13 +1,12 @@
 
 //let Announcement = require("../../../models/base/entity")("announcements");
 
-let mailer = require("../../../middleware/mailer");
 let async = require('async');
 let Logger = require('../models/logger');
 let User = require('../../../models/user');
 let ServiceInstance = require('../../../models/service-instance');
 let Invoice = require('../../../models/invoice');
-
+let dispatchEvent = require("../../../config/redux/store").dispatchEvent;
 module.exports = function(router, knex, stripe) {
 
     /**
@@ -25,9 +24,13 @@ module.exports = function(router, knex, stripe) {
             if(user.data) {
                 Invoice.findOne('invoice_id', event.data.object.id, function (invoice) {
                     if(!invoice.data) {
-                        Invoice.insertInvoice(event.data.object, user, function (result) {
+                        Invoice.insertInvoice(event.data.object, user).then(function (result) {
                             Logger.log(event.id,'Invoice Created - Webhook from Stripe. Insert new Invoice.');
                             callback(result);
+                        }).catch(function (err) {
+                            console.log(err);
+                            Logger.log(event.id,'FAILED => Invoice Creation - Webhook from Stripe. Insert new Invoice.');
+                            callback(err);
                         });
                     } else {
                         callback('Invoice already exists.');
@@ -42,9 +45,13 @@ module.exports = function(router, knex, stripe) {
     let invoiceUpdatedEvent = function (event, callback) {
         Invoice.findOne('invoice_id', event.data.object.id, function (invoice) {
             if(invoice.data) {
-                invoice.sync(event.data.object, function (result) {
+                invoice.sync(event.data.object).then(function (result) {
                     Logger.log(event.id,'Invoice Updated - Webhook from Stripe. Invoice Updated.');
                     callback(result);
+                }).catch(function (err) {
+                    console.log(err);
+                    Logger.log(event.id,'FAILED => Invoice Updated - Webhook from Stripe. Invoice Updated.');
+                    callback(err);
                 });
             } else {
                 callback('This invoice does not exist in the database.');
@@ -164,8 +171,7 @@ module.exports = function(router, knex, stripe) {
                         case 'invoice.payment_failed':
                             invoiceFailedEvent(event, function (user) {
                                 console.log(user);
-                                //TODO need a way to get user from this
-                                mailer("payment_failure", "id", user)(req, res, next);
+                                dispatchEvent("payment_failure", user);
                             });
                             break;
                         default:

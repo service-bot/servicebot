@@ -3,15 +3,16 @@
  *
  */
 let _ = require('lodash');
-
 let Stripe = function () {
-    let secret_key = Stripe.keys.stripe_secret_key;
-    let publishable_key = Stripe.keys.stripe_publishable_key;
+    let store = require("./redux/store");
+    let options = store.getState().options;
+    // let secret_key = Stripe.keys.stripe_secret_key;
+    // let publishable_key = Stripe.keys.stripe_publishable_key;
     //Require the correct secret key
-    let stripe_obj = require('stripe')(secret_key);
+    let stripe_obj = require('stripe')(options.stripe_secret_key);
     stripe_connection = {
-        stripe_secret_key: secret_key,
-        stripe_publishable_key: publishable_key,
+        stripe_secret_key: options.stripe_secret_key,
+        stripe_publishable_key: options.stripe_publishable_key,
         connection: stripe_obj
     };
     return stripe_connection;
