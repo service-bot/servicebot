@@ -47,28 +47,10 @@ let assignPermissionPromise = function (initConfig, permission_objects, initialR
                     admin.createWithStripe(function (err, result) {
                         console.log("ADMIN USER CREATED!");
                         resolve("done creating admin")
-                        admin.set("role_id", role.get("id"));
-                        admin.update(function (finished) {
-
-                        })
                     })
                 } else {
                     resolve(role);
                 }
-            });
-        }).then(function () {
-            //Assign all system settings
-            return new Promise(function (resolve, reject) {
-                let options = [
-                    {"option": "company_name", "value": initConfig.company_name},
-                    {"option": "company_address", "value": initConfig.company_address},
-                    {"option": "company_phone_number", "value": initConfig.company_phone_number},
-                    {"option": "company_email", "value": initConfig.company_email}
-                ];
-                SystemOption.batchUpdate(options, function (result) {
-                    console.log(result);
-                    return resolve('Completed!');
-                })
             });
         })
     }
@@ -456,6 +438,8 @@ module.exports = function (initConfig) {
                             "value": userRole['id']
                             }
                         );
+
+
                         //create options
                         SystemOption.batchCreate(systemOptions, function (optionResult) {
 
@@ -473,16 +457,27 @@ module.exports = function (initConfig) {
                                 let permission_objects = result.map(permission => new Permission(permission));
 
                                 //assign permissions to roles
-                                resolve(Promise.all(role_objects.map(assignPermissionPromise(initConfig, permission_objects, initialRoleMap))).then(function (roles) {
-                                    //IMPORTANT: uncomment the line below if you want the installation with the test demo data.
-                                    //return require("../tests/demo");
-                                }));
+                                resolve(Promise.all(role_objects.map(assignPermissionPromise(initConfig, permission_objects, initialRoleMap))).then(function () {
+                                        //Assign all system settings
+                                        return new Promise(function (resolve, reject) {
+                                            let options = [
+                                                {"option": "company_name", "value": initConfig.company_name},
+                                                {"option": "company_address", "value": initConfig.company_address},
+                                                {"option": "company_phone_number", "value": initConfig.company_phone_number},
+                                                {"option": "company_email", "value": initConfig.company_email}
+                                            ];
+                                            SystemOption.batchUpdate(options, function (result) {
+                                                return resolve('Completed!');
+                                            })
+                                        });
+                                    })
+                                );
                             });
                         });
                     });
                 });
             }
-        }).then(migrate()).then(store.initialize());
+        }).then(result => migrate()).then(result => store.initialize());
     });
 };
 
