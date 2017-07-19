@@ -2,6 +2,7 @@ import React from 'react';
 import Fetcher from "../utilities/fetcher.jsx"
 import DataTable from "../elements/datatable/datatable.jsx";
 import Jumbotron from "../layouts/jumbotron.jsx";
+import {Link, browserHistory} from 'react-router';
 import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
 import DateFormat from "../utilities/date-format.jsx";
@@ -30,15 +31,98 @@ class Notification extends React.Component{
 
 class NavNotification extends React.Component{
     constructor(props){
-        super(props)
+        super(props);
+
+        this.state = {openNotificationDropdown: false, viewMessage: null};
+
+        this.trimText = this.trimText.bind(this);
+        this.miniList = this.miniList.bind(this);
+        this.openNotificationDropdown = this.openNotificationDropdown.bind(this);
+        this.closeNotificationDropdown = this.closeNotificationDropdown.bind(this);
+        this.openMessageModel = this.openMessageModel.bind(this);
+        this.closeMessageModel = this.closeMessageModel.bind(this);
+        this.viewAll = this.viewAll.bind(this);
+    }
+
+    openNotificationDropdown(){
+        console.log('clicked open');
+        let unread = this.props.notifications.filter(notification => !notification.read);
+        if(unread.length) {
+            this.setState({openNotificationDropdown: true});
+        }else{
+            browserHistory.push('/notifications');
+        }
+    }
+    closeNotificationDropdown(){
+        console.log('clicked close');
+        this.setState({openNotificationDropdown: false});
+    }
+
+    createMarkup(html){
+        let trimmedHTML = this.trimText(html, 100).props.children + ' ...';
+        return {__html: trimmedHTML}
+    }
+
+    openMessageModel(dataObj){
+        this.setState({viewMessage: dataObj});
+        this.closeNotificationDropdown();
+        //TODO: add dismiss function here
+    }
+
+    closeMessageModel(){
+        this.setState({viewMessage: null});
+    }
+
+    viewAll(){
+        this.closeNotificationDropdown();
+        this.closeMessageModel();
+        browserHistory.push('/notifications');
+    }
+
+    trimText(data, limit){
+        if(data.length <= limit){
+            return (data);
+        }else {
+            return (
+                <span className="trimmed-text">{data.slice(0, limit)}</span>
+            );
+        }
+    }
+
+    miniList(unread){
+
+        if(this.state.openNotificationDropdown === true) {
+            return (
+                <div className="mini-notification-list">
+                    <ul>
+                        {unread.map(message => (
+                            <li key={`message-${message.id}`} onClick={()=>{return this.openMessageModel(message)}}
+                                dangerouslySetInnerHTML={this.createMarkup((message.message))}/>
+                        ))
+                        }
+                        <li className="text-center" onClick={this.viewAll}>View All</li>
+                    </ul>
+                </div>
+            );
+        }else{
+            return ( <span/> );
+        }
     }
 
     render(){
         let unread = this.props.notifications.filter(notification => !notification.read);
+
         return (
             <li className="nav-notification">
-                <i className="fa fa-bell" aria-hidden="true"/>
-                {unread.length ? unread.length : ''}
+                <div>
+                    <span onClick={this.openNotificationDropdown}>
+                        <i className="fa fa-bell" aria-hidden="true"/>
+                        <span className="notification-badge">{unread.length ? unread.length : '0'}</span>
+                    </span>
+                    {this.miniList(unread)}
+                </div>
+                {this.state.openNotificationDropdown && <div className="mini-notification-backdrop" onClick={this.closeNotificationDropdown}/>}
+                {this.state.viewMessage != null && <ModalNotification key="notification-modal" hide={this.closeMessageModel} notification={this.state.viewMessage}/>}
             </li>
         )
     }
