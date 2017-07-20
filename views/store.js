@@ -33,9 +33,9 @@ function appReducer(state = defaultAppState , action) {
                 [location] : [...state[location], action.notification]
             }
         case SET_NOTIFICATIONS :
-            let setLocation = "notifications"
+            let setLocation_notifications = "notifications"
             if(action.isSystem){
-                setLocation = "system_notifications"
+                setLocation_notifications = "system_notifications"
             }
             return {
                 ...state,
