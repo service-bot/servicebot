@@ -190,6 +190,10 @@ button.navbar-toggle.collapsed:hover .icon-bar {
   background: #d4d4d4;
 }
 
+.navvbar-badge {
+  margin-top: 10px;
+}
+
 
 @media (max-width: 543px) {
   [data-layout="top-navigation-1"] .navbar {

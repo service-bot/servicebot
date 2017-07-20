@@ -171,7 +171,7 @@ class NavBootstrap extends React.Component {
     getLivemode(){
         let livemode = cookie.load("spk").substring(3, 7);
         if(livemode.toUpperCase() == "TEST") {
-            return ( <div className="app-messages"><p>All payments are currently on Test Mode</p></div> );
+            return ( <span className="notification-badge"><strong>Test Mode Payments</strong></span> );
         } else {
             return <span/>;
         }
@@ -214,6 +214,9 @@ class NavBootstrap extends React.Component {
                         <Authorizer>
                             {this.getMenuItems(linkTextStyle)}
                         </Authorizer>
+                        <div className="nav navbar-nav navbar-right navvbar-badge">
+                            {this.getLivemode()}
+                        </div>
                         <Authorizer anonymous={true}>
                             <VisibleAnonymousLinks/>
                         </Authorizer>
@@ -250,7 +253,6 @@ class NavBootstrap extends React.Component {
                                                                 }/>
                 }
                 {this.getAppMessages()}
-                {this.getLivemode()}
             </nav>
 
         );
