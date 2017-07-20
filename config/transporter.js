@@ -16,8 +16,6 @@ let smtpConfig = {
     }
 };
 
-//var transporter = nodemailer.createTransport('smtps://testpug1%40gmail.com:100Dollar$@smtp.gmail.com');
-
 var transporter = nodemailer.createTransport(smtpConfig);
 
 // setup e-mail data with unicode symbols

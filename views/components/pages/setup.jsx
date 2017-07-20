@@ -12,6 +12,7 @@ import Multistep from "../elements/forms/multistep.jsx"
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import "../../../public/stylesheets/xaas/installation.css";
+import {store,initializedState } from "../../store.js"
 
 class SetupDB extends React.Component{
     constructor(props) {
@@ -174,6 +175,7 @@ class Setup extends React.Component {
                     fetch("/api/v1/service-templates/public",{retries:5, retryDelay:3000})
                         .then(function(result){
                             if(!result.error){
+                                store.dispatch(initializedState);
                                 browserHistory.push('home')
                             }
                         })
