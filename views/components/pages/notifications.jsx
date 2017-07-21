@@ -13,20 +13,20 @@ import ModalNotification from "../elements/modals/modal-notification.jsx";
 
 class Notification extends React.Component{
 
-   render(){
-       return <div>
-           <div>
-              Subject :  {this.props.subject}
-           </div>
-           <br/>
-           <p>TYPE : {this.props.type}</p>
-           <br/>
-           <div>
-               Message : {this.props.message}
-           </div>
-       </div>
+    render(){
+        return <div>
+            <div>
+                Subject :  {this.props.subject}
+            </div>
+            <br/>
+            <p>TYPE : {this.props.type}</p>
+            <br/>
+            <div>
+                Message : {this.props.message}
+            </div>
+        </div>
 
-   }
+    }
 }
 
 class NavNotification extends React.Component{
@@ -47,11 +47,9 @@ class NavNotification extends React.Component{
     openNotificationDropdown(){
         console.log('clicked open');
         let unread = this.props.notifications.filter(notification => !notification.read);
-        if(unread.length) {
-            this.setState({openNotificationDropdown: true});
-        }else{
-            browserHistory.push('/notifications');
-        }
+
+        this.setState({openNotificationDropdown: true});
+
     }
     closeNotificationDropdown(){
         console.log('clicked close');
@@ -95,10 +93,10 @@ class NavNotification extends React.Component{
             return (
                 <div className="mini-notification-list">
                     <ul>
-                        {unread.map(message => (
-                            <li key={`message-${message.id}`} onClick={()=>{return this.openMessageModel(message)}}
-                                dangerouslySetInnerHTML={this.createMarkup((message.message))}/>
-                        ))
+                        {unread.length ? unread.map(message => (
+                                <li key={`message-${message.id}`} onClick={()=>{return this.openMessageModel(message)}}
+                                    dangerouslySetInnerHTML={this.createMarkup((message.message))}/>
+                            )) :  <li className="text-center">You have no new notifications</li>
                         }
                         <li className="text-center" onClick={this.viewAll}>View All</li>
                     </ul>
@@ -116,8 +114,9 @@ class NavNotification extends React.Component{
             <li className="nav-notification">
                 <div>
                     <span onClick={this.openNotificationDropdown}>
-                        <i className="fa fa-bell" aria-hidden="true"/>
-                        <span className="notification-badge">{unread.length ? unread.length : '0'}</span>
+                        <i className="fa fa-bell nav-notification-icon" aria-hidden="true"/>
+                        {unread.length ? <span className="nav-notification-indicator"/> : <span/>}
+                        {/*<span className="notification-badge">{unread.length ? unread.length : '0'}</span>*/}
                     </span>
                     {this.miniList(unread)}
                 </div>

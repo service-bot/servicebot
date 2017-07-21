@@ -14,6 +14,15 @@ li.nav-notification i{
     color: white;
     line-height: 14px;
 }
+.nav-notification-indicator{
+    height: 8px;
+    width: 8px;
+    background: red;
+    position: absolute;
+    right: -4px;
+    bottom: 17px;
+    border-radius: 50px;
+}
 span.notification-badge {
     background: #dc3535;
     color: white;
@@ -38,7 +47,6 @@ span.notification-badge {
     z-index: 10000;
     font-size: 14px;
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.06);
-    margin-left: -16px;
 }
 .mini-notification-list:before {
     content: '';
