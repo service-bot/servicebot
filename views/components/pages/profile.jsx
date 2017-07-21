@@ -5,6 +5,15 @@ import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
 import UserFormEdit from "../elements/forms/user-form-edit.jsx";
 import Fetcher from "../utilities/fetcher.jsx";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid,
+        user: state.user || null,
+        options: state.options
+    }
+};
 
 class Profile extends React.Component {
 
@@ -31,6 +40,19 @@ class Profile extends React.Component {
                 self.setState({loading: false});
             }
         })
+    }
+
+    getUserEditForm(){
+        let user = this.props.user;
+        if(user && user.status != "invited") {
+            return (<UserFormEdit myUser={this.state.myUser}/>);
+        } else {
+            return (
+                <div className="invited-user-profile basic-info col-md-6 col-md-offset-3">
+                    <span>Please complete your registration by following the link that was emailed to you prior to editing your profile.</span>
+                </div>
+            );
+        }
     }
 
     render () {
@@ -62,7 +84,7 @@ class Profile extends React.Component {
                             <div className="row m-b-20">
                                 <div className="col-xs-12">
                                     <ContentTitle icon="user" title="My Profile"/>
-                                    <UserFormEdit myUser={this.state.myUser}/>
+                                    {this.getUserEditForm()}
                                 </div>
                             </div>
                         </Content>
@@ -73,4 +95,4 @@ class Profile extends React.Component {
     }
 }
 
-export default Profile;
+export default connect(mapStateToProps)(Profile);

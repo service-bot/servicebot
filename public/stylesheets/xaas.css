@@ -750,3 +750,11 @@ body.login .footer{
 #content-title{
     display: none;
 }
+
+.invited-user-profile {
+    line-height: 30px;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 20px;
+    font-weight: bold;
+}
