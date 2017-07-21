@@ -2,7 +2,7 @@ import React from 'react';
 import Load from '../../utilities/load.jsx';
 import Fetcher from "../../utilities/fetcher.jsx";
 let _ = require("lodash");
-import Input from '../../utilities/inputs.jsx';
+import Inputs from '../../utilities/inputs.jsx';
 import ContentTitle from '../../layouts/content-title.jsx';
 import update from 'immutability-helper';
 import { connect } from 'react-redux';
@@ -144,16 +144,16 @@ class SystemSettingsForm extends React.Component {
                                             if (group.data_type == 'color_picker') {
                                                 return (
                                                     <div key={`option_${group.option}`}>
-                                                        <Input type={group.data_type} name={group.option}
+                                                        <Inputs type={group.data_type} name={group.option}
                                                                label={group.option.replace(/_+/g, ' ')}
                                                                colors={colorSettings} defaultValue={group.value}
                                                                onChange={self.handleOnChange}/>
                                                     </div>
                                                 );
-                                            } else {
+                                            }else {
                                                 return (
                                                     <div key={`option_${group.option}`}>
-                                                        <Input type={group.data_type} name={group.option}
+                                                        <Inputs type={group.data_type} name={group.option}
                                                                label={group.option.replace(/_+/g, ' ')}
                                                                defaultValue={group.value}
                                                                onChange={self.handleOnChange}/>
@@ -205,16 +205,26 @@ class SystemSettingsForm extends React.Component {
                                             if (group.data_type == 'color_picker') {
                                                 return (
                                                     <div key={`option_${group.option}`}>
-                                                        <Input type={group.data_type} name={group.option}
+                                                        <Inputs type={group.data_type} name={group.option}
                                                                label={group.option.replace(/_+/g, ' ')}
                                                                colors={colorSettings} defaultValue={group.value}
                                                                onChange={self.handleOnChange}/>
                                                     </div>
                                                 );
+                                            }else if(group.data_type == 'your_special_type'){
+                                                return ( //this is special case
+                                                    <div key={`option_${group.option}`}>
+                                                        <Inputs type="select" name={group.option}
+                                                                label={group.option.replace(/_+/g, ' ')}
+                                                                defaultValue={group.value}
+                                                                options={['your array']}
+                                                                onChange={self.handleOnChange}/>
+                                                    </div>
+                                                )
                                             } else {
                                                 return (
                                                     <div key={`option_${group.option}`}>
-                                                        <Input type={group.data_type} name={group.option}
+                                                        <Inputs type={group.data_type} name={group.option}
                                                                label={group.option.replace(/_+/g, ' ')}
                                                                defaultValue={group.value}
                                                                onChange={self.handleOnChange}/>
