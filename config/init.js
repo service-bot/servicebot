@@ -452,7 +452,7 @@ module.exports = function (initConfig) {
                             "option": "default_user_role",
                             public: false,
                             "type": "system",
-                            "data_type": "number",
+                            "data_type": "user_role",
                             "value": userRole['id']
                             }
                         );
