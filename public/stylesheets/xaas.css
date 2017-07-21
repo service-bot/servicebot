@@ -74,6 +74,7 @@ span.btn-link:hover{
 .main .section {
     padding: 60px 0px;
     position: relative;
+    min-height: 80vh;
 }
 
 .section-heading {

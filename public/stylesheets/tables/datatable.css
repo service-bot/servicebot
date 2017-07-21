@@ -331,3 +331,7 @@ table.dataTable thead .sorting_desc_disabled:after {
   background: #292929;
   cursor: pointer;
 }
+
+#invoice-table.table thead {
+  color: #000000;
+}
