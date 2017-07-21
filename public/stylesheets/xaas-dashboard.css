@@ -6,6 +6,7 @@
     border: 1px solid rgba(128, 128, 128, 0.28);
     border-radius: 3px;
     overflow: hidden;
+    background: #FFFFFF;
 }
 .xaas-row.requested {
     border: none;
@@ -16,6 +17,7 @@
 }
 .xaas-row .btn{
     margin-bottom:0px;
+    margin-top: 3px;
 }
 .xaas-row:first-child {
     /*border-top: none;*/
@@ -54,6 +56,9 @@
 }
 .xaas-title .xaas-data:last-child {
     padding-right: 0px;
+}
+.xaas-title .xaas-status {
+    margin-top: 4px;
 }
 .xaas-title .xaas-status .status {
     font-size: 0.95rem;
