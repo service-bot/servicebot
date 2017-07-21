@@ -377,7 +377,7 @@ module.exports = function (router) {
                 }
                 ServiceTemplate.findAllByOrder(key, value, req.query.order_by, order, templates => {
                     if (templates.length == 0) {
-                        reject('No published templates found')
+                        reject([])
                     }
                     else {
                         resolve(templates);
@@ -387,7 +387,7 @@ module.exports = function (router) {
             else {
                 ServiceTemplate.findAll(key, value, templates => {
                     if (templates.length == 0) {
-                        reject('No published templates found')
+                        resolve([])
                     }
                     else {
                         resolve(templates);

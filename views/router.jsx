@@ -3,9 +3,8 @@ import {render} from 'react-dom';
 import { Router, Route, IndexRoute, IndexRedirect, browserHistory } from 'react-router';
 import Promise from "promise-polyfill";
 import {setOptions,setUid, setUser, fetchUsers, initializeState} from "./components/utilities/actions"
-import { store } from "./store"
+import { store, initializedState } from "./store"
 import { Provider } from 'react-redux'
-import Fetcher from "./components/utilities/fetcher.jsx";
 import cookie from 'react-cookie';
 // App
 import App from "./components/app.jsx";
@@ -26,7 +25,6 @@ import ResetPassword from "./components/elements/forms/reset-password.jsx";
 import SignUp from "./components/pages/signup.jsx";
 import UserForm from "./components/pages/account-settings.jsx";
 import Profile from "./components/pages/profile.jsx";
-import {isAuthorized} from "./components/utilities/authorizer.jsx";
 // Billings
 import BillingHistory from "./components/pages/billing-history.jsx";
 import BillingInvoice from "./components/pages/billing-invoice.jsx";
@@ -67,29 +65,6 @@ import ServiceRequestFormV2 from "./components/elements/forms/service-instance-f
 //     ));
 // });
 
-let initializedState = async function(dispatch){
-    let initialState = {
-        allForms : {},
-        options: {},
-        notifications: [],
-        system_notifications: [],
-        uid : cookie.load("uid")
-    };
-    initialState.options = await Fetcher("/api/v1/system-options/public");
-    try {
-        if (cookie.load("uid")) { // if user is logged in
-            initialState.user = (await Fetcher("/api/v1/users/own"))[0];
-            initialState.notifications = await Fetcher("/api/v1/notifications/own");
-            if(isAuthorized({permissions: "put_email_templates_id"})){
-                initialState.system_notifications = await Fetcher("/api/v1/notifications/system");
-            }
-        }
-    }
-    catch(err){
-        initialState.options.backgroundColor = "#000000";
-    }
-    return dispatch(initializeState(initialState));
-};
 
 store.dispatch(initializedState);
 
@@ -165,3 +140,4 @@ let AppRouter = function(props) {
     );
 }
 export default AppRouter;
+

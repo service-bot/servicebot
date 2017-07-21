@@ -9,6 +9,7 @@ export const SET_UID = 'SET_UID';
 export const SET_USER = "SET_USER";
 export const ADD_NOTIFICATION = "ADD_NOTIFICATION";
 export const SET_NOTIFICATIONS = "SET_NOTIFICATIONS";
+export const SET_NOTIFICATION = "SET_NOTIFICATION";
 export const SET_FORM_DATA = "SET_FORM_DATA";
 export const INITIALIZE = "INITIALIZE";
 
@@ -54,6 +55,9 @@ export function addNotification(notification, isSystem){
 
 export function setNotifications(notifications, isSystem){
     return { type: SET_NOTIFICATIONS, notifications, isSystem }
+}
+export function setNotification(notification, isSystem){
+    return { type: SET_NOTIFICATION, notification, isSystem }
 }
 
 
