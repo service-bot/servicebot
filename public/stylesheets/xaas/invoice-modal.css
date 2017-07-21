@@ -1,9 +1,14 @@
 .invoice-widget{
     padding: 20px;
     padding-bottom: 40px;
-    background-color: #0d47a1;
+    background-color: #FFFFFF;
     color: rgba(255, 255, 255, 0.75);
 }
 .invoice-widget .fa{
     margin-right: 10px;
+}
+.invoice-widget h4 {
+    color: #000000;
+    text-align: center;
+    margin-top: 10px;
 }

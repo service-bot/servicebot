@@ -1,6 +1,7 @@
 #invoice-table{
     margin-bottom: 0px;
 }
+
 .invoice-header {
     display: flex;
     flex-direction: column;

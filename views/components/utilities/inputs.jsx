@@ -250,8 +250,9 @@ class Inputs extends React.Component {
                                      value={typeof(option) == 'object' ? Object.values(option)[0] : option}>
                                     {typeof(option) == 'object' ? Object.keys(option)[0] : option}</option>
                           )) :
-                          <span className="help-block">Options format is not accepted. Must be an array or array of objects</span>
+                            <option value={this.props.value || this.props.defaultValue}>{this.props.value || this.props.defaultValue}</option>
                         }
+                        {/*<span className="help-block">Options format is not accepted. Must be an array or array of objects</span>*/}
                     </select>
                     {error && <span className="help-block">{error}</span> }
                     {warning && <span className="help-block">{warning}</span> }

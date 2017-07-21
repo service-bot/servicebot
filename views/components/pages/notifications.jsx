@@ -7,26 +7,26 @@ import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import {connect} from "react-redux";
-import {setNotifications, addNotification} from "../utilities/actions";
+import {setNotifications, setNotification, addNotification} from "../utilities/actions";
 import {isAuthorized} from "../utilities/authorizer.jsx"
 import ModalNotification from "../elements/modals/modal-notification.jsx";
 
 class Notification extends React.Component{
 
-   render(){
-       return <div>
-           <div>
-              Subject :  {this.props.subject}
-           </div>
-           <br/>
-           <p>TYPE : {this.props.type}</p>
-           <br/>
-           <div>
-               Message : {this.props.message}
-           </div>
-       </div>
+    render(){
+        return <div>
+            <div>
+                Subject :  {this.props.subject}
+            </div>
+            <br/>
+            <p>TYPE : {this.props.type}</p>
+            <br/>
+            <div>
+                Message : {this.props.message}
+            </div>
+        </div>
 
-   }
+    }
 }
 
 class NavNotification extends React.Component{
@@ -35,6 +35,7 @@ class NavNotification extends React.Component{
 
         this.state = {openNotificationDropdown: false, viewMessage: null};
 
+        this.dismiss = this.dismiss.bind(this);
         this.trimText = this.trimText.bind(this);
         this.miniList = this.miniList.bind(this);
         this.openNotificationDropdown = this.openNotificationDropdown.bind(this);
@@ -44,14 +45,24 @@ class NavNotification extends React.Component{
         this.viewAll = this.viewAll.bind(this);
     }
 
+    dismiss(dataObj){
+        console.log("dismissing", dataObj);
+        let self = this;
+        let read = {read: true};
+        Fetcher(`/api/v1/notifications/${dataObj.id}`, 'PUT', read).then(function (response) {
+            if(!response.error){
+                console.log('dismissed response', response);
+                self.setState({lastFetch: Date.now()});
+                //dismiss the notification in the Redux store
+                self.props.setNotification(response);
+            }
+        })
+    }
+
     openNotificationDropdown(){
         console.log('clicked open');
         let unread = this.props.notifications.filter(notification => !notification.read);
-        if(unread.length) {
-            this.setState({openNotificationDropdown: true});
-        }else{
-            browserHistory.push('/notifications');
-        }
+        this.setState({openNotificationDropdown: true});
     }
     closeNotificationDropdown(){
         console.log('clicked close');
@@ -66,7 +77,7 @@ class NavNotification extends React.Component{
     openMessageModel(dataObj){
         this.setState({viewMessage: dataObj});
         this.closeNotificationDropdown();
-        //TODO: add dismiss function here
+        this.dismiss(dataObj);
     }
 
     closeMessageModel(){
@@ -95,10 +106,10 @@ class NavNotification extends React.Component{
             return (
                 <div className="mini-notification-list">
                     <ul>
-                        {unread.map(message => (
-                            <li key={`message-${message.id}`} onClick={()=>{return this.openMessageModel(message)}}
-                                dangerouslySetInnerHTML={this.createMarkup((message.message))}/>
-                        ))
+                        {unread.length ? unread.map(message => (
+                                <li key={`message-${message.id}`} onClick={()=>{return this.openMessageModel(message)}}
+                                    dangerouslySetInnerHTML={this.createMarkup((message.message))}/>
+                            )) :  <li className="text-center">You have no new notifications</li>
                         }
                         <li className="text-center" onClick={this.viewAll}>View All</li>
                     </ul>
@@ -116,8 +127,9 @@ class NavNotification extends React.Component{
             <li className="nav-notification">
                 <div>
                     <span onClick={this.openNotificationDropdown}>
-                        <i className="fa fa-bell" aria-hidden="true"/>
-                        <span className="notification-badge">{unread.length ? unread.length : '0'}</span>
+                        <i className="fa fa-bell nav-notification-icon" aria-hidden="true"/>
+                        {unread.length ? <span className="nav-notification-indicator"/> : <span/>}
+                        {/*<span className="notification-badge">{unread.length ? unread.length : '0'}</span>*/}
                     </span>
                     {this.miniList(unread)}
                 </div>
@@ -171,7 +183,10 @@ class NotificationList extends React.Component{
         let read = {read: true};
         Fetcher(`/api/v1/notifications/${dataObj.id}`, 'PUT', read).then(function (response) {
             if(!response.error){
+                console.log('dismissed response', response);
                 self.setState({lastFetch: Date.now()});
+                //dismiss the notification in the Redux store
+                self.props.setNotification(response);
             }
         })
     }
@@ -323,13 +338,13 @@ function mapStateToProps(state){
 function mapDispatchToProps(dispatch){
     return {
         setNotifications : (notifications, system=false) => {console.log("SYS", system, notifications); return dispatch(setNotifications(notifications, system))},
+        setNotification : (notification, system=false)=> { return dispatch(setNotification(notification, system))},
         addNotification : (notification, system=false) => { return dispatch(addNotification(notification, system)) }
     }
 }
 Notifications = connect(null, mapDispatchToProps)(Notifications);
 NotificationList = connect(mapStateToProps, mapDispatchToProps)(NotificationList);
-// SystemNotificationList = connect(mapStateToProps)(SystemNotificationList);
-NavNotification = connect(mapStateToProps)(NavNotification);
+NavNotification = connect(mapStateToProps, mapDispatchToProps)(NavNotification);
 
 
 export { Notification, Notifications, NavNotification }

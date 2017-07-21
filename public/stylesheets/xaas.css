@@ -74,6 +74,7 @@ span.btn-link:hover{
 .main .section {
     padding: 60px 0px;
     position: relative;
+    min-height: 80vh;
 }
 
 .section-heading {
@@ -749,4 +750,12 @@ body.login .footer{
 
 #content-title{
     display: none;
+}
+
+.invited-user-profile {
+    line-height: 30px;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 20px;
+    font-weight: bold;
 }

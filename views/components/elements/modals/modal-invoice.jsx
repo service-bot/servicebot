@@ -168,7 +168,7 @@ class ModalInvoice extends React.Component {
                             <div className="invoice-widget">
                                 <div className="row">
                                     <div className="col-xs-12">
-                                        <p>You do not have any invoice at the moment.</p>
+                                        <h4>You do not have any invoice at the moment.</h4>
                                     </div>
                                 </div>
                             </div>
