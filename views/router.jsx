@@ -23,6 +23,7 @@ import Login from "./components/elements/forms/login.jsx";
 import ForgotPassword from "./components/elements/forms/forgot-password.jsx";
 import ResetPassword from "./components/elements/forms/reset-password.jsx";
 import SignUp from "./components/pages/signup.jsx";
+import InviteComplete from "./components/pages/invite.jsx";
 import UserForm from "./components/pages/account-settings.jsx";
 import Profile from "./components/pages/profile.jsx";
 // Billings
@@ -87,7 +88,7 @@ let AppRouter = function(props) {
                     <Route name="Forgot Password" path="forgot-password" component={ForgotPassword}/>
                     <Route name="Reset Password" path="reset-password/:uid/:token" component={ResetPassword}/>
                     <Route name="User Sign Up" path="signup" component={SignUp}/>
-                    <Route name="Finish Your Registration" path="invitation/:token" component={SignUp}/>
+                    <Route name="Finish Your Registration" path="invitation/:token" component={InviteComplete}/>
                     <Route name="My Services" path="my-services" component={MyServices}/>
                     <Route name="My Services" path="my-services/service-instance/" component={MyServices}/>
                     <Route name="Service Instance" path="my-services/service-instance/:instanceId"
