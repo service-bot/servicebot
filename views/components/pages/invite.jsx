@@ -8,15 +8,12 @@ class SignUp extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
-        console.log("opopo")
     }
 
     componentWillMount(){
-        console.log('IM HERE first');
         console.log(`/api/v1/invitation/${this.props.params.token}`)
         Fetcher(`/api/v1/invitation/${this.props.params.token}`)
             .catch(function (err) {
-                console.log('YO%5')
                 return browserHistory.push("/404");
         })
     }
