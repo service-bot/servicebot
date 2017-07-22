@@ -20,7 +20,7 @@ class SystemSettingsForm extends React.Component {
             ajaxLoad: false,
             success: false,
             rolesUrl: `/api/v1/roles`,
-            roles: [{u:0},{o:9}]
+            roles: []
         };
         this.fetchSettings = this.fetchSettings.bind(this);
         this.fetchRoles = this.fetchRoles.bind(this);
@@ -50,9 +50,7 @@ class SystemSettingsForm extends React.Component {
 
     fetchRoles(){
         let self = this;
-        console.log('FETCHING ROLESSS')
         Fetcher(self.state.rolesUrl).then(function (response) {
-            console.log("got response")
             if(!response.error){
                 console.log("roles", response);
                 let userRoles = response.map(role => {
@@ -61,7 +59,6 @@ class SystemSettingsForm extends React.Component {
                         return {[value]: roleKey}
                     }
                 );
-                console.log("udpated roles", userRoles)
                 self.setState({loading: false, roles: userRoles});
             }else{
                 console.log("getting roles error", response);
