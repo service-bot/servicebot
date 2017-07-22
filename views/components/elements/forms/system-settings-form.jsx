@@ -243,7 +243,7 @@ class SystemSettingsForm extends React.Component {
                                                         <Inputs type="select" name={group.option}
                                                                 label={group.option.replace(/_+/g, ' ')}
                                                                 value={group.value}
-                                                                options={self.roles}
+                                                                options={self.state.roles}
                                                                 onChange={self.handleOnChange}/>
                                                     </div>
                                                 )
