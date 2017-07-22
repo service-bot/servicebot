@@ -10,6 +10,7 @@ import {connect} from "react-redux";
 import {setNotifications, setNotification, addNotification} from "../utilities/actions";
 import {isAuthorized} from "../utilities/authorizer.jsx"
 import ModalNotification from "../elements/modals/modal-notification.jsx";
+let _ = require("lodash");
 
 class Notification extends React.Component{
 
@@ -103,12 +104,20 @@ class NavNotification extends React.Component{
     miniList(unread){
 
         if(this.state.openNotificationDropdown === true) {
+
+            let totalUnread = unread.length;
+            if(unread.length && unread.length > 3){
+               unread = _.slice(unread, unread.length -3, unread.length);
+            }
+
             return (
                 <div className="mini-notification-list">
+                    {totalUnread ? <li className="text-center"><strong>{`You have ${totalUnread} unread notifications`}</strong></li> : <span/>}
                     <ul>
                         {unread.length ? unread.map(message => (
-                                <li key={`message-${message.id}`} onClick={()=>{return this.openMessageModel(message)}}
-                                    dangerouslySetInnerHTML={this.createMarkup((message.message))}/>
+                                <li className="unread-message" key={`message-${message.id}`} onClick={()=>{return this.openMessageModel(message)}}
+                                    dangerouslySetInnerHTML={this.createMarkup((message.message))}>
+                                </li>
                             )) :  <li className="text-center">You have no new notifications</li>
                         }
                         <li className="text-center" onClick={this.viewAll}>View All</li>
