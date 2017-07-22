@@ -3,7 +3,8 @@ import Fetcher from "./utilities/fetcher.jsx"
 import NavBootstrap from "./layouts/nav-bootstrap.jsx"
 import Footer from "./layouts/footer.jsx"
 import {browserHistory} from 'react-router';
-import {setUid, setUser} from "./utilities/actions"
+import {connect} from "react-redux";
+import {setUid, setUser, dismissAlert} from "./utilities/actions"
 import { store } from "../store"
 
 class App extends React.Component {
@@ -34,9 +35,10 @@ class App extends React.Component {
         let that = this;
 
         Fetcher("/api/v1/auth/session/clear").then(function(result){
-            that.setState({uid: null})
+            that.setState({uid: null});
             localStorage.removeItem("permissions");
             store.dispatch(setUid(null));
+            store.dispatch(dismissAlert([]));
             browserHistory.push('/');
         }).then(function () {
             store.dispatch(setUser(null));
@@ -54,4 +56,5 @@ class App extends React.Component {
         );
     }
 }
+
 export default App;

@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware } from 'redux'
-import {SET_FORM_DATA, SET_OPTIONS, SET_UID, SET_USER, SET_NOTIFICATIONS, DISMISS_ALERT, SET_NOTIFICATION, ADD_NOTIFICATION, INITIALIZE, initializeState} from "./components/utilities/actions"
+import {SET_FORM_DATA, SET_OPTIONS, SET_UID, SET_USER, SET_NOTIFICATIONS, DISMISS_ALERT, ADD_ALERT, SET_NOTIFICATION, ADD_NOTIFICATION, INITIALIZE, initializeState} from "./components/utilities/actions"
 import cookie from 'react-cookie';
 import thunk from "redux-thunk";
 import {isAuthorized} from "./components/utilities/authorizer.jsx";
@@ -85,6 +85,11 @@ function appReducer(state = defaultAppState , action) {
             return {
                 ...state,
                 alerts : action.alerts
+            };
+        case ADD_ALERT:
+            return{
+                ...state,
+                alerts : [...state.alerts, action.alert]
             };
         default:
             return state;
