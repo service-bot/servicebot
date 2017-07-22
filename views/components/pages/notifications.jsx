@@ -281,7 +281,7 @@ class Notifications extends React.Component{
         super(props);
         this.state = {
             "url" : "/api/v1/notifications"
-        }
+        };
         console.log("Notifications props", this.props);
     }
     componentDidMount() {

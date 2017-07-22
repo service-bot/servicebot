@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware } from 'redux'
-import {SET_FORM_DATA, SET_OPTIONS, SET_UID, SET_USER, SET_NOTIFICATIONS, SET_NOTIFICATION, ADD_NOTIFICATION, INITIALIZE, initializeState} from "./components/utilities/actions"
+import {SET_FORM_DATA, SET_OPTIONS, SET_UID, SET_USER, SET_NOTIFICATIONS, DISMISS_ALERT, SET_NOTIFICATION, ADD_NOTIFICATION, INITIALIZE, initializeState} from "./components/utilities/actions"
 import cookie from 'react-cookie';
 import thunk from "redux-thunk";
 import {isAuthorized} from "./components/utilities/authorizer.jsx";
@@ -10,11 +10,9 @@ const defaultAppState = {
     options: {},
     notifications: [],
     system_notifications: [],
+    alerts: [],
     uid : cookie.load("uid")
 };
-
-
-
 
 function appReducer(state = defaultAppState , action) {
     //change the store state based on action.type
@@ -31,7 +29,7 @@ function appReducer(state = defaultAppState , action) {
             return {
                 ...state,
                 [location] : [...state[location], action.notification]
-            }
+            };
         case SET_NOTIFICATIONS :
             let setLocation_notifications = "notifications"
             if(action.isSystem){
@@ -40,7 +38,7 @@ function appReducer(state = defaultAppState , action) {
             return {
                 ...state,
                 [setLocation] : action.notifications
-            }
+            };
         case SET_NOTIFICATION :
             let setLocation = "notifications"
             if(action.isSystem){
@@ -56,7 +54,7 @@ function appReducer(state = defaultAppState , action) {
             return {
                 ...state,
                 [setLocation] : modifiedArray
-            }
+            };
 
         case SET_OPTIONS :
             return Object.assign({}, state, {
@@ -83,6 +81,11 @@ function appReducer(state = defaultAppState , action) {
                     [action.name] : newFormData
                 }
             };
+        case DISMISS_ALERT:
+            return {
+                ...state,
+                alerts : action.alerts
+            };
         default:
             return state;
     }
@@ -101,12 +104,22 @@ let initializedState = async function(dispatch){
         options: {},
         notifications: [],
         system_notifications: [],
+        alerts: [],
         uid : cookie.load("uid")
     };
     initialState.options = await Fetcher("/api/v1/system-options/public");
     try {
+        console.log("before checking cookie for uid");
         if (cookie.load("uid")) { // if user is logged in
             initialState.user = (await Fetcher("/api/v1/users/own"))[0];
+            console.log("user loaded");
+            if(initialState.user.status === 'invited'){
+                console.log('user is invited, set redux store alert');
+                initialState.alerts = [...initialState.alerts, {id: '1', message: 'Please check your email and set your password to complete your account.', show: true}];
+                initialState.alerts = [...initialState.alerts, {id: '2', message: 'A dummy alert.', show: true}];
+            }else{
+                console.log('user is not invited');
+            }
             initialState.notifications = await Fetcher("/api/v1/notifications/own");
             if(isAuthorized({permissions: "put_email_templates_id"})){
                 initialState.system_notifications = await Fetcher("/api/v1/notifications/system");

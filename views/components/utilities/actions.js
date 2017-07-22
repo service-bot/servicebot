@@ -12,6 +12,7 @@ export const SET_NOTIFICATIONS = "SET_NOTIFICATIONS";
 export const SET_NOTIFICATION = "SET_NOTIFICATION";
 export const SET_FORM_DATA = "SET_FORM_DATA";
 export const INITIALIZE = "INITIALIZE";
+export const DISMISS_ALERT = "DISMISS_ALERT";
 
 /*
  * other constants
@@ -73,3 +74,6 @@ export function setFormData(name, formData){
     return { type: SET_FORM_DATA, name, formData  }
 }
 
+export function dismissAlert(alerts){
+    return { type: DISMISS_ALERT, alerts }
+}

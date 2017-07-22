@@ -702,8 +702,6 @@ body.login .footer{
     position: absolute;
     width: 96%;
     height: auto;
-    padding: 10px 20px;
-    background: #dc3535;
     top: 68px;
     left: 0px;
     margin: 0px 2%;
@@ -712,6 +710,11 @@ body.login .footer{
 }
 .app-messages p {
     margin: 0px;
+}
+.app-message{
+    margin: 2px 0px;
+    background: #dc3535;
+    padding: 13px 20px;
 }
 
 /* desktops only */
