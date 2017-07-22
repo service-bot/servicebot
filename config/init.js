@@ -432,7 +432,7 @@ module.exports = function (initConfig) {
                         let userRole = roles.filter(role => role['role_name'] == 'user')[0];
                         systemOptions.push({
                             "option": "default_user_role",
-                            public: false,
+                            public: true,
                             "type": "system",
                             "data_type": "user_role",
                             "value": userRole['id']

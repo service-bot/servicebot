@@ -18,9 +18,12 @@ class SystemSettingsForm extends React.Component {
             system_settings: false,
             loading: true,
             ajaxLoad: false,
-            success: false
+            success: false,
+            rolesUrl: `/api/v1/roles`,
+            roles: [{u:0},{o:9}]
         };
         this.fetchSettings = this.fetchSettings.bind(this);
+        this.fetchRoles = this.fetchRoles.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
         this.handleOnChange = this.handleOnChange.bind(this);
         this.handleUpdateSettings = this.handleUpdateSettings.bind(this);
@@ -29,6 +32,7 @@ class SystemSettingsForm extends React.Component {
 
     componentDidMount(){
         this.fetchSettings();
+        this.fetchRoles();
     }
 
     fetchSettings(){
@@ -39,6 +43,28 @@ class SystemSettingsForm extends React.Component {
                 self.setState({loading: false, system_settings: response});
             }else{
                 console.log("system setting error", response);
+                self.setState({loading: false});
+            }
+        });
+    }
+
+    fetchRoles(){
+        let self = this;
+        console.log('FETCHING ROLESSS')
+        Fetcher(self.state.rolesUrl).then(function (response) {
+            console.log("got response")
+            if(!response.error){
+                console.log("roles", response);
+                let userRoles = response.map(role => {
+                        let roleKey = role.id;
+                        let value = role.role_name;
+                        return {[value]: roleKey}
+                    }
+                );
+                console.log("udpated roles", userRoles)
+                self.setState({loading: false, roles: userRoles});
+            }else{
+                console.log("getting roles error", response);
                 self.setState({loading: false});
             }
         });
@@ -114,7 +140,7 @@ class SystemSettingsForm extends React.Component {
             colorSettings = _.remove(colorSettings, null);
             colorSettings = _.union(colorSettings, ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#F78DA7', '#9900EF']);
             console.log("colorSettings", colorSettings);
-
+            //for side panel settings
             if(this.props.filter){
                 return(
                     <div>
@@ -211,13 +237,13 @@ class SystemSettingsForm extends React.Component {
                                                                onChange={self.handleOnChange}/>
                                                     </div>
                                                 );
-                                            }else if(group.data_type == 'your_special_type'){
+                                            }else if(group.data_type == 'user_role'){
                                                 return ( //this is special case
                                                     <div key={`option_${group.option}`}>
                                                         <Inputs type="select" name={group.option}
                                                                 label={group.option.replace(/_+/g, ' ')}
-                                                                defaultValue={group.value}
-                                                                options={['your array']}
+                                                                value={group.value}
+                                                                options={self.roles}
                                                                 onChange={self.handleOnChange}/>
                                                     </div>
                                                 )
