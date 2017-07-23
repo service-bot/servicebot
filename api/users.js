@@ -131,7 +131,7 @@ module.exports = function (router, passport) {
     }, function (req, res, next) {
         req.logIn(res.locals.valid_object, {session: true}, function (err) {
             if (!err) {
-                console.log("usa logged in!");
+                console.log("user logged in!");
                 next();
             } else {
                 console.error("Issue logging in: ", err)

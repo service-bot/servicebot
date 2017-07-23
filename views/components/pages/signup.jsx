@@ -49,9 +49,12 @@ class SignUp extends React.Component {
     }
     componentDidMount(){
         console.log("HISTORY", browserHistory);
+        console.log("WE GUNNA GET IN THER DAWG?")
         if(!isAuthorized({anonymous:true})){
+            console.log("yeHEAhAHHahHAwe did")
             return browserHistory.push("/");
         }
+        console.log("nahhhh mayneEEEEEEE we didnttttt")
         document.body.classList.add('login')
     }
     render () {

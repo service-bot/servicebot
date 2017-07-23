@@ -7,9 +7,7 @@ import Inputs from "../../utilities/inputs.jsx";
 import Buttons from "../buttons.jsx";
 import ModalConfirm from '../modals/modal-stripe-reconfigure.jsx';
 import Alerts from '../alerts.jsx';
-
 class SystemSettingsForm extends React.Component {
-
     constructor(props){
         super(props);
         this.state = {
@@ -23,7 +21,6 @@ class SystemSettingsForm extends React.Component {
         this.handleResponse = this.handleResponse.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
     }
-
     handleResponse(response){
         let self = this;
         self.setState({
@@ -49,11 +46,9 @@ class SystemSettingsForm extends React.Component {
             });
         }
     }
-
     onUpdate(form){
         this.setState({formData: form});
     }
-
     render () {
         let self = this;
         let getAlerts = ()=>{
@@ -62,7 +57,6 @@ class SystemSettingsForm extends React.Component {
                                  position={{position: 'fixed', bottom: true}} icon={self.state.alerts.icon} /> );
             }
         };
-
         if(this.state.loading){
             return ( <Load/> );
         }else if(this.state.success && false){
@@ -91,6 +85,8 @@ class SystemSettingsForm extends React.Component {
                             <div className="col-md-12">
                                 <div className="row">
                                     <DataForm handleResponse={this.handleResponse} onUpdate={this.onUpdate} url={this.state.stripe_import} method={'POST'}>
+                                        <Inputs label="Notify Users" type="checkbox" name="notifyUsers" defaultValue={false}
+                                                onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
                                         <div className="col-md-12 text-right">
                                             <Buttons btnType="danger" text="Import Stripe Data" type="submit" value="submit"/>
                                         </div>
@@ -104,5 +100,4 @@ class SystemSettingsForm extends React.Component {
         }
     }
 }
-
 export default SystemSettingsForm;

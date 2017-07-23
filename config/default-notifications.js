@@ -65,7 +65,7 @@ default_notifications.templates = [
     },
     {name:"invitation",
         event_name:"user_invited",
-        message:"Hello there, \r\nYou have been invited to use the [[_company_name]] ServiceBot System. From <a href='[[_hostname]]'>here</a> you can request new services, manage your services, and see other service options. Please click the link to begin user <a href='[[url]]'>registration</a>.",
+        message:"Hello there, \r\nYou have been invited to use the [[_company_name]] ServiceBot System. From here you can request new services, manage your services, and see other service options. Please click the link to begin user <a href='[[url]]'>registration</a>.",
         subject:"ServiceBot Invitation!",
         model:"user",
         send_email:true
