@@ -322,7 +322,7 @@ module.exports = function(router, knex, stripe) {
 
     router.post(`/stripe/import`, function(req, res, next){
         let protocol = req.protocol;
-        let host = req.host;
+        let host = req.hostname;
         let notifyUsers = false;
         if (req.body.hasOwnProperty("notifyUsers")) {
             console.log("notify users is set to " + req.body.notifyUsers);
