@@ -239,12 +239,13 @@ class Setup extends React.Component {
         }else{
         return(
 
-            <div style={{backgroundColor: '#30468a', minHeight: 100+'vh'}}>
-                <div className="installation">
-                    <div className="logo-installation">
+            <div style={{backgroundColor: '#0097f1', minHeight: 100+'vh'}}>
+                <div className="installation row">
+                    <div className="installation-logo col-md-8">
                         <img src="/assets/logos/logo-installation.png" />
+                        <h1>Welcome to ServiceBot Installer</h1>
                     </div>
-                    <h1>Automated Installation</h1>
+                    <div className="installation-form col-md-4">
                     <Content>
                         <Alert stack={{limit: 3}} position='bottom'/>
                         <form>
@@ -253,6 +254,7 @@ class Setup extends React.Component {
                             <br/>
                         </form>
                     </Content>
+                    </div>
                 </div>
             </div>
         );

@@ -18,11 +18,8 @@ class SystemSettings extends React.Component {
 
     }
 
-
     render () {
-        var self = this;
         let pageName = this.props.route.name;
-        let breadcrumbs = [{name:'Home', link:'home'},{name:'My Services', link:'/my-services'},{name:pageName, link:null}];
         return(
             <Authorizer permissions="can_administrate">
                 <Jumbotron pageName={pageName} location={this.props.location}/>
