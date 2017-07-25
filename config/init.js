@@ -144,6 +144,7 @@ module.exports = function (initConfig) {
                 table.string('event_name');
                 table.text('message', 'longtext');
                 table.string('subject');
+                table.string('description');
                 table.string("model");
                 table.specificType('additional_recipients', 'text[]');
                 table.boolean("send_email").defaultTo(false);
