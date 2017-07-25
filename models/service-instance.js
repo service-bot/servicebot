@@ -33,7 +33,7 @@ ServiceInstance.prototype.buildPayStructure = function (payment_object, callback
         'currency' : 'usd',
         'interval' : 'month',
         'interval_count' : 1,
-        'statement_descriptor' : '',
+        'statement_descriptor' : 'ServiceBot Subscription',
         'trial_period_days' : 0
     };
     let new_plan = _.pick(payment_object ,plan_arr);
@@ -103,6 +103,42 @@ ServiceInstance.prototype.deletePayPlan = function (callback) {
         callback('Service is has no current payment plan!');
     }
 }
+
+ServiceInstance.prototype.changePrice = function (newPlan) {
+    let self = this;
+    return new Promise(function (resolve, reject) {
+        self.deletePayPlan(function (result) {
+            return resolve(result);
+        });
+    }).then(function () {
+        return new Promise(function (resolve, reject) {
+            self.buildPayStructure(newPlan, function (plan_structure) {
+                self.createPayPlan(plan_structure, function (err, plan) {
+                    if(!err) {
+                        return resolve(plan);
+                    } else {
+                        return reject(err);
+                    }
+                });
+            });
+        });
+    }).then(function (updated_instance) {
+        return new Promise(function (resolve, reject) {
+            Stripe().connection.subscriptions.update(self.data.subscription_id, { plan: updated_instance.data.payment_plan.id }, function(err, subscription) {
+                    if(!err) {
+                        updated_instance.data.status = 'running';
+                        updated_instance.update(function (err, instance) {
+                            return resolve(instance);
+                        });
+                    } else {
+                        return reject(err);
+                    }
+                }
+            );
+        });
+    });
+};
+
 //todo: have this function return a promise instead of using callbacks.
 ServiceInstance.prototype.subscribe = function (callback) {
     let self = this;

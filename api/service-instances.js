@@ -54,41 +54,12 @@ module.exports = function(router) {
 
     router.post('/service-instances/:id/change-price', validate(ServiceInstance), auth(), function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        async.series([
-            function (callback) {
-                //Remove subscription
-                instance_object.unsubscribe(function (err, result) {
-                    callback(err, result);
-                });
-            },
-            function (callback) {
-                //Remove Payment plan
-                instance_object.deletePayPlan(function (result) {
-                    callback(null, result);
-                });
-            },
-            function (callback) {
-                //Create Payment plan
-                instance_object.buildPayStructure(req.body ,function (plan_structure) {
-                    instance_object.createPayPlan(plan_structure, function (plan) {
-                        callback(null, plan);
-                    });
-                });
-            },
-            function (callback) {
-                instance_object.subscribe(function (err, result) {
-                    callback(err, result);
-                });
-            }
-        ], function (err, result) {
-            if(!err){
-                res.json(result);
-                dispatchEvent("service_instance_updated", result);
-                next();
-                // mailer('service_instance_update')(req, res, next);
-            } else {
-                res.json(err);
-            }
+        instance_object.changePrice(req.body).then(function (updated_subscription) {
+            res.json(updated_subscription);
+            dispatchEvent("service_instance_updated", updated_subscription);
+            next();
+        }).catch(function (err) {
+            res.json(err);
         });
     });
 
