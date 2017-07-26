@@ -7,7 +7,7 @@ import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import Alert from 'react-s-alert';
 import Buttons from '../buttons.jsx';
 import {connect} from "react-redux";
-import {setUid, setUser, fetchUsers} from "../../utilities/actions";
+import {setUid, setUser, fetchUsers, setVersion} from "../../utilities/actions";
 import cookie from 'react-cookie';
 
 class Login extends React.Component {
@@ -28,7 +28,7 @@ class Login extends React.Component {
         e.preventDefault();
         let that = this;
 
-        Fetcher("/api/v1/auth/session", "POST", that.state.form).then(function(result){
+        Fetcher("/api/v1/auth/session", "POST", that.state.form).then(async function(result){
             if(!result.error) {
 
                 localStorage.setItem("permissions", result.permissions);
@@ -37,6 +37,11 @@ class Login extends React.Component {
 
                 //update redux store with the uid
                 that.props.setUid(cookie.load("uid"));
+
+                //update redux store with version number
+                Fetcher("/api/v1/system-options/version").then(function (version) {
+                    that.props.setVersion(version.version);
+                });
 
                 //if the user came from a modal, close the modal, else send user back 2 pages
                 if(that.props.modal !== true) {
@@ -164,6 +169,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setUser: (uid) => {
             dispatch(setUser(uid))
+        },
+        setVersion: (version) => {
+            dispatch(setVersion(version))
         }
     }
 };

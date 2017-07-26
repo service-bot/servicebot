@@ -9,6 +9,15 @@ import { connect } from 'react-redux';
 import Buttons from "../buttons.jsx";
 import ImageUploader from "../../utilities/image-uploader.jsx";
 import {setOptions} from "../../utilities/actions"
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid,
+        user: state.user || null,
+        options: state.options
+    }
+};
+
 class SystemSettingsForm extends React.Component {
 
     constructor(props){
@@ -110,6 +119,20 @@ class SystemSettingsForm extends React.Component {
         this.fetchSettings();
     }
 
+    getAppVersion(){
+        let version = this.props.options.version;
+        if(version) {
+            return(
+                <div className="alert alert-info">
+                    <i className="fa fa-info-circle"></i>
+                    ServiceBot Version: {version}
+                </div>
+            )
+        } else {
+            return (<span />);
+        }
+    }
+
     render () {
 
         if(this.state.loading){
@@ -200,7 +223,7 @@ class SystemSettingsForm extends React.Component {
                     <div className="row">
                         <div className="col-md-12">
                             <ContentTitle icon="cog" title="Customize your system options here."/>
-
+                            {this.getAppVersion()}
                             <div>
                                 <h4 className="text-capitalize">Branding</h4>
                                 <div className="row">
@@ -281,4 +304,4 @@ let mapDispatch = function(dispatch){
     }
 }
 
-export default connect(null, mapDispatch)(SystemSettingsForm);
+export default connect(mapStateToProps, mapDispatch)(SystemSettingsForm);
