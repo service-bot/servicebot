@@ -5,6 +5,15 @@ import Fetcher from "../utilities/fetcher.jsx";
 import update from "immutability-helper";
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import UserFormRegister from "../elements/forms/user-form-register.jsx";
+import { connect } from "react-redux";
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid,
+        user: state.user || null,
+        options: state.options
+    }
+};
 
 class SignUp extends React.Component {
 
@@ -49,16 +58,21 @@ class SignUp extends React.Component {
         document.body.classList.remove('login')
     }
     componentDidMount(){
-        console.log("HISTORY", browserHistory);
-        console.log("WE GUNNA GET IN THER DAWG?")
         if(!isAuthorized({anonymous:true})){
-            console.log("yeHEAhAHHahHAwe did")
             return browserHistory.push("/");
         }
-        console.log("nahhhh mayneEEEEEEE we didnttttt")
         document.body.classList.add('login')
     }
+
+    CheckRegistrationPermission(){
+        //If registration is not allowed, redirect to the 404 page
+        if(this.props.options.allow_registration && this.props.options.allow_registration.value == 'false') {
+            return browserHistory.push("/404");
+        }
+    }
+
     render () {
+        {this.CheckRegistrationPermission()}
         return(
             <Authorizer anonymous={true}>
                 <Content>
@@ -69,4 +83,4 @@ class SignUp extends React.Component {
     }
 }
 
-export default SignUp;
+export default connect(mapStateToProps)(SignUp);

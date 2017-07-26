@@ -179,6 +179,10 @@ class NotificationTemplateForm extends React.Component {
                                                 <TagsInput onChange={this.handleImage} name="additional_recipients" receiveOnChange={true} receiveValue={true} value={template.data.additional_recipients || []}/>
                                             </div>
                                             <div className="service-instance-section">
+                                                <span className="service-instance-section-label"><strong>Description</strong></span>
+                                                <input type="text" name="description" defaultValue={template.data.description}/>
+                                            </div>
+                                            <div className="service-instance-section">
                                                 <span className="service-instance-section-label"><strong>Subject</strong></span>
                                                 <input type="text" name="subject" defaultValue={template.data.subject}/>
                                             </div>

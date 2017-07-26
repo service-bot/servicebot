@@ -100,7 +100,7 @@ class SystemSettingsForm extends React.Component {
                                     <div className="stripe-import-form">
                                         <div className="p-20">
                                             {/* Define Inputs */}
-                                            <Inputs type="checkbox" label="Notify Users" name="notifyUsers" defaultValue={false}/>
+                                            <Inputs type="boolean" label="Notify Users" name="notifyUsers" defaultValue={false}/>
                                         </div>
                                         <Buttons containerClass="inline" size="md" btnType="danger" text="Import Stripe Data" value="submit" onClick={this.handleSubmission} loading={this.state.ajaxLoad}/>
                                     </div>

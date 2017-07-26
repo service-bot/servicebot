@@ -62,8 +62,8 @@ class ManageNotificationTemplates extends React.Component {
                                               {id: 'addnewcategory', name: 'Add New Category', link: '#', onClick: this.openAddCategoryModal}
                                           ]}/>
                                 <DataTable get="/api/v1/notification-templates"
-                                           col={['id', 'name', 'model', 'created_at', 'updated_at']}
-                                           colNames={['ID', 'Name', 'Model', 'Created At', 'Updated At']}
+                                           col={['id', 'subject', 'description', 'created_at', 'updated_at']}
+                                           colNames={['ID', 'Subject', 'Description', 'Created At', 'Updated At']}
                                            mod_name={this.modName}
                                            mod_created_at={this.modCreatedAt}
                                            mod_updated_at={this.modUpdatedAt}
