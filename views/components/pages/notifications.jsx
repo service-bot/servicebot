@@ -71,7 +71,10 @@ class NavNotification extends React.Component{
     }
 
     createMarkup(html){
-        let trimmedHTML = this.trimText(html, 100).props.children + ' ...';
+        let trimmedHTML = this.trimText(html, 100);
+        if(html.length > 100){
+            trimmedHTML = this.trimText(html, 100).props.children + ' ...';
+        }
         return {__html: trimmedHTML}
     }
 
