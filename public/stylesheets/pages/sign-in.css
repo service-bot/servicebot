@@ -54,8 +54,12 @@ body.login .featured{
 }
 
 @media (max-width: 543px) {
-  .sign-in {
+  .sign-in, .sign-up {
     max-width: 500px;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
   }
 }
 

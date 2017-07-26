@@ -1,5 +1,6 @@
 import React from 'react';
 import {browserHistory} from 'react-router';
+import Content from '../layouts/content.jsx';
 import Fetcher from "../utilities/fetcher.jsx";
 import update from "immutability-helper";
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
@@ -60,7 +61,9 @@ class SignUp extends React.Component {
     render () {
         return(
             <Authorizer anonymous={true}>
-                <UserFormRegister location={this.props.location} token={this.props.params.token || false}/>
+                <Content>
+                    <UserFormRegister location={this.props.location} token={this.props.params.token || false}/>
+                </Content>
             </Authorizer>
         );
     }

@@ -1,23 +1,15 @@
 import React from 'react';
+import cookie from 'react-cookie';
 import {Link} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import ModalInvoice from '../elements/modals/modal-invoice.jsx';
-import $ from "jquery";
-import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
-import { connect } from "react-redux";
 import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
 import {NavNotification} from "../pages/notifications.jsx";
-import cookie from 'react-cookie';
 import {AppMessage} from '../elements/app-message.jsx';
+import { connect } from "react-redux";
+import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
+import $ from "jquery";
 let _ = require("lodash");
-
-const mapStateToProps = (state, ownProps) => {
-    return {
-        uid: state.uid,
-        user: state.user || null,
-        options: state.options
-    }
-};
 
 const AnonymousLinks = ({signUpEnabled}) => (
     <ul className="nav navbar-nav navbar-right">
@@ -242,5 +234,13 @@ class NavBootstrap extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid,
+        user: state.user || null,
+        options: state.options
+    }
+};
 
 export default connect(mapStateToProps)(NavBootstrap);

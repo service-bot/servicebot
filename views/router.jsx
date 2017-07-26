@@ -48,6 +48,7 @@ import ManageNotificationTemplates from "./components/pages/manage-notification-
 import NotificationTemplateForm from "./components/elements/forms/notification-template-form.jsx";
 import ServiceTemplateForm from "./components/elements/forms/service-template-form-review.jsx";
 import ServiceInstanceForm from "./components/elements/forms/service-instance-form-example.jsx";
+import TestForm from "./components/elements/forms/test-form.jsx";
 import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
@@ -80,6 +81,7 @@ let AppRouter = function(props) {
             <Router history={browserHistory}>
                 <Route name="Home" path="/" component={App}>
                     <IndexRoute component={Home}/>
+                    <Route path="testform" component={TestForm}/>
                     <Route path="test" component={ServiceRequestFormV2}/>
                     {/*<Route path="test2" component={FormTest}/>*/}
                     <Route name="Home" path="home" component={Home}/>
