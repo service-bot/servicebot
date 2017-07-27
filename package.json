@@ -75,7 +75,7 @@
     "react-stepzilla": "^4.4.4",
     "react-tagsinput": "^3.16.1",
     "redux": "^3.6.0",
-    "redux-form": "^7.0.2",
+    "redux-form": "^7.0.3",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.15.4",
     "redux-thunk": "^2.2.0",

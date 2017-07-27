@@ -115,7 +115,7 @@ User.prototype.promiseStripeReconnect = function () {
 User.prototype.createWithStripe = function (callback) {
     let self = this;
     let customer_obj = {
-        email: self.data.email,
+        email: self.data.email.toLowerCase(),
         description: `ServiceBot User: ${self.data.email}`
     };
     //Create Stripe Customer:
@@ -142,6 +142,7 @@ User.prototype.createWithStripe = function (callback) {
 
 User.prototype.updateWithStripe = function (callback) {
     let self = this;
+    self.data.email = self.data.email.toLowerCase();
     self.promiseValid()
         .then(function (customer_id) {
             return new Promise(function (resolve, reject) {

@@ -13,6 +13,7 @@ import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import "../../../public/stylesheets/xaas/installation.css";
 import {store,initializedState } from "../../store.js"
+import { connect } from "react-redux";
 
 class SetupDB extends React.Component{
     constructor(props) {
@@ -159,6 +160,16 @@ class Setup extends React.Component {
 
     componentDidMount(){
         document.getElementById('servicebot-loader').classList.add('move-out');
+        if(this.props.options.text_size){
+            browserHistory.push("home");
+        }
+    }
+    componentDidUpdate(previousState, prevProps){
+
+        if(this.props.options.text_size){
+            browserHistory.push("home");
+        }
+
     }
 
     handleSubmit(e=null){
@@ -262,4 +273,4 @@ class Setup extends React.Component {
     }}
 }
 
-export default Setup;
+export default connect((state) => {return {"options" : state.options}})(Setup);
