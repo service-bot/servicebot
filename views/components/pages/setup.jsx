@@ -167,11 +167,10 @@ class Setup extends React.Component {
             console.log(e);
             e.preventDefault();
         }
-
+        self.setState({loading: true});
         Fetcher("/setup", "POST", self.state.form)
             .then(function(result){
                 if(!result.error) {
-                    self.setState({loading: true});
                     fetch("/api/v1/service-templates/public",{retries:5, retryDelay:3000})
                         .then(function(result){
                             if(!result.error){
@@ -181,6 +180,8 @@ class Setup extends React.Component {
                         })
                 }else{
                     console.log("There was an error");
+                    self.setState({loading: false});
+
                     console.log(!result.error);
                 }
             });
