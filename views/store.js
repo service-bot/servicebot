@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux'
-import {SET_FORM_DATA, SET_OPTIONS, SET_UID, SET_USER, SET_NOTIFICATIONS, DISMISS_ALERT, ADD_ALERT, SET_NOTIFICATION, ADD_NOTIFICATION, INITIALIZE, initializeState} from "./components/utilities/actions"
+import {SET_FORM_DATA, SET_OPTIONS, SET_VERSION, SET_UID, SET_USER, SET_NOTIFICATIONS, DISMISS_ALERT, ADD_ALERT, SET_NOTIFICATION, ADD_NOTIFICATION, INITIALIZE, initializeState} from "./components/utilities/actions"
 import cookie from 'react-cookie';
 import thunk from "redux-thunk";
 import {isAuthorized} from "./components/utilities/authorizer.jsx";
@@ -30,7 +30,12 @@ function optionsReducer(state = {}, action) {
         case INITIALIZE :
             return action.initialState.options
         case SET_OPTIONS :
-            return action.options;
+            return {...state, ...action.options }
+        case SET_VERSION :
+            return {
+                ...state,
+                version : action.version
+            };
         default:
             return state;
     }
@@ -91,7 +96,7 @@ function alertsReducer(state = [], action) {
     }
 }
 
-function uidReducer(state = null, action) {
+function uidReducer(state = cookie.load("uid") || null, action) {
     switch(action.type){
         case INITIALIZE :
             if(action.initialState.uid == undefined) {
@@ -157,6 +162,9 @@ let initializedState = async function(dispatch){
         console.log("before checking cookie for uid");
         if (cookie.load("uid")) { // if user is logged in
             initialState.user = (await Fetcher("/api/v1/users/own"))[0];
+            //Set the version of the application if the user is logged in
+            let version = await Fetcher("/api/v1/system-options/version");
+            initialState.options = {...initialState.options, version:version.version};
             console.log("user loaded");
             if(initialState.user.status === 'invited'){
                 console.log('user is invited, set redux store alert');

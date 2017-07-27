@@ -14,6 +14,12 @@
     color: #ff0015;
 }
 
+.alert-info{
+    color: #0f6175;
+    background: #deecf2;
+    border-color: #bfcfd6;
+}
+
 .s-alert-box {
     width: 50%;
     margin: 10px auto;
