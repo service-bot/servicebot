@@ -42,6 +42,12 @@
     border-right-color: #0d47a1;
 }
 
+/* list tabs ul */
+ul.tabs {
+    list-style: none;
+    padding-left: 0px;
+}
+
 @media screen {
 
 }
