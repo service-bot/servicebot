@@ -225,7 +225,7 @@ class SystemSettingsForm extends React.Component {
                     </div>
                 )
             }else { // for system settings page
-
+                this.getAppVersion();
                 return (
                     <div className="row">
                         <div className="col-md-3">
@@ -260,24 +260,6 @@ class SystemSettingsForm extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                            {this.getAppVersion()}
-                            <div>
-                                <h4 className="text-capitalize">Branding</h4>
-                                <div className="row">
-                                    <div className="col-md-6 form-group-flex column centered">
-                                        <label className="control-label">Upload Brand Logo</label>
-                                        <ImageUploader name="file" elementID="brand-logo"
-                                                       imageURL="/api/v1/system-options/file/brand_logo"
-                                                       imageStyle="badge badge-lg" uploadButton={true}/>
-                                    </div>
-                                    <div className="col-md-6 form-group-flex column centered">
-                                        <label className="control-label">Front Page Featured Image</label>
-                                        <ImageUploader name="file" elementID="front-page-image"
-                                                       imageURL="/api/v1/system-options/file/front_page_image"
-                                                       imageStyle="badge badge-lg" uploadButton={true}/>
-                                    </div>
-                                </div>
-                            </div>
 
                                 :
 
