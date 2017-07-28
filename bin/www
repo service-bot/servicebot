@@ -235,10 +235,12 @@ let startApp = function(app, callback=null){
 
                 try {
                     require("../bin/setup")(conf, function (env) {
-                        res.json({"message": "setup-initialized"});
-                        server.destroy();
-                        httpsServer.destroy();
-                        require("../app")(conf).then(startApp);
+                        require("../app")(conf).then(app => {
+                            res.json({"message": "setup-initialized"});
+                            server.destroy();
+                            httpsServer.destroy();
+                            return startApp(app);
+                        })
                     });
                 }catch(e){
                     res.json({"error": "Error - " + e});

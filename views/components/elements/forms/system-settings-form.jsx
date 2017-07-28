@@ -9,6 +9,15 @@ import { connect } from 'react-redux';
 import Buttons from "../buttons.jsx";
 import ImageUploader from "../../utilities/image-uploader.jsx";
 import {setOptions} from "../../utilities/actions"
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid,
+        user: state.user || null,
+        options: state.options
+    }
+};
+
 class SystemSettingsForm extends React.Component {
 
     constructor(props){
@@ -116,9 +125,21 @@ class SystemSettingsForm extends React.Component {
         this.setState({currentTabType: type})
     }
 
-    render () {
+    getAppVersion(){
+        let version = this.props.options.version;
+        if(version) {
+            return(
+                <div className="alert alert-info">
+                    <i className="fa fa-info-circle"></i>
+                    ServiceBot Version: {version}
+                </div>
+            )
+        } else {
+            return (<span />);
+        }
+    }
 
-        console.log('ssf', this.state);
+    render () {
 
         if(this.state.loading){
             return ( <Load/> );
@@ -239,6 +260,24 @@ class SystemSettingsForm extends React.Component {
                                         </div>
                                     </div>
                                 </div>
+                            {this.getAppVersion()}
+                            <div>
+                                <h4 className="text-capitalize">Branding</h4>
+                                <div className="row">
+                                    <div className="col-md-6 form-group-flex column centered">
+                                        <label className="control-label">Upload Brand Logo</label>
+                                        <ImageUploader name="file" elementID="brand-logo"
+                                                       imageURL="/api/v1/system-options/file/brand_logo"
+                                                       imageStyle="badge badge-lg" uploadButton={true}/>
+                                    </div>
+                                    <div className="col-md-6 form-group-flex column centered">
+                                        <label className="control-label">Front Page Featured Image</label>
+                                        <ImageUploader name="file" elementID="front-page-image"
+                                                       imageURL="/api/v1/system-options/file/front_page_image"
+                                                       imageStyle="badge badge-lg" uploadButton={true}/>
+                                    </div>
+                                </div>
+                            </div>
 
                                 :
 
@@ -302,4 +341,4 @@ let mapDispatch = function(dispatch){
     }
 }
 
-export default connect(null, mapDispatch)(SystemSettingsForm);
+export default connect(mapStateToProps, mapDispatch)(SystemSettingsForm);

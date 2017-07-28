@@ -50,7 +50,7 @@ module.exports = function (passport) {
             passReqToCallback: true // allows us to pass back the entire request to the callback
         },
         function (req, name, password, done) {
-            User.findOne('email', name, function (userToUpdate) {
+            User.findOne('email', name.toLowerCase(), function (userToUpdate) {
                 userToUpdate.set("password", bcrypt.hashSync(password, 10));
                 userToUpdate.update(function (err) {
                     Invitation.findOne("user_id", userToUpdate.get("id"), function (invite) {
@@ -81,7 +81,7 @@ module.exports = function (passport) {
 
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
-            User.findOne('email', name, function (result) {
+            User.findOne('email', name.toLowerCase(), function (result) {
                 console.log("checking name");
                 console.log(result);
                 if (result.data) {
@@ -112,7 +112,7 @@ module.exports = function (passport) {
             passReqToCallback: true // allows us to pass back the entire request to the callback
         },
         function (req, name, password, done) { // callback with email and password from our form
-            User.findOne('email', name, function (result) {
+            User.findOne('email', name.toLowerCase(), function (result) {
                 if (!result.data) {
                     return done(null, false, {message: "bad user"}); // req.flash is the way to set flashdata using connect-flash
                 }

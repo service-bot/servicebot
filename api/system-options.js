@@ -8,8 +8,8 @@ let File = require("../models/file");
 let mkdirp = require("mkdirp");
 let path = require("path");
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
-
 let systemFilePath = "uploads/system-options";
+let appPackage = require("../package.json");
 
 
 let systemStorage = multer.diskStorage({
@@ -138,6 +138,10 @@ module.exports = function (router) {
                 res.json(result);
             })
         });
+    });
+
+    router.get(`/system-options/version`, auth(), function (req, res, next) {
+        res.status("200").send({version:appPackage.version});
     });
 
 
