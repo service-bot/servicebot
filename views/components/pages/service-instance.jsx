@@ -262,6 +262,7 @@ class ServiceInstance extends React.Component {
             //Gather data first
             if( self.state.instance){
                 let service = self.state.instance;
+                console.log("the service instance", service);
                 id = service.id;
                 owner = service.references.users[0];
                 ownerId = service.user_id;
@@ -283,7 +284,7 @@ class ServiceInstance extends React.Component {
                 }else if(self.state.undoCancelModal){
                     return( <ModalManageCancellation myInstance={self.state.instance} show={self.state.undoCancelModal} hide={self.onUndoCancelClose}/> );
                 }else if(self.state.viewPaymentModal){
-                    return( <ModalPaymentHistory show={self.state.viewPaymentModal} hide={self.onViewPaymentModalClose}/> );
+                    return( <ModalPaymentHstory show={self.state.viewPaymentModal} hide={self.onViewPaymentModalClose}/> );
                 }else if(self.state.editInstanceModal){
                     return( <ModalEditInstance myInstance={self.state.instance} show={self.state.editInstanceModal} hide={self.onEditInstanceModalClose}/> );
                 }else if(self.state.editPaymentModal){
@@ -336,7 +337,8 @@ class ServiceInstance extends React.Component {
                                 <div id="service-instance-description" className="row">
                                     <div className="col-md-8 col-md-offset-2">
                                         <ServiceInstanceDescription service={myInstance} instanceDescription={myInstance.description}/>
-                                        <ServiceInstancePaymentPlan key={Object.id} owner={owner}
+                                        <ServiceInstancePaymentPlan key={Object.id}
+                                                                    owner={owner}
                                                                     service={myInstance}
                                                                     instancePaymentPlan={myInstance.payment_plan}
                                                                     status={myInstance.status}

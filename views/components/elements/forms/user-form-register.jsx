@@ -80,24 +80,24 @@ class UserFormRegister extends React.Component {
                         <div className="form-group">
                             <label className="control-label">Name</label>
                             <input type="text" name="name" className="form-control"/>
-                            <span className="bmd-help">Please enter your name</span>
+                            {/*<span className="bmd-help">Please enter your name</span>*/}
                         </div>
                         <div className="form-group">
                             <label className="control-label">Phone Number</label>
                             <input type="text" name="phone" className="form-control"/>
-                            <span className="bmd-help">Please enter your phone number</span>
+                            {/*<span className="bmd-help">Please enter your phone number</span>*/}
                         </div>
                         {!this.state.token &&
                         <div className="form-group">
                             <Inputs type="email" name="email" label="Email Address"
                                     onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
-                            <span className="bmd-help">Please enter your email</span>
+                            {/*<span className="bmd-help">Please enter your email</span>*/}
                         </div>
                         }
                         <div className="form-group">
                             <label className="control-label">Password</label>
                             <input type="password" name="password" className="form-control"/>
-                            <span className="bmd-help">Please enter your password</span>
+                            {/*<span className="bmd-help">Please enter your password</span>*/}
                         </div>
                         <div className="agreement-checkbox checkbox">
                             <label>

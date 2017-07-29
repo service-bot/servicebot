@@ -76,7 +76,9 @@ class SignUp extends React.Component {
         return(
             <Authorizer anonymous={true}>
                 <Content>
-                    <UserFormRegister location={this.props.location} token={this.props.params.token || false}/>
+                    <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
+                        <UserFormRegister location={this.props.location} token={this.props.params.token || false}/>
+                    </div>
                 </Content>
             </Authorizer>
         );

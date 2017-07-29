@@ -28,7 +28,7 @@ class ServiceInstancePaymentPlan extends React.Component {
                                 <span><i className="fa fa-phone"/>{owner.phone}</span>
                             </div>
                             <div>
-                                <Avatar linked={true} size="md" uid={owner.id}/>
+                                <Avatar key={`owner-avatar-${this.props.service.user_id}`} linked={true} size="md" uid={3}/>
                             </div>
                         </div>
                     </div>

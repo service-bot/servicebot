@@ -20,7 +20,9 @@ class SignUp extends React.Component {
 
     render () {
         return(
-            <UserFormInvite location={this.props.location} token={this.props.params.token || false}/>
+            <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
+                <UserFormInvite location={this.props.location} token={this.props.params.token || false}/>
+            </div>
         );
     }
 }

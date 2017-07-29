@@ -86,7 +86,7 @@ function systemNotificationReducer(state = [], action) {
 function alertsReducer(state = [], action) {
     switch(action.type){
         case INITIALIZE :
-            return action.initialState.alerts
+            return action.initialState.alerts;
         case DISMISS_ALERT:
             return action.alerts;
         case ADD_ALERT:
@@ -169,7 +169,7 @@ let initializedState = async function(dispatch){
             if(initialState.user.status === 'invited'){
                 console.log('user is invited, set redux store alert');
                 initialState.alerts = [...initialState.alerts, {id: '1', message: 'Please check your email and set your password to complete your account.', show: true}];
-                //initialState.alerts = [...initialState.alerts, {id: '2', message: 'A dummy alert.', show: true}];
+                // initialState.alerts = [...initialState.alerts, {id: '2', message: 'A dummy alert.', show: true}];
             }else{
                 console.log('user is not invited');
             }

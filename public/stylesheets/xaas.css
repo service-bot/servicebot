@@ -68,8 +68,19 @@ span.btn-link:hover{
 }
 
 /* layouts */
+.app-container{
+    height: auto;
+    display: flex;
+    flex-direction: column;
+}
+.centered-box{
+    min-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 .main {
-    min-height: 80vh;
+    min-height: 88vh;
 }
 .main .section {
     padding: 60px 0px;
@@ -668,7 +679,7 @@ body.login .footer{
     /*bottom: 0px;*/
     position: relative;
     bottom: 0px;
-    margin-top: 50px;
+    /*margin-top: 50px;*/
 }
 
 /* sign up */

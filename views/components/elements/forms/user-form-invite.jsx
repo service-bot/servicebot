@@ -61,7 +61,7 @@ class UserFormInvite extends React.Component {
             //TODO: Add validation functions and pass into DataForm as props
             return (
                 <div className="sign-up">
-                    <span>test {this.state.token}</span>
+                    {/*<span>test {this.state.token}</span>*/}
                     <DataForm validators={this.getValidators()} handleResponse={this.handleResponse} url={this.state.url} method={'POST'}>
 
                         <div>

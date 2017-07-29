@@ -48,7 +48,7 @@ class App extends React.Component {
     render () {
         let self = this;
         return(
-                <div style={{backgroundColor: this.state.backgroundColor, minHeight: 100+'vh'}}>
+                <div className="app-container" style={{backgroundColor: this.state.backgroundColor}}>
                     <NavBootstrap handleLogout={this.handleLogout} uid={this.state.uid}/>
                     {self.props.children}
                     <Footer/>
