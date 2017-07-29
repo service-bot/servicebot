@@ -42,6 +42,12 @@
     padding: 2px;
 }
 
+.badge.badge-xl {
+    height: 100px;
+    width: 100px;
+    padding: 2px;
+}
+
 
 .badge img {
     width: 100%;
