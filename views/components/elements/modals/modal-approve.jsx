@@ -48,7 +48,8 @@ class ModalApprove extends React.Component {
     fetcherUserPaymentInfo(){
         let self = this;
         //try and fetch user's card info from our database
-        Fetcher(`/api/v1/users/${self.state.uid}`).then(function (response) {
+        //changed so the user being checked is the owner of the instance
+        Fetcher(`/api/v1/users/${self.state.serviceInstance.user_id}`).then(function (response) {
             if(!response.error){
                 //if user has card on record
                 if(_.has(response, 'references.funds[0]') && _.has(response, 'references.funds[0].source.card')){
@@ -106,7 +107,6 @@ class ModalApprove extends React.Component {
                             }
                         });
                     } else {
-                        console.log("approved");
                         self.setState({loading: false, approved: true});
                     }
                 }
@@ -122,6 +122,7 @@ class ModalApprove extends React.Component {
     render () {
         let self = this;
         let pageName = "Service Approval";
+        let icon = "fa-thumbs-up";
         let currentModal = this.state.current_modal;
         let instance = this.state.serviceInstance;
         let name = instance.name;
@@ -129,8 +130,8 @@ class ModalApprove extends React.Component {
         let interval = instance.payment_plan.interval;
 
         let getAlerts = ()=>{
-            if(self.state.alerts ){
-                if(isAuthorized({permissions: "can_administrate"})){
+            if(self.state.alerts){
+                if(isAuthorized({permissions: ["can_administrate","can_manage"]})){
                     return ( <Alerts type={self.state.alerts.type} message={self.state.alerts.message}
                                position={{position: 'fixed', bottom: true}} icon="exclamation-circle" /> );
                 }else{
@@ -142,14 +143,15 @@ class ModalApprove extends React.Component {
 
         if(currentModal == 'model_approve' && !self.state.approved){
             return(
-                <Modal modalTitle={pageName} show={self.props.show} hide={self.props.hide} hideFooter={true} top="40%" width="490px">
+                <Modal modalTitle={pageName} icon={icon} show={self.props.show} hide={self.props.hide} hideFooter={true} top="40%" width="490px">
                     <div className="table-responsive">
                         <div className="p-20">
                             <div className="row">
                                 <div className="col-xs-12">
                                     {getAlerts()}
-                                    <p><strong>You are about to approve the following service.</strong></p>
-                                    <p>Service: {name}, <Price value={price}/>/{interval}</p>
+                                    <p><strong>You are about to approve the following service:</strong></p>
+                                    <p>Service Name: {name}</p>
+                                    <p>Service Type: {instance.type} - <Price value={price}/>/{interval}</p>
                                 </div>
                             </div>
                         </div>
@@ -163,14 +165,14 @@ class ModalApprove extends React.Component {
             );
         }else if(currentModal == 'model_approve' && self.state.approved) {
             return(
-                <Modal modalTitle={pageName} show={self.props.show} hide={self.props.hide}>
+                <Modal modalTitle={pageName} icon={icon} show={self.props.show} hide={self.props.hide}>
                     <div className="table-responsive">
                         <div className="p-20">
                             <div className="row">
                                 <div className="col-xs-12">
-                                    <p><strong>Thank you, you have approved this service!e</strong></p>
-                                    <p>Service: {name}</p>
-                                    <p>Price: <Price value={price}/>/{interval}</p>
+                                    <p><strong>You have successfully approved this service!</strong></p>
+                                    <p>Service Name: {name}</p>
+                                    <p>Service Type: {instance.type} - <Price value={price}/>/{interval}</p>
                                 </div>
                             </div>
                         </div>
@@ -178,7 +180,7 @@ class ModalApprove extends React.Component {
                 </Modal>
             );
         }else if(currentModal == 'payment_setup'){
-            return( <ModalPaymentSetup modalCallback={self.onPaymentSetupClose} show={self.state.paymentSetupModal} hide={self.onPaymentSetupClose}/> );
+            return( <ModalPaymentSetup modalCallback={self.onPaymentSetupClose} ownerId={instance.user_id} show={self.state.paymentSetupModal} hide={self.onPaymentSetupClose}/> );
         }
 
     }

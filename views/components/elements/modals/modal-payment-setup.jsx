@@ -24,7 +24,7 @@ class ModalPaymentSetup extends React.Component {
             uid = this.props.ownerId;
             console.log("modalPaymentSetup: owner", uid);
         }
-        this.state = {form: '', ownerId: uid, currentUserId: currentUserId};
+        this.state = {form: 'credit_card', ownerId: uid, currentUserId: currentUserId};
         this.handleCreditCard = this.handleCreditCard.bind(this);
         this.handleBankAccount = this.handleBankAccount.bind(this);
         this.handleBackBtn = this.handleBackBtn.bind(this);
@@ -47,7 +47,7 @@ class ModalPaymentSetup extends React.Component {
         this.setState({form: ''});
     }
     handleResponse(response){
-        if(response.created){
+        if(response.created || response.data){
             console.log('inside payment setup modal', response);
             this.handleModalCallback(response);
         }
@@ -63,9 +63,9 @@ class ModalPaymentSetup extends React.Component {
             return ( this.props.message.title );
         }else {
             if (this.state.currentUserId == this.state.ownerId) {
-                return ( "Looks like you don't have a payment source in your account, let's setup your payment here first." );
+                return ( `Looks like you don't have a payment source in your account, let's setup your payment here first.` );
             } else {
-                return ( "Looks like the user: {this.state.ownerId} doesn't have a payment source in their account, let's setup a payment for them first." );
+                return ( `Looks like this user doesn't have a payment source in their account, let's setup a payment for them first.` );
             }
         }
     }
@@ -81,9 +81,10 @@ class ModalPaymentSetup extends React.Component {
     render () {
         let self = this;
         let pageName = "Payment Setup";
+        let icon = "fa-credit-card-alt";
 
         return(
-            <Modal modalTitle={pageName} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
+            <Modal modalTitle={pageName} icon={icon} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
                 <div className="table-responsive">
                     <div className="p-20">
                         <div className="row">

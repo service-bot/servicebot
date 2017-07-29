@@ -205,6 +205,7 @@ class BillingSettingForm extends React.Component {
 
         if(self.props.modalCallback){
             console.log('has modal callback function');
+            console.log(response);
             self.props.modalCallback(response);
         }
     }
