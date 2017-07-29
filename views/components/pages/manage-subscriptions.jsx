@@ -49,9 +49,9 @@ class ManageSubscriptions extends React.Component {
         }else if(statusString == "waiting_cancellation"){
             return "Manage Cancellation";
         }else if(statusString == "cancelled"){
-            return "No Actions";
+            return null;
         }else if(statusString == "waiting"){
-            return "No Actions";
+            return null;
         }
         return "Error";
     }

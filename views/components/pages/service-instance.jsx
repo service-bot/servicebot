@@ -196,9 +196,9 @@ class ServiceInstance extends React.Component {
             if(status == 'requested'){
                 return (<li><Link to="#" onClick={self.handleApprove}>Approve Service</Link></li>);
             }else if(status == 'running'){
-                return (<li><Link to="#" onClick={self.handleCancel}>Request Cancel</Link></li>);
+                return (<li><Link to="#" onClick={self.handleCancel}>Request Cancellation</Link></li>);
             }else if(status == 'waiting_cancellation'){
-                return (<li><Link to="#" onClick={self.handleUndoCancel}>Undo Cancel Request</Link></li>);
+                return (<li><Link to="#" onClick={self.handleUndoCancel}>View Cancellation Request</Link></li>);
             }else if(status == 'cancelled'){
                 return (<li><Link to="#" onClick={self.handleApprove}>Restart Service</Link></li>);
             }
@@ -316,11 +316,11 @@ class ServiceInstance extends React.Component {
 
                                 {_.has(myInstance, 'references.service_instance_cancellations[0].id') &&
                                 <div className="row">
-                                    <div className="col-xs-12">
+                                    <div className="col-md-8 col-md-offset-2">
                                         <div className="alert alert-warning" role="alert">
-                                            <Link to="#" className="btn btn-warning btn-outline btn-rounded btn-sm pull-right" onClick={self.handleUndoCancel}>Undo Request</Link>
+                                            <Link to="#" className="btn btn-warning btn-outline btn-rounded btn-sm pull-right" onClick={self.handleUndoCancel}>View Cancellation Request</Link>
                                             <i className="fa fa-exclamation-circle"/>
-                                            You have requested cancellation for "{myInstance.name}".
+                                            There is a pending cancellation request for this service.
                                         </div>
                                     </div>
                                 </div>
