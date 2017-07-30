@@ -49,8 +49,12 @@ class Login extends React.Component {
                 if(self.props.modal !== true) {
                     if (self.props.location.state && self.props.location.state.fromSignup) {
                         return browserHistory.go(-2);
+                    } else if(result.permissions.includes("can_administrate", "can_manage")){
+                        return browserHistory.push("/dashboard");
+                    } else {
+                        return browserHistory.push("/my-services");
                     }
-                    browserHistory.goBack();
+                    //browserHistory.goBack();
                 }else{
                     self.props.hide();
                 }
