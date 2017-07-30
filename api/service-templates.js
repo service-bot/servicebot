@@ -145,24 +145,42 @@ module.exports = function (router) {
     router.get('/service-templates/:id/request', validate(ServiceTemplate), function (req, res, next) {
         let serviceTemplate = res.locals.valid_object;
         serviceTemplate.data.references = {};
-        serviceTemplate.getRelated(ServiceTemplateProperty, function (props) {
-            //this object for authenticated call
-            res.locals.valid_object.data.references[ServiceTemplateProperty.table] = props.map(entity => entity.data);
-            console.log(res.locals.valid_object);
-            if (!req.isAuthenticated()) {
-                let publicProps = _.filter(props, (prop => !prop.data.private));
-                serviceTemplate.data.references[ServiceTemplateProperty.table] = publicProps.map(entity => entity.data);
-                delete serviceTemplate.data.overhead;
-                res.json(serviceTemplate.data);
-            }
-            else {
-                next();
-            }
-        });
+            serviceTemplate.getRelated(ServiceTemplateProperty, function (props) {
+                //this object for authenticated call
+                res.locals.valid_object.data.references[ServiceTemplateProperty.table] = props.map(entity => entity.data);
+                console.log(res.locals.valid_object);
+                if(serviceTemplate.get('published') == true) {
+
+                    if (!req.isAuthenticated()) {
+                        let publicProps = _.filter(props, (prop => !prop.data.private));
+                        serviceTemplate.data.references[ServiceTemplateProperty.table] = publicProps.map(entity => entity.data);
+                        delete serviceTemplate.data.overhead;
+                        res.json(serviceTemplate.data);
+                    }
+                    else {
+                        next();
+                    }
+                }
+                else {
+                        next();
+                    }
+            });
+
     });
     router.get('/service-templates/:id/request', auth(), function (req, res, next) {
         console.log("authenticated user");
-        res.json(res.locals.valid_object.data);
+
+        let serviceTemplate = res.locals.valid_object;
+        let permission_array = res.locals.permissions;
+        let hasPermission = (permission_array.some(p => p.get("permission_name") == "can_administrate" || p.get("permission_name") == "can_manage"));
+        if(serviceTemplate.get('published') == true || hasPermission) {
+            console.log("got in here")
+            res.json(serviceTemplate.data);
+        }
+        else {
+            console.log("moved along")
+            next();
+        }
     });
 
 
@@ -177,130 +195,135 @@ module.exports = function (router) {
     router.post("/service-templates/:id/request", validate(ServiceTemplate), function (req, res, next) {
         if (!req.isAuthenticated()) {
             let serviceTemplate = res.locals.valid_object;
-            let req_body = req.body;
-            let permission_array = res.locals.permissions;
-            let req_body_email, req_body_token_id;
-            if (req_body.hasOwnProperty("email")) {
-                let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-                if (req_body.email.match(mailFormat)) {
-                    req_body_email = req_body.email;
-                }
-                else {
-                    res.status(400).json({error: 'Invalid email format'});
-                }
-            } else {
-                res.status(400).json({error: 'Must have property: email'});
-            }
-
-            if (req_body.hasOwnProperty("token_id")) {
-                if (req_body.token_id != '') {
-                    req_body_token_id = req_body.token_id;
-                }
-                else {
-                    res.status(400).json({error: 'token_id can not be empty'});
-                }
-            } else {
-                res.status(400).json({error: 'Must have property: token_id'});
-            }
-            //get default_user_role
-            let store = require('../config/redux/store');
-            let globalProps = store.getState().options;
-            let roleId = globalProps['default_user_role'];
-            let newUser = new User({"email": req_body_email, "role_id": roleId, "status": "invited"});
-            new Promise((resolve, reject) => {
-                //Check for existing user email
-                User.findOne("email", req_body_email, foundUser => {
-                    if(foundUser.data) {
-                        let userId = foundUser.get('id');
-                        Invitation.findOne("user_id", userId, foundInvitation => {
-                            if(foundInvitation.data){
-                                reject('Invitation already exists for this user')
-                            }
-                            else{
-                                reject('This email already exists in the system')
-                            }
-                        })
+            if(serviceTemplate.get('published') == true) {
+                let req_body = req.body;
+                let permission_array = res.locals.permissions;
+                let req_body_email, req_body_token_id;
+                if (req_body.hasOwnProperty("email")) {
+                    let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                    if (req_body.email.match(mailFormat)) {
+                        req_body_email = req_body.email;
                     }
-                    else{
-                        resolve()
+                    else {
+                        res.status(400).json({error: 'Invalid email format'});
                     }
-                });
-            })
-                .then(() => {
-                    //create new user
-                    return new Promise((resolve, reject) => {
-                        newUser.createWithStripe((err, resultUser) => {
-                            if (!err) {
-                                req.logIn(resultUser, {session:true}, function(err) {
-                                    if(!err){
-                                        console.log("user logged in!");
-                                        resolve(resultUser);
-                                    }else{
-                                        console.error("Issue logging in: ", err)
-                                        resolve(resultUser);
-                                    }
+                } else {
+                    res.status(400).json({error: 'Must have property: email'});
+                }
 
-                                });
-                            }
-                            else {
-                                reject(err);
-                            }
-                        });
+                if (req_body.hasOwnProperty("token_id")) {
+                    if (req_body.token_id != '') {
+                        req_body_token_id = req_body.token_id;
+                    }
+                    else {
+                        res.status(400).json({error: 'token_id can not be empty'});
+                    }
+                } else {
+                    res.status(400).json({error: 'Must have property: token_id'});
+                }
+                //get default_user_role
+                let store = require('../config/redux/store');
+                let globalProps = store.getState().options;
+                let roleId = globalProps['default_user_role'];
+                let newUser = new User({"email": req_body_email, "role_id": roleId, "status": "invited"});
+                new Promise((resolve, reject) => {
+                    //Check for existing user email
+                    User.findOne("email", req_body_email, foundUser => {
+                        if (foundUser.data) {
+                            let userId = foundUser.get('id');
+                            Invitation.findOne("user_id", userId, foundInvitation => {
+                                if (foundInvitation.data) {
+                                    reject('Invitation already exists for this user')
+                                }
+                                else {
+                                    reject('This email already exists in the system')
+                                }
+                            })
+                        }
+                        else {
+                            resolve()
+                        }
                     });
                 })
-                .then(resultUser => {
-                    //create invitation
-                    return new Promise((resolve, reject) => {
-                        let invite = new Invitation({"user_id": resultUser.get("id")});
-                        invite.create((err, result) => {
-                            if (!err) {
-                                res.locals.apiUrl = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + result.get("token");
-                                res.locals.frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
-                                EventLogs.logEvent(resultUser.get('id'), `user ${resultUser.get('email')} was created by self request`);
-                                resolve(resultUser);
-                            } else {
-                                reject(err);
-                            }
+                    .then(() => {
+                        //create new user
+                        return new Promise((resolve, reject) => {
+                            newUser.createWithStripe((err, resultUser) => {
+                                if (!err) {
+                                    req.logIn(resultUser, {session: true}, function (err) {
+                                        if (!err) {
+                                            console.log("user logged in!");
+                                            resolve(resultUser);
+                                        } else {
+                                            console.error("Issue logging in: ", err)
+                                            resolve(resultUser);
+                                        }
+
+                                    });
+                                }
+                                else {
+                                    reject(err);
+                                }
+                            });
                         });
-                    });
-                })
-                .then(resultUser => {
-                    //create fund
-                    console.log("TOKEN", req_body_token_id);
-                    return Fund.promiseFundCreateOrUpdate(resultUser.get('id'), req_body_token_id);
-                })
-                .then(fund => {
-                    //create service instance
-                    return serviceTemplate.requestPromise(fund.get('user_id'), req_body, permission_array);
-                })
-                .then(service => {
-                    //Send the mail based on the requester
-                    return new Promise((resolve, reject) => {
-                        service.set('api', res.locals.apiUrl);
-                        service.set('url', res.locals.frontEndUrl);
-                        dispatchEvent("service_instance_requested_new_user", service);
-                        // mailer('request_service_instance_new_user', 'user_id', service)(req, res, next);
-                        //TODO whats going on here @bsears?
-                        let user_role = new Role({"id" : 3});
-                        user_role.getPermissions(function(perms){
-                            let permission_names = perms.map(perm => perm.data.permission_name);
-                            service.set("permissions", permission_names);
+                    })
+                    .then(resultUser => {
+                        //create invitation
+                        return new Promise((resolve, reject) => {
+                            let invite = new Invitation({"user_id": resultUser.get("id")});
+                            invite.create((err, result) => {
+                                if (!err) {
+                                    res.locals.apiUrl = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + result.get("token");
+                                    res.locals.frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
+                                    EventLogs.logEvent(resultUser.get('id'), `user ${resultUser.get('email')} was created by self request`);
+                                    resolve(resultUser);
+                                } else {
+                                    reject(err);
+                                }
+                            });
+                        });
+                    })
+                    .then(resultUser => {
+                        //create fund
+                        console.log("TOKEN", req_body_token_id);
+                        return Fund.promiseFundCreateOrUpdate(resultUser.get('id'), req_body_token_id);
+                    })
+                    .then(fund => {
+                        //create service instance
+                        return serviceTemplate.requestPromise(fund.get('user_id'), req_body, permission_array);
+                    })
+                    .then(service => {
+                        //Send the mail based on the requester
+                        return new Promise((resolve, reject) => {
+                            service.set('api', res.locals.apiUrl);
+                            service.set('url', res.locals.frontEndUrl);
+                            dispatchEvent("service_instance_requested_new_user", service);
+                            // mailer('request_service_instance_new_user', 'user_id', service)(req, res, next);
+                            //TODO whats going on here @bsears?
+                            let user_role = new Role({"id": 3});
+                            user_role.getPermissions(function (perms) {
+                                let permission_names = perms.map(perm => perm.data.permission_name);
+                                service.set("permissions", permission_names);
+                                return resolve(service);
+                            });
+                        });
+                    })
+                    .then(service => {
+                        //create event log
+                        return new Promise((resolve, reject) => {
+                            EventLogs.logEvent(service.get('user_id'), `service-templates ${service.get('service_id')} was requested by user ${service.get('user_id')} and service-instance was created`);
+                            res.status(200).json(service.data);
                             return resolve(service);
                         });
+                    })
+                    .catch(err => {
+                        console.error('Service template request from new user error: ', err);
+                        res.status(400).json({error: err});
                     });
-                })
-                .then(service => {
-                    //create event log
-                    return new Promise((resolve, reject) => {
-                        EventLogs.logEvent(service.get('user_id'), `service-templates ${service.get('service_id')} was requested by user ${service.get('user_id')} and service-instance was created`);
-                        res.status(200).json(service.data);
-                        return resolve(service);
-                    });
-                })
-                .catch(err => {
-                    console.error('Service template request from new user error: ', err);
-                    res.status(400).json({error: err});
-                });
+            }
+            else {
+                next();
+            }
         }
         else {
             next();
@@ -316,42 +339,48 @@ module.exports = function (router) {
         let req_uid = req.user.get("id");
         let req_body = req.body;
         let permission_array = res.locals.permissions;
-        new Promise((resolve, reject) => {
-            if (req_body.hasOwnProperty("token_id")) {
-                if (req_body.token_id != '') {
-                    return resolve(Fund.promiseFundCreateOrUpdate(req_uid, req_body.token_id))
-                }
-                else {
+        let hasPermission = (permission_array.some(p => p.get("permission_name") == "can_administrate" || p.get("permission_name") == "can_manage"));
+        if(serviceTemplate.get('published') == true || hasPermission) {
+            new Promise((resolve, reject) => {
+                if (req_body.hasOwnProperty("token_id")) {
+                    if (req_body.token_id != '') {
+                        return resolve(Fund.promiseFundCreateOrUpdate(req_uid, req_body.token_id))
+                    }
+                    else {
+                        return resolve();
+                    }
+                } else {
                     return resolve();
                 }
-            } else {
-                return resolve();
-            }
-        })
-            .then(() => serviceTemplate.requestPromise(req_uid, req_body, permission_array))
-            .then(function (service) {
-
-                //Send the main based on the requester
-                return new Promise(function (resolve, reject) {
-                    console.log(service);
-                    if (service.data.user_id == req_uid) {
-                        dispatchEvent("service_instance_requested_by_user", service);
-                    } else {
-                        dispatchEvent("service_instance_requested_for_user", service);
-                    }
-                    return resolve(service);
-                });
             })
-            .then(function (service) {
-                return new Promise(function (resolve, reject) {
-                    // EventLogs.logEvent(req.user.get('id'), `service-templates ${req.params.id} was requested by user ${req.user.get('email')} and service-instance was created`);
-                    res.status(200).json(service.data);
-                    return resolve(service);
-                });
-            }).catch(function (err) {
+                .then(() => serviceTemplate.requestPromise(req_uid, req_body, permission_array))
+                .then(function (service) {
+
+                    //Send the main based on the requester
+                    return new Promise(function (resolve, reject) {
+                        console.log(service);
+                        if (service.data.user_id == req_uid) {
+                            dispatchEvent("service_instance_requested_by_user", service);
+                        } else {
+                            dispatchEvent("service_instance_requested_for_user", service);
+                        }
+                        return resolve(service);
+                    });
+                })
+                .then(function (service) {
+                    return new Promise(function (resolve, reject) {
+                        // EventLogs.logEvent(req.user.get('id'), `service-templates ${req.params.id} was requested by user ${req.user.get('email')} and service-instance was created`);
+                        res.status(200).json(service.data);
+                        return resolve(service);
+                    });
+                }).catch(function (err) {
                 console.log(err);
-            res.status(400).json({error: err});
-        });
+                res.status(400).json({error: err});
+            });
+        }
+        else {
+            res.status(401).json({error: "Unauthenticated"});
+        }
     });
 
 
