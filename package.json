@@ -76,6 +76,7 @@
     "react-tagsinput": "^3.16.1",
     "redux": "^3.6.0",
     "redux-form": "^7.0.3",
+    "redux-form-validators": "^1.0.3",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.15.4",
     "redux-thunk": "^2.2.0",
