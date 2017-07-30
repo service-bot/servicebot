@@ -228,7 +228,7 @@ class ServiceInstance extends React.Component {
                     <Authorizer permissions="can_administrate">
                         <li role="separator" className="divider"/>
                     </Authorizer>
-                    <li><Link to="#" onClick={self.handleViewPaymentModal}>View Payment History</Link></li>
+                    {/*<li><Link to="#" onClick={self.handleViewPaymentModal}>View Payment History</Link></li>*/}
                     {self.getStatusButtons()}
                 </ul>
             </div>
@@ -284,7 +284,7 @@ class ServiceInstance extends React.Component {
                 }else if(self.state.undoCancelModal){
                     return( <ModalManageCancellation myInstance={self.state.instance} show={self.state.undoCancelModal} hide={self.onUndoCancelClose}/> );
                 }else if(self.state.viewPaymentModal){
-                    return( <ModalPaymentHstory show={self.state.viewPaymentModal} hide={self.onViewPaymentModalClose}/> );
+                    return( <ModalPaymentHistory show={self.state.viewPaymentModal} hide={self.onViewPaymentModalClose}/> );
                 }else if(self.state.editInstanceModal){
                     return( <ModalEditInstance myInstance={self.state.instance} show={self.state.editInstanceModal} hide={self.onEditInstanceModalClose}/> );
                 }else if(self.state.editPaymentModal){

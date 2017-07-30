@@ -23,7 +23,7 @@ class ModalEditPaymentPlan extends React.Component {
         let pageName = "Edit Payment Plan";
 
         return(
-            <Modal modalTitle={pageName} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
+            <Modal modalTitle={pageName} icon="fa-credit-card-alt" hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
                 <div className="table-responsive">
                     <div className="row">
                         <div className="col-xs-12">

@@ -24,7 +24,7 @@ class ServiceInstanceFormEdit extends React.Component {
 
     handleResponse(response){
         console.log("inside handle response", response);
-        if(!response.error && !response.type == 'StripeInvalidRequestError'){
+        if(!response.error && response.type != 'StripeInvalidRequestError'){
             this.setState({success: true, submitting: false});
         }else{
             if(response.type == "StripeInvalidRequestError"){

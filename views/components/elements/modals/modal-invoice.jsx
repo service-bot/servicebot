@@ -102,10 +102,13 @@ class ModalInvoice extends React.Component {
                     );
                 };
 
-                let last4 = null;
-                let fund = self.state.currentUser.references.funds;
-                if(fund && fund.length > 0){
-                    last4 = fund[0].source.card.last4;
+                let last4, fund = null;
+
+                if(self.state.currentUser) {
+                    fund = self.state.currentUser.references.funds;
+                    if(fund && fund.length > 0){
+                        last4 = fund[0].source.card.last4;
+                    }
                 }
 
                 let modalHeadingStyle = {};
