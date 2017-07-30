@@ -1,5 +1,5 @@
 import { createStore, applyMiddleware, combineReducers } from 'redux'
-import {SET_FORM_DATA, SET_OPTIONS, SET_VERSION, SET_UID, SET_USER, SET_NOTIFICATIONS, DISMISS_ALERT, ADD_ALERT, SET_NOTIFICATION, ADD_NOTIFICATION, INITIALIZE, initializeState} from "./components/utilities/actions"
+import {SET_FORM_DATA, SET_OPTIONS, SET_VERSION, SET_UID, SET_USER, SET_NOTIFICATIONS, DISMISS_ALERT, ADD_ALERT, SET_NOTIFICATION,ADD_SYSTEM_NOTIFICATION, SET_SYSTEM_NOTIFICATIONS,SET_SYSTEM_NOTIFICATION, ADD_NOTIFICATION, INITIALIZE, initializeState} from "./components/utilities/actions"
 import cookie from 'react-cookie';
 import thunk from "redux-thunk";
 import {isAuthorized} from "./components/utilities/authorizer.jsx";
@@ -66,11 +66,11 @@ function systemNotificationReducer(state = [], action) {
     switch(action.type){
         case INITIALIZE :
             return action.initialState.system_notifications
-        case ADD_NOTIFICATION :
+        case ADD_SYSTEM_NOTIFICATION :
             return [...state, action.notification];
-        case SET_NOTIFICATIONS :
+        case SET_SYSTEM_NOTIFICATIONS :
             return action.notifications;
-        case SET_NOTIFICATION :
+        case SET_SYSTEM_NOTIFICATION :
             return (state.map(notification => {
                 if(notification.id == action.notification.id){
                     return action.notification

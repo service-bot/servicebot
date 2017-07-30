@@ -7,7 +7,7 @@ import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import {connect} from "react-redux";
-import {setNotifications, setNotification, addNotification} from "../utilities/actions";
+import {setNotifications, setNotification,setSystemNotifications, addNotification} from "../utilities/actions";
 import {isAuthorized} from "../utilities/authorizer.jsx"
 import ModalNotification from "../elements/modals/modal-notification.jsx";
 let _ = require("lodash");
@@ -315,7 +315,7 @@ class Notifications extends React.Component{
                     throw "not authorized for system"
                 }
             })
-            .then((sys_notifications) => self.props.setNotifications(sys_notifications, true))
+            .then((sys_notifications) => self.props.setSystemNotifications(sys_notifications, true))
             .catch((err) => Promise.reject());
     }
     render(){
@@ -351,6 +351,8 @@ function mapDispatchToProps(dispatch){
     return {
         setNotifications : (notifications, system=false) => {console.log("SYS", system, notifications); return dispatch(setNotifications(notifications, system))},
         setNotification : (notification, system=false)=> { return dispatch(setNotification(notification, system))},
+        setSystemNotifications : (notifications, system=true) => {console.log("SYS", system, notifications); return dispatch(setSystemNotifications(notifications, system))},
+
         addNotification : (notification, system=false) => { return dispatch(addNotification(notification, system)) }
     }
 }
