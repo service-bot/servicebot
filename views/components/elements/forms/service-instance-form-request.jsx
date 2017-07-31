@@ -252,7 +252,10 @@ class ServiceRequestForm extends React.Component {
             } else {
 
                 const users = this.state.users;
-                const sortedUsers = _.sortBy(users, ['id']);
+                const userRoleList = users.filter(function(user){
+                    return user.references.user_roles[0].role_name === 'user';
+                });
+                const sortedUsers = _.sortBy(userRoleList, ['id']);
                 let userOptions = (userList)=> {
                     return _.map(userList, (user)=>{ return new Object({[user.email]: user.id}) } );
                 };
