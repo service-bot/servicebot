@@ -347,7 +347,7 @@ class DataForm extends React.Component {
             })
         }
     }
-    handleInputChange(element, modelName=null, objectName=null) {
+    handleInputChange(element, modelName=null, objectName=null, nameOverride=null) {
         let self = this;
         return function(event, newSet=null){
             let set = {form : { references: {}}};
@@ -373,7 +373,7 @@ class DataForm extends React.Component {
                     //if target doesn't exist - assume the event is the value
                 }else{
                     value = event;
-                    name = element.props.name;
+                    name = nameOverride ? nameOverride : element.props.name;
                 }
 
             self.setState(currState => {

@@ -697,10 +697,8 @@ class CustomPropNameField extends React.Component {
     }
 
     componentDidMount(){
-            let event = new Event('input', { bubbles: true });
-            console.log("!");
-            this.refs.label.dispatchEvent(event);
-            this.refs.name.dispatchEvent(event);
+            this.props.onChange(this.state.label, null, null, "prop_label");
+            this.props.onChange(this.state.name, null, null, "name")
             this.setState({firstLoad: false});
     }
 
