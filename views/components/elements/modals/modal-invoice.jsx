@@ -118,7 +118,7 @@ class ModalInvoice extends React.Component {
                 }
 
                 return(
-                    <Modal modalTitle={pageName} show={this.props.show} hide={this.props.hide}>
+                    <Modal modalTitle={pageName} icon={this.props.icon} show={this.props.show} hide={this.props.hide}>
                         <div id="invoice-modal" className="table-responsive">
                             <div className="invoice-widget" style={modalHeadingStyle}>
                                 <div className="row">
@@ -166,7 +166,7 @@ class ModalInvoice extends React.Component {
                 );
             }else{
                 return(
-                    <Modal modalTitle={pageName} show={this.props.show} hide={this.props.hide}>
+                    <Modal modalTitle={pageName} icon={this.props.icon} show={this.props.show} hide={this.props.hide}>
                         <div className="table-responsive">
                             <div className="invoice-widget">
                                 <div className="row">

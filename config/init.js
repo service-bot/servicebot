@@ -480,7 +480,8 @@ module.exports = function (initConfig) {
                                                 {"option": "company_name", "value": initConfig.company_name},
                                                 {"option": "company_address", "value": initConfig.company_address},
                                                 {"option": "company_phone_number", "value": initConfig.company_phone_number},
-                                                {"option": "company_email", "value": initConfig.company_email}
+                                                {"option": "company_email", "value": initConfig.company_email},
+                                                {"option": "hostname", "value": initConfig.hostname}
                                             ];
                                             SystemOption.batchUpdate(options, function (result) {
                                                 return resolve(result);

@@ -128,7 +128,8 @@ class RefundForm extends React.Component {
                     <DataForm handleResponse={this.handleResponse} url={this.state.refundURL} method={'POST'}>
 
                         <div className="p-20">
-                            <p><strong>Issue a refund.</strong></p>
+                            <p><strong>You can issue a partial or full refund. If you leave the amount 0 and submit, full refund will be applied.
+                            Total amount of refunds cannot exceed the total transaction amount.</strong></p>
                             <Inputs type="price" name="amount" label="Refund Amount" defaultValue={0}
                                     onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
                             <Inputs type="select" name="reason" label="What is the reason for this refund?" defaultValue="requested_by_customer"
