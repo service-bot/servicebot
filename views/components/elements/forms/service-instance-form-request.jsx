@@ -54,7 +54,10 @@ class ServiceRequestForm extends React.Component {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
                     console.log('getting users in will mount', response);
-                    self.setState({users: response});
+                    let userRoleList = response.filter(function(user){
+                        return user.references.user_roles[0].role_name === 'user';
+                    });
+                    self.setState({users: userRoleList});
                 } else {
                     console.log('error getting users', response);
                 }
@@ -252,10 +255,7 @@ class ServiceRequestForm extends React.Component {
             } else {
 
                 const users = this.state.users;
-                const userRoleList = users.filter(function(user){
-                    return user.references.user_roles[0].role_name === 'user';
-                });
-                const sortedUsers = _.sortBy(userRoleList, ['id']);
+                const sortedUsers = _.sortBy(users, ['id']);
                 let userOptions = (userList)=> {
                     return _.map(userList, (user)=>{ return new Object({[user.email]: user.id}) } );
                 };

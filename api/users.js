@@ -272,6 +272,18 @@ module.exports = function (router, passport) {
         });
     });
 
+    router.post("/users/:id(\\d+)/suspend", validate(User), auth(null, User, "id"), function (req, res) {
+        let user = res.locals.valid_object;
+        user.unsuspend(function (err, updated_user) {
+            if(!err) {
+                //dispatchEvent("user_unsuspended", user);
+                res.status(200).json(updated_user);
+            } else {
+                res.status(400).json({error: err});
+            }
+        });
+    });
+
     router.delete(`/users/:id(\\d+)`, validate(User), auth(null, User, "id"), function (req, res, next) {
         let user = res.locals.valid_object;
         user.deleteWithStripe(function (err, completed_msg) {
