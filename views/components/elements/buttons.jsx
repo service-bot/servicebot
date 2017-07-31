@@ -61,7 +61,10 @@ class Buttons extends React.Component {
 
     success(){
         let self = this;
-        setTimeout(()=>{console.log('hi'); self.setState({success: false})}, 3000);
+        setTimeout(()=>{
+            self.setState({success: false});
+            self.props.reset();
+        }, 3000);
 
         let style = {color: '#8BC34A'};
         if(this.state.systemOptions){

@@ -64,7 +64,7 @@ class ManageNotificationTemplates extends React.Component {
                                 <DataTable get="/api/v1/notification-templates"
                                            col={['id', 'subject', 'description', 'created_at', 'updated_at']}
                                            colNames={['ID', 'Subject', 'Description', 'Created At', 'Updated At']}
-                                           mod_name={this.modName}
+                                           mod_subject={this.modName}
                                            mod_created_at={this.modCreatedAt}
                                            mod_updated_at={this.modUpdatedAt}
                                            lastFetch={this.state.lastFetch}

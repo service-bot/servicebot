@@ -7,8 +7,9 @@ import Jumbotron from "../../layouts/jumbotron.jsx";
 import Content from "../../layouts/content.jsx";
 import {DataForm, DataChild, DataInput} from "../../utilities/data-form.jsx";
 import {Wysiwyg, WysiwygTemplater} from "../wysiwyg.jsx";
-import TagsInput from 'react-tagsinput'
-import 'react-tagsinput/react-tagsinput.css'
+import TagsInput from 'react-tagsinput';
+import 'react-tagsinput/react-tagsinput.css';
+import Buttons from "../buttons.jsx";
 
 class NotificationTemplateForm extends React.Component {
 
@@ -19,13 +20,15 @@ class NotificationTemplateForm extends React.Component {
             template : {},
             url : "/api/v1/notification-templates/" + props.params.id,
             roleUrl : "/api/v1/roles",
-            roles : []
+            roles : [],
+            success: false
         };
 
         this.handleFiles = this.handleFiles.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
         this.handleRole = this.handleRole.bind(this);
         this.insertString = this.insertString.bind(this);
+        this.handleResetSuccess = this.handleResetSuccess.bind(this);
     }
 
     componentDidMount() {
@@ -40,7 +43,7 @@ class NotificationTemplateForm extends React.Component {
                 console.log(response);
                 return response;
             }
-//then get the roles
+        //then get the roles
         }).then(function(r){
             if(r){
                 Fetcher(self.state.url + "/roles").then(function(roles){
@@ -73,36 +76,25 @@ class NotificationTemplateForm extends React.Component {
     }}
     handleFiles(e){
         e.preventDefault();
-        // console.log($(".yo"));
-        // $('#content').redactor({
-        //     focus: true
-        // });
-
-        // let self = this;
-        // let url = this.state.url;
-        // self.handleImage(url + "/image", "template-image-form").then(function(result){
-        //     console.log(result);
-        //     self.handleImage(url + "/icon", "template-icon-form").then(function(result2){
-        //         console.log(result2);
-        //         self.forceUpdate();
-        //     })
-        // });
-
     }
-    handleResponse(response){
-        Fetcher(this.state.url + "/roles", "PUT", this.state.roles).then(function(response2){
-            console.log(response2)
-        })
-        console.log(response);
 
+    handleResponse(response){
+        let self = this;
+        Fetcher(this.state.url + "/roles", "PUT", this.state.roles).then(function(response2){
+            self.setState({success: true});
+            console.log(response2)
+        });
+        console.log(response);
+    }
+
+    handleResetSuccess(){
+        let self = this;
+        self.setState({success: false});
     }
 
     handleImage(url, id){
-        console.log("HELLO!");
+        //This function is unused
         var self = this;
-
-
-
     }
 
 
@@ -190,7 +182,7 @@ class NotificationTemplateForm extends React.Component {
                                                 <span className="service-instance-section-label"><strong>Body</strong></span>
                                                 <WysiwygTemplater receiveValue={true} receiveOnChange={true} name="message" defaultValue={template.data.message} ref="wysiwygTemplater" schema={template.schema}/>
                                                 <div className="p-t-15">
-                                                    <button className="btn btn-md btn-info btn-rounded pull-right" type="submit" value="submit">Save Notification Template</button>
+                                                    <Buttons btnType="primary" text="Save Notification Template" type="submit" loading={this.state.ajaxLoad} success={this.state.success} reset={this.handleResetSuccess}/>
                                                     <div className="clearfix"/>
                                                 </div>
                                             </div>
