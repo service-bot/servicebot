@@ -98,6 +98,23 @@ module.exports = function (router) {
         })
 
     });
+    router.delete("/service-template/:id/icon", validate(ServiceTemplate),auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
+        File.findFile(iconFilePath, req.params.id, function (icon) {
+            console.log(icon);
+            icon[0].delete(function(){
+                res.json({message:"File Deleted!"});
+            })
+        })
+    });
+
+
+    router.delete("/service-template/:id/image", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
+        File.findFile(imageFilePath, req.params.id, function (image) {
+            image[0].delete(function(){
+                res.json({message:"File Deleted!"});
+            })
+        })
+    });
 
 
     router.get('/service-templates/:id/image', validate(ServiceTemplate), function (req, res, next) {
