@@ -98,10 +98,11 @@ class ManageCatalogList extends React.Component {
                            mod_created_at={this.modCreated}
                            dropdown={[{name:'Actions', direction: 'right', buttons:[
                                         {id: 1, name: 'Edit', link: '/manage-catalog/:id/edit'},
-                                        {id: 2, name: 'Request for User', link: '/service-catalog/:id/request'},
-                                        {id: 3, name: 'divider'},
-                                        {id: 4, name: this.dropdownPublish, link: '#', onClick: this.onOpenPublishingModal},
-                                        {id: 5, name: 'Delete Service', link: '#', onClick: this.onOpenDeleteModal, style: {color: "#ff3535"}}]
+                                        {id: 2, name: 'Duplicate', link: '/manage-catalog/:id/duplicate'},
+                                        {id: 3, name: 'Request for User', link: '/service-catalog/:id/request'},
+                                        {id: 4, name: 'divider'},
+                                        {id: 5, name: this.dropdownPublish, link: '#', onClick: this.onOpenPublishingModal},
+                                        {id: 6, name: 'Delete Service', link: '#', onClick: this.onOpenDeleteModal, style: {color: "#ff3535"}}]
                                     }]}/>
                 {currentModal()}
             </div>
