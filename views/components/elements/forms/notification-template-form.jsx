@@ -1,8 +1,9 @@
 
 import React from 'react';
+import {browserHistory} from 'react-router';
 import Load from '../../utilities/load.jsx';
 import Fetcher from "../../utilities/fetcher.jsx"
-import {Authorizer} from "../../utilities/authorizer.jsx";
+import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import Jumbotron from "../../layouts/jumbotron.jsx";
 import Content from "../../layouts/content.jsx";
 import {DataForm, DataChild, DataInput} from "../../utilities/data-form.jsx";
@@ -32,7 +33,11 @@ class NotificationTemplateForm extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchData();
+        if(!isAuthorized({permissions:"can_administrate"})){
+            return browserHistory.push("/login");
+        } else {
+            this.fetchData();
+        }
     }
 
     fetchData(){

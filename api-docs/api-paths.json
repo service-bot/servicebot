@@ -1598,6 +1598,47 @@
           }
         }
       }
+    },
+    "delete": {
+      "summary": "Deletes Service Template Icon",
+      "tags": [
+        "service-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff"
+      ],
+      "operationId": "delete_service_templates_id_icon",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service-template id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "message",
+          "type": "string"
+        },
+        "default": {
+          "description": "Unexpected error",
+          "schema": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
     }
   },
   "/service-templates/{id}/image": {
@@ -1684,6 +1725,47 @@
           "schema": {
             "$ref": "#/definitions/files"
           }
+        },
+        "default": {
+          "description": "Unexpected error",
+          "schema": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Deletes Service Template Image",
+      "tags": [
+        "service-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff"
+      ],
+      "operationId": "delete_service_templates_id_image",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service-template id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "message",
+          "type": "string"
         },
         "default": {
           "description": "Unexpected error",
