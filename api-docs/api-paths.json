@@ -461,6 +461,50 @@
       }
     }
   },
+  "/users/{id}/unsuspend": {
+    "post": {
+      "summary": "UnSuspend the User",
+      "tags": [
+        "users"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff"
+      ],
+      "operationId": "post_users_id_unsuspend",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "user to unsuspend",
+          "required": true,
+          "type": "number"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "A user",
+          "schema": {
+            "$ref": "#/definitions/users"
+          }
+        },
+        "default": {
+          "description": "Unexpected error",
+          "schema": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    }
+  },
   "/users/invite": {
     "post": {
       "summary": "Invites a new User",

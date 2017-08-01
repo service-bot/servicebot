@@ -53,7 +53,10 @@ class ServiceRequestFormV2 extends React.Component {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
                     // console.log('User Data', response);
-                    self.setState({usersData: response});
+                    let userRoleList = response.filter(function(user){
+                        return user.references.user_roles[0].role_name === 'user';
+                    });
+                    self.setState({usersData: userRoleList});
                 } else {
                     console.log('Error getting users', response);
                 }
@@ -234,10 +237,7 @@ class ServiceRequestFormV2 extends React.Component {
             }else if(this.state.templateData){
 
                 const users = this.state.usersData;
-                const userRoleList = users.filter(function(user){
-                    return user.references.user_roles[0].role_name === 'user';
-                });
-                const sortedUsers = _.sortBy(userRoleList, ['id']);
+                const sortedUsers = _.sortBy(users, ['id']);
                 let userOptions = (userList)=> {
                     return _.map(userList, (user)=>{ return new Object({[user.email]: user.id}) } );
                 };

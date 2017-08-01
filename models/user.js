@@ -323,6 +323,22 @@ User.prototype.suspend = function (callback) {
     });
 };
 
+/**
+ * This function marks a users status from suspended to active.
+ * @param callback - updated user, or error.
+ */
+User.prototype.unsuspend = function (callback) {
+    let self = this;
+    self.data.status = 'active';
+    self.update(function (err, user) {
+        if(!err) {
+            callback(null, user);
+        } else {
+            callback(err, null);
+        }
+    });
+};
+
 //TODO: Implement User.prototype.update override once the above create is simplified. Implement when doing user setting page.
 
 /**
