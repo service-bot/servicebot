@@ -118,7 +118,7 @@ class ModalInvoice extends React.Component {
                 }
 
                 return(
-                    <Modal modalTitle={pageName} icon={this.props.icon} show={this.props.show} hide={this.props.hide}>
+                    <Modal modalTitle={pageName} icon="fa-credit-card-alt" show={this.props.show} hide={this.props.hide}>
                         <div id="invoice-modal" className="table-responsive">
                             <div className="invoice-widget" style={modalHeadingStyle}>
                                 <div className="row">
