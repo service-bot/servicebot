@@ -9,6 +9,7 @@ import ContentTitle from "../layouts/content-title.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import ModalInviteUser from "../elements/modals/modal-invite-user.jsx";
 import ModalSuspendUser from "../elements/modals/modal-suspend-user.jsx";
+import ModalUnsuspendUser from "../elements/modals/modal-unsuspend-user.jsx";
 import ModalDeleteUser from "../elements/modals/modal-delete-user.jsx";
 import ModalAddFund from "../elements/modals/modal-add-fund.jsx";
 import ModalEditUserRole from "../elements/modals/modal-edit-user-role.jsx";
@@ -21,6 +22,7 @@ class ManageUsers extends React.Component {
         this.state = {
             openInviteUserModal: false,
             openSuspendUserModal: false,
+            openUnsuspendUserModal: false,
             openDeleteUserModal: false,
             openEditRole: false,
             currentDataObject: {},
@@ -31,12 +33,26 @@ class ManageUsers extends React.Component {
         this.closeInviteUserModal = this.closeInviteUserModal.bind(this);
         this.openSuspendUser = this.openSuspendUser.bind(this);
         this.closeSuspendUser = this.closeSuspendUser.bind(this);
+        this.closeUnsuspendUser = this.closeUnsuspendUser.bind(this);
         this.openDeleteUser = this.openDeleteUser.bind(this);
         this.closeDeleteUser = this.closeDeleteUser.bind(this);
         this.openEditCreditCard = this.openEditCreditCard.bind(this);
         this.closeEditCreditCard = this.closeEditCreditCard.bind(this);
         this.openEditRole = this.openEditRole.bind(this);
         this.closeEditRole = this.closeEditRole.bind(this);
+        this.dropdownStatus = this.dropdownStatus.bind(this);
+
+    }
+
+    dropdownStatus(dataObject){
+        let status = dataObject.status;
+        const statusString = _.toLower(status);
+        if(statusString == "suspended"){
+            return "Activate User";
+        }else{
+            return "Suspend User";
+        }
+        return "Error";
     }
 
     modID(data){
@@ -116,11 +132,22 @@ class ManageUsers extends React.Component {
         return function (e) {
             e.preventDefault();
             console.log("dataobject",dataObject);
-            self.setState({openSuspendUserModal: true, currentDataObject: dataObject});
+            let status = dataObject.status;
+            const statusString = _.toLower(status);
+            if(statusString == "suspended"){
+                self.setState({openUnsuspendUserModal: true, currentDataObject: dataObject});
+            }
+            else{
+                self.setState({openSuspendUserModal: true, currentDataObject: dataObject});
+            }
         }
     }
     closeSuspendUser(){
         this.setState({openSuspendUserModal: false, currentDataObject: {}, lastFetch: Date.now()});
+    }
+
+    closeUnsuspendUser(){
+        this.setState({openUnsuspendUserModal: false, currentDataObject: {}, lastFetch: Date.now()});
     }
 
     openEditRole(dataObject){
@@ -161,6 +188,11 @@ class ManageUsers extends React.Component {
             if(this.state.openSuspendUserModal){
                 return (
                     <ModalSuspendUser uid={this.state.currentDataObject.id} show={this.state.openSuspendUserModal} hide={this.closeSuspendUser}/>
+                )
+            }
+            if(this.state.openUnsuspendUserModal){
+                return (
+                    <ModalUnsuspendUser uid={this.state.currentDataObject.id} show={this.state.openSuspendUserModal} hide={this.closeUnsuspendUser}/>
                 )
             }
             if(this.state.openDeleteUserModal){
@@ -208,7 +240,7 @@ class ManageUsers extends React.Component {
                                                {id: 3, name: 'Manage Services', link: '#', onClick: this.viewUserServices},
                                                {id: 4, name: 'divider'},
                                                {id: 5, name: 'Edit Role', link: '#', onClick: this.openEditRole},
-                                               {id: 6, name: 'Suspend User', link: '#', onClick: this.openSuspendUser},
+                                               {id: 6, name: this.dropdownStatus, link: '#', onClick: this.openSuspendUser},
                                                {id: 7, name: 'Delete User', link: '#', onClick: this.openDeleteUser, style: {color: "#ff3535"}},
                                            ]}
                                        ]

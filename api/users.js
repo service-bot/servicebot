@@ -272,7 +272,7 @@ module.exports = function (router, passport) {
         });
     });
 
-    router.post("/users/:id(\\d+)/suspend", validate(User), auth(null, User, "id"), function (req, res) {
+    router.post("/users/:id(\\d+)/unsuspend", validate(User), auth(null, User, "id"), function (req, res) {
         let user = res.locals.valid_object;
         user.unsuspend(function (err, updated_user) {
             if(!err) {
