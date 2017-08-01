@@ -4,7 +4,7 @@ import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import ServiceRequestForm from "../elements/forms/service-instance-form-request.jsx"
-
+import { store, initializedState } from "../../store";
 class GenericNotFound extends React.Component {
 
     constructor(props){
@@ -15,9 +15,11 @@ class GenericNotFound extends React.Component {
     componentDidMount(){
         document.getElementById('servicebot-loader').classList.add('move-out');
         document.body.classList.add('page-404');
+
     }
 
     componentWillUnmount(){
+        store.dispatch(initializedState);
         document.body.classList.remove('page-404');
     }
 
