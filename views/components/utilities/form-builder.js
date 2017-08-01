@@ -156,7 +156,7 @@ let formBuilder =  function(formName, defaultFormData=null, mapState = ()=>{}, m
                 // console.log("inputs component", self);
                 this.props.setFormData(buildFormRefsData(
                     component.props.name,
-                    component.props.defaultValue || null,
+                    component.props.defaultValue ||  component.props.value || null,
                     component.props.refName || null,
                     component.props.refID || null,
                     component.props.validator));
