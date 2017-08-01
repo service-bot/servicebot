@@ -9,8 +9,6 @@ import logger from 'redux-logger'
 
 function oldFormReducer(state = {}, action) {
     switch(action.type){
-        case INITIALIZE :
-            return action.initialState.allForms
         case SET_FORM_DATA:
             let newFormData = action.formData;
             if(typeof newFormData === "function"){

@@ -131,7 +131,6 @@ let AppRouter = function(props) {
                     <Route path="service-templates/:templateId" component={ServiceTemplateForm}/>
                     <Route name="Manage Subscriptions" path="/service-instance" component={ManageSubscriptions}/>
                     <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
-
                 </Route>
                 <Route name="Embed" path={"/service/:serviceId/embed"} component={Embed}/>
                 <Route name="Automated Installation" path="setup" component={Setup}/>
