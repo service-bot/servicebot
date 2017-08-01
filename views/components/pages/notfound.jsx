@@ -17,7 +17,7 @@ class GenericNotFound extends React.Component {
         document.body.classList.add('page-404');
     }
 
-    componentWillMount(){
+    componentWillUnmount(){
         document.body.classList.remove('page-404');
     }
 
@@ -25,9 +25,6 @@ class GenericNotFound extends React.Component {
     render () {
         return(
             <div>
-                <div className="page-404-logo">
-                    <img src="/api/v1/system-options/file/brand_logo" alt="logo"/>
-                </div>
                 <div className="page-service-instance" style={{marginTop: '100px'}}>
                     <Content>
                         <div className="row m-b-20">
