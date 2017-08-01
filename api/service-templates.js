@@ -45,6 +45,9 @@ let imageStorage = multer.diskStorage({
     }
 });
 
+
+
+const emptyImage = new Buffer([ 0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x2c, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x44, 0x01, 0x00, 0x3b]);
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 
 
@@ -72,8 +75,7 @@ module.exports = function (router) {
 
                 res.sendFile(abs, options)
             } else {
-                //todo: default icon logic goes here
-                res.status("400").send("no avatar");
+                res.send(emptyImage, { 'Content-Type': 'image/gif' }, 200);
             }
         })
 
@@ -132,7 +134,7 @@ module.exports = function (router) {
                 res.sendFile(abs, options)
             } else {
                 //todo: default image logic goes here
-                res.status("400").send("no template image");
+                res.send(emptyImage, { 'Content-Type': 'image/gif' }, 200);
             }
         })
 
