@@ -102,7 +102,7 @@ module.exports = function (initConfig) {
                 table.string('name');
                 table.string('email').notNullable().unique();
                 table.string('password');
-                table.enu('status', ['active', 'suspended', 'invited', 'flagged', 'disconnected']).defaultTo('flagged');
+                table.enu('status', ['active', 'suspended', 'invited', 'flagged', 'disconnected']).defaultTo('active');
                 table.string('customer_id');
                 table.string('phone');
                 table.timestamp('last_login');
