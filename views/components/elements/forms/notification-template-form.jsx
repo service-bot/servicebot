@@ -172,7 +172,7 @@ class NotificationTemplateForm extends React.Component {
                                             </div>
                                             <div className="service-instance-section">
                                                 <span className="service-instance-section-label"><strong>Description</strong></span>
-                                                <input type="text" name="description" defaultValue={template.data.description}/>
+                                                <p>{template.data.description}</p>
                                             </div>
                                             <div className="service-instance-section">
                                                 <span className="service-instance-section-label"><strong>Subject</strong></span>
