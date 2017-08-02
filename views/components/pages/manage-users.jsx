@@ -13,6 +13,8 @@ import ModalUnsuspendUser from "../elements/modals/modal-unsuspend-user.jsx";
 import ModalDeleteUser from "../elements/modals/modal-delete-user.jsx";
 import ModalAddFund from "../elements/modals/modal-add-fund.jsx";
 import ModalEditUserRole from "../elements/modals/modal-edit-user-role.jsx";
+import Modal from '../utilities/modal.jsx';
+import { connect } from 'react-redux';
 
 class ManageUsers extends React.Component {
 
@@ -25,6 +27,7 @@ class ManageUsers extends React.Component {
             openUnsuspendUserModal: false,
             openDeleteUserModal: false,
             openEditRole: false,
+            openMessageModal: null,
             currentDataObject: {},
             lastFetch: Date.now()
         };
@@ -41,7 +44,8 @@ class ManageUsers extends React.Component {
         this.openEditRole = this.openEditRole.bind(this);
         this.closeEditRole = this.closeEditRole.bind(this);
         this.dropdownStatus = this.dropdownStatus.bind(this);
-
+        this.openMessageModal = this.openMessageModal.bind(this);
+        this.closeMessageModal = this.closeMessageModal.bind(this);
     }
 
     dropdownStatus(dataObject){
@@ -91,7 +95,6 @@ class ManageUsers extends React.Component {
     openEditCreditCard(dataObject){
         let self = this;
         return function(e) {
-            // console.log("clicked on unpub button", dataObject);
             e.preventDefault();
             self.setState({ openEditCreditCard: true, currentDataObject: dataObject });
         }
@@ -103,7 +106,6 @@ class ManageUsers extends React.Component {
     openInviteUserModal(dataObject){
         let self = this;
         return function(e) {
-            // console.log("clicked on unpub button", dataObject);
             e.preventDefault();
             self.setState({ openInviteUserModal: true, currentDataObject: dataObject });
         }
@@ -115,30 +117,34 @@ class ManageUsers extends React.Component {
     viewUser(dataObject){
         return function (e) {
             e.preventDefault();
-            console.log("dataobject",dataObject);
             browserHistory.push(`/manage-users/${dataObject.id}`);
         }
     }
     viewUserServices(dataObject){
         return function (e) {
             e.preventDefault();
-            console.log("dataobject",dataObject);
             browserHistory.push(`/manage-subscriptions/?uid=${dataObject.id}`);
         }
     }
 
     openSuspendUser(dataObject){
         let self = this;
-        return function (e) {
-            e.preventDefault();
-            console.log("dataobject",dataObject);
-            let status = dataObject.status;
-            const statusString = _.toLower(status);
-            if(statusString == "suspended"){
-                self.setState({openUnsuspendUserModal: true, currentDataObject: dataObject});
+        if(dataObject.id == self.props.user.id){
+            return function (e) {
+                e.preventDefault();
+                self.setState({openMessageModal: {title: 'Alert!', message: 'Suspending own user is not allowed!'}});
             }
-            else{
-                self.setState({openSuspendUserModal: true, currentDataObject: dataObject});
+        }else {
+            return function (e) {
+                e.preventDefault();
+                let status = dataObject.status;
+                const statusString = _.toLower(status);
+                if (statusString == "suspended") {
+                    self.setState({openUnsuspendUserModal: true, currentDataObject: dataObject});
+                }
+                else {
+                    self.setState({openSuspendUserModal: true, currentDataObject: dataObject});
+                }
             }
         }
     }
@@ -152,26 +158,46 @@ class ManageUsers extends React.Component {
 
     openEditRole(dataObject){
         let self = this;
-        return function (e) {
-            e.preventDefault();
-            console.log("dataobject",dataObject);
-            self.setState({openEditRole: true, currentDataObject: dataObject});
+        if(dataObject.id == self.props.user.id){
+            return function (e) {
+                e.preventDefault();
+                self.setState({openMessageModal: {title: 'Alert!', message: 'Editing own role is not allowed!'}});
+            }
+        }else {
+            return function (e) {
+                e.preventDefault();
+                self.setState({openEditRole: true, currentDataObject: dataObject});
+            }
         }
     }
+
     closeEditRole(){
         this.setState({openEditRole: false, currentDataObject: {}, lastFetch: Date.now()});
     }
 
     openDeleteUser(dataObject){
         let self = this;
-        return function (e) {
-            e.preventDefault();
-            console.log("dataobject",dataObject);
-            self.setState({openDeleteUserModal: true, currentDataObject: dataObject});
+        if(dataObject.id == self.props.user.id){
+            return function (e) {
+                e.preventDefault();
+                self.setState({openMessageModal: {title: 'Alert!', message: 'Deleting own user is not allowed!'}});
+            }
+        }else {
+            return function (e) {
+                e.preventDefault();
+                self.setState({openDeleteUserModal: true, currentDataObject: dataObject});
+            }
         }
     }
     closeDeleteUser(){
         this.setState({openDeleteUserModal: false,  currentDataObject: {}, lastFetch: Date.now()});
+    }
+
+    openMessageModal(title, message){
+        this.setState({openMessageModal: {title: title, message: message}});
+    }
+    closeMessageModal(){
+        this.setState({openMessageModal: null});
     }
 
 
@@ -208,6 +234,16 @@ class ManageUsers extends React.Component {
             if(this.state.openEditRole){
                 return (
                     <ModalEditUserRole uid={this.state.currentDataObject.id} user={this.state.currentDataObject} show={this.state.openEditRole} hide={this.closeEditRole}/>
+                )
+            }
+            if(this.state.openMessageModal){
+                return (
+                    <Modal modalTitle={this.state.openMessageModal.title} hideCloseBtn={true} icon="fa-exclamation-triangle"
+                           show={this.state.openMessageModal} hide={this.closeMessageModal} hideFooter={true}>
+                        <div className="p-20">
+                            <span>{this.state.openMessageModal.message}</span>
+                        </div>
+                    </Modal>
                 )
             }
         };
@@ -254,4 +290,4 @@ class ManageUsers extends React.Component {
     }
 }
 
-export default ManageUsers;
+export default connect((state) => {return {user: state.user}})(ManageUsers);
