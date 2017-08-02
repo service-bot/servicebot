@@ -166,7 +166,11 @@ module.exports = function(router) {
             };
             let abs = path.resolve(__dirname, "../" + file.get("path"));
 
-            res.sendFile(abs, options, (err) => { res.status(500).json({error: err})})
+            res.sendFile(abs, options, (err) => {
+                if(err) {
+                    res.status(500).json({error: err})
+                }
+            })
 
         })
     });
