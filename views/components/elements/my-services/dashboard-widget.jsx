@@ -18,9 +18,15 @@ class DashboardWidget extends React.Component {
         if(this.props.options) {
             let options = this.props.options;
             style.widget.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
-
             let darkened = getDarkenedRGB(hexToRgb(_.get(options, 'primary_theme_background_color.value', '#000000')));
             let darkenedHex = rgbToHex(darkened.r, darkened.g, darkened.b);
+
+            if(self.props.widgetColor){
+                style.widget.backgroundColor = self.props.widgetColor;
+                darkened = getDarkenedRGB(hexToRgb(self.props.widgetColor));
+                darkenedHex = rgbToHex(darkened.r, darkened.g, darkened.b);
+            }
+
             style.widgetDark.backgroundColor = darkenedHex;
             style.widgetDark.color = _.get(options, 'primary_theme_text_color.value', '#ffffff');
         }
