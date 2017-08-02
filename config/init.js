@@ -50,7 +50,8 @@ let createAdmin = (initConfig) => {
                 let admin = new User({
                     email: initConfig.admin_user,
                     password: require("bcryptjs").hashSync(initConfig.admin_password, 10),
-                    role_id: adminRole.get("id")
+                    role_id: adminRole.get("id"),
+                    name: "admin"
                 });
 
 
