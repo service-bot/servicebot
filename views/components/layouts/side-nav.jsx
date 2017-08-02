@@ -48,13 +48,10 @@ class SlideNavLinks extends React.Component {
             permission = ['authorized'];
         }
 
-        console.log('my user', this.props.user);
-        console.log('my permission', permission);
 
         this.state.links.map( (link) => {
             if (link.permission.indexOf(permission[0]) != -1){
                 links = [ ... links, link];
-                console.log('my links', links);
             }
         });
 
@@ -125,7 +122,6 @@ class SideNav extends React.Component {
             }
         }
 
-        console.log("my style", style);
 
         let uid = cookie.load("uid");
         let email = cookie.load("username");
