@@ -48,7 +48,7 @@ module.exports = function (router, passport) {
                 };
                 let abs = path.resolve(__dirname, "../" + file.get("path"));
 
-                res.sendFile(abs, options)
+                res.sendFile(abs, options, (err) => { res.status(500).json({error: err})})
             } else {
                 //todo: default avatar logic goes here
                 let defaultAvatar = path.resolve(__dirname, "../public/assets/default/avatar-" + (id % 4) + ".png");
