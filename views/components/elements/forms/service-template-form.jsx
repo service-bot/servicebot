@@ -330,11 +330,18 @@ class ServiceTemplateForm extends React.Component {
         let templateDataChild = [];
         let submissionURL = "/api/v1/service-templates";
         let submission_method = "POST";
-        if(id && !self.props.params.duplicate){
+        if(id){
             templateData = self.state.template;
             templateDataChild = self.state.template.references.service_template_properties;
-            submissionURL = submissionURL+'/'+id;
-            submission_method = "PUT";
+            if(!self.props.params.duplicate) {
+                submissionURL = submissionURL + '/' + id;
+                submission_method = "PUT";
+            }else{
+                templateDataChild = templateDataChild.map(child => {
+                    delete child.id;
+                    return child;
+                })
+            }
         }
         if(this.state.form) {
             reviewJSON = self.state.form;
@@ -409,7 +416,7 @@ class ServiceTemplateForm extends React.Component {
                                     <label>Upload Cover Image</label>
                                     <ImageUploader elementID="template-image" imageStyle="template-image-upload"
                                                    imageURL={`/api/v1/service-templates/${this.state.submissionResponse.id}/image`}
-                                                   imageGETURL={this.state.templateId ?
+                                                   imageGETURL={(this.state.templateId && !this.props.params.duplicate) ?
                                                        `/api/v1/service-templates/${this.state.templateId}/image` :
                                                        `/api/v1/service-templates/${this.state.submissionResponse.id}/image`}
                                                    uploadTrigger={this.state.uploadTrigger}
@@ -423,7 +430,7 @@ class ServiceTemplateForm extends React.Component {
                                     <label>Upload Icon</label>
                                     <ImageUploader elementID="template-icon" imageStyle="template-image-upload"
                                                    imageURL={`/api/v1/service-templates/${this.state.submissionResponse.id}/icon`}
-                                                   imageGETURL={this.state.templateId ?
+                                                   imageGETURL={(this.state.templateId && !this.props.params.duplicate) ?
                                                        `/api/v1/service-templates/${this.state.templateId}/icon` :
                                                        `/api/v1/service-templates/${this.state.submissionResponse.id}/icon`}
                                                    uploadTrigger={this.state.uploadTrigger}
@@ -719,7 +726,6 @@ class CustomPropNameField extends React.Component {
         let defaultLabel = this.state.label || '';
         let defaultName = this.state.name || '';
 
-        console.log("label & name inputs props", this.props);
 
        return(
             <div>

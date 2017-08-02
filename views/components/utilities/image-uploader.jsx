@@ -46,11 +46,9 @@ class ImageUploader extends React.Component {
     onImageSelected(e){
         let self = this;
         self.setState({loadingImage: true});
-        console.log("image selected", e.currentTarget.value);
         let src = e.currentTarget;
         let targetImg = document.getElementById(`edit-${this.state.elementID}-img`);
         let fileReader = new FileReader();
-        console.log("the file", src.files[0]);
 
         fileReader.addEventListener("load", function () {
             targetImg.src = fileReader.result;
@@ -86,7 +84,6 @@ class ImageUploader extends React.Component {
     }
 
     handleImage(e){
-        console.log("inside handle image");
         if(e != undefined)
             e.preventDefault();
         let self = this;
@@ -94,13 +91,11 @@ class ImageUploader extends React.Component {
                     credentials : "include",
                     body : new FormData(document.getElementById(`imgform${this.state.elementID}`))
         };
-        console.log("init", init);
         self.setState({ajaxLoad: true});
 
         // console.log(e.target);
         Fetcher(self.state.imageURL, null, null, init).then(function(result){
             if(!result.error){
-                console.log("uploaded");
                 self.setState({imageSelected: false, ajaxLoad: false}, function () {
                     if(self.props.handleSuccess){
                         self.props.handleSuccess();
