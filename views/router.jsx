@@ -41,6 +41,7 @@ import ManageCatalog from "./components/pages/manage-catalog.jsx";
 import ManageCatalogList from "./components/pages/manage-catalog-list.jsx";
 import ManageCatalogCreate from "./components/pages/manage-catalog-create.jsx";
 import ManageCatalogEdit from "./components/pages/manage-catalog-edit.jsx";
+import ManageCatalogDuplicate from "./components/pages/manage-catalog-duplicate.jsx";
 import UserEdit from "./components/pages/user-edit.jsx";
 import ManageCategories from "./components/pages/manage-categories.jsx";
 import ManageNotificationTemplates from "./components/pages/manage-notification-templates.jsx";

@@ -11,7 +11,7 @@ class ManageCatalogDuplicate extends React.Component {
         return(
             <div className="col-xs-12">
                 <p>Service Template Duplicate Form</p>
-                <ServiceTemplateForm params = {{'templateId': this.props.params.templateId}}/>
+                <ServiceTemplateForm params = {{"duplicate" : true, 'templateId': this.props.params.templateId}}/>
             </div>
         );
     }

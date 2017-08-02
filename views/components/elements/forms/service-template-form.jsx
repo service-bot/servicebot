@@ -330,7 +330,7 @@ class ServiceTemplateForm extends React.Component {
         let templateDataChild = [];
         let submissionURL = "/api/v1/service-templates";
         let submission_method = "POST";
-        if(id){
+        if(id && !self.props.params.duplicate){
             templateData = self.state.template;
             templateDataChild = self.state.template.references.service_template_properties;
             submissionURL = submissionURL+'/'+id;
