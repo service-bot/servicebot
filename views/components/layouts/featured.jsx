@@ -59,7 +59,8 @@ class Featured extends React.Component {
                 {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
                                                                 filter = {["home_hero_image",
                                                                     "home_featured_heading",
-                                                                    "home_featured_description"]
+                                                                    "home_featured_description",
+                                                                    "home_featured_text_color"]
                                                                 }/>
                 }
             </div>
