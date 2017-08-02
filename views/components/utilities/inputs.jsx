@@ -204,7 +204,7 @@ class Inputs extends React.Component {
             error = "Component requires a label passed in props.";
         }
 
-        if(type == "text" || type == "number" || type == "hidden" || type == "email"){
+        if(type == "text" || type == "number" || type == "hidden" || type == "email" || type == "password"){
             // console.log("passed in value", defaultValue);
             return (
                 <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''} ${type == 'hidden' ? 'hidden' : ''}`}>
