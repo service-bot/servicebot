@@ -85,7 +85,7 @@ span.btn-link:hover{
 .main .section {
     padding: 60px 0px;
     position: relative;
-    min-height: 80vh;
+    min-height: 88vh;
 }
 
 .section-heading {
@@ -148,6 +148,14 @@ label, .help-block, .bmd-help{
 /* system settings page */
 .system-settings-group{
     margin-bottom: 20px;
+}
+.system-settings-page-form .system-settings-group {display: flex;flex-wrap: wrap;}
+
+.system-settings-group-title {flex-basis: 100%;}
+
+.system-settings-page-form .system-settings-group div {
+    flex-basis: 33%;
+    padding: 5px 10px 5px 0px;
 }
 
 /* service instance / details page */
@@ -759,8 +767,13 @@ body.login .footer{
     .nav.nav-inline.navbar-left-icons{
         display: block;
     }
-}
 
+    /* system settings page */
+    .system-settings-page-form .system-settings-group div {
+        flex-basis: 100%;
+        padding: 5px 0px 5px;
+    }
+}
 
 #content-title{
     display: none;

@@ -103,13 +103,23 @@ class MyServices extends React.Component {
             let nextInvoiceAmountDue = self.state.nextInvoice ? self.state.nextInvoice.amount_due : 0;
             let userStatus = this.props.user.status;
             let widgetColor = () => {
-                console.log(self.props.user.status);
                 switch (self.props.user.status) {
                     case 'active' : return '#27ae60';
                     case 'suspended' : return '#ff0000'; // this will not happen because suspended user cannot login
                     case 'invited' : return '#0069ff';
                     case 'flagged' : return '#e67e22';
                     case 'disconnected' : return '#95a5a6';
+                    default: return '#111111';
+                }
+            };
+
+            let widgetIcon = () => {
+                switch (self.props.user.status) {
+                    case 'active' : return 'check';
+                    case 'suspended' : return 'ban'; // this will not happen because suspended user cannot login
+                    case 'invited' : return 'envelope';
+                    case 'flagged' : return 'flag';
+                    case 'disconnected' : return 'chain-broken';
                     default: return '#111111';
                 }
             };
@@ -140,7 +150,7 @@ class MyServices extends React.Component {
                                     <DashboardWidget widgetIcon="credit-card" widgetName="Upcoming Invoice" widgetData={null} clickAction={self.onOpenInvoiceModal}>
                                         <Price value={nextInvoiceAmountDue}/>
                                     </DashboardWidget>
-                                    <DashboardWidget widgetIcon="check" widgetName="Account Status" widgetData={userStatus} widgetColor={widgetColor()}/>
+                                    <DashboardWidget widgetIcon={widgetIcon()} widgetName="Account Status" widgetData={userStatus} widgetColor={widgetColor()}/>
                                 </div>
                                 <div className="row">
                                     <DashboardServiceList handleComponentUpdating={self.handleComponentUpdating} services={self.state.services}/>

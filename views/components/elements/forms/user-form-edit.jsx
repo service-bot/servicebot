@@ -99,7 +99,7 @@ class UserFormEdit extends React.Component {
                                                        {/*imageURL={`/api/v1/service-templates/25/icon`} />*/}
                                         <ImageUploader name="avatar" elementID="avatar" imageStyle="badge badge-xl"
                                                        imageURL={`${this.state.url}/avatar`} imageGETURL={`${this.state.url}/avatar`}
-                                                       uploadButton={true}/>
+                                                       uploadButton={true} reloadNotice="Please reload the application."/>
                                     </div>
                                     <div className="col-md-12">
                                         <div className="row">
