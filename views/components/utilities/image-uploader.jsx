@@ -100,6 +100,9 @@ class ImageUploader extends React.Component {
                     if(self.props.handleSuccess){
                         self.props.handleSuccess();
                     }
+                    if(self.props.reloadNotice){
+                        self.setState({success: true, reloadNotice: self.props.reloadNotice});
+                    }
                 });
             }else{
                 console.log("failed", result);
@@ -120,6 +123,13 @@ class ImageUploader extends React.Component {
                             {this.state.loadingImage && <Load type="avatar"/> }
                             <input id={this.state.elementID} type="file" onChange={this.onImageSelected} name={this.props.name || 'file'}/>
                         </div>
+                        {(this.state.success && this.state.reloadNotice) &&
+                            <div>
+                                <span className="help-block"><small>{this.props.reloadNotice}</small></span>
+                                <Buttons btnType="primary" text="Reload Application" onClick={()=>{return location.reload()}}
+                                         position="center"/>
+                            </div>
+                        }
                         {(this.state.imageSelected && this.state.uploadButton) &&
                         <div>
                             <div className="image-upload-message"><small>{this.state.uploadMessage}</small></div>

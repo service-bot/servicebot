@@ -175,7 +175,9 @@ class SystemSettingsForm extends React.Component {
                             <label className="control-label">Brand Logo</label>
                             <ImageUploader name="file" elementID="brand-logo"
                                            imageURL="/api/v1/system-options/file/brand_logo"
-                                           imageStyle="badge badge-lg" uploadButton={true}/>
+                                           imageStyle="badge badge-lg" uploadButton={true}
+                                           reloadNotice="Please reload the application."
+                            />
                         </div>
                         }
 
@@ -184,7 +186,9 @@ class SystemSettingsForm extends React.Component {
                                 <label className="control-label">Front Page Hero Image</label>
                                 <ImageUploader name="file" elementID="front-page-image"
                                                imageURL="/api/v1/system-options/file/front_page_image"
-                                               imageStyle="badge badge-lg" uploadButton={true}/>
+                                               imageStyle="badge badge-lg" uploadButton={true}
+                                               reloadNotice="Please reload the application."
+                                />
                             </div>
                         }
 
@@ -226,20 +230,36 @@ class SystemSettingsForm extends React.Component {
                 )
             }else { // for system settings page
                 this.getAppVersion();
+                console.log("system options", this.props.options.value);
+
+                let tabStyle = (type) => {
+                    let tabColor = this.props.options.button_primary_color.value;
+                    if(type == self.state.currentTabType){
+                        return({borderColor: tabColor});
+                    }else{
+                        return({});
+                    }
+                };
+
+
                 return (
                     <div className="row">
                         <div className="col-md-3">
                             <h4 className="text-capitalize">Setting Types</h4>
                             <ul className="tabs">
-                                <li key={`settings-type-tab-branding`} className="tab" onClick={()=>{return this.handleTab('branding')}}><span>Branding</span></li>
+                                <li key={`settings-type-tab-branding`} className={`tab text-capitalize ${self.state.currentTabType == 'branding' ? 'active' : ''}`}
+                                    style={tabStyle('branding')}
+                                    onClick={()=>{return this.handleTab('branding')}}><span>Branding</span></li>
                                 {types.map((type) => {
                                     return (
-                                        <li key={`settings-type-tab-${type}`} className="tab text-capitalize" onClick={()=>{return this.handleTab(type)}}><span>{type}</span></li>
+                                        <li key={`settings-type-tab-${type}`} className={`tab text-capitalize ${type == self.state.currentTabType ? 'active' : ''}`}
+                                            style={tabStyle(type)}
+                                            onClick={()=>{return this.handleTab(type)}}><span>{type}</span></li>
                                     );
                                 })}
                             </ul>
                         </div>
-                        <div className="col-md-9">
+                        <div className="col-md-9 system-settings-page-form">
                             <ContentTitle icon="cog" title="Customize your system options here."/>
 
                             {this.state.currentTabType == "branding" ?
@@ -265,7 +285,7 @@ class SystemSettingsForm extends React.Component {
 
                                 <div key={`setting_type_${this.state.currentTabType}`}
                                      className={`system-settings-group setting-type-${this.state.currentTabType}`}>
-                                    <h4 className="text-capitalize">{this.state.currentTabType}</h4>
+                                    <h4 className="system-settings-group-title text-capitalize">{this.state.currentTabType}</h4>
                                     {group[this.state.currentTabType].map((group) => {
                                         if (group.data_type == 'color_picker') {
                                             return (
