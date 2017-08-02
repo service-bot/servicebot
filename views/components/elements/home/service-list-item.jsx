@@ -144,7 +144,6 @@ class ServiceListItem extends React.Component {
             }
         };
 
-        console.log("icon display?", _.get(this.props.options, 'service_box_icon_display.value'));
         return (
             <div id={`service-card-${serviceId}`} className="service-column col-xs-12 col-sm-6 col-lg-4 col-xl-4">
                 <div className="card-wrapper service" onClick={()=>{browserHistory.push(this.props.url)}} style={{height: this.props.height}}>
