@@ -67,6 +67,7 @@ class ServiceInstance extends React.Component {
         this.onPayChargeItemModalClose = this.onPayChargeItemModalClose.bind(this);
         this.handlePayAllChargesModal = this.handlePayAllChargesModal.bind(this);
         this.onPayAllChargesModalClose = this.onPayAllChargesModalClose.bind(this);
+        this.getAdditionalCharges = this.getAdditionalCharges.bind(this);
     }
 
     componentDidMount() {
@@ -235,6 +236,38 @@ class ServiceInstance extends React.Component {
         );
     }
 
+    getAdditionalCharges(myInstance, myInstanceChargeItems) {
+        if(myInstance.status != 'cancelled') {
+            if (myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) {
+                return (
+                    <div id="service-instance-waiting" className="row">
+                        <div className="col-md-8 col-md-offset-2">
+                            <ServiceInstanceWaitingCharges handlePayAllCharges={self.handlePayAllChargesModal}
+                                                           handlePayChargeItem={self.handlePayChargeItemModal}
+                                                           instanceWaitingItems={myInstanceChargeItems.false}/>
+                        </div>
+                    </div>
+                );
+            } else { return null; }
+        } else {
+            return (
+                <div id="service-instance-waiting" className="row">
+                    <div className="col-md-8 col-md-offset-2">
+                        <div className="service-block service-action-block">
+                            <div className="xaas-dashboard">
+                                <div className="xaas-row cancelled">
+                                    <div className="xaas-title xaas-has-child">
+                                        <b>Service is Cancelled!</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+    }
+
     render () {
         let self = this;
         let pageName = this.props.route.name;
@@ -326,13 +359,7 @@ class ServiceInstance extends React.Component {
                                 </div>
                                 }
 
-                                {(myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) &&
-                                <div id="service-instance-waiting" className="row">
-                                    <div className="col-md-8 col-md-offset-2">
-                                        <ServiceInstanceWaitingCharges handlePayAllCharges={self.handlePayAllChargesModal} handlePayChargeItem={self.handlePayChargeItemModal} instanceWaitingItems={myInstanceChargeItems.false}/>
-                                    </div>
-                                </div>
-                                }
+                                {this.getAdditionalCharges(myInstance, myInstanceChargeItems)}
 
                                 <div id="service-instance-description" className="row">
                                     <div className="col-md-8 col-md-offset-2">
