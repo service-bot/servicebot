@@ -61,7 +61,7 @@ module.exports = function (router) {
         next();
     })
 
-    router.get('/service-templates/:id/icon', validate(ServiceTemplate), function (req, res, next) {
+    router.get('/service-templates/:id(\\d+)/icon', validate(ServiceTemplate), function (req, res, next) {
         let id = req.params.id;
         File.findFile(iconFilePath, id, function (icon) {
             if (icon.length > 0) {
@@ -84,7 +84,7 @@ module.exports = function (router) {
         })
 
     });
-    router.put('/service-templates/:id/icon', auth(null, ServiceTemplate, 'created_by'), multer({storage: iconStorage}).single("template-icon"), function (req, res, next) {
+    router.put('/service-templates/:id(\\d+)/icon', auth(null, ServiceTemplate, 'created_by'), multer({storage: iconStorage}).single("template-icon"), function (req, res, next) {
         let file = req.file;
         file.user_id = req.user.get('id');
         file.name = file.originalname;
@@ -104,7 +104,7 @@ module.exports = function (router) {
         })
 
     });
-    router.delete("/service-template/:id/icon", validate(ServiceTemplate),auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
+    router.delete("/service-template/:id(\\d+)/icon", validate(ServiceTemplate),auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
         File.findFile(iconFilePath, req.params.id, function (icon) {
             console.log(icon);
             icon[0].delete(function(){
@@ -114,7 +114,7 @@ module.exports = function (router) {
     });
 
 
-    router.delete("/service-template/:id/image", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
+    router.delete("/service-template/:id(\\d+)/image", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
         File.findFile(imageFilePath, req.params.id, function (image) {
             image[0].delete(function(){
                 res.json({message:"File Deleted!"});
@@ -123,7 +123,7 @@ module.exports = function (router) {
     });
 
 
-    router.get('/service-templates/:id/image', validate(ServiceTemplate), function (req, res, next) {
+    router.get('/service-templates/:id(\\d+)/image', validate(ServiceTemplate), function (req, res, next) {
         let id = req.params.id;
         File.findFile(imageFilePath, id, function (image) {
             if (image.length > 0) {
@@ -148,7 +148,7 @@ module.exports = function (router) {
 
     });
 
-    router.put('/service-templates/:id/image', auth(null, ServiceTemplate, 'created_by'), multer({storage: imageStorage}).single('template-image'), function (req, res, next) {
+    router.put('/service-templates/:id(\\d+)/image', auth(null, ServiceTemplate, 'created_by'), multer({storage: imageStorage}).single('template-image'), function (req, res, next) {
         let file = req.file;
         file.user_id = req.user.get('id');
         file.name = file.originalname;

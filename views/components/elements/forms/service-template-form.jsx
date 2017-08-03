@@ -107,15 +107,6 @@ class ServiceTemplateForm extends React.Component {
         let self = this;
 
         this.fetchCategories();
-
-        Fetcher(self.state.url + "/files").then(function(files){
-            if(!files.error) {
-                // console.log(files);
-                self.setState({files: files});
-            }else{
-                console.error("file error", files.error);
-            }
-        })
     }
 
     fetchCategories(){
@@ -337,8 +328,7 @@ class ServiceTemplateForm extends React.Component {
                 submissionURL = submissionURL + '/' + id;
                 submission_method = "PUT";
             }else{
-                templateDataChild = templateDataChild.map(child => {
-                    delete child.id;
+                templateDataChild.map(child => {
                     return child;
                 })
             }
@@ -537,8 +527,8 @@ class ServiceTemplateForm extends React.Component {
                                                 <button className="btn btn-flat btn-info" onClick={self.handleDeleteOriginalProp(prop.id)}>Remove</button>
                                             </div>
 
-                                            <Inputs type="hidden" name="id" defaultValue={prop.id}
-                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                            {!self.props.params.duplicate && <Inputs type="hidden" name="id" defaultValue={prop.id}
+                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}/>}
 
                                             <CustomPropNameField name="prop_label" objectName={prop.name} defaultValues={{label: prop.prop_label, name: prop.name}}
                                                                  onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
@@ -704,8 +694,8 @@ class CustomPropNameField extends React.Component {
     }
 
     componentDidMount(){
-            this.props.onChange(this.state.label, null, null, "prop_label");
-            this.props.onChange(this.state.name, null, null, "name")
+            this.props.onChange(this.state.label, null, "prop_label");
+            this.props.onChange(this.state.name, null, "name");
             this.setState({firstLoad: false});
     }
 
