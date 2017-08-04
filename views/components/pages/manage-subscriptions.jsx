@@ -62,9 +62,13 @@ class ManageSubscriptions extends React.Component {
         );
     }
     modSubscriptionId(data){
-        return (
-            <InfoToolTip title={data} text="i" placement="left"/>
-        );
+        if(data != 'null') {
+            return (
+                <InfoToolTip title={data} text="i" placement="left"/>
+            );
+        } else {
+            return <span />;
+        }
     }
 
     modType(data, dataObj){
@@ -79,16 +83,16 @@ class ManageSubscriptions extends React.Component {
         if(type.toLowerCase() == 'subscription') {
             return (
                 <div>
-                    <span className="status-badge green" >{getBillingType(dataObj)}</span> <span className="status-badge grey" >{interval}</span>
+                    <span className="status-badge neutral" >{getBillingType(dataObj)}</span> <span className="status-badge black" >{interval}</span>
                 </div>
             );
         } else if (type.toLowerCase() == 'custom') {
             return (
-                <span className="status-badge blue">{getBillingType(dataObj)}</span>
+                <span className="status-badge neutral">{getBillingType(dataObj)}</span>
             );
         } else if (type.toLowerCase() == 'one_time') {
             return (
-                <span className="status-badge yellow">{getBillingType(dataObj)}</span>
+                <span className="status-badge neutral">{getBillingType(dataObj)}</span>
             );
         } else {
             return (
@@ -110,7 +114,7 @@ class ManageSubscriptions extends React.Component {
     }
     modAmount(data){
         return (
-            <Price value={data}/>
+            <b><Price value={data}/></b>
         );
     }
     modCreated(data){
@@ -122,15 +126,15 @@ class ManageSubscriptions extends React.Component {
     modStatus(data){
         switch (data) {
             case 'requested':
-                return 'Requested';
+                return (<span className='status-badge blue' >Requested</span>);
             case 'running':
-                return 'Running';
+                return (<span className='status-badge green' >Running</span>);
             case 'waiting_cancellation':
-                return 'Waiting Cancellation';
+                return (<span className='status-badge yellow' >Waiting Cancellation</span>);
             case 'cancelled':
-                return 'Cancelled';
+                return (<span className='status-badge grey' >Cancelled</span>);
             default:
-                return data;
+                return (<span className='status-badge grey' >{data}</span>);
         }
     }
     modUserId(data){
@@ -245,8 +249,8 @@ class ManageSubscriptions extends React.Component {
                                     <ContentTitle icon="cog" title={pageTitle}/>
                                     <DataTable parentState={this.state}
                                                get={url}
-                                               col={['user_id', 'references.users.0.email', 'name', 'payment_plan.interval', 'subscription_id', 'status', 'payment_plan.amount', 'created_at']}
-                                               colNames={['', 'User ID', 'Instance', 'Type', ' ', 'Status', 'Amount', 'Created At']}
+                                               col={['user_id', 'references.users.0.email', 'name', 'subscription_id', 'payment_plan.interval', 'payment_plan.amount', 'status', 'created_at']}
+                                               colNames={['', 'User ID', 'Service', ' ', 'Type', 'Amount', 'Status', 'Created At']}
                                                statusCol="status"
                                                mod_user_id={this.modUserId}
                                                mod_name={this.modName}

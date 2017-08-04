@@ -97,6 +97,24 @@
     background: #039be5;
 }
 
+.status-badge.dblue {
+    background: #639eb7;
+}
+
+.status-badge.navy {
+    background: #143ab1;
+}
+
 .status-badge.purple {
-    background: purple;
+    background: #791dad;
+}
+
+.status-badge.black {
+    background: #000000;
+}
+
+.status-badge.neutral {
+    background: #FFFFFF;
+    color: #000000;
+    border: 1px solid #000000;
 }
