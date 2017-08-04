@@ -66,11 +66,42 @@ class ManageUsers extends React.Component {
             </div>
         );
     }
+
     modName(data, dataObj){
+        if(data != "null") {
+            return (
+                <Link to={`/manage-users/${dataObj.id}`}>{data}</Link>
+            );
+        } else {
+            return (<span />);
+        }
+    }
+
+    modEmail(data, dataObj) {
         return (
             <Link to={`/manage-users/${dataObj.id}`}>{data}</Link>
         );
     }
+
+    modStatus(data, dataObj) {
+        let color = 'status-badge ';
+        switch (data.toLowerCase()) {
+            case 'active':
+                color += 'green'; break;
+            case 'invited':
+                color += 'blue'; break;
+            case 'flagged':
+                color += 'yellow'; break;
+            case 'suspended':
+                color += 'red'; break;
+            default:
+                color += 'grey';
+        }
+        return (
+            <span className={color} >{data}</span>
+        );
+    }
+
     modLastLogin(data, dataObj){
         if(dataObj.last_login != null){
             return (
@@ -254,15 +285,19 @@ class ManageUsers extends React.Component {
                 <div className="page-service-instance">
                     <Content>
                         <ContentTitle icon="cog" title="Manage all your users here"/>
-                        <Dropdown name="Actions"
+                        <div className="row pull-right p-b-15 p-r-15">
+                            <Dropdown name="Actions" direction="right"
                                   dropdown={[
                                       {id: 'invitenewuser', name: 'Invite New User', link: '#', onClick: this.openInviteUserModal}
                                   ]}/>
+                        </div>
                         <DataTable get="/api/v1/users"
-                                   col={['id', 'name', 'email', 'phone', 'references.user_roles.0.role_name', 'status', 'last_login', 'created_at']}
-                                   colNames={['', 'Name', 'Email', 'Phone', 'Role', 'Status', 'Last Login', 'Created At']}
+                                   col={['id', 'email', 'name', 'status', 'references.user_roles.0.role_name', 'last_login', 'created_at']}
+                                   colNames={['', 'Email', 'Name', 'Status', 'Role', 'Last Login', 'Created At']}
                                    mod_id={this.modID}
+                                   mod_email={this.modEmail}
                                    mod_name={this.modName}
+                                   mod_status={this.modStatus}
                                    mod_last_login={this.modLastLogin}
                                    mod_created_at={this.modCreatedAt}
                                    lastFetch={this.state.lastFetch}

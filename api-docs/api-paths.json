@@ -5577,6 +5577,40 @@
       }
     }
   },
+  "/system-options/version": {
+    "get": {
+      "summary": "Gets System version",
+      "tags": [
+        "system-options"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff",
+        "user"
+      ],
+      "operationId": "get_system_options_version",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "System Version",
+          "type": "string"
+        },
+        "default": {
+          "description": "Unexpected error",
+          "schema": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    }
+  },
   "/charge/{id}/approve": {
     "post": {
       "summary": "Approves a Charge Item",
