@@ -10,6 +10,7 @@ let path = require("path");
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
 let systemFilePath = "uploads/system-options";
 let appPackage = require("../package.json");
+let store = require("../config/redux/store")
 
 
 let systemStorage = multer.diskStorage({
@@ -24,7 +25,11 @@ let systemStorage = multer.diskStorage({
 });
 
 let systemFiles = ['front_page_image', 'brand_logo'];
+let uploadLimit = function(){
 
+    return store.getState().options.upload_limit * 1000000;
+
+}
 module.exports = function (router) {
 
 
@@ -90,7 +95,7 @@ module.exports = function (router) {
     //     });
     // });
 
-    router.put('/system-options/file/:id', auth(), multer({storage: systemStorage }).single('file'), function (req, res, next) {
+    router.put('/system-options/file/:id', auth(), multer({storage: systemStorage, limits : {fileSize : uploadLimit()} }).single('file'), function (req, res, next) {
         if (systemFiles.indexOf(req.params.id) > -1) {
             let file = req.file;
             file.name = file.originalname;

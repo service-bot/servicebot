@@ -10,6 +10,7 @@ let path = require("path");
 let multer= require("multer");
 let _ = require('lodash');
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
+let store = require("../config/redux/store");
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 
 let serviceFilePath = "uploads/services/files";
@@ -23,6 +24,11 @@ let serviceStorage = multer.diskStorage({
         })
     }
 });
+let uploadLimit = function(){
+
+    return store.getState().options.upload_limit * 1000000;
+
+}
 
 
 module.exports = function(router) {
@@ -121,7 +127,7 @@ module.exports = function(router) {
         });
     });
 
-    router.post('/service-instances/:id/files', validate(ServiceInstance), auth(null, ServiceInstance), multer({ storage:serviceStorage }).array('files'), function(req, res, next) {
+    router.post('/service-instances/:id/files', validate(ServiceInstance), auth(null, ServiceInstance), multer({ storage:serviceStorage, limits : {fileSize : uploadLimit()} }).array('files'), function(req, res, next) {
         console.log(req.files);
         let filesToInsert = req.files.map(function(file){
             if(req.user) {

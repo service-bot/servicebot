@@ -17,7 +17,7 @@ let path = require("path");
 let _ = require("lodash");
 let xss = require('xss');
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
-
+let store = require("../config/redux/store");
 //todo: generify single file upload for icon, image, avatar, right now duplicate code
 let iconFilePath = ServiceTemplate.iconFilePath;
 let imageFilePath = ServiceTemplate.imageFilePath;
@@ -44,6 +44,14 @@ let imageStorage = multer.diskStorage({
         })
     }
 });
+
+
+let uploadLimit = function(){
+
+    return store.getState().options.upload_limit * 1000000;
+
+}
+
 
 
 
@@ -84,7 +92,7 @@ module.exports = function (router) {
         })
 
     });
-    router.put('/service-templates/:id(\\d+)/icon', auth(null, ServiceTemplate, 'created_by'), multer({storage: iconStorage}).single("template-icon"), function (req, res, next) {
+    router.put('/service-templates/:id(\\d+)/icon', auth(null, ServiceTemplate, 'created_by'), multer({storage: iconStorage, limits : {fileSize : uploadLimit()}}).single("template-icon"), function (req, res, next) {
         let file = req.file;
         file.user_id = req.user.get('id');
         file.name = file.originalname;
@@ -148,7 +156,7 @@ module.exports = function (router) {
 
     });
 
-    router.put('/service-templates/:id(\\d+)/image', auth(null, ServiceTemplate, 'created_by'), multer({storage: imageStorage}).single('template-image'), function (req, res, next) {
+    router.put('/service-templates/:id(\\d+)/image', auth(null, ServiceTemplate, 'created_by'), multer({storage: imageStorage, limits : {fileSize : uploadLimit()}}).single('template-image'), function (req, res, next) {
         let file = req.file;
         file.user_id = req.user.get('id');
         file.name = file.originalname;

@@ -12,7 +12,7 @@ let Role = require("../models/role");
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 let avatarFilePath = "uploads/avatars";
-
+let store = require("../config/redux/store");
 let avatarStorage = multer.diskStorage({
     destination: function (req, file, cb) {
         mkdirp(avatarFilePath, err => cb(err, avatarFilePath))
@@ -23,6 +23,12 @@ let avatarStorage = multer.diskStorage({
         })
     }
 });
+
+let uploadLimit = function(){
+
+    return store.getState().options.upload_limit * 1000000;
+
+};
 
 module.exports = function (router, passport) {
     router.get('/invitation/:invitation_id', function (req, res, next) {
@@ -61,7 +67,7 @@ module.exports = function (router, passport) {
         })
 
     });
-    router.put('/users/:id/avatar', auth(), multer({storage: avatarStorage}).single('avatar'), function (req, res, next) {
+    router.put('/users/:id/avatar', auth(), multer({storage: avatarStorage, limits : {fileSize : uploadLimit()}}).single('avatar'), function (req, res, next) {
         let file = req.file;
         file.user_id = req.params.id;
         file.name = file.originalname;

@@ -96,6 +96,7 @@ let systemOptions =
         {"option": "breadcrumb_color", "value": "#FFFFFF", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "featured_service_show_all_button_text", "value": "Show All", public: true, "type": "featured services", "data_type": "text"},
         {"option": "featured_service_section_background_color", "value": "#FFFFFF", public: true, "type": "featured services", "data_type": "color_picker"},
+        {"option": "upload_limit", "value": 10, public: false, "type": "system", "data_type": "number"},
 
     ],
         populateOptions: function(options=systemOptions.options){
