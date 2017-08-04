@@ -66,10 +66,35 @@ class ManageSubscriptions extends React.Component {
             <InfoToolTip title={data} text="i" placement="left"/>
         );
     }
+
     modType(data, dataObj){
-        return (
-            getBillingType(dataObj)
-        );
+        let interval;
+        if(data == 'day') { interval = 'Dayli'; }
+        else if (data == 'week') { interval = 'Weekly'; }
+        else if (data == 'month') { interval = 'Monthly'; }
+        else if (data == 'year') { interval = 'Yearly'; }
+        else { interval = data; }
+
+        let type = dataObj.type;
+        if(type.toLowerCase() == 'subscription') {
+            return (
+                <div>
+                    <span className="status-badge green" >{getBillingType(dataObj)}</span> <span className="status-badge grey" >{interval}</span>
+                </div>
+            );
+        } else if (type.toLowerCase() == 'custom') {
+            return (
+                <span className="status-badge blue">{getBillingType(dataObj)}</span>
+            );
+        } else if (type.toLowerCase() == 'one_time') {
+            return (
+                <span className="status-badge yellow">{getBillingType(dataObj)}</span>
+            );
+        } else {
+            return (
+                <span className="status-badge grey">{getBillingType(dataObj)}</span>
+            );
+        }
     }
     modRequestedBy(data){
         if(data && data != null){
@@ -104,20 +129,6 @@ class ManageSubscriptions extends React.Component {
                 return 'Waiting Cancellation';
             case 'cancelled':
                 return 'Cancelled';
-            default:
-                return data;
-        }
-    }
-    modInterval(data){
-        switch (data){
-            case 'day':
-                return 'Daily';
-            case 'week':
-                return 'Weekly';
-            case 'month':
-                return 'Monthly';
-            case 'year':
-                return 'Yearly';
             default:
                 return data;
         }
@@ -234,18 +245,16 @@ class ManageSubscriptions extends React.Component {
                                     <ContentTitle icon="cog" title={pageTitle}/>
                                     <DataTable parentState={this.state}
                                                get={url}
-                                               col={['user_id', 'references.users.0.name', 'name', 'subscription_id', 'type', 'status', 'requested_by', 'payment_plan.amount', 'payment_plan.interval', 'created_at']}
-                                               colNames={['', 'User ID', 'Instance', ' ', 'Type', 'Status', 'Requested By', 'Amount', 'Interval', 'Created At']}
+                                               col={['user_id', 'references.users.0.email', 'name', 'payment_plan.interval', 'subscription_id', 'status', 'payment_plan.amount', 'created_at']}
+                                               colNames={['', 'User ID', 'Instance', 'Type', ' ', 'Status', 'Amount', 'Created At']}
                                                statusCol="status"
                                                mod_user_id={this.modUserId}
                                                mod_name={this.modName}
                                                mod_subscription_id={this.modSubscriptionId}
-                                               mod_type={this.modType}
-                                               mod_requested_by={this.modRequestedBy}
                                                mod_created_at={this.modCreated}
                                                mod_payment_plan-amount={this.modAmount}
                                                mod_status={this.modStatus}
-                                               mod_payment_plan-interval={this.modInterval}
+                                               mod_payment_plan-interval={this.modType}
                                                dropdown={[{
                                                    name: 'Actions', direction: 'right', buttons: [
                                                        {id: 1, name: 'View', link: '/service-instance/:id'},

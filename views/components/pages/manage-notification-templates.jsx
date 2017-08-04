@@ -50,10 +50,9 @@ class ManageNotificationTemplates extends React.Component {
                             <div className="col-xs-12">
                                 <ContentTitle icon="cog" title="Manage Notification Templates"/>
                                 <DataTable get="/api/v1/notification-templates"
-                                           col={['id', 'subject', 'description', 'created_at', 'updated_at']}
-                                           colNames={['ID', 'Subject', 'Description', 'Created At', 'Updated At']}
+                                           col={['id', 'subject', 'description', 'updated_at']}
+                                           colNames={['ID', 'Subject', 'Description', 'Updated At']}
                                            mod_subject={this.modName}
-                                           mod_created_at={this.modCreatedAt}
                                            mod_updated_at={this.modUpdatedAt}
                                            lastFetch={this.state.lastFetch}
                                            dropdown={

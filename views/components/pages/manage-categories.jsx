@@ -109,10 +109,12 @@ class ManageCategories extends React.Component {
                         <div className="row m-b-20">
                             <div className="col-xs-12">
                                 <ContentTitle icon="cog" title="Manage all your users here"/>
-                                <Dropdown name="Actions"
-                                          dropdown={[
-                                              {id: 'addnewcategory', name: 'Add New Category', link: '#', onClick: this.openAddCategoryModal}
-                                              ]}/>
+                                <div className="row pull-right p-b-15 p-r-15">
+                                    <Dropdown name="Actions" direction="right"
+                                              dropdown={[
+                                                  {id: 'addnewcategory', name: 'Add New Category', link: '#', onClick: this.openAddCategoryModal}
+                                                  ]}/>
+                                </div>
                                 <DataTable get="/api/v1/service-categories"
                                            col={['id', 'name', 'description', 'created_at', 'updated_at']}
                                            colNames={['', 'Name', 'Description', 'Created At', 'Updated At']}
