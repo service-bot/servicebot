@@ -18,7 +18,8 @@ class ImageUploader extends React.Component {
             ajaxLoad: false,
             imageSelected: false,
             loadingImage: false,
-            success: false
+            success: false,
+            image: true
         };
 
         this.onImageSelected = this.onImageSelected.bind(this);
@@ -52,7 +53,7 @@ class ImageUploader extends React.Component {
 
         fileReader.addEventListener("load", function () {
             targetImg.src = fileReader.result;
-            self.setState({loadingImage: false, imageSelected: true}, function () {
+            self.setState({loadingImage: false, imageSelected: true, image: true}, function () {
                 targetImg.classList.remove("no-image-yet");
             });
         }, false);
@@ -67,7 +68,6 @@ class ImageUploader extends React.Component {
     getCoverImage(){
         let self = this;
         let myImage = document.getElementById(`edit-${this.state.elementID}-img`);
-
         fetch(this.props.imageGETURL || self.state.imageURL,
             {method: 'GET', header: new Headers({"Content-Type": "application/json"}), credentials: "include"}).then(function(response) {
             if(response.ok) {
@@ -81,6 +81,8 @@ class ImageUploader extends React.Component {
             let objectURL = URL.createObjectURL(myBlob);
             myImage.src = objectURL;
         }).catch(function(error) {
+            console.log("catch image error", error);
+            self.setState({image: false});
             // myImage.src = '/assets/custom_icons/cloud-computing.png?' + new Date().getTime();
             myImage.classList.add("no-image-yet");
         });
@@ -117,12 +119,14 @@ class ImageUploader extends React.Component {
 
     render(){
 
+        console.log("image uploader render ");
         return(
             <div className="row">
                 <div className={`col-md-12 edit-${this.state.elementID}-image`}>
                     <form id={`imgform${this.state.elementID}`} className="image-uploader" encType="multipart/form-data">
                         <div className={`${this.state.imageStyle}`}>
-                            <img id={`edit-${this.state.elementID}-img`} src={this.props.imageGETURL || this.state.imageURL} ref="avatar" alt="badge"/>
+                            <img id={`edit-${this.state.elementID}-img`} className={!this.state.image && 'hidden'}
+                                 src={this.props.imageGETURL || this.state.imageURL} ref="avatar" alt="badge"/>
                             {this.state.loadingImage && <Load type="avatar"/> }
                             <input id={this.state.elementID} type="file" onChange={this.onImageSelected} name={this.props.name || 'file'}/>
                         </div>
