@@ -41,14 +41,6 @@ class ManageNotificationTemplates extends React.Component {
     render () {
         let pageName = this.props.route.name;
 
-        let getModals = ()=> {
-            if(this.state.openAddCategoryModal){
-                return (
-                    <ModalAddCategory show={this.state.openAddCategoryModal} hide={this.closeAddCategoryModal}/>
-                )
-            }
-        };
-
         return(
             <Authorizer permissions="can_administrate">
                 <Jumbotron pageName={pageName} location={this.props.location}/>
@@ -57,10 +49,6 @@ class ManageNotificationTemplates extends React.Component {
                         <div className="row m-b-20">
                             <div className="col-xs-12">
                                 <ContentTitle icon="cog" title="Manage Notification Templates"/>
-                                <Dropdown name="Actions"
-                                          dropdown={[
-                                              {id: 'addnewcategory', name: 'Add New Category', link: '#', onClick: this.openAddCategoryModal}
-                                          ]}/>
                                 <DataTable get="/api/v1/notification-templates"
                                            col={['id', 'subject', 'description', 'created_at', 'updated_at']}
                                            colNames={['ID', 'Subject', 'Description', 'Created At', 'Updated At']}
@@ -80,7 +68,6 @@ class ManageNotificationTemplates extends React.Component {
                                 />
                             </div>
                         </div>
-                        {getModals()}
                     </Content>
                 </div>
             </Authorizer>
