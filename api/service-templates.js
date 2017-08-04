@@ -104,7 +104,7 @@ module.exports = function (router) {
         })
 
     });
-    router.delete("/service-template/:id(\\d+)/icon", validate(ServiceTemplate),auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
+    router.delete("/service-template/:id(\\d+)/icon", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
         File.findFile(iconFilePath, req.params.id, function (icon) {
             console.log(icon);
             icon[0].delete(function(){
@@ -413,7 +413,13 @@ module.exports = function (router) {
 
     router.post("/service-templates", auth(), function (req, res, next) {
         req.body.created_by = req.user.get("id");
-        next();
+        ServiceTemplate.findAll("name", req.body.name, (templates) => {
+            if(templates && templates.length > 0){
+                res.status(400).json({error : "Service template name already in use"})
+            }else{
+                next();
+            }
+        })
     });
 
     router.get("/service-templates/public", function (req, res, next) {

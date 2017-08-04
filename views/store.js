@@ -139,7 +139,7 @@ const rootReducer = combineReducers({
     form: formReducer
 });
 
-let store = createStore(rootReducer, applyMiddleware(thunk, logger) );
+let store = createStore(rootReducer, applyMiddleware(thunk, logger));
 
 // store.subscribe(()=>{
 //     console.log("store changed", store.getState());
