@@ -18,7 +18,7 @@ class ModalAddFund extends React.Component {
         let pageName = "Add Credit Card For User";
 
         return(
-            <Modal modalTitle={pageName} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
+            <Modal modalTitle={pageName} icon="fa-credit-card-alt" hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
                 <div className="table-responsive">
                     <div className="p-20">
                         <BillingSettingsForm forUID={this.props.uid} user={this.props.user}/>

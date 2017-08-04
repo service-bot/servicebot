@@ -254,7 +254,7 @@ class BillingSettingForm extends React.Component {
 
             if(this.state.context === "PAGE_BILLING_SETTINGS") {
 
-                let displayName = user && (user.id || user.email) || "You";
+                let displayName = user && (user.name || user.email) || "You";
 
                 return (
                     <div>

@@ -347,9 +347,9 @@ class DataForm extends React.Component {
             })
         }
     }
-    handleInputChange(element, modelName=null, objectName=null, nameOverride=null) {
+    handleInputChange(element, modelName=null, objectName=null) {
         let self = this;
-        return function(event, newSet=null){
+        return function(event, newSet=null, nameOverride=null){
             let set = {form : { references: {}}};
             if(newSet && !event){
                 return self.setState(currState => {

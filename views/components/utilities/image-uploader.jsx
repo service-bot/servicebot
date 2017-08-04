@@ -75,6 +75,9 @@ class ImageUploader extends React.Component {
             }
             throw new Error('Network response was not ok.');
         }).then(function(myBlob) {
+            if(myBlob.type == "text/html"){
+                throw "not an image";
+            }
             let objectURL = URL.createObjectURL(myBlob);
             myImage.src = objectURL;
         }).catch(function(error) {
@@ -108,7 +111,7 @@ class ImageUploader extends React.Component {
                 console.log("failed", result);
                 self.setState({ajaxLoad: false});
             }
-        });
+        }).catch(e => {console.error("error getting img", e)});
     }
 
 
