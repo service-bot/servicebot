@@ -167,7 +167,7 @@ class ImageUploader extends React.Component {
                              loading={this.state.ajaxLoad} success="" position="center"/>
                     }
                     {this.state.imageFailed &&
-                    <span className="help-block">{this.state.imageFailed}</span>
+                    <span className="help-block image-failed">{this.state.imageFailed}</span>
                     }
                 </div>
             </div>
