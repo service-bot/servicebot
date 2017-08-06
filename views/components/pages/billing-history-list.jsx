@@ -84,7 +84,7 @@ class BillingHistoryList extends React.Component {
                 {/* no ending slash for the api url */}
                 <DataTable get={ this.state.url }
                            col={['id', 'invoice_id', 'amount_due', 'date', 'closed', 'paid']}
-                           colNames={['ID', 'Invoice ID', 'Amount Due', 'Payment Date', 'Closed', 'Paid']}
+                           colNames={['ID', 'Invoice ID', 'Amount Due', 'Date', 'Closed', 'Paid']}
                            statusCol="paid"
                            mod_invoice_id={this.modInvoiceId}
                            mod_amount_due={this.modAmountDue}

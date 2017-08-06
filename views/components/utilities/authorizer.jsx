@@ -27,7 +27,6 @@ let isAuthorized = function(props) {
             return true;
         }
         else{
-            console.log("NOT PERMITTED")
         }
 
         //logic goes here for unauthorized component

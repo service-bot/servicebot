@@ -68,6 +68,21 @@ class ManageCatalogList extends React.Component {
         );
     }
 
+    modPublished(data, dataObj) {
+        let color = 'status-badge ';
+        switch (data.toLowerCase()) {
+            case 'true':
+                color += 'green'; break;
+            case 'false':
+                color += 'red'; break;
+            default:
+                color += 'grey';
+        }
+        return (
+            <span className={color} >{data}</span>
+        );
+    }
+
     render () {
 
         let self = this;
@@ -87,7 +102,9 @@ class ManageCatalogList extends React.Component {
         return (
             <div className="col-xs-12">
                 <ContentTitle icon="cog" title="Manage all your services here"/>
-                <Dropdown name="Actions" dropdown={[{id: 'servicetemplateaction', name: 'Create New Service', link: '/manage-catalog/create'}]}/>
+                <div className="row pull-right p-b-15 p-r-15">
+                    <Dropdown name="Actions" direction="right" dropdown={[{id: 'servicetemplateaction', name: 'Create New Service', link: '/manage-catalog/create'}]}/>
+                </div>
                 {/* no slash at the end of the api url */}
                 <DataTable parentState={this.state}
                            get="/api/v1/service-templates"
@@ -95,12 +112,15 @@ class ManageCatalogList extends React.Component {
                            colNames={['ID', 'Name', 'Category', 'Published', 'Created By', 'Created At']}
                            statusCol="published"
                            mod_name={this.modName}
+                           mod_published={this.modPublished}
                            mod_created_at={this.modCreated}
                            dropdown={[{name:'Actions', direction: 'right', buttons:[
                                         {id: 1, name: 'Edit', link: '/manage-catalog/:id/edit'},
-                                        {id: 2, name: 'divider'},
-                                        {id: 3, name: this.dropdownPublish, link: '#', onClick: this.onOpenPublishingModal},
-                                        {id: 4, name: 'Delete Service', link: '#', onClick: this.onOpenDeleteModal, style: {color: "#ff3535"}}]
+                                        {id: 2, name: 'Duplicate', link: '/manage-catalog/:id/duplicate'},
+                                        {id: 3, name: 'Request for User', link: '/service-catalog/:id/request'},
+                                        {id: 4, name: 'divider'},
+                                        {id: 5, name: this.dropdownPublish, link: '#', onClick: this.onOpenPublishingModal},
+                                        {id: 6, name: 'Delete Service', link: '#', onClick: this.onOpenDeleteModal, style: {color: "#ff3535"}}]
                                     }]}/>
                 {currentModal()}
             </div>

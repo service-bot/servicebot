@@ -3,12 +3,7 @@
   padding-bottom: 20px;
 }
 
-.left-sidebar-1 .wrapper {
-  padding-bottom: 20px;
-}
-
 .left-sidebar-1 .wrapper .content {
-  padding-bottom: 20px;
   display: block;
   height: 100%;
   min-height: 100%;
@@ -83,7 +78,7 @@
 }
 
 .left-sidebar-1 .wrapper .content .sidebar-heading {
-  height: 100px;
+  height: 56px;
   display: block;
   position: relative;
   width: 100%;
@@ -95,14 +90,15 @@
 
 .left-sidebar-1 .wrapper .content .sidebar-heading .sidebar-image {
   position: absolute;
-  bottom: 18px;
-  left: 15px;
-  width: 50px;
-  height: 50px;
+  bottom: 14px;
+  left: 14px;
+  width: 30px;
+  height: 30px;
 }
 
 .left-sidebar-1 .wrapper .content .sidebar-heading .sidebar-image .img-circle {
-  height: 50px;
+  height: 30px;
+  width: 30px;
   border-style: solid;
   border-width: 2px;
   box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
@@ -114,8 +110,8 @@
 
 .left-sidebar-1 .wrapper .content .sidebar-heading .sidebar-options {
   position: absolute;
-  bottom: 20px;
-  left: 75px;
+  bottom: 13px;
+  left: 57px;
 }
 
 .left-sidebar-1 .wrapper .content .sidebar-heading .sidebar-options .description {
@@ -386,16 +382,11 @@ fieldset[disabled][disabled] [data-sidebar="dark"] .content .left-sidebar-search
   background: #fff;
 }
 
-[data-sidebar="primary"] .wrapper {
-  background: #fff;
-}
-
 .left-sidebar-1 .logo, .left-sidebar-1 .sidebar-heading{
-  background: #30468a;
+  /*background: #30468a;*/
 }
 
 [data-sidebar="primary"] .content, .left-sidebar-1 .wrapper {
-  background: #ffffff;
   color: #ffffff;
 }
 
@@ -534,6 +525,7 @@ fieldset[disabled][disabled] [data-sidebar="primary"] .content .left-sidebar-sea
 [data-sidebar="primary"] .content .left-sidebar-section {
   background: #fff;
   color: #212121;
+  height: 92%;
 }
 
 [data-sidebar="primary"] .content .left-sidebar-section .section-title {

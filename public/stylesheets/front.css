@@ -41,7 +41,7 @@ body.home .featured-bg{
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    border-bottom: 1px solid white;
+    /*border-bottom: 1px solid white;*/
     z-index: 1;
 }
 body.home #middle-column{

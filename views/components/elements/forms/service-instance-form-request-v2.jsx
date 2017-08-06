@@ -11,6 +11,7 @@ import IconHeading from "../../layouts/icon-heading.jsx";
 import ModalUserLogin from "../modals/modal-user-login.jsx";
 import {setUid, setUser, fetchUsers} from "../../utilities/actions";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
+import {addAlert} from "../../utilities/actions";
 let _ = require("lodash");
 
 const FORM_NAME = "reqForm";
@@ -52,7 +53,10 @@ class ServiceRequestFormV2 extends React.Component {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
                     // console.log('User Data', response);
-                    self.setState({usersData: response});
+                    let userRoleList = response.filter(function(user){
+                        return user.references.user_roles[0].role_name === 'user';
+                    });
+                    self.setState({usersData: userRoleList});
                 } else {
                     console.log('Error getting users', response);
                 }
@@ -135,6 +139,7 @@ class ServiceRequestFormV2 extends React.Component {
                         }else if(response.url && response.api){ //this is a case where the user is new and has invitation
                             self.props.setUid(response.user_id);
                             self.props.setUser(response.user_id);
+                            self.props.addAlert({id:'user-requested-service-new-user-invited', message: 'Please check your email and set your password to complete your account.', show: true});
                             localStorage.setItem("permissions", response.permissions);
                             self.setState({emailExists: true, invitationExists: true, serviceCreated: response, ajaxLoad: false, success: true});
                         }else{
@@ -333,6 +338,13 @@ class ServiceRequestFormV2 extends React.Component {
 
 }
 
+function mapStateToProps(state){
+    return {
+        uid: state.uid,
+        alerts : state.alerts
+    }
+}
+
 const mapDispatchToProps = (dispatch) => {
     return {
         setUid: (uid) => {
@@ -340,9 +352,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setUser: (uid) => {
             fetchUsers( uid, (err, user) => dispatch(setUser(user)));
-        }
+        },
+        addAlert: (alert) => {return dispatch(addAlert(alert))},
     }
 };
 
-
-export default formBuilder(FORM_NAME, null, (state) => {return {uid:state.uid}}, mapDispatchToProps )(ServiceRequestFormV2)
+export default formBuilder(FORM_NAME, null, mapStateToProps, mapDispatchToProps )(ServiceRequestFormV2)

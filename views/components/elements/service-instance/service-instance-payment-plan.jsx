@@ -12,26 +12,25 @@ class ServiceInstancePaymentPlan extends React.Component {
         let owner = this.props.owner;
 
         console.log("rendering", this.props.service);
-
         if(paymentPlan != null){
 
             return (
                 <div className="">
 
                     <Authorizer permissions={['can_administrate']}>
-                    <div className="service-instance-section">
-                        <span className="service-instance-section-label">Customer Information</span>
-                        <div id="instance-owner">
-                            <div>
-                                <span><i className="fa fa-envelope"/>{owner.email}</span><br/>
-                                <span><i className="fa fa-user"/>{owner.name}</span><br/>
-                                <span><i className="fa fa-phone"/>{owner.phone}</span>
-                            </div>
-                            <div>
-                                <Avatar linked={true} size="md" uid={owner.id}/>
+                        <div className="service-instance-section">
+                            <span className="service-instance-section-label">Customer Information</span>
+                            <div id="instance-owner">
+                                <div>
+                                    <span><i className="fa fa-envelope"/>{owner.email}</span><br/>
+                                    <span><i className="fa fa-user"/>{owner.name}</span><br/>
+                                    <span><i className="fa fa-phone"/>{owner.phone}</span>
+                                </div>
+                                <div>
+                                    <Avatar key={`owner-avatar-${owner.id}`} linked={true} size="xl" uid={owner.id}/>
+                                </div>
                             </div>
                         </div>
-                    </div>
                     </Authorizer>
 
                     <div id="payment-plan-box" className="service-instance-section">

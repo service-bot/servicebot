@@ -10,7 +10,7 @@ class ManageCatalogEdit extends React.Component {
     render () {
         return(
             <div className="col-xs-12">
-                <p>Service Template Create Form</p>
+                <p>Service Template Edit Form</p>
                 <ServiceTemplateForm params = {{'templateId': this.props.params.templateId}}/>
             </div>
         );

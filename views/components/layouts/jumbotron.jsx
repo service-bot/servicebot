@@ -31,7 +31,7 @@ class Jumbotron extends React.Component {
         }
 
         return (
-            <div className="servicetron">
+            <div className="servicetron no-print">
                 <div className="jumbotron jumbotron-fluid" style={style.jumbotron}>
                     <div className="top-navigation">
                         <div className="nav nav-inline top-navigation-links">

@@ -31,30 +31,45 @@ let assignPermissionPromise = function (initConfig, permission_objects, initialR
             let mapped = initialRoleMap[role.get("role_name")];
             let perms_to_assign = permission_objects.filter(p => mapped.includes(p.get("permission_name")));
             role.assignPermission(perms_to_assign, function (result) {
-                //initializes demo data
-                if (role.get("role_name") == "admin" && initConfig && initConfig.admin_user && initConfig.admin_password) {
-                    //insert user in config
-                    console.log("admin!", role);
-                    store.dispatch(setOptions({
-                        stripe_secret_key: initConfig.stripe_secret,
-                        stripe_publishable_key: initConfig.stripe_public
-                    }))
-                    let admin = new User({
-                        email: initConfig.admin_user,
-                        password: require("bcryptjs").hashSync(initConfig.admin_password, 10),
-                        role_id: role.get("id")
-                    });
-                    admin.createWithStripe(function (err, result) {
-                        console.log("ADMIN USER CREATED!");
-                        resolve("done creating admin")
-                    })
-                } else {
                     resolve(role);
-                }
             });
         })
     }
 };
+
+
+let createAdmin = (initConfig) => {
+    return new Promise((resolve, reject) => {
+        if (initConfig && initConfig.admin_user && initConfig.admin_password) {
+            //sets the stripe keys so the createWithStripe function has access to store data that needs to exist...
+            store.dispatch(setOptions({
+                stripe_secret_key: initConfig.stripe_secret,
+                stripe_publishable_key: initConfig.stripe_public
+            }))
+            Role.findOne("role_name", "admin", (adminRole) => {
+                let admin = new User({
+                    email: initConfig.admin_user,
+                    password: require("bcryptjs").hashSync(initConfig.admin_password, 10),
+                    role_id: adminRole.get("id"),
+                    name: "admin"
+                });
+
+
+                admin.createWithStripe(function (err, result) {
+                    if(err){
+                        console.error(err);
+                        reject(err);
+                    }
+                    resolve(result)
+                })
+
+            })
+
+        }else{
+            reject("no admin defined, can't initialize...");
+        }
+    })
+}
 
 //Creating initial user tables:
 module.exports = function (initConfig) {
@@ -88,7 +103,7 @@ module.exports = function (initConfig) {
                 table.string('name');
                 table.string('email').notNullable().unique();
                 table.string('password');
-                table.enu('status', ['active', 'suspended', 'invited', 'flagged', 'disconnected']).defaultTo('flagged');
+                table.enu('status', ['active', 'suspended', 'invited', 'flagged', 'disconnected']).defaultTo('active');
                 table.string('customer_id');
                 table.string('phone');
                 table.timestamp('last_login');
@@ -144,6 +159,7 @@ module.exports = function (initConfig) {
                 table.string('event_name');
                 table.text('message', 'longtext');
                 table.string('subject');
+                table.string('description');
                 table.string("model");
                 table.specificType('additional_recipients', 'text[]');
                 table.boolean("send_email").defaultTo(false);
@@ -432,7 +448,7 @@ module.exports = function (initConfig) {
                         let userRole = roles.filter(role => role['role_name'] == 'user')[0];
                         systemOptions.push({
                             "option": "default_user_role",
-                            public: false,
+                            public: true,
                             "type": "system",
                             "data_type": "user_role",
                             "value": userRole['id']
@@ -457,19 +473,23 @@ module.exports = function (initConfig) {
                                 let permission_objects = result.map(permission => new Permission(permission));
 
                                 //assign permissions to roles
-                                resolve(Promise.all(role_objects.map(assignPermissionPromise(initConfig, permission_objects, initialRoleMap))).then(function () {
+                                resolve(Promise.all(role_objects.map(assignPermissionPromise(initConfig, permission_objects, initialRoleMap)))
+                                    .then(function () {
                                         //Assign all system settings
                                         return new Promise(function (resolve, reject) {
                                             let options = [
                                                 {"option": "company_name", "value": initConfig.company_name},
                                                 {"option": "company_address", "value": initConfig.company_address},
                                                 {"option": "company_phone_number", "value": initConfig.company_phone_number},
-                                                {"option": "company_email", "value": initConfig.company_email}
+                                                {"option": "company_email", "value": initConfig.company_email},
+                                                {"option": "hostname", "value": initConfig.hostname}
                                             ];
                                             SystemOption.batchUpdate(options, function (result) {
-                                                return resolve('Completed!');
+                                                return resolve(result);
                                             })
                                         });
+                                    }).then(options => {
+                                        return createAdmin(initConfig)
                                     })
                                 );
                             });

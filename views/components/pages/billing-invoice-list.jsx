@@ -1,4 +1,5 @@
 import React from 'react';
+import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import {Link, browserHistory} from 'react-router';
 import ContentTitle from "../layouts/content-title.jsx";
 import Fetcher from "../utilities/fetcher.jsx";
@@ -8,6 +9,16 @@ import DataTable from "../elements/datatable/datatable.jsx";
 import {Price} from "../utilities/price.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import _ from "lodash";
+import { connect } from "react-redux";
+import ModalRefund from "../elements/modals/modal-refund.jsx";
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid,
+        user: state.user || null,
+        options: state.options
+    }
+};
 
 class BillingInvoiceList extends React.Component {
 
@@ -20,11 +31,17 @@ class BillingInvoiceList extends React.Component {
                         invoiceId: invoiceId,
                         invoice: {},
                         invoiceOwner: {},
-                        currentUser: uid
+                        currentUser: uid,
+                        refundModal: false
         };
 
         this.fetchInvoice = this.fetchInvoice.bind(this);
         this.fetchUser = this.fetchUser.bind(this);
+        this.openRefundModal = this.openRefundModal.bind(this);
+        this.closeRefundModal = this.closeRefundModal.bind(this);
+        this.getRefunds = this.getRefunds.bind(this);
+        this.getRefundDetail = this.getRefundDetail.bind(this);
+        this.getActionButtons = this.getActionButtons.bind(this);
     }
 
     componentDidMount(){
@@ -44,6 +61,9 @@ class BillingInvoiceList extends React.Component {
            }
         }).then(function(response){
             self.fetchUser(response);
+        }).catch(function (err) {
+            //If the user is unauthorized force them to 404 page
+            return browserHistory.push("/404");
         });
     }
 
@@ -72,70 +92,152 @@ class BillingInvoiceList extends React.Component {
         }
     }
 
+    openRefundModal(){
+        let self = this;
+        return function(e) {
+            e.preventDefault();
+            self.setState({refundModal: true});
+        }
+    }
+
+    closeRefundModal(){
+        this.setState({refundModal: false});
+    }
+
+    getRefundDetail(transactions){
+        if(transactions.length > 0 && transactions[0].amount_refunded > 0) {
+            let refunded = transactions[0].amount_refunded;
+            return (
+                <li><span className="status-label">Refunded:</span> <span><Price value={refunded} /></span></li>
+            );
+        } else {
+            return (<span/>);
+        }
+    }
+
+    getRefunds(transactions){
+        //If there is a transaction for this invoice
+        if(transactions.length > 0 && transactions[0].refunds.data.length > 0) {
+            let refunds = transactions[0].refunds.data;
+            return (
+                <div className="xaas-dashboard">
+                    <div className="xaas-row waiting">
+                        <div className="xaas-title xaas-has-child">
+                            <div className="xaas-data xaas-service"><span>Applied Refunds</span></div>
+                        </div>
+                        <div className="xaas-body">
+                            {refunds.map(refund =>
+                                <div className="xaas-body-row">
+                                    <div className="xaas-data xaas-price"><b><Price value={refund.amount} /></b></div>
+                                    <div className="xaas-data xaas-charge"><span>{refund.reason}</span></div>
+                                    <div className="xaas-data xaas-action"><span>{refund.status}</span></div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        } else {
+            return (<span/>);
+        }
+    }
+
+    getActionButtons(){
+        let self = this;
+        return (
+            <Authorizer permissions="can_administrate">
+                <button className="btn btn-danger" onClick={self.openRefundModal()}>Refund Invoice</button>
+            </Authorizer>
+        );
+    }
+
     render () {
+        let options = this.props.options;
+
         if(this.state.loading){
             return(<Load type="content"/>);
         }else{
             let invoice = this.state.invoice;
             let invoiceOwner = this.state.invoiceOwner;
+
+            let currentModal = ()=> {
+                if(this.state.refundModal){
+                    return(
+                        <ModalRefund invoice={this.state.invoice} show={this.state.refundModal} hide={this.closeRefundModal}/>
+                    )
+                }
+            };
+
             return (
                 <div className="col-xs-12">
-                    <ContentTitle icon="cog" title={`Invoice ID:${invoice.invoice_id}`}/>
+                    <div className="row">
+                        <div className="col-xs-10">
+                            <ContentTitle icon="cog" title={`Invoice ID:${invoice.invoice_id}`}/>
+                        </div>
+                        <div className="col-xs-2">
+                            {this.getActionButtons()}
+                        </div>
+                    </div>
                     <div className="Invoice">
                         <div className="invoice-header">
                             <div className="invoice-header-header">
-                                <div className="invoice-date"><span className="invoice-date-label">Charge Date:</span><DateFormat date={invoice.date}/></div>
+                                <div className="invoice-entity">
+                                    <h2 className="invoice-name">Invoice</h2>
+                                    <h2 className="company-name">{options.hostname && options.hostname.value}</h2>
+                                </div>
                                 <div className="invoice-no">
+                                    <span className="invoice-date-label">Charge Date:</span><DateFormat date={invoice.date}/><br/>
                                     <span className="invoice-no-label">Invoice No:</span>{invoice.id}<br/>
                                     <span className="invoice-no-label">Invoice ID:</span>{invoice.invoice_id}<br/>
-                                    <span className="invoice-no-label">Subscription ID:</span>{invoice.subscription}
+                                    <span className="invoice-no-label">Subscription ID:</span>{invoice.subscription}<br/>
                                 </div>
                             </div>
                         </div>
                         <div className="entity-info">
-                            <div className="invoice-entity">
-                                <h2 className="invoice-name">Invoice</h2>
-                                <h2 className="company-name">ServiceBot.io</h2>
-                            </div>
                             <div className="invoice-entity-details">
-                                <div className="invoice-from">
+                                <div className="col-xs-12 col-md-4">
                                     <div className="invoice-from-header"><h3>From</h3></div>
                                     <div className="invoice-from-body">
                                         <ul>
-                                            <li className="entity-name">ServiceBot.io</li>
-                                            <li>1 Inifinite Loop</li>
-                                            <li>Mountain View, CA 20010</li>
+                                            <li className="entity-name">{options.company_name && options.company_name.value}</li>
+                                            <li>{options.company_address && options.company_address.value}</li>
+                                            {options.company_email && <li><i className="fa fa-envelope"/> {options.company_email.value}</li>}
+                                            {options.company_phone_number && <li><i className="fa fa-phone"/> {options.company_phone_number.value}</li>}
                                         </ul>
                                     </div>
                                 </div>
-                                <div className="invoice-to">
+                                <div className="col-xs-12 col-md-4">
                                     <div className="invoice-to-header"><h3>To</h3></div>
                                     <div className="invoice-to-body">
                                         <ul>
                                             {invoiceOwner.name && <li className="entity-name"><i className="fa fa-user"/> {invoiceOwner.name}</li> }
-                                            {invoiceOwner.email && <li><i className="fa fa-envelope"/>{invoiceOwner.email}</li> }
-                                            {invoiceOwner.phone && <li><i className="fa fa-phone"/>{invoiceOwner.phone}</li> }
+                                            {invoiceOwner.email && <li><i className="fa fa-envelope"/> {invoiceOwner.email}</li> }
+                                            {invoiceOwner.phone && <li><i className="fa fa-phone"/> {invoiceOwner.phone}</li> }
                                         </ul>
                                     </div>
                                 </div>
-                                <div className="invoice-status">
-                                    <div className="invoice-status-header"><h3>Status</h3></div>
+                                <div className="col-xs-12 col-md-4">
+                                    <div className="invoice-status-header"><h3>Details</h3></div>
                                     <div className="invoice-status-body">
                                         <ul>
                                             <li><span className="status-label">Invoice Total:</span> {_.has(invoice, 'references.transactions[0].amount') ?
                                                 <Price value={invoice.references.transactions[0].amount}/> : <Price value={invoice.amount_due}/>}</li>
-                                            <li><span className="status-label">Period Start:</span> <DateFormat date={invoice.period_start}/></li>
-                                            <li><span className="status-label">Period End:</span> <DateFormat date={invoice.period_end}/></li>
-                                            <li><span className="status-label">Charge Date:</span> <DateFormat date={invoice.date}/></li>
+
+                                            {this.getRefundDetail(invoice.references.transactions)}
+
                                             <li><span className="status-label">Status:</span> <span>{invoice.paid ? 'Paid' : 'Not Charged'}</span></li>
                                             {invoice.next_attempt != null &&
                                                 <li><span className="status-label">Next Attempt:</span> <DateFormat date={invoice.next_attempt}/></li>
                                             }
+
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        {this.getRefunds(invoice.references.transactions)}
+
                         <div className="invoice-details">
                             <table className="table table-striped table-hover">
                                 <thead>
@@ -164,7 +266,7 @@ class BillingInvoiceList extends React.Component {
                                         <td><strong>Transaction Total</strong></td>
                                         {_.has(invoice, 'references.transactions[0].amount') ?
                                             <td><strong><Price value={invoice.references.transactions[0].amount}/></strong></td>:
-                                            <td><strong>Not Charged</strong></td>
+                                            <td><strong>No Charge</strong></td>
                                         }
                                     </tr>
                                 </tfoot>
@@ -174,10 +276,11 @@ class BillingInvoiceList extends React.Component {
 
                         </div>
                     </div>
+                    {currentModal()}
                 </div>
             );
         }
     }
 }
 
-export default BillingInvoiceList;
+export default connect(mapStateToProps)(BillingInvoiceList);

@@ -1,22 +1,15 @@
 import React from 'react';
+import cookie from 'react-cookie';
 import {Link} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import ModalInvoice from '../elements/modals/modal-invoice.jsx';
-import $ from "jquery";
-import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
-import { connect } from "react-redux";
-let _ = require("lodash");
 import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
 import {NavNotification} from "../pages/notifications.jsx";
-import cookie from 'react-cookie';
-
-const mapStateToProps = (state, ownProps) => {
-    return {
-        uid: state.uid,
-        user: state.user || null,
-        options: state.options
-    }
-};
+import {AppMessage} from '../elements/app-message.jsx';
+import { connect } from "react-redux";
+import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
+import $ from "jquery";
+let _ = require("lodash");
 
 const AnonymousLinks = ({signUpEnabled}) => (
     <ul className="nav navbar-nav navbar-right">
@@ -57,7 +50,6 @@ class NavBootstrap extends React.Component {
         this.toggleSideBar = this.toggleSideBar.bind(this);
         this.toggleOnEditingGear = this.toggleOnEditingGear.bind(this);
         this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
-        this.getAppMessages = this.getAppMessages.bind(this);
         this.getLivemode = this.getLivemode.bind(this);
     }
 
@@ -152,22 +144,6 @@ class NavBootstrap extends React.Component {
         }
     }
 
-    getAppMessages(){
-        let message = null;
-        if(this.props.user) {
-            if(this.props.user.status == "invited") {
-                message = "Please check your email and set your password to complete your account.";
-            }
-        }
-
-        if(message){
-            return ( <div className="app-messages"><p>{message}</p></div> );
-        }else{
-            return <span/>;
-        }
-
-    }
-
     getLivemode(){
         let livemode = cookie.load("spk").substring(3, 7);
         if(livemode.toUpperCase() == "TEST") {
@@ -252,11 +228,19 @@ class NavBootstrap extends React.Component {
                                                                             "button_primary_text_color"]
                                                                 }/>
                 }
-                {this.getAppMessages()}
+                <AppMessage/>
             </nav>
 
         );
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid,
+        user: state.user || null,
+        options: state.options
+    }
+};
 
 export default connect(mapStateToProps)(NavBootstrap);

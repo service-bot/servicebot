@@ -93,13 +93,13 @@ class UserFormEdit extends React.Component {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-md-12 form-group-flex column centered">
-                                        <label className="control-label">Upload Brand Logo</label>
+                                    <div className="col-md-12 form-group-flex column centered p-b-10">
+                                        <label className="control-label">Upload Avatar</label>
                                         {/*<ImageUploader name="template-icon" elementID="template-image" imageStyle="badge badge-lg"*/}
                                                        {/*imageURL={`/api/v1/service-templates/25/icon`} />*/}
-                                        <ImageUploader name="avatar" elementID="avatar" imageStyle="badge badge-lg"
+                                        <ImageUploader name="avatar" elementID="avatar" imageStyle="badge badge-xl"
                                                        imageURL={`${this.state.url}/avatar`} imageGETURL={`${this.state.url}/avatar`}
-                                                       uploadButton={true}/>
+                                                       uploadButton={true} reloadNotice="Please reload the application."/>
                                     </div>
                                     <div className="col-md-12">
                                         <div className="row">
@@ -168,7 +168,7 @@ class UserFormEdit extends React.Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-12 edit-profile-image">
-                                        <div><div className="badge badge-lg">
+                                        <div><div className="badge badge-xl">
                                             <img id="avatar-img" src={this.state.profileImage} ref="avatar" className="max-w-40 h-40 img-circle" alt="badge"/>
                                             {this.state.loadingImage && <Load type="avatar"/> }
                                         </div></div>

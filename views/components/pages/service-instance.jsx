@@ -67,6 +67,7 @@ class ServiceInstance extends React.Component {
         this.onPayChargeItemModalClose = this.onPayChargeItemModalClose.bind(this);
         this.handlePayAllChargesModal = this.handlePayAllChargesModal.bind(this);
         this.onPayAllChargesModalClose = this.onPayAllChargesModalClose.bind(this);
+        this.getAdditionalCharges = this.getAdditionalCharges.bind(this);
     }
 
     componentDidMount() {
@@ -196,9 +197,9 @@ class ServiceInstance extends React.Component {
             if(status == 'requested'){
                 return (<li><Link to="#" onClick={self.handleApprove}>Approve Service</Link></li>);
             }else if(status == 'running'){
-                return (<li><Link to="#" onClick={self.handleCancel}>Request Cancel</Link></li>);
+                return (<li><Link to="#" onClick={self.handleCancel}>Request Cancellation</Link></li>);
             }else if(status == 'waiting_cancellation'){
-                return (<li><Link to="#" onClick={self.handleUndoCancel}>Undo Cancel Request</Link></li>);
+                return (<li><Link to="#" onClick={self.handleUndoCancel}>View Cancellation Request</Link></li>);
             }else if(status == 'cancelled'){
                 return (<li><Link to="#" onClick={self.handleApprove}>Restart Service</Link></li>);
             }
@@ -228,11 +229,43 @@ class ServiceInstance extends React.Component {
                     <Authorizer permissions="can_administrate">
                         <li role="separator" className="divider"/>
                     </Authorizer>
-                    <li><Link to="#" onClick={self.handleViewPaymentModal}>View Payment History</Link></li>
+                    {/*<li><Link to="#" onClick={self.handleViewPaymentModal}>View Payment History</Link></li>*/}
                     {self.getStatusButtons()}
                 </ul>
             </div>
         );
+    }
+
+    getAdditionalCharges(myInstance, myInstanceChargeItems) {
+        if(myInstance.status != 'cancelled') {
+            if (myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) {
+                return (
+                    <div id="service-instance-waiting" className="row">
+                        <div className="col-md-8 col-md-offset-2">
+                            <ServiceInstanceWaitingCharges handlePayAllCharges={self.handlePayAllChargesModal}
+                                                           handlePayChargeItem={self.handlePayChargeItemModal}
+                                                           instanceWaitingItems={myInstanceChargeItems.false}/>
+                        </div>
+                    </div>
+                );
+            } else { return null; }
+        } else {
+            return (
+                <div id="service-instance-waiting" className="row">
+                    <div className="col-md-8 col-md-offset-2">
+                        <div className="service-block service-action-block">
+                            <div className="xaas-dashboard">
+                                <div className="xaas-row cancelled">
+                                    <div className="xaas-title xaas-has-child">
+                                        <b>Service is Cancelled!</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
     }
 
     render () {
@@ -262,6 +295,7 @@ class ServiceInstance extends React.Component {
             //Gather data first
             if( self.state.instance){
                 let service = self.state.instance;
+                console.log("the service instance", service);
                 id = service.id;
                 owner = service.references.users[0];
                 ownerId = service.user_id;
@@ -315,28 +349,23 @@ class ServiceInstance extends React.Component {
 
                                 {_.has(myInstance, 'references.service_instance_cancellations[0].id') &&
                                 <div className="row">
-                                    <div className="col-xs-12">
+                                    <div className="col-md-8 col-md-offset-2">
                                         <div className="alert alert-warning" role="alert">
-                                            <Link to="#" className="btn btn-warning btn-outline btn-rounded btn-sm pull-right" onClick={self.handleUndoCancel}>Undo Request</Link>
+                                            <Link to="#" className="btn btn-warning btn-outline btn-rounded btn-sm pull-right" onClick={self.handleUndoCancel}>View Cancellation Request</Link>
                                             <i className="fa fa-exclamation-circle"/>
-                                            You have requested cancellation for "{myInstance.name}".
+                                            There is a pending cancellation request for this service.
                                         </div>
                                     </div>
                                 </div>
                                 }
 
-                                {(myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) &&
-                                <div id="service-instance-waiting" className="row">
-                                    <div className="col-md-8 col-md-offset-2">
-                                        <ServiceInstanceWaitingCharges handlePayAllCharges={self.handlePayAllChargesModal} handlePayChargeItem={self.handlePayChargeItemModal} instanceWaitingItems={myInstanceChargeItems.false}/>
-                                    </div>
-                                </div>
-                                }
+                                {this.getAdditionalCharges(myInstance, myInstanceChargeItems)}
 
                                 <div id="service-instance-description" className="row">
                                     <div className="col-md-8 col-md-offset-2">
                                         <ServiceInstanceDescription service={myInstance} instanceDescription={myInstance.description}/>
-                                        <ServiceInstancePaymentPlan key={Object.id} owner={owner}
+                                        <ServiceInstancePaymentPlan key={Object.id}
+                                                                    owner={owner}
                                                                     service={myInstance}
                                                                     instancePaymentPlan={myInstance.payment_plan}
                                                                     status={myInstance.status}

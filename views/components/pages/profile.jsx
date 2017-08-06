@@ -1,5 +1,7 @@
 import React from 'react';
 import cookie from 'react-cookie';
+import {browserHistory} from 'react-router';
+import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
@@ -26,7 +28,11 @@ class Profile extends React.Component {
     }
 
     componentDidMount(){
-        this.fetchUser();
+        if(!isAuthorized({})){
+            return browserHistory.push("/login");
+        } else {
+            this.fetchUser();
+        }
     }
 
     fetchUser(){

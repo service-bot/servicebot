@@ -9,8 +9,6 @@ class FeaturedImage extends React.Component {
 
     }
     render () {
-        console.log("initial bg color", this.props.bgColor);
-
         let style = {
             backgroundSize: "cover",
             backgroundPosition: "center",

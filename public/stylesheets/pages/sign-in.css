@@ -1,10 +1,7 @@
 .sign-in, .sign-up {
   position: relative;
   background: #fff;
-  box-shadow: 0px 4px 5px -2px rgba(0, 0, 0, 0.2), 0px 7px 10px 1px rgba(0, 0, 0, 0.14), 0px 2px 16px 1px rgba(0, 0, 0, 0.12);
   padding: 40px;
-  width: 50%;
-  margin: 25px auto 25px;
 }
 
 .sign-in h3 {
@@ -29,7 +26,7 @@
   margin-bottom: 20px;
 }
 
-.sign-in .sign-up-link a {
+.sign-in .sign-up-link a, .sign-up-link a {
   color: #0d47a1;
 }
 
@@ -37,7 +34,6 @@
   font-size: 0.8rem !important;
   color: #9e9e9e;
 }
-
 
 /* modal sign-in */
 .modal .sign-in {
@@ -54,31 +50,12 @@ body.login .featured{
 }
 
 @media (max-width: 543px) {
-  .sign-in {
+  .sign-in, .sign-up {
     max-width: 500px;
+    margin: 0px;
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
   }
 }
 
-@media (min-width: 544px) and (max-width: 767px) {
-  .sign-in {
-    width: 500px;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  .sign-in {
-    width: 600px;
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1199px) {
-  .sign-in {
-    width: 600px;
-  }
-}
-
-@media (min-width: 1200px) {
-  .sign-in {
-    width: 600px;
-  }
-}

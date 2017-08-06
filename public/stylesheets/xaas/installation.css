@@ -1,3 +1,23 @@
+.installation-logo img{
+    max-width: 120px;
+}
+.installation-logo, .installation-form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 5%;
+    height: 100vh;
+}
+.installation-form{
+    background-color: #fff;
+    overflow: scroll;
+}
+
+.installation {
+    height: 100vh;
+}
+
+
 .installation h1{
     text-align: center;
     color: white;
@@ -40,23 +60,22 @@
 }
 
 .installation .form-control{
-    border: 0;
-    box-shadow: none;
+    /*border: 0;*/
+    /*box-shadow: none;*/
 }
 
 .installation label{
-    color: white;
-    font-family: 'Roboto Slab', "Helvetica", sans-serif;
+    /*font-family: 'Roboto Slab', "Helvetica", sans-serif;*/
     font-weight: normal;
     font-size: 18px;
     line-height: 32px;
     margin-bottom: 0;
-    letter-spacing: 1px;
+    /*letter-spacing: 1px;*/
 }
 
 .installation input {
-    font-family: 'Roboto Slab', "Helvetica", sans-serif;
-    letter-spacing: 1px;
+    /*font-family: 'Roboto Slab', "Helvetica", sans-serif;*/
+    /*letter-spacing: 1px;*/
 }
 
 .installation .row{
@@ -82,11 +101,12 @@
     background: #000000;
     border-radius: 3px;
     padding: 5px 15px;
-    font-family: 'Roboto Slab', "Helvetica", sans-serif;
+    /*font-family: 'Roboto Slab', "Helvetica", sans-serif;*/
     font-size: 16px;
     font-weight: normal;
     color: white;
     margin-bottom: 5px;
+    width: 100%;
 }
 
 /* desktops only */

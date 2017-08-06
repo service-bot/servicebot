@@ -23,6 +23,7 @@ import Login from "./components/elements/forms/login.jsx";
 import ForgotPassword from "./components/elements/forms/forgot-password.jsx";
 import ResetPassword from "./components/elements/forms/reset-password.jsx";
 import SignUp from "./components/pages/signup.jsx";
+import InviteComplete from "./components/pages/invite.jsx";
 import UserForm from "./components/pages/account-settings.jsx";
 import Profile from "./components/pages/profile.jsx";
 // Billings
@@ -40,6 +41,7 @@ import ManageCatalog from "./components/pages/manage-catalog.jsx";
 import ManageCatalogList from "./components/pages/manage-catalog-list.jsx";
 import ManageCatalogCreate from "./components/pages/manage-catalog-create.jsx";
 import ManageCatalogEdit from "./components/pages/manage-catalog-edit.jsx";
+import ManageCatalogDuplicate from "./components/pages/manage-catalog-duplicate.jsx";
 import UserEdit from "./components/pages/user-edit.jsx";
 import ManageCategories from "./components/pages/manage-categories.jsx";
 import ManageNotificationTemplates from "./components/pages/manage-notification-templates.jsx";
@@ -87,7 +89,7 @@ let AppRouter = function(props) {
                     <Route name="Forgot Password" path="forgot-password" component={ForgotPassword}/>
                     <Route name="Reset Password" path="reset-password/:uid/:token" component={ResetPassword}/>
                     <Route name="User Sign Up" path="signup" component={SignUp}/>
-                    <Route name="Finish Your Registration" path="invitation/:token" component={SignUp}/>
+                    <Route name="Finish Your Registration" path="invitation/:token" component={InviteComplete}/>
                     <Route name="My Services" path="my-services" component={MyServices}/>
                     <Route name="My Services" path="my-services/service-instance/" component={MyServices}/>
                     <Route name="Service Instance" path="my-services/service-instance/:instanceId"
@@ -121,6 +123,7 @@ let AppRouter = function(props) {
                         <Route name="Manage Catalog" path="list" component={ManageCatalogList}/>
                         <Route name="Create Template" path="create" component={ManageCatalogCreate}/>
                         <Route name="Edit Template" path=":templateId" component={ManageCatalogEdit}/>
+                        <Route name="Duplicate Template" path=":templateId/duplicate" component={ManageCatalogDuplicate}/>
                         <Route name="Edit Template" path=":templateId/edit" component={ManageCatalogEdit}/>
                     </Route>
                     {/* Query routes */}
@@ -130,7 +133,6 @@ let AppRouter = function(props) {
                     <Route path="service-templates/:templateId" component={ServiceTemplateForm}/>
                     <Route name="Manage Subscriptions" path="/service-instance" component={ManageSubscriptions}/>
                     <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
-
                 </Route>
                 <Route name="Embed" path={"/service/:serviceId/embed"} component={Embed}/>
                 <Route name="Automated Installation" path="setup" component={Setup}/>

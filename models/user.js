@@ -114,10 +114,12 @@ User.prototype.promiseStripeReconnect = function () {
  */
 User.prototype.createWithStripe = function (callback) {
     let self = this;
+    self.data.email = self.data.email.toLowerCase();
     let customer_obj = {
         email: self.data.email,
         description: `ServiceBot User: ${self.data.email}`
     };
+
     //Create Stripe Customer:
     Stripe().connection.customers.create(customer_obj, function(err, customer) {
         if(!err){
@@ -142,6 +144,7 @@ User.prototype.createWithStripe = function (callback) {
 
 User.prototype.updateWithStripe = function (callback) {
     let self = this;
+    self.data.email = self.data.email.toLowerCase();
     self.promiseValid()
         .then(function (customer_id) {
             return new Promise(function (resolve, reject) {
@@ -317,6 +320,22 @@ User.prototype.suspend = function (callback) {
         }).catch(function (err) {
             callback(err, null);
         });
+    });
+};
+
+/**
+ * This function marks a users status from suspended to active.
+ * @param callback - updated user, or error.
+ */
+User.prototype.unsuspend = function (callback) {
+    let self = this;
+    self.data.status = 'active';
+    self.update(function (err, user) {
+        if(!err) {
+            callback(null, user);
+        } else {
+            callback(err, null);
+        }
     });
 };
 

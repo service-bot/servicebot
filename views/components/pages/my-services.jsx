@@ -12,6 +12,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import _ from "lodash";
 import ModalInvoice from '../elements/modals/modal-invoice.jsx';
 import {Price} from '../utilities/price.jsx';
+import { connect } from 'react-redux';
 
 class MyServices extends React.Component {
 
@@ -100,6 +101,30 @@ class MyServices extends React.Component {
             let runningServiceCount = grouped.running ? grouped.running.length : false;
             let requestedServiceCount = grouped.requested ? grouped.requested.length : false;
             let nextInvoiceAmountDue = self.state.nextInvoice ? self.state.nextInvoice.amount_due : 0;
+            let userStatus = this.props.user.status;
+            let widgetColor = () => {
+                switch (self.props.user.status) {
+                    case 'active' : return '#27ae60';
+                    case 'suspended' : return '#ff0000'; // this will not happen because suspended user cannot login
+                    case 'invited' : return '#0069ff';
+                    case 'flagged' : return '#e67e22';
+                    case 'disconnected' : return '#95a5a6';
+                    default: return '#111111';
+                }
+            };
+
+            let widgetIcon = () => {
+                switch (self.props.user.status) {
+                    case 'active' : return 'check';
+                    case 'suspended' : return 'ban'; // this will not happen because suspended user cannot login
+                    case 'invited' : return 'envelope';
+                    case 'flagged' : return 'flag';
+                    case 'disconnected' : return 'chain-broken';
+                    default: return '#111111';
+                }
+            };
+
+            console.log('my color', widgetColor());
 
             const currentModal = ()=> {
                 if(self.state.InvoiceModal){
@@ -108,6 +133,8 @@ class MyServices extends React.Component {
                     );
                 }
             };
+
+            console.log("store's user", userStatus);
 
             return(
                 <Authorizer>
@@ -118,12 +145,12 @@ class MyServices extends React.Component {
                                                      transitionAppear={true} transitionAppearTimeout={1000}
                                                      transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                                 <div className="row">
-                                    <DashboardWidget widgetIcon="connectdevelop" widgetName="Active Services" widgetData={runningServiceCount || '0'} widgetColor="blue"/>
-                                    <DashboardWidget widgetIcon="warning" widgetName="Awaiting for Approvals" widgetData={requestedServiceCount || '0'} widgetColor="blue"/>
-                                    <DashboardWidget widgetIcon="credit-card" widgetName="Upcoming Invoice" widgetData={null} widgetColor="blue" clickAction={self.onOpenInvoiceModal}>
+                                    <DashboardWidget widgetIcon="connectdevelop" widgetName="Active Services" widgetData={runningServiceCount || '0'} />
+                                    <DashboardWidget widgetIcon="warning" widgetName="Awaiting for Approvals" widgetData={requestedServiceCount || '0'} />
+                                    <DashboardWidget widgetIcon="credit-card" widgetName="Upcoming Invoice" widgetData={null} clickAction={self.onOpenInvoiceModal}>
                                         <Price value={nextInvoiceAmountDue}/>
                                     </DashboardWidget>
-                                    <DashboardWidget widgetIcon="check" widgetName="Account Status" widgetData="Good standing" widgetColor="green"/>
+                                    <DashboardWidget widgetIcon={widgetIcon()} widgetName="Account Status" widgetData={userStatus} widgetColor={widgetColor()}/>
                                 </div>
                                 <div className="row">
                                     <DashboardServiceList handleComponentUpdating={self.handleComponentUpdating} services={self.state.services}/>
@@ -145,4 +172,4 @@ class MyServices extends React.Component {
     }
 }
 
-export default MyServices;
+export default connect((state) => {return {user:state.user}})(MyServices);;

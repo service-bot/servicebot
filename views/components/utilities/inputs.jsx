@@ -165,9 +165,13 @@ class Inputs extends React.Component {
         }
 
         this.setState({value: _.toUpper(color.hex), colors: currentColors, showPicker: false}, ()=>{
-            let event = new Event('input', { bubbles: true });
-            document.getElementById(`color_picker_${this.state.name}_input`).dispatchEvent(event);
-
+            let event = {
+                currentTarget : {
+                    name: this.state.name,
+                    value: this.state.value
+                }
+            };
+            this.props.onChange(event);
             //remove event listener for clicking outside
             document.getElementById(`color_picker_${this.state.name}`).removeEventListener('click', this.clickInsideListener);
         });
@@ -200,7 +204,7 @@ class Inputs extends React.Component {
             error = "Component requires a label passed in props.";
         }
 
-        if(type == "text" || type == "number" || type == "hidden" || type == "email"){
+        if(type == "text" || type == "number" || type == "hidden" || type == "email" || type == "password"){
             // console.log("passed in value", defaultValue);
             return (
                 <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''} ${type == 'hidden' ? 'hidden' : ''}`}>
@@ -250,9 +254,11 @@ class Inputs extends React.Component {
                                      value={typeof(option) == 'object' ? Object.values(option)[0] : option}>
                                     {typeof(option) == 'object' ? Object.keys(option)[0] : option}</option>
                           )) :
-                            <option value={this.props.value || this.props.defaultValue}>{this.props.value || this.props.defaultValue}</option>
+                        <span className="help-block">Options format is not accepted. Must be an array or array of objects</span>
+
                         }
-                        {/*<span className="help-block">Options format is not accepted. Must be an array or array of objects</span>*/}
+                        {/*<option value={this.props.value || this.props.defaultValue}>{this.props.value || this.props.defaultValue}</option>*/}
+
                     </select>
                     {error && <span className="help-block">{error}</span> }
                     {warning && <span className="help-block">{warning}</span> }
@@ -291,7 +297,7 @@ class Inputs extends React.Component {
                     <div className="ColorPickerPreview"
                          style={{backgroundColor: this.state.value, width: 50+'px', height: 50+'px', cursor: 'pointer', borderRadius: 5+'px'}}
                          onClick={this.handleShowPicker}/>
-                    <span className="custom-color-picker" onClick={this.handleShowCustomPicker}><i className="fa fa-edit"/></span>
+                    <span className="custom-color-picker" onClick={this.handleShowPicker}><i className="fa fa-edit"/></span>
                     <input id={`color_picker_${this.state.name}_input`} className="form-control"
                            type="text" name={this.state.name} style={{display: 'none'}}
                            value={this.state.value} onFocus={this.handleShowPicker} onChange={this.props.onChange}/>
@@ -299,10 +305,10 @@ class Inputs extends React.Component {
                     <TwitterPicker color={{color: {hex: this.state.value}}} colors={this.state.colors}
                                    onChange={this.handleColorPickerChange}/>
                     }
-                    { this.state.showCustomPicker &&
-                    <SketchPicker color={{color: {hex: this.state.value}}} colors={this.state.colors}
-                                  onChange={this.handleColorPickerChange}/>
-                    }
+                    {/*{ this.state.showCustomPicker &&*/}
+                    {/*<SketchPicker color={{color: {hex: this.state.value}}} colors={this.state.colors}*/}
+                                  {/*onChange={this.handleColorPickerChange}/>*/}
+                    {/*}*/}
                     {this.props.error && <span className="help-block">{this.props.error}</span> }
                     <div className="clearfix"/>
                 </div>

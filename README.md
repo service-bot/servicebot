@@ -8,21 +8,6 @@
 ___
 <p align="center">ServiceBot is a platform for a business to sell their services and automate the administrative tasks such as billing and invoicing.</p>
 
-## Demo
-**User Login Credentials:**
-
-Email: customer@servicebot.io
-
-Password: demo
-
-**Admin Login Credentials:**
-
-Email: admin@servicebot.io
-
-Password: demo
-
-[![alt text](https://servicebot.io/servicebot.png)](https://demo.servicebot.cloud)
-
 ## Installation
 
 For business class hosting, see [servicebot.io/pricing](https://servicebot.io/pricing).

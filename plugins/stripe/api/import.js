@@ -8,6 +8,8 @@ let Fund = require('../../../models/fund');
 let ServiceTemplate = require('../../../models/service-template');
 let ServiceCategory = require('../../../models/service-category');
 let Invoice = require('../../../models/invoice');
+let dispatchEvent = require("../../../config/redux/store").dispatchEvent;
+
 
 module.exports = function(router, knex, stripe) {
 
@@ -16,7 +18,7 @@ module.exports = function(router, knex, stripe) {
      * @param last_id - Used for recursive calls
      * @returns {Promise}
      */
-    let importStripeUsers = function (last_id) {
+    let importStripeUsers = function (last_id, notifyUsers, protocol, host) {
         let req_params = { limit: 100 };
         if (last_id !== null) { req_params['starting_after'] = last_id; }
 
@@ -24,7 +26,7 @@ module.exports = function(router, knex, stripe) {
             stripe().connection.customers.list(req_params, function (err, customers) {
                 if(!err) {
                     Promise.all(customers.data.map(function (customer) {
-                        return importUser(customer).catch(function (err) {
+                        return importUser(customer, notifyUsers, protocol, host).catch(function (err) {
                             console.log(err);
                             return Promise.resolve(true);
                         });
@@ -33,7 +35,7 @@ module.exports = function(router, knex, stripe) {
                         if (customers.has_more) {
                             let last_customer = customers["data"][customers["data"].length - 1].id;
                             console.log(`Parsed all users until Customer ID ${last_customer}`);
-                            return resolve(importStripeUsers(last_customer));
+                            return setTimeout(resolve,1000,importStripeUsers(last_customer, notifyUsers, protocol, host));
                         } else {
                             console.log(`All users and data have been imported.`);
                             return resolve(true);
@@ -119,23 +121,36 @@ module.exports = function(router, knex, stripe) {
         });
     };
 
-    let importUser = function (customer) {
+    let importUser = function (customer, notifyUsers, protocol, host) {
         return new Promise(function (resolve, reject) {
             User.findOne('customer_id', customer.id, function (user) {
                 if(!user.data) {
+                    //get default_user_role
+                    let store = require('../../../config/redux/store');
+                    let globalProps = store.getState().options;
+                    let roleId = globalProps['default_user_role'];
                     User.findOne('email', customer.email, function (user_by_email) {
                         let new_user = new User({
                             "email": customer.email,
                             "customer_id": customer.id,
-                            "role_id": 3,
+                            "role_id": roleId,
                             "status": "invited"
                         });
                         //Create the user entity
                         new_user.create(function (err, user) {
                             if(!err) {
                                 let invite = new Invitation({"user_id": user.get("id")});
-                                invite.create((err, invite) => {
+                                invite.create((err, result) => {
                                     //***dispatch an invite event
+                                    if(notifyUsers) {
+                                        console.log(`going to send email to stripe invited user ${user.get('email')}`);
+                                        let apiUrl = protocol + '://' + host + "/api/v1/users/register?token=" + result.get("token");
+                                        let frontEndUrl = protocol + '://' + host + "/invitation/" + result.get("token");
+                                        console.log(frontEndUrl);
+                                        user.set('url', frontEndUrl);
+                                        user.set('api', apiUrl);
+                                        dispatchEvent("user_invited", user);
+                                    }
                                     return resolve(user);
                                 });
                             } else {
@@ -306,7 +321,14 @@ module.exports = function(router, knex, stripe) {
 
 
     router.post(`/stripe/import`, function(req, res, next){
-        importStripeUsers(null).then(function () {
+        let protocol = req.protocol;
+        let host = req.hostname;
+        let notifyUsers = false;
+        if (req.body.hasOwnProperty("notifyUsers")) {
+            console.log("notify users is set to " + req.body.notifyUsers);
+            notifyUsers = req.body.notifyUsers;
+        }
+        importStripeUsers(null, notifyUsers, protocol, host).then(function () {
             return importStripePlans();
         }).then(function () {
             return importStripeSubscriptions();

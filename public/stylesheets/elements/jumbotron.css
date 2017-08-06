@@ -98,6 +98,9 @@
 }
 
 @media (max-width: 543px) {
+  .jumbotron{
+    padding: 30px 15px;
+  }
   .servicetron .btn-outline {
     display: none;
   }

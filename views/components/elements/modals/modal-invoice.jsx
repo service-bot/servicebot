@@ -102,10 +102,13 @@ class ModalInvoice extends React.Component {
                     );
                 };
 
-                let last4 = null;
-                let fund = self.state.currentUser.references.funds;
-                if(fund && fund.length > 0){
-                    last4 = fund[0].source.card.last4;
+                let last4, fund = null;
+
+                if(self.state.currentUser) {
+                    fund = self.state.currentUser.references.funds;
+                    if(fund && fund.length > 0){
+                        last4 = fund[0].source.card.last4;
+                    }
                 }
 
                 let modalHeadingStyle = {};
@@ -115,7 +118,7 @@ class ModalInvoice extends React.Component {
                 }
 
                 return(
-                    <Modal modalTitle={pageName} show={this.props.show} hide={this.props.hide}>
+                    <Modal modalTitle={pageName} icon="fa-credit-card-alt" show={this.props.show} hide={this.props.hide}>
                         <div id="invoice-modal" className="table-responsive">
                             <div className="invoice-widget" style={modalHeadingStyle}>
                                 <div className="row">
@@ -163,7 +166,7 @@ class ModalInvoice extends React.Component {
                 );
             }else{
                 return(
-                    <Modal modalTitle={pageName} show={this.props.show} hide={this.props.hide}>
+                    <Modal modalTitle={pageName} icon={this.props.icon} show={this.props.show} hide={this.props.hide}>
                         <div className="table-responsive">
                             <div className="invoice-widget">
                                 <div className="row">

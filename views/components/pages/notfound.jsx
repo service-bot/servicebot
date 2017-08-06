@@ -4,7 +4,7 @@ import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import ServiceRequestForm from "../elements/forms/service-instance-form-request.jsx"
-
+import { store, initializedState } from "../../store";
 class GenericNotFound extends React.Component {
 
     constructor(props){
@@ -15,9 +15,11 @@ class GenericNotFound extends React.Component {
     componentDidMount(){
         document.getElementById('servicebot-loader').classList.add('move-out');
         document.body.classList.add('page-404');
+
     }
 
-    componentWillMount(){
+    componentWillUnmount(){
+        store.dispatch(initializedState);
         document.body.classList.remove('page-404');
     }
 
@@ -25,16 +27,12 @@ class GenericNotFound extends React.Component {
     render () {
         return(
             <div>
-                <div className="page-404-logo">
-                    <img src="/api/v1/system-options/file/brand_logo" alt="logo"/>
-                </div>
                 <div className="page-service-instance" style={{marginTop: '100px'}}>
                     <Content>
                         <div className="row m-b-20">
                             <div className="not-found-404">
-                                <h1>404</h1>
-                                <p>We are sorry, but you might be lost!</p>
-                                <Link className="btn btn-info btn-rounded btn-md" to="/">Go Home</Link>
+                                <img src="/assets/backgrounds/404-page.png"/>
+                                <Link className="btn btn-info btn-rounded btn-md btn-outline btn-404-go-home" to="/">Go Home</Link>
                             </div>
                         </div>
                     </Content>

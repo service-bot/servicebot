@@ -23,9 +23,7 @@ class Wysiwyg extends React.Component {
         var self = this;
         $(this.refs.wysiwygArea).redactor();
         $(this.refs.wysiwygArea).on('change.callback.redactor', function(e, data) {
-            let event = new Event('input', { bubbles: true });
-            self.refs.wysiwygArea.dispatchEvent(event);
-
+            self.props.onChange(e);
         });
 
     }

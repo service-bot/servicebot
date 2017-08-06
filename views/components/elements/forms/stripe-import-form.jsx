@@ -1,19 +1,15 @@
 import React from 'react';
 import Load from '../../utilities/load.jsx';
 import Fetcher from "../../utilities/fetcher.jsx";
-let _ = require("lodash");
-import {DataForm, DataChild} from "../../utilities/data-form.jsx";
-import Inputs from "../../utilities/inputs.jsx";
+import Inputs from "../../utilities/inputsV2.jsx";
+import { formBuilder } from "../../utilities/form-builder";
 import Buttons from "../buttons.jsx";
-import ModalConfirm from '../modals/modal-stripe-reconfigure.jsx';
 import Alerts from '../alerts.jsx';
-
 class SystemSettingsForm extends React.Component {
-
     constructor(props){
         super(props);
         this.state = {
-            stripe_import: `/api/v1/stripe/import`,
+            formURL: `/api/v1/stripe/import`,
             stripe_settings: false,
             loading: false,
             confirm_modal: false,
@@ -21,9 +17,24 @@ class SystemSettingsForm extends React.Component {
             success: false
         };
         this.handleResponse = this.handleResponse.bind(this);
+        this.handleSubmission = this.handleSubmission.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
     }
+    handleSubmission(){
 
+        let self = this;
+        let payload = self.props.formData; // this formData object came from Redux store
+        self.setState({ajaxLoad: true});
+        Fetcher(this.state.formURL, 'POST', payload).then(function (response) {
+            if (!response.error) {
+                console.log("updated", response);
+                self.setState({ajaxLoad: false, success: true, updatedUser: response.results.data}); //change the last one to what u are doing
+            }else {
+                console.log(`Server Error:`, response.error);
+                self.setState({ajaxLoad: false});
+            }
+        });
+    }
     handleResponse(response){
         let self = this;
         self.setState({
@@ -49,11 +60,9 @@ class SystemSettingsForm extends React.Component {
             });
         }
     }
-
     onUpdate(form){
         this.setState({formData: form});
     }
-
     render () {
         let self = this;
         let getAlerts = ()=>{
@@ -62,7 +71,6 @@ class SystemSettingsForm extends React.Component {
                                  position={{position: 'fixed', bottom: true}} icon={self.state.alerts.icon} /> );
             }
         };
-
         if(this.state.loading){
             return ( <Load/> );
         }else if(this.state.success && false){
@@ -74,7 +82,6 @@ class SystemSettingsForm extends React.Component {
                 </div>
             );
         }else{
-            const settings = this.state.stripe_settings;
             return (
                 <div className="row">
                     <div className="basic-info col-md-6 col-md-offset-3">
@@ -90,11 +97,13 @@ class SystemSettingsForm extends React.Component {
                         <div className="row">
                             <div className="col-md-12">
                                 <div className="row">
-                                    <DataForm handleResponse={this.handleResponse} onUpdate={this.onUpdate} url={this.state.stripe_import} method={'POST'}>
-                                        <div className="col-md-12 text-right">
-                                            <Buttons btnType="danger" text="Import Stripe Data" type="submit" value="submit"/>
+                                    <div className="stripe-import-form">
+                                        <div className="p-20">
+                                            {/* Define Inputs */}
+                                            <Inputs type="boolean" label="Notify Users" name="notifyUsers" defaultValue={false}/>
                                         </div>
-                                    </DataForm>
+                                        <Buttons containerClass="inline" size="md" btnType="danger" text="Import Stripe Data" value="submit" onClick={this.handleSubmission} loading={this.state.ajaxLoad}/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -105,4 +114,6 @@ class SystemSettingsForm extends React.Component {
     }
 }
 
-export default SystemSettingsForm;
+const FORM_NAME = "stripeImportForm";
+
+export default formBuilder(FORM_NAME)(SystemSettingsForm)

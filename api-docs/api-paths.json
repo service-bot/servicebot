@@ -461,6 +461,50 @@
       }
     }
   },
+  "/users/{id}/unsuspend": {
+    "post": {
+      "summary": "UnSuspend the User",
+      "tags": [
+        "users"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff"
+      ],
+      "operationId": "post_users_id_unsuspend",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "user to unsuspend",
+          "required": true,
+          "type": "number"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "A user",
+          "schema": {
+            "$ref": "#/definitions/users"
+          }
+        },
+        "default": {
+          "description": "Unexpected error",
+          "schema": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    }
+  },
   "/users/invite": {
     "post": {
       "summary": "Invites a new User",
@@ -1554,6 +1598,47 @@
           }
         }
       }
+    },
+    "delete": {
+      "summary": "Deletes Service Template Icon",
+      "tags": [
+        "service-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff"
+      ],
+      "operationId": "delete_service_templates_id_icon",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service-template id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "message",
+          "type": "string"
+        },
+        "default": {
+          "description": "Unexpected error",
+          "schema": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
     }
   },
   "/service-templates/{id}/image": {
@@ -1640,6 +1725,47 @@
           "schema": {
             "$ref": "#/definitions/files"
           }
+        },
+        "default": {
+          "description": "Unexpected error",
+          "schema": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Deletes Service Template Image",
+      "tags": [
+        "service-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff"
+      ],
+      "operationId": "delete_service_templates_id_image",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service-template id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "message",
+          "type": "string"
         },
         "default": {
           "description": "Unexpected error",
@@ -5441,6 +5567,40 @@
               "$ref": "#/definitions/files"
             }
           }
+        },
+        "default": {
+          "description": "Unexpected error",
+          "schema": {
+            "$ref": "#/definitions/Error"
+          }
+        }
+      }
+    }
+  },
+  "/system-options/version": {
+    "get": {
+      "summary": "Gets System version",
+      "tags": [
+        "system-options"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff",
+        "user"
+      ],
+      "operationId": "get_system_options_version",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "System Version",
+          "type": "string"
         },
         "default": {
           "description": "Unexpected error",

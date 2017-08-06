@@ -49,9 +49,9 @@ class ManageSubscriptions extends React.Component {
         }else if(statusString == "waiting_cancellation"){
             return "Manage Cancellation";
         }else if(statusString == "cancelled"){
-            return "No Actions";
+            return null;
         }else if(statusString == "waiting"){
-            return "No Actions";
+            return null;
         }
         return "Error";
     }
@@ -62,14 +62,43 @@ class ManageSubscriptions extends React.Component {
         );
     }
     modSubscriptionId(data){
-        return (
-            <InfoToolTip title={data} text="i" placement="left"/>
-        );
+        if(data != 'null') {
+            return (
+                <InfoToolTip title={data} text="i" placement="left"/>
+            );
+        } else {
+            return <span />;
+        }
     }
+
     modType(data, dataObj){
-        return (
-            getBillingType(dataObj)
-        );
+        let interval;
+        if(data == 'day') { interval = 'Dayli'; }
+        else if (data == 'week') { interval = 'Weekly'; }
+        else if (data == 'month') { interval = 'Monthly'; }
+        else if (data == 'year') { interval = 'Yearly'; }
+        else { interval = data; }
+
+        let type = dataObj.type;
+        if(type.toLowerCase() == 'subscription') {
+            return (
+                <div>
+                    <span className="status-badge neutral" >{getBillingType(dataObj)}</span> <span className="status-badge black" >{interval}</span>
+                </div>
+            );
+        } else if (type.toLowerCase() == 'custom') {
+            return (
+                <span className="status-badge neutral">{getBillingType(dataObj)}</span>
+            );
+        } else if (type.toLowerCase() == 'one_time') {
+            return (
+                <span className="status-badge neutral">{getBillingType(dataObj)}</span>
+            );
+        } else {
+            return (
+                <span className="status-badge grey">{getBillingType(dataObj)}</span>
+            );
+        }
     }
     modRequestedBy(data){
         if(data && data != null){
@@ -85,7 +114,7 @@ class ManageSubscriptions extends React.Component {
     }
     modAmount(data){
         return (
-            <Price value={data}/>
+            <b><Price value={data}/></b>
         );
     }
     modCreated(data){
@@ -97,29 +126,15 @@ class ManageSubscriptions extends React.Component {
     modStatus(data){
         switch (data) {
             case 'requested':
-                return 'Requested';
+                return (<span className='status-badge blue' >Requested</span>);
             case 'running':
-                return 'Running';
+                return (<span className='status-badge green' >Running</span>);
             case 'waiting_cancellation':
-                return 'Waiting Cancellation';
+                return (<span className='status-badge yellow' >Waiting Cancellation</span>);
             case 'cancelled':
-                return 'Cancelled';
+                return (<span className='status-badge grey' >Cancelled</span>);
             default:
-                return data;
-        }
-    }
-    modInterval(data){
-        switch (data){
-            case 'day':
-                return 'Daily';
-            case 'week':
-                return 'Weekly';
-            case 'month':
-                return 'Monthly';
-            case 'year':
-                return 'Yearly';
-            default:
-                return data;
+                return (<span className='status-badge grey' >{data}</span>);
         }
     }
     modUserId(data){
@@ -234,18 +249,16 @@ class ManageSubscriptions extends React.Component {
                                     <ContentTitle icon="cog" title={pageTitle}/>
                                     <DataTable parentState={this.state}
                                                get={url}
-                                               col={['user_id', 'references.users.0.name', 'name', 'subscription_id', 'type', 'status', 'requested_by', 'payment_plan.amount', 'payment_plan.interval', 'created_at']}
-                                               colNames={['', 'User ID', 'Instance', ' ', 'Type', 'Status', 'Requested By', 'Amount', 'Interval', 'Created At']}
+                                               col={['user_id', 'references.users.0.email', 'name', 'subscription_id', 'payment_plan.interval', 'payment_plan.amount', 'status', 'created_at']}
+                                               colNames={['', 'User ID', 'Service', ' ', 'Type', 'Amount', 'Status', 'Created At']}
                                                statusCol="status"
                                                mod_user_id={this.modUserId}
                                                mod_name={this.modName}
                                                mod_subscription_id={this.modSubscriptionId}
-                                               mod_type={this.modType}
-                                               mod_requested_by={this.modRequestedBy}
                                                mod_created_at={this.modCreated}
                                                mod_payment_plan-amount={this.modAmount}
                                                mod_status={this.modStatus}
-                                               mod_payment_plan-interval={this.modInterval}
+                                               mod_payment_plan-interval={this.modType}
                                                dropdown={[{
                                                    name: 'Actions', direction: 'right', buttons: [
                                                        {id: 1, name: 'View', link: '/service-instance/:id'},

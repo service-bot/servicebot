@@ -100,7 +100,7 @@ ul.nav.navbar-nav.navbar-right > li > .badge{
 [data-layout="top-navigation-1"] .jumbotron-2 {
   padding-left: 20px;
   padding-right: 20px;
-  width: calc(100% - $left-sidebar-width);
+  /*width: calc(100% - $left-sidebar-width);*/
 }
 
 [data-layout="top-navigation-1"] .left-sidebar-1 {
@@ -129,7 +129,6 @@ ul.nav.navbar-nav.navbar-right > li > .badge{
   height: 100%;
   max-height: 100%;
   overflow: auto;
-  width: 270px;
 }
 
 [data-layout="top-navigation-1"] .left-sidebar-1 .wrapper .content {
@@ -242,5 +241,13 @@ button.navbar-toggle.collapsed:hover .icon-bar {
     margin-left: 0;
     margin-right: 0;
     padding: 20px;
+  }
+}
+
+@media print
+{
+  .no-print, .no-print *
+  {
+    display: none !important;
   }
 }

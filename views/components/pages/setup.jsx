@@ -13,6 +13,7 @@ import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import "../../../public/stylesheets/xaas/installation.css";
 import {store,initializedState } from "../../store.js"
+import { connect } from "react-redux";
 
 class SetupDB extends React.Component{
     constructor(props) {
@@ -159,6 +160,16 @@ class Setup extends React.Component {
 
     componentDidMount(){
         document.getElementById('servicebot-loader').classList.add('move-out');
+        if(this.props.options.text_size){
+            browserHistory.push("home");
+        }
+    }
+    componentDidUpdate(previousState, prevProps){
+
+        if(this.props.options.text_size){
+            browserHistory.push("home");
+        }
+
     }
 
     handleSubmit(e=null){
@@ -167,11 +178,10 @@ class Setup extends React.Component {
             console.log(e);
             e.preventDefault();
         }
-
+        self.setState({loading: true});
         Fetcher("/setup", "POST", self.state.form)
             .then(function(result){
                 if(!result.error) {
-                    self.setState({loading: true});
                     fetch("/api/v1/service-templates/public",{retries:5, retryDelay:3000})
                         .then(function(result){
                             if(!result.error){
@@ -181,6 +191,8 @@ class Setup extends React.Component {
                         })
                 }else{
                     console.log("There was an error");
+                    self.setState({loading: false});
+
                     console.log(!result.error);
                 }
             });
@@ -239,12 +251,13 @@ class Setup extends React.Component {
         }else{
         return(
 
-            <div style={{backgroundColor: '#30468a', minHeight: 100+'vh'}}>
-                <div className="installation">
-                    <div className="logo-installation">
+            <div style={{backgroundColor: '#0097f1', minHeight: 100+'vh'}}>
+                <div className="installation row">
+                    <div className="installation-logo col-md-8">
                         <img src="/assets/logos/logo-installation.png" />
+                        <h1>Welcome to ServiceBot Installer</h1>
                     </div>
-                    <h1>Automated Installation</h1>
+                    <div className="installation-form col-md-4">
                     <Content>
                         <Alert stack={{limit: 3}} position='bottom'/>
                         <form>
@@ -253,10 +266,11 @@ class Setup extends React.Component {
                             <br/>
                         </form>
                     </Content>
+                    </div>
                 </div>
             </div>
         );
     }}
 }
 
-export default Setup;
+export default connect((state) => {return {"options" : state.options}})(Setup);

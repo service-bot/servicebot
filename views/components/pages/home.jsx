@@ -74,15 +74,6 @@ class Home extends React.Component {
             color: 'white',
         };
 
-        let featuredHeadingStyle = this.props.featuredHeadingStyle || {
-            fontSize: '72px',
-            marginBottom: '30px'
-        };
-
-        let featuredIntroStyle = this.props.featuredIntroStyle || {
-            fontSize: '26px'
-        };
-
         let featuredHeading, featuredDescription, featuredServicesHeading, featuredServicesShowAllButton, featuredServiceSectionBackgroundColor = "";
 
         if(this.props.options) {
@@ -93,6 +84,17 @@ class Home extends React.Component {
             featuredServicesShowAllButton = _.get(options, 'featured_service_show_all_button_text.value', "Show All Services");
             featuredServiceSectionBackgroundColor = _.get(options, 'featured_service_section_background_color.value', "Show All Services");
         }
+
+        let featuredHeadingStyle = this.props.featuredHeadingStyle || {
+                fontSize: '72px',
+                marginBottom: '30px',
+                color: _.get(this.props.options, 'home_featured_text_color.value', '#ffffff')
+        };
+
+        let featuredIntroStyle = this.props.featuredIntroStyle || {
+                fontSize: '26px',
+                color: _.get(this.props.options, 'home_featured_text_color.value', '#ffffff')
+        };
 
         return(
             <div className="page-home">

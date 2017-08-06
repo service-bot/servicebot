@@ -12,7 +12,7 @@ let Role = require("../models/role");
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 let avatarFilePath = "uploads/avatars";
-
+let store = require("../config/redux/store");
 let avatarStorage = multer.diskStorage({
     destination: function (req, file, cb) {
         mkdirp(avatarFilePath, err => cb(err, avatarFilePath))
@@ -23,6 +23,12 @@ let avatarStorage = multer.diskStorage({
         })
     }
 });
+
+let uploadLimit = function(){
+
+    return store.getState().options.upload_limit * 1000000;
+
+};
 
 module.exports = function (router, passport) {
     router.get('/invitation/:invitation_id', function (req, res, next) {
@@ -48,7 +54,11 @@ module.exports = function (router, passport) {
                 };
                 let abs = path.resolve(__dirname, "../" + file.get("path"));
 
-                res.sendFile(abs, options)
+                res.sendFile(abs, options, (err) => {
+                    if(err) {
+                        res.status(500).json({error: err})
+                    }
+                })
             } else {
                 //todo: default avatar logic goes here
                 let defaultAvatar = path.resolve(__dirname, "../public/assets/default/avatar-" + (id % 4) + ".png");
@@ -57,7 +67,7 @@ module.exports = function (router, passport) {
         })
 
     });
-    router.put('/users/:id/avatar', auth(), multer({storage: avatarStorage}).single('avatar'), function (req, res, next) {
+    router.put('/users/:id/avatar', auth(), multer({storage: avatarStorage, limits : {fileSize : uploadLimit()}}).single('avatar'), function (req, res, next) {
         let file = req.file;
         file.user_id = req.params.id;
         file.name = file.originalname;
@@ -131,7 +141,7 @@ module.exports = function (router, passport) {
     }, function (req, res, next) {
         req.logIn(res.locals.valid_object, {session: true}, function (err) {
             if (!err) {
-                console.log("usa logged in!");
+                console.log("user logged in!");
                 next();
             } else {
                 console.error("Issue logging in: ", err)
@@ -265,6 +275,18 @@ module.exports = function (router, passport) {
         user.suspend(function (err, updated_user) {
             if(!err) {
                 dispatchEvent("user_suspended", user);
+                res.status(200).json(updated_user);
+            } else {
+                res.status(400).json({error: err});
+            }
+        });
+    });
+
+    router.post("/users/:id(\\d+)/unsuspend", validate(User), auth(null, User, "id"), function (req, res) {
+        let user = res.locals.valid_object;
+        user.unsuspend(function (err, updated_user) {
+            if(!err) {
+                //dispatchEvent("user_unsuspended", user);
                 res.status(200).json(updated_user);
             } else {
                 res.status(400).json({error: err});

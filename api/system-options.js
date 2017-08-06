@@ -8,8 +8,9 @@ let File = require("../models/file");
 let mkdirp = require("mkdirp");
 let path = require("path");
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
-
 let systemFilePath = "uploads/system-options";
+let appPackage = require("../package.json");
+let store = require("../config/redux/store")
 
 
 let systemStorage = multer.diskStorage({
@@ -24,7 +25,11 @@ let systemStorage = multer.diskStorage({
 });
 
 let systemFiles = ['front_page_image', 'brand_logo'];
+let uploadLimit = function(){
 
+    return store.getState().options.upload_limit * 1000000;
+
+}
 module.exports = function (router) {
 
 
@@ -40,7 +45,11 @@ module.exports = function (router) {
                     };
                     let abs = path.resolve(__dirname, "../" + file.get("path"));
 
-                    res.sendFile(abs, options)
+                    res.sendFile(abs, options, (err) => {
+                        if(err) {
+                            res.status(500).json({error: err})
+                        }
+                    })
                 } else {
                     //todo: make less hardcoded.. maybe seperate api calls again
                     if(req.params.id == "brand_logo"){
@@ -86,7 +95,7 @@ module.exports = function (router) {
     //     });
     // });
 
-    router.put('/system-options/file/:id', auth(), multer({storage: systemStorage }).single('file'), function (req, res, next) {
+    router.put('/system-options/file/:id', auth(), multer({storage: systemStorage, limits : {fileSize : uploadLimit()} }).single('file'), function (req, res, next) {
         if (systemFiles.indexOf(req.params.id) > -1) {
             let file = req.file;
             file.name = file.originalname;
@@ -138,6 +147,10 @@ module.exports = function (router) {
                 res.json(result);
             })
         });
+    });
+
+    router.get(`/system-options/version`, auth(), function (req, res, next) {
+        res.status("200").send({version:appPackage.version});
     });
 
 

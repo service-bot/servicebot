@@ -47,7 +47,9 @@
     margin-left: 10px;
     color: #989898;
 }
-
+.form-group.color-picker-input {
+    position: relative;
+}
 /* TagsInput tags input*/
 input.react-tagsinput-input::placeholder {
     color: #0091ea;
@@ -124,6 +126,7 @@ a.react-tagsinput-remove {
     border-radius: 5px;
     border: 1px dashed #abb8c3;
     margin: 3px 0px 10px;
+    position: relative;
 }
 form#imgformtemplate-image img {
     width: 100%;

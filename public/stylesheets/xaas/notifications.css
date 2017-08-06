@@ -24,7 +24,7 @@ li.nav-notification i{
     border-radius: 50px;
 }
 span.notification-badge {
-    background: #dc3535;
+    background: #ff0000;
     color: white;
     border-radius: 50px;
     padding: 3px 10px 3px 8px;
@@ -63,8 +63,9 @@ span.notification-badge {
 
 .mini-notification-list li {
     list-style: none;
-    padding: 10px 20px 10px;
+    padding: 10px 20px 10px 32px;
     line-height: 1.5em;
+    position: relative;
 }
 
 .mini-notification-list ul {
@@ -84,4 +85,17 @@ span.notification-badge {
     left: 0px;
     width: 100%;
     height: 100%;
+}
+
+li.unread-message:before {
+    height: 8px;
+    width: 8px;
+    background: #dc3535;
+    position: absolute;
+    left: 12px;
+    margin-top: 1px;
+    top: 44%;
+    transform: translateY(-50%);
+    border-radius: 50px;
+    content: '';
 }

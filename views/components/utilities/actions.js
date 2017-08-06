@@ -5,13 +5,20 @@ import Fetcher from '../utilities/fetcher.jsx';
  */
 
 export const SET_OPTIONS = 'SET_OPTIONS';
+export const SET_VERSION = 'SET_VERSION';
 export const SET_UID = 'SET_UID';
 export const SET_USER = "SET_USER";
 export const ADD_NOTIFICATION = "ADD_NOTIFICATION";
 export const SET_NOTIFICATIONS = "SET_NOTIFICATIONS";
 export const SET_NOTIFICATION = "SET_NOTIFICATION";
+export const ADD_SYSTEM_NOTIFICATION = "ADD_SYSTEM_NOTIFICATION";
+export const SET_SYSTEM_NOTIFICATIONS = "SET_SYSTEM_NOTIFICATIONS";
+export const SET_SYSTEM_NOTIFICATION = "SET_SYSTEM_NOTIFICATION";
+
 export const SET_FORM_DATA = "SET_FORM_DATA";
 export const INITIALIZE = "INITIALIZE";
+export const DISMISS_ALERT = "DISMISS_ALERT";
+export const ADD_ALERT = "ADD_ALERT";
 
 /*
  * other constants
@@ -43,6 +50,10 @@ export function setOptions(options){
     return { type: SET_OPTIONS, options }
 }
 
+export function setVersion(version){
+    return { type: SET_VERSION, version }
+}
+
 export function initializeState(initialState){
     return { type: INITIALIZE, initialState }
 }
@@ -60,6 +71,19 @@ export function setNotification(notification, isSystem){
     return { type: SET_NOTIFICATION, notification, isSystem }
 }
 
+export function addSystemNotification(notification, isSystem){
+    return { type: ADD_NOTIFICATION, notification, isSystem }
+}
+
+
+export function setSystemNotifications(notifications, isSystem){
+    return { type: SET_SYSTEM_NOTIFICATIONS, notifications, isSystem }
+}
+export function setSystemNotification(notification, isSystem){
+    return { type: SET_NOTIFICATION, notification, isSystem }
+}
+
+
 
 export function setUid(uid) {
     return { type: SET_UID, uid }
@@ -73,3 +97,9 @@ export function setFormData(name, formData){
     return { type: SET_FORM_DATA, name, formData  }
 }
 
+export function dismissAlert(alerts){
+    return { type: DISMISS_ALERT, alerts }
+}
+export function addAlert(alert){
+    return { type: ADD_ALERT, alert }
+}

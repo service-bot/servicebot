@@ -10,6 +10,7 @@ let path = require("path");
 let multer= require("multer");
 let _ = require('lodash');
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
+let store = require("../config/redux/store");
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 
 let serviceFilePath = "uploads/services/files";
@@ -23,6 +24,11 @@ let serviceStorage = multer.diskStorage({
         })
     }
 });
+let uploadLimit = function(){
+
+    return store.getState().options.upload_limit * 1000000;
+
+}
 
 
 module.exports = function(router) {
@@ -54,41 +60,12 @@ module.exports = function(router) {
 
     router.post('/service-instances/:id/change-price', validate(ServiceInstance), auth(), function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        async.series([
-            function (callback) {
-                //Remove subscription
-                instance_object.unsubscribe(function (err, result) {
-                    callback(err, result);
-                });
-            },
-            function (callback) {
-                //Remove Payment plan
-                instance_object.deletePayPlan(function (result) {
-                    callback(null, result);
-                });
-            },
-            function (callback) {
-                //Create Payment plan
-                instance_object.buildPayStructure(req.body ,function (plan_structure) {
-                    instance_object.createPayPlan(plan_structure, function (plan) {
-                        callback(null, plan);
-                    });
-                });
-            },
-            function (callback) {
-                instance_object.subscribe(function (err, result) {
-                    callback(err, result);
-                });
-            }
-        ], function (err, result) {
-            if(!err){
-                res.json(result);
-                dispatchEvent("service_instance_updated", result);
-                next();
-                // mailer('service_instance_update')(req, res, next);
-            } else {
-                res.json(err);
-            }
+        instance_object.changePrice(req.body).then(function (updated_subscription) {
+            res.json(updated_subscription);
+            dispatchEvent("service_instance_updated", updated_subscription);
+            next();
+        }).catch(function (err) {
+            res.json(err);
         });
     });
 
@@ -150,7 +127,7 @@ module.exports = function(router) {
         });
     });
 
-    router.post('/service-instances/:id/files', validate(ServiceInstance), auth(null, ServiceInstance), multer({ storage:serviceStorage }).array('files'), function(req, res, next) {
+    router.post('/service-instances/:id/files', validate(ServiceInstance), auth(null, ServiceInstance), multer({ storage:serviceStorage, limits : {fileSize : uploadLimit()} }).array('files'), function(req, res, next) {
         console.log(req.files);
         let filesToInsert = req.files.map(function(file){
             if(req.user) {
@@ -195,7 +172,11 @@ module.exports = function(router) {
             };
             let abs = path.resolve(__dirname, "../" + file.get("path"));
 
-            res.sendFile(abs, options)
+            res.sendFile(abs, options, (err) => {
+                if(err) {
+                    res.status(500).json({error: err})
+                }
+            })
 
         })
     });

@@ -1,7 +1,7 @@
 {
   "name": "servicebot",
-  "version": "0.3.0",
-  "license" : "GPL-3.0" ,
+  "version": "0.5.0",
+  "license": "GPL-3.0",
   "scripts": {
     "start": "node ./bin/www",
     "build": "./node_modules/.bin/webpack",
@@ -9,11 +9,10 @@
     "fullStart": "./node_modules/.bin/webpack && node ./bin/www",
     "debug": "node $NODE_DEBUG_OPTION ./bin/www"
   },
-  "repository" :
-  { "type" : "git"
-  , "url" : "https://github.com/service-bot/servicebot.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/service-bot/servicebot.git"
   },
-
   "dependencies": {
     "architect": "^0.1.11",
     "async": "^2.1.4",
@@ -76,6 +75,9 @@
     "react-stepzilla": "^4.4.4",
     "react-tagsinput": "^3.16.1",
     "redux": "^3.6.0",
+    "redux-form": "^7.0.3",
+    "redux-form-validators": "^1.0.3",
+    "redux-logger": "^3.0.6",
     "redux-saga": "^0.15.4",
     "redux-thunk": "^2.2.0",
     "request": "^2.79.0",

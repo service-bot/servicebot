@@ -18,16 +18,22 @@ class ImageUploader extends React.Component {
             ajaxLoad: false,
             imageSelected: false,
             loadingImage: false,
-            success: false
+            success: false,
+            image: true,
+            imageFailed: false
         };
+
+        console.log("image url", this.props.imageURL);
 
         this.onImageSelected = this.onImageSelected.bind(this);
         this.handleImage = this.handleImage.bind(this);
         this.getCoverImage = this.getCoverImage.bind(this);
+        this.removeImage = this.removeImage.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
-
+        console.log("this image url", this.props.imageURL);
+        console.log("next image url", nextProps.imageURL);
         if(nextProps.imageURL != this.state.imageURL){
             this.setState({
                 imageURL: nextProps.imageURL
@@ -46,15 +52,13 @@ class ImageUploader extends React.Component {
     onImageSelected(e){
         let self = this;
         self.setState({loadingImage: true});
-        console.log("image selected", e.currentTarget.value);
         let src = e.currentTarget;
         let targetImg = document.getElementById(`edit-${this.state.elementID}-img`);
         let fileReader = new FileReader();
-        console.log("the file", src.files[0]);
 
         fileReader.addEventListener("load", function () {
             targetImg.src = fileReader.result;
-            self.setState({loadingImage: false, imageSelected: true}, function () {
+            self.setState({loadingImage: false, imageSelected: true, image: true}, function () {
                 targetImg.classList.remove("no-image-yet");
             });
         }, false);
@@ -69,24 +73,28 @@ class ImageUploader extends React.Component {
     getCoverImage(){
         let self = this;
         let myImage = document.getElementById(`edit-${this.state.elementID}-img`);
-
         fetch(this.props.imageGETURL || self.state.imageURL,
             {method: 'GET', header: new Headers({"Content-Type": "application/json"}), credentials: "include"}).then(function(response) {
-            if(response.ok) {
+            console.log("in get cover image", response);
+            if(response.ok){
+                self.setState({hasImage: true});
                 return response.blob();
             }
             throw new Error('Network response was not ok.');
         }).then(function(myBlob) {
+            if(myBlob.type == "text/html"){
+                throw "not an image";
+            }
             let objectURL = URL.createObjectURL(myBlob);
             myImage.src = objectURL;
         }).catch(function(error) {
+            self.setState({image: false});
             // myImage.src = '/assets/custom_icons/cloud-computing.png?' + new Date().getTime();
             myImage.classList.add("no-image-yet");
         });
     }
 
     handleImage(e){
-        console.log("inside handle image");
         if(e != undefined)
             e.preventDefault();
         let self = this;
@@ -94,37 +102,58 @@ class ImageUploader extends React.Component {
                     credentials : "include",
                     body : new FormData(document.getElementById(`imgform${this.state.elementID}`))
         };
-        console.log("init", init);
         self.setState({ajaxLoad: true});
 
-        // console.log(e.target);
         Fetcher(self.state.imageURL, null, null, init).then(function(result){
             if(!result.error){
-                console.log("uploaded");
                 self.setState({imageSelected: false, ajaxLoad: false}, function () {
                     if(self.props.handleSuccess){
                         self.props.handleSuccess();
                     }
+                    if(self.props.reloadNotice){
+                        self.setState({success: true, reloadNotice: self.props.reloadNotice});
+                    }
                 });
             }else{
                 console.log("failed", result);
-                self.setState({ajaxLoad: false});
+                self.setState({ajaxLoad: false, imageFailed: result.error});
             }
-        });
+        }).catch(e => {console.error("error getting img", e)});
     }
 
+    removeImage(e){
+        let self = this;
+        e.preventDefault();
+        console.log("removing image", self.props.imageGETURL);
+        Fetcher(self.props.imageGETURL, "DELETE", null, null).then(function (response) {
+            console.log("in delete image", response);
+            if(!response.error){
+                self.setState({hasImage: false, image: false});
+            }
+        }).catch(e => {console.error("error removing img", e)});
+
+    }
 
     render(){
 
+        console.log("image uploader render ");
         return(
             <div className="row">
                 <div className={`col-md-12 edit-${this.state.elementID}-image`}>
                     <form id={`imgform${this.state.elementID}`} className="image-uploader" encType="multipart/form-data">
                         <div className={`${this.state.imageStyle}`}>
-                            <img id={`edit-${this.state.elementID}-img`} src={this.props.imageGETURL || this.state.imageURL} ref="avatar" alt="badge"/>
-                            {this.state.loadingImage && <Load type="avatar"/> }
+                            <img id={`edit-${this.state.elementID}-img`} className={!this.state.image && 'hidden'}
+                                 src={this.props.imageGETURL || this.state.imageURL} ref="avatar" alt="badge"/>
+                            { this.state.loadingImage && <Load type="avatar"/> }
                             <input id={this.state.elementID} type="file" onChange={this.onImageSelected} name={this.props.name || 'file'}/>
                         </div>
+                        {(this.state.success && this.state.reloadNotice) &&
+                            <div>
+                                <span className="help-block"><small>{this.props.reloadNotice}</small></span>
+                                <Buttons btnType="primary" text="Reload Application" onClick={()=>{return location.reload()}}
+                                         position="center"/>
+                            </div>
+                        }
                         {(this.state.imageSelected && this.state.uploadButton) &&
                         <div>
                             <div className="image-upload-message"><small>{this.state.uploadMessage}</small></div>
@@ -133,6 +162,13 @@ class ImageUploader extends React.Component {
                         </div>
                         }
                     </form>
+                    {(this.state.hasImage && this.props.imageRemovable) &&
+                    <Buttons btnType="primary" text="Remove Image" onClick={this.removeImage}
+                             loading={this.state.ajaxLoad} success="" position="center"/>
+                    }
+                    {this.state.imageFailed &&
+                    <span className="help-block image-failed">{this.state.imageFailed}</span>
+                    }
                 </div>
             </div>
         );

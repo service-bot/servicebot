@@ -107,15 +107,6 @@ class ServiceTemplateForm extends React.Component {
         let self = this;
 
         this.fetchCategories();
-
-        Fetcher(self.state.url + "/files").then(function(files){
-            if(!files.error) {
-                // console.log(files);
-                self.setState({files: files});
-            }else{
-                console.error("file error", files.error);
-            }
-        })
     }
 
     fetchCategories(){
@@ -333,8 +324,14 @@ class ServiceTemplateForm extends React.Component {
         if(id){
             templateData = self.state.template;
             templateDataChild = self.state.template.references.service_template_properties;
-            submissionURL = submissionURL+'/'+id;
-            submission_method = "PUT";
+            if(!self.props.params.duplicate) {
+                submissionURL = submissionURL + '/' + id;
+                submission_method = "PUT";
+            }else{
+                templateDataChild.map(child => {
+                    return child;
+                })
+            }
         }
         if(this.state.form) {
             reviewJSON = self.state.form;
@@ -395,7 +392,15 @@ class ServiceTemplateForm extends React.Component {
             }
         };
 
+        let imageUploadURL = (this.state.templateId && !this.props.params.duplicate) ?
+            `/api/v1/service-templates/${this.state.templateId}/image` :
+            `/api/v1/service-templates/${this.state.submissionResponse.id}/image`;
 
+        let iconUploadURL = (this.state.templateId && !this.props.params.duplicate) ?
+            `/api/v1/service-templates/${this.state.templateId}/icon` :
+            `/api/v1/service-templates/${this.state.submissionResponse.id}/icon`;
+
+        console.log("template image urls", imageUploadURL, iconUploadURL);
         //Returning stuff to be rendered (the input fields)
         return (
             <div>
@@ -409,13 +414,12 @@ class ServiceTemplateForm extends React.Component {
                                     <label>Upload Cover Image</label>
                                     <ImageUploader elementID="template-image" imageStyle="template-image-upload"
                                                    imageURL={`/api/v1/service-templates/${this.state.submissionResponse.id}/image`}
-                                                   imageGETURL={this.state.templateId ?
-                                                       `/api/v1/service-templates/${this.state.templateId}/image` :
-                                                       `/api/v1/service-templates/${this.state.submissionResponse.id}/image`}
+                                                   imageGETURL={imageUploadURL}
                                                    uploadTrigger={this.state.uploadTrigger}
                                                    uploadButton={false}
                                                    handleSuccess={this.handleImageUploadSuccess}
                                                    onChange={this.onImageChanged}
+                                                   imageRemovable={true}
                                                    name="template-image"/>
                                 </div>
 
@@ -423,13 +427,12 @@ class ServiceTemplateForm extends React.Component {
                                     <label>Upload Icon</label>
                                     <ImageUploader elementID="template-icon" imageStyle="template-image-upload"
                                                    imageURL={`/api/v1/service-templates/${this.state.submissionResponse.id}/icon`}
-                                                   imageGETURL={this.state.templateId ?
-                                                       `/api/v1/service-templates/${this.state.templateId}/icon` :
-                                                       `/api/v1/service-templates/${this.state.submissionResponse.id}/icon`}
+                                                   imageGETURL={iconUploadURL}
                                                    uploadTrigger={this.state.uploadTrigger}
                                                    uploadButton={false}
                                                    handleSuccess={this.handleImageUploadSuccess}
                                                    onChange={this.onImageChanged}
+                                                   imageRemovable={true}
                                                    name="template-icon"/>
                                 </div>
 
@@ -530,8 +533,8 @@ class ServiceTemplateForm extends React.Component {
                                                 <button className="btn btn-flat btn-info" onClick={self.handleDeleteOriginalProp(prop.id)}>Remove</button>
                                             </div>
 
-                                            <Inputs type="hidden" name="id" defaultValue={prop.id}
-                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                            {!self.props.params.duplicate && <Inputs type="hidden" name="id" defaultValue={prop.id}
+                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}/>}
 
                                             <CustomPropNameField name="prop_label" objectName={prop.name} defaultValues={{label: prop.prop_label, name: prop.name}}
                                                                  onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
@@ -697,10 +700,8 @@ class CustomPropNameField extends React.Component {
     }
 
     componentDidMount(){
-            let event = new Event('input', { bubbles: true });
-            console.log("!");
-            this.refs.label.dispatchEvent(event);
-            this.refs.name.dispatchEvent(event);
+            this.props.onChange(this.state.label, null, "prop_label");
+            this.props.onChange(this.state.name, null, "name");
             this.setState({firstLoad: false});
     }
 
@@ -721,7 +722,6 @@ class CustomPropNameField extends React.Component {
         let defaultLabel = this.state.label || '';
         let defaultName = this.state.name || '';
 
-        console.log("label & name inputs props", this.props);
 
        return(
             <div>

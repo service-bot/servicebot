@@ -1,7 +1,108 @@
 import React from 'react';
-import {Link} from 'react-router';
-import Authorizer from "../utilities/authorizer.jsx"
 import cookie from 'react-cookie';
+import {Link} from 'react-router';
+import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
+import { connect } from "react-redux";
+
+class SlideNavLinks extends React.Component {
+
+    constructor(props){
+        super(props);
+
+        this.state = {
+            links: [
+                { name: 'Login', url: '/login', permission: ['visitor'], icon: 'fingerprint', hidden: false },
+                { name: 'Sign Up', url: '/signup', permission: ['visitor'], icon: 'fingerprint', hidden: false},
+                { name: 'My Services', url: '/my-services', permission: ['authorized'], icon: 'dashboard', hidden: false},
+                { group: 'Billings', permission: ['authorized'], icon: '', hidden: false, links: [
+                    { name: 'Upcoming Invoice', url: '', permission: ['authorized'], icon: 'attach_money', hidden: false},
+                    { name: 'Billing History', url: `/billing-history/${props.uid}`, permission: ['authorized'], icon: 'history', hidden: false},
+                    { name: 'Billing Settings', url: `/billing-settings/${props.uid}`, permission: ['authorized'], icon: 'account_balance', hidden: false},
+                ]},
+                { name: 'Dashboard', url: '/dashboard', permission: ['can_administrate, can_manage'], icon: 'dashboard', hidden: false},
+                { group: 'Manage Store', permission: ['can_administrate, can_manage'], icon: '', hidden: false, links: [
+                    { name: 'Manage Catalog', url: '/manage-catalog/list', permission: ['can_administrate, can_manage'], icon: 'view_list', hidden: false},
+                    { name: 'Manage Categories', url: '/manage-categories', permission: ['can_administrate, can_manage'], icon: 'playlist_add', hidden: false},
+                    { name: 'Manage Subscriptions', url: '/manage-subscriptions', permission: ['can_administrate, can_manage'], icon: 'card_membership', hidden: false},
+                ]},
+                { group: 'Manage System', permission: ['can_administrate, can_manage'], icon: '', hidden: false, links: [
+                    { name: 'Manage Users', url: '/manage-users', permission: ['can_administrate, can_manage'], icon: 'people', hidden: false},
+                    { name: 'Notification Templates', url: '/notification-templates', permission: ['can_administrate, can_manage'], icon: 'settings', hidden: false},
+                    { name: 'Manage Permission', url: '/manage-permission', permission: ['can_administrate, can_manage'], icon: 'fingerprint', hidden: false},
+                    { name: 'Stripe Settings', url: '/stripe-settings', permission: ['can_administrate, can_manage'], icon: 'settings', hidden: false},
+                    { name: 'System Settings', url: '/system-settings', permission: ['can_administrate, can_manage'], icon: 'settings', hidden: false},
+                ]},
+            ]
+        };
+
+        this.getLinksByPermission = this.getLinksByPermission.bind(this);
+    }
+
+    getLinksByPermission(){
+
+        let links = [];
+        let permission = ['visitor'];
+        if( this.props.user && isAuthorized({permissions: ["can_administrate", "can_manage"]}) ){
+            permission = ['can_administrate, can_manage'];
+        }else if( this.props.user ){
+            permission = ['authorized'];
+        }
+
+
+        this.state.links.map( (link) => {
+            if (link.permission.indexOf(permission[0]) != -1){
+                links = [ ... links, link];
+            }
+        });
+
+        return links;
+    }
+
+    render(){
+
+        console.log('current user', this.props.user);
+
+        let myLinks = this.getLinksByPermission();
+
+        if(myLinks) {
+            return (
+                <ul className="list-unstyled" id="navigation">
+                    { myLinks.map((link, index) => (
+                        <li key={`link-${index}`}>
+                            { !link.group ?
+                                <Link className="btn btn-flat" to={link.url} onClick={this.props.handleClick}>
+                                    <span className="btn-title">{link.name}</span>
+                                    <i className="material-icons pull-left icon">{link.icon}</i>
+                                </Link> :
+                                <div className="links-group">
+                                    <span className="section-title">{link.group}</span>
+                                    <ul className="list-unstyled">
+                                        { link.links.map((groupLink, index) => (
+                                            <li key={`group-link-${index}`}>
+                                                <Link className="btn btn-flat" to={groupLink.url} onClick={this.props.handleClick}>
+                                                    <span className="btn-title">{groupLink.name}</span>
+                                                    <i className="material-icons pull-left icon">{groupLink.icon}</i>
+                                                </Link>
+                                            </li>
+                                        ))
+                                        }
+                                    </ul>
+                                </div>
+                            }
+                        </li>
+                    ))
+                    }
+                </ul>
+            );
+        }else{
+            return (
+                <span>no links</span>
+            )
+        }
+
+    }
+
+}
 
 class SideNav extends React.Component {
 
@@ -13,17 +114,25 @@ class SideNav extends React.Component {
     }
 
     render () {
+        console.log("options side nav", this.props.options);
+        let style = {};
+        if(this.props.options){
+            if(this.props.options.primary_theme_background_color){
+                style = { ...style, backgroundColor: this.props.options.primary_theme_background_color.value}
+            }
+        }
+
+
         let uid = cookie.load("uid");
         let email = cookie.load("username");
+
         return (
-            <div className="left-sidebar-1">
+            <div className="left-sidebar-1" style={style}>
                 <div className="wrapper">
                     <div className="content">
-                        <div className="logo">
-                            <Link onClick={this.handleLinkClick} className="side-nav-logo text" to="/">
-                                <img src="/assets/logos/servicebot-logo.png" />
-                            </Link>
-                        </div>
+                        {/*<div className="logo">*/}
+                            {/*<Link to="/" className="navbar-brand nav-logo"><img src="/api/v1/system-options/file/brand_logo"/></Link>*/}
+                        {/*</div>*/}
                         {/*<div className="left-sidebar-search">*/}
                             {/*<form className="form-inline form-custom">*/}
                                 {/*<i className="material-icons">search</i>*/}
@@ -58,85 +167,8 @@ class SideNav extends React.Component {
                         </Authorizer>
 
                         <div className="left-sidebar-section">
-                            <Authorizer>
-                                <div className="section-title">My Services</div>
-                                <ul className="list-unstyled" id="navigation">
-                                    <li>
-                                        <Link onClick={this.handleLinkClick} to="/my-services" className="btn btn-flat" data-parent="#navigation">
-                                            <span className="btn-title">My Dashboard</span>
-                                            <i className="material-icons pull-left icon">dashboard</i>
-                                        </Link>
-                                    </li>
-                                </ul>
-                                <div className="section-title">Billings</div>
-                                <ul className="list-unstyled" id="navigation">
-                                    <li>
-                                        <Link onClick={this.handleLinkClick} to="/my-services/modal/upcoming-invoice" className="btn btn-flat" data-parent="#navigation">
-                                            <span className="btn-title">Upcoming Invoice</span>
-                                            <i className="material-icons pull-left icon">attach_money</i>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link onClick={this.handleLinkClick} to={`/billing-history/${uid}`} className="btn btn-flat" data-parent="#navigation">
-                                            <span className="btn-title">Billing History</span>
-                                            <i className="material-icons pull-left icon">history</i>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link onClick={this.handleLinkClick} to={`/billing-settings/${uid}`} className="btn btn-flat" data-parent="#navigation">
-                                            <span className="btn-title">Billing Settings</span>
-                                            <i className="material-icons pull-left icon">account_balance</i>
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </Authorizer>
-                            <Authorizer permissions="can_administrate">
-                                <div className="section-title">Admin Setting</div>
-                                <ul className="list-unstyled" id="navigation">
-                                    <li>
-                                        <Link onClick={this.handleLinkClick} to="/service-catalog" className="btn btn-flat" data-parent="#navigation">
-                                            <span className="btn-title">Service Catalog</span>
-                                            <i className="material-icons pull-left icon">view_list</i>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link onClick={this.handleLinkClick} to="/manage-catalog" className="btn btn-flat" data-parent="#navigation">
-                                            <span className="btn-title">Manage Catalog</span>
-                                            <i className="material-icons pull-left icon">playlist_add</i>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link onClick={this.handleLinkClick} to="/manage-subscriptions" className="btn btn-flat" data-parent="#navigation">
-                                            <span className="btn-title">Manage Subscriptions</span>
-                                            <i className="material-icons pull-left icon">card_membership</i>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link onClick={this.handleLinkClick} to="/manage-users" className="btn btn-flat" data-parent="#navigation">
-                                            <span className="btn-title">Manage Users</span>
-                                            <i className="material-icons pull-left icon">people</i>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link onClick={this.handleLinkClick} to="/manage-roles" className="btn btn-flat" data-parent="#navigation">
-                                            <span className="btn-title">Manage Roles</span>
-                                            <i className="material-icons pull-left icon">fingerprint</i>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link onClick={this.handleLinkClick} to="/stripe-settings" className="btn btn-flat" data-parent="#navigation">
-                                            <span className="btn-title">Stripe Settings</span>
-                                            <i className="material-icons pull-left icon">settings</i>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link onClick={this.handleLinkClick} to="/system-settings" className="btn btn-flat" data-parent="#navigation">
-                                            <span className="btn-title">System Settings</span>
-                                            <i className="material-icons pull-left icon">settings</i>
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </Authorizer>
+                            {/* Login */}
+                            <SlideNavLinks uid={this.props.uid} user={this.props.user} handleClick={this.handleLinkClick}/>
                         </div>
                     </div>
                 </div>
@@ -145,4 +177,12 @@ class SideNav extends React.Component {
     }
 }
 
-export default SideNav;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid,
+        user: state.user || null,
+        options: state.options
+    }
+};
+
+export default connect(mapStateToProps)(SideNav);

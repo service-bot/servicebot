@@ -7,9 +7,10 @@ import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import {connect} from "react-redux";
-import {setNotifications, setNotification, addNotification} from "../utilities/actions";
+import {setNotifications, setNotification,setSystemNotifications, addNotification} from "../utilities/actions";
 import {isAuthorized} from "../utilities/authorizer.jsx"
 import ModalNotification from "../elements/modals/modal-notification.jsx";
+let _ = require("lodash");
 
 class Notification extends React.Component{
 
@@ -70,7 +71,10 @@ class NavNotification extends React.Component{
     }
 
     createMarkup(html){
-        let trimmedHTML = this.trimText(html, 100).props.children + ' ...';
+        let trimmedHTML = this.trimText(html, 100);
+        if(html.length > 100){
+            trimmedHTML = this.trimText(html, 100).props.children + ' ...';
+        }
         return {__html: trimmedHTML}
     }
 
@@ -103,12 +107,20 @@ class NavNotification extends React.Component{
     miniList(unread){
 
         if(this.state.openNotificationDropdown === true) {
+
+            let totalUnread = unread.length;
+            if(unread.length && unread.length > 3){
+               unread = _.slice(unread, unread.length -3, unread.length);
+            }
+
             return (
                 <div className="mini-notification-list">
+                    {totalUnread ? <li className="text-center"><strong>{`You have ${totalUnread} unread notifications`}</strong></li> : <span/>}
                     <ul>
                         {unread.length ? unread.map(message => (
-                                <li key={`message-${message.id}`} onClick={()=>{return this.openMessageModel(message)}}
-                                    dangerouslySetInnerHTML={this.createMarkup((message.message))}/>
+                                <li className="unread-message" key={`message-${message.id}`} onClick={()=>{return this.openMessageModel(message)}}
+                                    dangerouslySetInnerHTML={this.createMarkup((message.message))}>
+                                </li>
                             )) :  <li className="text-center">You have no new notifications</li>
                         }
                         <li className="text-center" onClick={this.viewAll}>View All</li>
@@ -281,7 +293,7 @@ class Notifications extends React.Component{
         super(props);
         this.state = {
             "url" : "/api/v1/notifications"
-        }
+        };
         console.log("Notifications props", this.props);
     }
     componentDidMount() {
@@ -303,7 +315,7 @@ class Notifications extends React.Component{
                     throw "not authorized for system"
                 }
             })
-            .then((sys_notifications) => self.props.setNotifications(sys_notifications, true))
+            .then((sys_notifications) => self.props.setSystemNotifications(sys_notifications, true))
             .catch((err) => Promise.reject());
     }
     render(){
@@ -339,6 +351,8 @@ function mapDispatchToProps(dispatch){
     return {
         setNotifications : (notifications, system=false) => {console.log("SYS", system, notifications); return dispatch(setNotifications(notifications, system))},
         setNotification : (notification, system=false)=> { return dispatch(setNotification(notification, system))},
+        setSystemNotifications : (notifications, system=true) => {console.log("SYS", system, notifications); return dispatch(setSystemNotifications(notifications, system))},
+
         addNotification : (notification, system=false) => { return dispatch(addNotification(notification, system)) }
     }
 }

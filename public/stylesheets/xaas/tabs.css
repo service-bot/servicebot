@@ -16,7 +16,6 @@
 
 .tab {
     padding: 20px 30px;
-    margin-right: 20px;
     cursor: pointer;
     color: darkgrey;
     font-weight: bold;
@@ -40,6 +39,14 @@
 .tab.active {
     color: #696969;
     border-right-color: #0d47a1;
+    background: #f1f1f1;
+}
+
+/* list tabs ul */
+ul.tabs {
+    list-style: none;
+    padding-left: 0px;
+    border: 1px solid #ececec;
 }
 
 @media screen {

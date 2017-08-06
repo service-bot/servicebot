@@ -9,6 +9,15 @@ import { connect } from 'react-redux';
 import Buttons from "../buttons.jsx";
 import ImageUploader from "../../utilities/image-uploader.jsx";
 import {setOptions} from "../../utilities/actions"
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid,
+        user: state.user || null,
+        options: state.options
+    }
+};
+
 class SystemSettingsForm extends React.Component {
 
     constructor(props){
@@ -18,17 +27,23 @@ class SystemSettingsForm extends React.Component {
             system_settings: false,
             loading: true,
             ajaxLoad: false,
-            success: false
+            success: false,
+            rolesUrl: `/api/v1/roles`,
+            roles: [],
+            currentTabType: 'branding'
         };
         this.fetchSettings = this.fetchSettings.bind(this);
+        this.fetchRoles = this.fetchRoles.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
         this.handleOnChange = this.handleOnChange.bind(this);
         this.handleUpdateSettings = this.handleUpdateSettings.bind(this);
         this.handleOnBack = this.handleOnBack.bind(this);
+        this.handleTab = this.handleTab.bind(this);
     }
 
     componentDidMount(){
         this.fetchSettings();
+        this.fetchRoles();
     }
 
     fetchSettings(){
@@ -39,6 +54,25 @@ class SystemSettingsForm extends React.Component {
                 self.setState({loading: false, system_settings: response});
             }else{
                 console.log("system setting error", response);
+                self.setState({loading: false});
+            }
+        });
+    }
+
+    fetchRoles(){
+        let self = this;
+        Fetcher(self.state.rolesUrl).then(function (response) {
+            if(!response.error){
+                console.log("roles", response);
+                let userRoles = response.map(role => {
+                        let roleKey = role.id;
+                        let value = role.role_name;
+                        return {[value]: roleKey}
+                    }
+                );
+                self.setState({loading: false, roles: userRoles});
+            }else{
+                console.log("getting roles error", response);
                 self.setState({loading: false});
             }
         });
@@ -87,6 +121,24 @@ class SystemSettingsForm extends React.Component {
         this.fetchSettings();
     }
 
+    handleTab(type){
+        this.setState({currentTabType: type})
+    }
+
+    getAppVersion(){
+        let version = this.props.options.version;
+        if(version) {
+            return(
+                <div className="alert alert-info">
+                    <i className="fa fa-info-circle"></i>
+                    ServiceBot Version: {version}
+                </div>
+            )
+        } else {
+            return (<span />);
+        }
+    }
+
     render () {
 
         if(this.state.loading){
@@ -114,7 +166,7 @@ class SystemSettingsForm extends React.Component {
             colorSettings = _.remove(colorSettings, null);
             colorSettings = _.union(colorSettings, ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#F78DA7', '#9900EF']);
             console.log("colorSettings", colorSettings);
-
+            //for side panel settings
             if(this.props.filter){
                 return(
                     <div>
@@ -123,7 +175,9 @@ class SystemSettingsForm extends React.Component {
                             <label className="control-label">Brand Logo</label>
                             <ImageUploader name="file" elementID="brand-logo"
                                            imageURL="/api/v1/system-options/file/brand_logo"
-                                           imageStyle="badge badge-lg" uploadButton={true}/>
+                                           imageStyle="badge badge-lg" uploadButton={true}
+                                           reloadNotice="Please reload the application."
+                            />
                         </div>
                         }
 
@@ -132,7 +186,9 @@ class SystemSettingsForm extends React.Component {
                                 <label className="control-label">Front Page Hero Image</label>
                                 <ImageUploader name="file" elementID="front-page-image"
                                                imageURL="/api/v1/system-options/file/front_page_image"
-                                               imageStyle="badge badge-lg" uploadButton={true}/>
+                                               imageStyle="badge badge-lg" uploadButton={true}
+                                               reloadNotice="Please reload the application."
+                                />
                             </div>
                         }
 
@@ -172,70 +228,101 @@ class SystemSettingsForm extends React.Component {
                         </div>
                     </div>
                 )
-            }else {
+            }else { // for system settings page
+                console.log("system options", this.props.options.value);
+
+                let tabStyle = (type) => {
+                    let tabColor = this.props.options.button_primary_color.value;
+                    if(type == self.state.currentTabType){
+                        return({borderColor: tabColor});
+                    }else{
+                        return({});
+                    }
+                };
+
+
                 return (
                     <div className="row">
-                        <div className="col-md-12">
+                        <div className="p-b-15">
+                            {this.getAppVersion()}
+                        </div>
+                        <div className="col-md-3">
+                            <h4 className="text-capitalize">Setting Types</h4>
+                            <ul className="tabs">
+                                <li key={`settings-type-tab-branding`} className={`tab text-capitalize ${self.state.currentTabType == 'branding' ? 'active' : ''}`}
+                                    style={tabStyle('branding')}
+                                    onClick={()=>{return this.handleTab('branding')}}><span>Branding</span></li>
+                                {types.map((type) => {
+                                    return (
+                                        <li key={`settings-type-tab-${type}`} className={`tab text-capitalize ${type == self.state.currentTabType ? 'active' : ''}`}
+                                            style={tabStyle(type)}
+                                            onClick={()=>{return this.handleTab(type)}}><span>{type}</span></li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                        <div className="col-md-9 system-settings-page-form">
                             <ContentTitle icon="cog" title="Customize your system options here."/>
 
-                            <div>
-                                <h4 className="text-capitalize">Branding</h4>
-                                <div className="row">
-                                    <div className="col-md-6 form-group-flex column centered">
-                                        <label className="control-label">Upload Brand Logo</label>
-                                        <ImageUploader name="file" elementID="brand-logo"
-                                                       imageURL="/api/v1/system-options/file/brand_logo"
-                                                       imageStyle="badge badge-lg" uploadButton={true}/>
-                                    </div>
-                                    <div className="col-md-6 form-group-flex column centered">
-                                        <label className="control-label">Front Page Featured Image</label>
-                                        <ImageUploader name="file" elementID="front-page-image"
-                                                       imageURL="/api/v1/system-options/file/front_page_image"
-                                                       imageStyle="badge badge-lg" uploadButton={true}/>
+                            {this.state.currentTabType == "branding" ?
+                                <div>
+                                    <h4 className="text-capitalize">Branding</h4>
+                                    <div className="row">
+                                        <div className="col-md-6 form-group-flex column centered">
+                                            <label className="control-label">Upload Brand Logo</label>
+                                            <ImageUploader name="file" elementID="brand-logo"
+                                                           imageURL="/api/v1/system-options/file/brand_logo"
+                                                           imageStyle="badge badge-lg" uploadButton={true}/>
+                                        </div>
+                                        <div className="col-md-6 form-group-flex column centered">
+                                            <label className="control-label">Front Page Featured Image</label>
+                                            <ImageUploader name="file" elementID="front-page-image"
+                                                           imageURL="/api/v1/system-options/file/front_page_image"
+                                                           imageStyle="badge badge-lg" uploadButton={true}/>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {types.map((type) => {
-                                return (
-                                    <div key={`setting_type_${type}`}
-                                         className={`system-settings-group setting-type-${type}`}>
-                                        <h4 className="text-capitalize">{type}</h4>
-                                        {group[type].map((group) => {
-                                            if (group.data_type == 'color_picker') {
-                                                return (
-                                                    <div key={`option_${group.option}`}>
-                                                        <Inputs type={group.data_type} name={group.option}
-                                                               label={group.option.replace(/_+/g, ' ')}
-                                                               colors={colorSettings} defaultValue={group.value}
-                                                               onChange={self.handleOnChange}/>
-                                                    </div>
-                                                );
-                                            }else if(group.data_type == 'your_special_type'){
-                                                return ( //this is special case
-                                                    <div key={`option_${group.option}`}>
-                                                        <Inputs type="select" name={group.option}
-                                                                label={group.option.replace(/_+/g, ' ')}
-                                                                defaultValue={group.value}
-                                                                options={['your array']}
-                                                                onChange={self.handleOnChange}/>
-                                                    </div>
-                                                )
-                                            } else {
-                                                return (
-                                                    <div key={`option_${group.option}`}>
-                                                        <Inputs type={group.data_type} name={group.option}
-                                                               label={group.option.replace(/_+/g, ' ')}
-                                                               defaultValue={group.value}
-                                                               onChange={self.handleOnChange}/>
-                                                    </div>
-                                                );
-                                            }
-                                        })}
-                                        <div className="clearfix"/>
-                                    </div>
-                                );
-                            })}
+                                :
+
+                                <div key={`setting_type_${this.state.currentTabType}`}
+                                     className={`system-settings-group setting-type-${this.state.currentTabType}`}>
+                                    <h4 className="system-settings-group-title text-capitalize">{this.state.currentTabType}</h4>
+                                    {group[this.state.currentTabType].map((group) => {
+                                        if (group.data_type == 'color_picker') {
+                                            return (
+                                                <div key={`option_${group.option}`}>
+                                                    <Inputs type={group.data_type} name={group.option}
+                                                            label={group.option.replace(/_+/g, ' ')}
+                                                            colors={colorSettings} defaultValue={group.value}
+                                                            onChange={self.handleOnChange}/>
+                                                </div>
+                                            );
+                                        } else if (group.data_type == 'user_role') {
+                                            return ( //this is special case
+                                                <div key={`option_${group.option}`}>
+                                                    <Inputs type="select" name={group.option}
+                                                            label={group.option.replace(/_+/g, ' ')}
+                                                            value={group.value}
+                                                            options={self.state.roles}
+                                                            onChange={self.handleOnChange}/>
+                                                </div>
+                                            )
+                                        } else {
+                                            return (
+                                                <div key={`option_${group.option}`}>
+                                                    <Inputs type={group.data_type} name={group.option}
+                                                            label={group.option.replace(/_+/g, ' ')}
+                                                            defaultValue={group.value}
+                                                            onChange={self.handleOnChange}/>
+                                                </div>
+                                            );
+                                        }
+                                    })}
+                                    <div className="clearfix"/>
+                                </div>
+
+                            }
 
                             <div className="text-right">
                                 <Buttons btnType="primary" text="Update Settings" onClick={self.handleUpdateSettings}
@@ -258,4 +345,4 @@ let mapDispatch = function(dispatch){
     }
 }
 
-export default connect(null, mapDispatch)(SystemSettingsForm);
+export default connect(mapStateToProps, mapDispatch)(SystemSettingsForm);

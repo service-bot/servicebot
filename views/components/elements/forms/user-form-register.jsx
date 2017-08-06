@@ -42,14 +42,48 @@ class UserFormRegister extends React.Component {
     getValidators() {
         //optional references: the service template's references.service_template_properties
         //Defining general validators
+        let isEmpty = (val) =>{ return val === '' || typeof(val) === 'undefined'};
+        //Defining field validators
         let validateEmail = (val) => {
             let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            console.log("validating email", val.match(mailFormat));
-            return val.match(mailFormat) ? true : {error:"Invalid email format"};
-
+            if(isEmpty(val)){
+                return {error: "Email is required!"};
+            }else if(!val.match(mailFormat)){
+                return {error: "Invalid email format!"};
+            }else{
+                return true;
+            }
         };
+        let validateName = (val) => {
+            console.log("validating name", val);
+            if(isEmpty(val)){
+                return {error: "Name is required!"};
+            }else{
+                return true;
+            }
+        };
+        let validatePhone = (val) => {
+            console.log("validating phone", val);
+            if(isEmpty(val)){
+                return {error: "Phone is required!"};
+            }else{
+                return true;
+            }
+        };
+        let validatePassword = (val) => {
+            if(isEmpty(val)){
+                return {error: "Password is required!"};
+            }else{
+                return true;
+            }
+        };
+
+
         let validatorJSON = {
-            'email': validateEmail
+            'name': validateName,
+            'phone': validatePhone,
+            'email': validateEmail,
+            'password': validatePassword
         };
         return validatorJSON;
     }
@@ -77,28 +111,16 @@ class UserFormRegister extends React.Component {
                                 <p>Please enter your email address and password to create your account</p>
                             </div>
                         }
-                        <div className="form-group">
-                            <label className="control-label">Name</label>
-                            <input type="text" name="name" className="form-control"/>
-                            <span className="bmd-help">Please enter your name</span>
-                        </div>
-                        <div className="form-group">
-                            <label className="control-label">Phone Number</label>
-                            <input type="text" name="phone" className="form-control"/>
-                            <span className="bmd-help">Please enter your phone number</span>
-                        </div>
+
+                        <Inputs type="text" name="name" label="Name" onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
+                        <Inputs type="text" name="phone" label="Phone Number" onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
+
                         {!this.state.token &&
-                        <div className="form-group">
-                            <Inputs type="email" name="email" label="Email Address"
-                                    onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
-                            <span className="bmd-help">Please enter your email</span>
-                        </div>
+                            <Inputs type="email" name="email" label="Email Address" onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
                         }
-                        <div className="form-group">
-                            <label className="control-label">Password</label>
-                            <input type="password" name="password" className="form-control"/>
-                            <span className="bmd-help">Please enter your password</span>
-                        </div>
+
+                        <Inputs type="password" name="password" label="Password" onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
+
                         <div className="agreement-checkbox checkbox">
                             <label>
                                 <input name="agree" type="checkbox"/>

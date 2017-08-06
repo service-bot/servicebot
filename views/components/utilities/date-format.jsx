@@ -29,6 +29,13 @@ class DateFormat extends React.Component {
         let hour = date.getHours();
         let min = date.getMinutes();
 
+        if(hour < 10){
+            hour = '0' + hour;
+        }
+        if(min < 10){
+            min = '0' + min;
+        }
+
         let myDate = `${monthNames[month]} ${day}, ${year}`;
         if(this.props.weekday){
             myDate = `${dayNames[dayOfWeek]} ${monthNames[month]} ${day}, ${year}`;

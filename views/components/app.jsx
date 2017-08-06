@@ -3,7 +3,8 @@ import Fetcher from "./utilities/fetcher.jsx"
 import NavBootstrap from "./layouts/nav-bootstrap.jsx"
 import Footer from "./layouts/footer.jsx"
 import {browserHistory} from 'react-router';
-import {setUid, setUser} from "./utilities/actions"
+import {connect} from "react-redux";
+import {setUid, setUser, dismissAlert} from "./utilities/actions"
 import { store } from "../store"
 
 class App extends React.Component {
@@ -20,7 +21,6 @@ class App extends React.Component {
         store.subscribe(function(){
             let storeState = store.getState();
             if (storeState.options) {
-                console.log("app.jsx did mount has options", storeState.options);
                 self.setState({backgroundColor: storeState.options.background_color ? storeState.options.background_color.value : '#ffffff'});
             }
             if(!options && storeState.options){
@@ -34,9 +34,10 @@ class App extends React.Component {
         let that = this;
 
         Fetcher("/api/v1/auth/session/clear").then(function(result){
-            that.setState({uid: null})
+            that.setState({uid: null});
             localStorage.removeItem("permissions");
             store.dispatch(setUid(null));
+            store.dispatch(dismissAlert([]));
             browserHistory.push('/');
         }).then(function () {
             store.dispatch(setUser(null));
@@ -46,7 +47,7 @@ class App extends React.Component {
     render () {
         let self = this;
         return(
-                <div style={{backgroundColor: this.state.backgroundColor, minHeight: 100+'vh'}}>
+                <div className="app-container" style={{backgroundColor: this.state.backgroundColor}}>
                     <NavBootstrap handleLogout={this.handleLogout} uid={this.state.uid}/>
                     {self.props.children}
                     <Footer/>
@@ -54,4 +55,5 @@ class App extends React.Component {
         );
     }
 }
+
 export default App;
