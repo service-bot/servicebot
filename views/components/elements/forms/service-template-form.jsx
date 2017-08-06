@@ -392,7 +392,15 @@ class ServiceTemplateForm extends React.Component {
             }
         };
 
+        let imageUploadURL = (this.state.templateId && !this.props.params.duplicate) ?
+            `/api/v1/service-templates/${this.state.templateId}/image` :
+            `/api/v1/service-templates/${this.state.submissionResponse.id}/image`;
 
+        let iconUploadURL = (this.state.templateId && !this.props.params.duplicate) ?
+            `/api/v1/service-templates/${this.state.templateId}/icon` :
+            `/api/v1/service-templates/${this.state.submissionResponse.id}/icon`;
+
+        console.log("template image urls", imageUploadURL, iconUploadURL);
         //Returning stuff to be rendered (the input fields)
         return (
             <div>
@@ -406,13 +414,12 @@ class ServiceTemplateForm extends React.Component {
                                     <label>Upload Cover Image</label>
                                     <ImageUploader elementID="template-image" imageStyle="template-image-upload"
                                                    imageURL={`/api/v1/service-templates/${this.state.submissionResponse.id}/image`}
-                                                   imageGETURL={(this.state.templateId && !this.props.params.duplicate) ?
-                                                       `/api/v1/service-templates/${this.state.templateId}/image` :
-                                                       `/api/v1/service-templates/${this.state.submissionResponse.id}/image`}
+                                                   imageGETURL={imageUploadURL}
                                                    uploadTrigger={this.state.uploadTrigger}
                                                    uploadButton={false}
                                                    handleSuccess={this.handleImageUploadSuccess}
                                                    onChange={this.onImageChanged}
+                                                   imageRemovable={true}
                                                    name="template-image"/>
                                 </div>
 
@@ -420,13 +427,12 @@ class ServiceTemplateForm extends React.Component {
                                     <label>Upload Icon</label>
                                     <ImageUploader elementID="template-icon" imageStyle="template-image-upload"
                                                    imageURL={`/api/v1/service-templates/${this.state.submissionResponse.id}/icon`}
-                                                   imageGETURL={(this.state.templateId && !this.props.params.duplicate) ?
-                                                       `/api/v1/service-templates/${this.state.templateId}/icon` :
-                                                       `/api/v1/service-templates/${this.state.submissionResponse.id}/icon`}
+                                                   imageGETURL={iconUploadURL}
                                                    uploadTrigger={this.state.uploadTrigger}
                                                    uploadButton={false}
                                                    handleSuccess={this.handleImageUploadSuccess}
                                                    onChange={this.onImageChanged}
+                                                   imageRemovable={true}
                                                    name="template-icon"/>
                                 </div>
 

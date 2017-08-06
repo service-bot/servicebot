@@ -114,7 +114,7 @@ module.exports = function (router) {
         })
 
     });
-    router.delete("/service-template/:id(\\d+)/icon", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
+    router.delete("/service-templates/:id(\\d+)/icon", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
         File.findFile(iconFilePath, req.params.id, function (icon) {
             console.log(icon);
             icon[0].delete(function(){
@@ -124,7 +124,7 @@ module.exports = function (router) {
     });
 
 
-    router.delete("/service-template/:id(\\d+)/image", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
+    router.delete("/service-templates/:id(\\d+)/image", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
         File.findFile(imageFilePath, req.params.id, function (image) {
             image[0].delete(function(){
                 res.json({message:"File Deleted!"});

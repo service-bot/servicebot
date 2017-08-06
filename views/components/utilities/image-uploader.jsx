@@ -22,13 +22,17 @@ class ImageUploader extends React.Component {
             image: true
         };
 
+        console.log("image url", this.props.imageURL);
+
         this.onImageSelected = this.onImageSelected.bind(this);
         this.handleImage = this.handleImage.bind(this);
         this.getCoverImage = this.getCoverImage.bind(this);
+        this.removeImage = this.removeImage.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
-
+        console.log("this image url", this.props.imageURL);
+        console.log("next image url", nextProps.imageURL);
         if(nextProps.imageURL != this.state.imageURL){
             this.setState({
                 imageURL: nextProps.imageURL
@@ -70,7 +74,9 @@ class ImageUploader extends React.Component {
         let myImage = document.getElementById(`edit-${this.state.elementID}-img`);
         fetch(this.props.imageGETURL || self.state.imageURL,
             {method: 'GET', header: new Headers({"Content-Type": "application/json"}), credentials: "include"}).then(function(response) {
-            if(response.ok) {
+            console.log("in get cover image", response);
+            if(response.ok){
+                self.setState({hasImage: true});
                 return response.blob();
             }
             throw new Error('Network response was not ok.');
@@ -81,7 +87,6 @@ class ImageUploader extends React.Component {
             let objectURL = URL.createObjectURL(myBlob);
             myImage.src = objectURL;
         }).catch(function(error) {
-            console.log("catch image error", error);
             self.setState({image: false});
             // myImage.src = '/assets/custom_icons/cloud-computing.png?' + new Date().getTime();
             myImage.classList.add("no-image-yet");
@@ -98,7 +103,6 @@ class ImageUploader extends React.Component {
         };
         self.setState({ajaxLoad: true});
 
-        // console.log(e.target);
         Fetcher(self.state.imageURL, null, null, init).then(function(result){
             if(!result.error){
                 self.setState({imageSelected: false, ajaxLoad: false}, function () {
@@ -116,6 +120,18 @@ class ImageUploader extends React.Component {
         }).catch(e => {console.error("error getting img", e)});
     }
 
+    removeImage(e){
+        let self = this;
+        e.preventDefault();
+        console.log("removing image", self.props.imageGETURL);
+        Fetcher(self.props.imageGETURL, "DELETE", null, null).then(function (response) {
+            console.log("in delete image", response);
+            if(!response.error){
+                self.setState({hasImage: false, image: false});
+            }
+        }).catch(e => {console.error("error removing img", e)});
+
+    }
 
     render(){
 
@@ -127,7 +143,7 @@ class ImageUploader extends React.Component {
                         <div className={`${this.state.imageStyle}`}>
                             <img id={`edit-${this.state.elementID}-img`} className={!this.state.image && 'hidden'}
                                  src={this.props.imageGETURL || this.state.imageURL} ref="avatar" alt="badge"/>
-                            {this.state.loadingImage && <Load type="avatar"/> }
+                            { this.state.loadingImage && <Load type="avatar"/> }
                             <input id={this.state.elementID} type="file" onChange={this.onImageSelected} name={this.props.name || 'file'}/>
                         </div>
                         {(this.state.success && this.state.reloadNotice) &&
@@ -145,6 +161,10 @@ class ImageUploader extends React.Component {
                         </div>
                         }
                     </form>
+                    {(this.state.hasImage && this.props.imageRemovable) &&
+                    <Buttons btnType="primary" text="Remove Image" onClick={this.removeImage}
+                             loading={this.state.ajaxLoad} success="" position="center"/>
+                    }
                 </div>
             </div>
         );

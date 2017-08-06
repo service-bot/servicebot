@@ -620,7 +620,15 @@ span.one-time-charge-label {
 
 /* 404 page */
 .page-404 {
-    background-color: #2a90ce;
+    background-color: #e0e0e0;
+}
+.page-404 .page-service-instance {
+    padding: 0px;
+    margin: 0px !important;
+}
+.btn-404-go-home{
+    position: fixed;
+    bottom: 30px;
 }
 
 .not-found-404 {
@@ -628,10 +636,6 @@ span.one-time-charge-label {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-}
-
-.not-found-404 > * {
-    margin: 30px;
 }
 .page-404-logo {
     text-align: center;

@@ -126,6 +126,7 @@ a.react-tagsinput-remove {
     border-radius: 5px;
     border: 1px dashed #abb8c3;
     margin: 3px 0px 10px;
+    position: relative;
 }
 form#imgformtemplate-image img {
     width: 100%;

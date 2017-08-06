@@ -31,9 +31,8 @@ class GenericNotFound extends React.Component {
                     <Content>
                         <div className="row m-b-20">
                             <div className="not-found-404">
-                                <h1>404</h1>
-                                <p>We are sorry, but you might be lost!</p>
-                                <Link className="btn btn-info btn-rounded btn-md" to="/">Go Home</Link>
+                                <img src="/assets/backgrounds/404-page.png"/>
+                                <Link className="btn btn-info btn-rounded btn-md btn-outline btn-404-go-home" to="/">Go Home</Link>
                             </div>
                         </div>
                     </Content>
