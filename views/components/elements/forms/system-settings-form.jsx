@@ -229,7 +229,6 @@ class SystemSettingsForm extends React.Component {
                     </div>
                 )
             }else { // for system settings page
-                this.getAppVersion();
                 console.log("system options", this.props.options.value);
 
                 let tabStyle = (type) => {
@@ -244,6 +243,9 @@ class SystemSettingsForm extends React.Component {
 
                 return (
                     <div className="row">
+                        <div className="p-b-15">
+                            {this.getAppVersion()}
+                        </div>
                         <div className="col-md-3">
                             <h4 className="text-capitalize">Setting Types</h4>
                             <ul className="tabs">
