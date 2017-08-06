@@ -19,7 +19,8 @@ class ImageUploader extends React.Component {
             imageSelected: false,
             loadingImage: false,
             success: false,
-            image: true
+            image: true,
+            imageFailed: false
         };
 
         console.log("image url", this.props.imageURL);
@@ -115,7 +116,7 @@ class ImageUploader extends React.Component {
                 });
             }else{
                 console.log("failed", result);
-                self.setState({ajaxLoad: false});
+                self.setState({ajaxLoad: false, imageFailed: result.error});
             }
         }).catch(e => {console.error("error getting img", e)});
     }
@@ -164,6 +165,9 @@ class ImageUploader extends React.Component {
                     {(this.state.hasImage && this.props.imageRemovable) &&
                     <Buttons btnType="primary" text="Remove Image" onClick={this.removeImage}
                              loading={this.state.ajaxLoad} success="" position="center"/>
+                    }
+                    {this.state.imageFailed &&
+                    <span className="help-block">{this.state.imageFailed}</span>
                     }
                 </div>
             </div>
