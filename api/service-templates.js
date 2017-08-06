@@ -87,7 +87,7 @@ module.exports = function (router) {
                     }
                 })
             } else {
-                res.send(emptyImage, { 'Content-Type': 'image/gif' }, 200);
+                res.send(emptyImage, { 'Content-Type': 'image/gif' }, 404);
             }
         })
 
@@ -150,7 +150,7 @@ module.exports = function (router) {
                 })
             } else {
                 //todo: default image logic goes here
-                res.send(emptyImage, { 'Content-Type': 'image/gif' }, 200);
+                res.send(emptyImage, { 'Content-Type': 'image/gif' }, 404);
             }
         })
 
