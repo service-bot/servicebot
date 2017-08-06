@@ -87,7 +87,9 @@ module.exports = function (router) {
                     }
                 })
             } else {
-                res.send(emptyImage, { 'Content-Type': 'image/gif' }, 404);
+                res.status(404).json({"error" : "image not found"})
+
+                // res.send(emptyImage, { 'Content-Type': 'image/gif' }, 404);
             }
         })
 
@@ -150,7 +152,8 @@ module.exports = function (router) {
                 })
             } else {
                 //todo: default image logic goes here
-                res.send(emptyImage, { 'Content-Type': 'image/gif' }, 404);
+                res.status(404).json({"error" : "image not found"})
+                // res.send(emptyImage, { 'Content-Type': 'image/gif' }, 404);
             }
         })
 
