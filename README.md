@@ -40,7 +40,7 @@ We look forward to working with you!
 
 
 ## Credit
-Maintained by [Vampeo](https://vampeo.com)
+Maintained by [Vampeo](http://vampeo.com)
 
 ## License
 Copyright (C) 2017 ServiceBot
