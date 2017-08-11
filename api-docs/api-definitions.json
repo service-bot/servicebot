@@ -10,57 +10,47 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "role_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "name":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "email":{
         "type":"string",
         "maxLength":255,
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "password":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "active":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "customer_id":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "phone":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "last_login":{
         "type":"string",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
         "type":"string",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -83,33 +73,27 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"Fund ID"
       },
       "user_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "flagged":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "source":{
         "type":"string",
         "maxLength":2000,
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "updated_at":{
         "type":"string",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created_at":{
         "type":"string",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       }
     }
@@ -120,13 +104,11 @@
       "email":{
         "type":"string",
         "maxLength":255,
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "password":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       }
     }
@@ -136,18 +118,15 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "role_name":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
         "type":"string",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -163,7 +142,6 @@
     "properties":{
       "role_id":{
         "type":"integer",
-        "required":true,
         "description":"Role ID"
       },
       "permission_ids": {
@@ -199,84 +177,69 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "category_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created_by":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "name":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "description":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "details":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "published":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "statement_descriptor":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "trial_period_days":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "amount":{
-        "type":"real",
-        "required":false,
+        "type":"integer",
         "description":"FILL ME OUT!!!!"
       },
       "currency":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "interval":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "interval_count":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "subscription_prorate":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
-        "type":"timestamp with time zone",
-        "required":true,
+        "type":"string",
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -316,73 +279,60 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "name":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "value":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "prop_class":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "prop_label":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "prop_description":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
-        "type":"timestamp with time zone",
-        "required":true,
+        "type":"string",
         "description":"FILL ME OUT!!!!"
       },
       "parent_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "private":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "prompt_user":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "required":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "prop_input_type":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "prop_values":{
-        "type":"ARRAY",
-        "required":false,
+        "type":"string",
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -399,24 +349,20 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "name":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "description":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
-        "type":"timestamp with time zone",
-        "required":true,
+        "type":"string",
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -433,56 +379,46 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "service_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "user_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "requested_by":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "payment_plan":{
         "type":"object",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "name":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "description":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "subscription_id":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "status":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
         "type":"string",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -530,47 +466,39 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "name":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "value":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "prop_class":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "prop_label":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "prop_description":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
-        "type":"timestamp with time zone",
-        "required":true,
+        "type":"string",
         "description":"FILL ME OUT!!!!"
       },
       "parent_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -587,28 +515,23 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "service_instance_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "user_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "message":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
-        "type":"timestamp with time zone",
-        "required":true,
+        "type":"string",
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -625,71 +548,58 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "user_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "service_instance_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "approved":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "subscription_id":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "item_id":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "amount":{
-        "type":"real",
-        "required":false,
+        "type":"integer",
         "description":"FILL ME OUT!!!!"
       },
       "currency":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "description":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "period_start":{
-        "type":"bigint",
-        "required":false,
+        "type":"integer",
         "description":"FILL ME OUT!!!!"
       },
       "period_end":{
-        "type":"bigint",
-        "required":false,
+        "type":"integer",
         "description":"FILL ME OUT!!!!"
       },
       "updated":{
-        "type":"timestamp with time zone",
-        "required":false,
+        "type":"string",
         "description":"FILL ME OUT!!!!"
       },
       "created":{
-        "type":"timestamp with time zone",
-        "required":true,
+        "type":"string",
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -706,38 +616,31 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "service_instance_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "user_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "status":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "fulfilled_by":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "updated":{
-        "type":"timestamp with time zone",
-        "required":false,
+        "type":"string",
         "description":"FILL ME OUT!!!!"
       },
       "created":{
-        "type":"timestamp with time zone",
-        "required":true,
+        "type":"string",
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -753,42 +656,35 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "event_id":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "log_level":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "log_type":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "log_source":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "log":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
         "type":"string",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -805,37 +701,31 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "name":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "event_name":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "message":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "subject":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "model":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "additional_recipients":{
@@ -849,22 +739,18 @@
       },
       "send_email":{
         "type":"boolean",
-        "required":false,
         "description":"Set true if Emails should be sent"
       },
       "send_to_owner":{
         "type":"boolean",
-        "required":false,
         "description":"Set true if notifications should be sent to the owner of the object"
       },
       "create_notification":{
         "type":"boolean",
-        "required":false,
         "description":"Set true if notifications should be created"
       },
       "created_at":{
         "type":"string",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -875,124 +761,156 @@
       }
     }
   },
+  "notifications":{
+    "type":"object",
+    "properties":{
+      "id":{
+        "type":"integer",
+        "description":"FILL ME OUT!!!!"
+      },
+      "source_id":{
+        "type":"string",
+        "maxLength":255,
+        "description":"FILL ME OUT!!!!"
+      },
+      "message":{
+        "type":"string",
+        "maxLength":255,
+        "description":"FILL ME OUT!!!!"
+      },
+      "type":{
+        "type":"string",
+        "maxLength":255,
+        "description":"FILL ME OUT!!!!"
+      },
+      "user_id":{
+        "type":"integer",
+        "description":"FILL ME OUT!!!!"
+      },
+      "subject":{
+        "type":"string",
+        "maxLength":255,
+        "description":"FILL ME OUT!!!!"
+      },
+      "affected_versions":{
+        "type":"string",
+        "maxLength":255,
+        "description":"FILL ME OUT!!!!"
+      },
+      "read":{
+        "type":"boolean",
+        "description":"If notification was read or not"
+      },
+      "email_delivered":{
+        "type":"boolean",
+        "description":"If notification email was delivered"
+      },
+      "email_read":{
+        "type":"boolean",
+        "description":"If notification email was read"
+      },
+      "created_at":{
+        "type":"string",
+        "description":"FILL ME OUT!!!!"
+      }
+    }
+  },
 
   "invoices":{
     "type":"object",
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "user_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "invoice_id":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "subscription":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "charge":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "description":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "amount_due":{
         "type":"number",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "discount":{
         "type":"number",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "attempt_count":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "closed":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "currency":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "forgiven":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "date":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "next_attempt":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "paid":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "period_end":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "period_start":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "receipt_number":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "starting_balance":{
         "type":"number",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "ending_balance":{
         "type":"number",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "total":{
         "type":"number",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
         "type":"string",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -1024,61 +942,50 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "invoice_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "line_item_id":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "amount":{
         "type":"number",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "currency":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "description":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "livemode":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "proration":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "quantity":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "type":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
         "type":"string",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -1095,110 +1002,90 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "invoice":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "user_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "charge_id":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "amount":{
         "type":"number",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "refunded":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "amount_refunded":{
         "type":"number",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "refunds":{
         "type":"object",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "captured":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "currency":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "dispute":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "paid":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "description":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "failure_code":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "failure_message":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "livemode":{
         "type":"boolean",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "statement_descriptor":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "status":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "updated":{
         "type":"string",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
         "type":"string",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -1215,13 +1102,11 @@
       "option":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "value":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -1238,40 +1123,33 @@
     "properties":{
       "id":{
         "type":"integer",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "user_id":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "path":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "size":{
         "type":"integer",
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "name":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "mimetype":{
         "type":"string",
         "maxLength":255,
-        "required":false,
         "description":"FILL ME OUT!!!!"
       },
       "created":{
         "type":"string",
-        "required":true,
         "description":"FILL ME OUT!!!!"
       },
       "references":{
@@ -1302,12 +1180,10 @@
     "properties":{
       "stripe_secret":{
         "type":"string",
-        "required":true,
         "description":"Stripe secret key"
       },
       "stripe_public":{
         "type":"string",
-        "required":true,
         "description":"Stripe public key"
       }
     }
