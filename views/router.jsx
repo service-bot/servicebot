@@ -54,6 +54,10 @@ import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
 //Tests
 import ServiceRequestFormV2 from "./components/elements/forms/service-instance-form-request-v2.jsx";
+import ServiceTemplateFormV2 from "./components/elements/forms/service-template-formv2.jsx";
+import ServiceTemplateFormV3 from "./components/elements/forms/service-template-formv3.jsx";
+
+
 
 // Fetcher("/api/v1/system-options/public").then(function(response) {
 //     store.dispatch(setOptions(response));
@@ -82,7 +86,8 @@ let AppRouter = function(props) {
                 <Route name="Home" path="/" component={App}>
                     <IndexRoute component={Home}/>
                     <Route path="test" component={ServiceRequestFormV2}/>
-                    {/*<Route path="test2" component={FormTest}/>*/}
+                    <Route path="test2" component={ServiceTemplateFormV2}/>
+                    <Route path="test3" component={ServiceTemplateFormV3}/>
                     <Route name="Home" path="home" component={Home}/>
                     <Route name="All Services" path="all-services" component={AllServices}/>
                     <Route name="User Login" path="login" component={Login}/>

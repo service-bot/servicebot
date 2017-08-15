@@ -129,7 +129,7 @@ let SelectInput = (props) => {
 let CustomInputTypes = {
     "text" : {widget : Text},
     "checkbox" : {widget : Checkbox, config : null},
-    "selectinput" : {widget : SelectWidget, config : Tags}
+    "selectInput" : {widget : SelectWidget, config : Tags}
 }
 let CustomField =  (props) => {
 const {index, typeValue, member, hasEmailValue, configValue, myValues, emailValue, change} = props;

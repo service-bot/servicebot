@@ -7,7 +7,7 @@ const RenderWidget = (props) => {
         {configComponent && <Field name={`${member}.config`} component={configComponent}/>}
         <br/>
         <label>Default Value</label>
-        {widgetComponent && <Field name={`${member}.default`} configValue={configValue} component={widgetComponent}/>}
+        {widgetComponent && <Field name={`${member}.value`} configValue={configValue} component={widgetComponent}/>}
     </div>)
 }
 
