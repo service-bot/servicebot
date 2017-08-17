@@ -7,7 +7,7 @@ import 'react-tagsinput/react-tagsinput.css';
 import './css/template-create.css';
 import { Field, Fields,  FormSection,FieldArray, reduxForm, formValueSelector, change, unregisterField } from 'redux-form'
 import {connect } from "react-redux";
-import { RenderWidget} from "../../utilities/widgets";
+import { RenderWidget, WidgetList, widgets} from "../../utilities/widgets";
 let _ = require("lodash");
 import ServiceTemplateFormSubscriptionFields from './service-template-form-subscription-fields.jsx';
 
@@ -95,30 +95,9 @@ const getServiceType = () => {
 
 
 
-let SelectWidget = (props) => {
-    let {input, configValue} = props;
-    return (<select {...input}>
-        <option value=""/>
-        { configValue && configValue.map(option =>  <option value={option}>{option}</option>)}
-    </select>)
-};
 const selector = formValueSelector('serviceTemplateForm'); // <-- same as form name
 
-let Text = (props) => {
-    return <input {...props.input} type="text"/>
-};
-let Checkbox = (props) => {
-    return <input {...props.input} type="checkbox"/>
-};
-let Tags = (props) => {
-    return  <TagsInput  {...props.input} value={props.input.value || []}/>
-};
 
-let CustomInputTypes = {
-    "text" : {widget : Text},
-    "checkbox" : {widget : Checkbox},
-    "select" : {widget : SelectWidget, config : Tags}
-};
 let CustomField =  (props) => {
     const {index, typeValue, member, hasEmailValue, configValue, myValues, emailValue, change} = props;
     let prop_input_type = "text";
@@ -132,20 +111,13 @@ let CustomField =  (props) => {
                 type="text"
                 component={renderField}
                 label="Label"/>
-
-            <Field name={`${member}.prop_input_type`} id="prop_input_type" component="select">
-                <option />
-                <option value="text">Text</option>
-                <option value="checkbox">Checkbox</option>
-                <option value="select">Select List</option>
-            </Field>
+            <WidgetList name={`${member}.prop_input_type`}/>
 
             {typeValue && <RenderWidget
                 member={member}
                 configValue={props.configValue}
-                widgetComponent={CustomInputTypes[typeValue].widget}
-                configComponent={CustomInputTypes[typeValue].config}/>}
-
+                widgetType={typeValue}/>
+            }
             <Field
                 name={`${member}.private`}
                 type="checkbox"
