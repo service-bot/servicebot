@@ -40,7 +40,7 @@ let showResults = (async function(values) {
     window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`);
 });
 
-const fetchCategories = () =>{
+/*const fetchCategories = () =>{
     return new Promise(function(resolve, reject){
         Fetcher(CATEGORIES_URL).then(function (categories_response) {
             if(!categories_response.error){
@@ -90,7 +90,7 @@ const getServiceType = () => {
     }else{
         return false;
     }
-}
+}*/
 
 
 
@@ -99,7 +99,7 @@ const selector = formValueSelector('serviceTemplateForm'); // <-- same as form n
 
 
 let CustomField =  (props) => {
-    const {index, typeValue, member, hasEmailValue, configValue, myValues, emailValue, change} = props;
+    const {index, typeValue, member, privateValue, configValue, myValues, changePrivate} = props;
     let prop_input_type = "text";
     return (
         <div>
@@ -119,23 +119,24 @@ let CustomField =  (props) => {
                 widgetType={typeValue}/>
             }
             <Field
+                onChange={changePrivate}
                 name={`${member}.private`}
                 type="checkbox"
                 component={renderField}
                 label="Private?"/>
 
-            <Field
+            {!privateValue && <Field
                 name={`${member}.required`}
                 type="checkbox"
                 component={renderField}
                 label="Required?"/>
-
-            <Field
+            }
+            {!privateValue && <Field
                 name={`${member}.prompt_user`}
                 type="checkbox"
                 component={renderField}
                 label="Prompt User?"/>
-
+            }
 
         </div>
     )
@@ -143,15 +144,18 @@ let CustomField =  (props) => {
 
 CustomField = connect((state, ownProps) => {
     return {
-        "hasEmailValue" : selector(state, "references.service_template_properties")[ownProps.index].hasEmail,
+        "privateValue" : selector(state, "references.service_template_properties")[ownProps.index].private,
         "typeValue" : selector(state, "references.service_template_properties")[ownProps.index].prop_input_type,
-        configValue : selector(state, `references.service_template_properties`)[ownProps.index].config,
-
+        "configValue" : selector(state, `references.service_template_properties`)[ownProps.index].config,
         "myValues" : selector(state, `references.${ownProps.member}`)
 
     }
 }, (dispatch, ownProps)=> {
-    return {"change" : () => dispatch(change("serviceTemplateForm", `references.${ownProps.member}.email`, ""))}
+    return {"changePrivate" : () => {
+        dispatch(change("serviceTemplateForm", `references.${ownProps.member}.required`, false));
+        dispatch(change("serviceTemplateForm", `references.${ownProps.member}.prompt_user`, false));
+    }
+    }
 })(CustomField);
 
 //A single field on the form
@@ -167,8 +171,8 @@ const renderField = ({ input, label, type, meta: { touched, error, warning } }) 
 
 //Custom property
 const renderCustomProperty = (props) => {
-    const { hasEmailValue, fields, meta: { touched, error } } = props;
-    console.log("EMAIL ! " , hasEmailValue);
+    const { privateValue, fields, meta: { touched, error } } = props;
+    console.log("EMAIL ! " , privateValue);
     return (
         <ul>
             {fields.map((customProperty, index) =>
@@ -191,10 +195,12 @@ const renderCustomProperty = (props) => {
 
 
 //The full form
-const FieldLevelValidationForm = (props) => {
-    const { handleSubmit, pristine, reset, submitting } = props
+let FieldLevelValidationForm = (props) => {
+    const { handleSubmit, pristine, reset, submitting, serviceTypeValue, changeServiceType, } = props;
     return (
+
         <form onSubmit={handleSubmit}>
+
             <Field name="name" type="text"
                    component={renderField} label="Service Name"
                    validate={[required, maxLength15]}
@@ -225,6 +231,26 @@ const FieldLevelValidationForm = (props) => {
                    validate={[required]}
             />
 
+            <label htmlFor="type">Service Type</label><br></br>
+            <Field name="type" id="type" component="select" onChange={changeServiceType}>
+                <option value="subscription">Subscription</option>
+                <option value="one_time">One Time</option>
+                <option value="custom">Custom</option>
+            </Field>
+
+            {(serviceTypeValue ==='subscription' || serviceTypeValue ==='one_time') &&
+            <Field name="amount" type="number"
+                   component={renderField} label="Amount"
+                   validate={[required, number, minValue]}
+            />
+            }
+
+            {(serviceTypeValue ==='subscription') && <div> put other stuff here</div>
+            }
+
+            {(serviceTypeValue ==='custom') && <div>You will be able to add custom service charges after an instance of this service as been created for a customer.</div>
+            }
+
             <br/>
             <FormSection name="references">
                 <FieldArray name="service_template_properties" component={renderCustomProperty}/>
@@ -235,7 +261,17 @@ const FieldLevelValidationForm = (props) => {
             </div>
         </form>
     )
-}
+};
+
+FieldLevelValidationForm = connect((state, ownProps) => {
+    return {
+        "serviceTypeValue" : selector(state, `type`)
+    }
+}, (dispatch, ownProps)=> {
+    return {"changeServiceType" : () => dispatch(change("serviceTemplateForm", `interval_count`, 0))
+    }
+})(FieldLevelValidationForm);
+
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 class ServiceForm extends React.Component {
@@ -244,19 +280,10 @@ class ServiceForm extends React.Component {
     }
 
     render(){
-        const { handleSubmit, pristine, reset, submitting } = this.props
-        return (<form onSubmit={handleSubmit}>
-            <Field
-                name="username"
-                type="text"
-                component={renderField}
-                label="Username"
-                validate={[aol, required, length({ min: 2, max: 8 })
-                ]}
-                warn={email()}
-            />
-            <button type="submit" disabled={pristine || submitting}>Submit</button>
+        const { handleSubmit, pristine, reset, submitting, values } = this.props;
 
+        return (<form onSubmit={handleSubmit}>
+            <button type="submit" disabled={pristine || submitting}>Submit</button>
         </form>)
     }
 }

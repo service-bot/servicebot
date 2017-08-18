@@ -9,17 +9,17 @@ let SelectWidget = (props) => {
         <option value=""/>
         { configValue && configValue.map((option, index) =>  <option key={index} value={option}>{option}</option>)}
     </select>)
-}
+};
 
 let Text = (props) => {
     return <input {...props.input} type="text"/>
-}
+};
 let Checkbox = (props) => {
     return <input {...props.input} type="checkbox"/>
-}
+};
 let Tags = (props) => {
     return  <TagsInput  {...props.input} value={props.input.value || []}/>
-}
+};
 
 
 
@@ -27,7 +27,7 @@ const widgets = [
     {widget : Text, type : "text", label : "Text"},
     {widget : Checkbox, type : "checkbox", label : "Checkbox"},
     {widget : SelectWidget, type : "select", label : "Select", config : Tags}
-]
+];
 
 
 
