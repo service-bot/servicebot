@@ -231,9 +231,11 @@ let FieldLevelValidationForm = (props) => {
                    validate={[required]}
             />
             <Field name="category_id" type="select"
-                   component={SelectWidget} label="Category"
-                   validate={[required]}
-            />
+                   component="select" label="Category"
+                   validate={[required]}>
+                { formJSON.categoryValue.map((option, index) =>  <option key={index} value={option.id}>{option.name}</option>)}
+
+            </Field>
             <br/>
             <Field name="statement_descriptor" type="text"
                    component={renderField} label="Statement Descriptor"

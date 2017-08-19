@@ -6,7 +6,6 @@ import TagsInput from "react-tagsinput"
 let SelectWidget = (props) => {
     let {input, configValue} = props;
     return (<select {...input}>
-        <option value=""/>
         { configValue && configValue.map((option, index) =>  <option key={index} value={option}>{option}</option>)}
     </select>)
 };
