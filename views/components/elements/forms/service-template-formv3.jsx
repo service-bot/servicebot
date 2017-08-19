@@ -5,9 +5,9 @@ import Fetcher from "../../utilities/fetcher.jsx"
 import TagsInput from "react-tagsinput"
 import 'react-tagsinput/react-tagsinput.css';
 import './css/template-create.css';
-import { Field, Fields,  FormSection,FieldArray, reduxForm, formValueSelector, change, unregisterField } from 'redux-form'
+import { Field, Fields,  FormSection,FieldArray, reduxForm, formValueSelector, change, unregisterField, getFormValues } from 'redux-form'
 import {connect } from "react-redux";
-import { RenderWidget, WidgetList, widgets} from "../../utilities/widgets";
+import { RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
 let _ = require("lodash");
 import ServiceTemplateFormSubscriptionFields from './service-template-form-subscription-fields.jsx';
 
@@ -111,7 +111,7 @@ let CustomField =  (props) => {
                 type="text"
                 component={renderField}
                 label="Label"/>
-            <WidgetList name={`${member}.prop_input_type`}/>
+            <WidgetList name={`${member}.prop_input_type`} id="prop_input_type"/>
 
             {typeValue && <RenderWidget
                 member={member}
@@ -196,11 +196,24 @@ const renderCustomProperty = (props) => {
 
 //The full form
 let FieldLevelValidationForm = (props) => {
-    const { handleSubmit, pristine, reset, submitting, serviceTypeValue, changeServiceType, } = props;
+    const changeServiceType = (event, newValue) => {
+        if(newValue === 'one_time') {
+            props.setIntervalCount();
+            props.setInterval();
+        }
+        else if(newValue === 'custom') {
+            props.setIntervalCount();
+            props.setInterval();
+            props.clearAmount();
+        }
+    };
+    const { handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON } = props;
     return (
 
         <form onSubmit={handleSubmit}>
-
+            <pre>
+                {JSON.stringify(formJSON, null, 2)}
+            </pre>
             <Field name="name" type="text"
                    component={renderField} label="Service Name"
                    validate={[required, maxLength15]}
@@ -218,7 +231,7 @@ let FieldLevelValidationForm = (props) => {
                    validate={[required]}
             />
             <Field name="category_id" type="select"
-                   component={renderField} label="Category"
+                   component={SelectWidget} label="Category"
                    validate={[required]}
             />
             <br/>
@@ -239,13 +252,26 @@ let FieldLevelValidationForm = (props) => {
             </Field>
 
             {(serviceTypeValue ==='subscription' || serviceTypeValue ==='one_time') &&
-            <Field name="amount" type="number"
-                   component={renderField} label="Amount"
-                   validate={[required, number, minValue]}
-            />
+                <Field name="amount" type="number"
+                       component={renderField} label="Amount"
+                       validate={[required, number, minValue]}
+                />
             }
 
-            {(serviceTypeValue ==='subscription') && <div> put other stuff here</div>
+            {(serviceTypeValue ==='subscription') &&
+                <div>
+                    <label htmlFor="type">Bill Customer Every</label>
+                    <Field name="interval_count" type="number"
+                    component={renderField}
+                    validate={[required, number, minValue]}
+                    />
+                    <Field name="interval" id="interval" component="select">
+                        <option value="day">Day</option>
+                        <option value="week">Week</option>
+                        <option value="month">Month</option>
+                        <option value="year">Year</option>
+                    </Field>
+                </div>
             }
 
             {(serviceTypeValue ==='custom') && <div>You will be able to add custom service charges after an instance of this service as been created for a customer.</div>
@@ -265,31 +291,23 @@ let FieldLevelValidationForm = (props) => {
 
 FieldLevelValidationForm = connect((state, ownProps) => {
     return {
-        "serviceTypeValue" : selector(state, `type`)
+        "serviceTypeValue" : selector(state, `type`),
+        formJSON: getFormValues('serviceTemplateForm')(state),
+
     }
 }, (dispatch, ownProps)=> {
-    return {"changeServiceType" : () => dispatch(change("serviceTemplateForm", `interval_count`, 0))
+    return {
+        'setIntervalCount' : () => {dispatch(change("serviceTemplateForm", `interval_count`, 1))},
+        'setInterval' : () => {dispatch(change("serviceTemplateForm", `interval`, 'day'))},
+        'clearAmount' : () => {dispatch(change("serviceTemplateForm", `amount`, 0))}
     }
 })(FieldLevelValidationForm);
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-class ServiceForm extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
-    render(){
-        const { handleSubmit, pristine, reset, submitting, values } = this.props;
-
-        return (<form onSubmit={handleSubmit}>
-            <button type="submit" disabled={pristine || submitting}>Submit</button>
-        </form>)
-    }
-}
 
 //Put a service template here if testing renter
-ServiceForm = reduxForm({
+let ServiceForm = reduxForm({
     initialValues : {
         "id": 1,
         "category_id": 1,
@@ -383,7 +401,16 @@ ServiceForm = reduxForm({
                     "updated_at": "2017-08-13T19:32:05.690Z"
                 }
             ]
-        }
+        },
+        "categoryValue" : [
+            {
+                "id": 1,
+                "name": "great services",
+                "description": null,
+                "created_at": "2017-08-13T14:12:21.065Z",
+                "updated_at": "2017-08-13T14:12:21.065Z"
+            }
+        ]
     },
     form: 'serviceTemplateForm'  // a unique identifier for this form
 })(FieldLevelValidationForm);

@@ -48,9 +48,9 @@ const RenderWidget = (props) => {
 
 
 
-let WidgetList = props => (<Field name={props.name} id="prop_input_type" component="select">
+let WidgetList = props => (<Field name={props.name} id={props.name} component="select">
     <option />
     {widgets.map((widget, index) => <option key={index} value={widget.type}>{widget.label}</option>)}
 </Field>);
 
-export {RenderWidget, WidgetList, widgets}
+export {RenderWidget, WidgetList, widgets, SelectWidget}
