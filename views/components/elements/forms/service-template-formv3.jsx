@@ -40,6 +40,8 @@ let showResults = (async function(values) {
     window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`);
 });
 
+
+
 /*const fetchCategories = () =>{
     return new Promise(function(resolve, reject){
         Fetcher(CATEGORIES_URL).then(function (categories_response) {
@@ -195,6 +197,7 @@ const renderCustomProperty = (props) => {
 
 
 //The full form
+
 let FieldLevelValidationForm = (props) => {
     const changeServiceType = (event, newValue) => {
         if(newValue === 'one_time') {
@@ -309,6 +312,7 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 
 //Put a service template here if testing renter
+
 let ServiceForm = reduxForm({
     initialValues : {
         "id": 1,
@@ -419,13 +423,55 @@ let ServiceForm = reduxForm({
 
 
 
+const getInitialForm = async (id = null) => {
+    let categories = await fetch();
+    let template = await (id ? fetch(id) : {});
+    return {
+        ...template,
+        categories
+    }
 
-
-
-let TestPage = (props) => {
-    return <div>
-        <ServiceForm onSubmit={showResults} />
-    </div>
 }
 
-export default TestPage;
+
+class ServiceTemplateForm extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            data : {},
+            categories_url: "/api/v1/service-categories",
+
+        }
+        this.fetchCategories = this.fetchCategories.bind(this);
+
+    }
+    componentDidMount(){
+        let categories = this.fetchCategories();
+    }
+
+    fetchCategories(){
+        let self = this;
+        return new Promise(function(resolve, reject){
+            Fetcher(self.state.categories_url).then(function (categories_response) {
+                if(!categories_response.error){
+                    // console.log(categories_response);
+                    resolve(categories_response);
+                }else{
+                    console.error("category error", categories_response.error);
+                    reject(categories_response.error);
+                }
+            })
+        });
+    }
+
+    render(){
+        return <div>
+            <ServiceForm initialValues={this.state.data} onSubmit={showResults} />
+        </div>
+
+    }
+}
+
+
+
+export default ServiceTemplateForm;
