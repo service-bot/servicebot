@@ -236,7 +236,7 @@ let FieldLevelValidationForm = (props) => {
             <Field name="category_id" type="select"
                    component="select" label="Category"
                    validate={[required]}>
-                { formJSON.categoryValue.map((option, index) =>  <option key={index} value={option.id}>{option.name}</option>)}
+                {formJSON.categories && formJSON.categories.map((option, index) =>  <option key={index} value={option.id}>{option.name}</option>)}
 
             </Field>
             <br/>
@@ -314,116 +314,12 @@ const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 //Put a service template here if testing renter
 
 let ServiceForm = reduxForm({
-    initialValues : {
-        "id": 1,
-        "category_id": 1,
-        "created_by": 1,
-        "name": "great service",
-        "description": "its so great",
-        "details": "<p>this is the best service</p>",
-        "published": true,
-        "statement_descriptor": "asdf",
-        "trial_period_days": 0,
-        "amount": 500,
-        "overhead": null,
-        "currency": "USD",
-        "interval": "month",
-        "interval_count": 1,
-        "type": "subscription",
-        "subscription_prorate": true,
-        "created_at": "2017-08-13T14:12:32.130Z",
-        "updated_at": "2017-08-13T14:16:21.529Z",
-        "references": {
-            "service_template_properties": [
-                {
-                    "id": 1,
-                    "name": "some_text",
-                    "value": "muhvalue",
-                    "prop_class": null,
-                    "prop_label": "some text",
-                    "prop_description": null,
-                    "created_at": "2017-08-13T14:16:21.558Z",
-                    "updated_at": "2017-08-13T14:16:21.558Z",
-                    "parent_id": 1,
-                    "private": false,
-                    "prompt_user": true,
-                    "required": true,
-                    "prop_input_type": "text",
-                    "prop_values": null
-                },
-                {
-                    "id": 2,
-                    "name": "some_dropdown",
-                    "value": "",
-                    "prop_class": null,
-                    "prop_label": "some dropdown",
-                    "prop_description": null,
-                    "created_at": "2017-08-13T14:16:21.558Z",
-                    "updated_at": "2017-08-13T14:16:21.558Z",
-                    "parent_id": 1,
-                    "private": false,
-                    "prompt_user": true,
-                    "required": false,
-                    "prop_input_type": "select",
-                    "prop_values": null
-                },
-                {
-                    "id": 3,
-                    "name": "some_checkbox",
-                    "value": true,
-                    "prop_class": null,
-                    "prop_label": "some checkbox",
-                    "prop_description": null,
-                    "created_at": "2017-08-13T14:16:21.558Z",
-                    "updated_at": "2017-08-13T14:16:21.558Z",
-                    "parent_id": 1,
-                    "private": false,
-                    "prompt_user": true,
-                    "required": false,
-                    "prop_input_type": "checkbox",
-                    "prop_values": null
-                }
-            ],
-            "service_categories": [
-                {
-                    "id": 1,
-                    "name": "great services",
-                    "description": null,
-                    "created_at": "2017-08-13T14:12:21.065Z",
-                    "updated_at": "2017-08-13T14:12:21.065Z"
-                }
-            ],
-            "users": [
-                {
-                    "id": 1,
-                    "role_id": 1,
-                    "name": "admin",
-                    "email": "kevin@servicebot.io",
-                    "status": "active",
-                    "customer_id": "cus_BAxGQCOpAQ0bXj",
-                    "phone": null,
-                    "last_login": "2017-08-13T19:32:05.665Z",
-                    "created_at": "2017-08-08T17:19:01.980Z",
-                    "updated_at": "2017-08-13T19:32:05.690Z"
-                }
-            ]
-        },
-        "categoryValue" : [
-            {
-                "id": 1,
-                "name": "great services",
-                "description": null,
-                "created_at": "2017-08-13T14:12:21.065Z",
-                "updated_at": "2017-08-13T14:12:21.065Z"
-            }
-        ]
-    },
     form: 'serviceTemplateForm'  // a unique identifier for this form
 })(FieldLevelValidationForm);
 
 
 
-const getInitialForm = async (id = null) => {
+/*const getInitialForm = async (id = null) => {
     let categories = await fetch();
     let template = await (id ? fetch(id) : {});
     return {
@@ -431,7 +327,7 @@ const getInitialForm = async (id = null) => {
         categories
     }
 
-}
+}*/
 
 
 class ServiceTemplateForm extends React.Component {
@@ -441,12 +337,103 @@ class ServiceTemplateForm extends React.Component {
             data : {},
             categories_url: "/api/v1/service-categories",
 
-        }
+        };
         this.fetchCategories = this.fetchCategories.bind(this);
 
     }
     componentDidMount(){
-        let categories = this.fetchCategories();
+/*        let categories = this.fetchCategories();
+        console.log(categories);
+        categories = [
+            {
+                "id": 1,
+                "name": "great services",
+                "description": null,
+                "created_at": "2017-08-13T14:12:21.065Z",
+                "updated_at": "2017-08-13T14:12:21.065Z"
+            }
+        ];*/
+        let template = {
+            "id": 1,
+            "category_id": 1,
+            "created_by": 1,
+            "name": "great service",
+            "description": "its so great",
+            "details": "<p>this is the best service</p>",
+            "published": true,
+            "statement_descriptor": "asdf",
+            "trial_period_days": 0,
+            "amount": 500,
+            "overhead": null,
+            "currency": "USD",
+            "interval": "month",
+            "interval_count": 1,
+            "type": "subscription",
+            "subscription_prorate": true,
+            "created_at": "2017-08-13T14:12:32.130Z",
+            "updated_at": "2017-08-13T14:16:21.529Z",
+            "references": {
+                "service_categories": [
+                    {
+                        "id": 1,
+                        "name": "great services",
+                        "description": null,
+                        "created_at": "2017-08-13T14:12:21.065Z",
+                        "updated_at": "2017-08-13T14:12:21.065Z"
+                    }
+                ],
+                "service_template_properties": [
+                    {
+                        "id": 2,
+                        "name": "some_dropdown",
+                        "value": "",
+                        "prop_class": null,
+                        "prop_label": "some dropdown",
+                        "prop_description": null,
+                        "created_at": "2017-08-13T14:16:21.558Z",
+                        "updated_at": "2017-08-13T14:16:21.558Z",
+                        "parent_id": 1,
+                        "private": false,
+                        "prompt_user": true,
+                        "required": false,
+                        "prop_input_type": "select",
+                        "prop_values": null
+                    },
+                    {
+                        "id": 1,
+                        "name": "some_text",
+                        "value": "muhvalue",
+                        "prop_class": null,
+                        "prop_label": "some text",
+                        "prop_description": null,
+                        "created_at": "2017-08-13T14:16:21.558Z",
+                        "updated_at": "2017-08-13T14:16:21.558Z",
+                        "parent_id": 1,
+                        "private": false,
+                        "prompt_user": true,
+                        "required": false,
+                        "prop_input_type": "text",
+                        "prop_values": null
+                    }
+                ],
+                "users": [
+                    {
+                        "id": 1,
+                        "role_id": 1,
+                        "name": "admin",
+                        "email": "kevin@servicebot.io",
+                        "status": "active",
+                        "customer_id": "cus_BAxGQCOpAQ0bXj",
+                        "phone": null,
+                        "last_login": "2017-08-17T20:46:02.778Z",
+                        "created_at": "2017-08-08T17:19:01.980Z",
+                        "updated_at": "2017-08-17T20:46:02.811Z"
+                    }
+                ]
+            }
+        };
+        this.setState({data: template});
+
     }
 
     fetchCategories(){
