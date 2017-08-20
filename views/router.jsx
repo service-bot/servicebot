@@ -56,6 +56,7 @@ import GenericNotFound from "./components/pages/notfound.jsx";
 import ServiceRequestFormV2 from "./components/elements/forms/service-instance-form-request-v2.jsx";
 import ServiceTemplateFormV2 from "./components/elements/forms/service-template-formv2.jsx";
 import ServiceTemplateFormV3 from "./components/elements/forms/service-template-formv3.jsx";
+import ServiceTemplateFormV4 from "./components/elements/forms/service-template-formv4.jsx";
 
 
 
@@ -88,6 +89,8 @@ let AppRouter = function(props) {
                     <Route path="test" component={ServiceRequestFormV2}/>
                     <Route path="test2" component={ServiceTemplateFormV2}/>
                     <Route path="test3" component={ServiceTemplateFormV3}/>
+                    <Route path="test4" component={ServiceTemplateFormV4}/>
+
                     <Route name="Home" path="home" component={Home}/>
                     <Route name="All Services" path="all-services" component={AllServices}/>
                     <Route name="User Login" path="login" component={Login}/>
