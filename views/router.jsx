@@ -54,11 +54,8 @@ import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
 //Tests
-import ServiceRequestFormV2 from "./components/elements/forms/service-instance-form-request-v2.jsx";
-import ServiceTemplateFormV2 from "./components/elements/forms/service-template-formv2.jsx";
-import ServiceTemplateFormV3 from "./components/elements/forms/service-template-formv3.jsx";
 import ServiceTemplateFormV4 from "./components/elements/forms/service-template-formv4.jsx";
-
+import TestBase from "./components/elements/forms/test-base.jsx";
 
 
 // Fetcher("/api/v1/system-options/public").then(function(response) {
@@ -87,10 +84,13 @@ let AppRouter = function(props) {
             <Router history={browserHistory}>
                 <Route name="Home" path="/" component={App}>
                     <IndexRoute component={Home}/>
-                    <Route path="test" component={ServiceRequestFormV2}/>
-                    <Route path="test2" component={ServiceTemplateFormV2}/>
-                    <Route path="test3" component={ServiceTemplateFormV3}/>
-                    <Route path="test4" component={ServiceTemplateFormV4}/>
+
+                    <Route path="test-template" component={ServiceTemplateFormV4}/>
+                    <Route path="test-template/:templateId" component={ServiceTemplateFormV4}/>
+                    <Route path="test-base" component={TestBase}/>
+                    <Route path="test-base/:templateId" component={TestBase}/>
+
+
 
                     <Route name="Home" path="home" component={Home}/>
                     <Route name="All Services" path="all-services" component={AllServices}/>
