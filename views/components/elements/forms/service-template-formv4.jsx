@@ -5,6 +5,7 @@ import './css/template-create.css';
 import { Field, Fields,  FormSection,FieldArray, reduxForm, formValueSelector, change, unregisterField, getFormValues } from 'redux-form'
 import {connect } from "react-redux";
 import { RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
+import RichText from "./rich-text.jsx";
 
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 
@@ -135,6 +136,9 @@ let FieldLevelValidationForm = (props) => {
     return (
 
         <form onSubmit={handleSubmit}>
+            <pre>
+                {JSON.stringify(formJSON, null, 2)}
+            </pre>
             <h3>Basic Info</h3>
 
             <Field name="name" type="text"
@@ -149,6 +153,12 @@ let FieldLevelValidationForm = (props) => {
                    component={renderField} label="Service Details"
                    validate={[required]}
             />
+{/*
+            <RichText id="details"/>
+*/}
+
+
+
             <Field name="published" type="checkbox"
                    component={renderField} label="Published?"
             />

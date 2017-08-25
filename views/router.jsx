@@ -56,6 +56,7 @@ import GenericNotFound from "./components/pages/notfound.jsx";
 //Tests
 import ServiceTemplateFormV4 from "./components/elements/forms/service-template-formv4.jsx";
 import TestBase from "./components/elements/forms/test-base.jsx";
+import TestUpload from "./components/elements/forms/file-upload-form.jsx";
 
 
 // Fetcher("/api/v1/system-options/public").then(function(response) {
@@ -89,6 +90,7 @@ let AppRouter = function(props) {
                     <Route path="test-template/:templateId" component={ServiceTemplateFormV4}/>
                     <Route path="test-base" component={TestBase}/>
                     <Route path="test-base/:templateId" component={TestBase}/>
+                    <Route path="test-upload/:templateId" component={TestUpload}/>
 
 
 
