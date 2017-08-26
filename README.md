@@ -33,10 +33,7 @@ APIs: <https://api-docs.servicebot.io/>
 
 ServiceBot is **open source** and accepts contributions from the public
 
-Before contributing to ServiceBot:
-
-1. Read and sign the [**ServiceBot Contribution License Agreement**](https://goo.gl/forms/N7SWawNxnoDXOR5A3).
-2. Not sure what to work on? Check the open issue or pop into [gitter] and ask!
+Not sure what to work on? Check the open issue or pop into [gitter] and ask!
 
 We look forward to working with you!
 

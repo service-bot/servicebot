@@ -17,6 +17,7 @@ let path = require("path");
 let _ = require("lodash");
 let xss = require('xss');
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
+let validateProperties = require("../input_types/handleInputs").validateProperties;
 let store = require("../config/redux/store");
 //todo: generify single file upload for icon, image, avatar, right now duplicate code
 let iconFilePath = ServiceTemplate.iconFilePath;
@@ -233,7 +234,15 @@ module.exports = function (router) {
     router.post("/service-templates/:id/request", validate(ServiceTemplate), function (req, res, next) {
         if (!req.isAuthenticated()) {
             let serviceTemplate = res.locals.valid_object;
+
             if(serviceTemplate.get('published') == true) {
+                if(serviceTemplate.references && serviceTemplate.references.service_template_properties){
+                    let validationResult = validateRequest(serviceTemplate.references.service_template_properties);
+                    console.log("request validation result: " + validationResult);
+                    if(validationResult.length > 0){
+                        return res.status(400).json({error: validationResult});
+                    }
+                }
                 let req_body = req.body;
                 let permission_array = res.locals.permissions;
                 let req_body_email, req_body_token_id;
@@ -337,7 +346,7 @@ module.exports = function (router) {
                             service.set('url', res.locals.frontEndUrl);
                             dispatchEvent("service_instance_requested_new_user", service);
                             // mailer('request_service_instance_new_user', 'user_id', service)(req, res, next);
-                            //TODO whats going on here @bsears?
+                            //TODO get default role
                             let user_role = new Role({"id": 3});
                             user_role.getPermissions(function (perms) {
                                 let permission_names = perms.map(perm => perm.data.permission_name);
@@ -379,6 +388,13 @@ module.exports = function (router) {
         let permission_array = res.locals.permissions;
         let hasPermission = (permission_array.some(p => p.get("permission_name") == "can_administrate" || p.get("permission_name") == "can_manage"));
         if(serviceTemplate.get('published') == true || hasPermission) {
+            if(serviceTemplate.references && serviceTemplate.references.service_template_properties){
+                let validationResult = validateRequest(serviceTemplate.references.service_template_properties);
+                console.log("request validation result: " + validationResult);
+                if(validationResult != true){
+                    return res.status(400).json({error: validationResult});
+                }
+            }
             new Promise((resolve, reject) => {
                 if (req_body.hasOwnProperty("token_id")) {
                     if (req_body.token_id != '') {

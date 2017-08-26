@@ -41,8 +41,10 @@ ServiceTemplate.prototype.requestPromise = function (uid, body = {}, permission_
         type: self.get("type")
     };
     let submittedProperties = null;
+    let adjustments = [];
     if(body.references) {
         submittedProperties = body.references.service_template_properties;
+        adjustments = require("../input_types/handleInputs").getPriceAdjustments(submittedProperties);
     }
     let ServiceInstance = require('../models/service-instance');
     let newInstance = new ServiceInstance(instanceAttributes);

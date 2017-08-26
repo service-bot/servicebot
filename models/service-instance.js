@@ -283,7 +283,8 @@ ServiceInstance.prototype.generateProps = function (submittedProperties=null, ca
                 if(submittedProperties) {
                     if (templateProperty.prompt_user == true) {
                         if (submittedMap.hasOwnProperty(templateProperty.id)) {
-                            templateProperty.value = submittedMap[templateProperty.id].value;
+                            templateProperty.data = submittedMap[templateProperty.id].data;
+                            templateProperty.config = submittedMap[templateProperty.id].config
                         }
                     }
                 }

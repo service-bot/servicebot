@@ -1,6 +1,6 @@
 {
   "name": "servicebot",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "license": "GPL-3.0",
   "scripts": {
     "start": "node ./bin/www",
@@ -38,9 +38,11 @@
     "express-session": "^1.14.2",
     "fetch-retry": "^1.0.3",
     "form-data": "^2.1.2",
+    "glob": "^7.1.2",
     "helmet": "^3.5.0",
     "http": "0.0.0",
     "immutability-helper": "^2.1.1",
+    "import-export": "^1.0.1",
     "imports-loader": "^0.7.0",
     "install": "^0.8.6",
     "jquery": "^3.1.1",
@@ -92,7 +94,7 @@
     "tape": "^4.6.3",
     "underscore": "^1.8.3",
     "wait-for-port": "0.0.2",
-    "webpack": "^1.14.0",
+    "webpack": "^2.7.0",
     "whatwg-fetch": "^2.0.2",
     "xss": "^0.3.3"
   },
