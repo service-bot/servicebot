@@ -44,6 +44,7 @@ import ManageCatalogEdit from "./components/pages/manage-catalog-edit.jsx";
 import ManageCatalogDuplicate from "./components/pages/manage-catalog-duplicate.jsx";
 import UserEdit from "./components/pages/user-edit.jsx";
 import ManageCategories from "./components/pages/manage-categories.jsx";
+import ManageCategories2 from "./components/pages/manage-categories-2.jsx";
 import ManageNotificationTemplates from "./components/pages/manage-notification-templates.jsx";
 // Elements
 import NotificationTemplateForm from "./components/elements/forms/notification-template-form.jsx";
@@ -53,10 +54,9 @@ import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
 //Tests
-import ServiceRequestFormV2 from "./components/elements/forms/service-instance-form-request-v2.jsx";
-import ServiceTemplateFormV2 from "./components/elements/forms/service-template-formv2.jsx";
-import ServiceTemplateFormV3 from "./components/elements/forms/service-template-formv3.jsx";
-
+import ServiceTemplateFormV4 from "./components/elements/forms/service-template-formv4.jsx";
+import TestBase from "./components/elements/forms/test-base.jsx";
+import TestUpload from "./components/elements/forms/file-upload-form.jsx";
 
 
 // Fetcher("/api/v1/system-options/public").then(function(response) {
@@ -85,9 +85,15 @@ let AppRouter = function(props) {
             <Router history={browserHistory}>
                 <Route name="Home" path="/" component={App}>
                     <IndexRoute component={Home}/>
-                    <Route path="test" component={ServiceRequestFormV2}/>
-                    <Route path="test2" component={ServiceTemplateFormV2}/>
-                    <Route path="test3" component={ServiceTemplateFormV3}/>
+
+                    <Route path="test-template" component={ServiceTemplateFormV4}/>
+                    <Route path="test-template/:templateId" component={ServiceTemplateFormV4}/>
+                    <Route path="test-base" component={TestBase}/>
+                    <Route path="test-base/:templateId" component={TestBase}/>
+                    <Route path="test-upload/:templateId" component={TestUpload}/>
+
+
+
                     <Route name="Home" path="home" component={Home}/>
                     <Route name="All Services" path="all-services" component={AllServices}/>
                     <Route name="User Login" path="login" component={Login}/>
@@ -120,6 +126,7 @@ let AppRouter = function(props) {
                     <Route name="Edit User" path="manage-users/:userId" components={UserEdit}/>
                     <Route name="Manage Subscriptions" path="manage-subscriptions" component={ManageSubscriptions}/>
                     <Route name="Manage Categories" path="manage-categories" component={ManageCategories}/>
+                    <Route name="Manage Categories 2" path="manage-categories-2" component={ManageCategories2}/>
                     <Route name="Manage Permission" path="manage-permission" component={ManagePermission}/>
                     <Route name="Manage Notification Templates" path="notification-templates" components={ManageNotificationTemplates}/>
                     <Route name="Notification Template" path="notification-templates/:id" component={NotificationTemplateForm}/>

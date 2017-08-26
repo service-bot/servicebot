@@ -17,6 +17,8 @@ let PriceOperation = (props) => {
 };
 
 
+
+
 const RenderWidget = (props) => {
     const {member, widgetType, configValue, defaultWidgetValue} = props;
     const widget = widgets[widgetType];
@@ -25,12 +27,12 @@ const RenderWidget = (props) => {
         <FormSection name={`${member}.config`}>
             {widget.config && <Field name={`value`} component={widget.config}/>}
             {widget.pricing &&
-                <div>
-                    <FormSection name={`pricing`}>
-                        <Field name={`value`} configValue={configValue} component={widget.pricing}/>
-                        <Field name="operation" component={PriceOperation}/>
-                    </FormSection>
-                </div>}
+            <div>
+                <FormSection name={`pricing`}>
+                    <Field name={`value`} configValue={configValue} component={widget.pricing}/>
+                    <Field name="operation" component={PriceOperation}/>
+                </FormSection>
+            </div>}
 
         </FormSection>
         <br/>
@@ -43,8 +45,7 @@ const RenderWidget = (props) => {
 
 
 
-
-let WidgetList = props => (<Field name={props.name} id="prop_input_type" component="select">
+let WidgetList = props => (<Field name={props.name} id={props.name} component="select">
     <option />
     {Object.values(widgets).map((widget, index) => <option key={index} value={widget.type}>{widget.label}</option>)}
 </Field>);
