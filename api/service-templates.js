@@ -237,7 +237,7 @@ module.exports = function (router) {
 
             if(serviceTemplate.get('published') == true) {
                 if(serviceTemplate.references && serviceTemplate.references.service_template_properties){
-                    let validationResult = validateRequest(serviceTemplate.references.service_template_properties);
+                    let validationResult = validateProperties(serviceTemplate.references.service_template_properties);
                     console.log("request validation result: " + validationResult);
                     if(validationResult.length > 0){
                         return res.status(400).json({error: validationResult});
@@ -389,7 +389,7 @@ module.exports = function (router) {
         let hasPermission = (permission_array.some(p => p.get("permission_name") == "can_administrate" || p.get("permission_name") == "can_manage"));
         if(serviceTemplate.get('published') == true || hasPermission) {
             if(serviceTemplate.references && serviceTemplate.references.service_template_properties){
-                let validationResult = validateRequest(serviceTemplate.references.service_template_properties);
+                let validationResult = validateProperties(serviceTemplate.references.service_template_properties);
                 console.log("request validation result: " + validationResult);
                 if(validationResult != true){
                     return res.status(400).json({error: validationResult});

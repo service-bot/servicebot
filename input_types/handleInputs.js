@@ -24,18 +24,22 @@ module.exports = {
     },
     getPriceAdjustments: function (properties) {
         let handlers = getHandlers()
-        return properties.reduce((acc, prop) => {
-            if (handlers[prop.type] && handlers[prop.type].priceHandler) {
-                const adjuster = handlers[prop.type].priceHandler;
-                acc.push({
-                    name: prop.name,
-                    type: prop.type,
-                    operation: prop.config.pricing.operation,
-                    value: adjuster(prop.data, prop.config)
-                });
-            }
-            return acc;
-        }, [])
+        if(properties) {
+            return properties.reduce((acc, prop) => {
+                if (handlers[prop.type] && handlers[prop.type].priceHandler) {
+                    const adjuster = handlers[prop.type].priceHandler;
+                    acc.push({
+                        name: prop.name,
+                        type: prop.type,
+                        operation: prop.config.pricing.operation,
+                        value: adjuster(prop.data, prop.config)
+                    });
+                }
+                return acc;
+            }, [])
+        }else{
+            return [];
+        }
     }
 };
 
