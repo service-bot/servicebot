@@ -6,6 +6,7 @@ import { Field, Fields,  FormSection,FieldArray, reduxForm, formValueSelector, c
 import {connect } from "react-redux";
 import { RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
 import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
+import FileUploadForm from "./file-upload-form.jsx";
 
 
 
@@ -138,9 +139,6 @@ let FieldLevelValidationForm = (props) => {
     return (
 
         <form onSubmit={handleSubmit}>
-            <pre>
-                {JSON.stringify(formJSON, null, 2)}
-            </pre>
             <h3>Basic Info</h3>
 
             <Field name="name" type="text"
@@ -234,21 +232,48 @@ class ServiceTemplateForm extends React.Component {
 
     constructor(props){
         super(props);
+        this.state = {
+            newTemplateId : 0,
+            success : false
+        };
+        this.handleResponse = this.handleResponse.bind(this);
+
     }
 
+    handleResponse(response){
+        this.setState({
+            newTemplateId : response.id,
+            success: true
+        });
+    }
     render () {
         let initialRequests = [];
         let submissionRequest = {};
         let successMessage = "Template Updated";
+        let imageUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/image`;
+        let iconUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/icon`;
+
         if(this.props.params.templateId){
             initialRequests.push({'method': 'GET', 'url': `/api/v1/service-templates/${this.props.params.templateId}`},
                 {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
-            )
-            submissionRequest = {
-                'method': 'PUT',
-                'url': `/api/v1/service-templates/${this.props.params.templateId}`
-            };
-            successMessage = "Template Updated";
+            );
+            if(this.props.params.duplicate){
+                submissionRequest = {
+                    'method': 'POST',
+                    'url': `/api/v1/service-templates`
+                };
+                successMessage = "Template Duplicated";
+            }
+            else{
+                submissionRequest = {
+                    'method': 'PUT',
+                    'url': `/api/v1/service-templates/${this.props.params.templateId}`
+                };
+                successMessage = "Template Updated";
+                imageUploadURL = `/api/v1/service-templates/${this.props.params.templateId}/image`;
+                iconUploadURL = `/api/v1/service-templates/${this.props.params.templateId}/icon`;
+
+            }
         }
         else{
             initialRequests.push(
@@ -262,12 +287,32 @@ class ServiceTemplateForm extends React.Component {
         }
 
         return (
+
             <div>
+                {(!this.state.success) &&
+                    <div>
+                        <FileUploadForm
+                            upload = {this.state.success}
+                            imageUploadURL = {imageUploadURL}
+                            name = "template-image"
+                            label = "Upload Cover Image"
+                        />
+                        <FileUploadForm
+                            upload = {this.state.success}
+                            imageUploadURL = {iconUploadURL}
+                            name = "template-icon"
+                            label = "Upload Icon Image"
+                        />
+                    </div>
+                }
+
+
                 <ServiceBotBaseForm
                     form = {FieldLevelValidationForm}
                     initialRequests = {initialRequests}
                     submissionRequest = {submissionRequest}
                     successMessage = {successMessage}
+                    handleResponse = {this.handleResponse}
                 />
             </div>
         )

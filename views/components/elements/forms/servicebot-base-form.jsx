@@ -51,6 +51,9 @@ class ServiceBotBaseForm extends React.Component {
         //come back to this for error handling
         Fetcher(self.state.submissionRequest.url, self.state.submissionRequest.method, values).then(result => {
             if(!result.error) {
+                if(self.props.handleResponse){
+                    self.props.handleResponse(result)
+                }
                 self.setState({success: true, submissionResponse: result});
             }
         })
@@ -74,12 +77,15 @@ class ServiceBotBaseForm extends React.Component {
                     }
                 });
                 if(!hasError){
-                    //fix the logic here
-
-                    let requestValues = values[0];
-                    for (let i = 1; i < values.length; i++) {
-                        let objectName = self.state.initialRequests[i].name;
-                        requestValues[objectName] = values[i];
+                    let requestValues = {};
+                    for (let i = 0; i < values.length; i++) {
+                        if(i==0 && !self.state.initialRequests[0].name){
+                            requestValues = values[0];
+                        }
+                        else {
+                            let objectName = self.state.initialRequests[i].name;
+                            requestValues[objectName] = values[i];
+                        }
                     }
                     self.setState({loading: false, initialValues: requestValues});
                 }else{
