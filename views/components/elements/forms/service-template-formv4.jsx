@@ -251,7 +251,7 @@ class ServiceTemplateForm extends React.Component {
     }
     handleIconSuccess(){
         this.setState({
-            imageSuccess: true
+            iconSuccess: true
         });
     }
 
@@ -304,10 +304,11 @@ class ServiceTemplateForm extends React.Component {
         return (
 
             <div>
-                {!this.state.imageSuccess &&
-                    !this.state.iconSuccess &&
-                    !this.state.success &&
+                {(!this.state.imageSuccess ||
+                    !this.state.iconSuccess ||
+                    !this.state.success) &&
                     <div>
+
                         <FileUploadForm
                             upload = {this.state.success}
                             imageUploadURL = {imageUploadURL}
