@@ -37,8 +37,28 @@ const RenderWidget = (props) => {
         </FormSection>
         <br/>
         <label>Default Value</label>
-        {widget.widget && <Field name={`${member}.value`} configValue={configValue} component={widget.widget}/>}
+        {widget.widget && <Field name={`${member}.data.value`} configValue={configValue} component={widget.widget}/>}
     </div>)
+}
+
+const PriceBreakdown = (props) => {
+    const { inputs } = props
+
+    var breakdown = inputs.reduce((acc, input) => {
+        console.log(input, "INPUT!");
+        if(input.config && input.config.pricing && widgets[input.type].handler.priceHandler) {
+            acc.push(<div>{input.prop_label} - {input.config.pricing.operation}
+                - {widgets[input.type].handler.priceHandler(input.data, input.config)}</div>);
+        }
+        return acc;
+    }, [])
+
+    if (breakdown.length == 0){
+        breakdown =  <div></div>
+    }
+    return <div>
+        {breakdown}
+    </div>
 }
 
 
@@ -50,4 +70,4 @@ let WidgetList = props => (<Field name={props.name} id={props.name} component="s
     {Object.values(widgets).map((widget, index) => <option key={index} value={widget.type}>{widget.label}</option>)}
 </Field>);
 
-export {RenderWidget, WidgetList, widgets}
+export {RenderWidget, WidgetList, PriceBreakdown, widgets}
