@@ -6,15 +6,10 @@ class FileInputForm extends Component {
 
     constructor(props){
         super(props);
-        this.handleImageUploadSuccess = this.handleImageUploadSuccess.bind(this);
         this.onImageChanged = this.onImageChanged.bind(this);
 
     }
-    handleImageUploadSuccess(){
-        if(!this.state.submitSuccessful) {
-            this.setState({submitSuccessful: true});
-        }
-    }
+
     onImageChanged(){
         this.setState({imageChanged: true});
     }
@@ -29,7 +24,7 @@ class FileInputForm extends Component {
                                imageGETURL={this.props.imageUploadURL}
                                uploadTrigger={this.props.upload}
                                uploadButton={false}
-                               handleSuccess={this.handleImageUploadSuccess}
+                               handleSuccess={this.props.handleImageUploadSuccess}
                                onChange={this.onImageChanged}
                                imageRemovable={true}
                                name={this.props.name}/>

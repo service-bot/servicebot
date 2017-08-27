@@ -234,10 +234,25 @@ class ServiceTemplateForm extends React.Component {
         super(props);
         this.state = {
             newTemplateId : 0,
-            success : false
+            success : false,
+            imageSuccess : false,
+            iconSuccess : false
         };
         this.handleResponse = this.handleResponse.bind(this);
+        this.handleImageSuccess = this.handleImageSuccess.bind(this);
+        this.handleIconSuccess = this.handleIconSuccess.bind(this);
 
+    }
+
+    handleImageSuccess(){
+        this.setState({
+            imageSuccess: true
+        });
+    }
+    handleIconSuccess(){
+        this.setState({
+            imageSuccess: true
+        });
     }
 
     handleResponse(response){
@@ -289,23 +304,26 @@ class ServiceTemplateForm extends React.Component {
         return (
 
             <div>
-                {(!this.state.success) &&
+                {!this.state.imageSuccess &&
+                    !this.state.iconSuccess &&
+                    !this.state.success &&
                     <div>
                         <FileUploadForm
                             upload = {this.state.success}
                             imageUploadURL = {imageUploadURL}
                             name = "template-image"
                             label = "Upload Cover Image"
+                            handleImageUploadSuccess = {this.handleImageSuccess}
                         />
                         <FileUploadForm
                             upload = {this.state.success}
                             imageUploadURL = {iconUploadURL}
                             name = "template-icon"
                             label = "Upload Icon Image"
+                            handleImageUploadSuccess = {this.handleIconSuccess}
                         />
                     </div>
                 }
-
 
                 <ServiceBotBaseForm
                     form = {FieldLevelValidationForm}

@@ -48,13 +48,19 @@ class ServiceBotBaseForm extends React.Component {
 
     submitForm(values){
         let self = this;
-        //come back to this for error handling
+        self.setState({loading: true});
         Fetcher(self.state.submissionRequest.url, self.state.submissionRequest.method, values).then(result => {
             if(!result.error) {
+                console.log(result);
                 if(self.props.handleResponse){
                     self.props.handleResponse(result)
                 }
-                self.setState({success: true, submissionResponse: result});
+                self.setState({loading:false, success: true, submissionResponse: result});
+            }
+            else{
+                console.error("submission error", result.error);
+                self.setState({loading:false});
+                browserHistory.push(self.state.failureRoute);
             }
         })
     }
