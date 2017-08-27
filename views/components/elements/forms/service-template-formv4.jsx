@@ -5,7 +5,9 @@ import './css/template-create.css';
 import { Field, Fields,  FormSection,FieldArray, reduxForm, formValueSelector, change, unregisterField, getFormValues } from 'redux-form'
 import {connect } from "react-redux";
 import { RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
-import RichText from "./rich-text.jsx";
+import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
+
+
 
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 
@@ -132,7 +134,7 @@ let FieldLevelValidationForm = (props) => {
         }
     };
 
-    const { handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON } = props;
+    const { handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON, content } = props;
     return (
 
         <form onSubmit={handleSubmit}>
@@ -150,15 +152,9 @@ let FieldLevelValidationForm = (props) => {
                    validate={[required]}
             />
             <Field name="details" type="text"
-                   component={renderField} label="Service Details"
+                   component={WysiwygRedux} label="Service Details"
                    validate={[required]}
             />
-{/*
-            <RichText id="details"/>
-*/}
-
-
-
             <Field name="published" type="checkbox"
                    component={renderField} label="Published?"
             />
@@ -252,13 +248,17 @@ class ServiceTemplateForm extends React.Component {
                 'method': 'PUT',
                 'url': `/api/v1/service-templates/${this.props.params.templateId}`
             };
-            successMessage = "Template Created";
+            successMessage = "Template Updated";
         }
         else{
+            initialRequests.push(
+                {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
+            );
             submissionRequest = {
                 'method': 'POST',
                 'url': `/api/v1/service-templates`
             };
+            successMessage = "Template Created";
         }
 
         return (

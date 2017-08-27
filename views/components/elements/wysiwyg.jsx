@@ -4,7 +4,6 @@ import "../../../public/js/scripts/redactor/redactor.min.css";
 import "../../../public/js/scripts/redactor/redactor.min.js";
 
 
-
 class Wysiwyg extends React.Component {
     constructor(props){
         super(props)
@@ -32,11 +31,36 @@ class Wysiwyg extends React.Component {
 
         </textarea>
     }
-
-
-
 }
 
+class WysiwygRedux extends React.Component {
+    constructor(props){
+        super(props)
+        this.insert = this.insert.bind(this);
+
+        this.state = {
+        }
+    }
+
+    insert(content){
+        $(this.refs.wysiwygArea).redactor("buffer.set");
+        $(this.refs.wysiwygArea).redactor("insert.raw", content);
+    }
+
+    componentDidMount() {
+        var self = this;
+        $(this.refs.wysiwygArea).redactor();
+        $(this.refs.wysiwygArea).on('change.callback.redactor', function(e, data) {
+            self.props.input.onChange(e);
+        });
+
+    }
+    render(){
+        return <textarea onChange={this.props.onChange} name={this.props.name} id="editor" ref="wysiwygArea" value={this.props.value}>
+
+        </textarea>
+    }
+}
 
 class WysiwygTemplater extends React.Component{
     constructor(props){
@@ -56,4 +80,4 @@ class WysiwygTemplater extends React.Component{
 
 }
 
-export {Wysiwyg, WysiwygTemplater};
+export {Wysiwyg, WysiwygRedux, WysiwygTemplater};
