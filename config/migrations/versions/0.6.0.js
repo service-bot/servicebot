@@ -26,11 +26,12 @@ module.exports = {
                 return Promise.all(propUpdates);
 
             }).then(properties => {
-
                 return knex.schema.alterTable("service_template_properties", t => {
                     t.dropColumns("prop_values", "prop_input_type");
                 }).alterTable("properties", t => {
                     t.dropColumn("value");
+                }).alterTable("charge_items", t => {
+                    t.dropColumn("subscription_id");
                 })
 
             })
@@ -42,6 +43,8 @@ module.exports = {
                 t.specificType('prop_values', 'text[]');
             }).alterTable("properties", t => {
                 t.string("value");
+            }).alterTable("charge_items", t => {
+                t.string("subscription_id");
             }).then(props => {
                 return knex("properties").where(true, true)
             }).then(props => {

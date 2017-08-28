@@ -237,7 +237,7 @@ class ServiceInstance extends React.Component {
     }
 
     getAdditionalCharges(myInstance, myInstanceChargeItems) {
-        if(myInstance.status != 'cancelled') {
+        if(myInstance.status !== 'cancelled' || myInstance.status !== 'requested') {
             if (myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) {
                 return (
                     <div id="service-instance-waiting" className="row">

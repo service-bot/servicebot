@@ -178,41 +178,26 @@ ServiceInstance.prototype.subscribe = function (callback) {
                 });
             });
         }).then(function (updated_instance) {
-            //This section is for the one_time services. There will be a new charge added and paid on the spot.
-            return new Promise(function (resolve, reject) {
-                ServiceTemplates.findOne('id', self.data.service_id, function (template) {
-                    if(template.data.type == 'one_time') {
-                        return resolve(template.data);
-                    } else {
-                        return resolve(false);
-                    }
-                });
-            }).then(function (template) {
-                return new Promise(function (resolve, reject) {
-                    if(template) {
-                        let charge_obj = {
-                            'user_id': self.get('user_id'),
-                            'service_instance_id': self.get('id'),
-                            'subscription_id': self.get('subscription_id'),
-                            'currency': self.data.payment_plan.currency,
-                            'amount': template.amount,
-                            'description': 'Service One-Time Price'
-                        };
-                        let charge = new Charges(charge_obj);
-                        charge.create(function (err, charge_item) {
-                            if(!err) {
-                                charge_item.approve(function (result) {
+            return new Promise(function (resolveAll, rejectAll) {
+                Charges.findAll('service_instance_id', self.data.id, function (charges) {
+                    Promise.all(charges.map(charge => {
+                        return new Promise(function(resolve, reject){
+                            charge.approve(function (err, result) {
+                                if(!err) {
                                     return resolve(updated_instance);
-                                });
-                            } else {
-                                return reject(err);
-                            }
-                        });
-                    } else {
-                        return resolve(updated_instance);
-                    }
+                                } else {
+                                    return reject(err);
+                                }
+                            });
+                        })
+                    })).then(function(){
+                        resolveAll(updated_instance);
+                    }).catch(function(err){
+                        console.error(err);
+                        rejectAll(err);
+                    });
                 });
-            })
+            });
         }).then(function (updated_instance) {
             //todo: move this piece out of model layer into route layer
             dispatchEvent("service_instance_subscribed", updated_instance);
@@ -317,7 +302,7 @@ ServiceInstance.prototype.approveAllCharges = function (callback) {
     let self = this;
     self.getAllAwaitingCharges(function(all_charges){
         callback(all_charges.map(function(charge){
-            charge.approve(function (result) {});
+            charge.approve(function (err, result) {});
         }));
     });
 };
