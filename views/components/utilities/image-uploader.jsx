@@ -20,7 +20,8 @@ class ImageUploader extends React.Component {
             loadingImage: false,
             success: false,
             image: true,
-            imageFailed: false
+            imageFailed: false,
+            imageChanged : false
         };
 
         console.log("image url", this.props.imageURL);
@@ -32,15 +33,19 @@ class ImageUploader extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
-        console.log("this image url", this.props.imageURL);
-        console.log("next image url", nextProps.imageURL);
         if(nextProps.imageURL != this.state.imageURL){
             this.setState({
                 imageURL: nextProps.imageURL
             });
         }
-        if(nextProps.uploadTrigger){
-            console.log("got upload trigger = true", nextProps.uploadTrigger);
+        if(this.props.uploadTrigger != nextProps.uploadTrigger){
+            if(!this.state.imageChanged){
+                if(this.props.handleSuccess){
+                    return this.props.handleSuccess();
+                }else{
+                    return;
+                }
+            }
             this.handleImage();
         }
     }
@@ -58,7 +63,7 @@ class ImageUploader extends React.Component {
 
         fileReader.addEventListener("load", function () {
             targetImg.src = fileReader.result;
-            self.setState({loadingImage: false, imageSelected: true, image: true}, function () {
+            self.setState({loadingImage: false, imageSelected: true, image: true, imageChanged : true}, function () {
                 targetImg.classList.remove("no-image-yet");
             });
         }, false);
@@ -95,6 +100,7 @@ class ImageUploader extends React.Component {
     }
 
     handleImage(e){
+        console.log("WE CALLED IT BOIS")
         if(e != undefined)
             e.preventDefault();
         let self = this;
@@ -128,7 +134,7 @@ class ImageUploader extends React.Component {
         Fetcher(self.props.imageGETURL, "DELETE", null, null).then(function (response) {
             console.log("in delete image", response);
             if(!response.error){
-                self.setState({hasImage: false, image: false});
+                self.setState({hasImage: false, image: false, imageChanged : true});
             }
         }).catch(e => {console.error("error removing img", e)});
 
