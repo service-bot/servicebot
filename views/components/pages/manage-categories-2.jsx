@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
+import Load from "../utilities/load.jsx";
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import DataTable from "../elements/datatable/datatable.jsx";
@@ -9,13 +10,15 @@ import ContentTitle from "../layouts/content-title.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import ModalAddCategory from "../elements/modals/modal-add-category.jsx";
 import ModalDeleteCategory from "../elements/modals/modal-delete-category.jsx";
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import {BootstrapTable, TableHeaderColumn, SearchField} from 'react-bootstrap-table';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import Fetcher from '../utilities/fetcher.jsx';
+import {ServiceBotTableSearch, ServiceBotTableSearchResetButton} from '../elements/bootstrap-tables/servicebot-table-search.jsx';
+import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
 
 class ManageCategories2 extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -23,7 +26,8 @@ class ManageCategories2 extends React.Component {
             openDeleteCategoryModal: false,
             currentDataObject: {},
             lastFetch: Date.now(),
-            loading: true
+            loading: true,
+            advancedFilter: null,
         };
 
         this.openAddCategoryModal = this.openAddCategoryModal.bind(this);
@@ -36,71 +40,59 @@ class ManageCategories2 extends React.Component {
         this.rowActionsFormatter = this.rowActionsFormatter.bind(this);
     }
 
-    componentDidMount(){
-        if(!isAuthorized({permissions:"can_administrate"})){
+    componentDidMount() {
+        if (!isAuthorized({permissions: "can_administrate"})) {
             return browserHistory.push("/login");
         }
-
         this.fetchData();
-
     }
 
-    openAddCategoryModal(dataObject){
+    fetchData() {
         let self = this;
-        return function(e) {
-            // console.log("clicked on unpub button", dataObject);
-            e.preventDefault();
-            self.setState({ openAddCategoryModal: true, currentDataObject: dataObject });
-        }
-    }
-    closeAddCategoryModal(){
-        this.setState({ openAddCategoryModal: false, currentDataObject: {}, lastFetch: Date.now()});
+        let url = '/api/v1/service-categories';
+        //todo: Can refactgor to reuse a fetch function as for the search
+        Fetcher(url).then(function (response) {
+            console.log("response", response);
+            if (!response.error) {
+                self.setState({rows: response});
+            }
+            self.setState({loading: false});
+            console.log(self.state);
+        });
     }
 
-    openEditCategoryModal(row){
+    openAddCategoryModal() {
+        console.log("abs");
+        this.setState({openAddCategoryModal: true,});
+    }
+
+    closeAddCategoryModal() {
+        this.setState({openAddCategoryModal: false});
+    }
+
+    openEditCategoryModal(row) {
         console.log(row);
         let self = this;
 
-        self.setState({ openEditCategoryModal: true, currentDataObject: row });
-    }
-    closeEditCategoryModal(){
-        this.fetchData();
-        this.setState({ openEditCategoryModal: false, currentDataObject: {}, lastFetch: Date.now()});
+        self.setState({openEditCategoryModal: true, currentDataObject: row});
     }
 
-    openDeleteCategoryModal(dataObject){
+    closeEditCategoryModal() {
+        this.fetchData();
+        this.setState({openEditCategoryModal: false, currentDataObject: {}, lastFetch: Date.now()});
+    }
+
+    openDeleteCategoryModal(dataObject) {
         let self = this;
         return function (e) {
             e.preventDefault();
-            console.log("dataobject",dataObject);
+            console.log("dataobject", dataObject);
             self.setState({openDeleteCategoryModal: true, currentDataObject: dataObject});
         }
     }
-    closeDeleteCategoryModal(){
-        this.setState({openDeleteCategoryModal: false,  currentDataObject: {}, lastFetch: Date.now()});
-    }
 
-    onAfterInsertRow(row) {
-        alert('This will call an API to insert a row into the database');
-    }
-
-    afterSearch(searchText, result) {
-        console.log('Your search text is ' + searchText);
-        console.log('Result is:');
-        for (let i = 0; i < result.length; i++) {
-            console.log('Fruit: ' + result[i].id + ', ' + result[i].name + ', ' + result[i].price);
-        }
-    }
-    onAfterDeleteRow(rowKeys) {
-        alert('The rowkey you drop: ' + rowKeys);
-    }
-    customConfirm(next, dropRowKeys) {
-        const dropRowKeysStr = dropRowKeys.join(',');
-        if (confirm(`(It's a custom confirm)Are you sure you want to delete ${dropRowKeysStr}?`)) {
-            // If the confirmation is true, call the function that
-            // continues the deletion of the record.
-            next();
-        }
+    closeDeleteCategoryModal() {
+        this.setState({openDeleteCategoryModal: false, currentDataObject: {}, lastFetch: Date.now()});
     }
 
     priceFormatter(cell, row) {
@@ -110,62 +102,39 @@ class ManageCategories2 extends React.Component {
     rowActionsFormatter(cell, row) {
         let self = this;
         return (
-            <button onClick={()=>{self.openEditCategoryModal(row)}}>Edit</button>
+            <button className="btn btn-rounded btn-default" onClick={() => {
+                self.openEditCategoryModal(row)
+            }}>Edit</button>
         )
     }
 
-    fetchData(){
-        let self = this;
-        let url = '/api/v1/service-categories';
-        //todo: Can refactgor to reuse a fetch function as for the search
-        Fetcher(url).then(function(response){
-            console.log("response", response);
-            if(!response.error){
-                self.setState({resObjs : response});
-            }
-            self.setState({loading:false});
-            console.log(self.state);
-        });
-    }
-
-    render () {
+    render() {
         let pageName = this.props.route.name;
-        let breadcrumbs = [{name:'Home', link:'home'},{name:'My Services', link:'/my-services'},{name:pageName, link:null}];
 
-        let getModals = ()=> {
-            if(this.state.openAddCategoryModal){
+        let renderModals = () => {
+            if (this.state.openAddCategoryModal) {
                 return (
                     <ModalAddCategory show={this.state.openAddCategoryModal} hide={this.closeAddCategoryModal}/>
                 )
             }
-            if(this.state.openEditCategoryModal){
+            if (this.state.openEditCategoryModal) {
                 return (
-                    <ModalAddCategory id={this.state.currentDataObject.id} show={this.state.openEditCategoryModal} hide={this.closeEditCategoryModal}/>
+                    <ModalAddCategory id={this.state.currentDataObject.id} show={this.state.openEditCategoryModal}
+                                      hide={this.closeEditCategoryModal}/>
                 )
             }
-            if(this.state.openDeleteCategoryModal){
+            if (this.state.openDeleteCategoryModal) {
                 return (
-                    <ModalDeleteCategory id={this.state.currentDataObject.id} show={this.state.openDeleteCategoryModal} hide={this.closeDeleteCategoryModal}/>
+                    <ModalDeleteCategory id={this.state.currentDataObject.id} show={this.state.openDeleteCategoryModal}
+                                         hide={this.closeDeleteCategoryModal}/>
                 )
             }
         };
 
-        if(this.state.loading){
-            return( <div><p>'loading'</p></div>);
-        }else {
+        if (this.state.loading) {
+            return ( <Load/> );
+        } else {
 
-            let rows = this.state.resObjs;
-            const selectRowProp = {
-                mode: 'checkbox'
-            };
-
-            const options = {
-                afterInsertRow: this.onAfterInsertRow,   // A hook for after insert rows
-                handleConfirmDeleteRow: this.customConfirm,
-                afterDeleteRow: this.onAfterDeleteRow,
-                afterSearch: this.afterSearch,
-                clearSearch: true,
-            };
             return (
                 <Authorizer permissions="can_administrate">
                     <Jumbotron pageName={pageName} location={this.props.location}/>
@@ -173,92 +142,42 @@ class ManageCategories2 extends React.Component {
                         <Content>
                             <div className="row m-b-20">
                                 <div className="col-xs-12">
-                                    <ContentTitle icon="cog" title="Manage all your users here"/>
-                                    <div className="row pull-right p-b-15 p-r-15">
-                                        <Dropdown name="Actions" direction="right"
-                                                  dropdown={[
-                                                      {
-                                                          id: 'addnewcategory',
-                                                          name: 'Add New Category',
-                                                          link: '#',
-                                                          onClick: this.openAddCategoryModal
-                                                      }
-                                                  ]}/>
-                                    </div>
-
-
-                                    <BootstrapTable data={rows}
-                                                    insertRow={ true }
-                                                    deleteRow={ true }
-                                                    selectRow={ selectRowProp }
-                                                    exportCSV={ true }
-                                                    search={ true }
-                                                    options={ options }
-                                                    striped
-                                                    hover
-                                                    lastFatch={this.lastFetch}
+                                    <ServiceBotTableBase
+                                        tableTitle="Manage Products / Services"
+                                        rows={this.state.rows}
+                                        createItem={this.openAddCategoryModal}
                                     >
                                         <TableHeaderColumn isKey
                                                            dataField='id'
                                                            dataSort={ true }
-                                                           filter={ {type: 'TextFilter', delay: 100} }>
-                                            Product ID
+                                                           width= {100} >
+                                            ID
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='name'
                                                            dataSort={ true }
-                                                           filter={ {type: 'TextFilter', delay: 100} }>
+                                                           width= {300}>
                                             Name
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataSort={ true }
-                                                           dataField='description'
-                                                           filter={ {type: 'TextFilter', delay: 100} }>
+                                                           dataField='description'>
                                             Description
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataSort={ true }
                                                            dataField='created_at'
                                                            dataFormat={ this.priceFormatter }
-                                                           filter={ {type: 'TextFilter', delay: 100} }>
+                                                           width= {350}>
                                             Created At
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='Actions'
-                                                           dataFormat={ this.rowActionsFormatter }>
+                                                           dataFormat={ this.rowActionsFormatter }
+                                                           width= {130}
+                                                           filter={false}>
                                             Actions
                                         </TableHeaderColumn>
-                                    </BootstrapTable>
-
-
-                                    {/*<DataTable get="/api/v1/service-categories"*/}
-                                               {/*col={['id', 'name', 'description', 'created_at', 'updated_at']}*/}
-                                               {/*colNames={['', 'Name', 'Description', 'Created At', 'Updated At']}*/}
-                                               {/*mod_created_at={this.modCreated}*/}
-                                               {/*mod_updated_at={this.modCreated}*/}
-                                               {/*lastFetch={this.state.lastFetch}*/}
-                                               {/*dropdown={*/}
-                                                   {/*[{*/}
-                                                       {/*name: 'Actions',*/}
-                                                       {/*direction: 'right',*/}
-                                                       {/*buttons: [*/}
-                                                           {/*{*/}
-                                                               {/*id: 1,*/}
-                                                               {/*name: 'Edit Category',*/}
-                                                               {/*link: '#',*/}
-                                                               {/*onClick: this.openEditCategoryModal*/}
-                                                           {/*},*/}
-                                                           {/*{*/}
-                                                               {/*id: 2,*/}
-                                                               {/*name: 'Delete Category',*/}
-                                                               {/*link: '#',*/}
-                                                               {/*onClick: this.openDeleteCategoryModal,*/}
-                                                               {/*style: {color: "#ff3535"}*/}
-                                                           {/*},*/}
-                                                       {/*]*/}
-                                                   {/*}*/}
-                                                   {/*]*/}
-                                               {/*}*/}
-                                    {/*/>*/}
+                                    </ServiceBotTableBase>
                                 </div>
                             </div>
-                            {getModals()}
+                            {renderModals()}
                         </Content>
                     </div>
                 </Authorizer>

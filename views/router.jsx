@@ -126,7 +126,7 @@ let AppRouter = function(props) {
                     <Route name="Edit User" path="manage-users/:userId" components={UserEdit}/>
                     <Route name="Manage Subscriptions" path="manage-subscriptions" component={ManageSubscriptions}/>
                     <Route name="Manage Categories" path="manage-categories" component={ManageCategories}/>
-                    <Route name="Manage Categories 2" path="manage-categories-2" component={ManageCategories2}/>
+                    <Route name="Manage Categories" path="manage-categories-2" component={ManageCategories2}/>
                     <Route name="Manage Permission" path="manage-permission" component={ManagePermission}/>
                     <Route name="Manage Notification Templates" path="notification-templates" components={ManageNotificationTemplates}/>
                     <Route name="Notification Template" path="notification-templates/:id" component={NotificationTemplateForm}/>
