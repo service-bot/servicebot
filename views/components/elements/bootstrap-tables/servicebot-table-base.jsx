@@ -134,6 +134,7 @@ class ServiceBotTableBase extends React.Component {
                                 selectRow={ false }
                                 exportCSV={ true }
                                 search={ true }
+                                multiColumnSearch={true}
                                 striped
                                 hover
                                 pagination
