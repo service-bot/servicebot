@@ -8,8 +8,9 @@ import {Link, browserHistory} from 'react-router';
 To use ServiceBot Base Form:
 Inputs->
 *form - A redux-form
-*initalRequests - an Array of request object. The first request will be the main request object which will be up into
-    the redux-form initialValues. All other requests should have a name formatted with a leading _ to avoid collisions. Ex:
+*initialValues - an object with the initial values of the form. will be overrode by values from initialRequests
+*initialRequests - an Array of request object. All entries without a name value will be added to the redux-form initialValues highest level.
+ All other requests should have a name formatted with a leading _ to avoid collisions. Ex:
     const initialRequests = [
         {'method': 'GET', 'url': `/api/v1/service-templates/1`},
         {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
@@ -37,7 +38,8 @@ class ServiceBotBaseForm extends React.Component {
             initialRequests: this.props.initialRequests,
             submissionRequest: this.props.submissionRequest,
             successMessage: this.props.successMessage,
-            failureRoute: (this.props.failureRoute || "/")
+            failureRoute: (this.props.failureRoute || "/"),
+            initialValues: this.props.initialValues || {}
         };
         this.submitForm = this.submitForm.bind(this);
 
@@ -83,10 +85,11 @@ class ServiceBotBaseForm extends React.Component {
                     }
                 });
                 if(!hasError){
-                    let requestValues = {};
+                    let requestValues = self.state.initialValues;
                     for (let i = 0; i < values.length; i++) {
-                        if(i==0 && !self.state.initialRequests[0].name){
-                            requestValues = values[0];
+                        if(!self.state.initialRequests[0].name){
+                            //requestValues = values[0];
+                            Object.assign(requestValues, values[i])
                         }
                         else {
                             let objectName = self.state.initialRequests[i].name;

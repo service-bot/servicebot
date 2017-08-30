@@ -140,7 +140,9 @@ let FieldLevelValidationForm = (props) => {
 
         <form onSubmit={handleSubmit}>
             <h3>Basic Info</h3>
-
+            <pre>
+                {JSON.stringify(formJSON, null, 2)}
+            </pre>
             <Field name="name" type="text"
                    component={renderField} label="Service Name"
                    validate={[required, maxLength15]}
@@ -262,6 +264,7 @@ class ServiceTemplateForm extends React.Component {
         });
     }
     render () {
+        let initialValues = {};
         let initialRequests = [];
         let submissionRequest = {};
         let successMessage = "Template Updated";
@@ -291,6 +294,10 @@ class ServiceTemplateForm extends React.Component {
             }
         }
         else{
+            initialValues = {
+                type : 'subscription',
+                category_id : 1
+            };
             initialRequests.push(
                 {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
             );
@@ -328,6 +335,7 @@ class ServiceTemplateForm extends React.Component {
 
                 <ServiceBotBaseForm
                     form = {FieldLevelValidationForm}
+                    initialValues = {initialValues}
                     initialRequests = {initialRequests}
                     submissionRequest = {submissionRequest}
                     successMessage = {successMessage}
