@@ -2,19 +2,17 @@ import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Load from "../utilities/load.jsx";
+import Fetcher from '../utilities/fetcher.jsx';
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import DataTable from "../elements/datatable/datatable.jsx";
-import Dropdown from "../elements/datatable/datatable-dropdown.jsx";
+import Dropdown from "../elements/dropdown.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import ModalAddCategory from "../elements/modals/modal-add-category.jsx";
 import ModalDeleteCategory from "../elements/modals/modal-delete-category.jsx";
-import {BootstrapTable, TableHeaderColumn, SearchField} from 'react-bootstrap-table';
-import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-import Fetcher from '../utilities/fetcher.jsx';
-import {ServiceBotTableSearch, ServiceBotTableSearchResetButton} from '../elements/bootstrap-tables/servicebot-table-search.jsx';
 import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
+import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 
 class ManageCategories2 extends React.Component {
 
@@ -67,14 +65,12 @@ class ManageCategories2 extends React.Component {
     }
 
     closeAddCategoryModal() {
+        this.fetchData();
         this.setState({openAddCategoryModal: false});
     }
 
     openEditCategoryModal(row) {
-        console.log(row);
-        let self = this;
-
-        self.setState({openEditCategoryModal: true, currentDataObject: row});
+        this.setState({openEditCategoryModal: true, currentDataObject: row});
     }
 
     closeEditCategoryModal() {
@@ -82,16 +78,12 @@ class ManageCategories2 extends React.Component {
         this.setState({openEditCategoryModal: false, currentDataObject: {}, lastFetch: Date.now()});
     }
 
-    openDeleteCategoryModal(dataObject) {
-        let self = this;
-        return function (e) {
-            e.preventDefault();
-            console.log("dataobject", dataObject);
-            self.setState({openDeleteCategoryModal: true, currentDataObject: dataObject});
-        }
+    openDeleteCategoryModal(row) {
+        this.setState({openDeleteCategoryModal: true, currentDataObject: row});
     }
 
     closeDeleteCategoryModal() {
+        this.fetchData();
         this.setState({openDeleteCategoryModal: false, currentDataObject: {}, lastFetch: Date.now()});
     }
 
@@ -101,11 +93,17 @@ class ManageCategories2 extends React.Component {
 
     rowActionsFormatter(cell, row) {
         let self = this;
+
         return (
-            <button className="btn btn-rounded btn-default" onClick={() => {
-                self.openEditCategoryModal(row)
-            }}>Edit</button>
-        )
+            <Dropdown
+                direction="right"
+                dropdown={[
+                    { type: "button", label: "Edit", action: () => {self.openEditCategoryModal(row)}, },
+                    { type: "divider" },
+                    { type: "button", label: "Delete", action: () => {self.openDeleteCategoryModal(row)}, },
+                ]}
+            />
+        );
     }
 
     render() {
@@ -143,20 +141,20 @@ class ManageCategories2 extends React.Component {
                             <div className="row m-b-20">
                                 <div className="col-xs-12">
                                     <ServiceBotTableBase
-                                        tableTitle="Manage Products / Services"
                                         rows={this.state.rows}
                                         createItem={this.openAddCategoryModal}
+                                        fetchRows={this.fetchData}
                                     >
                                         <TableHeaderColumn isKey
                                                            dataField='id'
                                                            dataSort={ true }
-                                                           width= {100} >
+                                                           width={100}>
                                             ID
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='name'
                                                            dataSort={ true }
-                                                           width= {300}>
-                                            Name
+                                                           width={300}>
+                                            Category Name
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataSort={ true }
                                                            dataField='description'>
@@ -165,14 +163,16 @@ class ManageCategories2 extends React.Component {
                                         <TableHeaderColumn dataSort={ true }
                                                            dataField='created_at'
                                                            dataFormat={ this.priceFormatter }
-                                                           width= {350}>
-                                            Created At
+                                                           width={350}>
+                                            Created
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='Actions'
+                                                           className={'action-column-header'}
+                                                           columnClassName={'action-column'}
                                                            dataFormat={ this.rowActionsFormatter }
-                                                           width= {130}
+                                                           width={130}
                                                            filter={false}>
-                                            Actions
+
                                         </TableHeaderColumn>
                                     </ServiceBotTableBase>
                                 </div>

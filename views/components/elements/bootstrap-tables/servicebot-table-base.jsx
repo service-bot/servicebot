@@ -16,6 +16,7 @@ class ServiceBotTableBase extends React.Component {
         this.toggleColumnFilter = this.toggleColumnFilter.bind(this);
         this.renderCustomButtonGroup = this.renderCustomButtonGroup.bind(this);
         this.customColumns = this.customColumns.bind(this);
+        this.onAfterInsertRow = this.onAfterInsertRow.bind(this);
     }
 
     toggleColumnFilter() {
@@ -58,15 +59,8 @@ class ServiceBotTableBase extends React.Component {
         )
     };
 
-    renderPaginationPanel(props) {
-        return (
-            <div className="react-bs-table-pagination">
-                <div className="col-md-12">{ props.components.pageList }</div>
-            </div>
-        );
-    }
-
     onAfterInsertRow(row) {
+        this.props.fetchRows();
         alert('This will call an API to insert a row into the database');
     }
 
@@ -83,7 +77,7 @@ class ServiceBotTableBase extends React.Component {
         }
     }
 
-    customColumns(children){
+    customColumns(children) {
         let self = this;
 
         const customChildren = React.Children.map(children,
@@ -93,6 +87,22 @@ class ServiceBotTableBase extends React.Component {
         );
 
         return customChildren;
+    }
+
+    renderSizePerPageDropDown(props) {
+        return (
+            <div className='btn-group'>
+                {
+                    [25, 50, 100].map((n, idx) => {
+                        const isActive = (n === props.currSizePerPage) ? 'active' : null;
+                        return (
+                            <button key={ idx } type='button' className={ `btn btn-default ${isActive}` }
+                                    onClick={ () => props.changeSizePerPage(n) }>{ n }</button>
+                        );
+                    })
+                }
+            </div>
+        );
     }
 
     render() {
@@ -109,14 +119,8 @@ class ServiceBotTableBase extends React.Component {
             searchPanel: (props) => (<ServiceBotTableSearch { ...props } toggleAdvanced={this.toggleColumnFilter}/>),
             searchField: (props) => (<ServiceBotSearchField { ...props }/>),
             exportCSVBtn: this.renderExportCSVButton,
-            sizePerPageList: [ {
-                text: '5', value: 5
-            }, {
-                text: '10', value: 10
-            }, {
-                text: 'All', value: rows.length
-            } ], // you can change the dropdown list for size per page
-            sizePerPage: 5,
+            sizePerPageDropDown: this.renderSizePerPageDropDown,
+            sizePerPage: 50,
             prePage: 'Prev', // Previous page button text
             nextPage: 'Next', // Next page button text
             firstPage: 'First', // First page button text
