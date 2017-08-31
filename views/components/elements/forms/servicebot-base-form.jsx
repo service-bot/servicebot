@@ -106,7 +106,7 @@ class ServiceBotBaseForm extends React.Component {
             })
         }
         else{
-            self.setState({loading: false, initialValues: {}});
+            self.setState({loading: false});
         }
     }
 

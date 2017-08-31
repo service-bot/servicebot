@@ -8,6 +8,8 @@ import Fetcher from "../utilities/fetcher.jsx"
 import {Price} from "../utilities/price.jsx";
 import { connect } from 'react-redux';
 let _ = require("lodash");
+import IconHeading from "../layouts/icon-heading.jsx";
+
 
 
 class ServiceRequest extends React.Component {
@@ -127,7 +129,13 @@ class ServiceRequest extends React.Component {
                     </Featured>
                     <Content>
                         <PageSection>
-                            <ServiceRequestForm templateId={this.state.id}/>
+                            <div className="basic-info col-md-6">
+                                <div className="service-request-details">
+                                    <IconHeading imgIcon="/assets/custom_icons/what_you_are_getting_icon.png" title="What you are getting"/>
+                                    <div dangerouslySetInnerHTML={{__html: this.state.service.details}}/>
+                                </div>
+                            </div>
+                            <ServiceRequestForm templateId={this.state.id} service={this.state.service}/>
                         </PageSection>
                     </Content>
                 </div>
