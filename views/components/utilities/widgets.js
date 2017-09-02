@@ -1,47 +1,65 @@
 import React from "react";
-import {Field} from "redux-form";
+import {Field, FormSection} from "redux-form";
 import TagsInput from "react-tagsinput"
-
-
-let SelectWidget = (props) => {
-    let {input, configValue} = props;
+import widgets from "../../../input_types/widgets";
+var values = require('object.values');
+if (!Object.values) {
+    values.shim();
+}
+let PriceOperation = (props) => {
+    let {input} = props;
     return (<select {...input}>
-        { configValue && configValue.map((option, index) =>  <option key={index} value={option}>{option}</option>)}
+        <option value="add">Add</option>
+        <option value="subtract">Subtract</option>
+        <option value="divide">Percent Decrease</option>
+        <option value="multiply">Percent Increase</option>
     </select>)
 };
 
-let Text = (props) => {
-    return <input {...props.input} type="text"/>
-};
-let Checkbox = (props) => {
-    return <input {...props.input} type="checkbox"/>
-};
-let Tags = (props) => {
-    return  <TagsInput  {...props.input} value={props.input.value || []}/>
-};
-
-
-
-const widgets = [
-    {widget : Text, type : "text", label : "Text"},
-    {widget : Checkbox, type : "checkbox", label : "Checkbox"},
-    {widget : SelectWidget, type : "select", label : "Select", config : Tags}
-];
 
 
 
 const RenderWidget = (props) => {
     const {member, widgetType, configValue, defaultWidgetValue} = props;
-    const widget = widgets.filter(w => w.type == widgetType)[0];
+    const widget = widgets[widgetType];
 
     return (<div>
-        {widget.config && <Field name={`${member}.config`} component={widget.config}/>}
+        <FormSection name={`${member}.config`}>
+            {widget.config && <Field name={`value`} component={widget.config}/>}
+            {widget.pricing &&
+            <div>
+                <FormSection name={`pricing`}>
+                    <Field name={`value`} configValue={configValue} component={widget.pricing}/>
+                    <Field name="operation" component={PriceOperation}/>
+                </FormSection>
+            </div>}
+
+        </FormSection>
         <br/>
         <label>Default Value</label>
-        {widget.widget && <Field name={`${member}.value`} configValue={configValue} component={widget.widget}/>}
+        {widget.widget && <Field name={`${member}.data.value`} configValue={configValue} component={widget.widget}/>}
     </div>)
 }
 
+const PriceBreakdown = (props) => {
+    const { inputs } = props
+
+    var breakdown = inputs.reduce((acc, input) => {
+        console.log(input, "INPUT!");
+        if(input.config && input.config.pricing && widgets[input.type].handler.priceHandler) {
+            acc.push(<div>{input.prop_label} - {input.config.pricing.operation}
+                - {widgets[input.type].handler.priceHandler(input.data, input.config)}</div>);
+        }
+        return acc;
+    }, [])
+
+    if (breakdown.length == 0){
+        breakdown =  <div></div>
+    }
+    return <div>
+        {breakdown}
+    </div>
+}
 
 
 
@@ -49,7 +67,7 @@ const RenderWidget = (props) => {
 
 let WidgetList = props => (<Field name={props.name} id={props.name} component="select">
     <option />
-    {widgets.map((widget, index) => <option key={index} value={widget.type}>{widget.label}</option>)}
+    {Object.values(widgets).map((widget, index) => <option key={index} value={widget.type}>{widget.label}</option>)}
 </Field>);
 
-export {RenderWidget, WidgetList, widgets, SelectWidget}
+export {RenderWidget, WidgetList, PriceBreakdown, widgets}

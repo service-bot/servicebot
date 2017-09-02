@@ -9,9 +9,13 @@ module.exports = function(router) {
      */
     router.post("/charge/:id/approve", validate(Charge, "id"), auth(null, Charge), function(req, res) {
         charge_item = res.locals.valid_object;
-        charge_item.approve(function (result) {
-            EventLogs.logEvent(req.user.get('id'), `charge ${req.params.id} was approved by user ${req.user.get('email')}`);
-            res.json(result);
+        charge_item.approve(function (err, result) {
+            if(!err) {
+                EventLogs.logEvent(req.user.get('id'), `charge ${req.params.id} was approved by user ${req.user.get('email')}`);
+                res.json(result);
+            } else {
+                res.json({error: err})
+            }
         });
     });
 

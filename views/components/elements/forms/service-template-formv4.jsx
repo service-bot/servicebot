@@ -4,11 +4,10 @@ import 'react-tagsinput/react-tagsinput.css';
 import './css/template-create.css';
 import { Field, Fields,  FormSection,FieldArray, reduxForm, formValueSelector, change, unregisterField, getFormValues } from 'redux-form'
 import {connect } from "react-redux";
-import { RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
+import { RenderWidget, WidgetList, PriceBreakdown, widgets} from "../../utilities/widgets";
+import RichText from "./rich-text.jsx";
 import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
 import FileUploadForm from "./file-upload-form.jsx";
-
-
 
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 
@@ -37,7 +36,7 @@ let CustomField =  (props) => {
                 type="text"
                 component={renderField}
                 label="Label"/>
-            <WidgetList name={`${member}.prop_input_type`} id="prop_input_type"/>
+            <WidgetList name={`${member}.type`} id="type"/>
 
             {typeValue && <RenderWidget
                 member={member}
@@ -71,7 +70,7 @@ let CustomField =  (props) => {
 CustomField = connect((state, ownProps) => {
     return {
         "privateValue" : selector(state, "references.service_template_properties")[ownProps.index].private,
-        "typeValue" : selector(state, "references.service_template_properties")[ownProps.index].prop_input_type,
+        "typeValue" : selector(state, "references.service_template_properties")[ownProps.index].type,
         "configValue" : selector(state, `references.service_template_properties`)[ownProps.index].config,
         "myValues" : selector(state, `references.${ownProps.member}`)
 
@@ -135,7 +134,8 @@ let FieldLevelValidationForm = (props) => {
         }
     };
 
-    const { handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON, content } = props;
+
+    const { handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON } = props;
     return (
 
         <form onSubmit={handleSubmit}>
@@ -155,6 +155,10 @@ let FieldLevelValidationForm = (props) => {
                    component={WysiwygRedux} label="Service Details"
                    validate={[required]}
             />
+
+
+
+
             <Field name="published" type="checkbox"
                    component={renderField} label="Published?"
             />
@@ -208,6 +212,7 @@ let FieldLevelValidationForm = (props) => {
             <FormSection name="references">
                 <FieldArray name="service_template_properties" component={renderCustomProperty}/>
             </FormSection>
+            {props.formJSON.references && props.formJSON.references.service_template_properties && <PriceBreakdown inputs={props.formJSON.references.service_template_properties}/>}
             <div id="service-submission-box" className="button-box right">
                 <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>Go Back</Link>
                 <button className="btn btn-rounded btn-primary" type="submit" value="submit">Submit</button>

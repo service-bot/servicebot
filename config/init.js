@@ -250,7 +250,9 @@ module.exports = function (initConfig) {
             }).createTable('properties', function (table) {
                 table.increments();
                 table.string('name');
-                table.string('value');
+                table.string('type');
+                table.jsonb('data');
+                table.jsonb('config');
                 table.string('prop_class');
                 table.string('prop_label');
                 table.string('prop_description');
@@ -265,8 +267,6 @@ module.exports = function (initConfig) {
                 table.boolean('private').defaultTo(false);
                 table.boolean('prompt_user').defaultTo(true);
                 table.boolean('required').defaultTo(false);
-                table.string('prop_input_type');
-                table.specificType('prop_values', 'text[]');
                 table.timestamps(true, true);
                 console.log("Created 'service_template_properties' table.");
 
