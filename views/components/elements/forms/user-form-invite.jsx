@@ -6,7 +6,7 @@ import {setUid, fetchUsers, setUser} from "../../utilities/actions";
 import {connect} from "react-redux";
 import cookie from 'react-cookie';
 import Inputs from '../../utilities/inputs.jsx';
-let _ = require("lodash");
+import Alerts from '../alerts.jsx';
 
 class UserFormInvite extends React.Component {
 
@@ -24,15 +24,39 @@ class UserFormInvite extends React.Component {
     }
 
     handleResponse(response) {
+        let self = this;
+        self.setState({
+            loading : true
+        });
+        //Get the response
         if (!response.error) {
             localStorage.setItem("permissions", response.permissions);
             this.props.setUid(cookie.load("uid"));
             this.props.setUser(cookie.load("uid"));
-            this.setState({success: true});
-            if (this.props.location.state && this.props.location.state.fromLogin) {
-                return browserHistory.go(-2);
+            this.setState({
+                success: true,
+                loading: false,
+                alerts: {
+                    type: 'success',
+                    icon: 'times',
+                    message: 'You have successfully completed your account creation.'
+                }
+            });
+            //If the user has admin rights, forward to dashboard, else to my services
+            if(response.permissions.includes("can_adminstrate") || response.permissions.includes("can_manage")) {
+                browserHistory.push('/dashboard');
+            } else {
+                browserHistory.push('/my-services');
             }
-            browserHistory.goBack();
+        } else {
+            self.setState({
+                loading: false,
+                alerts: {
+                    type: 'danger',
+                    icon: 'times',
+                    message: response
+                }
+            });
         }
     }
 
@@ -52,18 +76,21 @@ class UserFormInvite extends React.Component {
     }
 
     render() {
-
+        var self = this;
+        let getAlerts = ()=>{
+            if(self.state.alerts){
+                return ( <Alerts type={self.state.alerts.type} message={self.state.alerts.message}
+                                 position={{position: 'fixed', bottom: true}} icon={self.state.alerts.icon} /> );
+            }
+        };
         if (this.state.loading) {
             return ( <Load/> );
-        } else if (this.state.success) {
-            browserHistory.goBack();
         } else {
             //TODO: Add validation functions and pass into DataForm as props
             return (
                 <div className="sign-up">
-                    {/*<span>test {this.state.token}</span>*/}
+                    {getAlerts()}
                     <DataForm validators={this.getValidators()} handleResponse={this.handleResponse} url={this.state.url} method={'POST'}>
-
                         <div>
                             <h3 className="m-b-20">Finish Your Invitation</h3>
                             <p>Please enter your information to finish the invitation</p>
