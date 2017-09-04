@@ -94,8 +94,6 @@ let AppRouter = function(props) {
                     <Route path="test-upload/:templateId" component={TestUpload}/>
                     <Route path="test-request/:templateId" component={ServiceRequestV2}/>
 
-
-
                     <Route name="Home" path="home" component={Home}/>
                     <Route name="All Services" path="all-services" component={AllServices}/>
                     <Route name="User Login" path="login" component={Login}/>

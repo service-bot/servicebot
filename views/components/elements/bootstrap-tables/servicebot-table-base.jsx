@@ -59,6 +59,22 @@ class ServiceBotTableBase extends React.Component {
         )
     };
 
+    renderSizePerPageDropDown(props) {
+        return (
+            <div className='btn-group'>
+                {
+                    [25, 50, 100].map((n, idx) => {
+                        const isActive = (n === props.currSizePerPage) ? 'active' : null;
+                        return (
+                            <button key={ idx } type='button' className={ `btn btn-default ${isActive}` }
+                                    onClick={ () => props.changeSizePerPage(n) }>{ n }</button>
+                        );
+                    })
+                }
+            </div>
+        );
+    };
+
     onAfterInsertRow(row) {
         this.props.fetchRows();
         alert('This will call an API to insert a row into the database');
@@ -87,22 +103,6 @@ class ServiceBotTableBase extends React.Component {
         );
 
         return customChildren;
-    }
-
-    renderSizePerPageDropDown(props) {
-        return (
-            <div className='btn-group'>
-                {
-                    [25, 50, 100].map((n, idx) => {
-                        const isActive = (n === props.currSizePerPage) ? 'active' : null;
-                        return (
-                            <button key={ idx } type='button' className={ `btn btn-default ${isActive}` }
-                                    onClick={ () => props.changeSizePerPage(n) }>{ n }</button>
-                        );
-                    })
-                }
-            </div>
-        );
     }
 
     render() {

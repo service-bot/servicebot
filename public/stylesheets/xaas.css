@@ -412,7 +412,26 @@ span.one-time-charge-label {
 }
 
 
+/* service template form */
+ul.custom-fields-list {
+    list-style: none;
+    padding: 0px;
+}
 
+.custom-fields-list h4 {
+    display: inline-block;
+}
+
+.custom-field-button{
+    float: right;
+}
+.custom-field-button:after{
+    content: '';
+    clear: both;
+}
+.custom-field-name{
+    padding: 10px 0px 20px;
+}
 
 /* service template form review */
 #review-content .label{

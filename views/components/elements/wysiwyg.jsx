@@ -35,11 +35,8 @@ class Wysiwyg extends React.Component {
 
 class WysiwygRedux extends React.Component {
     constructor(props){
-        super(props)
+        super(props);
         this.insert = this.insert.bind(this);
-
-        this.state = {
-        }
     }
 
     insert(content){
@@ -56,9 +53,13 @@ class WysiwygRedux extends React.Component {
 
     }
     render(){
-        return <textarea onChange={this.props.onChange} name={this.props.name} id="editor" ref="wysiwygArea" value={this.props.input.value}>
-
-        </textarea>
+        return (
+            <div>
+                {this.props.label && <label className="control-label">{this.props.label}</label>}
+            <textarea onChange={this.props.onChange} name={this.props.name} id="editor" ref="wysiwygArea" value={this.props.input.value}>
+            </textarea>
+            </div>
+        );
     }
 }
 
