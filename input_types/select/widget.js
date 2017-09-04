@@ -1,6 +1,8 @@
 import React from "react";
 import TagsInput from "react-tagsinput"
+import {priceField} from "../../views/components/elements/forms/servicebot-base-field.jsx";
 import handler from "./widgetHandler";
+import CurrencyInput from 'react-currency-input';
 
 let Tags = (props) => {
     return  <TagsInput  {...props.input} value={props.input.value || []}/>
@@ -28,11 +30,10 @@ class SelectPricing extends React.Component{
         }
     }
 
-    handleChange(e){
-        let name = e.currentTarget.name;
+    handleChange(e, maskedValue, floatvalue){
+        let name = e.target.name;
         let self = this;
-        let value = e.currentTarget.value;
-        this.setState({[name] : value}, () => {
+        this.setState({[name] : floatvalue}, () => {
             self.props.input.onChange(self.state);
         });
     }
@@ -42,14 +43,19 @@ class SelectPricing extends React.Component{
         let {input, configValue} = this.props;
         let self = this;
         console.log(configValue);
-        return <div>
-            {configValue && configValue.value && configValue.value.map((option, index) => (
-                <div>
-                <label>{option}</label>
-                <input type="number" value={self.state[option]} name={option} key={index} onChange={self.handleChange}/>
-            </div>))}
-        </div>
-
+        return (
+            <div className={`form-group form-group-flex`}>
+                {configValue && configValue.value && configValue.value.map((option, index) => (
+                    <div>
+                        <label className="control-label form-label-flex-md">{option}</label>
+                        <CurrencyInput className="form-control" value={self.state[option]} name={option} key={index}
+                                       prefix="$" decimalSeparator="." thousandSeparator="," precision="2"
+                                       onChangeEvent={self.handleChange}
+                        />
+                    </div>
+                ))}
+            </div>
+        );
     }
 }
 

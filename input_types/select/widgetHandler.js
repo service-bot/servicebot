@@ -1,6 +1,6 @@
 let handleConfig = {
     priceHandler : function(data, config){
-        console.log(data);
+        console.log('data',data);
         console.log("stuff", config.pricing.value);
         return config.pricing.value[data.value];
     },

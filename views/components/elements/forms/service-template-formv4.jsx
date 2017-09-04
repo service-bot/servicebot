@@ -35,46 +35,57 @@ const minValue18 = minValue(18);
 const selector = formValueSelector('servicebotForm'); // <-- same as form name
 
 
-let CustomField = (props) => {
-    const {index, typeValue, member, privateValue, configValue, myValues, changePrivate} = props;
-    return (
-        <div>
-            <Field
-                name={`${member}.prop_label`}
-                type="text"
-                component={inputField}
-                label="Label"/>
+class CustomField extends React.Component {
 
-            <WidgetList name={`${member}.type`} id="type"/>
+    constructor(props){
+        super(props);
+    }
 
-            {typeValue && <RenderWidget
-                member={member}
-                configValue={configValue}
-                widgetType={typeValue}/>
-            }
-            <Field
-                onChange={changePrivate}
-                name={`${member}.private`}
-                type="checkbox"
-                component={inputField}
-                label="Private?"/>
 
-            {!privateValue && <Field
-                name={`${member}.required`}
-                type="checkbox"
-                component={inputField}
-                label="Required?"/>
-            }
-            {!privateValue && <Field
-                name={`${member}.prompt_user`}
-                type="checkbox"
-                component={inputField}
-                label="Prompt User?"/>
-            }
+    render() {
 
-        </div>
-    )
-};
+        let props = this.props;
+
+        const {index, typeValue, member, privateValue, configValue, myValues, changePrivate} = props;
+        return (
+            <div>
+                <Field
+                    name={`${member}.prop_label`}
+                    type="text"
+                    component={inputField}
+                    label="Label"/>
+
+                <WidgetList name={`${member}.type`} id="type"/>
+
+                {typeValue && <RenderWidget
+                    member={member}
+                    configValue={configValue}
+                    widgetType={typeValue}/>
+                }
+                <Field
+                    onChange={changePrivate}
+                    name={`${member}.private`}
+                    type="checkbox"
+                    component={inputField}
+                    label="Private?"/>
+
+                {!privateValue && <Field
+                    name={`${member}.required`}
+                    type="checkbox"
+                    component={inputField}
+                    label="Required?"/>
+                }
+                {!privateValue && <Field
+                    name={`${member}.prompt_user`}
+                    type="checkbox"
+                    component={inputField}
+                    label="Prompt User?"/>
+                }
+
+            </div>
+        )
+    };
+}
 
 CustomField = connect((state, ownProps) => {
     return {
@@ -97,198 +108,233 @@ CustomField = connect((state, ownProps) => {
 
 
 //Custom property
-const renderCustomProperty = (props) => {
-    const {privateValue, fields, meta: {touched, error}} = props;
-    console.log("EMAIL ! ", privateValue);
-    return (
-        <ul className="custom-fields-list">
-            {fields.map((customProperty, index) =>
-                <li className="custom-field-item" key={index}>
-                    <div className="custom-field-name">
-                        <h4>Field #{index + 1}</h4>
-                        <button className="btn btn-rounded custom-field-button"
-                                type="button"
-                                title="Remove Field"
-                                onClick={() => fields.remove(index)}>Remove
-                        </button>
-                    </div>
-                    <CustomField member={customProperty} index={index}/>
+class renderCustomProperty extends React.Component {
+
+    constructor(props){
+        super(props);
+
+        console.log("render custom props", props);
+    }
+
+    render(){
+        let props = this.props;
+        const {privateValue, fields, meta: {touched, error}} = props;
+        console.log("EMAIL ! ", privateValue);
+        return (
+            <ul className="custom-fields-list">
+                {fields.map((customProperty, index) =>
+                    <li className="custom-field-item" key={index}>
+                        <div className="custom-field-name">
+                            <h4>Field #{index + 1}</h4>
+                            <button className="btn btn-rounded custom-field-button"
+                                    type="button"
+                                    title="Remove Field"
+                                    onClick={() => fields.remove(index)}>Remove
+                            </button>
+                        </div>
+                        <CustomField member={customProperty} index={index}/>
+                    </li>
+                )}
+                <li>
+                    <button className="btn btn-rounded" type="button" onClick={() => fields.push({})}>Add Field</button>
+                    {touched && error && <span>{error}</span>}
                 </li>
-            )}
-            <li>
-                <button className="btn btn-rounded" type="button" onClick={() => fields.push({})}>Add Field</button>
-                {touched && error && <span>{error}</span>}
-            </li>
-        </ul>
-    )
-};
+            </ul>
+        )
+    };
+}
+
 
 //The full form
-let FieldLevelValidationForm = (props) => {
-    const changeServiceType = (event, newValue) => {
-        if (newValue === 'one_time') {
-            props.setIntervalCount();
-            props.setInterval();
-        }
-        else if (newValue === 'custom') {
-            props.setIntervalCount();
-            props.setInterval();
-            props.clearAmount();
-        }
-    };
 
 
-    const {handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON} = props;
 
-    const sectionDescriptionStyle = {
-        background: "#7fd3ff",
-        height: "100px",
-        width: "100px",
-        padding: "30px",
-        marginLeft: "50%",
-        transform: "translateX(-50%)",
-        borderRadius: "50%",
-    };
+class FieldLevelValidationForm extends React.Component {
 
-    return (
-        <div>
-            {/*<div className="col-md-3">*/}
-            {/*Tabs*/}
-            {/*<pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>*/}
-            {/*{JSON.stringify(formJSON, null, 2)}*/}
-            {/*</pre>*/}
-            {/*</div>*/}
-            <div className="col-md-12">
-                <form onSubmit={handleSubmit}>
-                    <div className="row">
-                        <div className="col-md-8">
-                            <h3>Basic Info</h3>
-                            <Field name="name" type="text"
-                                   component={inputField} label="Product / Service Name"
-                                   validate={[required, maxLength15]}
-                            />
-                            <Field name="description" type="text"
-                                   component={inputField} label="Summary"
-                                   validate={[required]}
-                            />
-                            <Field name="details" type="text"
-                                   component={WysiwygRedux} label="Details"
-                                   validate={[required]}
-                            />
-                            <Field name="published" type="checkbox"
-                                   component={inputField} label="Published?"
-                            />
-                            <Field name="category_id" type="select"
-                                   component={selectField} label="Category" options={formJSON._categories}
-                                   validate={[required]}
-                            />
-                        </div>
-                        <div className="col-md-4">
-                            <div style={sectionDescriptionStyle}>
-                                <img src="/assets/custom_icons/all_services_page_heading_icon.png"/>
+    constructor(props){
+        super(props);
+
+    }
+    render() {
+
+        let props = this.props;
+
+        const changeServiceType = (event, newValue) => {
+            if (newValue === 'one_time') {
+                props.setIntervalCount();
+                props.setInterval();
+            }
+            else if (newValue === 'custom') {
+                props.setIntervalCount();
+                props.setInterval();
+                props.clearAmount();
+            }
+        };
+
+
+        const {handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON} = props;
+
+        const sectionDescriptionStyle = {
+            background: "#7fd3ff",
+            height: "100px",
+            width: "100px",
+            padding: "30px",
+            marginLeft: "50%",
+            transform: "translateX(-50%)",
+            borderRadius: "50%",
+        };
+
+        return (
+            <div>
+                {/*<div className="col-md-3">*/}
+                {/*Tabs*/}
+                {/*<pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>*/}
+                {/*{JSON.stringify(formJSON, null, 2)}*/}
+                {/*</pre>*/}
+                {/*</div>*/}
+                <div className="col-md-12">
+                    <form onSubmit={handleSubmit}>
+                        <div className="row">
+                            <div className="col-md-8">
+                                <h3>Basic Info</h3>
+                                <Field name="name" type="text"
+                                       component={inputField} label="Product / Service Name"
+                                       validate={[required, maxLength15]}
+                                />
+                                <Field name="description" type="text"
+                                       component={inputField} label="Summary"
+                                       validate={[required]}
+                                />
+                                <Field name="details" type="text"
+                                       component={WysiwygRedux} label="Details"
+                                       validate={[required]}
+                                />
+                                <Field name="published" type="checkbox"
+                                       component={inputField} label="Published?"
+                                />
+                                <Field name="category_id" type="select"
+                                       component={selectField} label="Category" options={formJSON._categories}
+                                       validate={[required]}
+                                />
                             </div>
-                            <p className="help-block">Enter the basic information about your service. Summary will be
-                                shown to users in the product / service listing pages, such as the home page featured
-                                items. Details will be shown on each individual products / services page.</p>
+                            <div className="col-md-4">
+                                <div style={sectionDescriptionStyle}>
+                                    <img src="/assets/custom_icons/all_services_page_heading_icon.png"/>
+                                </div>
+                                <p className="help-block">Enter the basic information about your service. Summary will
+                                    be
+                                    shown to users in the product / service listing pages, such as the home page
+                                    featured
+                                    items. Details will be shown on each individual products / services page.</p>
+                            </div>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-12">
-                            <hr/>
-                            <div className="row">
-                                <div className="col-md-8">
-                                    <h3>Payment Details</h3>
-                                    <Field name="statement_descriptor" type="text"
-                                           component={inputField} label="Statement Descriptor"
-                                           validate={[required, maxLength22]}
-                                    />
-                                    <Field name="trial_period_days" type="number"
-                                           component={inputField} label="Trial Period (Days)"
-                                    />
-                                    <Field name="type" id="type"
-                                           component={selectField} label="Billing Type" onChange={changeServiceType}
-                                           options={[
-                                               {id: "subscription", name: "Subscription"},
-                                               {id: "one_time", name: "One Time"},
-                                               {id: "custom", name: "Custom"},
-                                           ]}
-                                    />
-                                    {(serviceTypeValue === 'subscription' || serviceTypeValue === 'one_time') &&
-                                    <Field name="amount" type="number"
-                                           component={priceField} label="Amount"/>
-                                    }
-
-                                    {(serviceTypeValue === 'subscription') &&
-                                    <div className="form-group form-group-flex">
-                                        <label className="control-label form-label-flex-md" htmlFor="type">Bill Customer Every</label>
-                                        <Field name="interval_count" type="number"
-                                               component={inputField}
+                        <div className="row">
+                            <div className="col-md-12">
+                                <hr/>
+                                <div className="row">
+                                    <div className="col-md-8">
+                                        <h3>Payment Details</h3>
+                                        <Field name="statement_descriptor" type="text"
+                                               component={inputField} label="Statement Descriptor"
+                                               validate={[required, maxLength22]}
                                         />
-                                        <Field name="interval" id="interval" component={selectField}
+                                        <Field name="trial_period_days" type="number"
+                                               component={inputField} label="Trial Period (Days)"
+                                        />
+                                        <Field name="type" id="type"
+                                               component={selectField} label="Billing Type" onChange={changeServiceType}
                                                options={[
-                                                   {id: "day", name: "Day"},
-                                                   {id: "week", name: "Week"},
-                                                   {id: "month", name: "Month"},
-                                                   {id: "year", name: "Year"}
+                                                   {id: "subscription", name: "Subscription"},
+                                                   {id: "one_time", name: "One Time"},
+                                                   {id: "custom", name: "Custom"},
                                                ]}
                                         />
-                                    </div>
-                                    }
+                                        {(serviceTypeValue === 'subscription' || serviceTypeValue === 'one_time') &&
+                                        <Field name="amount" type="number"
+                                               component={priceField} label="Amount"/>
+                                        }
 
-                                    {(serviceTypeValue === 'custom') &&
-                                    <div>
-                                        <p>You will be able to add custom service charges after an instance of
-                                            this service as been created for a customer.
-                                        </p>
+                                        {(serviceTypeValue === 'subscription') &&
+                                        <div className="form-group form-group-flex">
+                                            <label className="control-label form-label-flex-md" htmlFor="type">Bill
+                                                Customer Every</label>
+                                            <Field name="interval_count" type="number"
+                                                   component={inputField}
+                                            />
+                                            <Field name="interval" id="interval" component={selectField}
+                                                   options={[
+                                                       {id: "day", name: "Day"},
+                                                       {id: "week", name: "Week"},
+                                                       {id: "month", name: "Month"},
+                                                       {id: "year", name: "Year"}
+                                                   ]}
+                                            />
+                                        </div>
+                                        }
+
+                                        {(serviceTypeValue === 'custom') &&
+                                        <div>
+                                            <p>You will be able to add custom service charges after an instance of
+                                                this service as been created for a customer.
+                                            </p>
+                                        </div>
+                                        }
                                     </div>
-                                    }
-                                </div>
-                                <div className="col-md-4">
-                                    <div style={sectionDescriptionStyle}>
-                                        <img src="/assets/custom_icons/all_services_page_heading_icon.png"/>
+                                    <div className="col-md-4">
+                                        <div style={sectionDescriptionStyle}>
+                                            <img src="/assets/custom_icons/all_services_page_heading_icon.png"/>
+                                        </div>
+                                        <p className="help-block">Setup payment details. This will be how your customers
+                                            will be charged. For example, you can setup a recurring charge for your
+                                            product
+                                            / service by setting Billing Type to Subscription and define how often your
+                                            customer will get charged automatically.</p>
                                     </div>
-                                    <p className="help-block">Setup payment details. This will be how your customers
-                                        will be charged. For example, you can setup a recurring charge for your product
-                                        / service by setting Billing Type to Subscription and define how often your
-                                        customer will get charged automatically.</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-md-12">
-                            <hr/>
-                            <div className="row">
-                                <div className="col-md-8">
-                                    <h3>Custom Fields</h3>
-                                    <FormSection name="references">
-                                        <FieldArray name="service_template_properties"
-                                                    component={renderCustomProperty}/>
-                                    </FormSection>
-                                    {props.formJSON.references && props.formJSON.references.service_template_properties &&
-                                    <PriceBreakdown inputs={props.formJSON.references.service_template_properties}/>}
-                                    <div id="service-submission-box" className="button-box right">
-                                        <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>Go
-                                            Back</Link>
-                                        <button className="btn btn-rounded btn-primary" type="submit" value="submit">
-                                            Submit
-                                        </button>
+                        <div className="row">
+                            <div className="col-md-12">
+                                <hr/>
+                                <div className="row">
+                                    <div className="col-md-8">
+                                        <h3>Custom Fields</h3>
+                                        <FormSection name="references">
+                                            <FieldArray name="service_template_properties"
+                                                        component={renderCustomProperty}/>
+                                        </FormSection>
+                                        {props.formJSON.references && props.formJSON.references.service_template_properties &&
+                                        <PriceBreakdown
+                                            inputs={props.formJSON.references.service_template_properties}/>}
+                                        <div id="service-submission-box" className="button-box right">
+                                            <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>Go
+                                                Back</Link>
+                                            <button className="btn btn-rounded btn-primary" type="submit"
+                                                    value="submit">
+                                                Submit
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="col-md-4">
-                                    <div style={sectionDescriptionStyle}>
-                                        <img src="/assets/custom_icons/all_services_page_heading_icon.png"/>
+                                    <div className="col-md-4">
+                                        <div style={sectionDescriptionStyle}>
+                                            <img src="/assets/custom_icons/all_services_page_heading_icon.png"/>
+                                        </div>
+                                        <p className="help-block">Define custom fields. You can collect additional
+                                            information from your customers by defining custom fields. Each custom field
+                                            can also be used as "Add-Ons" to your product / services. For example, if
+                                            you define a custom field for number of rooms to be cleaned, you can set an
+                                            additional cost that will be charged toward your customer when they select
+                                            the number of rooms to be cleaned.</p>
                                     </div>
-                                    <p className="help-block">Define custom fields. You can collect additional information from your customers by defining custom fields. Each custom field can also be used as "Add-Ons" to your product / services. For example, if you define a custom field for number of rooms to be cleaned, you can set an additional cost that will be charged toward your customer when they select the number of rooms to be cleaned.</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
-        </div>
-    )
-};
+        )
+    };
+}
 
 FieldLevelValidationForm = connect((state, ownProps) => {
     return {
