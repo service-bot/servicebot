@@ -1,0 +1,16 @@
+td.action-column {
+    overflow: visible !important;
+    text-align: right !important;
+}
+
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover{
+    color: #212121;
+    background-color: #fff;
+    border-color: #ccc;
+}
+.pagination>li>a, .pagination>li>span{
+    color: #9a9a9a;
+}
+.pagination>li>a:focus, .pagination>li>a:hover, .pagination>li>span:focus, .pagination>li>span:hover{
+    color: #525252;
+}
