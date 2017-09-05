@@ -16,50 +16,39 @@ class SystemSettingsForm extends React.Component {
             ajaxLoad: false,
             success: false
         };
-        this.handleResponse = this.handleResponse.bind(this);
         this.handleSubmission = this.handleSubmission.bind(this);
         this.onUpdate = this.onUpdate.bind(this);
     }
     handleSubmission(){
-
         let self = this;
         let payload = self.props.formData; // this formData object came from Redux store
         self.setState({ajaxLoad: true});
         Fetcher(this.state.formURL, 'POST', payload).then(function (response) {
             if (!response.error) {
                 console.log("updated", response);
-                self.setState({ajaxLoad: false, success: true, updatedUser: response.results.data}); //change the last one to what u are doing
+                self.setState({
+                    ajaxLoad: false,
+                    success: true,
+                    alerts: {
+                        type: 'success',
+                        icon: 'check',
+                        message: 'Success! Stripe data has been imported!'
+                    }
+                }); //change the last one to what u are doing
             }else {
                 console.log(`Server Error:`, response.error);
-                self.setState({ajaxLoad: false});
+                self.setState({
+                    ajaxLoad: false,
+                    alerts: {
+                        type: 'danger',
+                        icon: 'times',
+                        message: response.error
+                    }
+                });
             }
         });
     }
-    handleResponse(response){
-        let self = this;
-        self.setState({
-            loading : true
-        });
-        if(response){
-            self.setState({
-                loading: false,
-                alerts: {
-                    type: 'success',
-                    icon: 'times',
-                    message: 'All Stripe data has been imported successfully!'
-                }
-            });
-        } else {
-            self.setState({
-                loading: false,
-                alerts: {
-                    type: 'danger',
-                    icon: 'times',
-                    message: response
-                }
-            });
-        }
-    }
+
     onUpdate(form){
         this.setState({formData: form});
     }
