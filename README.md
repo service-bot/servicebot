@@ -7,7 +7,7 @@
 
 ___
 <p align="center">ServiceBot is a platform for a business to sell their services and automate the administrative tasks such as billing and invoicing.</p>
-
+ 
 ## Installation
 
 For business class hosting, see [servicebot.io/pricing](https://servicebot.io/pricing).

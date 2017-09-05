@@ -237,6 +237,7 @@ class ServiceInstance extends React.Component {
     }
 
     getAdditionalCharges(myInstance, myInstanceChargeItems) {
+        let self = this;
         if(myInstance.status != 'cancelled') {
             if (myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) {
                 return (
