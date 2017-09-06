@@ -46,7 +46,7 @@ class CustomField extends React.Component {
 
         let props = this.props;
 
-        const {index, typeValue, member, privateValue, configValue, myValues, changePrivate} = props;
+        const {index, typeValue, member, privateValue, requiredValue, promptValue, configValue, changePrivate, changeRequired, changePrompt} = props;
         return (
             <div>
                 <Field
@@ -62,20 +62,23 @@ class CustomField extends React.Component {
                     configValue={configValue}
                     widgetType={typeValue}/>
                 }
-                <Field
+
+                {!requiredValue && !promptValue && <Field
                     onChange={changePrivate}
                     name={`${member}.private`}
                     type="checkbox"
                     component={inputField}
                     label="Private?"/>
-
+                }
                 {!privateValue && <Field
+                    onChange={changeRequired}
                     name={`${member}.required`}
                     type="checkbox"
                     component={inputField}
                     label="Required?"/>
                 }
-                {!privateValue && <Field
+                {!privateValue && !requiredValue && <Field
+                    onChange={changePrompt}
                     name={`${member}.prompt_user`}
                     type="checkbox"
                     component={inputField}
@@ -90,6 +93,8 @@ class CustomField extends React.Component {
 CustomField = connect((state, ownProps) => {
     return {
         "privateValue": selector(state, "references.service_template_properties")[ownProps.index].private,
+        "requiredValue": selector(state, "references.service_template_properties")[ownProps.index].required,
+        "promptValue": selector(state, "references.service_template_properties")[ownProps.index].prompt_user,
         "typeValue": selector(state, "references.service_template_properties")[ownProps.index].type,
         "configValue": selector(state, `references.service_template_properties`)[ownProps.index].config,
         "myValues": selector(state, `references.${ownProps.member}`)
@@ -97,15 +102,25 @@ CustomField = connect((state, ownProps) => {
     }
 }, (dispatch, ownProps) => {
     return {
-        "changePrivate": () => {
-            dispatch(change("serviceTemplateForm", `references.${ownProps.member}.required`, false));
-            dispatch(change("serviceTemplateForm", `references.${ownProps.member}.prompt_user`, false));
+        "changePrivate": (event) => {
+            if(!event.currentTarget.value || event.currentTarget.value == 'false') {
+                dispatch(change("servicebotForm", `references.${ownProps.member}.required`, false));
+                dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, false));
+            }
+        },
+        "changeRequired": (event) => {
+            if(!event.currentTarget.value || event.currentTarget.value == 'false'){
+                dispatch(change("servicebotForm", `references.${ownProps.member}.private`, false));
+                dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, true));
+            }
+        },
+        "changePrompt": (event) => {
+            if(!event.currentTarget.value || event.currentTarget.value == 'false'){
+                dispatch(change("servicebotForm", `references.${ownProps.member}.private`, false));
+            }
         }
     }
 })(CustomField);
-
-//A single field on the form
-
 
 //Custom property
 class renderCustomProperty extends React.Component {
