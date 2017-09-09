@@ -6,6 +6,7 @@ import { Field, Fields,  FormSection,FieldArray, reduxForm, formValueSelector, c
 import {connect } from "react-redux";
 import { RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
+import {inputField, selectField, priceField} from "./servicebot-base-field.jsx";
 
 import Load from '../../utilities/load.jsx';
 import Inputs from "../../utilities/inputsV2.jsx";
@@ -41,43 +42,40 @@ const minValue18 = minValue(18);
 
 const selector = formValueSelector('servicebotForm'); // <-- same as form name
 
+const boop = ({input, label, type, formJSON, config, meta: {touched, error, warning}}) => (
+    <div className={`form-group form-group-flex`}>
+        {label && <label className="control-label form-label-flex-md">{label}</label>}
+        <div className="form-input-flex">
+            {type === "textarea" && <textarea className="form-control" {...input} placeholder={label}/> }
+            {(type === "text" || type === "number") && <input className="form-control" {...input} placeholder={label} type={type}/> }
+            {type === "checkbox" && <input className="form-control checkbox" {...input} placeholder={label} type={type}/> }
+            {type === "select" &&
+            <select className="form-control" {...input} placeholder={label}>
+                {config && config.value.map((option, index) =>
+                    <option key={index} value={option}>
+                        {option}
+                    </option>
+                )
+                }
+            </select> }
+            {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span>{warning}</span>)) }
+        </div>
+    </div>
+);
 
 let CustomField =  (props) => {
-    const {index, typeValue, member, privateValue, configValue, myValues, changePrivate} = props;
+    const {index, typeValue, member, privateValue, configValue, myValues, formJSON} = props;
     return (
         <div>
             <Field
-                name={`${member}.prop_label`}
-                type="text"
-                component={renderField}
-                label="Label"/>
-            <WidgetList name={`${member}.prop_input_type`} id="prop_input_type"/>
-
-            {typeValue && <RenderWidget
-                member={member}
-                configValue={props.configValue}
-                widgetType={typeValue}/>
-            }
-            <Field
-                onChange={changePrivate}
-                name={`${member}.private`}
-                type="checkbox"
-                component={renderField}
-                label="Private?"/>
-
-            {!privateValue && <Field
-                name={`${member}.required`}
-                type="checkbox"
-                component={renderField}
-                label="Required?"/>
-            }
-            {!privateValue && <Field
-                name={`${member}.prompt_user`}
-                type="checkbox"
-                component={renderField}
-                label="Prompt User?"/>
-            }
-
+                name={`${member}.data.value`}
+                type={formJSON.type}
+                component={boop}
+                label={formJSON.prop_label}
+                value={formJSON.data.value}
+                formJSON={formJSON}
+                config={formJSON.config}
+                />
         </div>
     )
 };
@@ -98,73 +96,110 @@ CustomField = connect((state, ownProps) => {
     }
 })(CustomField);
 
-//A single field on the form
-const renderField = ({ input, label, type, meta: { touched, error, warning } }) => (
-    <div>
-        <label>{label}</label>
-        <div>
-            <input {...input} placeholder={label} type={type}/>
-            {touched && ((error && <span>{error}</span>) || (warning && <span>{warning}</span>))}
-        </div>
-    </div>
-);
 
 //Custom property
 const renderCustomProperty = (props) => {
-    const { privateValue, fields, meta: { touched, error } } = props;
+    const { privateValue, fields, formJSON, meta: { touched, error } } = props;
     console.log("EMAIL ! " , privateValue);
     return (
-        <ul>
+        <div>
+            <ul>
             {fields.map((customProperty, index) =>
                 <li key={index}>
-                    <button
-                        type="button"
-                        title="Remove Member"
-                        onClick={() => fields.remove(index)}>Remove Member</button>
-                    <h4>Member #{index + 1}</h4>
-                    <CustomField member={customProperty} index={index}/>
+                    <CustomField member={customProperty} index={index} formJSON={formJSON[index]}/>
                 </li>
             )}
-            <li>
-                <button type="button" onClick={() => fields.push({})}>Add Member</button>
-                {touched && error && <span>{error}</span>}
-            </li>
         </ul>
+        </div>
     )}
 
 
 
 //The full form
+class ServiceRequestForm extends React.Component {
 
-let ServiceRequestForm = (props) => {
-    const changeServiceType = (event, newValue) => {
-        if(newValue === 'one_time') {
-            props.setIntervalCount();
-            props.setInterval();
-        }
-        else if(newValue === 'custom') {
-            props.setIntervalCount();
-            props.setInterval();
-            props.clearAmount();
-        }
-    };
+    constructor(props){
+        super(props);
 
-    const { handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON, content } = props;
-    return (
+    }
+    render() {
 
-        <form onSubmit={handleSubmit}>
-            <h3>Basic Info</h3>
-            <pre>
-                {JSON.stringify(formJSON, null, 2)}
-            </pre>
+        let props = this.props;
 
-            <div id="service-submission-box" className="button-box right">
-                <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>Go Back</Link>
-                <button className="btn btn-rounded btn-primary" type="submit" value="submit">Submit</button>
+        const changeServiceType = (event, newValue) => {
+            if (newValue === 'one_time') {
+                props.setIntervalCount();
+                props.setInterval();
+            }
+            else if (newValue === 'custom') {
+                props.setIntervalCount();
+                props.setInterval();
+                props.clearAmount();
+            }
+        };
+
+
+        const {handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON, uid} = props;
+
+        const sectionDescriptionStyle = {
+            background: "#7fd3ff",
+            height: "100px",
+            width: "100px",
+            padding: "30px",
+            marginLeft: "50%",
+            transform: "translateX(-50%)",
+            borderRadius: "50%",
+        };
+
+        return (
+            <div>
+                {/*<div className="col-md-3">*/}
+                {/*Tabs*/}
+                {/*<pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>*/}
+                {/*JSON.stringify(formJSON, null, 2)*/}
+                {/*</pre>*/}
+                {/*</div>*/}
+                <div className="col-md-12">
+                    <form onSubmit={handleSubmit}>
+                        <div className="row">
+                            <div className="col-md-8">
+                                <h3>Custom Fields</h3>
+                                <FormSection name="references">
+                                    <FieldArray name="service_template_properties"
+                                                component={renderCustomProperty}
+                                                formJSON={formJSON.references.service_template_properties}/>
+                                </FormSection>
+{/*                                <Field name="name" type="text"
+                                       component={inputField} label="Product / Service Name"
+                                       validate={[required, maxLength15]}
+                                />
+                                <Field name="description" type="text"
+                                       component={inputField} label="Summary"
+                                       validate={[required]}
+                                />
+                                <Field name="details" type="text"
+                                       component={WysiwygRedux} label="Details"
+                                       validate={[required]}
+                                />
+                                <Field name="published" type="checkbox"
+                                       component={inputField} label="Published?"
+                                />
+                                <Field name="category_id" type="select"
+                                       component={selectField} label="Category" options={formJSON._categories}
+                                       validate={[required]}
+                                />*/}
+                            </div>
+                        </div>
+                        <button className="btn btn-rounded btn-primary" type="submit"
+                                value="submit">
+                            Submit
+                        </button>
+                    </form>
+                </div>
             </div>
-        </form>
-    )
-};
+        )
+    };
+}
 
 ServiceRequestForm = connect((state, ownProps) => {
     return {
@@ -237,6 +272,9 @@ class ServiceTemplateForm extends React.Component {
     componentDidMount(){
         if(this.props.uid) {
             this.checkIfUserHasCard();
+        }
+        else{
+            this.setState({loading: false});
         }
 
     }
@@ -346,11 +384,13 @@ class ServiceTemplateForm extends React.Component {
         });
     }
 
-/*    render () {
+    render () {
         let initialValues = this.props.service;
         let initialRequests = [];
-        let submissionRequest = {};
-        let successMessage = "Service Requested";
+        let submissionRequest = {
+            'method': 'POST',
+            'url': `/api/v1/service-templates/${this.props.templateId}/request`
+        };        let successMessage = "Service Requested";
 
 
         return (
@@ -367,8 +407,8 @@ class ServiceTemplateForm extends React.Component {
             </div>
         )
 
-    }*/
-    render(){
+    }
+/*    render(){
 
         if(this.state.loading){
             return ( <Load type="content"/> );
@@ -409,7 +449,7 @@ class ServiceTemplateForm extends React.Component {
                 return (
                     <div>
 
-                        {/*<pre>{JSON.stringify(this.props.formData, null, '\t')}</pre>*/}
+                        <pre>{JSON.stringify(this.state.formData, null, '\t')}</pre>
 
                         <div className="row">
                             <div className="basic-info col-md-6">
@@ -430,23 +470,26 @@ class ServiceTemplateForm extends React.Component {
 
                                     {!this.props.uid &&
                                     <div>
-                                        <Inputs type="text" label="Email Address" name="email" defaultValue="" onChange={console.log("OK")} validator={validateEmail} errors={this.props.formData.errors}/>
+{/!*
+                                        <Inputs type="text" label="Email Address" name="email" defaultValue="" onChange={console.log("OK")} validator={validateEmail} />
+*!/}
+                                        INPUT FOR USER EMAIL
                                         {this.state.emailExists &&
                                         <ModalUserLogin hide={this.closeUserLoginModal} email={this.props.formData.email} invitationExists={this.state.invitationExists} width="640px" serviceCreated={this.state.serviceCreated}/>
                                         }
                                     </div>
                                     }
 
-                                    {this.state.stripToken &&
-                                    <Inputs type="hidden" name="token_id" defaultValue={this.state.stripToken.id} onChange={console.log("YO")} validator={validateRequired} errors={this.props.formData.errors}/>
-                                    }
-                                    {/*!!!!!!!!!!!!!!!!Basically just changing stuff here*/}
+                                    {/!*this.state.stripToken &&
+                                    <Inputs type="hidden" name="token_id" defaultValue={this.state.stripToken.id} onChange={console.log("YO")} validator={validateRequired} />
+                                    *!/}
+
                                     {this.state.formData.references.service_template_properties.length > 0 &&
                                     this.state.formData.references.service_template_properties.map(reference => ((!reference.private || isAuthorized({permissions: 'can_administrate'})) &&
                                         <div key={`custom-fields-${reference.prop_label}`}>
-                                            {/*<Inputs type="hidden" name="id" value={reference.id}*/}
-                                            {/*refName="service_template_properties" refID={reference.id}/>*/}
-                                            <Inputs type={reference.prop_input_type} label={reference.prop_label} name="value"
+                                            <Inputs type="hidden" name="id" value={reference.id}
+                                            refName="service_template_properties" refID={reference.id}/>
+{/!*                                            <Inputs type={reference.prop_input_type} label={reference.prop_label} name="value"
                                                     disabled={!reference.prompt_user && !isAuthorized({permissions: 'can_administrate'})}
                                                     defaultValue={reference.value}
                                                     onChange={console.log("OK")}
@@ -454,7 +497,8 @@ class ServiceTemplateForm extends React.Component {
                                                     refName="service_template_properties" refID={reference.id}
                                                     validator={reference.required && validateRequired}
                                                     errors={reference.errors}
-                                            />
+                                            />*!/}
+                                            Custom prop field {reference.prop_label}
                                         </div>
                                     ))}
 
@@ -491,7 +535,7 @@ class ServiceTemplateForm extends React.Component {
 
         }
 
-    }
+    }*/
 
 }
 

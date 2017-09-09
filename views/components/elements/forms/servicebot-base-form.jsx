@@ -20,6 +20,7 @@ Inputs->
         'method': 'PUT',
         'url': `/api/v1/service-categories/1`
     };
+*handleResponse - A method to be called after a form is submitted. Takes in the result of the submission Response
 *successMessage - The message to be displayed after submission succeeds
 *failureRoute - The route for the browser to redirect to if there’s a failure
 
