@@ -23,7 +23,7 @@ Inputs->
 *handleResponse - A method to be called after a form is submitted. Takes in the result of the submission Response
 *successMessage - The message to be displayed after submission succeeds
 *failureRoute - The route for the browser to redirect to if there’s a failure
-
+*helpers - any properties needed to pass to the form for functionality
 Note:
 Form is name 'servicebotForm' is selector is needed
  */
@@ -40,7 +40,8 @@ class ServiceBotBaseForm extends React.Component {
             submissionRequest: this.props.submissionRequest,
             successMessage: this.props.successMessage,
             failureRoute: (this.props.failureRoute || "/"),
-            initialValues: this.props.initialValues || {}
+            initialValues: this.props.initialValues || {},
+            helpers: this.props.helpers || {}
         };
         this.submitForm = this.submitForm.bind(this);
 
@@ -125,7 +126,7 @@ class ServiceBotBaseForm extends React.Component {
         }else{
             return (
                 <div >
-                    <this.form initialValues={this.state.initialValues} onSubmit={this.submitForm} />
+                    <this.form initialValues={this.state.initialValues} onSubmit={this.submitForm} helpers={this.state.helpers}/>
                 </div>
             );
         }

@@ -120,7 +120,6 @@ class ServiceRequestForm extends React.Component {
 
     constructor(props){
         super(props);
-
     }
     render() {
 
@@ -139,7 +138,7 @@ class ServiceRequestForm extends React.Component {
         };
 
 
-        const {handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON, uid} = props;
+        const {handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON, helpers} = props;
 
         const sectionDescriptionStyle = {
             background: "#7fd3ff",
@@ -156,9 +155,10 @@ class ServiceRequestForm extends React.Component {
                 {/*<div className="col-md-3">*/}
                 {/*Tabs*/}
                 {/*<pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>*/}
-                {/*JSON.stringify(formJSON, null, 2)*/}
+                {/*JSON.stringify(props, null, 2)*/}
                 {/*</pre>*/}
                 {/*</div>*/}
+                {`this should be uid ${helpers.uid}`}
                 <div className="col-md-12">
                     <form onSubmit={handleSubmit}>
                         <div className="row">
@@ -390,8 +390,9 @@ class ServiceTemplateForm extends React.Component {
         let submissionRequest = {
             'method': 'POST',
             'url': `/api/v1/service-templates/${this.props.templateId}/request`
-        };        let successMessage = "Service Requested";
-
+        };
+        let successMessage = "Service Requested";
+        let helpers = this.state;
 
         return (
 
@@ -403,7 +404,23 @@ class ServiceTemplateForm extends React.Component {
                     submissionRequest = {submissionRequest}
                     successMessage = {successMessage}
                     handleResponse = {this.handleResponse}
+                    helpers = {helpers}
                 />
+                {this.state.hasCard &&
+                <div>
+                    {this.state.stripToken ?
+                        <div>
+                            <p className="help-block">You {this.state.card.funding} card in your account ending in: {this.state.card.last4} will be used.</p>
+                            <span className="help-block">If you wish to use a different card, you can update your card under <Link to="/billing-settings">billing settings.</Link></span>
+                        </div> :
+                        <p className="help-block">Using {this.state.card.funding} card ending in: {this.state.card.last4}</p>
+                    }
+                </div>
+                }
+                {JSON.stringify(this.state, null, '\t')}
+                <br></br>
+                {`this user is: ${this.props.user}|||||||||||>>>>>`}
+                {JSON.stringify(this.props, null, '\t')}
             </div>
         )
 
@@ -539,6 +556,13 @@ class ServiceTemplateForm extends React.Component {
 
 }
 
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid,
+        user: state.user || null,
+        options: state.options
+    }
+};
 
-export default ServiceTemplateForm;
+export default connect(mapStateToProps)(ServiceTemplateForm);
 
