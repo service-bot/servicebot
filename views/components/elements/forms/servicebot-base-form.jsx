@@ -126,7 +126,7 @@ class ServiceBotBaseForm extends React.Component {
         }else{
             return (
                 <div >
-                    <this.form initialValues={this.state.initialValues} onSubmit={this.submitForm} helpers={this.state.helpers}/>
+                    <this.form initialValues={this.state.initialValues} onSubmit={this.submitForm} helpers={this.props.helpers}/>
                 </div>
             );
         }

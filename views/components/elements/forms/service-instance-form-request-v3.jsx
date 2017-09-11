@@ -64,7 +64,7 @@ const boop = ({input, label, type, formJSON, config, meta: {touched, error, warn
 );
 
 let CustomField =  (props) => {
-    const {index, typeValue, member, privateValue, configValue, myValues, formJSON} = props;
+    const {member, formJSON} = props;
     return (
         <div>
             <Field
@@ -100,7 +100,6 @@ CustomField = connect((state, ownProps) => {
 //Custom property
 const renderCustomProperty = (props) => {
     const { privateValue, fields, formJSON, meta: { touched, error } } = props;
-    console.log("EMAIL ! " , privateValue);
     return (
         <div>
             <ul>
@@ -111,7 +110,7 @@ const renderCustomProperty = (props) => {
             )}
         </ul>
         </div>
-    )}
+    )};
 
 
 
@@ -124,18 +123,6 @@ class ServiceRequestForm extends React.Component {
     render() {
 
         let props = this.props;
-
-        const changeServiceType = (event, newValue) => {
-            if (newValue === 'one_time') {
-                props.setIntervalCount();
-                props.setInterval();
-            }
-            else if (newValue === 'custom') {
-                props.setIntervalCount();
-                props.setInterval();
-                props.clearAmount();
-            }
-        };
 
 
         const {handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON, helpers} = props;
@@ -155,28 +142,32 @@ class ServiceRequestForm extends React.Component {
                 {/*<div className="col-md-3">*/}
                 {/*Tabs*/}
                 {/*<pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>*/}
-                {/*JSON.stringify(props, null, 2)*/}
+                {/*JSON.stringify(this.props, null, 2)*/}
                 {/*</pre>*/}
                 {/*</div>*/}
-                {`this should be uid ${helpers.uid}`}
                 <div className="col-md-12">
                     <form onSubmit={handleSubmit}>
                         <div className="row">
                             <div className="col-md-8">
+                                {!helpers.uid &&
+                                <div>
+                                    <Field name="email" type="text"
+                                           component={inputField} label="Email Address"
+                                           validate={[required]}
+                                    />
+                                    {helpers.emailExists &&
+                                    <ModalUserLogin hide={this.closeUserLoginModal} email={this.props.formData.email} invitationExists={this.state.invitationExists} width="640px" serviceCreated={this.state.serviceCreated}/>
+                                    }
+                                </div>
+                                }
+
                                 <h3>Custom Fields</h3>
                                 <FormSection name="references">
                                     <FieldArray name="service_template_properties"
                                                 component={renderCustomProperty}
                                                 formJSON={formJSON.references.service_template_properties}/>
                                 </FormSection>
-{/*                                <Field name="name" type="text"
-                                       component={inputField} label="Product / Service Name"
-                                       validate={[required, maxLength15]}
-                                />
-                                <Field name="description" type="text"
-                                       component={inputField} label="Summary"
-                                       validate={[required]}
-                                />
+{/*
                                 <Field name="details" type="text"
                                        component={WysiwygRedux} label="Details"
                                        validate={[required]}
@@ -188,6 +179,19 @@ class ServiceRequestForm extends React.Component {
                                        component={selectField} label="Category" options={formJSON._categories}
                                        validate={[required]}
                                 />*/}
+
+                                {helpers.hasCard &&
+                                <div>
+                                    {helpers.stripToken ?
+                                        <div>
+                                            Theres a token
+                                            <p className="help-block">You {helpers.card.funding} card in your account ending in: {helpers.card.last4} will be used.</p>
+                                            <span className="help-block">If you wish to use a different card, you can update your card under <Link to="/billing-settings">billing settings.</Link></span>
+                                        </div> :
+                                        <p className="help-block">Using {helpers.card.funding} card ending in: {helpers.card.last4}</p>
+                                    }
+                                </div>
+                                }
                             </div>
                         </div>
                         <button className="btn btn-rounded btn-primary" type="submit"
@@ -270,11 +274,21 @@ class ServiceTemplateForm extends React.Component {
     }
 
     componentDidMount(){
+
+        let self = this;
+        Fetcher(self.state.formURL).then(function (response) {
+            if (!response.error) {
+                self.setState({loading: false, templateData: response, formData: response});
+            } else {
+                console.log("Error", response.error);
+                self.setState({loading: false});
+            }
+        }).catch(function(err){
+            console.log("ERROR!", err);
+        });
+
         if(this.props.uid) {
             this.checkIfUserHasCard();
-        }
-        else{
-            this.setState({loading: false});
         }
 
     }
@@ -392,7 +406,8 @@ class ServiceTemplateForm extends React.Component {
             'url': `/api/v1/service-templates/${this.props.templateId}/request`
         };
         let successMessage = "Service Requested";
-        let helpers = this.state;
+        let helpers = Object.assign(this.state, this.props);
+
 
         return (
 
@@ -406,154 +421,10 @@ class ServiceTemplateForm extends React.Component {
                     handleResponse = {this.handleResponse}
                     helpers = {helpers}
                 />
-                {this.state.hasCard &&
-                <div>
-                    {this.state.stripToken ?
-                        <div>
-                            <p className="help-block">You {this.state.card.funding} card in your account ending in: {this.state.card.last4} will be used.</p>
-                            <span className="help-block">If you wish to use a different card, you can update your card under <Link to="/billing-settings">billing settings.</Link></span>
-                        </div> :
-                        <p className="help-block">Using {this.state.card.funding} card ending in: {this.state.card.last4}</p>
-                    }
-                </div>
-                }
-                {JSON.stringify(this.state, null, '\t')}
-                <br></br>
-                {`this user is: ${this.props.user}|||||||||||>>>>>`}
-                {JSON.stringify(this.props, null, '\t')}
             </div>
         )
 
     }
-/*    render(){
-
-        if(this.state.loading){
-            return ( <Load type="content"/> );
-        }else{
-
-            let myService = this.state.formData;
-
-            let getRequestText = ()=>{
-                let serType = myService.type;
-                // console.log("service type",myService.type);
-                if (serType == "subscription"){
-                    return (<span>{"Subscribe"} <Price value={myService.amount}/>{myService.interval_count == 1 ? ' /' : ' / ' + myService.interval_count} {' '+myService.interval}</span>);
-                }else if (serType == "one_time"){
-                    return (<span>{"Buy"} <Price value={myService.amount}/></span>);
-                }else if (serType == "custom"){
-                    return ("Request");
-                }else{
-                    return (<span><Price value={myService.amount}/></span>)
-                }
-            };
-
-            if(this.state.formResponseData){
-                return ( <h3>Got request</h3> );
-            }else if(this.state.templateData){
-
-                const users = this.state.usersData;
-                const sortedUsers = _.sortBy(users, ['id']);
-                let userOptions = (userList)=> {
-                    return _.map(userList, (user)=>{ return new Object({[user.email]: user.id}) } );
-                };
-                let userOptionList = userOptions(sortedUsers);
-
-                //define validation functions
-                let validateEmail      = (val) => { return /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val) || 'Email format is not validate'};
-                let validateRequired   = (val) => { return (val != null && val.trim() != '' || 'This field is required')};
-                let validateNumber     = (val) => { return !isNaN(parseFloat(val)) && isFinite(val) || 'This field must be a number'};
-                let validateBoolean    = (val) => { return (val === true || val === false || val === 'true' || val === 'false') || 'This field must be a boolean'};
-                return (
-                    <div>
-
-                        <pre>{JSON.stringify(this.state.formData, null, '\t')}</pre>
-
-                        <div className="row">
-                            <div className="basic-info col-md-6">
-                                <div className="service-request-details">
-                                    <IconHeading imgIcon="/assets/custom_icons/what_you_are_getting_icon.png" title="What you are getting"/>
-                                    <div dangerouslySetInnerHTML={{__html: this.state.templateData.details}}/>
-                                </div>
-                            </div>
-                            <div className="basic-info col-md-6">
-                                <div className="service-request-form">
-                                    <IconHeading imgIcon="/assets/custom_icons/get_your_service_icon.png" title="Get your service"/>
-
-                                    <Authorizer permissions="can_administrate">
-                                        <Inputs type="select" label="For Client" name="client_id"
-                                                value={sortedUsers.map(function (user) {return user.id })[0]}
-                                                options={userOptionList} formLess={true}/>
-                                    </Authorizer>
-
-                                    {!this.props.uid &&
-                                    <div>
-{/!*
-                                        <Inputs type="text" label="Email Address" name="email" defaultValue="" onChange={console.log("OK")} validator={validateEmail} />
-*!/}
-                                        INPUT FOR USER EMAIL
-                                        {this.state.emailExists &&
-                                        <ModalUserLogin hide={this.closeUserLoginModal} email={this.props.formData.email} invitationExists={this.state.invitationExists} width="640px" serviceCreated={this.state.serviceCreated}/>
-                                        }
-                                    </div>
-                                    }
-
-                                    {/!*this.state.stripToken &&
-                                    <Inputs type="hidden" name="token_id" defaultValue={this.state.stripToken.id} onChange={console.log("YO")} validator={validateRequired} />
-                                    *!/}
-
-                                    {this.state.formData.references.service_template_properties.length > 0 &&
-                                    this.state.formData.references.service_template_properties.map(reference => ((!reference.private || isAuthorized({permissions: 'can_administrate'})) &&
-                                        <div key={`custom-fields-${reference.prop_label}`}>
-                                            <Inputs type="hidden" name="id" value={reference.id}
-                                            refName="service_template_properties" refID={reference.id}/>
-{/!*                                            <Inputs type={reference.prop_input_type} label={reference.prop_label} name="value"
-                                                    disabled={!reference.prompt_user && !isAuthorized({permissions: 'can_administrate'})}
-                                                    defaultValue={reference.value}
-                                                    onChange={console.log("OK")}
-                                                    options={reference.prop_values}
-                                                    refName="service_template_properties" refID={reference.id}
-                                                    validator={reference.required && validateRequired}
-                                                    errors={reference.errors}
-                                            />*!/}
-                                            Custom prop field {reference.prop_label}
-                                        </div>
-                                    ))}
-
-
-                                    {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
-                                    <BillingSettingsForm context="SERVICE_REQUEST" retrieveStripeToken={this.retrieveStripeToken}/>
-                                    }
-
-                                    {this.state.hasCard &&
-                                    <div>
-                                        {this.state.stripToken ?
-                                            <div>
-                                                <p className="help-block">You {this.state.card.funding} card in your account ending in: {this.state.card.last4} will be used.</p>
-                                                <span className="help-block">If you wish to use a different card, you can update your card under <Link to="/billing-settings">billing settings.</Link></span>
-                                            </div> :
-                                            <p className="help-block">Using {this.state.card.funding} card ending in: {this.state.card.last4}</p>
-                                        }
-                                    </div>
-                                    }
-
-                                    <Buttons buttonClass="btn-primary btn-bar" size="lg" position="center" btnType="primary" value="submit"
-                                             onClick={this.handleSubmission} loading={this.state.ajaxLoad}>
-                                        <span>{getRequestText()}</span>
-                                    </Buttons>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                );
-            }else{
-                return( <h3>Error fetching service data</h3> );
-            }
-
-        }
-
-    }*/
-
 }
 
 const mapStateToProps = (state, ownProps) => {
