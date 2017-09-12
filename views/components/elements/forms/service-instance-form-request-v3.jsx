@@ -136,29 +136,57 @@ class ServiceRequestForm extends React.Component {
             transform: "translateX(-50%)",
             borderRadius: "50%",
         };
+        let getRequestText = ()=>{
+            let serType = formJSON.type;
+            // console.log("service type",myService.type);
+            if (serType == "subscription"){
+                return (<span>{"Subscribe"} <Price value={formJSON.amount}/>{formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' '+formJSON.interval}</span>);
+            }else if (serType == "one_time"){
+                return (<span>{"Buy"} <Price value={formJSON.amount}/></span>);
+            }else if (serType == "custom"){
+                return ("Request");
+            }else{
+                return (<span><Price value={formJSON.amount}/></span>)
+            }
+        };
+        const users = helpers.usersData;
+        const sortedUsers = _.sortBy(users, ['id']);
+        let userOptions = (userList)=> {
+            return _.map(userList, (user)=>{ return new Object({[user.email]: user.id}) } );
+        };
+        let userOptionList = userOptions(sortedUsers);
 
         return (
             <div>
                 {/*<div className="col-md-3">*/}
                 {/*Tabs*/}
                 {/*<pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>*/}
-                {/*JSON.stringify(this.props, null, 2)*/}
+                {JSON.stringify(formJSON, null, 2)}
                 {/*</pre>*/}
                 {/*</div>*/}
                 <div className="col-md-12">
                     <form onSubmit={handleSubmit}>
                         <div className="row">
                             <div className="col-md-8">
-                                {!helpers.uid &&
-                                <div>
-                                    <Field name="email" type="text"
-                                           component={inputField} label="Email Address"
+                                <Authorizer permissions="can_administrate">
+                                    <Field name="client_id" type="select"
+                                           component={selectField} label="For Client" options={sortedUsers}
                                            validate={[required]}
                                     />
-                                    {helpers.emailExists &&
-                                    <ModalUserLogin hide={this.closeUserLoginModal} email={this.props.formData.email} invitationExists={this.state.invitationExists} width="640px" serviceCreated={this.state.serviceCreated}/>
+                                </Authorizer>
+                                {!helpers.uid && <div>
+                                    <Field name="email" type="text"
+                                           component={inputField} label="Email Address"
+                                           validate={[required]}/>
+
+                                    {helpers.emailExists && <ModalUserLogin
+                                        hide={this.closeUserLoginModal}
+                                        email={this.props.formData.email}
+                                        invitationExists={this.state.invitationExists}
+                                        width="640px"
+                                        serviceCreated={this.state.serviceCreated}/>
                                     }
-                                </div>
+                                    </div>
                                 }
 
                                 <h3>Custom Fields</h3>
@@ -167,7 +195,7 @@ class ServiceRequestForm extends React.Component {
                                                 component={renderCustomProperty}
                                                 formJSON={formJSON.references.service_template_properties}/>
                                 </FormSection>
-{/*
+                                {/*
                                 <Field name="details" type="text"
                                        component={WysiwygRedux} label="Details"
                                        validate={[required]}
@@ -196,7 +224,7 @@ class ServiceRequestForm extends React.Component {
                         </div>
                         <button className="btn btn-rounded btn-primary" type="submit"
                                 value="submit">
-                            Submit
+                            {getRequestText()}
                         </button>
                     </form>
                 </div>

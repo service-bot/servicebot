@@ -89,7 +89,7 @@ class ServiceBotBaseForm extends React.Component {
                 if(!hasError){
                     let requestValues = self.state.initialValues;
                     for (let i = 0; i < values.length; i++) {
-                        if(!self.state.initialRequests[0].name){
+                        if(!self.state.initialRequests[i].name){
                             //requestValues = values[0];
                             Object.assign(requestValues, values[i])
                         }
