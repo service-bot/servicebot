@@ -426,9 +426,6 @@ ul.custom-fields-list {
     content: '';
     clear: both;
 }
-.custom-field-name{
-    padding: 10px 0px 20px;
-}
 
 /* service template form review */
 #review-content .label{

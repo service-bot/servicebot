@@ -23,14 +23,16 @@ const RenderWidget = (props) => {
     const {member, widgetType, configValue, defaultWidgetValue} = props;
     const widget = widgets[widgetType];
 
-    return (<div>
-        <FormSection name={`${member}.config`}>
-            {widget.config && <Field name={`value`} component={widget.config}/>}
-            {widget.pricing &&
-            <div>
-                <FormSection name={`pricing`}>
-                    <label>Amount</label>
-                    <Field name={`value`} configValue={configValue} component={widget.pricing}/>
+    return (
+        <div>
+            <FormSection name={`${member}.config`}>
+                {widget.config && <Field name={`value`} component={widget.config}/>}
+                {widget.pricing &&
+                <div className="addon-widget-has-pricing">
+                    <FormSection name={`pricing`} className="form-group form-group-flex addon-widget-pricing-inputs-wrapper">
+                        <label className="control-label form-label-flex-md addon-widget-pricing-input-label">Add-On Pricing</label>
+                        <Field name={`value`} configValue={configValue} component={widget.pricing}/>
+                    </FormSection>
                     <Field name="operation" component={selectField} label="Apply Price Change"
                            options={[
                                {id: "add", name: "Add"},
@@ -38,14 +40,11 @@ const RenderWidget = (props) => {
                                {id: "divide", name: "Percent Decrease"},
                                {id: "multiply", name: "Percent Increase"},
                            ]}/>
-                </FormSection>
-            </div>}
-
-        </FormSection>
-        <br/>
-        <label>Default Value</label>
-        {widget.widget && <Field name={`${member}.data.value`} configValue={configValue} component={widget.widget}/>}
-    </div>)
+                </div>}
+            </FormSection>
+            {widget.widget && <Field name={`${member}.data.value`} configValue={configValue} component={widget.widget}/>}
+        </div>
+    );
 };
 
 const PriceBreakdown = (props) => {
@@ -61,11 +60,13 @@ const PriceBreakdown = (props) => {
     }, []);
 
     if (breakdown.length == 0){
-        breakdown =  <div></div>
+        breakdown =  <div/>
     }
-    return <div>
-        {breakdown}
-    </div>
+    return (
+        <div>
+            {breakdown}
+        </div>
+    );
 };
 
 let WidgetList = props => (

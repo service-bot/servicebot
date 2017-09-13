@@ -17,7 +17,7 @@ import {connect} from "react-redux";
 import {RenderWidget, WidgetList, PriceBreakdown, widgets} from "../../utilities/widgets";
 import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
 import FileUploadForm from "./file-upload-form.jsx";
-import {inputField, selectField, priceField} from "./servicebot-base-field.jsx";
+import {inputField, selectField, iconToggleField, priceField} from "./servicebot-base-field.jsx";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 
 
@@ -39,52 +39,76 @@ class CustomField extends React.Component {
 
     constructor(props){
         super(props);
-    }
 
+    }
 
     render() {
 
         let props = this.props;
 
-        const {index, typeValue, member, privateValue, requiredValue, promptValue, configValue, changePrivate, changeRequired, changePrompt} = props;
+        const {index, typeValue, member, privateValue, requiredValue, promptValue, configValue, setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt} = props;
         return (
-            <div>
-                <Field
-                    name={`${member}.prop_label`}
-                    type="text"
-                    component={inputField}
-                    label="Label"/>
+            <div className="custom-property-fields">
+                <div id="custom-prop-name" className="custom-property-field-group">
+                    <Field
+                        name={`${member}.prop_label`}
+                        type="text"
+                        component={inputField}
+                        placeholder="Custom Property Label"
+                    />
+                </div>
 
-                <WidgetList name={`${member}.type`} id="type"/>
+                <div id="custom-prop-type" className="custom-property-field-group">
+                    <WidgetList name={`${member}.type`} id="type"/>
+                </div>
 
-                {typeValue && <RenderWidget
-                    member={member}
-                    configValue={configValue}
-                    widgetType={typeValue}/>
-                }
+                <div id="custom-prop-settings" className="custom-property-field-group">
+                    {!privateValue && !requiredValue &&
+                    <Field
+                        onChange={changePrompt}
+                        setValue={setPrompt}
+                        name={`${member}.prompt_user`}
+                        type="checkbox"
+                        label={promptValue ? "Prompt User" : "Set Prompt User"}
+                        defaultValue={true}
+                        color="#0091EA"
+                        faIcon="eye"
+                        component={iconToggleField}
+                    />
+                    }
+                    {!privateValue &&
+                    <Field
+                        onChange={changeRequired}
+                        setValue={setRequired}
+                        name={`${member}.required`}
+                        type="checkbox"
+                        label={requiredValue ? "Required" : "Set Required"}
+                        color="#FF1744"
+                        faIcon="check"
+                        component={iconToggleField}
+                        />
+                    }
+                    {!requiredValue && !promptValue &&
+                    <Field
+                        onChange={changePrivate}
+                        setValue={setPrivate}
+                        name={`${member}.private`}
+                        type="checkbox"
+                        label={privateValue ? "Private" : "Set Private"}
+                        color="#424242"
+                        faIcon="hand-paper-o"
+                        component={iconToggleField}
+                    />
+                    }
+                </div>
 
-                {!requiredValue && !promptValue && <Field
-                    onChange={changePrivate}
-                    name={`${member}.private`}
-                    type="checkbox"
-                    component={inputField}
-                    label="Private?"/>
-                }
-                {!privateValue && <Field
-                    onChange={changeRequired}
-                    name={`${member}.required`}
-                    type="checkbox"
-                    component={inputField}
-                    label="Required?"/>
-                }
-                {!privateValue && !requiredValue && <Field
-                    onChange={changePrompt}
-                    name={`${member}.prompt_user`}
-                    type="checkbox"
-                    component={inputField}
-                    label="Prompt User?"/>
-                }
-
+                <div id="custom-prop-widget" className="custom-property-field-group">
+                    {typeValue && <RenderWidget
+                        member={member}
+                        configValue={configValue}
+                        widgetType={typeValue}/>
+                    }
+                </div>
             </div>
         )
     };
@@ -102,7 +126,34 @@ CustomField = connect((state, ownProps) => {
     }
 }, (dispatch, ownProps) => {
     return {
+        "setPrivate": (val) => {
+            if(val == true){
+                dispatch(change("servicebotForm", `references.${ownProps.member}.private`, true));
+                dispatch(change("servicebotForm", `references.${ownProps.member}.required`, false));
+                dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, false));
+            }else{
+                dispatch(change("servicebotForm", `references.${ownProps.member}.private`, false));
+            }
+        },
+        "setRequired": (val) => {
+            if(val == true){
+                dispatch(change("servicebotForm", `references.${ownProps.member}.required`, true));
+                dispatch(change("servicebotForm", `references.${ownProps.member}.private`, false));
+                dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, true));
+            }else{
+                dispatch(change("servicebotForm", `references.${ownProps.member}.required`, false));
+            }
+        },
+        "setPrompt": (val) => {
+            if(val == true){
+                dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, true));
+                dispatch(change("servicebotForm", `references.${ownProps.member}.private`, false));
+            }else{
+                dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, false));
+            }
+        },
         "changePrivate": (event) => {
+            console.log("changing private value");
             if(!event.currentTarget.value || event.currentTarget.value == 'false') {
                 dispatch(change("servicebotForm", `references.${ownProps.member}.required`, false));
                 dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, false));
@@ -128,33 +179,51 @@ class renderCustomProperty extends React.Component {
     constructor(props){
         super(props);
 
+        this.state = {
+            customFields: [],
+        };
+
         console.log("render custom props", props);
+
+        this.onAdd = this.onAdd.bind(this);
+    }
+
+    onAdd(e){
+        e.preventDefault();
+        const {privateValue, fields, meta: {touched, error}} = this.props;
+        return (fields.push({}));
     }
 
     render(){
         let props = this.props;
         const {privateValue, fields, meta: {touched, error}} = props;
+        console.log("fields", fields.getAll());
         console.log("EMAIL ! ", privateValue);
         return (
-            <ul className="custom-fields-list">
-                {fields.map((customProperty, index) =>
-                    <li className="custom-field-item" key={index}>
-                        <div className="custom-field-name">
-                            <h4>Field #{index + 1}</h4>
-                            <button className="btn btn-rounded custom-field-button"
-                                    type="button"
-                                    title="Remove Field"
-                                    onClick={() => fields.remove(index)}>Remove
-                            </button>
-                        </div>
-                        <CustomField member={customProperty} index={index}/>
+            <div>
+                <ul className="custom-fields-list">
+                    {fields.map((customProperty, index) =>
+                        <li className="custom-field-item" key={index}>
+                            <div className="custom-field-name">
+                                {/*{fields.get(index).prop_label ?*/}
+                                    {/*<p>{fields.get(index).prop_label}</p> : <p>Field #{index + 1}</p>*/}
+                                {/*}*/}
+                                <button className="btn btn-rounded custom-field-button iconToggleField" id="custom-field-delete-button"
+                                        type="button"
+                                        title="Remove Field"
+                                        onClick={() => fields.remove(index)}>
+                                    <span className="itf-icon"><i className="fa fa-close"/></span>
+                                </button>
+                            </div>
+                            <CustomField member={customProperty} index={index}/>
+                        </li>
+                    )}
+                    <li>
+                        <button className="btn btn-rounded" type="button" onClick={this.onAdd}>Add Field</button>
+                        {touched && error && <span>{error}</span>}
                     </li>
-                )}
-                <li>
-                    <button className="btn btn-rounded" type="button" onClick={() => fields.push({})}>Add Field</button>
-                    {touched && error && <span>{error}</span>}
-                </li>
-            </ul>
+                </ul>
+            </div>
         )
     };
 }
@@ -204,7 +273,7 @@ class FieldLevelValidationForm extends React.Component {
                 {/*<div className="col-md-3">*/}
                 {/*Tabs*/}
                 {/*<pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>*/}
-                {JSON.stringify(props, null, 2)}
+                {/*{JSON.stringify(props, null, 2)}*/}
                 {/*</pre>*/}
                 {/*</div>*/}
                 <div className="col-md-12">
