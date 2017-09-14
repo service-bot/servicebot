@@ -160,9 +160,9 @@ class ServiceRequestForm extends React.Component {
             <div>
                 {/*<div className="col-md-3">*/}
                 {/*Tabs*/}
-                {/*<pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>*/}
-                {JSON.stringify(formJSON, null, 2)}
-                {/*</pre>*/}
+                <pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>
+                {JSON.stringify(helpers, null, 2)}
+                </pre>
                 {/*</div>*/}
                 <div className="col-md-12">
                     <form onSubmit={handleSubmit}>
@@ -174,6 +174,7 @@ class ServiceRequestForm extends React.Component {
                                            validate={[required]}
                                     />
                                 </Authorizer>
+
                                 {!helpers.uid && <div>
                                     <Field name="email" type="text"
                                            component={inputField} label="Email Address"
@@ -187,6 +188,11 @@ class ServiceRequestForm extends React.Component {
                                         serviceCreated={this.state.serviceCreated}/>
                                     }
                                     </div>
+                                }
+
+                                {!helpers.uid && formJSON.amount > 0 && <div>
+                                    Would be billing settings
+                                </div>
                                 }
 
                                 <h3>Custom Fields</h3>
