@@ -259,6 +259,7 @@ class ServiceTemplateForm extends React.Component {
         let templateId = this.props.templateId || 1;
 
         this.state = {
+            tokenGenerator: this.tokenGenerator(),
             uid: this.props.uid,
             stripToken: null,
             templateId: templateId,
@@ -342,16 +343,22 @@ class ServiceTemplateForm extends React.Component {
         }
     }
 
-    retrieveStripeToken(stripeForm, token = null){ //getToken is the getToken function, token is the token
+    *tokenGenerator(){
+        console.log("WE IN THE TOKEN GENERATOR");
+        let token = yield;
+        console.log("got token ", token);
+        return token;
+    }
+
+    async retrieveStripeToken(stripeForm, token = null){ //getToken is the getToken function, token is the token
         let self = this;
+        console.log("RETRIEVE STRIPE TOKEN WUZ CALLED")
         if(stripeForm){
             this.setState({stripeForm: stripeForm});
         }
         if(token) {
-            this.setState({stripToken: token}, function () {
-                // console.log("Stripe token", self.state.stripToken);
-                self.handleSubmission();
-            });
+            this.setState({stripToken: token});
+            this.state.tokenGenerator.next(token)
         }
     }
 
@@ -443,23 +450,33 @@ class ServiceTemplateForm extends React.Component {
         };
         let successMessage = "Service Requested";
         let helpers = Object.assign(this.state, this.props);
-        let submissionPrep = () => {
+        let submissionPrep = function (values, callback){
+            console.log("we've arrived in submission prep -------")
             self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
-            //get token_id
-            //return object
-            {token_id:'asdfsdfasdf-asdfasdfasdf'}
+            submissionGenerator().next();
+
+            function* submissionGenerator(){
+                console.log("in submission generator 1");
+                let token = yield* self.state.tokenGenerator;
+                values.token_id = token;
+                console.log("in submission generator 2", token);
+
+                callback(values);
+            }
         };
         //make new field for CC number
 
         return (
 
             <div>
+
                 <BillingSettingsForm context="SERVICE_REQUEST" retrieveStripeToken={this.retrieveStripeToken}/>
 
                 <ServiceBotBaseForm
                     form = {ServiceRequestForm}
                     initialValues = {initialValues}
                     initialRequests = {initialRequests}
+                    submissionPrep = {submissionPrep}
                     submissionRequest = {submissionRequest}
                     successMessage = {successMessage}
                     handleResponse = {this.handleResponse}

@@ -55,21 +55,29 @@ class ServiceBotBaseForm extends React.Component {
         let self = this;
         self.setState({loading: true});
         if(self.props.submissionPrep){
+            console.log("submissionprepcalled");
 
+            self.props.submissionPrep(values, self.makeCall.bind(this));
         }
-        //do submissionprep
-        //add token_id onto values
+        else{
+            this.makeCall(values);
+        }
+    }
+
+    makeCall(values) {
+        let self = this;
+        console.log("MAKING A CALL")
         Fetcher(self.state.submissionRequest.url, self.state.submissionRequest.method, values).then(result => {
-            if(!result.error) {
+            if (!result.error) {
                 console.log(result);
-                if(self.props.handleResponse){
+                if (self.props.handleResponse) {
                     self.props.handleResponse(result)
                 }
-                self.setState({loading:false, success: true, submissionResponse: result});
+                self.setState({loading: false, success: true, submissionResponse: result});
             }
-            else{
+            else {
                 console.error("submission error", result.error);
-                self.setState({loading:false});
+                self.setState({loading: false});
                 browserHistory.push(self.state.failureRoute);
             }
         })
