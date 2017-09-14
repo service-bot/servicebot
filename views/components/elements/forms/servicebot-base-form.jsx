@@ -15,6 +15,7 @@ Inputs->
         {'method': 'GET', 'url': `/api/v1/service-templates/1`},
         {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
     ];
+*submissionPrep -
 *submissionRequest - A request object with just the method and url for the form to be submitted to. Ex:
     const submissionRequest = {
         'method': 'PUT',
@@ -53,6 +54,11 @@ class ServiceBotBaseForm extends React.Component {
     submitForm(values){
         let self = this;
         self.setState({loading: true});
+        if(self.props.submissionPrep){
+
+        }
+        //do submissionprep
+        //add token_id onto values
         Fetcher(self.state.submissionRequest.url, self.state.submissionRequest.method, values).then(result => {
             if(!result.error) {
                 console.log(result);

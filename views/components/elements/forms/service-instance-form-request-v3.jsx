@@ -160,9 +160,9 @@ class ServiceRequestForm extends React.Component {
             <div>
                 {/*<div className="col-md-3">*/}
                 {/*Tabs*/}
-                <pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>
+{/*                <pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>
                 {JSON.stringify(helpers, null, 2)}
-                </pre>
+                </pre>*/}
                 {/*</div>*/}
                 <div className="col-md-12">
                     <form onSubmit={handleSubmit}>
@@ -213,6 +213,7 @@ class ServiceRequestForm extends React.Component {
                                        component={selectField} label="Category" options={formJSON._categories}
                                        validate={[required]}
                                 />*/}
+
 
                                 {helpers.hasCard &&
                                 <div>
@@ -433,6 +434,7 @@ class ServiceTemplateForm extends React.Component {
     }
 
     render () {
+        let self = this;
         let initialValues = this.props.service;
         let initialRequests = [];
         let submissionRequest = {
@@ -441,11 +443,19 @@ class ServiceTemplateForm extends React.Component {
         };
         let successMessage = "Service Requested";
         let helpers = Object.assign(this.state, this.props);
-
+        let submissionPrep = () => {
+            self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
+            //get token_id
+            //return object
+            {token_id:'asdfsdfasdf-asdfasdfasdf'}
+        };
+        //make new field for CC number
 
         return (
 
             <div>
+                <BillingSettingsForm context="SERVICE_REQUEST" retrieveStripeToken={this.retrieveStripeToken}/>
+
                 <ServiceBotBaseForm
                     form = {ServiceRequestForm}
                     initialValues = {initialValues}
