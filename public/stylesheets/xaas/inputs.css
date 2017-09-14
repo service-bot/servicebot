@@ -88,6 +88,9 @@ input.react-tagsinput-input {
     padding: 5px;
     margin-bottom: 0px;
     border: none;
+    font-size: 16px !important;
+    font-weight: 100 !important;
+    width: 111px !important;
 }
 
 span.react-tagsinput-tag {
@@ -97,6 +100,8 @@ span.react-tagsinput-tag {
     color: white;
     padding: 0px 6px;
     margin: 0px 5px 0px 0px;
+    font-size: 16px;
+    font-weight: 100;
 }
 
 a.react-tagsinput-remove {

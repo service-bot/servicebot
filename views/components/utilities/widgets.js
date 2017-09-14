@@ -3,7 +3,7 @@ import {Field, FormSection} from "redux-form";
 import TagsInput from "react-tagsinput"
 import widgets from "../../../input_types/widgets";
 import {inputField, selectField, priceField} from "../elements/forms/servicebot-base-field.jsx";
-var values = require('object.values');
+const values = require('object.values');
 if (!Object.values) {
     values.shim();
 }
@@ -50,7 +50,7 @@ const RenderWidget = (props) => {
 const PriceBreakdown = (props) => {
     const { inputs } = props;
 
-    var breakdown = inputs.reduce((acc, input) => {
+    let breakdown = inputs.reduce((acc, input) => {
         console.log(input, "INPUT!");
         if(input.config && input.config.pricing && widgets[input.type].handler.priceHandler) {
             acc.push(<div>{input.prop_label} - {input.config.pricing.operation}
