@@ -259,7 +259,6 @@ class ServiceTemplateForm extends React.Component {
         let templateId = this.props.templateId || 1;
 
         this.state = {
-            tokenGenerator: this.tokenGenerator(),
             uid: this.props.uid,
             stripToken: null,
             templateId: templateId,
@@ -343,11 +342,12 @@ class ServiceTemplateForm extends React.Component {
         }
     }
 
-    *tokenGenerator(){
+    *tokenGenerator(values, callback){
         console.log("WE IN THE TOKEN GENERATOR");
         let token = yield;
         console.log("got token ", token);
-        return token;
+        values.token_id = token.id;
+        callback(values);
     }
 
     async retrieveStripeToken(stripeForm, token = null){ //getToken is the getToken function, token is the token
@@ -452,17 +452,18 @@ class ServiceTemplateForm extends React.Component {
         let helpers = Object.assign(this.state, this.props);
         let submissionPrep = function (values, callback){
             console.log("we've arrived in submission prep -------")
-            self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
-            submissionGenerator().next();
+            self.setState({tokenGenerator : self.tokenGenerator(values, callback)}, (state => {
+                self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
+            }))
 
-            function* submissionGenerator(){
-                console.log("in submission generator 1");
-                let token = yield* self.state.tokenGenerator;
-                values.token_id = token;
-                console.log("in submission generator 2", token);
-
-                callback(values);
-            }
+            // function* submissionGenerator(){
+            //     console.log("in submission generator 1");
+            //     let token = yield* self.state.tokenGenerator;
+            //     values.token_id = token;
+            //     console.log("in submission generator 2", token);
+            //
+            //     callback(values);
+            // }
         };
         //make new field for CC number
 
