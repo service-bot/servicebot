@@ -56,7 +56,6 @@ class ServiceBotBaseForm extends React.Component {
         self.setState({loading: true});
         if(self.props.submissionPrep){
             console.log("submissionprepcalled");
-
             self.props.submissionPrep(values, self.makeCall.bind(this));
         }
         else{
@@ -66,7 +65,8 @@ class ServiceBotBaseForm extends React.Component {
 
     makeCall(values) {
         let self = this;
-        console.log("MAKING A CALL")
+        console.log("MAKING A CALL");
+        console.log("These are the values", values);
         Fetcher(self.state.submissionRequest.url, self.state.submissionRequest.method, values).then(result => {
             if (!result.error) {
                 console.log(result);

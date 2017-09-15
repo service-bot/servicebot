@@ -444,34 +444,33 @@ class ServiceTemplateForm extends React.Component {
         let self = this;
         let initialValues = this.props.service;
         let initialRequests = [];
+        let submissionPrep;
         let submissionRequest = {
             'method': 'POST',
             'url': `/api/v1/service-templates/${this.props.templateId}/request`
         };
         let successMessage = "Service Requested";
         let helpers = Object.assign(this.state, this.props);
-        let submissionPrep = function (values, callback){
-            console.log("we've arrived in submission prep -------")
-            self.setState({tokenGenerator : self.tokenGenerator(values, callback)}, (state => {
-                self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
-            }))
+        if(!isAuthorized({permissions: "can_administrate"})){
+            submissionPrep = function (values, callback){
+                console.log("we've arrived in submission prep -------")
+                let tokenGenerator = self.tokenGenerator(values, callback);
+                tokenGenerator.next();
+                self.setState({tokenGenerator}, (state => {
+                    self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
+                }))
 
-            // function* submissionGenerator(){
-            //     console.log("in submission generator 1");
-            //     let token = yield* self.state.tokenGenerator;
-            //     values.token_id = token;
-            //     console.log("in submission generator 2", token);
-            //
-            //     callback(values);
-            // }
-        };
+            };
+        }
+
         //make new field for CC number
 
         return (
 
             <div>
-
+                {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
                 <BillingSettingsForm context="SERVICE_REQUEST" retrieveStripeToken={this.retrieveStripeToken}/>
+                }
 
                 <ServiceBotBaseForm
                     form = {ServiceRequestForm}
