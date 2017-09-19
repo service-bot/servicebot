@@ -342,16 +342,23 @@ class ServiceTemplateForm extends React.Component {
         }
     }
 
-    retrieveStripeToken(stripeForm, token = null){ //getToken is the getToken function, token is the token
+    *tokenGenerator(values, callback){
+        console.log("WE IN THE TOKEN GENERATOR");
+        let token = yield;
+        console.log("got token ", token);
+        values.token_id = token.id;
+        callback(values);
+    }
+
+    async retrieveStripeToken(stripeForm, token = null){ //getToken is the getToken function, token is the token
         let self = this;
+        console.log("RETRIEVE STRIPE TOKEN WUZ CALLED")
         if(stripeForm){
             this.setState({stripeForm: stripeForm});
         }
         if(token) {
-            this.setState({stripToken: token}, function () {
-                // console.log("Stripe token", self.state.stripToken);
-                self.handleSubmission();
-            });
+            this.setState({stripToken: token});
+            this.state.tokenGenerator.next(token)
         }
     }
 
@@ -437,29 +444,39 @@ class ServiceTemplateForm extends React.Component {
         let self = this;
         let initialValues = this.props.service;
         let initialRequests = [];
+        let submissionPrep;
         let submissionRequest = {
             'method': 'POST',
             'url': `/api/v1/service-templates/${this.props.templateId}/request`
         };
         let successMessage = "Service Requested";
         let helpers = Object.assign(this.state, this.props);
-        let submissionPrep = () => {
-            self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
-            //get token_id
-            //return object
-            {token_id:'asdfsdfasdf-asdfasdfasdf'}
-        };
+        if(!isAuthorized({permissions: "can_administrate"})){
+            submissionPrep = function (values, callback){
+                console.log("we've arrived in submission prep -------")
+                let tokenGenerator = self.tokenGenerator(values, callback);
+                tokenGenerator.next();
+                self.setState({tokenGenerator}, (state => {
+                    self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
+                }))
+
+            };
+        }
+
         //make new field for CC number
 
         return (
 
             <div>
+                {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
                 <BillingSettingsForm context="SERVICE_REQUEST" retrieveStripeToken={this.retrieveStripeToken}/>
+                }
 
                 <ServiceBotBaseForm
                     form = {ServiceRequestForm}
                     initialValues = {initialValues}
                     initialRequests = {initialRequests}
+                    submissionPrep = {submissionPrep}
                     submissionRequest = {submissionRequest}
                     successMessage = {successMessage}
                     handleResponse = {this.handleResponse}
