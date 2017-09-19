@@ -17,7 +17,7 @@ import {connect} from "react-redux";
 import {RenderWidget, WidgetList, PriceBreakdown, widgets} from "../../utilities/widgets";
 import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
 import FileUploadForm from "./file-upload-form.jsx";
-import {inputField, selectField, iconToggleField, priceField} from "./servicebot-base-field.jsx";
+import {inputField, selectField, OnOffToggleField, iconToggleField, priceField} from "./servicebot-base-field.jsx";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 
 
@@ -41,16 +41,17 @@ class CustomField extends React.Component {
         super(props);
 
     }
-
     render() {
 
         let props = this.props;
 
-        const {index, typeValue, member, privateValue, requiredValue, promptValue, configValue, setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt} = props;
+        const {willAutoFocus, index, typeValue, member, privateValue, requiredValue, promptValue, configValue, setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt} = props;
+        console.log("this is going to auto focus", willAutoFocus);
         return (
             <div className="custom-property-fields">
                 <div id="custom-prop-name" className="custom-property-field-group">
                     <Field
+                        willAutoFocus={willAutoFocus}
                         name={`${member}.prop_label`}
                         type="text"
                         component={inputField}
@@ -215,11 +216,15 @@ class renderCustomProperty extends React.Component {
                                     <span className="itf-icon"><i className="fa fa-close"/></span>
                                 </button>
                             </div>
-                            <CustomField member={customProperty} index={index}/>
+                            <CustomField member={customProperty} index={index} willAutoFocus={fields.length-1 == index}/>
                         </li>
                     )}
-                    <li>
-                        <button className="btn btn-rounded" type="button" onClick={this.onAdd}>Add Field</button>
+                    <li className="custom-field-item">
+                        <div className="form-group form-group-flex">
+                            <input className="form-control custom-property-add-field-toggle" autoFocus={false}
+                                   placeholder="Add Custom Field ..." onClick={this.onAdd}/>
+                        </div>
+                        {/*<button className="btn btn-rounded" type="button" onClick={this.onAdd}>Add Field</button>*/}
                         {touched && error && <span>{error}</span>}
                     </li>
                 </ul>
@@ -294,7 +299,8 @@ class FieldLevelValidationForm extends React.Component {
                                        validate={[required]}
                                 />
                                 <Field name="published" type="checkbox"
-                                       component={inputField} label="Published?"
+                                       defaultValue={true} color="#0091EA" faIcon="check"
+                                       component={OnOffToggleField} label="Published?"
                                 />
                                 <Field name="category_id" type="select"
                                        component={selectField} label="Category" options={formJSON._categories}

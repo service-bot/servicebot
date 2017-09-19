@@ -23,3 +23,26 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+/* slider toggle */
+.iconToggleField.slideToggle {
+    height: 20px;
+    width: 61px !important;
+    border: 1px solid #eee;
+    background: #eee;
+    margin: 5px 0px;
+}
+.iconToggleField.slideToggle .itf-icon {
+    border-radius: 50px;
+    width: 30px;
+    text-align: center;
+}
+.iconToggleField.slideToggle.active .itf-icon {
+    left: 42px;
+    transition: left 0.1s ease-in-out;
+}
+.iconToggleField.slideToggle .itf-icon {
+    left: 18px;
+    transition: left 0.1s ease-in-out;
+    background: #c5c5c5;
+}

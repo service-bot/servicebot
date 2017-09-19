@@ -20,6 +20,7 @@ class SelectPricing extends React.Component {
     constructor(props) {
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.handlePercentPriceChange = this.handlePercentPriceChange.bind(this);
         this.state = {};
     }
 
@@ -45,23 +46,39 @@ class SelectPricing extends React.Component {
         });
     }
 
+    handlePercentPriceChange(e, maskedValue, floatvalue){
+        let name = e.target.name;
+        let self = this;
+        this.setState({[name]: floatvalue}, () => {
+            self.props.input.onChange(self.state);
+        });
+    }
+
     render() {
         let {input, configValue} = this.props;
         let self = this;
-        console.log(configValue);
+        console.log("selectPrice config value", configValue);
         return (
             <div className={`addon-options-widget-price-inputs-wrapper`}>
-                {configValue && configValue.value && configValue.value.map((option, index) => (
+                {configValue ? configValue.value && configValue.value.map((option, index) => (
                     <div className="form-group form-group-flex addon-options-widget-price-inputs">
                         <label
                             className="control-label form-label-flex-md addon-options-widget-price-input-label">{option}</label>
-                        <CurrencyInput className="form-control addon-options-widget-price-input"
-                                       value={self.state[option]} name={option} key={index}
-                                       prefix="$" decimalSeparator="." thousandSeparator="," precision="2"
-                                       onChangeEvent={self.handleChange}
-                        />
+                        {configValue.operation && (configValue.operation == "add" || configValue.operation == "subtract") ?
+                            <CurrencyInput className="form-control addon-options-widget-price-input"
+                                           value={self.state[option]} name={option} key={index}
+                                           prefix="$" decimalSeparator="." thousandSeparator="," precision="2"
+                                           onChangeEvent={self.handleChange}
+                            /> :
+                            <CurrencyInput className="form-control addon-checkbox-widget-price-input"
+                                           value={self.state[option]} name={option} key={index}
+                                           decimalSeparator="." precision="0" suffix="%"
+                                           onChangeEvent={self.handlePercentPriceChange}/>
+                        }
                     </div>
-                ))}
+                )):
+                    <span className="addon-widget-price-tip">Add some available options above</span>
+                }
             </div>
         );
     }

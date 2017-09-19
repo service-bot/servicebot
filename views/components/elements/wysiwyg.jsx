@@ -54,10 +54,9 @@ class WysiwygRedux extends React.Component {
     }
     render(){
         return (
-            <div>
+            <div className="form-group">
                 {this.props.label && <label className="control-label">{this.props.label}</label>}
-            <textarea onChange={this.props.onChange} name={this.props.name} id="editor" ref="wysiwygArea" value={this.props.input.value}>
-            </textarea>
+                <textarea onChange={this.props.onChange} name={this.props.name} id="editor" ref="wysiwygArea" value={this.props.input.value}/>
             </div>
         );
     }
