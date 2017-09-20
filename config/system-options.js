@@ -97,6 +97,8 @@ let systemOptions =
         {"option": "featured_service_show_all_button_text", "value": "Show All", public: true, "type": "featured services", "data_type": "text"},
         {"option": "featured_service_section_background_color", "value": "#FFFFFF", public: true, "type": "featured services", "data_type": "color_picker"},
         {"option": "upload_limit", "value": 10, public: false, "type": "system", "data_type": "number"},
+        {"option": "service_template_icon_background_color", "value": "#000000", public: true, "type": "theme", "data_type": "color_picker"},
+        {"option": "service_template_icon_fill_color", "value": "#FFFFFF", public: true, "type": "theme", "data_type": "color_picker"},
 
     ],
         populateOptions: function(options=systemOptions.options){

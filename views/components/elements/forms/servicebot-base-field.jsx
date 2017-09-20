@@ -45,6 +45,7 @@ class selectField extends React.Component {
         let {options, defaultValue, input} = this.props;
         let self = this;
         console.log("IOTIONS", options);
+        //if there is a default value, set it, other wise, use the first option
         if((!input.value || !options.find(option =>option.id == input.value)) && options.length > 0 ){
             input.onChange(options[0].id);
         }
