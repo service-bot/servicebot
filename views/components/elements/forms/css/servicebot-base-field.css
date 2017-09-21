@@ -1,3 +1,35 @@
+/* form-control */
+.form-control.has-error{
+    border-color: #ff6565;
+}
+.form-control.has-warning{
+    border-color: #ffc165;
+}
+.form-control.has-error:hover{
+    background-color: #ffefef;
+}
+.form-control.has-warning:hover{
+    background-color: #fff1e8;
+}
+
+/* form error and warning */
+.form-error, .form-warning {
+    display: block;
+    color: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 0px 10px;
+    font-size: 12px;
+    margin-top: -4px;
+}
+.form-error{
+    background: #ff6565;
+}
+.form-warning{
+    background: #ffc165;
+}
+
+/* icon toggle field */
 .iconToggleField {
     position: relative;
     width: 35px !important;

@@ -280,7 +280,7 @@ class FieldLevelValidationForm extends React.Component {
             <div>
                 {/*<div className="col-md-3">*/}
                 {/*Tabs*/}
-                {/*<pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>*/}
+                {/*<pre className="" style={{maxHeight: 'auto', overflowY: 'scroll'}}>*/}
                 {/*{JSON.stringify(props, null, 2)}*/}
                 {/*</pre>*/}
                 {/*</div>*/}

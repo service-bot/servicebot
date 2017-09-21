@@ -15,14 +15,18 @@ class inputField extends React.Component {
         let props = this.props;
         let {input, placeholder, label, type, meta: {touched, error, warning}} = props;
         let autofocus = props && props.willAutoFocus;
+
+        console.log("do i have error?", error);
+        let formControlClass = `form-control ${touched && error && 'has-error'} ${touched && warning && 'has-warning'}`;
+
         return(
             <div className={`form-group form-group-flex`}>
                 {label && <label className="control-label form-label-flex-md">{label}</label>}
                 <div className="form-input-flex">
-                    {type === "textarea" && <textarea className="form-control" {...input} placeholder={label} autoFocus={autofocus}/> }
-                    {(type === "text" || type === "number") && <input className="form-control" {...input} placeholder={placeholder || label} type={type} autoFocus={autofocus}/> }
-                    {type === "checkbox" && <input className="form-control checkbox" {...input} placeholder={label} type={type} autoFocus={autofocus}/> }
-                    {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span>{warning}</span>)) }
+                    {type === "textarea" && <textarea className={formControlClass} {...input} placeholder={label} autoFocus={autofocus}/> }
+                    {(type === "text" || type === "number") && <input className={formControlClass} {...input} placeholder={placeholder || label} type={type} autoFocus={autofocus}/> }
+                    {type === "checkbox" && <input className={`${formControlClass} checkbox`} {...input} placeholder={label} type={type} autoFocus={autofocus}/> }
+                    {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span className="form-warning">{warning}</span>)) }
                 </div>
             </div>
         );
@@ -68,7 +72,7 @@ class selectField extends React.Component {
                         )
                         }
                     </select>
-                    {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span>{warning}</span>))}
+                    {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span className="form-warning">{warning}</span>))}
                 </div>
             </div>
         );
@@ -230,7 +234,7 @@ class priceField extends React.Component {
                         onChangeEvent={this.handleChange} value={this.state[name]}
                     />
                     {touched && ((error && <span className="form-error">{error}</span>) || (warning &&
-                    <span>{warning}</span>))}
+                    <span className="form-warning">{warning}</span>))}
                 </div>
             </div>
         );
