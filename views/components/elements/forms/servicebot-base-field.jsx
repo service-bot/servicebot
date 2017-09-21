@@ -41,7 +41,7 @@ class selectField extends React.Component {
     }
     componentDidMount(){
         let {options, valueKey, input} = this.props;
-        if(!input.value){
+        if(!input.value && options.length > 0){
             let value = valueKey ? options[0][valueKey] : options[0].id;
             input.onChange(value);
 

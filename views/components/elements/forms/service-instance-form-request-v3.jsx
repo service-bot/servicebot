@@ -169,8 +169,10 @@ class ServiceRequestForm extends React.Component {
                         <div className="row">
                             <div className="col-md-8">
                                 <Authorizer permissions="can_administrate">
-                                    <Field name="client_id" type="select"
-                                           component={selectField} label="For Client" options={sortedUsers}
+                                    <Field name="client_id"
+                                           component={selectField}
+                                           label="For Client"
+                                           options={sortedUsers}
                                            validate={[required]}
                                     />
                                 </Authorizer>
