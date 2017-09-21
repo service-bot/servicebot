@@ -26,7 +26,7 @@ module.exports = {
         let handlers = getHandlers()
         if(properties) {
             return properties.reduce((acc, prop) => {
-                if (handlers[prop.type] && handlers[prop.type].priceHandler) {
+                if (handlers[prop.type] && handlers[prop.type].priceHandler && prop.config && prop.config.pricing) {
                     const adjuster = handlers[prop.type].priceHandler;
                     acc.push({
                         name: prop.name,
