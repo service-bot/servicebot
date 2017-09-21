@@ -158,12 +158,12 @@ class ServiceRequestForm extends React.Component {
 
         return (
             <div>
-                {/*<div className="col-md-3">*/}
-                {/*Tabs*/}
-{/*                <pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>
-                {JSON.stringify(helpers, null, 2)}
-                </pre>*/}
-                {/*</div>*/}
+                <div className="col-md-3">
+                Tabs
+                <pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>
+                {JSON.stringify(formJSON, null, 2)}
+                </pre>
+                </div>
                 <div className="col-md-12">
                     <form onSubmit={handleSubmit}>
                         <div className="row">

@@ -39,16 +39,18 @@ class selectField extends React.Component {
         super(props);
         this.state = {};
     }
-/*    componentDidMount(){
-        let {options, defaultValue} = this.props;
-        let self = this;
-        this.props.input.onChange(options[0]);
+    componentDidMount(){
+        let {options, valueKey, input} = this.props;
+        if(!input.value){
+            let value = valueKey ? options[0][valueKey] : options[0].id;
+            input.onChange(value);
 
-    }*/
+        }
+
+    }
     componentDidUpdate(prevProps, prevState){
-        let {options, defaultValue, input} = this.props;
+        let {options, valueKey, labelKey, defaultValue, input} = this.props;
         let self = this;
-        console.log("IOTIONS", options);
         //if there is a default value, set it, other wise, use the first option
         if((!input.value || !options.find(option =>option.id == input.value)) && options.length > 0 ){
             input.onChange(options[0].id);
