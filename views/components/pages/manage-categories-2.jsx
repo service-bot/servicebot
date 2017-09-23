@@ -1,13 +1,11 @@
 import React from 'react';
-import {Link, browserHistory} from 'react-router';
+import {browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Load from "../utilities/load.jsx";
 import Fetcher from '../utilities/fetcher.jsx';
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
-import DataTable from "../elements/datatable/datatable.jsx";
 import Dropdown from "../elements/dropdown.jsx";
-import ContentTitle from "../layouts/content-title.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import ModalAddCategory from "../elements/modals/modal-add-category.jsx";
 import ModalDeleteCategory from "../elements/modals/modal-delete-category.jsx";
@@ -28,14 +26,14 @@ class ManageCategories2 extends React.Component {
             advancedFilter: null,
         };
 
+        this.fetchData = this.fetchData.bind(this);
+        this.rowActionsFormatter = this.rowActionsFormatter.bind(this);
         this.openAddCategoryModal = this.openAddCategoryModal.bind(this);
         this.closeAddCategoryModal = this.closeAddCategoryModal.bind(this);
         this.openEditCategoryModal = this.openEditCategoryModal.bind(this);
         this.closeEditCategoryModal = this.closeEditCategoryModal.bind(this);
         this.openDeleteCategoryModal = this.openDeleteCategoryModal.bind(this);
         this.closeDeleteCategoryModal = this.closeDeleteCategoryModal.bind(this);
-        this.fetchData = this.fetchData.bind(this);
-        this.rowActionsFormatter = this.rowActionsFormatter.bind(this);
     }
 
     componentDidMount() {
@@ -48,7 +46,6 @@ class ManageCategories2 extends React.Component {
     fetchData() {
         let self = this;
         let url = '/api/v1/service-categories';
-        //todo: Can refactgor to reuse a fetch function as for the search
         Fetcher(url).then(function (response) {
             console.log("response", response);
             if (!response.error) {
@@ -60,7 +57,6 @@ class ManageCategories2 extends React.Component {
     }
 
     openAddCategoryModal() {
-        console.log("abs");
         this.setState({openAddCategoryModal: true,});
     }
 
@@ -112,18 +108,21 @@ class ManageCategories2 extends React.Component {
         let renderModals = () => {
             if (this.state.openAddCategoryModal) {
                 return (
-                    <ModalAddCategory show={this.state.openAddCategoryModal} hide={this.closeAddCategoryModal}/>
+                    <ModalAddCategory show={this.state.openAddCategoryModal}
+                                      hide={this.closeAddCategoryModal}/>
                 )
             }
             if (this.state.openEditCategoryModal) {
                 return (
-                    <ModalAddCategory id={this.state.currentDataObject.id} show={this.state.openEditCategoryModal}
+                    <ModalAddCategory id={this.state.currentDataObject.id}
+                                      show={this.state.openEditCategoryModal}
                                       hide={this.closeEditCategoryModal}/>
                 )
             }
             if (this.state.openDeleteCategoryModal) {
                 return (
-                    <ModalDeleteCategory id={this.state.currentDataObject.id} show={this.state.openDeleteCategoryModal}
+                    <ModalDeleteCategory id={this.state.currentDataObject.id}
+                                         show={this.state.openDeleteCategoryModal}
                                          hide={this.closeDeleteCategoryModal}/>
                 )
             }
