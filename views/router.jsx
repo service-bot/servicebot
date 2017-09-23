@@ -136,7 +136,7 @@ let AppRouter = function(props) {
                         <Route name="Create Template" path="create" component={ManageCatalogCreate}/>
                         <Route name="Edit Template" path=":templateId" component={ManageCatalogEdit}/>
                         <Route name="Duplicate Template" path=":templateId/duplicate" component={ManageCatalogDuplicate}/>
-                        <Route name="Edit Template" path=":templateId/edit" component={ManageCatalogEdit}/>
+                        {/*<Route name="Edit Template" path=":templateId/edit" component={ManageCatalogEdit}/>*/}
                     </Route>
                     {/* Query routes */}
                     <Route name="Services" path="manage-subscriptions/:status" component={ManageSubscriptions}/>
