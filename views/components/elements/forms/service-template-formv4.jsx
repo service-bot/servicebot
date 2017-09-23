@@ -45,7 +45,6 @@ class CustomField extends React.Component {
     render() {
 
         let props = this.props;
-        console.log("custom widget props", props);
         let {willAutoFocus, index, typeValue, member, myValues, privateValue, requiredValue, promptValue, configValue,
             setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt} = props;
         if(myValues.prop_label){
