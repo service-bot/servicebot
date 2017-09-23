@@ -20,6 +20,7 @@ class ManageCategories2 extends React.Component {
         this.state = {
             openAddCategoryModal: false,
             openDeleteCategoryModal: false,
+            rows: {},
             currentDataObject: {},
             lastFetch: Date.now(),
             loading: true,
@@ -43,19 +44,25 @@ class ManageCategories2 extends React.Component {
         this.fetchData();
     }
 
+    /**
+     * Fetches Table Data
+     * Sets the state with the fetched data for use in ServiceBotTableBase's props.row
+     */
     fetchData() {
         let self = this;
         let url = '/api/v1/service-categories';
         Fetcher(url).then(function (response) {
-            console.log("response", response);
             if (!response.error) {
                 self.setState({rows: response});
             }
             self.setState({loading: false});
-            console.log(self.state);
         });
     }
 
+    /**
+     * Modal Controls
+     * Open and close modals by setting the state for rendering the modals,
+     */
     openAddCategoryModal() {
         this.setState({openAddCategoryModal: true,});
     }
@@ -83,6 +90,10 @@ class ManageCategories2 extends React.Component {
         this.setState({openDeleteCategoryModal: false, currentDataObject: {}, lastFetch: Date.now()});
     }
 
+    /**
+     * Cell formatters
+     * Formats each cell data by passing the function as the dataFormat prop in TableHeaderColumn
+     */
     priceFormatter(cell, row) {
         return <DateFormat date={cell} time/>;
     }
@@ -110,21 +121,21 @@ class ManageCategories2 extends React.Component {
                 return (
                     <ModalAddCategory show={this.state.openAddCategoryModal}
                                       hide={this.closeAddCategoryModal}/>
-                )
+                );
             }
             if (this.state.openEditCategoryModal) {
                 return (
                     <ModalAddCategory id={this.state.currentDataObject.id}
                                       show={this.state.openEditCategoryModal}
                                       hide={this.closeEditCategoryModal}/>
-                )
+                );
             }
             if (this.state.openDeleteCategoryModal) {
                 return (
                     <ModalDeleteCategory id={this.state.currentDataObject.id}
                                          show={this.state.openDeleteCategoryModal}
                                          hide={this.closeDeleteCategoryModal}/>
-                )
+                );
             }
         };
 
@@ -141,7 +152,8 @@ class ManageCategories2 extends React.Component {
                                 <div className="col-xs-12">
                                     <ServiceBotTableBase
                                         rows={this.state.rows}
-                                        createItem={this.openAddCategoryModal}
+                                        createItemAction={this.openAddCategoryModal}
+                                        createItemLabel={'Create Category'}
                                         fetchRows={this.fetchData}
                                     >
                                         <TableHeaderColumn isKey
@@ -169,9 +181,8 @@ class ManageCategories2 extends React.Component {
                                                            className={'action-column-header'}
                                                            columnClassName={'action-column'}
                                                            dataFormat={ this.rowActionsFormatter }
-                                                           width={130}
+                                                           width={100}
                                                            filter={false}>
-
                                         </TableHeaderColumn>
                                     </ServiceBotTableBase>
                                 </div>
