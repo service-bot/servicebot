@@ -11,7 +11,6 @@ import {Price, getBillingType} from "../utilities/price.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 import ModalRequestCancellation from "../elements/modals/modal-request-cancellation.jsx";
 import ModalManageCancellation from "../elements/modals/modal-manage-cancellation.jsx";
 import ModalDeleteRequest from "../elements/modals/modal-delete-request.jsx";
@@ -131,24 +130,15 @@ class ManageSubscriptions extends React.Component {
         else if (interval == 'year') { interval = 'Yearly'; }
 
         let type = row.type.toLowerCase();
-        if(type == 'subscription') {
-            return (
-                <div>
-                    <span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span>
-                </div>
-            );
-        } else if (type == 'custom') {
-            return (
-                <span className="status-badge neutral">{getBillingType(row)}</span>
-            );
-        } else if (type == 'one_time') {
-            return (
-                <span className="status-badge neutral">{getBillingType(row)}</span>
-            );
-        } else {
-            return (
-                <span className="status-badge grey">{getBillingType(row)}</span>
-            );
+        switch(type){
+            case 'subscription':
+                return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
+            case 'custom':
+                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+            case 'one_time':
+                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+            default:
+                return ( <span className="status-badge grey">{getBillingType(row)}</span> );
         }
     }
     amountFormatter(cell){
@@ -157,15 +147,15 @@ class ManageSubscriptions extends React.Component {
     statusFormatter(cell){
         switch (cell) {
             case 'requested':
-                return (<span className='status-badge blue' >Requested</span>);
+                return ( <span className='status-badge blue' >Requested</span> );
             case 'running':
-                return (<span className='status-badge green' >Running</span>);
+                return ( <span className='status-badge green' >Running</span> );
             case 'waiting_cancellation':
-                return (<span className='status-badge yellow' >Waiting Cancellation</span>);
+                return ( <span className='status-badge yellow' >Waiting Cancellation</span> );
             case 'cancelled':
-                return (<span className='status-badge grey' >Cancelled</span>);
+                return ( <span className='status-badge grey' >Cancelled</span> );
             default:
-                return (<span className='status-badge grey' >{cell}</span>);
+                return ( <span className='status-badge grey' >{cell}</span> );
         }
     }
     createdFormatter(cell){
@@ -290,7 +280,7 @@ class ManageSubscriptions extends React.Component {
                                         fetchRows={this.fetchData}
                                     >
                                         <TableHeaderColumn isKey
-                                                           dataField='uid'
+                                                           dataField='user_id'
                                                            dataFormat={this.userIdFormatter}
                                                            dataSort={ false }
                                                            width='30'/>
