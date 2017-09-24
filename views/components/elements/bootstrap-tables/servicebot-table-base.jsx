@@ -110,9 +110,10 @@ class ServiceBotTableBase extends React.Component {
 
     render() {
 
-        let {children, rows, onAfterInsertRow, deleteRow, onAfterDeleteRow, customConfirmDeleteRow, clearSearch} = this.props;
+        let {noDataText, children, rows, onAfterInsertRow, deleteRow, onAfterDeleteRow, customConfirmDeleteRow, clearSearch} = this.props;
 
         const options = {
+            noDataText: noDataText || 'No Data To Display',
             afterInsertRow: onAfterInsertRow || this.onAfterInsertRow,   // A hook for after insert rows
             afterDeleteRow: onAfterDeleteRow || this.onAfterDeleteRow,
             handleConfirmDeleteRow: customConfirmDeleteRow || this.customConfirmDeleteRow,
