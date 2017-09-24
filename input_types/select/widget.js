@@ -21,7 +21,7 @@ class SelectPricing extends React.Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handlePercentPriceChange = this.handlePercentPriceChange.bind(this);
-        this.state = {};
+        this.state = (props.configValue && props.configValue.pricing) ? props.configValue.pricing.value : {};
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -36,6 +36,7 @@ class SelectPricing extends React.Component {
                 self.props.input.onChange(self.state);
             });
         }
+
     }
 
     handleChange(e, maskedValue, floatvalue) {
