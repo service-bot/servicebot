@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import {ServiceBotTableSearch, ServiceBotSearchField} from './servicebot-table-search.jsx';
+import './css/style.css';
 
 class ServiceBotTableBase extends React.Component {
 
