@@ -10,6 +10,8 @@ import DataTable from "../elements/datatable/datatable.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import {DashboardWidgets} from "../elements/dashboard/dashboard-widgets.jsx";
 import {ServiceOverTimeChart, ServiceStatusChart} from "../elements/dashboard/dashboard-chart.jsx";
+import DashboardRequestedServices from "./dashboard-requested-services.jsx";
+import DashboardCancellationRequests from "./dashboard-cancellation-requests.jsx";
 import PageSection from "../layouts/page-section.jsx";
 
 class Dashboard extends React.Component {
@@ -63,48 +65,9 @@ class Dashboard extends React.Component {
                                 <ContentTitle title="Welcome to your dashboard"/>
                                 <DashboardWidgets data={this.state.analytics}/>
                                 <div className="row">
-                                    <div className="col-md-8">
-                                        <DataTable parentState={this.state}
-                                                   get={'/api/v1/service-instances/search?key=status&value=waiting_cancellation'}
-                                                   col={['references.users.0.name', 'name', 'created_at']}
-                                                   colNames={['Customer Name', 'Service Name', 'Created On']}
-                                                   statusCol="status"
-                                                   headingText="Cancellation Requests"
-                                                   descriptionText="Services with cancellation request from customers."
-                                                   className="dashboard-charts"
-                                                   mod_name={(data, resObj)=>{
-                                                       return ( <Link to={`/service-instance/${resObj.id}`}>{data}</Link> );
-                                                   }}
-                                                   mod_created_at={(data)=>{return <DateFormat date={data}/>}}
-                                                   dropdown={[{
-                                                       name: 'Actions', direction: 'right', buttons: [
-                                                           {id: 1, name: 'View', link: '/service-instance/:id'},
-                                                           {
-                                                               id: 2, name: 'View Invoices', link: '#',
-                                                               onClick: (dataObj)=>{return function(e) {
-                                                                   e.preventDefault();
-                                                                   browserHistory.push(`/billing-history/${dataObj.user_id}`);
-                                                               }}
-                                                           }]
-                                                   }]}
-                                        />
-                                        <DataTable parentState={this.state}
-                                                   get={'/api/v1/service-instances/search?key=status&value=requested'}
-                                                   col={['references.users.0.name', 'name', 'created_at']}
-                                                   colNames={['Customer Name', 'Service Name', 'Created On']}
-                                                   statusCol="status"
-                                                   headingText="Requested Services"
-                                                   descriptionText="Services requested for customer and awaiting the customer to approve."
-                                                   className="dashboard-charts"
-                                                   mod_name={(data, resObj)=>{
-                                                       return ( <Link to={`/service-instance/${resObj.id}`}>{data}</Link> );
-                                                   }}
-                                                   mod_created_at={(data)=>{return <DateFormat date={data}/>}}
-                                                   dropdown={[{
-                                                       name: 'Actions', direction: 'right', buttons: [
-                                                           {id: 1, name: 'View', link: '/service-instance/:id'}]
-                                                   }]}
-                                        />
+                                    <div className="col-md-8 dashboard-charts">
+                                        <DashboardRequestedServices/>
+                                        <DashboardCancellationRequests/>
                                     </div>
                                     <div className="col-md-4">
                                         <ServiceStatusChart className="dashboard-charts"/>

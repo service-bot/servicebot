@@ -4,3 +4,14 @@
 .table {
     overflow: visible;
 }
+
+/* table column styles */
+.customer-column{
+
+}
+.customer-column .customer-image{
+
+}
+.customer-column .customer-name{
+    margin-left: 5px;
+}
