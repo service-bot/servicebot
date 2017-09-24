@@ -161,6 +161,17 @@ class ManageSubscriptions extends React.Component {
     createdFormatter(cell){
         return ( <DateFormat date={cell} time/> );
     }
+    requestedByFormatter(cell){
+        if(cell && cell != null){
+            let user = _.find(this.state.allUsers, function (user) {
+                return user.id == cell
+            });
+            if(user!= undefined){
+                return user.name || user.email;
+            }
+            return cell;
+        }
+    }
     rowActionsFormatter(cell, row){
         let self = this;
 
@@ -178,7 +189,7 @@ class ManageSubscriptions extends React.Component {
                     {   type: "button",
                         label: this.dropdownStatusFormatter(row),
                         action: () => {self.onOpenActionModal(row)}, },
-                    ]}
+                ]}
             />
         );
     }
@@ -197,17 +208,6 @@ class ManageSubscriptions extends React.Component {
             return null;
         }
         return "Error";
-    }
-    requestedByFormatter(cell){
-        if(cell && cell != null){
-            let user = _.find(this.state.allUsers, function (user) {
-                return user.id == cell
-            });
-            if(user!= undefined){
-                return user.name || user.email;
-            }
-            return cell;
-        }
     }
 
     render () {
