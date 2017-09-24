@@ -45,7 +45,6 @@ class ManageSubscriptions extends React.Component {
             return browserHistory.push("/login");
         }
         this.fetchData();
-        this.fetchAllUsers();
     }
 
     /**
@@ -75,7 +74,8 @@ class ManageSubscriptions extends React.Component {
                 console.log('subscription data', response);
                 self.setState({rows: response});
             }
-            // self.setState({loading: false});
+        }).then(function (){
+            self.fetchAllUsers();
         });
     }
 

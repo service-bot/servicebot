@@ -22,8 +22,8 @@ class DataTable extends React.Component {
     //dropdown(Array)   tells the render function how to render the dropdown (support multiple)
     //** example        [{name:'Actions', direction: 'right', buttons:[{id: 1, name: 'Stop', link: '/service-instances/stop'}]
     //** function       you can pass the name and link in each button as function, and return the value you need for the button.
-    //** example        dropdown={[{name:'Actions', direction: 'right', buttons:[{id: 3, name: this.dropdownStatus, link: this.dropdownStatusLink}]}]
-    //**                this.dropdownStatus and this.dropdownStatusLink are functions defined in your page.
+    //** example        dropdown={[{name:'Actions', direction: 'right', buttons:[{id: 3, name: this.dropdownStatusFormatter, link: this.dropdownStatusLink}]}]
+    //**                this.dropdownStatusFormatter and this.dropdownStatusLink are functions defined in your page.
 
     //buttons(Array)    tells the render function how to render the buttons (support multiple)
     //** example        [{name:'View', link:'/users'},{name:'Edit', link:'/users/edit'}]
