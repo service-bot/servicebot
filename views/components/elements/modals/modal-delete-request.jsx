@@ -56,7 +56,7 @@ class ModalDeleteRequest extends React.Component {
 
         if(currentModal == 'model_delete'){
             return(
-                <Modal modalTitle={pageName} show={self.props.show} hide={self.props.hide} hideFooter={true} top="40%" width="490px">
+                <Modal modalTitle={pageName} icon="fa-trash" show={self.props.show} hide={self.props.hide} hideFooter={true} top="40%" width="490px">
                     <div className="table-responsive">
                         <div className="p-20">
                             <div className="row">
