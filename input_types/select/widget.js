@@ -72,7 +72,7 @@ class SelectPricing extends React.Component {
                                            onChangeEvent={self.handleChange}
                             /> :
                             <CurrencyInput className="form-control addon-checkbox-widget-price-input"
-                                           value={self.state[option] || configValue.pricing.value[option]} name={option} key={index}
+                                           value={self.state[option] || (configValue.pricing && configValue.pricing.value ) && configValue.pricing.value[option]}    name={option} key={index}
                                            decimalSeparator="." precision="0" suffix="%"
                                            onChangeEvent={self.handlePercentPriceChange}/>
                         }
