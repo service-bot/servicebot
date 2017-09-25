@@ -1,3 +1,6 @@
+.servicebot-table-base {
+    margin-bottom: 25px;
+}
 .react-bs-container-body{
     overflow: visible !important;
 }

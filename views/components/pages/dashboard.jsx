@@ -1,19 +1,17 @@
 import React from 'react';
-import {Link, hashHistory, browserHistory} from 'react-router';
+import {browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Fetcher from '../utilities/fetcher.jsx';
 import Load from '../utilities/load.jsx';
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
-import DataTable from "../elements/datatable/datatable.jsx";
-import DateFormat from "../utilities/date-format.jsx";
 import {DashboardWidgets} from "../elements/dashboard/dashboard-widgets.jsx";
 import {ServiceOverTimeChart, ServiceStatusChart} from "../elements/dashboard/dashboard-chart.jsx";
 import DashboardRequestedServices from "./dashboard-requested-services.jsx";
 import DashboardCancellationRequests from "./dashboard-cancellation-requests.jsx";
 import SVGIcons from "../utilities/svg-icons.jsx";
-import PageSection from "../layouts/page-section.jsx";
+import ServiceBotTableNoData from '../elements/bootstrap-tables/servicebot-table-no-data.jsx';
 let _ = require("lodash");
 import { connect } from "react-redux";
 
@@ -88,7 +86,11 @@ class Dashboard extends React.Component {
                                                 <DashboardRequestedServices/>
                                                 <DashboardCancellationRequests/>
                                             </div> :
-                                            <div className="no-data-message">
+                                            <ServiceBotTableNoData
+                                                title="Welcome to your store dashboard!"
+                                                body="Let's get started by creating your first product / service!"
+                                                buttonLabel="Create Now!"
+                                                buttonAction={()=>{browserHistory.push('/manage-catalog/create')}}>
                                                 <SVGIcons id="custom-field-svg" width="550px" height="400px" viewBoxX="700" viewBoxY="500" fillColor={_.get(options, 'service_template_icon_background_color.value', '#000000')}>
                                                     <g opacity=".1">
                                                         <circle cx="344.14" cy="234.42" r="136.86" fill="#1C75BC"/>
@@ -207,12 +209,7 @@ class Dashboard extends React.Component {
                                                         <path d="m421.2 244.62s0.863-20.275-18.328-23.613c0 0 13.71 6.706 10.643 25.689 0 0 5.89-1.465 7.685-2.076z" fill="#fff"/>
                                                     </g>
                                                 </SVGIcons>
-                                                <p className="no-data-message-text">
-                                                    <span className="no-data-message-text-title">Welcome to your store dashboard!</span>
-                                                    <span className="no-data-message-text-body">Let's get started by creating your first product / service!</span>
-                                                    <button className="btn btn-rounded btn-outline btn-info" onClick={()=>{browserHistory.push('/manage-catalog/create')}}>Create Now!</button>
-                                                </p>
-                                            </div>
+                                            </ServiceBotTableNoData>
                                         }
                                     </div>
                                     <div className="col-md-4">
