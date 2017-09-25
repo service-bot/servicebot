@@ -112,7 +112,7 @@ User.prototype.promiseStripeReconnect = function () {
 /**
  * Overriding the User create function to also add Stripe customer creation and attachment.
  */
-User.prototype.createWithStripe = function (callback) {
+let createWithStripe = function (options, callback) {
     let self = this;
     self.data.email = self.data.email.toLowerCase();
     let customer_obj = {
@@ -121,7 +121,7 @@ User.prototype.createWithStripe = function (callback) {
     };
 
     //Create Stripe Customer:
-    Stripe().connection.customers.create(customer_obj, function(err, customer) {
+    Stripe(options).connection.customers.create(customer_obj, function(err, customer) {
         if(!err){
             console.log(`Stripe Customer Created: ${customer.id}`);
             self.data.customer_id = customer.id;
@@ -141,6 +141,17 @@ User.prototype.createWithStripe = function (callback) {
         }
     });
 };
+
+//allows to pass option override, no longer relying 100% on store.
+User.prototype.createWithStripe = new Proxy(createWithStripe, {
+    apply : function(target, thisArg, argList){
+        if(argList.length === 2){
+            target.bind(thisArg)(...argList)
+        }else{
+            target.bind(thisArg)(undefined, ...argList);
+        }
+    }
+});
 
 User.prototype.updateWithStripe = function (callback) {
     let self = this;

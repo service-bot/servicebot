@@ -4,28 +4,34 @@ let _ = require('lodash');
 let Promise = require("bluebird");
 
 //TODO - BIG TASK - relationship system, allow to define relationships in model and relationship tables - would autodelete rel rows
-
+//TODO - Big task - full promise support..........
+//todo - big task - refactor ORM completely....
 /**
  *
  * @param tableName - name of table the entity belongs to
  * @param primaryKey
  * @param references - follows format
+ * @param database - database object
  * @returns {Entity}
  */
 
-module.exports = function(tableName, references=[], primaryKey='id') {
+module.exports = function(tableName, references=[], primaryKey='id', database=knex) {
 
     var Entity = function (data) {
         this.data = data;
     }
 
-
+    Entity.database = database;
     Entity.table = tableName;
     Entity.primaryKey = primaryKey;
     Entity.references = references;
 
     Entity.prototype.data = {};
 
+    //introduced to support plugins
+    Entity.changeDB = (db) => {
+        Entity.database = db;
+    };
 
     Entity.prototype.get = function (name) {
         return this.data[name];
@@ -62,12 +68,12 @@ module.exports = function(tableName, references=[], primaryKey='id') {
 
     Entity.createPromise =function(entityData){
         let self = this
-        return knex(Entity.table).columnInfo()
+        return Entity.database(Entity.table).columnInfo()
                 .then(function (info) {
                     return _.pick(entityData, _.keys(info));
                 })
                 .then(function(data){
-                    return knex(Entity.table).returning("*").insert(data)
+                    return Entity.database(Entity.table).returning("*").insert(data)
                 })
                 .then(function(result){
                     return result[0];
@@ -78,12 +84,12 @@ module.exports = function(tableName, references=[], primaryKey='id') {
     };
     Entity.prototype.create = function (callback) {
         let self = this;
-        knex(Entity.table).columnInfo()
+        Entity.database(Entity.table).columnInfo()
             .then(function (info) {
                 return _.pick(self.data, _.keys(info));
             })
             .then(function(data){
-                knex(Entity.table).returning(primaryKey).insert(data)
+                Entity.database(Entity.table).returning(primaryKey).insert(data)
                     .then(function(result){
                         self.set(primaryKey, result[0]);
                         callback(null, self);
@@ -101,13 +107,13 @@ module.exports = function(tableName, references=[], primaryKey='id') {
         if (!id) {
             throw "cannot update non existent"
         }
-        knex(Entity.table).columnInfo()
+        Entity.database(Entity.table).columnInfo()
             .then(function (info) {
                 self.data.updated_at = new Date();
                 return _.pick(self.data, _.keys(info));
             })
             .then(function(data){
-                knex(Entity.table).where(primaryKey, id).update(data).returning("*")
+                Entity.database(Entity.table).where(primaryKey, id).update(data).returning("*")
                     .then(function(result){
                         callback(null, new Entity(result[0]));
                     })
@@ -121,7 +127,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
 
     Entity.prototype.delete = function (callback) {
         let id = this.get('id');
-        knex(Entity.table).where('id', id).del()
+        Entity.database(Entity.table).where('id', id).del()
             .then(function(res){
                 callback(null, res);
             })
@@ -206,7 +212,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
 
     //Also want to think about having generic find method all models would use
     Entity.findAll = function(key=true, value=true, callback){
-        knex(Entity.table).where(key, value)
+        Entity.database(Entity.table).where(key, value)
             .then(function (result) {
                 if (!result) {
                     result = [];
@@ -227,7 +233,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
     };
 
     Entity.findAllByOrder = function(key, value, orderBy, sortMethod, callback){
-        knex(Entity.table).orderBy(orderBy,sortMethod).where(key, value)
+        Entity.database(Entity.table).orderBy(orderBy,sortMethod).where(key, value)
             .then(function (result) {
                 if (!result) {
                     result = [];
@@ -241,7 +247,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
     };
 
     Entity.findOne = function (key, value, callback) {
-        knex(Entity.table).where(key, value)
+        Entity.database(Entity.table).where(key, value)
             .then(function (result) {
                 if (!result) {
                     result = [];
@@ -255,7 +261,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
 
     //Generic findById function. Finds the record by passing the id.
     Entity.findById = function(id, callback){
-        knex(Entity.table).where('id', id)
+        Entity.database(Entity.table).where('id', id)
             .then(function (result) {
                 if(!result){
                     result = [];
@@ -269,7 +275,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
 
     Entity.getSchema = function(includeTo,includeFrom,callback){
         //get column info for this entity
-        knex(Entity.table).columnInfo()
+        Entity.database(Entity.table).columnInfo()
             .then(function (info) {
                 let schema = info;
                 schema.references = {};
@@ -280,7 +286,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
 
                         //reduce by returning same promise with .then for each relationship where the schema has the relationship added
                     return promise.then(function(){
-                        return knex(relationship.model.table).columnInfo().then(function(relInfo){
+                        return Entity.database(relationship.model.table).columnInfo().then(function(relInfo){
                             schema.references[relationship.model.table] = relInfo;
                         })
                     })
@@ -298,7 +304,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
         if(value % 1 === 0){
             query = key + " = ?";
         }
-        knex(Entity.table).whereRaw(query, value)
+        Entity.database(Entity.table).whereRaw(query, value)
             .then(function (result) {
                 if (!result) {
                     result = [];
@@ -314,7 +320,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
     //Returns the total number of rows for the Entity Table
 
     Entity.getRowCountByKey = function (key, value, callback) {
-        let query = knex(Entity.table).count();
+        let query = Entity.database(Entity.table).count();
         if(key) {
             query.where(key, value)
         }
@@ -327,7 +333,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
     };
 
     Entity.getSumOfColumnFiltered = function (column, key, value, callback) {
-        let query = knex(Entity.table).sum(column);
+        let query = Entity.database(Entity.table).sum(column);
         if(key) {
             query.where(key, value)
         }
@@ -341,7 +347,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
     };
     //get objects created between dates
     Entity.findBetween = function (from, to, dateField='created', callback) {
-        knex(Entity.table).whereBetween(dateField, [from, to])
+        Entity.database(Entity.table).whereBetween(dateField, [from, to])
             .then(function (result) {
                 if (!result) {
                     result = [];
@@ -360,15 +366,17 @@ module.exports = function(tableName, references=[], primaryKey='id') {
      * @param dataArray - array of data objects that are going to be inserted
      * @param callback
      */
-    Entity.batchCreate = function (dataArray, callback) {
-        knex(Entity.table).columnInfo()
+
+        //todo: refactor..
+    let batchCreate = function (dataArray, callback) {
+        Entity.database(Entity.table).columnInfo()
             .then(function (info) {
                 return dataArray.map(function (entity) {
                     return _.pick(entity, _.keys(info));
                 })
             })
             .then(function (data) {
-                knex(Entity.table).insert(data).returning("*")
+                Entity.database(Entity.table).insert(data).returning("*")
                     .then(function (result) {
                         callback(result)
                     })
@@ -378,18 +386,34 @@ module.exports = function(tableName, references=[], primaryKey='id') {
                     })
             })
     };
+    let promiseProxy = function(functionToProxy){
+        return new Proxy(functionToProxy, {
+            apply : function(target, thisArg, argumentList){
+                if(typeof argumentList[argumentList.length] === "function"){
+                    target(...argumentList);
+                }
+                else{
+                    return new Promise((resolve) => {
+                        target(...argumentList, resolve);
+                    })
+                }
+            }
+        })
+
+    }
+    //promise support
 
     //TODO this batch update work
-    Entity.batchUpdate = function (dataArray, callback) {
+    let batchUpdate = function (dataArray, callback) {
 
-        knex(Entity.table).columnInfo()
+        Entity.database(Entity.table).columnInfo()
             .then(function (info) {
                 return dataArray.map(function (entity) {
                     return _.pick(entity, _.keys(info));
                 })
             })
             .then(function (data) {
-                knex.transaction(function(trx){
+                Entity.database.transaction(function(trx){
                     return Promise.map(data, function(entityData){
                         if(entityData[Entity.primaryKey]) {
                             return trx.from(Entity.table).where(Entity.primaryKey, entityData[Entity.primaryKey]).update(entityData).returning("*");
@@ -405,6 +429,9 @@ module.exports = function(tableName, references=[], primaryKey='id') {
                 })
             });
     };
+
+    Entity.batchCreate = promiseProxy(batchCreate);
+    Entity.batchUpdate = promiseProxy(batchUpdate);
 
 
     return Entity;

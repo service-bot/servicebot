@@ -101,10 +101,10 @@ let systemOptions =
         {"option": "service_template_icon_fill_color", "value": "#FFFFFF", public: true, "type": "theme", "data_type": "color_picker"},
 
     ],
-        populateOptions: function(options=systemOptions.options){
+        populateOptions: function(options=systemOptions.options, model=SystemOption){
             return Promise.all(options.map((option) => {
                 return new Promise((resolve, reject) => {
-                    new SystemOption(option).create((err, result) => {
+                    new model(option).create((err, result) => {
                         if(err){
                             if(err.code == 23505) {
                                 resolve(`option ${option.option} already exists`);

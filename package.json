@@ -7,7 +7,9 @@
     "build": "./node_modules/.bin/webpack",
     "dev-client": "./node_modules/.bin/webpack-dev-server --port 3002 --content-base public/",
     "fullStart": "./node_modules/.bin/webpack && node ./bin/www",
-    "debug": "node $NODE_DEBUG_OPTION ./bin/www"
+    "debug": "node $NODE_DEBUG_OPTION ./bin/www",
+    "test": "node ./tests/pluginbotTest.js"
+
   },
   "repository": {
     "type": "git",
@@ -60,6 +62,7 @@
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
     "pg": "^6.4.2",
+    "pluginbot": "^0.1.10",
     "promise-polyfill": "^6.0.2",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",

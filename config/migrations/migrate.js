@@ -9,6 +9,7 @@ let SystemOptions = require("../../models/system-options");
 
 
 async function migrate(){
+    console.log(process.env.npm_package_version);
     let migrations = await getMigrations()
     let appVersion = (await SystemOptions.getOptions()).app_version;
     console.log(migrations);

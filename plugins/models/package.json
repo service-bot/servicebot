@@ -1,0 +1,13 @@
+{
+  "name": "models",
+  "version": "0.0.1",
+  "dependencies": {
+    
+  },
+  "pluginbot" : {
+    "server" : {
+      "main" : "models.js",
+      "consumes" : ["database"]
+    }
+  }
+}
