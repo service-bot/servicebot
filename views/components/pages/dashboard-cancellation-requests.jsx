@@ -93,7 +93,8 @@ class DashboardCancellationRequests extends React.Component {
                                        dataField='user_id'
                                        dataFormat={this.userIdFormatter}
                                        dataSort={ false }
-                                       width='30'/>
+                                       width='30'
+                                       filter={false}/>
                     <TableHeaderColumn dataField='name'
                                        dataFormat={this.nameFormatter}
                                        dataSort={ true }
