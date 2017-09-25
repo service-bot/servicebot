@@ -1,7 +1,7 @@
 let handleConfig = {
     priceHandler : function(data, config){
-        console.log('data',data);
-        console.log("stuff", config.pricing.value);
+        // console.log('data',data);
+        // console.log("stuff", config.pricing.value);
         return config.pricing.value[data.value];
     },
     validator : function(data, config){
@@ -10,6 +10,6 @@ let handleConfig = {
         }
         return true;
     }
-}
+};
 
 module.exports = handleConfig;

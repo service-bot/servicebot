@@ -67,7 +67,7 @@ class SelectPricing extends React.Component {
                             className="control-label form-label-flex-md addon-options-widget-price-input-label">{option}</label>
                         {configValue.operation && (configValue.operation == "add" || configValue.operation == "subtract") ?
                             <CurrencyInput className="form-control addon-options-widget-price-input"
-                                           value={self.state[option] || configValue.pricing.value[option]} name={option} key={index}
+                                           value={self.state[option] || (configValue.pricing && configValue.pricing.value ) && configValue.pricing.value[option]} name={option} key={index}
                                            prefix="$" decimalSeparator="." thousandSeparator="," precision="2"
                                            onChangeEvent={self.handleChange}
                             /> :
