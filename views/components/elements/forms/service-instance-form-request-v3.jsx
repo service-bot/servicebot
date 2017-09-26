@@ -246,11 +246,6 @@ class ServiceRequestForm extends React.Component {
                                     </div>
                                 }
 
-                                {!helpers.uid && formJSON.amount > 0 && <div>
-                                    Would be billing settings
-                                </div>
-                                }
-
                                 <h3>Custom Fields</h3>
                                 <FormSection name="references">
                                     <FieldArray name="service_template_properties"
