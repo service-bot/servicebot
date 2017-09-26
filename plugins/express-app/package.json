@@ -1,12 +1,12 @@
 {
-  "name": "models",
+  "name": "express-app",
   "version": "0.0.1",
   "dependencies": {
     
   },
   "pluginbot" : {
     "server" : {
-      "main" : "models.js",
+      "main" : "app.js",
       "consumes" : ["database"]
     }
   }

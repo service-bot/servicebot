@@ -12,12 +12,12 @@ process.on('unhandledRejection', function (e) {
 
 // create the pool somewhere globally so its lifetime
 // lasts for as long as your app is running
-let User = require('../models/user');
-let Invitation = require('../models/invitation');
-let Invoices = require('../models/invoice');
 
 // expose this function to our app using module.exports
 module.exports = function (passport) {
+    let User = require('../models/user');
+    let Invitation = require('../models/invitation');
+    let Invoices = require('../models/invoice');
 
     // =========================================================================
     // passport session setup ==================================================

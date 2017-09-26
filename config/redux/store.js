@@ -1,4 +1,4 @@
-
+//todo: consolidate with pluginbot
 let NotificationTemplate = require("../../models/notification-template");
 let thunk = require('redux-thunk').default;
 let sagaMiddleware = require("./saga");
@@ -15,7 +15,7 @@ const defaultAppState = {
     "eventSagas" : {},
     "options" : {}
 };
-//todo: store sagas in store
+//todo: store sagas in store?
 function appReducer(state = defaultAppState , action) {
     //change the store state based on action.type
     switch(action.type) {

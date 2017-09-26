@@ -40,6 +40,14 @@ module.exports = {
             yield call(populateDB, database, initialConfig);
             console.log("Initialization complete!!!!!");
             yield put({type : "FINISHED_SETUP"});
+        }else{
+
+            //todo: move this to a plugin
+            let migrate = require("../../config/migrations/migrate");
+            yield call(migrate);
+            //todo : implement new system options?
+            //check migrate
+            //check new system options?
         }
 
 

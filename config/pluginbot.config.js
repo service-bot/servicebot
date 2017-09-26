@@ -24,58 +24,6 @@ let knex = require ("knex");
 const PLUGIN_DIRECTORY = path.resolve(__dirname, "../plugins");
 const PLUGIN_TABLE = "plugins";
 
-let envExists = function() {
-    return fs.existsSync(path.join(__dirname, '../env/.env'));
-}
-
-
-let getEnabledPlugins = async function(db){
-    let pluginTableExists = await db.schema.hasTable(PLUGIN_TABLE);
-    console.log("plugin table exists: ", pluginTableExists);
-    return  await (pluginTableExists ? db(PLUGIN_TABLE).where("enabled", true) : basePlugins());
-
-}
-
-let basePlugins = function() {
-
-   return [
-        {"path": `${PLUGIN_DIRECTORY}/database`, dbConfig : getDBConf()},
-        {"path": `${PLUGIN_DIRECTORY}/setup`, appConfig : getAppConf()},
-    ];
-};
-
-let getAppConf = function(){
-    return {
-
-        "port" : process.env.PORT || 3000,
-        "ssl_port" : process.env.SSL_PORT || 3001,
-        "certificate_path" : process.env.CERTIFICATES || null //ssl not mandatory
-    };
-}
-
-let getDBConf = function(){
-    let conf =  {
-        "host": process.env.POSTGRES_DB_HOST,
-        "user": process.env.POSTGRES_DB_USER,
-        "database" : process.env.POSTGRES_DB_NAME,
-        "password" : process.env.POSTGRES_DB_PASSWORD,
-        "port" : process.env.POSTGRES_DB_PORT,
-    };
-    if(Object.values(conf).some(value => value === undefined)){
-        //todo: say what it's missing
-        console.log("missing db configuration!")
-        return undefined
-    }
-    return conf;
-};
-
-
-
-
-
-
-
-
 module.exports = async function(){
     let plugins = [];
     if(!envExists()){
@@ -95,6 +43,8 @@ module.exports = async function(){
 
         plugins = await getEnabledPlugins(db);
     }
+
+
     return {
         plugins : plugins,
 
@@ -127,3 +77,55 @@ module.exports = async function(){
     }
 
 };
+
+
+
+
+let envExists = function() {
+    return fs.existsSync(path.join(__dirname, '../env/.env'));
+}
+
+
+let getEnabledPlugins = async function(db){
+    let pluginTableExists = await db.schema.hasTable(PLUGIN_TABLE);
+    console.log("plugin table exists: ", pluginTableExists);
+    return  await (pluginTableExists ? db(PLUGIN_TABLE).where("enabled", true) : basePlugins());
+
+}
+
+let basePlugins = function() {
+
+    return [
+        {"path": `${PLUGIN_DIRECTORY}/database`, dbConfig : getDBConf()},
+        {"path": `${PLUGIN_DIRECTORY}/setup`, appConfig : getAppConf()},
+        {"path": `${PLUGIN_DIRECTORY}/express-app`, appConfig : getAppConf()},
+
+    ];
+};
+
+let getAppConf = function(){
+    return {
+
+        "port" : process.env.PORT || 3000,
+        "ssl_port" : process.env.SSL_PORT || 3001,
+        "certificate_path" : process.env.CERTIFICATES || null, //ssl not mandatory
+    };
+};
+
+
+let getDBConf = function(){
+    let conf =  {
+        "host": process.env.POSTGRES_DB_HOST,
+        "user": process.env.POSTGRES_DB_USER,
+        "database" : process.env.POSTGRES_DB_NAME,
+        "password" : process.env.POSTGRES_DB_PASSWORD,
+        "port" : process.env.POSTGRES_DB_PORT,
+    };
+    if(Object.values(conf).some(value => value === undefined)){
+        //todo: say what it's missing
+        console.log("missing db configuration!")
+        return undefined
+    }
+    return conf;
+};
+

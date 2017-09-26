@@ -9,7 +9,8 @@ module.exports = {
             yield consume(services.startTrigger);
             console.log("Setup starting!");
             let cancelChannel = yield actionChannel("FINISHED_SETUP");
-            //start stuff
+
+            //wait for api to send initial configuration
             let initialConfig = yield call(app, config.appConfig);
             console.log("providing teh confs");
 
