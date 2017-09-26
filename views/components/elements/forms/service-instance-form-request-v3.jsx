@@ -312,7 +312,6 @@ class ServiceTemplateForm extends React.Component {
         };
 
         this.closeUserLoginModal = this.closeUserLoginModal.bind(this);
-        this.handleSubmission = this.handleSubmission.bind(this);
         this.retrieveStripeToken = this.retrieveStripeToken.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
     }
@@ -399,49 +398,6 @@ class ServiceTemplateForm extends React.Component {
         }
     }
 
-    handleSubmission(){
-        let self = this;
-        let payload = self.props.validateForm(self.props.formData);
-
-        if(!this.state.hasCard && this.state.stripeForm && !this.state.stripToken){
-            this.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
-        }else if(this.state.hasCard || this.state.stripToken || isAuthorized({permissions: "can_administrate"})){
-            if(!payload.hasErrors) {
-                self.setState({ajaxLoad: true});
-
-                Fetcher(this.state.formURL, 'POST', payload).then(function (response) {
-                    if (!response.error) {
-                        if(self.props.uid) {
-                            browserHistory.push(`/service-instance/${response.id}`);
-                            self.setState({ajaxLoad: false, success: true});
-                        }else if(response.url && response.api){ //this is a case where the user is new and has invitation
-                            self.props.setUid(response.user_id);
-                            self.props.setUser(response.user_id);
-                            self.props.addAlert({id:'user-requested-service-new-user-invited', message: 'Please check your email and set your password to complete your account.', show: true});
-                            localStorage.setItem("permissions", response.permissions);
-                            self.setState({emailExists: true, invitationExists: true, serviceCreated: response, ajaxLoad: false, success: true});
-                        }else{
-                            self.setState({ajaxLoad: false, success: true, serviceCreated: response});
-                        }
-                    } else {
-                        self.setState({ajaxLoad: false});
-                        console.log(`Server Error:`, response.error);
-                        if(response.error == "This email already exists in the system"){
-                            self.setState({emailExists: true, formResponseError: response.error});
-                        }else if(response.error == "Invitation already exists for this user"){
-                            self.setState({emailExists: true, invitationExists: true, formResponseError: response.error});
-                        }
-                    }
-                });
-            }else{
-                console.log("Errors found by validators", payload);
-            }
-        }else{
-            console.log("User doesn't have card nor a stripe token");
-        }
-    }
-
-
     closeUserLoginModal(){
         this.setState({emailExists: false});
     }
@@ -500,12 +456,12 @@ class ServiceTemplateForm extends React.Component {
             };
         }
 
-        //make new field for CC number
-
         return (
 
             <div>
-                {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
+                {(!this.state.hasCard &&
+                    !isAuthorized({permissions: "can_administrate"})) &&
+                    this.props.service.amount > 0 &&
                 <BillingSettingsForm context="SERVICE_REQUEST" retrieveStripeToken={this.retrieveStripeToken}/>
                 }
 
