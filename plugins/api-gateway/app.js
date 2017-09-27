@@ -12,7 +12,7 @@ let architect = require("architect")
 let schedule = require("node-schedule");
 var helmet = require('helmet')
 let consume = require("pluginbot/effects/consume");
-let {call} = require("redux-saga/effects")
+let {call, spawn} = require("redux-saga/effects")
 let createServer = require("./server");
 
 module.exports = {
@@ -144,6 +144,9 @@ module.exports = {
             require('../../api/permissions')(api);
             require('../../api/roles')(api);
             require('../../api/analytics')(api);
+            let routeConsumer = require("./router");
+            let authService = yield consume(services.authService);
+            yield spawn(routeConsumer,  api, services.routeDefinition, authService);
 
 
             var configPath = path.join(__dirname, "../../config/plugins.js");

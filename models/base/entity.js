@@ -2,6 +2,7 @@
 let knex = require('../../config/db.js');
 let _ = require('lodash');
 let Promise = require("bluebird");
+var whereFilter = require('knex-filter-loopback').whereFilter;
 
 //TODO - BIG TASK - relationship system, allow to define relationships in model and relationship tables - would autodelete rel rows
 //TODO - Big task - full promise support..........
@@ -225,6 +226,17 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
             });
     };
 
+    //best one! (todo... clean up ORM cuz it sucks)
+    Entity.find = async function(filter={}){
+        try{
+            let entities = await Entity.database(Entity.table).where(whereFilter(filter));
+            return entities ? entities.map(e => new Entity(e)) : [];
+        }catch(err){
+            console.error(err);
+            return [];
+        }
+    };
+
     //Find on relative function will call the findAll function by default. Allowing overrides at a model layer.
     Entity.findOnRelative = function(key=true, value=true, callback){
         Entity.findAll(key, value, function(result){
@@ -386,21 +398,6 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
                     })
             })
     };
-    let promiseProxy = function(functionToProxy){
-        return new Proxy(functionToProxy, {
-            apply : function(target, thisArg, argumentList){
-                if(typeof argumentList[argumentList.length] === "function"){
-                    target(...argumentList);
-                }
-                else{
-                    return new Promise((resolve) => {
-                        target(...argumentList, resolve);
-                    })
-                }
-            }
-        })
-
-    }
     //promise support
 
     //TODO this batch update work
@@ -429,7 +426,7 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
                 })
             });
     };
-
+    let promiseProxy = require("../../lib/promiseProxy");
     Entity.batchCreate = promiseProxy(batchCreate);
     Entity.batchUpdate = promiseProxy(batchUpdate);
 

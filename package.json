@@ -9,7 +9,6 @@
     "fullStart": "./node_modules/.bin/webpack && node ./bin/www",
     "debug": "node $NODE_DEBUG_OPTION ./bin/www",
     "test": "node ./tests/pluginbotTest.js"
-
   },
   "repository": {
     "type": "git",
@@ -50,6 +49,7 @@
     "jquery": "^3.2.1",
     "jsonwebtoken": "^7.4.3",
     "knex": "^0.12.9",
+    "knex-filter-loopback": "^0.1.0",
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
     "morgan": "^1.8.2",

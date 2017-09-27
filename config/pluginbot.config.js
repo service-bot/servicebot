@@ -98,7 +98,7 @@ let basePlugins = function() {
     return [
         {"path": `${PLUGIN_DIRECTORY}/database`, dbConfig : getDBConf()},
         {"path": `${PLUGIN_DIRECTORY}/setup`, appConfig : getAppConf()},
-        {"path": `${PLUGIN_DIRECTORY}/express-app`, appConfig : getAppConf()},
+        {"path": `${PLUGIN_DIRECTORY}/api-gateway`, appConfig : getAppConf()},
 
     ];
 };

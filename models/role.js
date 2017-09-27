@@ -74,8 +74,9 @@ Role.prototype.setPermissions = function(permissions, callback){
         })
 
 }
+let promiseProxy = require("../lib/promiseProxy");
 
-Role.prototype.getPermissions = function(callback){
+let getPermissions = function(callback){
     let roleId = this.get('id');
     knex(Permission.table).whereIn("id", function(){
       this.select("permission_id").from("roles_to_permissions").where("role_id", roleId)
@@ -85,6 +86,9 @@ Role.prototype.getPermissions = function(callback){
         console.log(err);
     })
 };
+
+Role.prototype.getPermissions = promiseProxy(getPermissions);
+
 
 Role.prototype.getUsers = function(callback){
     require("./user").findAll("role_id", this.get("id"), function(result){
@@ -125,6 +129,9 @@ Role.prototype.hasPermission = function (permission, callback) {
         });
     }
 };
+
+
+
 
 
 

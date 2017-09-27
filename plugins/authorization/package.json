@@ -1,13 +1,12 @@
 {
-  "name": "express-app",
+  "name": "authorization",
   "version": "0.0.1",
   "dependencies": {
     
   },
   "pluginbot" : {
     "server" : {
-      "main" : "app.js",
-      "consumes" : ["database"]
+      "main" : "auth.js",
     }
   }
 }
