@@ -82,8 +82,9 @@ let getNotificationContents = function(template, targetObject){
         targetObject.attachReferences(updatedObject => {
             let store = require('../config/redux/store');
             let globalProps = store.getState().options;
-            Object.keys(globalProps).forEach(key => updatedObject.set("_" + key, globalProps[key]));
-            return resolve(updatedObject)
+            let map = {...updatedObject.data};
+            Object.keys(globalProps).forEach(key => map["_" + key] = globalProps[key]);
+            return resolve(map)
         });
     }).then(updatedObject => {
         return new Promise(function (resolve, reject) {

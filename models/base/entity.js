@@ -2,7 +2,7 @@
 let knex = require('../../config/db.js');
 let _ = require('lodash');
 let Promise = require("bluebird");
-
+let promiseProxy = require("../../lib/promiseProxy");
 //TODO - BIG TASK - relationship system, allow to define relationships in model and relationship tables - would autodelete rel rows
 
 /**
@@ -240,7 +240,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
             });
     };
 
-    Entity.findOne = function (key, value, callback) {
+    let findOne = function (key, value, callback) {
         knex(Entity.table).where(key, value)
             .then(function (result) {
                 if (!result) {
@@ -252,7 +252,7 @@ module.exports = function(tableName, references=[], primaryKey='id') {
                 console.log(err);
             });
     };
-
+    Entity.findOne = promiseProxy(findOne);
     //Generic findById function. Finds the record by passing the id.
     Entity.findById = function(id, callback){
         knex(Entity.table).where('id', id)
