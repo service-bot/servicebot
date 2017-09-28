@@ -33,13 +33,13 @@ module.exports = function*(router, routeDefinition, authService){
 
     while(true){
 
-        let {ResourceDefinition, endpoint, method, middleware, permissions} = yield consume(routeDefinition);
+        let {ResourceDefinition, endpoint, method, middleware, permissions, description} = yield consume(routeDefinition);
         let newRoute = require("express").Router();
 
         let routePath = ResourceDefinition ? `${ResourceDefinition.name}/${endpoint}` : endpoint;
 
         newRoute[method.toLowerCase()](routePath, authMiddleware(permissions, ResourceDefinition), ...middleware)
-
+        router.use(newRoute);
     }
 
 };

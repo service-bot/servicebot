@@ -112,6 +112,10 @@ module.exports = function(router, knex, stripe) {
     /**
      * This is the route to change Stripe API keys.
      */
+
+    let definition = {
+        endpoint : "/stripe/reconfig"
+    }
     router.post(`/stripe/reconfigure`, auth(), function(req, res){
         let stripe_config = req.body;
         let stripe_publishable = stripe_config.stripe_public;
