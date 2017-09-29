@@ -34,10 +34,10 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
             service_id: self.get("id"),
             type: self.get("type")
         };
+
         let submittedProperties = null;
         let ServiceInstance = require('../models/service-instance');
         let service = new ServiceInstance(await ServiceInstance.createPromise(instanceAttributes));
-        console.log(service);
         let props = await service.generateProps(submittedProperties);
         let plan = instanceRequest;
 

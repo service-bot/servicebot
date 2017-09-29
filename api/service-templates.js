@@ -299,7 +299,7 @@ module.exports = function (router) {
                 }, 0);
             }
 
-
+            res.locals.adjusted_price = price;
             if (!req.isAuthenticated()) {
 
                 if (req_body.hasOwnProperty("email")) {
