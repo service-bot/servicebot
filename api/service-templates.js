@@ -226,52 +226,121 @@ module.exports = function (router) {
         }
     });
 
+    //added reject to auth cuz it needs to handle failures, preventing memory leaks
+    let authPromise = function(req, res){
+        return new Promise((resolve, reject) => {
+            if(req.isAuthenticated()){
+                auth()(req, res, resolve, reject)
+            }else{
+                resolve();
+            }
+        })
+    };
 
+
+    //middleware to validate and adjust price.. todo: move price adjjustment somewhere else
     let validateServiceRequest = async function (req, res, next) {
-        let serviceTemplate = res.locals.valid_object;
-        let references = serviceTemplate.references;
-        let props = references ? references.service_template_properties : null;
-        let req_body = req.body;
+        try {
+            let serviceTemplate = res.locals.valid_object;
+            let references = serviceTemplate.references;
+            let props = references ? references.service_template_properties : null;
+            let req_body = req.body;
+            await authPromise(req, res);
+            let permission_array = res.locals.permissions || [];
 
-        //todo: this doesn't do anthing yet, needs to check the "passed" props not the ones on the original...
-        let validationResult = props ? validateProperties(props) : [];
-        if (validationResult.length > 0) {
-            return res.status(400).json({error: validationResult});
-        }
+            //this is true when user can override things
+            let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
+            let templatePrice = serviceTemplate.get("amount");
 
-        if (!req.isAuthenticated()) {
+            let price = hasPermission ? (req_body.price_override || templatePrice) : templatePrice;
+            if (!hasPermission) {
 
-            if (req_body.hasOwnProperty("email")) {
-                let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-                if (!req_body.email.match(mailFormat)) {
-                    return res.status(400).json({error: 'Invalid email format'});
+                res.locals.overrides = {
+
                 }
-            } else {
-                return res.status(400).json({error: 'Must have property: email'});
+                service_user_id = body.client_id;
+                service_description = body.description || service_description;
+                service_name = body.name || service_name;
             }
 
-            if (!req_body.hasOwnProperty("token_id") || req_body.token_id === '') {
-                return res.status(400).json({error: 'Must have property: token_id'});
+
+            //todo: this doesn't do anthing yet, needs to check the "passed" props not the ones on the original...
+            let validationResult = props ? validateProperties(props) : [];
+            if (validationResult.length > 0) {
+                return res.status(400).json({error: validationResult});
             }
 
-            let user = await User.findOne("email", req_body.email);
-            if (user.data) {
-                let invitation = await Invitation.findOne("user_id", user.get("id"));
-                if (invitation.data) {
-                    return res.status(400).json({error: 'User has already been invited'});
 
+            //todo: move price adjustment into something outside of here... want to reuse this logic
+
+            //todo: toCents to module?
+            function toCents (amount) {
+                if (typeof amount !== 'string' && typeof amount !== 'number') {
+                    throw new Error('Amount passed must be of type String or Number.')
+                }
+
+                return Math.round(100 * parseFloat(typeof amount === 'string' ? amount.replace(/[$,]/g, '') : amount))
+            }
+
+            if (props) {
+                let adjustments = require("../input_types/handleInputs").getPriceAdjustments(props);
+                price += adjustments.reduce((acc, adjustment) => {
+                    let operation = adjustment.operation;
+                    switch (operation) {
+                        case "add" :
+                            acc += toCents(adjustment.value);
+                            break;
+                        case "subtract" :
+                            acc -= toCents(adjustment.value);
+                            break;
+                        case "multiply" :
+                            acc += (price * (adjustment.value / 100));
+                            break;
+                        case "divide" :
+                            acc -= (price * (adjustment.value / 100));
+                            break;
+                        default :
+                            throw "Bad operation : " + operation
+
+                    }
+                    return acc;
+                }, 0);
+            }
+            res.locals.adjusted_price = price;
+
+            if (!req.isAuthenticated()) {
+
+                if (req_body.hasOwnProperty("email")) {
+                    let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                    if (!req_body.email.match(mailFormat)) {
+                        return res.status(400).json({error: 'Invalid email format'});
+                    }
                 } else {
-                    return res.status(400).json({error: 'Email already exists'});
+                    return res.status(400).json({error: 'Must have property: email'});
                 }
+
+                if ((!req_body.hasOwnProperty("token_id") || req_body.token_id === '') && price !== 0) {
+                    return res.status(400).json({error: 'Must have property: token_id'});
+                }
+
+                let user = await User.findOne("email", req_body.email);
+                if (user.data) {
+                    let invitation = await Invitation.findOne("user_id", user.get("id"));
+                    if (invitation.data) {
+                        return res.status(400).json({error: 'User has already been invited'});
+
+                    } else {
+                        return res.status(400).json({error: 'Email already exists'});
+                    }
+                }
+
+
+
             }
+            return next();
 
-            next();
-
-
-        } else {
-
-            auth()(req, res, next);
-
+        }catch(error){
+            console.error("error validating....");
         }
     }
 
@@ -365,6 +434,9 @@ module.exports = function (router) {
             }
 
             //create the service instance
+
+            //adjusted price...
+            req_body.amount = res.locals.adjusted_price;
             let newInstance = await serviceTemplate.requestPromise(user.get('id'), req_body, permission_array);
             res.json({
                 ...responseJSON,
