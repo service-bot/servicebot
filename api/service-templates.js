@@ -253,21 +253,21 @@ module.exports = function (router) {
             let templatePrice = serviceTemplate.get("amount");
 
             let price = hasPermission ? (req_body.price_override || templatePrice) : templatePrice;
-            if (!hasPermission) {
-
-                res.locals.overrides = {
-
-                }
-                service_user_id = body.client_id;
-                service_description = body.description || service_description;
-                service_name = body.name || service_name;
-            }
 
 
             //todo: this doesn't do anthing yet, needs to check the "passed" props not the ones on the original...
             let validationResult = props ? validateProperties(props) : [];
             if (validationResult.length > 0) {
                 return res.status(400).json({error: validationResult});
+            }
+            
+            if (hasPermission) {
+              res.locals.overrides = {user_id : req_body.client_id || req.user.get("id"),
+                description : req_body.description || serviceTemplate.get("description"),
+                name : req_body.name || serviceTemplate.get("name")
+            }
+
+
             }
 
 
@@ -306,7 +306,7 @@ module.exports = function (router) {
                     return acc;
                 }, 0);
             }
-            res.locals.adjusted_price = price;
+
 
             if (!req.isAuthenticated()) {
 
@@ -333,6 +333,7 @@ module.exports = function (router) {
                         return res.status(400).json({error: 'Email already exists'});
                     }
                 }
+
 
 
 
