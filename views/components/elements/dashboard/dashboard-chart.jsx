@@ -81,7 +81,7 @@ class ServiceOverTimeChart extends React.Component {
         }else{
             return(
                 <div className={`service-created-cancelled-overtime-chart ${this.props.className}`}>
-                    <h3 className="chart-title">Running Services Overtime</h3>
+                    <h3 className="chart-title">Running Services Over Time</h3>
                     <RC2 data={this.state.chartData} options={this.state.chartOptions} type='line'/>
                 </div>
             );

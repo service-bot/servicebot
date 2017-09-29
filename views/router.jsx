@@ -44,7 +44,6 @@ import ManageCatalogEdit from "./components/pages/manage-catalog-edit.jsx";
 import ManageCatalogDuplicate from "./components/pages/manage-catalog-duplicate.jsx";
 import UserEdit from "./components/pages/user-edit.jsx";
 import ManageCategories from "./components/pages/manage-categories.jsx";
-import ManageCategories2 from "./components/pages/manage-categories-2.jsx";
 import ManageNotificationTemplates from "./components/pages/manage-notification-templates.jsx";
 // Elements
 import NotificationTemplateForm from "./components/elements/forms/notification-template-form.jsx";
@@ -126,7 +125,6 @@ let AppRouter = function(props) {
                     <Route name="Edit User" path="manage-users/:userId" components={UserEdit}/>
                     <Route name="Manage Subscriptions" path="manage-subscriptions" component={ManageSubscriptions}/>
                     <Route name="Manage Categories" path="manage-categories" component={ManageCategories}/>
-                    <Route name="Manage Categories" path="manage-categories-2" component={ManageCategories2}/>
                     <Route name="Manage Permission" path="manage-permission" component={ManagePermission}/>
                     <Route name="Manage Notification Templates" path="notification-templates" components={ManageNotificationTemplates}/>
                     <Route name="Notification Template" path="notification-templates/:id" component={NotificationTemplateForm}/>
@@ -136,7 +134,7 @@ let AppRouter = function(props) {
                         <Route name="Create Template" path="create" component={ManageCatalogCreate}/>
                         <Route name="Edit Template" path=":templateId" component={ManageCatalogEdit}/>
                         <Route name="Duplicate Template" path=":templateId/duplicate" component={ManageCatalogDuplicate}/>
-                        <Route name="Edit Template" path=":templateId/edit" component={ManageCatalogEdit}/>
+                        {/*<Route name="Edit Template" path=":templateId/edit" component={ManageCatalogEdit}/>*/}
                     </Route>
                     {/* Query routes */}
                     <Route name="Services" path="manage-subscriptions/:status" component={ManageSubscriptions}/>

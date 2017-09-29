@@ -45,9 +45,11 @@ class CustomField extends React.Component {
     render() {
 
         let props = this.props;
-
-        const {willAutoFocus, index, typeValue, member, privateValue, requiredValue, promptValue, configValue, setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt} = props;
-        console.log("this is going to auto focus", willAutoFocus);
+        let {willAutoFocus, index, typeValue, member, myValues, privateValue, requiredValue, promptValue, configValue,
+            setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt} = props;
+        if(myValues.prop_label){
+            willAutoFocus = false;
+        }
         return (
             <div className="custom-property-fields">
                 <div id="custom-prop-name" className="custom-property-field-group">
@@ -348,6 +350,7 @@ class FieldLevelValidationForm extends React.Component {
                                         />
                                         <Field name="trial_period_days" type="number"
                                                component={inputField} label="Trial Period (Days)"
+                                               validate={required}
                                         />
                                         <Field name="type" id="type"
                                                component={selectField} label="Billing Type" onChange={changeServiceType}
@@ -368,6 +371,7 @@ class FieldLevelValidationForm extends React.Component {
                                                 Customer Every</label>
                                             <Field name="interval_count" type="number"
                                                    component={inputField}
+                                                   validate={required}
                                             />
                                             <Field name="interval" id="interval" component={selectField}
                                                    options={[

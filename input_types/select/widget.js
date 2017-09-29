@@ -21,7 +21,7 @@ class SelectPricing extends React.Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
         this.handlePercentPriceChange = this.handlePercentPriceChange.bind(this);
-        this.state = {};
+        this.state = (props.configValue && props.configValue.pricing) ? props.configValue.pricing.value : {};
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -36,6 +36,7 @@ class SelectPricing extends React.Component {
                 self.props.input.onChange(self.state);
             });
         }
+
     }
 
     handleChange(e, maskedValue, floatvalue) {
@@ -66,12 +67,12 @@ class SelectPricing extends React.Component {
                             className="control-label form-label-flex-md addon-options-widget-price-input-label">{option}</label>
                         {configValue.operation && (configValue.operation == "add" || configValue.operation == "subtract") ?
                             <CurrencyInput className="form-control addon-options-widget-price-input"
-                                           value={self.state[option]} name={option} key={index}
+                                           value={self.state[option] || (configValue.pricing && configValue.pricing.value ) && configValue.pricing.value[option]} name={option} key={index}
                                            prefix="$" decimalSeparator="." thousandSeparator="," precision="2"
                                            onChangeEvent={self.handleChange}
                             /> :
                             <CurrencyInput className="form-control addon-checkbox-widget-price-input"
-                                           value={self.state[option]} name={option} key={index}
+                                           value={self.state[option] || (configValue.pricing && configValue.pricing.value ) && configValue.pricing.value[option]}    name={option} key={index}
                                            decimalSeparator="." precision="0" suffix="%"
                                            onChangeEvent={self.handlePercentPriceChange}/>
                         }

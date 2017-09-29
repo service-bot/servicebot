@@ -7,12 +7,7 @@ import {connect } from "react-redux";
 import { RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import {inputField, selectField, priceField} from "./servicebot-base-field.jsx";
-
-import Load from '../../utilities/load.jsx';
-import Inputs from "../../utilities/inputsV2.jsx";
 import BillingSettingsForm from "../../elements/forms/billing-settings-form.jsx";
-import { formBuilder } from "../../utilities/form-builder";
-import Buttons from "../../elements/buttons.jsx";
 import {Price} from "../../utilities/price.jsx";
 import Fetcher from "../../utilities/fetcher.jsx";
 import IconHeading from "../../layouts/icon-heading.jsx";
@@ -20,10 +15,6 @@ import ModalUserLogin from "../modals/modal-user-login.jsx";
 import {setUid, setUser, fetchUsers} from "../../utilities/actions";
 import {addAlert} from "../../utilities/actions";
 let _ = require("lodash");
-
-const FORM_NAME = "reqForm";
-
-
 
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 
@@ -42,22 +33,31 @@ const minValue18 = minValue(18);
 
 const selector = formValueSelector('servicebotForm'); // <-- same as form name
 
-const boop = ({input, label, type, formJSON, config, meta: {touched, error, warning}}) => (
+const customFieldComponent = ({input, label, type, formJSON, config, meta: {touched, error, warning}}) => (
     <div className={`form-group form-group-flex`}>
         {label && <label className="control-label form-label-flex-md">{label}</label>}
         <div className="form-input-flex">
             {type === "textarea" && <textarea className="form-control" {...input} placeholder={label}/> }
             {(type === "text" || type === "number") && <input className="form-control" {...input} placeholder={label} type={type}/> }
-            {type === "checkbox" && <input className="form-control checkbox" {...input} placeholder={label} type={type}/> }
+            {type === "checkbox" &&
+                <div>
+                <input className="form-control checkbox" {...input} placeholder={label} type={type}/>
+                    {config.pricing && `[${config.operation}s ${config.pricing.value}]`}
+                </div>
+            }
             {type === "select" &&
-            <select className="form-control" {...input} placeholder={label}>
-                {config && config.value.map((option, index) =>
-                    <option key={index} value={option}>
-                        {option}
-                    </option>
-                )
-                }
-            </select> }
+                <select className="form-control" {...input} placeholder={label}>
+                    {config && config.value.map((option, index) =>
+                        <option key={index} value={option}>
+                            {config.pricing ? (
+                                `${option} [${config.operation}s $${config.pricing.value[option]}]`
+                            ) : (
+                                {option}
+                            )}
+                        </option>
+                    )
+                    }
+                </select> }
             {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span>{warning}</span>)) }
         </div>
     </div>
@@ -70,7 +70,7 @@ let CustomField =  (props) => {
             <Field
                 name={`${member}.data.value`}
                 type={formJSON.type}
-                component={boop}
+                component={customFieldComponent}
                 label={formJSON.prop_label}
                 value={formJSON.data.value}
                 formJSON={formJSON}
@@ -136,17 +136,49 @@ class ServiceRequestForm extends React.Component {
             transform: "translateX(-50%)",
             borderRadius: "50%",
         };
+        let getPrice = function () {
+            const price = formJSON.amount;
+            let updatedPrice = formJSON.amount;
+            let properties = formJSON.references.service_template_properties;
+            let priceChanges = [];
+            console.log("Our price is: ", price);
+            console.log("Our properties are", properties);
+            properties.map((prop) => {
+                console.log("this is prop", prop.id);
+                if (prop.config.pricing) {
+                    switch (prop.type) {
+                        case 'checkbox':
+                            if (prop.data.value) {
+                                let priceChange = getPriceChange(price, prop.config.operation, prop.config.pricing.value);
+                                priceChanges.push(`${prop.prop_label} ${prop.config.operation}s ${priceChange}`);
+                                updatedPrice += priceChange;
+                            }
+                            break;
+                        case 'select':
+                            let selectedOption = prop.data.value;
+                            console.log("its a select", prop.config.pricing.value[selectedOption]);
+                            let priceChange = getPriceChange(price, prop.config.operation, prop.config.pricing.value[selectedOption]);
+                            priceChanges.push(`${prop.prop_label} ${prop.config.operation}s ${priceChange}`);
+                            updatedPrice += priceChange;
+                            break;
+                        default:
+                            console.log("Property type doesn't change price")
+                    }
+                }
+            });
+            return updatedPrice
+        };
         let getRequestText = ()=>{
             let serType = formJSON.type;
             // console.log("service type",myService.type);
             if (serType == "subscription"){
-                return (<span>{"Subscribe"} <Price value={formJSON.amount}/>{formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' '+formJSON.interval}</span>);
+                return (<span>{"Subscribe"} <Price value={getPrice()}/>{formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' '+formJSON.interval}</span>);
             }else if (serType == "one_time"){
-                return (<span>{"Buy"} <Price value={formJSON.amount}/></span>);
+                return (<span>{"Buy"} <Price value={getPrice()}/></span>);
             }else if (serType == "custom"){
                 return ("Request");
             }else{
-                return (<span><Price value={formJSON.amount}/></span>)
+                return (<span><Price value={getPrice()}/></span>)
             }
         };
         const users = helpers.usersData;
@@ -155,6 +187,28 @@ class ServiceRequestForm extends React.Component {
             return _.map(userList, (user)=>{ return new Object({[user.email]: user.id}) } );
         };
         let userOptionList = userOptions(sortedUsers);
+        const getPriceChange = function(basePrice, modifier, amount){
+            let priceChange = 0;
+            switch(modifier) {
+                case 'add':
+                    priceChange = amount;
+                    break;
+                case 'subtract':
+                    priceChange = -amount;
+                    break;
+                case 'multiply':
+                    priceChange = basePrice * (amount/100);
+                    break;
+                case 'divide':
+                    priceChange = -(basePrice * (amount/100));
+                    break;
+                default:
+                    console.log("Property type doesn't change price")
+            }
+            return priceChange;
+        };
+
+
 
         return (
             <div>
@@ -192,36 +246,17 @@ class ServiceRequestForm extends React.Component {
                                     </div>
                                 }
 
-                                {!helpers.uid && formJSON.amount > 0 && <div>
-                                    Would be billing settings
-                                </div>
-                                }
-
                                 <h3>Custom Fields</h3>
                                 <FormSection name="references">
                                     <FieldArray name="service_template_properties"
                                                 component={renderCustomProperty}
                                                 formJSON={formJSON.references.service_template_properties}/>
                                 </FormSection>
-                                {/*
-                                <Field name="details" type="text"
-                                       component={WysiwygRedux} label="Details"
-                                       validate={[required]}
-                                />
-                                <Field name="published" type="checkbox"
-                                       component={inputField} label="Published?"
-                                />
-                                <Field name="category_id" type="select"
-                                       component={selectField} label="Category" options={formJSON._categories}
-                                       validate={[required]}
-                                />*/}
-
 
                                 {helpers.hasCard &&
                                 <div>
                                     {helpers.stripToken ?
                                         <div>
-                                            Theres a token
                                             <p className="help-block">You {helpers.card.funding} card in your account ending in: {helpers.card.last4} will be used.</p>
                                             <span className="help-block">If you wish to use a different card, you can update your card under <Link to="/billing-settings">billing settings.</Link></span>
                                         </div> :
@@ -277,7 +312,6 @@ class ServiceTemplateForm extends React.Component {
         };
 
         this.closeUserLoginModal = this.closeUserLoginModal.bind(this);
-        this.handleSubmission = this.handleSubmission.bind(this);
         this.retrieveStripeToken = this.retrieveStripeToken.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
     }
@@ -364,49 +398,6 @@ class ServiceTemplateForm extends React.Component {
         }
     }
 
-    handleSubmission(){
-        let self = this;
-        let payload = self.props.validateForm(self.props.formData);
-
-        if(!this.state.hasCard && this.state.stripeForm && !this.state.stripToken){
-            this.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
-        }else if(this.state.hasCard || this.state.stripToken || isAuthorized({permissions: "can_administrate"})){
-            if(!payload.hasErrors) {
-                self.setState({ajaxLoad: true});
-
-                Fetcher(this.state.formURL, 'POST', payload).then(function (response) {
-                    if (!response.error) {
-                        if(self.props.uid) {
-                            browserHistory.push(`/service-instance/${response.id}`);
-                            self.setState({ajaxLoad: false, success: true});
-                        }else if(response.url && response.api){ //this is a case where the user is new and has invitation
-                            self.props.setUid(response.user_id);
-                            self.props.setUser(response.user_id);
-                            self.props.addAlert({id:'user-requested-service-new-user-invited', message: 'Please check your email and set your password to complete your account.', show: true});
-                            localStorage.setItem("permissions", response.permissions);
-                            self.setState({emailExists: true, invitationExists: true, serviceCreated: response, ajaxLoad: false, success: true});
-                        }else{
-                            self.setState({ajaxLoad: false, success: true, serviceCreated: response});
-                        }
-                    } else {
-                        self.setState({ajaxLoad: false});
-                        console.log(`Server Error:`, response.error);
-                        if(response.error == "This email already exists in the system"){
-                            self.setState({emailExists: true, formResponseError: response.error});
-                        }else if(response.error == "Invitation already exists for this user"){
-                            self.setState({emailExists: true, invitationExists: true, formResponseError: response.error});
-                        }
-                    }
-                });
-            }else{
-                console.log("Errors found by validators", payload);
-            }
-        }else{
-            console.log("User doesn't have card nor a stripe token");
-        }
-    }
-
-
     closeUserLoginModal(){
         this.setState({emailExists: false});
     }
@@ -465,12 +456,12 @@ class ServiceTemplateForm extends React.Component {
             };
         }
 
-        //make new field for CC number
-
         return (
 
             <div>
-                {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
+                {(!this.state.hasCard &&
+                    !isAuthorized({permissions: "can_administrate"})) &&
+                    this.props.service.amount > 0 &&
                 <BillingSettingsForm context="SERVICE_REQUEST" retrieveStripeToken={this.retrieveStripeToken}/>
                 }
 

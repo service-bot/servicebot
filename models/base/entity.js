@@ -2,6 +2,7 @@
 let knex = require('../../config/db.js');
 let _ = require('lodash');
 let Promise = require("bluebird");
+let promiseProxy = require("../../lib/promiseProxy");
 var whereFilter = require('knex-filter-loopback').whereFilter;
 
 //TODO - BIG TASK - relationship system, allow to define relationships in model and relationship tables - would autodelete rel rows
@@ -258,7 +259,7 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
             });
     };
 
-    Entity.findOne = function (key, value, callback) {
+    let findOne = function (key, value, callback) {
         Entity.database(Entity.table).where(key, value)
             .then(function (result) {
                 if (!result) {
@@ -270,7 +271,6 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
                 console.log(err);
             });
     };
-
     //Generic findById function. Finds the record by passing the id.
     Entity.findById = function(id, callback){
         Entity.database(Entity.table).where('id', id)
@@ -426,9 +426,9 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
                 })
             });
     };
-    let promiseProxy = require("../../lib/promiseProxy");
     Entity.batchCreate = promiseProxy(batchCreate);
     Entity.batchUpdate = promiseProxy(batchUpdate);
+    Entity.findOne = promiseProxy(findOne);
 
 
     return Entity;

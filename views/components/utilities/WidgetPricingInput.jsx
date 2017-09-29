@@ -11,27 +11,31 @@ class WidgetPricingInput extends React.Component{
     }
 
     handleChange(e, maskedValue, floatvalue) {
-            this.props.input.onChange(floatvalue);
+        let name = e.target.name;
+        let self = this;
+        this.setState({[name]: floatvalue}, () => {
+            self.props.input.onChange(self.state[name]);
+        });
     }
 
     render(){
         //renders a number input or a currency input based on the operation type
         let self = this;
         let props = this.props;
-        let {operation} = props;
+        let {operation, input: {name, value, onChange}} = props;
 
         if(operation == 'add' || operation == 'subtract'){
             return(
-                <CurrencyInput {...props.input} className="form-control addon-checkbox-widget-price-input"
-                               prefix="$" decimalSeparator="." thousandSeparator="," precision="2"
-                               onChangeEvent={self.handleChange}
+                <CurrencyInput className="form-control addon-checkbox-widget-price-input" name={name}
+                                prefix="$" decimalSeparator="." thousandSeparator="," precision="2"
+                                onChangeEvent={this.handleChange} value={value}
                 />
             );
         }else if(operation == 'divide' || operation == 'multiply'){
             return(
-                <CurrencyInput {...props.input} className="form-control addon-checkbox-widget-price-input"
+                <CurrencyInput className="form-control addon-checkbox-widget-price-input" name={name}
                                decimalSeparator="." precision="0" suffix="%"
-                               onChangeEvent={self.handleChange}
+                               onChangeEvent={this.handleChange} value={value}
                 />
                 // <input {...props.input} type="number" className="form-control addon-checkbox-widget-price-input"/>
             );

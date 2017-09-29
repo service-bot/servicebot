@@ -9,7 +9,8 @@ let ServiceInstanceCharges = require("./charge");
 let ServiceInstanceCancellations = require("./service-instance-cancellation");
 let Charges = require("./charge");
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
-
+let promisify = require("bluebird").promisify;
+let promisifyProxy = require("../lib/promiseProxy");
 let User = require('./user');
 let _ = require("lodash");
 let references = [
@@ -24,7 +25,7 @@ let Stripe = require('../config/stripe');
 
 ServiceInstance.serviceFilePath = "uploads/services/files";
 
-ServiceInstance.prototype.buildPayStructure = function (payment_object, callback){
+let buildPayStructure = function (payment_object, callback){
     let self = this;
     let plan_arr = ['name','amount','currency','interval','interval_count','statement_descriptor', 'trial_period_days'];
     let random_code = Math.random().toString(36).substring(10, 12) + Math.random().toString(36).substring(10, 12);
@@ -43,7 +44,8 @@ ServiceInstance.prototype.buildPayStructure = function (payment_object, callback
     callback(plan);
 }
 
-ServiceInstance.prototype.createPayPlan = function (plan=null, callback){
+
+let createPayPlan = function (plan=null, callback){
     let self = this;
     async.waterfall([
         function(callback) {
@@ -84,7 +86,7 @@ ServiceInstance.prototype.createPayPlan = function (plan=null, callback){
     });
 }
 
-ServiceInstance.prototype.deletePayPlan = function (callback) {
+let deletePayPlan = function (callback) {
     let self = this;
     if(self.data.payment_plan.id) {
         //Remove the plan from Stripe
@@ -104,43 +106,12 @@ ServiceInstance.prototype.deletePayPlan = function (callback) {
     }
 }
 
-ServiceInstance.prototype.changePrice = function (newPlan) {
-    let self = this;
-    return new Promise(function (resolve, reject) {
-        self.deletePayPlan(function (result) {
-            return resolve(result);
-        });
-    }).then(function () {
-        return new Promise(function (resolve, reject) {
-            self.buildPayStructure(newPlan, function (plan_structure) {
-                self.createPayPlan(plan_structure, function (err, plan) {
-                    if(!err) {
-                        return resolve(plan);
-                    } else {
-                        return reject(err);
-                    }
-                });
-            });
-        });
-    }).then(function (updated_instance) {
-        return new Promise(function (resolve, reject) {
-            Stripe().connection.subscriptions.update(self.data.subscription_id, { plan: updated_instance.data.payment_plan.id }, function(err, subscription) {
-                    if(!err) {
-                        updated_instance.data.status = 'running';
-                        updated_instance.update(function (err, instance) {
-                            return resolve(instance);
-                        });
-                    } else {
-                        return reject(err);
-                    }
-                }
-            );
-        });
-    });
-};
+
+
+
 
 //todo: have this function return a promise instead of using callbacks.
-ServiceInstance.prototype.subscribe = function (callback) {
+let subscribe = function (callback) {
     let self = this;
     if(!self.data.subscription_id) {
         new Promise(function (resolve, reject) {
@@ -210,7 +181,9 @@ ServiceInstance.prototype.subscribe = function (callback) {
     }
 }
 
-ServiceInstance.prototype.unsubscribe = function (callback) {
+
+
+let unsubscribe = function (callback) {
     let self = this;
     if(self.data.subscription_id) {
         //Remove the subscription from Stripe
@@ -230,8 +203,7 @@ ServiceInstance.prototype.unsubscribe = function (callback) {
     }
 }
 
-
-ServiceInstance.prototype.requestCancellation = function (callback) {
+let requestCancellation = function (callback) {
     let self = this;
     //Making sure there is only one cancellation request
     let allowed_cancellation_status = ['running','requested', 'waiting'];
@@ -253,8 +225,7 @@ ServiceInstance.prototype.requestCancellation = function (callback) {
     }
 };
 
-
-ServiceInstance.prototype.generateProps = function (submittedProperties=null, callback) {
+let generateProps = function (submittedProperties=null, callback) {
     let self = this;
     ServiceTemplates.findOne('id', self.data.service_id, function (serviceTemplate) {
         //Get all service template properties
@@ -286,7 +257,7 @@ ServiceInstance.prototype.generateProps = function (submittedProperties=null, ca
     });
 }
 
-ServiceInstance.prototype.getAllAwaitingCharges = function (callback) {
+let getAllAwaitingCharges = function (callback) {
     let self = this;
     ServiceInstanceCharges.findAll('service_instance_id', self.data.id, function(props){
         //Filter the result to only unapproved items.
@@ -298,7 +269,7 @@ ServiceInstance.prototype.getAllAwaitingCharges = function (callback) {
 
 
 //TODO: The post response is null. maybe make it more meaningful.
-ServiceInstance.prototype.approveAllCharges = function (callback) {
+let approveAllCharges = function (callback) {
     let self = this;
     self.getAllAwaitingCharges(function(all_charges){
         callback(all_charges.map(function(charge){
@@ -307,8 +278,7 @@ ServiceInstance.prototype.approveAllCharges = function (callback) {
     });
 };
 
-
-ServiceInstance.prototype.deleteFiles = function(callback){
+let deleteFiles = function(callback){
 
     File.findFile(ServiceInstance.serviceFilePath, this.get("id"), function(files){
         Promise.all(files.map(file => {
@@ -325,5 +295,64 @@ ServiceInstance.prototype.deleteFiles = function(callback){
     })
 
 };
+
+
+ServiceInstance.prototype.changePrice = function (newPlan) {
+    let self = this;
+    return new Promise(function (resolve, reject) {
+        self.deletePayPlan(function (result) {
+            return resolve(result);
+        });
+    }).then(function () {
+        return new Promise(function (resolve, reject) {
+            self.buildPayStructure(newPlan, function (plan_structure) {
+                self.createPayPlan(plan_structure, function (err, plan) {
+                    if(!err) {
+                        return resolve(plan);
+                    } else {
+                        return reject(err);
+                    }
+                });
+            });
+        });
+    }).then(function (updated_instance) {
+        return new Promise(function (resolve, reject) {
+            Stripe().connection.subscriptions.update(self.data.subscription_id, { plan: updated_instance.data.payment_plan.id }, function(err, subscription) {
+                    if(!err) {
+                        updated_instance.data.status = 'running';
+                        updated_instance.update(function (err, instance) {
+                            return resolve(instance);
+                        });
+                    } else {
+                        return reject(err);
+                    }
+                }
+            );
+        });
+    });
+};
+
+
+//todo: clean this up so they really support promises.
+ServiceInstance.prototype.buildPayStructure = promisifyProxy(buildPayStructure);
+ServiceInstance.prototype.createPayPlan = promisifyProxy(createPayPlan, false)
+ServiceInstance.prototype.subscribe = promisifyProxy(subscribe, false);
+ServiceInstance.prototype.unsubscribe = promisifyProxy(unsubscribe, false)
+ServiceInstance.prototype.deletePayPlan = promisifyProxy(deletePayPlan);
+ServiceInstance.prototype.requestCancellation = promisifyProxy(requestCancellation);
+ServiceInstance.prototype.generateProps = promisifyProxy(generateProps);
+ServiceInstance.prototype.getAllAwaitingCharges = promisifyProxy(getAllAwaitingCharges);
+ServiceInstance.prototype.approveAllCharges = promisifyProxy(approveAllCharges);
+ServiceInstance.prototype.deleteFiles = promisifyProxy(deleteFiles);
+
+
+
+
+
+
+
+
+
+
 
 module.exports = ServiceInstance;

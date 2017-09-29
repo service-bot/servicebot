@@ -233,7 +233,7 @@ class priceField extends React.Component {
                 <div className="form-input-flex">
                     <CurrencyInput className="form-control" name={name}
                         prefix="$" decimalSeparator="." thousandSeparator="," precision="2"
-                        onChangeEvent={this.handleChange} value={this.state[name]}
+                        onChangeEvent={this.handleChange} value={value}
                     />
                     {touched && ((error && <span className="form-error">{error}</span>) || (warning &&
                     <span className="form-warning">{warning}</span>))}

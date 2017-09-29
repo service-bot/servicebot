@@ -6,7 +6,7 @@ import React from 'react';
  */
 let Price = function(props){
     return(
-        <span>${(props.value / 100).toFixed(2)}</span>
+        <span>${props.value}</span>
     );
 };
 
@@ -27,7 +27,11 @@ let getPrice = (myService, serviceType = null)=>{
         return (<span><Price value={myService.amount}/></span>)
     }
 };
-
+/**
+ * To be deprecated after refactoring all code
+ * @param myService - a service template record row
+ * @returns {*}
+ */
 let getBillingType = (myService)=>{
     let serType = myService.type;
 
@@ -42,4 +46,17 @@ let getBillingType = (myService)=>{
     }
 };
 
-export {Price, getPrice, getBillingType};
+/**
+ * Takes a service template and returns the text from row.type after formatting
+ * @param row - a service template record row
+ * @returns {string}
+ */
+let serviceTypeFormatter = (row)=>{
+    let type = row.type;
+
+    let text = type.replace(/_/g, " ");
+    return ( text.charAt(0).toUpperCase() + text.slice(1) );
+};
+
+
+export {Price, getPrice, getBillingType, serviceTypeFormatter};

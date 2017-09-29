@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import {ServiceBotTableSearch, ServiceBotSearchField} from './servicebot-table-search.jsx';
+import './css/style.css';
 
 class ServiceBotTableBase extends React.Component {
 
@@ -46,11 +47,13 @@ class ServiceBotTableBase extends React.Component {
         let self = this;
         return (
             <ButtonGroup className='servicebot-table-btn-group' sizeClass='btn-group-md'>
+                {self.props.createItemAction &&
                 <button type='button' className={ `btn btn-default` } onClick={() => {
-                    self.props.createItem ? self.props.createItem() :
+                    self.props.createItemAction ? self.props.createItemAction() :
                         console.error('You must pass a prop "createItem" to ServiceBotTableBase component.');
-                }}><i className="fa fa-plus"/> Create Category
+                }}><i className="fa fa-plus"/> {self.props.createItemLabel}
                 </button>
+                }
                 { props.showSelectedOnlyBtn }
                 { props.exportCSVBtn }
                 { props.insertBtn }
@@ -107,9 +110,10 @@ class ServiceBotTableBase extends React.Component {
 
     render() {
 
-        let {children, rows, onAfterInsertRow, deleteRow, onAfterDeleteRow, customConfirmDeleteRow, clearSearch} = this.props;
+        let {noDataText, children, rows, onAfterInsertRow, deleteRow, onAfterDeleteRow, customConfirmDeleteRow, clearSearch} = this.props;
 
         const options = {
+            noDataText: noDataText || 'No Data To Display',
             afterInsertRow: onAfterInsertRow || this.onAfterInsertRow,   // A hook for after insert rows
             afterDeleteRow: onAfterDeleteRow || this.onAfterDeleteRow,
             handleConfirmDeleteRow: customConfirmDeleteRow || this.customConfirmDeleteRow,
