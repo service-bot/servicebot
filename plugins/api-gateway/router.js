@@ -12,20 +12,24 @@ module.exports = function*(router, routeDefinition, authService){
             if(!permissions || permissions.length === 0){
                 return next();
             }
-            let roles = [req.user.data.role_id];
+            if(req.isAuthenticated()) {
+                let roles = [req.user.data.role_id];
 
-            if(req.params.id && permissions.find(needsOwner) && (await Resource.isOwner(req.params.id, req.user.data.id))) {
-                permissions = permissions.reduce((acc, permission) =>{
-                    let filteredPermission = needsOwner(permission) ? (Array.isArray(permission) && permission.filter(perm => !needsOwner(perm))) : permission;
-                    if(filteredPermission) {
-                        acc.push(filteredPermission);
-                    }
-                    return acc;
+                if (req.params.id && permissions.find(needsOwner) && (await Resource.isOwner(req.params.id, req.user.data.id))) {
+                    permissions = permissions.reduce((acc, permission) => {
+                        let filteredPermission = needsOwner(permission) ? (Array.isArray(permission) && permission.filter(perm => !needsOwner(perm))) : permission;
+                        if (filteredPermission) {
+                            acc.push(filteredPermission);
+                        }
+                        return acc;
 
-                }, []);
+                    }, []);
+                }
+                if(authService.hasPermissions(roles, permissions)){
+                   return next();
+                }
             }
-            authService.hasPermissions(roles, permissions);
-
+            return res.status(403).json({error : "Unauthorized!"});
         }
     };
 
@@ -34,11 +38,12 @@ module.exports = function*(router, routeDefinition, authService){
     while(true){
 
         let {ResourceDefinition, endpoint, method, middleware, permissions, description} = yield consume(routeDefinition);
+        console.log("IVE GOT NEW ROUTE THING!", endpoint);
         let newRoute = require("express").Router();
 
-        let routePath = ResourceDefinition ? `${ResourceDefinition.name}/${endpoint}` : endpoint;
+        let routePath = ResourceDefinition ? `/${ResourceDefinition.name}${endpoint}` : endpoint;
 
-        newRoute[method.toLowerCase()](routePath, authMiddleware(permissions, ResourceDefinition), ...middleware)
+        newRoute[method.toLowerCase()](routePath, authMiddleware(permissions, ResourceDefinition), ...middleware);
         router.use(newRoute);
     }
 

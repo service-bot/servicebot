@@ -1,4 +1,4 @@
-{
+  {
   "/users": {
     "get": {
       "summary": "Gets all Users",

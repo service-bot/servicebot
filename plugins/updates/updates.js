@@ -1,14 +1,12 @@
 
-module.exports = function setup(options, imports, register) {
+
+    let run = function*(config, provide, services) {
     let analytics = require("../../lib/analytics");
     let request = require("request");
     let semver = require("semver");
     let _ = require("lodash");
-    console.log(process.env.npm_package_version);
-    //logic for creating tables
-    let knex = imports.knex;
-    let master = options.master;
-    let interval = options.interval; //24 hours
+    let master = config.master;
+    let interval = config.interval; //24 hours
     let Notification = require("../../models/notifications");
     let dispatchEvent = require("../../config/redux/store").dispatchEvent;
     let salt = process.env.INSTANCE_SALT
@@ -62,11 +60,6 @@ module.exports = function setup(options, imports, register) {
 
 
     checkMaster();
-
-
-
-
-    register(null, {
-        //define services this plugin provides...
-    });
 };
+
+module.exports = {run};

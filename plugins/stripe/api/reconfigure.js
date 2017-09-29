@@ -82,7 +82,7 @@ module.exports = function(router, knex, stripe) {
         });
     };
 
-    router.get(`/stripe/keys`, auth(), function (req, res) {
+   let getStripeKeys = function (req, res) {
         SystemOptions.findOne('option', 'stripe_secret_key', function (option_secret_key) {
             SystemOptions.findOne('option', 'stripe_publishable_key', function (option_publishable_key) {
                 let secret_key = option_secret_key.data.value.substring(0,7) + '******' + option_secret_key.data.value.substring(option_secret_key.data.value.length-5,option_secret_key.data.value.length);
@@ -90,9 +90,9 @@ module.exports = function(router, knex, stripe) {
                 return res.status(200).json({secret_key: secret_key, publishable_key: publishable_key});
             });
         });
-    });
+    };
 
-    router.post(`/stripe/preconfigure`, auth(), function (req, res) {
+    let preconfigure =  function (req, res) {
         let stripe_config = req.body;
         let stripe_publishable = stripe_config.stripe_public;
         let stripe_secret = stripe_config.stripe_secret;
@@ -107,16 +107,13 @@ module.exports = function(router, knex, stripe) {
         }).catch(function (err) {
             return res.status(400).json({error: err});
         });
-    });
+    };
 
     /**
      * This is the route to change Stripe API keys.
      */
 
-    let definition = {
-        endpoint : "/stripe/reconfig"
-    }
-    router.post(`/stripe/reconfigure`, auth(), function(req, res){
+    let reconfigure =  function(req, res){
         let stripe_config = req.body;
         let stripe_publishable = stripe_config.stripe_public;
         let stripe_secret = stripe_config.stripe_secret;
@@ -222,7 +219,32 @@ module.exports = function(router, knex, stripe) {
         }).catch(function (err) {
             return res.status(400).json({error: err});
         });
-    });
+    };
 
-    return router;
+    return [
+        {
+            endpoint : "/stripe/reconfigure",
+            method : "post",
+            middleware : [reconfigure],
+            permissions : ["post_stripe_reconfigure"],
+            description : "Reconfigure Stripe account"
+
+        },
+        {
+            endpoint : "/stripe/preconfigure",
+            method : "post",
+            middleware : [preconfigure],
+            permissions : ["post_stripe_preconfigure"],
+            description : "Reconfigure Stripe account"
+
+        },
+        {
+            endpoint : "/stripe/keys",
+            method : "get",
+            middleware : [getStripeKeys],
+            permissions : ["get_stripe_keys"],
+            description : "Get stripe keys"
+
+        }
+    ];
 }

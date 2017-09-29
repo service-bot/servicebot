@@ -18,6 +18,7 @@ let createServer = require("./server");
 module.exports = {
     run : function*(config, provide, services){
         let database = yield consume(services.database);
+        console.log("GOT MA DB!");
         let appConfig = config.appConfig;
 
         //todo: this should not exist in the future
@@ -104,7 +105,7 @@ module.exports = {
 
             //initialize api route
             var api = express.Router();
-
+            app.use("/api/v1", api);
             //force all requests to api route to look for token, if token is present in header the user will be logged in with taht token
             api.use(function (req, res, next) {
                 passport.authenticate('jwt', function (err, user, info) {
@@ -149,61 +150,47 @@ module.exports = {
             yield spawn(routeConsumer,  api, services.routeDefinition, authService);
 
 
-            var configPath = path.join(__dirname, "../../config/plugins.js");
-
-            let pluginConf = architect.loadConfig(configPath);
-            pluginConf[0].app = app;
-            pluginConf[0].api = api;
-            architect.createApp(pluginConf, function (err, architectApp) {
-
-                architectApp.services.api.use(function (req, res, next) {
-                    if (res.locals.json) {
-                        res.json(res.locals.json);
-                    } else {
-                        next();
-                    }
-                })
-
-                architectApp.services.app.use('/api/v1', architectApp.services.api);
-
-                architectApp.services.app.get('*', function (req, res) {
-                    if (req.path.split("/")[3] == "embed" && req.method === 'GET') {
-                        res.removeHeader('X-Frame-Options');
-                    }
-                    res.sendFile(path.resolve(__dirname, "../..", 'public', 'index.html'))
-                })
+        api.use(function (req, res, next) {
+            if (res.locals.json) {
+                res.json(res.locals.json);
+            } else {
+                next();
+            }
+        });
 
 
-                // catch 404 and forward to error handler
-                architectApp.services.app.use(function (req, res, next) {
-                    var err = new Error('Not Found');
-                    err.status = 404;
-                    next(err);
-                });
-
-                // error handler
-                architectApp.services.app.use(function (err, req, res, next) {
-                    // set locals, only providing error in development
-                    res.locals.message = err.message;
-                    console.error(err);
-                    res.locals.error = req.app.get('env') === 'development' ? err : "unhandled error has happened in server";
-                    if(err.message == "File too large"){
-                        err.status = 413;
-                        res.locals.error = "File too large";
-
-                    }
-
-                    // send the error
-                    res.status(err.status || 500).json({error : res.locals.error});
-
-                    //res.render('error');
-                });
+        app.get('*', function (req, res) {
+            if (req.path.split("/")[3] == "embed" && req.method === 'GET') {
+                res.removeHeader('X-Frame-Options');
+            }
+            res.sendFile(path.resolve(__dirname, "../..", 'public', 'index.html'))
+        })
 
 
-            })
+        // catch 404 and forward to error handler
+        app.use(function (req, res, next) {
+            var err = new Error('Not Found');
+            err.status = 404;
+            next(err);
+        });
 
+        // error handler
+        app.use(function (err, req, res, next) {
+            // set locals, only providing error in development
+            res.locals.message = err.message;
+            console.error(err);
+            res.locals.error = req.app.get('env') === 'development' ? err : "unhandled error has happened in server";
+            if(err.message == "File too large"){
+                err.status = 413;
+                res.locals.error = "File too large";
 
+            }
 
+            // send the error
+            res.status(err.status || 500).json({error : res.locals.error});
+
+            //res.render('error');
+        });
 
     }
 }

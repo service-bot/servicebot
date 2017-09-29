@@ -5,7 +5,7 @@ let populateDB = require("./populate");
 
 
 let tablesExist = async function(database){
-    return await database("pg_catalog.pg_tables").select("tablename").where("schemaname", "public");
+    return (await database("pg_catalog.pg_tables").select("tablename").where("schemaname", "public")).length === 0;
 }
 
 
