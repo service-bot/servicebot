@@ -260,15 +260,7 @@ module.exports = function (router) {
             if (validationResult.length > 0) {
                 return res.status(400).json({error: validationResult});
             }
-            
-            if (hasPermission) {
-              res.locals.overrides = {user_id : req_body.client_id || req.user.get("id"),
-                description : req_body.description || serviceTemplate.get("description"),
-                name : req_body.name || serviceTemplate.get("name")
-            }
 
-
-            }
 
 
             //todo: move price adjustment into something outside of here... want to reuse this logic
@@ -383,7 +375,6 @@ module.exports = function (router) {
 
                 //create the new user
                 let createdUser = await createUser();
-
                 let invite = new Invitation({"user_id": createdUser.get("id")});
                 let createInvite = Promise.promisify(invite.create, {context: invite});
 
@@ -429,6 +420,8 @@ module.exports = function (router) {
                 return res.status(403).json({"error" : "Unauthorized"});
             }
 
+
+
             //if token_id exists, create/update the user's fund
             if (req_body.token_id && req_body.token_id !== '') {
                 let newFund = await Fund.promiseFundCreateOrUpdate(user.get('id'), req_body.token_id);
@@ -438,7 +431,30 @@ module.exports = function (router) {
 
             //adjusted price...
             req_body.amount = res.locals.adjusted_price;
-            let newInstance = await serviceTemplate.requestPromise(user.get('id'), req_body, permission_array);
+
+
+            if (hasPermission) {
+                res.locals.overrides = {
+                    user_id : req_body.client_id || req.user.get("id"),
+                    requested_by : req.user.get("id"),
+                    description : req_body.description || serviceTemplate.get("description"),
+                    name : req_body.name || serviceTemplate.get("name")
+                };
+
+
+            }else{
+                res.locals.overrides = {
+                    user_id : req.user.get("id"),
+                    requested_by : req.user.get("id")
+
+                }
+            }
+
+            let newInstance = await serviceTemplate.requestPromise({
+                ...req_body,
+                ...res.locals.overrides
+            });
+
             res.json({
                 ...responseJSON,
                 ...newInstance.data

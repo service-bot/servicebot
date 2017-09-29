@@ -17,53 +17,60 @@ ServiceTemplate.iconFilePath = "uploads/templates/icons";
 ServiceTemplate.imageFilePath = "uploads/templates/images";
 
 ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
-    let self = this;
-    let service_user_id = "";
-    let service_description = self.data.description;
-    let service_name = self.data.name;
-    if(self.data.detail) {
-        service_description = `${service_description} <hr> ${self.data.detail}`;
-    }
-    //Idealize the new service instance
-    let instanceAttributes = {
-        name: instanceRequest.name,
-        description: service_description,
-        requested_by: instanceRequest.requested_by,
-        user_id: instanceRequest.user_id,
-        service_id: self.get("id"),
-        type: self.get("type")
-    };
-    let submittedProperties = null;
-    let ServiceInstance = require('../models/service-instance');
-    let service = await (new ServiceInstance(instanceAttributes).createPromise());
-    let props = await service.generateProps(submittedProperties);
-    let plan = instanceRequest;
-
-
-    if (self.data.type === 'one_time') {
-
-        let charge_obj = {
-            'user_id': service.get('user_id'),
-            'service_instance_id': service.get('id'),
-            'currency': self.get('currency'),
-            'amount': self.get('amount'),
-            'description': service.get('name')
+    try {
+        let self = this;
+        let service_user_id = "";
+        let service_description = self.data.description;
+        let service_name = self.data.name;
+        console.log("REQIN!");
+        if (self.data.detail) {
+            service_description = `${service_description} <hr> ${self.data.detail}`;
+        }
+        //Idealize the new service instance
+        let instanceAttributes = {
+            name: instanceRequest.name,
+            description: service_description,
+            requested_by: instanceRequest.requested_by,
+            user_id: instanceRequest.user_id,
+            service_id: self.get("id"),
+            type: self.get("type")
         };
-        let charge = await (new Charges(charge_obj).createPromise());
-        let template_plan = self.data;
-        template_plan.amount = 0;
-        template_plan.interval = 'day';
-        plan = template_plan;
+        let submittedProperties = null;
+        let ServiceInstance = require('../models/service-instance');
+        let service = new ServiceInstance(await ServiceInstance.createPromise(instanceAttributes));
+        console.log(service);
+        let props = await service.generateProps(submittedProperties);
+        let plan = instanceRequest;
+
+
+        if (self.data.type === 'one_time') {
+
+            let charge_obj = {
+                'user_id': service.get('user_id'),
+                'service_instance_id': service.get('id'),
+                'currency': self.get('currency'),
+                'amount': self.get('amount'),
+                'description': service.get('name')
+            };
+            let charge = await  Charges.createPromise(charge_obj);
+            let template_plan = self.data;
+            template_plan.amount = 0;
+            template_plan.interval = 'day';
+            plan = template_plan;
+        }
+        let payStructure = (instanceRequest.amount === 0 || instanceRequest.amount === undefined) ? null : (await service.buildPayStructure(plan));
+        let payPlan = await service.createPayPlan(payStructure);
+
+
+        if (instanceAttributes.requested_by === instanceAttributes.user_id) {
+            await service.subscribe();
+        }
+
+        return service;
+    }catch(e){
+        console.error(e);
+        throw e;
     }
-    let payStructure = (instanceRequest.amount === 0 || instanceRequest.amount === undefined) ? null : (await service.buildPayStructure(plan));
-    let payPlan = await service.createPayPlan(payStructure);
-
-
-    if(instanceAttributes.requested_by === instanceAttributes.user_id){
-        await service.subscribe();
-    }
-    return service;
-
     // return new Promise(function (resolve_all, reject_all) {
     //     newInstance.create(function (err, service) {
     //         if(err){
