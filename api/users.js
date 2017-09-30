@@ -9,7 +9,6 @@ let path = require("path");
 let mkdirp = require("mkdirp");
 let bcrypt = require("bcryptjs");
 let Role = require("../models/role");
-let dispatchEvent = require("../config/redux/store").dispatchEvent;
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 let avatarFilePath = "uploads/avatars";
 let store = require("../config/redux/store");
@@ -155,7 +154,7 @@ module.exports = function (router, passport) {
         user_role.getPermissions(function (perms) {
             let permission_names = perms.map(perm => perm.data.permission_name);
             res.locals.json = {"message" : "successful signup", "permissions" : permission_names };
-            dispatchEvent("user_registered", req.user);
+            store.dispatchEvent("user_registered", req.user);
             next();
         });
     });
@@ -176,7 +175,7 @@ module.exports = function (router, passport) {
                     result.set('api', apiUrl);
                     res.locals.valid_object = result;
                     next();
-                    dispatchEvent("user_invited", user);
+                    store.dispatchEvent("user_invited", user);
                 } else {
                     res.status(403).json({error: err});
                 }
@@ -221,7 +220,7 @@ module.exports = function (router, passport) {
                                         newUser.set('api', apiUrl);
                                         res.locals.valid_object = result;
                                         next();
-                                        dispatchEvent("user_invited", newUser);
+                                        store.dispatchEvent("user_invited", newUser);
                                     } else {
                                         res.status(403).json({error: err});
                                     }
@@ -274,7 +273,7 @@ module.exports = function (router, passport) {
         let user = res.locals.valid_object;
         user.suspend(function (err, updated_user) {
             if(!err) {
-                dispatchEvent("user_suspended", user);
+                store.dispatchEvent("user_suspended", user);
                 res.status(200).json(updated_user);
             } else {
                 res.status(400).json({error: err});

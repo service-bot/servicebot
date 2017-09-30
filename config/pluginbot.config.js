@@ -96,9 +96,10 @@ let getEnabledPlugins = async function(db){
 let basePlugins = function() {
 
     return [
-        {"path": `${PLUGIN_DIRECTORY}/database`, dbConfig : getDBConf()},
-        {"path": `${PLUGIN_DIRECTORY}/setup`, appConfig : getAppConf()},
-        {"path": `${PLUGIN_DIRECTORY}/api-gateway`, appConfig : getAppConf()},
+        {"path" : `${PLUGIN_DIRECTORY}/database`, dbConfig : getDBConf()},
+        {"path" : `${PLUGIN_DIRECTORY}/setup`, appConfig : getAppConf()},
+        {"path" : `${PLUGIN_DIRECTORY}/system-options`},
+        {"path" : `${PLUGIN_DIRECTORY}/api-gateway`, appConfig : getAppConf()},
         {"path" : `${PLUGIN_DIRECTORY}/stripe`},
         {"path" : `${PLUGIN_DIRECTORY}/authorization`},
         {"path" : `${PLUGIN_DIRECTORY}/updates`, "interval" : 86400000, "master" : "https://hub.servicebot.io/api/v1/announcements"}

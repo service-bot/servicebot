@@ -1,9 +1,7 @@
 let consume = require("pluginbot/effects/consume");
 let {call} = require("redux-saga/effects");
 let run = function*(config, provide, services){
-    console.log("WHERES MA DATABSE");
   let database = yield consume(services.database);
-  console.log("HI FRIEND!");
   //todo: move this to some installation script
     let createDB = function(database){
       return database.schema.hasTable('stripe_event_logs').hasTable('stripe').then(function(exists){

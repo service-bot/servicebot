@@ -2,7 +2,7 @@ let auth = require('../middleware/auth');
 let validate = require('../middleware/validate');
 let EventLogs = require('../models/event-log');
 let async = require("async");
-let dispatchEvent = require("../config/redux/store").dispatchEvent;
+let store = require("../config/redux/store");
 
 //TODO : Strip password field from getters
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
@@ -135,7 +135,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
             else {
                 if (references === undefined || references.length == 0 || req.body.references === undefined || req.body.references.length == 0) {
                     res.locals.json = updatedEntity.data;
-                    dispatchEvent(`${model.table}_updated`, updatedEntity);
+                    store.dispatchEvent(`${model.table}_updated`, updatedEntity);
                     EventLogs.logEvent(req.user.get('id'), `${resourceName} ${updatedEntity.get(model.primaryKey)} was updated by user ${req.user.get('email')}`);
                     next();
                 }
@@ -148,7 +148,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
                             counter++;
                             if (counter == references.length) {
                                 res.locals.json = updatedEntity.data;
-                                dispatchEvent(`${model.table}_updated`, updatedEntity);
+                                store.dispatchEvent(`${model.table}_updated`, updatedEntity);
                                 EventLogs.logEvent(req.user.get('id'), `${resourceName} ${updatedEntity.get(model.primaryKey)} was updated by user ${req.user.get('email')}`);
                                 next();
                             }
@@ -158,7 +158,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
                             updatedEntity.updateReferences(referenceData, reference, function (modifiedEntity) {
                                 counter++;
                                 if (counter == references.length) {
-                                    dispatchEvent(`${model.table}_updated`, modifiedEntity);
+                                    store.dispatchEvent(`${model.table}_updated`, modifiedEntity);
                                     res.locals.json = modifiedEntity.data;
                                     EventLogs.logEvent(req.user.get('id'), `${resourceName} ${updatedEntity.get(model.primaryKey)} was updated by user ${req.user.get('email')}`);
                                     next();
@@ -179,7 +179,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
                 res.status(500).send({ error: err })
             }
             else {
-                dispatchEvent(`${model.table}_deleted`, entity);
+                store.dispatchEvent(`${model.table}_deleted`, entity);
                 res.locals.json = {message: `${resourceName} with id ${req.params.id} deleted`};
                 EventLogs.logEvent(req.user.get('id'), `${resourceName} ${req.params.id} was deleted by user ${req.user.get('email')}`);
                 next();
@@ -197,7 +197,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
             else {
                 if (references === undefined || references.length == 0 || req.body.references === undefined || req.body.references.length == 0) {
                     res.locals.json = newEntity.data;
-                    dispatchEvent(`${model.table}_created`, newEntity)
+                    store.dispatchEvent(`${model.table}_created`, newEntity)
                     EventLogs.logEvent(req.user.get('id'), `${resourceName} ${newEntity.get(model.primaryKey)} was created by user ${req.user.get('email')}`);
                     next();
                 }
@@ -210,7 +210,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
                             counter++;
                             if (counter == references.length) {
                                 res.locals.json = newEntity.data;
-                                dispatchEvent(`${model.table}_created`, newEntity)
+                                store.dispatchEvent(`${model.table}_created`, newEntity)
 
                                 EventLogs.logEvent(req.user.get('id'), `${resourceName} ${newEntity.get(model.primaryKey)} was created by user ${req.user.get('email')}`);
                                 next();
@@ -222,7 +222,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
                                 counter++;
                                 if (counter == references.length) {
                                     res.locals.json = modifiedEntity.data;
-                                    dispatchEvent(`${model.table}_created`, modifiedEntity)
+                                    store.dispatchEvent(`${model.table}_created`, modifiedEntity)
                                     EventLogs.logEvent(req.user.get('id'), `${resourceName} ${newEntity.get(model.primaryKey)} was created by user ${req.user.get('email')}`);
                                     next();
                                 }

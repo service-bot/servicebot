@@ -12,18 +12,20 @@ let architect = require("architect")
 let schedule = require("node-schedule");
 var helmet = require('helmet')
 let consume = require("pluginbot/effects/consume");
-let {call, spawn} = require("redux-saga/effects")
+let {call, put, spawn} = require("redux-saga/effects")
+let HOME_PATH = path.resolve(__dirname, "../../", "public");
 let createServer = require("./server");
+
+//todo: store sagas in store?
 
 module.exports = {
     run : function*(config, provide, services){
         let database = yield consume(services.database);
-        console.log("GOT MA DB!");
         let appConfig = config.appConfig;
+        let Settings =  require('../../models/system-options');
+
 
         //todo: this should not exist in the future
-        let store = require("../../config/redux/store");
-        yield call(store.initialize);
 
             var app = express();
 
@@ -35,7 +37,15 @@ module.exports = {
             require('../../config/passport.js')(passport);
 
             app.use(helmet());
-            //var subpath = express();
+
+            var exphbs  = require('express-handlebars');
+
+            app.engine('handlebars', exphbs({defaultLayout: 'main', layoutsDir : HOME_PATH}));
+            app.set('view engine', 'handlebars');
+            app.set('views', HOME_PATH);
+
+
+        //var subpath = express();
 
             // swagger definition
             var swaggerDefinition = {
@@ -73,7 +83,7 @@ module.exports = {
             //this routes all requests to serve index
 
             // view engine setup
-            app.set('views', path.join(__dirname, '../../views'));
+            // app.set('views', path.join(__dirname, '../../views'));
             //app.set('view engine', 'jade');
 
 
@@ -163,7 +173,8 @@ module.exports = {
             if (req.path.split("/")[3] == "embed" && req.method === 'GET') {
                 res.removeHeader('X-Frame-Options');
             }
-            res.sendFile(path.resolve(__dirname, "../..", 'public', 'index.html'))
+            res.render("main");
+            // res.sendFile(path.resolve(__dirname, "../..", 'public', 'index.html'))
         })
 
 

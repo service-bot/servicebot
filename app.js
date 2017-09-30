@@ -175,14 +175,14 @@ module.exports = function (initConfig = null) {
                     res.locals.message = err.message;
                     console.error(err);
                     res.locals.error = req.app.get('env') === 'development' ? err : "unhandled error has happened in server";
-                    if(err.message == "File too large"){
+                    if (err.message === "File too large") {
                         err.status = 413;
                         res.locals.error = "File too large";
 
                     }
 
                     // send the error
-                    res.status(err.status || 500).json({error : res.locals.error});
+                    res.status(err.status || 500).json({error: res.locals.error});
 
                     //res.render('error');
                 });

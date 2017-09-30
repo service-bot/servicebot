@@ -37,6 +37,7 @@
     "dollars-to-cents": "^1.0.3",
     "dotenv": "^4.0.0",
     "express": "^4.15.4",
+    "express-handlebars": "^3.0.0",
     "express-session": "^1.15.5",
     "fetch-retry": "^1.1.1",
     "form-data": "^2.3.1",

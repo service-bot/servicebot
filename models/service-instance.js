@@ -8,7 +8,7 @@ let ServiceInstanceMessages = require("./service-instance-message");
 let ServiceInstanceCharges = require("./charge");
 let ServiceInstanceCancellations = require("./service-instance-cancellation");
 let Charges = require("./charge");
-let dispatchEvent = require("../config/redux/store").dispatchEvent;
+let store = require("../config/redux/store");
 let promisify = require("bluebird").promisify;
 let promisifyProxy = require("../lib/promiseProxy");
 let User = require('./user');
@@ -171,7 +171,7 @@ let subscribe = function (callback) {
             });
         }).then(function (updated_instance) {
             //todo: move this piece out of model layer into route layer
-            dispatchEvent("service_instance_subscribed", updated_instance);
+            store.dispatchEvent("service_instance_subscribed", updated_instance);
             callback(null, updated_instance);
         }).catch(function (err) {
             callback(err, null);

@@ -36,7 +36,7 @@
                            let data = notification.data;
                            return Notification.createPromise(data)
                                .then((result) => {
-                                   dispatchEvent("master_notification_created", result);
+                                   store.dispatchEvent("master_notification_created", result);
                                    return result;
                                })
                                .catch((err) => {

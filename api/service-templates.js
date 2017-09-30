@@ -462,13 +462,13 @@ module.exports = function (router) {
 
             //events!
             if(isNew){
-                dispatchEvent("service_instance_requested_new_user", newInstance);
+                store.dispatchEvent("service_instance_requested_new_user", newInstance);
 
             }else if(req.uid !== newInstance.get("user_id")){
-                dispatchEvent("service_instance_requested_for_user", newInstance);
+                store.dispatchEvent("service_instance_requested_for_user", newInstance);
 
             }else{
-                dispatchEvent("service_instance_requested_by_user", newInstance);
+                store.dispatchEvent("service_instance_requested_by_user", newInstance);
             }
 
         } catch (error) {

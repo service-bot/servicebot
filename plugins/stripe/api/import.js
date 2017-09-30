@@ -149,7 +149,7 @@ module.exports = function(knex, stripe) {
                                         console.log(frontEndUrl);
                                         user.set('url', frontEndUrl);
                                         user.set('api', apiUrl);
-                                        dispatchEvent("user_invited", user);
+                                        store.dispatchEvent("user_invited", user);
                                     }
                                     return resolve(user);
                                 });

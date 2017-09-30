@@ -41,29 +41,23 @@ function appReducer(state = defaultAppState , action) {
 
 
 
-let store = createStore(appReducer,applyMiddleware(thunk), applyMiddleware(sagaMiddleware));
-
-store.subscribe(()=>{
-    // console.log("UPDATE", store.getState());
-});
 
 
-function dispatchEvent(eventName, eventObject){
-   return store.dispatch(triggerEvent(eventName, eventObject));
+
+class Store{
+    constructor(){
+        this.reducer = appReducer;
+    }
+    setStore(store){
+      this.store = store;
+    }
+    getState(){
+        return this.store.getState().servicebot;
+    }
+    dispatchEvent(eventName, eventObject){
+        return this.store.dispatch(triggerEvent(eventName, eventObject));
+
+    };
 }
 
-store.initialize = function(){
-    let initialState = {};
-    return Settings.getOptions().then((result) => {
-        initialState["options"] = result;
-        return sagaMiddleware.initialize()
-    }).then(store.dispatch(initializeStore(initialState))
-     ).catch((err) => {
-        console.error(err)
-        reject(err);
-    })
-};
-store.sagaMiddleware = sagaMiddleware;
-store.dispatchEvent = dispatchEvent;
-
-module.exports = store;
+module.exports = new Store();

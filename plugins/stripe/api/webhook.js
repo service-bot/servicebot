@@ -6,10 +6,10 @@ let Logger = require('../models/logger');
 let User = require('../../../models/user');
 let ServiceInstance = require('../../../models/service-instance');
 let Invoice = require('../../../models/invoice');
-let dispatchEvent = require("../../../config/redux/store").dispatchEvent;
 
 module.exports = function(knex) {
     let stripe = require('../../../config/stripe');
+    let store = require("../../../config/redux/store");
 
     /**
      * This function will retrieve an event from Stripe using the event id to validate post request
@@ -173,7 +173,7 @@ module.exports = function(knex) {
                         case 'invoice.payment_failed':
                             invoiceFailedEvent(event, function (user) {
                                 console.log(user);
-                                dispatchEvent("payment_failure", user);
+                                store.dispatchEvent("payment_failure", user);
                             });
                             break;
                         default:

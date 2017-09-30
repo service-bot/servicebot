@@ -7,7 +7,7 @@ let User = require('../../../models/user');
 let Stripe = require('../../../config/stripe');
 let StripeValidator = require('../../../lib/stripeValidator');
 let SystemOptions = require('../../../models/system-options');
-let dispatchEvent = require("../../../config/redux/store").dispatchEvent
+let store = require("../../../config/redux/store")
 module.exports = function(router, knex, stripe) {
 
     //Promise used for validating the Stripe API key change prior to the change.
@@ -179,7 +179,7 @@ module.exports = function(router, knex, stripe) {
                     };
 
                     console.log('Updating the Stripe config keys to: ', new_stripe_keys);
-                    dispatchEvent("system_options_updated", new_stripe_keys)
+                    store.dispatchEvent("system_options_updated", new_stripe_keys)
                     Stripe.setKeys(new_stripe_keys);
                     return resolve(do_migration);
                 });

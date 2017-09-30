@@ -1,12 +1,12 @@
 {
-  "name": "system-options",
+  "name": "notification",
   "version": "0.0.1",
   "dependencies": {
     
   },
   "pluginbot" : {
     "server" : {
-      "main" : "main.js",
+      "main" : "saga.js",
       "consumes" : ["database"]
     }
   }
