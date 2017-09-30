@@ -3,7 +3,7 @@ var path = require('path');
 
 var BUILD_DIR = path.resolve(__dirname, 'public/build');
 var APP_DIR = path.resolve(__dirname, 'views');
-
+const CONFIG_PATH = path.resolve(__dirname, './config/pluginbot.config.js');
 
 
 var INPUTS_DIR = path.resolve(__dirname, 'input_types');
@@ -18,9 +18,54 @@ let pluginConfig = new Promise((resolve, reject) => {
 })
 
 
-var config = function(){
-    return pluginConfig.then((input_types) => {
-        return {
+
+var config = async function(){
+    let configBuilder = require("pluginbot/config");
+    let input_types = await  pluginConfig;
+    let pluginConfigs = await configBuilder.buildClientConfig(CONFIG_PATH);
+    let pluginMap = await configBuilder.buildClientPluginMap(CONFIG_PATH);
+    console.log("MAP " ,pluginMap);
+    let plugins =
+        {
+            entry: {
+                ...pluginMap
+            },
+            output: {
+                path: BUILD_DIR + "/plugins",
+                publicPath: "/build/plugins/",
+                filename: '[name].js',
+                chunkFilename : '[name]-[id].js',
+                library : ["_plugins", "[name]"],
+                libraryTarget : "umd"
+
+
+            },
+
+            module: {
+                loaders: [
+                    {
+                        test: /\.jsx?/,
+                        loader: 'babel-loader'
+                    },
+
+                ]
+            },
+            plugins: [
+
+                // new webpack.optimize.UglifyJsPlugin({
+                //     compress: {
+                //         warnings: false
+                //     }
+                // }),
+                // new webpack.DefinePlugin({
+                //     'process.env': {
+                //         NODE_ENV: JSON.stringify('production')
+                //     }
+                // })
+
+            ]
+        };
+        return [plugins, {
             entry: {
                 "bundle": ['react-hot-loader/patch', APP_DIR + '/index.jsx'],
                 "widgets": ['react-hot-loader/patch', INPUTS_DIR + '/widgets.js']
@@ -52,7 +97,9 @@ var config = function(){
                 }
             },
             externals: {
-                servicebot_input_types: JSON.stringify(input_types)
+                servicebot_input_types: JSON.stringify(input_types),
+                pluginbot_client_config: JSON.stringify(pluginConfigs),
+                _plugins : "_plugins"
             },
 
 
@@ -97,9 +144,8 @@ var config = function(){
                 // })
 
             ]
-        }
-    })
-};
+        }]
+    };
 
 
 module.exports = config;

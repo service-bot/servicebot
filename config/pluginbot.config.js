@@ -102,6 +102,7 @@ let basePlugins = function() {
         {"path" : `${PLUGIN_DIRECTORY}/api-gateway`, appConfig : getAppConf()},
         {"path" : `${PLUGIN_DIRECTORY}/stripe`},
         {"path" : `${PLUGIN_DIRECTORY}/authorization`},
+        {"path" : `${PLUGIN_DIRECTORY}/test-client`},
         {"path" : `${PLUGIN_DIRECTORY}/updates`, "interval" : 86400000, "master" : "https://hub.servicebot.io/api/v1/announcements"}
     ];
 };
