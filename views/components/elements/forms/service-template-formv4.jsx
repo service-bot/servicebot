@@ -280,12 +280,12 @@ class FieldLevelValidationForm extends React.Component {
 
         return (
             <div>
-                <div className="col-md-3">
+{/*                <div className="col-md-3">
                 Tabs
                 <pre className="" style={{maxHeight: 'auto', overflowY: 'scroll'}}>
                 {JSON.stringify(props, null, 2)}
                 </pre>
-                </div>
+                </div>*/}
                 <div className="col-md-12">
                     <form onSubmit={handleSubmit}>
                         <div className="row">
