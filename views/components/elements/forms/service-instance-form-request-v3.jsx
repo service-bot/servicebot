@@ -444,7 +444,8 @@ class ServiceTemplateForm extends React.Component {
         };
         let successMessage = "Service Requested";
         let helpers = Object.assign(this.state, this.props);
-        if(!isAuthorized({permissions: "can_administrate"})){
+        if(!isAuthorized({permissions: "can_administrate"}) &&
+            this.props.service.amount > 0){
             submissionPrep = function (values, callback){
                 console.log("we've arrived in submission prep -------")
                 let tokenGenerator = self.tokenGenerator(values, callback);
