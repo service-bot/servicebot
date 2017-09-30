@@ -22,7 +22,7 @@ import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import SVGIcons from "../../utilities/svg-icons.jsx";
 let _ = require("lodash");
 
-const required = value => value ? undefined : 'Required';
+const required = value => (value || value !== '' || value !== null || value !== undefined) ? undefined : 'Required';
 const maxLength = max => value =>
     value && value.length > max ? `Must be ${max} characters or less` : undefined;
 const maxLength15 = maxLength(15);
@@ -280,12 +280,12 @@ class FieldLevelValidationForm extends React.Component {
 
         return (
             <div>
-                {/*<div className="col-md-3">*/}
-                {/*Tabs*/}
-                {/*<pre className="" style={{maxHeight: 'auto', overflowY: 'scroll'}}>*/}
-                {/*{JSON.stringify(props, null, 2)}*/}
-                {/*</pre>*/}
-                {/*</div>*/}
+                <div className="col-md-3">
+                Tabs
+                <pre className="" style={{maxHeight: 'auto', overflowY: 'scroll'}}>
+                {JSON.stringify(props, null, 2)}
+                </pre>
+                </div>
                 <div className="col-md-12">
                     <form onSubmit={handleSubmit}>
                         <div className="row">
@@ -562,7 +562,8 @@ class ServiceTemplateForm extends React.Component {
         else {
             initialValues = {
                 type: 'subscription',
-                category_id: 1
+                category_id: 1,
+                trial_period_days: 0
             };
             initialRequests.push(
                 {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},

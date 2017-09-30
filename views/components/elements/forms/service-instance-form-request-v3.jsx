@@ -49,10 +49,10 @@ const customFieldComponent = ({input, label, type, formJSON, config, meta: {touc
                 <select className="form-control" {...input} placeholder={label}>
                     {config && config.value.map((option, index) =>
                         <option key={index} value={option}>
-                            {config.pricing ? (
+                            {(config.pricing && config.pricing.value.hasOwnProperty(option))? (
                                 `${option} [${config.operation}s $${config.pricing.value[option]}]`
                             ) : (
-                                {option}
+                                `${option}`
                             )}
                         </option>
                     )
