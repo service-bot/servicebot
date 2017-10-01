@@ -63,49 +63,23 @@ const customFieldComponent = ({input, label, type, formJSON, config, meta: {touc
     </div>
 );
 
-let CustomField =  (props) => {
-    const {member, formJSON} = props;
-    return (
-        <div>
-            <Field
-                name={`${member}.data.value`}
-                type={formJSON.type}
-                component={customFieldComponent}
-                label={formJSON.prop_label}
-                value={formJSON.data.value}
-                formJSON={formJSON}
-                config={formJSON.config}
-                />
-        </div>
-    )
-};
-
-CustomField = connect((state, ownProps) => {
-    return {
-        "privateValue" : selector(state, "references.service_template_properties")[ownProps.index].private,
-        "typeValue" : selector(state, "references.service_template_properties")[ownProps.index].prop_input_type,
-        "configValue" : selector(state, `references.service_template_properties`)[ownProps.index].config,
-        "myValues" : selector(state, `references.${ownProps.member}`)
-
-    }
-}, (dispatch, ownProps)=> {
-    return {"changePrivate" : () => {
-        dispatch(change("serviceTemplateForm", `references.${ownProps.member}.required`, false));
-        dispatch(change("serviceTemplateForm", `references.${ownProps.member}.prompt_user`, false));
-    }
-    }
-})(CustomField);
-
-
 //Custom property
 const renderCustomProperty = (props) => {
-    const { privateValue, fields, formJSON, meta: { touched, error } } = props;
+    const { fields, formJSON, meta: { touched, error } } = props;
     return (
         <div>
             <ul>
             {fields.map((customProperty, index) =>
                 <li key={index}>
-                    <CustomField member={customProperty} index={index} formJSON={formJSON[index]}/>
+                    <Field
+                        name={`${customProperty}.data.value`}
+                        type={formJSON[index].type}
+                        component={customFieldComponent}
+                        label={formJSON[index].prop_label}
+                        value={formJSON[index].data.value}
+                        formJSON={formJSON[index]}
+                        config={formJSON[index].config}
+                    />
                 </li>
             )}
         </ul>
@@ -121,30 +95,15 @@ class ServiceRequestForm extends React.Component {
         super(props);
     }
     render() {
-
         let props = this.props;
+        const {handleSubmit, formJSON, helpers} = props;
 
-
-        const {handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON, helpers} = props;
-
-        const sectionDescriptionStyle = {
-            background: "#7fd3ff",
-            height: "100px",
-            width: "100px",
-            padding: "30px",
-            marginLeft: "50%",
-            transform: "translateX(-50%)",
-            borderRadius: "50%",
-        };
         let getPrice = function () {
             const price = formJSON.amount;
             let updatedPrice = formJSON.amount;
             let properties = formJSON.references.service_template_properties;
             let priceChanges = [];
-            console.log("Our price is: ", price);
-            console.log("Our properties are", properties);
             properties.map((prop) => {
-                console.log("this is prop", prop.id);
                 if (prop.config.pricing) {
                     switch (prop.type) {
                         case 'checkbox':
@@ -156,7 +115,6 @@ class ServiceRequestForm extends React.Component {
                             break;
                         case 'select':
                             let selectedOption = prop.data.value;
-                            console.log("its a select", prop.config.pricing.value[selectedOption]);
                             let priceChange = getPriceChange(price, prop.config.operation, prop.config.pricing.value[selectedOption]);
                             priceChanges.push(`${prop.prop_label} ${prop.config.operation}s ${priceChange}`);
                             updatedPrice += priceChange;
@@ -168,25 +126,7 @@ class ServiceRequestForm extends React.Component {
             });
             return updatedPrice
         };
-        let getRequestText = ()=>{
-            let serType = formJSON.type;
-            // console.log("service type",myService.type);
-            if (serType == "subscription"){
-                return (<span>{"Subscribe"} <Price value={getPrice()}/>{formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' '+formJSON.interval}</span>);
-            }else if (serType == "one_time"){
-                return (<span>{"Buy"} <Price value={getPrice()}/></span>);
-            }else if (serType == "custom"){
-                return ("Request");
-            }else{
-                return (<span><Price value={getPrice()}/></span>)
-            }
-        };
-        const users = helpers.usersData;
-        const sortedUsers = _.sortBy(users, ['id']);
-        let userOptions = (userList)=> {
-            return _.map(userList, (user)=>{ return new Object({[user.email]: user.id}) } );
-        };
-        let userOptionList = userOptions(sortedUsers);
+
         const getPriceChange = function(basePrice, modifier, amount){
             let priceChange = 0;
             switch(modifier) {
@@ -208,16 +148,29 @@ class ServiceRequestForm extends React.Component {
             return priceChange;
         };
 
-
+        let getRequestText = ()=>{
+            let serType = formJSON.type;
+            if (serType == "subscription"){
+                return (<span>{"Subscribe"} <Price value={getPrice()}/>{formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' '+formJSON.interval}</span>);
+            }else if (serType == "one_time"){
+                return (<span>{"Buy"} <Price value={getPrice()}/></span>);
+            }else if (serType == "custom"){
+                return ("Request");
+            }else{
+                return (<span><Price value={getPrice()}/></span>)
+            }
+        };
+        const users = helpers.usersData;
+        const sortedUsers = _.sortBy(users, ['id']);
 
         return (
             <div>
-                <div className="col-md-3">
+{/*                <div className="col-md-3">
                 Tabs
                 <pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>
                 {JSON.stringify(formJSON, null, 2)}
                 </pre>
-                </div>
+                </div>*/}
                 <div className="col-md-12">
                     <form onSubmit={handleSubmit}>
                         <div className="row">
@@ -294,7 +247,6 @@ class ServiceTemplateForm extends React.Component {
         super(props);
 
         let templateId = this.props.templateId || 1;
-
         this.state = {
             uid: this.props.uid,
             stripToken: null,
@@ -310,11 +262,11 @@ class ServiceTemplateForm extends React.Component {
             hasCard: null,
             loading: true
         };
-
         this.closeUserLoginModal = this.closeUserLoginModal.bind(this);
         this.retrieveStripeToken = this.retrieveStripeToken.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
     }
+
     componentWillMount(){
         let self = this;
 
@@ -322,7 +274,6 @@ class ServiceTemplateForm extends React.Component {
         if(isAuthorized({permissions: "can_administrate"})) {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
-                    // console.log('User Data', response);
                     let userRoleList = response.filter(function(user){
                         return user.references.user_roles[0].role_name === 'user';
                     });
@@ -345,7 +296,6 @@ class ServiceTemplateForm extends React.Component {
     }
 
     componentDidMount(){
-
         let self = this;
         Fetcher(self.state.formURL).then(function (response) {
             if (!response.error) {
@@ -361,7 +311,6 @@ class ServiceTemplateForm extends React.Component {
         if(this.props.uid) {
             this.checkIfUserHasCard();
         }
-
     }
 
     componentDidUpdate(nextProps, nextState){
@@ -379,9 +328,7 @@ class ServiceTemplateForm extends React.Component {
     }
 
     *tokenGenerator(values, callback){
-        console.log("WE IN THE TOKEN GENERATOR");
         let token = yield;
-        console.log("got token ", token);
         values.token_id = token.id;
         callback(values);
     }
@@ -444,10 +391,10 @@ class ServiceTemplateForm extends React.Component {
         };
         let successMessage = "Service Requested";
         let helpers = Object.assign(this.state, this.props);
+        //Gets a token to populate token_id for instance request
         if(!isAuthorized({permissions: "can_administrate"}) &&
             this.props.service.amount > 0){
             submissionPrep = function (values, callback){
-                console.log("we've arrived in submission prep -------")
                 let tokenGenerator = self.tokenGenerator(values, callback);
                 tokenGenerator.next();
                 self.setState({tokenGenerator}, (state => {
@@ -458,7 +405,6 @@ class ServiceTemplateForm extends React.Component {
         }
 
         return (
-
             <div>
                 {(!this.state.hasCard &&
                     !isAuthorized({permissions: "can_administrate"})) &&

@@ -42,6 +42,11 @@ class CustomField extends React.Component {
         super(props);
 
     }
+
+    componentDidUpdate(){
+
+    }
+
     render() {
 
         let props = this.props;
