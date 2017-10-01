@@ -7,6 +7,7 @@ import Fetcher from "./components/utilities/fetcher.jsx";
 import { reducer as formReducer } from 'redux-form'
 import logger from 'redux-logger'
 import PluginbotClient  from "pluginbot-react";
+import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 let DELETETHISCODELATERUID = cookie.load("uid");
 function oldFormReducer(state = {}, action) {
@@ -140,7 +141,9 @@ const rootReducer = {
     alerts: alertsReducer,
     uid : uidReducer,
     user: userReducer,
-    form: formReducer
+    form: formReducer,
+    routing: routerReducer
+
 };
 
 

@@ -60,6 +60,7 @@ import TestBase from "./components/elements/forms/test-base.jsx";
 import TestUpload from "./components/elements/forms/file-upload-form.jsx";
 import ServiceRequestV2 from "./components/pages/service-catalog-request-v2.jsx"
 
+import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 // Fetcher("/api/v1/system-options/public").then(function(response) {
 //     store.dispatch(setOptions(response));
@@ -80,7 +81,9 @@ class AppRouter extends React.Component {
         this.props.initialize()
     }
     render(){
-        return (<Router history={browserHistory}>
+        const history = syncHistoryWithStore(browserHistory, this.props.store)
+
+        return (<Router history={history}>
             <Route name="Home" path="/" component={App}>
                 <IndexRoute component={Home}/>
 
@@ -180,7 +183,7 @@ class AppWrapper extends React.Component {
             console.log(this.state.pluginbot, "POASASASASASS");
             return (
                 <PluginbotProvider pluginbot={this.state.pluginbot}>
-                    <AppRouter/>
+                    <AppRouter store={this.state.pluginbot.store}/>
                 </PluginbotProvider>
             );
         }else{
