@@ -235,7 +235,7 @@ module.exports = function(router, knex, stripe) {
             method : "post",
             middleware : [preconfigure],
             permissions : ["post_stripe_preconfigure"],
-            description : "Reconfigure Stripe account"
+            description : "Preconfigure Stripe account"
 
         },
         {

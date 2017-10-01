@@ -127,6 +127,7 @@ class NavBootstrap extends React.Component {
                 </ul>
             )
         }else{
+
             return(
                 <ul className="nav navbar-nav">
                     <li><Link to="/my-services" style={style}>My Services<span className="sr-only">(current)</span></Link></li>

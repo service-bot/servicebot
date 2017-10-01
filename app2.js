@@ -27,9 +27,13 @@ function appReducer(state = defaultAppState , action) {
 
 
 module.exports = async function(configPath) {
-    let Pluginbot = require("pluginbot");
-    let path = require("path");
-    let app = await Pluginbot.createPluginbot(configPath)
-    await app.initialize({"servicebot" : appReducer});
-    return app;
+    try {
+        let Pluginbot = require("pluginbot");
+        let path = require("path");
+        let app = await Pluginbot.createPluginbot(configPath)
+        await app.initialize({"servicebot": appReducer});
+        return app;
+    }catch(e){
+        console.error(e);
+    }
 };

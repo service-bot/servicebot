@@ -2,6 +2,7 @@ let consume = require("pluginbot/effects/consume");
 module.exports = {
 
     run : function*(config, provide, services){
+        let database = yield consume(services.database);
         //todo: move Role and Permissions to be managed by this plugin
         let Role = require("../../models/role.js");
         let authService = {

@@ -1,10 +1,13 @@
-
+let consume = require("pluginbot/effects/consume");
 
     let run = function*(config, provide, services) {
-    let analytics = require("../../lib/analytics");
+    let database = yield consume(services.database);
+    console.log("bad");
     let request = require("request");
     let semver = require("semver");
-    let _ = require("lodash");
+        let analytics = require("../../lib/analytics");
+
+        let _ = require("lodash");
     let master = config.master;
     let interval = config.interval; //24 hours
     let Notification = require("../../models/notifications");

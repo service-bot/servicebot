@@ -274,6 +274,9 @@ module.exports = function (router) {
                 return Math.round(100 * parseFloat(typeof amount === 'string' ? amount.replace(/[$,]/g, '') : amount))
             }
 
+
+
+            //Price adjustment -- is here instead of elsewhere because we need a price check == 0 to bypass need for token
             if (props) {
                 let adjustments = require("../input_types/handleInputs").getPriceAdjustments(props);
                 price += adjustments.reduce((acc, adjustment) => {
@@ -298,8 +301,11 @@ module.exports = function (router) {
                     return acc;
                 }, 0);
             }
-
             res.locals.adjusted_price = price;
+
+
+
+            //validation for unauthenticated requests (has email, token, etc...)
             if (!req.isAuthenticated()) {
 
                 if (req_body.hasOwnProperty("email")) {

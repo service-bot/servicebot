@@ -6,7 +6,9 @@ import {isAuthorized} from "./components/utilities/authorizer.jsx";
 import Fetcher from "./components/utilities/fetcher.jsx";
 import { reducer as formReducer } from 'redux-form'
 import logger from 'redux-logger'
+import PluginbotClient  from "pluginbot-react";
 
+let DELETETHISCODELATERUID = cookie.load("uid");
 function oldFormReducer(state = {}, action) {
     switch(action.type){
         case SET_FORM_DATA:
@@ -100,9 +102,11 @@ function uidReducer(state = cookie.load("uid") || null, action) {
             if(action.initialState.uid == undefined) {
                 return null;
             } else {
+                DELETETHISCODELATERUID = action.initialState.uid;
                 return action.initialState.uid;
             }
         case SET_UID :
+            DELETETHISCODELATERUID = action.uid;
             return action.uid;
         default:
             return state;
@@ -128,7 +132,7 @@ function userReducer(state = {}, action) {
     }
 }
 
-const rootReducer = combineReducers({
+const rootReducer = {
     allForms : oldFormReducer,
     options: optionsReducer,
     notifications: notificationsReducer,
@@ -137,9 +141,8 @@ const rootReducer = combineReducers({
     uid : uidReducer,
     user: userReducer,
     form: formReducer
-});
+};
 
-let store = createStore(rootReducer, applyMiddleware(thunk, logger));
 
 // store.subscribe(()=>{
 //     console.log("store changed", store.getState());
@@ -184,5 +187,17 @@ let initializedState = async function(dispatch){
 };
 
 
+let initialize = async function(){
+    console.log("INIT NOT AGAIN!");
 
-export { store, initializedState };
+    let app = await PluginbotClient.createPluginbot();
+    console.log("INIT NOT DONE!");
+
+    await app.initialize(rootReducer, thunk, logger);
+        console.log("INIT DONE!");
+        return app;
+
+};
+
+let pluginbot = initialize();
+export { pluginbot, initializedState, DELETETHISCODELATERUID };

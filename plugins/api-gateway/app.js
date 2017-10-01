@@ -12,152 +12,155 @@ let architect = require("architect")
 let schedule = require("node-schedule");
 var helmet = require('helmet')
 let consume = require("pluginbot/effects/consume");
-let {call, put, spawn} = require("redux-saga/effects")
+let {call, put, spawn, takeEvery} = require("redux-saga/effects")
 let HOME_PATH = path.resolve(__dirname, "../../", "public");
 let createServer = require("./server");
 
 //todo: store sagas in store?
 
 module.exports = {
-    run : function*(config, provide, services){
-        let database = yield consume(services.database);
+    run: function* (config, provide, services) {
         let appConfig = config.appConfig;
-        let Settings =  require('../../models/system-options');
 
 
         //todo: this should not exist in the future
+        var app = express();
+        app.use(helmet());
+        app.engine('handlebars', exphbs({defaultLayout: 'main', layoutsDir: HOME_PATH}));
+        app.set('view engine', 'handlebars');
+        app.set('views', HOME_PATH);
+        app.use(express.static(path.join(__dirname, '../../public')));
+        yield takeEvery()
 
-            var app = express();
 
-            let injectProperties = require("../../middleware/property-injector");
 
-            //listen for requests;
-            let servers = createServer(appConfig, app);
+        //listen for requests;
+        let servers = createServer(appConfig, app);
 
-            require('../../config/passport.js')(passport);
+        let Settings = require('../../models/system-options');
 
-            app.use(helmet());
+        let database = yield consume(services.database);
 
-            var exphbs  = require('express-handlebars');
+        let injectProperties = require("../../middleware/property-injector");
 
-            app.engine('handlebars', exphbs({defaultLayout: 'main', layoutsDir : HOME_PATH}));
-            app.set('view engine', 'handlebars');
-            app.set('views', HOME_PATH);
+        require('../../config/passport.js')(passport);
+
+
+        var exphbs = require('express-handlebars');
 
 
         //var subpath = express();
 
-            // swagger definition
-            var swaggerDefinition = {
-                info: {
-                    title: 'ServiceBot API',
-                    version: '1.0.0',
-                    description: 'Rest API documentation for ServiceBot',
-                },
-                host: 'localhost:3001',
-                basePath: '/api/v1/',
-            };
+        // swagger definition
+        var swaggerDefinition = {
+            info: {
+                title: 'ServiceBot API',
+                version: '1.0.0',
+                description: 'Rest API documentation for ServiceBot',
+            },
+            host: 'localhost:3001',
+            basePath: '/api/v1/',
+        };
 
-            // options for the swagger docs
-            var options = {
-                // import swaggerDefinitions
-                swaggerDefinition: swaggerDefinition,
-                // path to the API docs
-                apis: ["../../api/*"],
-            };
+        // options for the swagger docs
+        var options = {
+            // import swaggerDefinitions
+            swaggerDefinition: swaggerDefinition,
+            // path to the API docs
+            apis: ["../../api/*"],
+        };
 
-            // initialize swagger-jsdoc
-            var swaggerSpec = swaggerJSDoc(options);
-            swaggerSpec.paths = require('../../api-docs/api-paths.json');
-            swaggerSpec.definitions = require('../../api-docs/api-definitions.json');
-            swaggerSpec.securityDefinitions = require('../../api-docs/api-security-definitions.json');
-            // serve swagger
-            app.get('/swagger.json', function (req, res) {
-                res.setHeader('Content-Type', 'application/json');
-                res.send(swaggerSpec);
-            });
+        // initialize swagger-jsdoc
+        var swaggerSpec = swaggerJSDoc(options);
+        swaggerSpec.paths = require('../../api-docs/api-paths.json');
+        swaggerSpec.definitions = require('../../api-docs/api-definitions.json');
+        swaggerSpec.securityDefinitions = require('../../api-docs/api-security-definitions.json');
+        // serve swagger
+        app.get('/swagger.json', function (req, res) {
+            res.setHeader('Content-Type', 'application/json');
+            res.send(swaggerSpec);
+        });
 
-            //this is where we set routes to go through react
-            app.use(express.static(path.join(__dirname, '../../public')));
+        //this is where we set routes to go through react
 
-            //this routes all requests to serve index
+        //this routes all requests to serve index
 
-            // view engine setup
-            // app.set('views', path.join(__dirname, '../../views'));
-            //app.set('view engine', 'jade');
+        // view engine setup
+        // app.set('views', path.join(__dirname, '../../views'));
+        //app.set('view engine', 'jade');
 
 
-            // uncomment after placing your favicon in /public
-            //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+        // uncomment after placing your favicon in /public
+        //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
-            app.use(logger('dev'));
-            app.use(bodyParser.json());
-            app.use(bodyParser.urlencoded({
-                extended: false
-            }));
-            app.use(cookieParser());
+        app.use(logger('dev'));
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({
+            extended: false
+        }));
+        app.use(cookieParser());
 
-            //todo: move this into a plugin
-            app.use(expressSession({
-                secret: process.env.SECRET_KEY,
-                resave: true,
-                saveUninitialized: true
-            }));
+        //todo: move this into a plugin
+        app.use(expressSession({
+            secret: process.env.SECRET_KEY,
+            resave: true,
+            saveUninitialized: true
+        }));
 
-            app.use(passport.initialize());
-            app.use(passport.session());
-            app.use(require("../../middleware/role-session")());
-            app.use(flash());
-            app.use(injectProperties());
+        app.use(passport.initialize());
+        app.use(passport.session());
+        app.use(require("../../middleware/role-session")());
+        app.use(flash());
+        app.use(injectProperties());
 
-            //auth route doesn't go in express route so it doesn't need auth
-            require("../../api/auth")(app, passport);
+        //auth route doesn't go in express route so it doesn't need auth
+        require("../../api/auth")(app, passport);
 
-            //initialize api route
-            var api = express.Router();
-            app.use("/api/v1", api);
-            //force all requests to api route to look for token, if token is present in header the user will be logged in with taht token
-            api.use(function (req, res, next) {
-                passport.authenticate('jwt', function (err, user, info) {
+        //initialize api route
+        var api = express.Router();
+        app.use("/api/v1", api);
+        //force all requests to api route to look for token, if token is present in header the user will be logged in with taht token
+        api.use(function (req, res, next) {
+            passport.authenticate('jwt', function (err, user, info) {
+                if (err) {
+                    return next(err);
+                }
+                if (!user) {
+                    return next();
+                }
+                req.logIn(user, {
+                    session: false
+                }, function (err) {
                     if (err) {
                         return next(err);
                     }
-                    if (!user) {
-                        return next();
-                    }
-                    req.logIn(user, {
-                        session: false
-                    }, function (err) {
-                        if (err) {
-                            return next(err);
-                        }
-                        return next();
-                    });
-                })(req, res, next);
-            });
+                    return next();
+                });
+            })(req, res, next);
+        });
 
-            //todo: move apis to plugins.
-            require('../../api/users')(api, passport);
-            require('../../api/funds')(api);
-            require('../../api/invoices')(api);
-            require('../../api/service-instances')(api);
-            require('../../api/service-instance-properties')(api);
-            require('../../api/service-instance-messages')(api);
-            require('../../api/service-instance-cancellations')(api);
-            require('../../api/service-templates')(api);
-            require('../../api/service-template-properties')(api);
-            require('../../api/service-categories')(api);
-            require('../../api/system-options')(api);
-            require('../../api/charge')(api);
-            require('../../api/event-logs')(api);
-            require('../../api/notification-templates')(api);
-            require('../../api/notifications')(api);
-            require('../../api/permissions')(api);
-            require('../../api/roles')(api);
-            require('../../api/analytics')(api);
-            let routeConsumer = require("./router");
-            let authService = yield consume(services.authService);
-            yield spawn(routeConsumer,  api, services.routeDefinition, authService);
+        //todo: move apis to plugins.
+        require('../../api/users')(api, passport);
+        require('../../api/funds')(api);
+        require('../../api/invoices')(api);
+        require('../../api/service-instances')(api);
+        require('../../api/service-instance-properties')(api);
+        require('../../api/service-instance-messages')(api);
+        require('../../api/service-instance-cancellations')(api);
+        require('../../api/service-templates')(api);
+        require('../../api/service-template-properties')(api);
+        require('../../api/service-categories')(api);
+        require('../../api/system-options')(api);
+        require('../../api/charge')(api);
+        require('../../api/event-logs')(api);
+        require('../../api/notification-templates')(api);
+        require('../../api/notifications')(api);
+        require('../../api/permissions')(api);
+        require('../../api/roles')(api);
+        require('../../api/analytics')(api);
+        let routeConsumer = require("./router");
+        let authService = yield consume(services.authService);
+        yield spawn(routeConsumer, api, services.routeDefinition, authService);
 
 
         api.use(function (req, res, next) {
@@ -191,17 +194,20 @@ module.exports = {
             res.locals.message = err.message;
             console.error(err);
             res.locals.error = req.app.get('env') === 'development' ? err : "unhandled error has happened in server";
-            if(err.message == "File too large"){
+            if (err.message == "File too large") {
                 err.status = 413;
                 res.locals.error = "File too large";
 
             }
 
             // send the error
-            res.status(err.status || 500).json({error : res.locals.error});
+            res.status(err.status || 500).json({error: res.locals.error});
 
             //res.render('error');
         });
+
+        yield put({type: "FINISHED_SETUP"});
+
 
     }
 }

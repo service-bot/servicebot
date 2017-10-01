@@ -1,12 +1,3 @@
-//todo: consolidate with pluginbot
-let NotificationTemplate = require("../../models/notification-template");
-let thunk = require('redux-thunk').default;
-let sagaMiddleware = require("./saga");
-let { call, put, takeEvery } = require('redux-saga/effects')
-let { delay } = require('redux-saga')
-let Settings =  require('../../models/system-options');
-
-let { createStore, applyMiddleware, combineReducers } = require('redux');
 
 
 let { EVENT, SET_OPTIONS,SET_EVENT_SAGAS, INIT_STORE, setOptions ,setEventSagas, initializeStore, triggerEvent}  =  require("./actions");

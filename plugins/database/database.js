@@ -39,7 +39,6 @@ module.exports = {
             console.log("Tables created - now populating with data");
             yield call(populateDB, database, initialConfig);
             console.log("Initialization complete!!!!!");
-            yield put({type : "FINISHED_SETUP"});
         }else{
 
             //todo: move this to a plugin

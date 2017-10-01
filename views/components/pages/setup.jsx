@@ -12,7 +12,7 @@ import Multistep from "../elements/forms/multistep.jsx"
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import "../../../public/stylesheets/xaas/installation.css";
-import {store,initializedState } from "../../store.js"
+import { initializedState } from "../../store.js"
 import { connect } from "react-redux";
 
 class SetupDB extends React.Component{
@@ -182,13 +182,7 @@ class Setup extends React.Component {
         Fetcher("/setup", "POST", self.state.form)
             .then(function(result){
                 if(!result.error) {
-                    fetch("/api/v1/service-templates/public",{retries:5, retryDelay:3000})
-                        .then(function(result){
-                            if(!result.error){
-                                store.dispatch(initializedState);
-                                browserHistory.push('home')
-                            }
-                        })
+                    self.props.initialize();
                 }else{
                     console.log("There was an error");
                     self.setState({loading: false});
@@ -273,4 +267,9 @@ class Setup extends React.Component {
     }}
 }
 
-export default connect((state) => {return {"options" : state.options}})(Setup);
+
+let mapDispatch = function(dispatch){
+    return { initialize : () => dispatch(initializedState) }
+}
+
+export default connect((state) => {return {"options" : state.options}}, mapDispatch )(Setup);

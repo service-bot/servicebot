@@ -5,7 +5,8 @@
   "private": true,
   "pluginbot" : {
     "server" : {
-      "main" : "updates.js"
+      "main" : "updates.js",
+      "consumes" : ["database"]
     }
   }
 }

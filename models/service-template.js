@@ -23,6 +23,8 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
         let service_description = self.data.description;
         let service_name = self.data.name;
         if (self.data.detail) {
+
+            //todo : strip out XSS
             service_description = `${service_description} <hr> ${self.data.detail}`;
         }
         //Idealize the new service instance

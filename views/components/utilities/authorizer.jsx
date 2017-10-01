@@ -1,13 +1,12 @@
 import React from 'react';
 import { connect } from "react-redux";
-import { store } from "../../store";
 //TODO : Consider server side, there are implications handling this auth client side, possible attack vector, APIs should block attacker from getting any useful data
+import {DELETETHISCODELATERUID} from "../../store";
 
 
 let isAuthorized = function(props) {
     //check if logged in
-    let storeState = store.getState();
-    if( storeState.uid && localStorage.getItem("permissions")) {
+    if( DELETETHISCODELATERUID  && localStorage.getItem("permissions")) {
 
         if(props.anonymous){
             return false;
@@ -87,7 +86,6 @@ let Authorizer = function(props) {
         }
     }
     else{
-
         if(props.anonymous){
             if(Array.isArray(props.children)){
                 return (<span>{props.children}</span>);
@@ -103,7 +101,6 @@ let Authorizer = function(props) {
     }
 
 };
-
 const mapStateToProps = (state, ownProps) => {
     return {
         uid: state.uid,
@@ -111,6 +108,8 @@ const mapStateToProps = (state, ownProps) => {
         options: state.options
     }
 };
+
+
 
 
 Authorizer = connect(mapStateToProps)(Authorizer);

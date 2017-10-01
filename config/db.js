@@ -6,7 +6,6 @@ var config = {
     port: process.env.POSTGRES_DB_PORT
 };
 
-
 var knex = require('knex')({
     client: 'pg',
     connection: config

@@ -1,4 +1,3 @@
-
 let knex = require('../../config/db.js');
 let _ = require('lodash');
 let Promise = require("bluebird");
@@ -18,7 +17,6 @@ var whereFilter = require('knex-filter-loopback').whereFilter;
  */
 
 module.exports = function(tableName, references=[], primaryKey='id', database=knex) {
-
     var Entity = function (data) {
         this.data = data;
     }

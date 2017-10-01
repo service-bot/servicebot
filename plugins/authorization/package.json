@@ -6,7 +6,8 @@
   },
   "pluginbot" : {
     "server" : {
-      "main" : "auth.js"
+      "main" : "auth.js",
+      "consumes" : ["database"]
     }
   }
 }

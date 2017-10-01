@@ -28,7 +28,7 @@ class Profile extends React.Component {
     }
 
     componentDidMount(){
-        if(!isAuthorized({})){
+        if(!isAuthorized({uid : this.props.uid})){
             return browserHistory.push("/login");
         } else {
             this.fetchUser();

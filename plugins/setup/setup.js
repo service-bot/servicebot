@@ -2,6 +2,7 @@ let {call, take, takeEvery, cancel, actionChannel} = require("redux-saga/effects
 let express = require("express");
 let consume = require("pluginbot/effects/consume");
 let app = require("./app");
+let { END }  = require("redux-saga");
 module.exports = {
     run : function*(config, provide, services){
         try {
@@ -11,7 +12,7 @@ module.exports = {
             let cancelChannel = yield actionChannel("FINISHED_SETUP");
 
             //wait for api to send initial configuration
-            let initialConfig = yield call(app, config.appConfig);
+            let {initialConfig, response, emitter} = yield call(app, config.appConfig);
             console.log("providing teh confs");
 
             let dbConfig = {
@@ -26,6 +27,9 @@ module.exports = {
             yield provide({dbConfig});
             yield provide({initialConfig});
             yield take(cancelChannel);
+            console.log("FIN!");
+            response({message: "Setup complete"});
+            emitter();
             cancel();
         }
         finally {

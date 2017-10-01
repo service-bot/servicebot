@@ -7,6 +7,8 @@ let http = require("http");
 let enableDestroy = require('server-destroy');
 let {eventChannel, END }  = require("redux-saga");
 let {take }  = require("redux-saga/effects")
+let HOME_PATH = path.resolve(__dirname, "../../", "public");
+
 
 let startApp = function(app, callback=null){
     let debug = require('debug')('testpassport:server');
@@ -110,7 +112,7 @@ let startApp = function(app, callback=null){
 
 
 
-module.exports = function*(appConfig) {
+module.exports = function*(appConfig, router) {
 
 
 
@@ -125,7 +127,7 @@ module.exports = function*(appConfig) {
         }));
         let api = express.Router();
         console.log("environment not initialized - waiting for installation request")
-        app.get('/', function (req, res, next) {
+        router.get('/', function (req, res, next) {
             if (req.url === '/setup') {
                 console.log(req.url);
                 next();
@@ -134,26 +136,26 @@ module.exports = function*(appConfig) {
             }
         });
 
-        app.use(express.static(path.join(__dirname, '../..', 'public')));
-
-//this routes all requests to serve index
-// view engine setup
-        app.set('views', path.join(__dirname, 'views'));
-
-        let server = app.listen((appConfig.port || 3001), function () {
-        });
-        let sslConfig = {}
-        if (appConfig.certificate_path) {
-            var key = fs.readFileSync(appConfig.certificate_path + "servicebot.key");
-            var cert = fs.readFileSync(appConfig.certificate_path + "servicebot.crt");
-            var ca = fs.readFileSync(appConfig.certificate_path + "servicebot_bundle.crt");
-            sslConfig = {key: key, cert: cert, ca: ca};
-        }
-
-        let httpsServer = https.createServer(sslConfig, app).listen(appConfig.ssl_port || 3000);
-        enableDestroy(server);
-        enableDestroy(httpsServer);
-        console.log("waitin around");
+//         app.use(express.static(path.join(__dirname, '../..', 'public')));
+//
+// //this routes all requests to serve index
+// // view engine setup
+//         app.set('views', path.join(__dirname, 'views'));
+//
+//         let server = app.listen((appConfig.port || 3001), function () {
+//         });
+//         let sslConfig = {}
+//         if (appConfig.certificate_path) {
+//             var key = fs.readFileSync(appConfig.certificate_path + "servicebot.key");
+//             var cert = fs.readFileSync(appConfig.certificate_path + "servicebot.crt");
+//             var ca = fs.readFileSync(appConfig.certificate_path + "servicebot_bundle.crt");
+//             sslConfig = {key: key, cert: cert, ca: ca};
+//         }
+//
+//         let httpsServer = https.createServer(sslConfig, app).listen(appConfig.ssl_port || 3000);
+//         enableDestroy(server);
+//         enableDestroy(httpsServer);
+//         console.log("waitin around");
         api.post("/api/v1/check-db", function (req, res, next) {
             let dbconfig = req.body;
 
@@ -205,15 +207,16 @@ module.exports = function*(appConfig) {
         app.use(api);
 
         app.post("/setup", function (req, res, next) {
-            let conf = req.body;
+            let initialConfig = req.body;
 
-            if (!conf.admin_user || !conf.admin_password || !conf.company_name || !conf.company_email) {
+            if (!initialConfig.admin_user || !initialConfig.admin_password || !initialConfig.company_name || !initialConfig.company_email) {
                 return res.status(400).json({error: 'All fields are required'});
             }
 
             try {
-                require("../../bin/setup")(conf, function (env) {
-                    emitter({conf});
+                require("../../bin/setup")(initialConfig, function (env) {
+                    console.log("GOTTA ENV!");
+                    emitter({initialConfig, response : res.json});
                     emitter(END);
                     console.log("yeah ok");
                 });
@@ -221,18 +224,33 @@ module.exports = function*(appConfig) {
                 res.json({"error": "Error - " + e});
             }
         });
+
+        // var exphbs = require('express-handlebars');
+        //
+        // app.engine('handlebars', exphbs({defaultLayout: 'main', layoutsDir: HOME_PATH}));
+        // app.set('view engine', 'handlebars');
+        // app.set('views', HOME_PATH);
+
         app.get('/setup', function (request, response) {
-            response.sendFile(path.resolve(__dirname, '../../public', 'index.html'))
+            response.render("main");
+            // response.sendFile(path.resolve(__dirname, '../../public', 'index.html'))
         });
 
         return () => {
+            console.log("CLEAN!");
+            var removeRoute = require('express-remove-route');
+
+            removeRoute(app, '/setup');
+            removeRoute(app, '/api/v1/check-stripe');
+            removeRoute(app, '/api/v1/check-db');
+
+
+
             // Perform any cleanup you need here
-            server.destroy();
-            httpsServer.destroy();
         };
 
     });
-    let {conf} = yield take(channel);
-    console.log("GOTTA CONF!");
-    return conf;
+
+
+    return yield take(channel);
 };
