@@ -1,133 +1,19 @@
 let express = require('express')
-let bodyParser = require('body-parser');
 let path = require("path");
-let fs = require('fs');
-let https = require("https");
-let http = require("http");
-let enableDestroy = require('server-destroy');
-let {eventChannel, END }  = require("redux-saga");
-let {take }  = require("redux-saga/effects")
-let HOME_PATH = path.resolve(__dirname, "../../", "public");
+let {eventChannel, END} = require("redux-saga");
+let {take} = require("redux-saga/effects")
 
 
-let startApp = function(app, callback=null){
-    let debug = require('debug')('testpassport:server');
-
-    /**
-     * Get port from environment and store in Express.
-     */
-
-    let port = normalizePort(process.env.PORT || '3001');
-    app.set('port', port);
-
-    /**
-     * Create HTTP server.
-     */
-    let config = {}
-    if(process.env.CERTIFICATES){
-        var key = fs.readFileSync(process.env.CERTIFICATES + "servicebot.key");
-        var cert = fs.readFileSync(process.env.CERTIFICATES + "servicebot.crt");
-        var ca = fs.readFileSync(process.env.CERTIFICATES + "servicebot_bundle.crt");
-        config = {key:key, cert:cert, ca:ca};
-    }
-    let server = http.createServer(app);
-    let httpsServer = https.createServer(config, app);
-    httpsServer.listen(process.env.SSL_PORT || 3000);
-    httpsServer.on('error', onError);
-    httpsServer.on('listening', onListening);
-
-    /**
-     * Listen on provided port, on all network interfaces.
-     */
-
-    server.listen(port);
-    server.on('error', onError);
-    server.on('listening', onListening);
-    if(callback){
-        enableDestroy(server);
-        callback(app, server);
-    }
-
-    /**
-     * Normalize a port into a number, string, or false.
-     */
-
-    function normalizePort(val) {
-        let port = parseInt(val, 10);
-
-        if (isNaN(port)) {
-            // named pipe
-            return val;
-        }
-
-        if (port >= 0) {
-            // port number
-            return port;
-        }
-
-        return false;
-    }
-
-    /**
-     * Event listener for HTTP server "error" event.
-     */
-
-    function onError(error) {
-        if (error.syscall !== 'listen') {
-            throw error;
-        }
-
-        let bind = typeof port === 'string'
-            ? 'Pipe ' + port
-            : 'Port ' + port;
-
-        // handle specific listen errors with friendly messages
-        switch (error.code) {
-            case 'EACCES':
-                console.error(bind + ' requires elevated privileges');
-                process.exit(1);
-                break;
-            case 'EADDRINUSE':
-                console.error(bind + ' is already in use');
-                process.exit(1);
-                break;
-            default:
-                throw error;
-        }
-    }
-
-    /**
-     * Event listener for HTTP server "listening" event.
-     */
-
-    function onListening() {
-        let addr = server.address();
-        let bind = typeof addr === 'string'
-            ? 'pipe ' + addr
-            : 'port ' + addr.port;
-        console.log('Listening on ' + bind);
-    }
-};
-
-
-
-
-module.exports = function*(appConfig, router) {
-
-
-
-
+module.exports = function* (appConfig, app) {
 
 
     const channel = eventChannel(emitter => {
-        let app = express();
-        app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({
-            extended: false
-        }));
+        let setupDisabled = false;
         let api = express.Router();
-        console.log("environment not initialized - waiting for installation request")
-        router.get('/', function (req, res, next) {
+        app.get('/', function (req, res, next) {
+            if (setupDisabled) {
+                return next();
+            }
             if (req.url === '/setup') {
                 console.log(req.url);
                 next();
@@ -136,27 +22,12 @@ module.exports = function*(appConfig, router) {
             }
         });
 
-//         app.use(express.static(path.join(__dirname, '../..', 'public')));
-//
-// //this routes all requests to serve index
-// // view engine setup
-//         app.set('views', path.join(__dirname, 'views'));
-//
-//         let server = app.listen((appConfig.port || 3001), function () {
-//         });
-//         let sslConfig = {}
-//         if (appConfig.certificate_path) {
-//             var key = fs.readFileSync(appConfig.certificate_path + "servicebot.key");
-//             var cert = fs.readFileSync(appConfig.certificate_path + "servicebot.crt");
-//             var ca = fs.readFileSync(appConfig.certificate_path + "servicebot_bundle.crt");
-//             sslConfig = {key: key, cert: cert, ca: ca};
-//         }
-//
-//         let httpsServer = https.createServer(sslConfig, app).listen(appConfig.ssl_port || 3000);
-//         enableDestroy(server);
-//         enableDestroy(httpsServer);
-//         console.log("waitin around");
+
         api.post("/api/v1/check-db", function (req, res, next) {
+            if (setupDisabled) {
+                return next();
+            }
+
             let dbconfig = req.body;
 
             //Null Check
@@ -191,6 +62,10 @@ module.exports = function*(appConfig, router) {
         });
 
         api.post("/api/v1/check-stripe", function (req, res, next) {
+            if (setupDisabled) {
+                return next();
+            }
+
             let stripe_config = req.body;
             let publishable = stripe_config.stripe_public;
             let secret = stripe_config.stripe_secret;
@@ -207,6 +82,10 @@ module.exports = function*(appConfig, router) {
         app.use(api);
 
         app.post("/setup", function (req, res, next) {
+            if (setupDisabled) {
+                return next();
+            }
+
             let initialConfig = req.body;
 
             if (!initialConfig.admin_user || !initialConfig.admin_password || !initialConfig.company_name || !initialConfig.company_email) {
@@ -215,38 +94,24 @@ module.exports = function*(appConfig, router) {
 
             try {
                 require("../../bin/setup")(initialConfig, function (env) {
-                    console.log("GOTTA ENV!");
-                    emitter({initialConfig, response : res.json});
+                    emitter({initialConfig, response: res});
                     emitter(END);
-                    console.log("yeah ok");
                 });
             } catch (e) {
                 res.json({"error": "Error - " + e});
             }
         });
 
-        // var exphbs = require('express-handlebars');
-        //
-        // app.engine('handlebars', exphbs({defaultLayout: 'main', layoutsDir: HOME_PATH}));
-        // app.set('view engine', 'handlebars');
-        // app.set('views', HOME_PATH);
 
-        app.get('/setup', function (request, response) {
+        app.get('/setup', function (request, response, next) {
+            if (setupDisabled) {
+                return next();
+            }
             response.render("main");
-            // response.sendFile(path.resolve(__dirname, '../../public', 'index.html'))
         });
 
         return () => {
-            console.log("CLEAN!");
-            var removeRoute = require('express-remove-route');
-
-            removeRoute(app, '/setup');
-            removeRoute(app, '/api/v1/check-stripe');
-            removeRoute(app, '/api/v1/check-db');
-
-
-
-            // Perform any cleanup you need here
+            setupDisabled = true;
         };
 
     });

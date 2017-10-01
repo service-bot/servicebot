@@ -26,27 +26,31 @@ module.exports = {
         //todo: this should not exist in the future
         var app = express();
         app.use(helmet());
+        var exphbs = require('express-handlebars');
         app.engine('handlebars', exphbs({defaultLayout: 'main', layoutsDir: HOME_PATH}));
         app.set('view engine', 'handlebars');
         app.set('views', HOME_PATH);
+        app.use(logger('dev'));
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({
+            extended: false
+        }));
+        app.use(cookieParser());
         app.use(express.static(path.join(__dirname, '../../public')));
-        yield takeEvery()
-
-
+        let servers = createServer(appConfig, app);
+        yield provide({expressApp: app});
+        let database = yield consume(services.database);
 
         //listen for requests;
-        let servers = createServer(appConfig, app);
 
         let Settings = require('../../models/system-options');
 
-        let database = yield consume(services.database);
 
         let injectProperties = require("../../middleware/property-injector");
 
         require('../../config/passport.js')(passport);
 
 
-        var exphbs = require('express-handlebars');
 
 
         //var subpath = express();
@@ -93,12 +97,6 @@ module.exports = {
         // uncomment after placing your favicon in /public
         //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
-        app.use(logger('dev'));
-        app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({
-            extended: false
-        }));
-        app.use(cookieParser());
 
         //todo: move this into a plugin
         app.use(expressSession({

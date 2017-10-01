@@ -12,7 +12,9 @@ module.exports = {
             let cancelChannel = yield actionChannel("FINISHED_SETUP");
 
             //wait for api to send initial configuration
-            let {initialConfig, response, emitter} = yield call(app, config.appConfig);
+            let expressApp = yield consume(services.expressApp);
+            console.log("got my app!");
+            let {initialConfig, response, emitter} = yield call(app, config.appConfig, expressApp);
             console.log("providing teh confs");
 
             let dbConfig = {
@@ -27,11 +29,8 @@ module.exports = {
             yield provide({dbConfig});
             yield provide({initialConfig});
             yield take(cancelChannel);
-            console.log("FIN!");
-            response({message: "Setup complete"});
-            emitter();
-            cancel();
-        }
+            response.json({message: "Setup complete"});
+            }
         finally {
             console.log("CLOSIN DOWN THE SETUP!");
         }
