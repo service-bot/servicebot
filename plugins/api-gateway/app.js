@@ -2,14 +2,11 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var express = require('express');
 var expressSession = require('express-session');
-var favicon = require('serve-favicon');
 var flash = require('connect-flash');
 var swaggerJSDoc = require('swagger-jsdoc');
 var logger = require('morgan');
 var passport = require('passport');
 var path = require('path');
-let architect = require("architect")
-let schedule = require("node-schedule");
 var helmet = require('helmet')
 let consume = require("pluginbot/effects/consume");
 let {call, put, spawn, takeEvery} = require("redux-saga/effects")
@@ -21,9 +18,6 @@ let createServer = require("./server");
 module.exports = {
     run: function* (config, provide, services) {
         let appConfig = config.appConfig;
-
-
-        //todo: this should not exist in the future
         var app = express();
         app.use(helmet());
         var exphbs = require('express-handlebars');
@@ -39,15 +33,11 @@ module.exports = {
         app.use(express.static(path.join(__dirname, '../../public')));
         let servers = createServer(appConfig, app);
         yield provide({expressApp: app});
+
+        //wait for database to become available
         let database = yield consume(services.database);
-
-        //listen for requests;
-
         let Settings = require('../../models/system-options');
-
-
         let injectProperties = require("../../middleware/property-injector");
-
         require('../../config/passport.js')(passport);
 
 

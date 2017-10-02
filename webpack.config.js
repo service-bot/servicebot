@@ -26,7 +26,6 @@ var config = async function () {
     let input_types = await  pluginConfig;
     let pluginConfigs = await configBuilder.buildClientConfig(CONFIG_PATH);
     let pluginMap = await configBuilder.buildClientPluginMap(CONFIG_PATH);
-    console.log("MAP ", pluginMap);
     let plugins =
         {
             entry: {
@@ -48,14 +47,17 @@ var config = async function () {
                     {
                         test: /\.jsx?/,
                         loader: 'babel-loader',
-                        include: [PLUGIN_DIR],
+                        include: [PLUGIN_DIR, APP_DIR],
 
 
                     },
+                    {
+                        test: /\.css$/,
+                        loader: "style-loader!css-loader"
+                    }
 
                 ]
             },
-            devtool: 'inline-source-map',
 
             plugins: [
 
@@ -151,7 +153,7 @@ var config = async function () {
 
         ]
     }
-    return [app, plugins]
+    return [ plugins]
 };
 
 

@@ -180,7 +180,6 @@ class AppWrapper extends React.Component {
     render() {
         let props = this.props;
         if (this.state.pluginbot) {
-            console.log(this.state.pluginbot, "POASASASASASS");
             return (
                 <PluginbotProvider pluginbot={this.state.pluginbot}>
                     <AppRouter store={this.state.pluginbot.store}/>

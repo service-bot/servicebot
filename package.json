@@ -1,6 +1,6 @@
 {
   "name": "servicebot",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "license": "GPL-3.0",
   "scripts": {
     "start": "node ./bin/start",
@@ -15,7 +15,6 @@
     "url": "https://github.com/service-bot/servicebot.git"
   },
   "dependencies": {
-    "architect": "^0.1.13",
     "async": "^2.5.0",
     "babel": "^6.23.0",
     "babel-core": "^6.26.0",
@@ -64,7 +63,7 @@
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
     "pg": "^6.4.2",
-    "pluginbot": "^0.1.13",
+    "pluginbot": "^0.1.14",
     "pluginbot-react": "0.0.8",
     "promise-polyfill": "^6.0.2",
     "prop-types": "^15.6.0",

@@ -17,7 +17,7 @@ let path = require("path");
 let _ = require("lodash");
 let xss = require('xss');
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
-let validateProperties = require("../input_types/handleInputs").validateProperties;
+let validateProperties = require("../lib/handleInputs").validateProperties;
 let store = require("../config/redux/store");
 //todo: generify single file upload for icon, image, avatar, right now duplicate code
 let iconFilePath = ServiceTemplate.iconFilePath;
@@ -278,7 +278,7 @@ module.exports = function (router) {
 
             //Price adjustment -- is here instead of elsewhere because we need a price check == 0 to bypass need for token
             if (props) {
-                let adjustments = require("../input_types/handleInputs").getPriceAdjustments(props);
+                let adjustments = require("../lib/handleInputs").getPriceAdjustments(props);
                 price += adjustments.reduce((acc, adjustment) => {
                     let operation = adjustment.operation;
                     switch (operation) {

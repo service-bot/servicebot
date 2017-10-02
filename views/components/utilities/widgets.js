@@ -1,12 +1,15 @@
 import React from "react";
 import {Field, FormSection} from "redux-form";
 import TagsInput from "react-tagsinput"
-import widgets from "../../../input_types/widgets";
+// import widgets from "../../../input_types/widgets";
 import {inputField, selectField, priceField} from "../elements/forms/servicebot-base-field.jsx";
+import consume from "pluginbot-react/src/consume";
+
 const values = require('object.values');
 if (!Object.values) {
     values.shim();
 }
+
 let PriceOperation = (props) => {
     let {input} = props;
     return (
@@ -19,10 +22,12 @@ let PriceOperation = (props) => {
     )
 };
 
-const RenderWidget = (props) => {
+let RenderWidget = (props) => {
     const {member, widgetType, configValue, defaultWidgetValue} = props;
-    const widget = widgets[widgetType];
-
+    const widget = props.services && props.services.widget && props.services.widget.find(widgetToCheck => widgetToCheck.type === widgetType);
+    if (!widget) {
+        console.error("widget does not exist ", widgetType);
+    }
     return (
         <div>
             <FormSection name={`${member}.config`}>
@@ -36,31 +41,39 @@ const RenderWidget = (props) => {
                                {id: "multiply", name: "Percent add to base price"},
                                {id: "divide", name: "Percent off from base price"},
                            ]}/>
-                    <FormSection name={`pricing`} className="form-group form-group-flex addon-widget-pricing-inputs-wrapper">
-                        <label className="control-label form-label-flex-md addon-widget-pricing-input-label">Add-On Pricing</label>
+                    <FormSection name={`pricing`}
+                                 className="form-group form-group-flex addon-widget-pricing-inputs-wrapper">
+                        <label className="control-label form-label-flex-md addon-widget-pricing-input-label">Add-On
+                            Pricing</label>
                         <Field name={`value`} configValue={configValue} component={widget.pricing}/>
                     </FormSection>
                 </div>}
             </FormSection>
-            {widget.widget && <Field name={`${member}.data.value`} configValue={configValue} component={widget.widget}/>}
+            {widget.widget &&
+            <Field name={`${member}.data.value`} configValue={configValue} component={widget.widget}/>}
         </div>
     );
 };
 
-const PriceBreakdown = (props) => {
-    const { inputs } = props;
+
+let PriceBreakdown = (props) => {
+    const {inputs} = props;
+    let widgets = props.services && props.services.widget && props.services.widget.reduce((acc, widget) => {
+        acc[widget.type] = widget;
+        return acc;
+    }, {});
 
     let breakdown = inputs.reduce((acc, input) => {
         console.log(input, "INPUT!");
-        if(input.config && input.config.pricing && widgets[input.type].handler.priceHandler) {
+        if (input.config && input.config.pricing && widgets[input.type].handler.priceHandler) {
             acc.push(<div>{input.prop_label} - {input.config.pricing.operation}
                 - {widgets[input.type].handler.priceHandler(input.data, input.config)}</div>);
         }
         return acc;
     }, []);
 
-    if (breakdown.length == 0){
-        breakdown =  <div/>
+    if (breakdown.length == 0) {
+        breakdown = <div/>
     }
     return (
         <div>
@@ -68,11 +81,14 @@ const PriceBreakdown = (props) => {
         </div>
     );
 };
-
 let WidgetList = props => (
     <Field name={props.name} id={props.name} component={selectField}
-        options={Object.values(widgets)} valueKey="type" labelKey="label"
+           options={props.services.widget} valueKey="type" labelKey="label"
     />
 );
 
-export {RenderWidget, WidgetList, PriceBreakdown, widgets}
+WidgetList = consume("widget")(WidgetList);
+PriceBreakdown = consume("widget")(PriceBreakdown);
+RenderWidget = consume("widget")(RenderWidget);
+
+export {RenderWidget, WidgetList, PriceBreakdown}

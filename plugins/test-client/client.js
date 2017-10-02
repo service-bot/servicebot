@@ -1,17 +1,8 @@
-import { router } from 'redux-saga-router';
-import { browserHistory as history } from 'react-router';
-import { call, put, fork} from "redux-saga/effects";
+let consume = require("pluginbot/effects/consume");
+const text = require("./text/widget").default;
+module.exports = {
+    run: function* (config, provide, services) {
+        yield provide({widget : text});
+    }
 
-function* run(config, provide, services){
-    console.log("!!!!");
-    const routes = {
-        // ...
-    };
-
-
-
-        yield fork(router, history, routes);
-
-}
-
-export {run}
+};

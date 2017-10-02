@@ -1,43 +1,9 @@
 
 
-let { EVENT, SET_OPTIONS,SET_EVENT_SAGAS, INIT_STORE, setOptions ,setEventSagas, initializeStore, triggerEvent}  =  require("./actions");
-const defaultAppState = {
-    "eventReducer" : null,
-    "eventSagas" : {},
-    "options" : {}
-};
-//todo: store sagas in store?
-function appReducer(state = defaultAppState , action) {
-    //change the store state based on action.type
-    switch(action.type) {
-        case EVENT:
-            return state;
-        case INIT_STORE:
-            return action.initialStore;
-        case SET_EVENT_SAGAS :
-            return Object.assign({}, state, {
-                "eventSagas" : action.event_sagas
-            });
-        case SET_OPTIONS :
-            let options = Object.assign({}, state.options, action.options);
-            return Object.assign({}, state, {
-                "options" : options
-            })
-        default:
-            return state;
-    }
-}
-
-
-
-
-
-
-
+let { triggerEvent}  =  require("./actions");
 
 class Store{
     constructor(){
-        this.reducer = appReducer;
     }
     setStore(store){
       this.store = store;

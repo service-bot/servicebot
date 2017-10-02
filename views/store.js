@@ -191,14 +191,10 @@ let initializedState = async function(dispatch){
 
 
 let initialize = async function(){
-    console.log("INIT NOT AGAIN!");
 
     let app = await PluginbotClient.createPluginbot();
-    console.log("INIT NOT DONE!");
-
     await app.initialize(rootReducer, thunk, logger);
-        console.log("INIT DONE!");
-        return app;
+    return app;
 
 };
 
