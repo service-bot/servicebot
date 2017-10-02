@@ -78,7 +78,6 @@ var config = async function () {
     let app = {
         entry: {
             "bundle": ['react-hot-loader/patch', APP_DIR + '/index.jsx'],
-            "widgets": ['react-hot-loader/patch', INPUTS_DIR + '/widgets.js']
 
 
         },
@@ -111,9 +110,8 @@ var config = async function () {
             }
         },
         externals: {
-            servicebot_input_types: JSON.stringify(input_types),
             pluginbot_client_config: JSON.stringify(pluginConfigs),
-            _plugins: "_plugins"
+            _plugins: "_plugins",
         },
 
 
@@ -137,7 +135,6 @@ var config = async function () {
         },
         plugins: [
             new webpack.HotModuleReplacementPlugin(),
-            new webpack.IgnorePlugin(/\.\/getWidgets/),
 
 
             // new webpack.optimize.UglifyJsPlugin({
