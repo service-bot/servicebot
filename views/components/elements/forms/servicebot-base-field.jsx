@@ -95,6 +95,12 @@ class OnOffToggleField extends React.Component {
         this.hoverOff = this.hoverOff.bind(this);
     }
 
+    componentDidMount() {
+        let initialValue = this.state.value || false;
+        this.props.input.onChange(initialValue);
+
+    }
+
     toggle(){
         console.log(this.state);
         let newVal = !this.state.value;
