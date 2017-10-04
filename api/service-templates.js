@@ -17,11 +17,11 @@ let path = require("path");
 let _ = require("lodash");
 let xss = require('xss');
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
-let validateProperties = require("../input_types/handleInputs").validateProperties;
 let store = require("../config/redux/store");
 //todo: generify single file upload for icon, image, avatar, right now duplicate code
 let iconFilePath = ServiceTemplate.iconFilePath;
 let imageFilePath = ServiceTemplate.imageFilePath;
+let validateProperties = require("../input_types/handleInputs").validateProperties;
 
 
 let iconStorage = multer.diskStorage({
@@ -247,6 +247,7 @@ module.exports = function (router) {
             let req_body = req.body;
             await authPromise(req, res);
             let permission_array = res.locals.permissions || [];
+            let handlers = require("../input_types/handlers")();
 
             //this is true when user can override things
             let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
@@ -256,47 +257,14 @@ module.exports = function (router) {
 
 
             //todo: this doesn't do anthing yet, needs to check the "passed" props not the ones on the original...
-            let validationResult = props ? validateProperties(props) : [];
+            let validationResult = props ? validateProperties(props, handlers) : [];
             if (validationResult.length > 0) {
                 return res.status(400).json({error: validationResult});
             }
 
 
-
-            //todo: move price adjustment into something outside of here... want to reuse this logic
-
-            //todo: toCents to module?
-            function toCents (amount) {
-                if (typeof amount !== 'string' && typeof amount !== 'number') {
-                    throw new Error('Amount passed must be of type String or Number.')
-                }
-
-                return Math.round(100 * parseFloat(typeof amount === 'string' ? amount.replace(/[$,]/g, '') : amount))
-            }
-
             if (props) {
-                let adjustments = require("../input_types/handleInputs").getPriceAdjustments(props);
-                price += adjustments.reduce((acc, adjustment) => {
-                    let operation = adjustment.operation;
-                    switch (operation) {
-                        case "add" :
-                            acc += toCents(adjustment.value);
-                            break;
-                        case "subtract" :
-                            acc -= toCents(adjustment.value);
-                            break;
-                        case "multiply" :
-                            acc += (price * (adjustment.value / 100));
-                            break;
-                        case "divide" :
-                            acc -= (price * (adjustment.value / 100));
-                            break;
-                        default :
-                            throw "Bad operation : " + operation
-
-                    }
-                    return acc;
-                }, 0);
+                price = require("../input_types/handleInputs").getPrice(props, handlers, price, true);
             }
 
             res.locals.adjusted_price = price;

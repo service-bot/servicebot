@@ -29,6 +29,8 @@ const RenderWidget = (props) => {
                 {widget.config && <Field name={`value`} component={widget.config}/>}
                 {widget.pricing &&
                 <div className="addon-widget-has-pricing">
+                    <FormSection name={`pricing`}>
+
                     <Field name="operation" component={selectField} label="Apply Price Change"
                            options={[
                                {id: "add", name: "Add to base price"},
@@ -36,9 +38,11 @@ const RenderWidget = (props) => {
                                {id: "multiply", name: "Percent add to base price"},
                                {id: "divide", name: "Percent off from base price"},
                            ]}/>
-                    <FormSection name={`pricing`} className="form-group form-group-flex addon-widget-pricing-inputs-wrapper">
-                        <label className="control-label form-label-flex-md addon-widget-pricing-input-label">Add-On Pricing</label>
-                        <Field name={`value`} configValue={configValue} component={widget.pricing}/>
+
+                        <div className="form-group form-group-flex addon-widget-pricing-inputs-wrapper">
+                            <label className="control-label form-label-flex-md addon-widget-pricing-input-label">Add-On Pricing</label>
+                            <Field name={`value`} configValue={configValue} component={widget.pricing}/>
+                        </div>
                     </FormSection>
                 </div>}
             </FormSection>
