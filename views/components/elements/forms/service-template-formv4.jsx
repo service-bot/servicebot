@@ -429,9 +429,10 @@ class FieldLevelValidationForm extends React.Component {
                                             <FieldArray name="service_template_properties"
                                                         component={renderCustomProperty}/>
                                         </FormSection>
-                                        {props.formJSON.references && props.formJSON.references.service_template_properties &&
-                                        <PriceBreakdown
-                                            inputs={props.formJSON.references.service_template_properties}/>}
+                                        {/*{props.formJSON.references && props.formJSON.references.service_template_properties &&*/}
+                                        {/*<PriceBreakdown*/}
+                                            {/*inputs={props.formJSON.references.service_template_properties}/>*/}
+                                        {/*}*/}
                                         <div id="service-submission-box" className="button-box right">
                                             <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>Go
                                                 Back</Link>
