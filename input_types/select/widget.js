@@ -97,7 +97,13 @@ let SelectWidget = (props) => {
                 <select className="form-control addon-options-widget-default-value-select" {...input}>
                     <option value="">Choose One</option>
                     { configValue && configValue.value && configValue.value.map((option, index) =>
-                        <option key={index} value={option}>{option}</option>
+                        <option key={index} value={option}>
+                            {(configValue.pricing && configValue.pricing.value.hasOwnProperty(option))? (
+                                 `${option} [${configValue.pricing.operation}s $${configValue.pricing.value[option]}]`
+                             ) : (
+                                 `${option}`
+                             )}
+                        </option>
                     )}
                 </select>
             </div>
