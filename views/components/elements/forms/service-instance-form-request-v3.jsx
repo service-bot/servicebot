@@ -115,58 +115,10 @@ class ServiceRequestForm extends React.Component {
         let newPrice = formJSON.amount;
         try {
             newPrice = getPrice(formJSON.references.service_template_properties, handlers, formJSON.amount);
+            helpers.updatePrice(newPrice);
         }catch(e){
             console.error(e);
         }
-        // let getPrice = function () {
-        //     const price = formJSON.amount;
-        //     let updatedPrice = formJSON.amount;
-        //     let properties = formJSON.references.service_template_properties;
-        //     let priceChanges = [];
-        //     properties.map((prop) => {
-        //         if (prop.config.pricing) {
-        //             switch (prop.type) {
-        //                 case 'checkbox':
-        //                     if (prop.data.value) {
-        //                         let priceChange = getPriceChange(price, prop.config.operation, prop.config.pricing.value);
-        //                         priceChanges.push(`${prop.prop_label} ${prop.config.operation}s ${priceChange}`);
-        //                         updatedPrice += priceChange;
-        //                     }
-        //                     break;
-        //                 case 'select':
-        //                     let selectedOption = prop.data.value;
-        //                     let priceChange = getPriceChange(price, prop.config.operation, prop.config.pricing.value[selectedOption]);
-        //                     priceChanges.push(`${prop.prop_label} ${prop.config.operation}s ${priceChange}`);
-        //                     updatedPrice += priceChange;
-        //                     break;
-        //                 default:
-        //                     console.log("Property type doesn't change price")
-        //             }
-        //         }
-        //     });
-        //     return updatedPrice
-        // };
-
-        // const getPriceChange = function(basePrice, modifier, amount){
-        //     let priceChange = 0;
-        //     switch(modifier) {
-        //         case 'add':
-        //             priceChange = amount;
-        //             break;
-        //         case 'subtract':
-        //             priceChange = -amount;
-        //             break;
-        //         case 'multiply':
-        //             priceChange = basePrice * (amount/100);
-        //             break;
-        //         case 'divide':
-        //             priceChange = -(basePrice * (amount/100));
-        //             break;
-        //         default:
-        //             console.log("Property type doesn't change price")
-        //     }
-        //     return priceChange;
-        // };
 
         let getRequestText = ()=>{
             let serType = formJSON.type;
@@ -277,6 +229,7 @@ class ServiceTemplateForm extends React.Component {
             formResponseData: null,
             formResponseError: null,
             serviceCreated: null,
+            servicePrice: this.props.service.amount,
             usersData: {},
             usersURL: "/api/v1/users",
             hasCard: null,
@@ -285,6 +238,8 @@ class ServiceTemplateForm extends React.Component {
         this.closeUserLoginModal = this.closeUserLoginModal.bind(this);
         this.retrieveStripeToken = this.retrieveStripeToken.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
+        this.updatePrice = this.updatePrice.bind(this);
+
     }
 
     componentWillMount(){
@@ -353,6 +308,12 @@ class ServiceTemplateForm extends React.Component {
         callback(values);
     }
 
+    updatePrice(newPrice){
+        console.log("**Update price was called with price", newPrice);
+        let self = this;
+        self.setState({servicePrice: newPrice});
+    }
+
     async retrieveStripeToken(stripeForm, token = null){ //getToken is the getToken function, token is the token
         let self = this;
         console.log("RETRIEVE STRIPE TOKEN WUZ CALLED")
@@ -411,9 +372,10 @@ class ServiceTemplateForm extends React.Component {
         };
         let successMessage = "Service Requested";
         let helpers = Object.assign(this.state, this.props);
+        helpers.updatePrice = self.updatePrice;
         //Gets a token to populate token_id for instance request
         if(!isAuthorized({permissions: "can_administrate"}) &&
-            this.props.service.amount > 0){
+            this.state.servicePrice > 0){
             submissionPrep = function (values, callback){
                 let tokenGenerator = self.tokenGenerator(values, callback);
                 tokenGenerator.next();
@@ -426,12 +388,13 @@ class ServiceTemplateForm extends React.Component {
 
         return (
             <div>
+                Price: {this.state.servicePrice}
+
                 {(!this.state.hasCard &&
                     !isAuthorized({permissions: "can_administrate"})) &&
-                    this.props.service.amount > 0 &&
+                    this.state.servicePrice > 0 &&
                 <BillingSettingsForm context="SERVICE_REQUEST" retrieveStripeToken={this.retrieveStripeToken}/>
                 }
-
                 <ServiceBotBaseForm
                     form = {ServiceRequestForm}
                     initialValues = {initialValues}
