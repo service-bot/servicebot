@@ -150,7 +150,7 @@ var config = async function () {
 
         ]
     }
-    return [ plugins]
+    return [  app,plugins]
 };
 
 

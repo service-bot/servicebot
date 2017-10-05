@@ -21,7 +21,7 @@ let store = require("../config/redux/store");
 //todo: generify single file upload for icon, image, avatar, right now duplicate code
 let iconFilePath = ServiceTemplate.iconFilePath;
 let imageFilePath = ServiceTemplate.imageFilePath;
-let validateProperties = require("../input_types/handleInputs").validateProperties;
+let validateProperties = require("../lib/handleInputs").validateProperties;
 
 
 let iconStorage = multer.diskStorage({

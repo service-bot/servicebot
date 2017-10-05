@@ -17,7 +17,7 @@ import {addAlert} from "../../utilities/actions";
 let _ = require("lodash");
 
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
-import {getPrice} from "../../../../input_types/handleInputs";
+import {getPrice} from "../../../../lib/handleInputs";
 import values from 'object.values';
 
 if (!Object.values) {
