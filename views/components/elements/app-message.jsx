@@ -2,8 +2,7 @@ import React from 'react';
 import {connect} from "react-redux";
 import {dismissAlert} from "../utilities/actions";
 
-
-class AppMessage extends React.Component {
+class Message extends React.Component {
 
     constructor(props){
         super(props);
@@ -11,24 +10,59 @@ class AppMessage extends React.Component {
         this.dismiss = this.dismiss.bind(this);
     }
 
-    dismiss(id){
-        let updatedAlerts = this.props.alerts.filter(alert => alert.id !== id);
-        this.props.dismiss(updatedAlerts);
+    componentDidMount(){
+        let {alert, dismiss} = this.props;
+        setTimeout(()=>{
+            return(dismiss(alert.id));
+        }, 4000 );
+    }
+
+    dismiss(){
+        let {alert, dismiss} = this.props;
+        dismiss(alert.id);
+    }
+
+    render(){
+        let {alert: {alertType, message, id}} = this.props;
+        return(
+            <div className={`app-message app-message-${alertType || 'info'}`}>
+                <p>
+                    {message}
+                    <button onClick={()=>{return(this.dismiss(id))}} id={id}
+                            className="pull-right btn btn-rounded btn-outline btn-white btn-sm">
+                        dismiss
+                    </button>
+                </p>
+            </div>
+        )
+    }
+}
+
+function mapDispatchToProps(dispatch){
+    return {
+        dismiss : (alerts) => {return dispatch(dismissAlert(alerts))},
+    }
+}
+Message = connect(null, mapDispatchToProps)(Message);
+
+
+class AppMessage extends React.Component {
+
+    constructor(props){
+        super(props);
     }
 
     render(){
         let { alerts } = this.props;
-        console.log("the alerts", alerts);
-        if(this.props.alerts.length) {
+        if(alerts.length) {
             return (
                 <div className="app-messages">
-                    {alerts.map(theAlert=>(
-                        <div key={`message-${theAlert.id}`} className="app-message">
-                            <p>{theAlert.message}
-                            <button onClick={()=>{return(this.dismiss(theAlert.id))}} id={theAlert.id} className="pull-right btn btn-rounded btn-outline btn-white btn-sm">dismiss</button>
-                            </p>
-                        </div>
-                        ))
+                    {
+                        alerts.map(
+                            theAlert => (
+                                <Message key={`message-${theAlert.id}`} alert={theAlert}/>
+                            )
+                        )
                     }
                 </div>
             )
@@ -45,12 +79,5 @@ function mapStateToProps(state){
         alerts : state.alerts
     }
 }
-function mapDispatchToProps(dispatch){
-    return {
-        dismiss : (alerts) => {return dispatch(dismissAlert(alerts))},
-    }
-}
-
 AppMessage = connect(mapStateToProps, mapDispatchToProps)(AppMessage);
-
 export {AppMessage};
