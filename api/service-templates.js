@@ -401,8 +401,7 @@ module.exports = function (router) {
 
             //adjusted price...
             req_body.amount = res.locals.adjusted_price;
-
-
+            //elevated accounts can override things
             if (hasPermission) {
                 res.locals.overrides = {
                     user_id : req_body.client_id || req.user.get("id"),
@@ -415,7 +414,7 @@ module.exports = function (router) {
             }else{
                 res.locals.overrides = {
                     user_id : req.user.get("id"),
-                    requested_by : req.user.get("id")
+                    requested_by : req.user.get("id"),
 
                 }
             }
@@ -432,6 +431,8 @@ module.exports = function (router) {
 
             //events!
             if(isNew){
+                newInstance.set("api", responseJSON.api);
+                newInstance.set("url", responseJSON.url);
                 dispatchEvent("service_instance_requested_new_user", newInstance);
 
             }else if(req.uid !== newInstance.get("user_id")){

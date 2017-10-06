@@ -42,7 +42,7 @@ NotificationTemplate.prototype.build = function (map, callback) {
             splitStr[1] += "[0]";
             replaceString = splitStr.join(".");
         }
-        return _.get(map.data, replaceString);
+        return _.get(map, replaceString);
     };
 
     const regex = /\[\[([\w, \.]+)]]/gm;
@@ -80,6 +80,7 @@ let getNotificationContents = function(template, targetObject){
     return new Promise(function (resolve, reject) {
         //Attach references
         targetObject.attachReferences(updatedObject => {
+            console.log("UPDATED STUFF!", updatedObject);
             let store = require('../config/redux/store');
             let globalProps = store.getState().options;
             let map = {...updatedObject.data};
