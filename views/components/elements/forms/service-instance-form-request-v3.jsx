@@ -17,7 +17,12 @@ import {addAlert} from "../../utilities/actions";
 let _ = require("lodash");
 
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
+import {getPrice} from "../../../../input_types/handleInputs";
+import values from 'object.values';
 
+if (!Object.values) {
+    values.shim();
+}
 
 
 const required = value => value ? undefined : 'Required';
@@ -33,35 +38,35 @@ const minValue18 = minValue(18);
 
 const selector = formValueSelector('servicebotForm'); // <-- same as form name
 
-const customFieldComponent = ({input, label, type, formJSON, config, meta: {touched, error, warning}}) => (
-    <div className={`form-group form-group-flex`}>
-        {label && <label className="control-label form-label-flex-md">{label}</label>}
-        <div className="form-input-flex">
-            {type === "textarea" && <textarea className="form-control" {...input} placeholder={label}/> }
-            {(type === "text" || type === "number") && <input className="form-control" {...input} placeholder={label} type={type}/> }
-            {type === "checkbox" &&
-                <div>
-                <input className="form-control checkbox" {...input} placeholder={label} type={type}/>
-                    {config.pricing && `[${config.operation}s ${config.pricing.value}]`}
-                </div>
-            }
-            {type === "select" &&
-                <select className="form-control" {...input} placeholder={label}>
-                    {config && config.value.map((option, index) =>
-                        <option key={index} value={option}>
-                            {(config.pricing && config.pricing.value.hasOwnProperty(option))? (
-                                `${option} [${config.operation}s $${config.pricing.value[option]}]`
-                            ) : (
-                                `${option}`
-                            )}
-                        </option>
-                    )
-                    }
-                </select> }
-            {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span>{warning}</span>)) }
-        </div>
-    </div>
-);
+// const customFieldComponent = ({input, label, type, formJSON, config, meta: {touched, error, warning}}) => (
+//     <div className={`form-group form-group-flex`}>
+//         {label && <label className="control-label form-label-flex-md">{label}</label>}
+//         <div className="form-input-flex">
+//             {type === "textarea" && <textarea className="form-control" {...input} placeholder={label}/> }
+//             {(type === "text" || type === "number") && <input className="form-control" {...input} placeholder={label} type={type}/> }
+//             {type === "checkbox" &&
+//                 <div>
+//                 <input className="form-control checkbox" {...input} placeholder={label} type={type}/>
+//                     {config.pricing && `[${config.operation}s ${config.pricing.value}]`}
+//                 </div>
+//             }
+//             {type === "select" &&
+//                 <select className="form-control" {...input} placeholder={label}>
+//                     {config && config.value.map((option, index) =>
+//                         <option key={index} value={option}>
+//                             {(config.pricing && config.pricing.value.hasOwnProperty(option))? (
+//                                 `${option} [${config.operation}s $${config.pricing.value[option]}]`
+//                             ) : (
+//                                 `${option}`
+//                             )}
+//                         </option>
+//                     )
+//                     }
+//                 </select> }
+//             {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span>{warning}</span>)) }
+//         </div>
+//     </div>
+// );
 
 //Custom property
 const renderCustomProperty = (props) => {
@@ -70,17 +75,18 @@ const renderCustomProperty = (props) => {
         <div>
             <ul>
             {fields.map((customProperty, index) =>
-                <li key={index}>
+            {   let property = widgets[formJSON[index].type];
+                return (<li key={index}>
                     <Field
                         name={`${customProperty}.data.value`}
                         type={formJSON[index].type}
-                        component={customFieldComponent}
+                        component={property.widget}
                         label={formJSON[index].prop_label}
-                        value={formJSON[index].data.value}
+                        // value={formJSON[index].data.value}
                         formJSON={formJSON[index]}
-                        config={formJSON[index].config}
+                        configValue={formJSON[index].config}
                     />
-                </li>
+                </li>)}
             )}
         </ul>
         </div>
@@ -97,67 +103,33 @@ class ServiceRequestForm extends React.Component {
     render() {
         let props = this.props;
         const {handleSubmit, formJSON, helpers} = props;
+        console.log(formJSON.references.service_template_properties);
+        console.log(Object.values(widgets));
+        let handlers = Object.values(widgets).reduce((acc, widget) => {
+            console.log("widget...", widget);
+            acc[widget.type] = widget.handler;
+            return acc;
 
-        let getPrice = function () {
-            const price = formJSON.amount;
-            let updatedPrice = formJSON.amount;
-            let properties = formJSON.references.service_template_properties;
-            let priceChanges = [];
-            properties.map((prop) => {
-                if (prop.config.pricing) {
-                    switch (prop.type) {
-                        case 'checkbox':
-                            if (prop.data.value) {
-                                let priceChange = getPriceChange(price, prop.config.operation, prop.config.pricing.value);
-                                priceChanges.push(`${prop.prop_label} ${prop.config.operation}s ${priceChange}`);
-                                updatedPrice += priceChange;
-                            }
-                            break;
-                        case 'select':
-                            let selectedOption = prop.data.value;
-                            let priceChange = getPriceChange(price, prop.config.operation, prop.config.pricing.value[selectedOption]);
-                            priceChanges.push(`${prop.prop_label} ${prop.config.operation}s ${priceChange}`);
-                            updatedPrice += priceChange;
-                            break;
-                        default:
-                            console.log("Property type doesn't change price")
-                    }
-                }
-            });
-            return updatedPrice
-        };
-
-        const getPriceChange = function(basePrice, modifier, amount){
-            let priceChange = 0;
-            switch(modifier) {
-                case 'add':
-                    priceChange = amount;
-                    break;
-                case 'subtract':
-                    priceChange = -amount;
-                    break;
-                case 'multiply':
-                    priceChange = basePrice * (amount/100);
-                    break;
-                case 'divide':
-                    priceChange = -(basePrice * (amount/100));
-                    break;
-                default:
-                    console.log("Property type doesn't change price")
-            }
-            return priceChange;
-        };
+        }, {});
+        console.log("MA HANDLERS", handlers);
+        let newPrice = formJSON.amount;
+        try {
+            newPrice = getPrice(formJSON.references.service_template_properties, handlers, formJSON.amount);
+            helpers.updatePrice(newPrice);
+        }catch(e){
+            console.error(e);
+        }
 
         let getRequestText = ()=>{
             let serType = formJSON.type;
             if (serType == "subscription"){
-                return (<span>{"Subscribe"} <Price value={getPrice()}/>{formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' '+formJSON.interval}</span>);
+                return (<span>{"Subscribe"} <Price value={newPrice}/>{formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' '+formJSON.interval}</span>);
             }else if (serType == "one_time"){
-                return (<span>{"Buy"} <Price value={getPrice()}/></span>);
+                return (<span>{"Buy"} <Price value={newPrice}/></span>);
             }else if (serType == "custom"){
                 return ("Request");
             }else{
-                return (<span><Price value={getPrice()}/></span>)
+                return (<span><Price value={newPrice}/></span>)
             }
         };
         const users = helpers.usersData;
@@ -257,6 +229,7 @@ class ServiceTemplateForm extends React.Component {
             formResponseData: null,
             formResponseError: null,
             serviceCreated: null,
+            servicePrice: this.props.service.amount,
             usersData: {},
             usersURL: "/api/v1/users",
             hasCard: null,
@@ -265,6 +238,8 @@ class ServiceTemplateForm extends React.Component {
         this.closeUserLoginModal = this.closeUserLoginModal.bind(this);
         this.retrieveStripeToken = this.retrieveStripeToken.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
+        this.updatePrice = this.updatePrice.bind(this);
+
     }
 
     componentWillMount(){
@@ -333,6 +308,12 @@ class ServiceTemplateForm extends React.Component {
         callback(values);
     }
 
+    updatePrice(newPrice){
+        console.log("**Update price was called with price", newPrice);
+        let self = this;
+        self.setState({servicePrice: newPrice});
+    }
+
     async retrieveStripeToken(stripeForm, token = null){ //getToken is the getToken function, token is the token
         let self = this;
         console.log("RETRIEVE STRIPE TOKEN WUZ CALLED")
@@ -391,9 +372,10 @@ class ServiceTemplateForm extends React.Component {
         };
         let successMessage = "Service Requested";
         let helpers = Object.assign(this.state, this.props);
+        helpers.updatePrice = self.updatePrice;
         //Gets a token to populate token_id for instance request
         if(!isAuthorized({permissions: "can_administrate"}) &&
-            this.props.service.amount > 0){
+            this.state.servicePrice > 0){
             submissionPrep = function (values, callback){
                 let tokenGenerator = self.tokenGenerator(values, callback);
                 tokenGenerator.next();
@@ -406,12 +388,13 @@ class ServiceTemplateForm extends React.Component {
 
         return (
             <div>
+                Price: {this.state.servicePrice}
+
                 {(!this.state.hasCard &&
                     !isAuthorized({permissions: "can_administrate"})) &&
-                    this.props.service.amount > 0 &&
+                    this.state.servicePrice > 0 &&
                 <BillingSettingsForm context="SERVICE_REQUEST" retrieveStripeToken={this.retrieveStripeToken}/>
                 }
-
                 <ServiceBotBaseForm
                     form = {ServiceRequestForm}
                     initialValues = {initialValues}

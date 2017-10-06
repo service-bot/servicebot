@@ -1,9 +1,85 @@
 //takes in a request and outputs the updated instance
 
-let getHandlers = require("./handlers");
+//todo: move property system into plugins.
+function getHandlers(handlerArray){
+    if(!handlerArray){
+        console.error("Handlers not provided..");
+    }
+    return handlerArray.reduce((acc, handler) => {
+        acc[handler.name] = handler;
+        return acc;
+    }, {});
+};
+
+function toCents (amount) {
+    if (typeof amount !== 'string' && typeof amount !== 'number') {
+        throw new Error('Amount passed must be of type String or Number.')
+    }
+
+    return Math.round(100 * parseFloat(typeof amount === 'string' ? amount.replace(/[$,]/g, '') : amount))
+}
+function getPriceAdjustments(properties, handlers) {
+    // let handlers = getHandlers(handlerArray);
+    if(properties) {
+        console.log("REDUCING!", properties);
+        return properties.reduce((acc, prop) => {
+            console.log("UH PROP!", prop, handlers);
+            if (handlers[prop.type] && handlers[prop.type].priceHandler && prop.config && prop.config.pricing && prop.config.pricing.operation) {
+                console.log("ADJUSTING!", prop);
+                const adjuster = handlers[prop.type].priceHandler;
+                let valToPUsh = {
+                    name: prop.name,
+                    type: prop.type,
+                    operation: prop.config.pricing.operation,
+                    value: adjuster(prop.data, prop.config)
+                }
+                console.log("PUSH", valToPUsh);
+                acc.push(valToPUsh);
+
+            }
+            return acc;
+        }, [])
+    }else{
+        return [];
+    }
+};
+
+
 module.exports = {
-    validateProperties: function (properties) {
-        let handlers = getHandlers()
+    getPrice : function(properties, handlers, basePrice, cents=false){
+        let adjustments = [];
+        try {
+            adjustments = getPriceAdjustments(properties, handlers);
+        }catch(e){
+            console.error("price error", e);
+        }
+            console.log("ADJUSTMENTS!", adjustments);
+            return (basePrice + adjustments.reduce((acc, adjustment) => {
+                let operation = adjustment.operation;
+                switch (operation) {
+                    case "add" :
+                        acc += cents ? toCents(adjustment.value) : adjustment.value;
+                        break;
+                    case "subtract" :
+                        acc -= cents ? toCents(adjustment.value) : adjustment.value;
+                        break;
+                    case "multiply" :
+                        acc += (basePrice * (adjustment.value / 100));
+                        break;
+                    case "divide" :
+                        acc -= (basePrice * (adjustment.value / 100));
+                        break;
+                    default :
+                        throw "Bad operation : " + operation
+
+                }
+                return acc;
+            }, 0));
+
+
+    },
+    validateProperties: function (properties, handlers) {
+        // let handlers = getHandlers(handlerArray);
         return properties.reduce((acc, prop) => {
             //todo: reduce duplicate code that exists here and in webpack code.
 
@@ -22,24 +98,6 @@ module.exports = {
             return acc;
         }, [])
     },
-    getPriceAdjustments: function (properties) {
-        let handlers = getHandlers()
-        if(properties) {
-            return properties.reduce((acc, prop) => {
-                if (handlers[prop.type] && handlers[prop.type].priceHandler && prop.config && prop.config.pricing) {
-                    const adjuster = handlers[prop.type].priceHandler;
-                    acc.push({
-                        name: prop.name,
-                        type: prop.type,
-                        operation: prop.config.pricing.operation,
-                        value: adjuster(prop.data, prop.config)
-                    });
-                }
-                return acc;
-            }, [])
-        }else{
-            return [];
-        }
-    }
+    getPriceAdjustments
 };
 
