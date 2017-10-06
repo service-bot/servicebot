@@ -23,7 +23,7 @@ module.exports = function (tableName, references = [], primaryKey = 'id') {
             get: async function (target, name) {
                 let reference = references.find(ref => ref.model.table === name);
                 if (!reference) {
-                    throw `Reference ${name} is not defined.`
+                    throw `Reference is not defined.`
                 }
                 return await self.getRelated(reference.model)
             }
@@ -61,12 +61,13 @@ module.exports = function (tableName, references = [], primaryKey = 'id') {
         }
         let referenceModel = reference.model;
         let referenceField = reference.referenceField;
-        if (reference.direction == "from") {
+        if (reference.direction === "from") {
             referenceModel.findOnRelative(referenceField, self.get("id"), function (results) {
+                console.log(callback);
                 callback(results);
             })
         }
-        else if (reference.direction == "to") {
+        else if (reference.direction === "to") {
             referenceModel.findOnRelative(referenceModel.primaryKey, self.get(referenceField), function (results) {
                 callback(results);
             })
@@ -405,7 +406,7 @@ module.exports = function (tableName, references = [], primaryKey = 'id') {
     };
 
     //TODO this batch update work
-    function batchUpdate(dataArray, callback) {
+function batchUpdate(dataArray, callback) {
         knex(Entity.table).columnInfo()
             .then(function (info) {
                 return dataArray.map(function (entity) {

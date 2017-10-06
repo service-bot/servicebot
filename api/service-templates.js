@@ -244,7 +244,7 @@ module.exports = function (router) {
         try {
             let serviceTemplate = res.locals.valid_object;
             let references = serviceTemplate.references;
-            let props = references ? references.service_template_properties : null;
+            let props = references ? (await references.service_template_properties) : null;
             let req_body = req.body;
             await authPromise(req, res);
             let permission_array = res.locals.permissions || [];
@@ -258,10 +258,10 @@ module.exports = function (router) {
 
 
             //todo: this doesn't do anthing yet, needs to check the "passed" props not the ones on the original...
-            let validationResult = props ? validateProperties(props, handlers) : [];
-            if (validationResult.length > 0) {
-                return res.status(400).json({error: validationResult});
-            }
+            // let validationResult = props ? validateProperties(props, handlers) : [];
+            // if (validationResult.length > 0) {
+            //     return res.status(400).json({error: validationResult});
+            // }
 
 
             if (props) {
@@ -302,7 +302,8 @@ module.exports = function (router) {
             return next();
 
         }catch(error){
-            console.error("error validating....");
+            console.error("error validating....", error);
+            res.status(500).json({error});
         }
     }
 
