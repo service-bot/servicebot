@@ -21,6 +21,7 @@ let store = require("../config/redux/store");
 //todo: generify single file upload for icon, image, avatar, right now duplicate code
 let iconFilePath = ServiceTemplate.iconFilePath;
 let imageFilePath = ServiceTemplate.imageFilePath;
+let slug = require("slug");
 let validateProperties = require("../input_types/handleInputs").validateProperties;
 
 
@@ -449,6 +450,15 @@ module.exports = function (router) {
 
     router.post("/service-templates", auth(), function (req, res, next) {
         req.body.created_by = req.user.get("id");
+        let properties = req.body.references.service_template_properties
+        if(properties){
+            req.body.references.service_template_properties = properties.map(prop => {
+                return {
+                    ...prop,
+                    name : slug(prop.prop_label)
+                };
+            });
+        }
         ServiceTemplate.findAll("name", req.body.name, (templates) => {
             if (templates && templates.length > 0) {
                 res.status(400).json({error: "Service template name already in use"})
@@ -457,6 +467,7 @@ module.exports = function (router) {
             }
         })
     });
+
 
     router.get("/service-templates/public", function (req, res, next) {
         let key = "published";
