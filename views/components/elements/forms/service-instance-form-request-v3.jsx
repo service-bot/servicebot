@@ -217,7 +217,7 @@ ServiceRequestForm = connect((state, ownProps) => {
     }
 })(ServiceRequestForm);
 
-class ServiceTemplateForm extends React.Component {
+class ServiceInstanceForm extends React.Component {
 
     constructor(props){
         super(props);
@@ -428,5 +428,5 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-export default connect(mapStateToProps)(ServiceTemplateForm);
+export default connect(mapStateToProps)(ServiceInstanceForm);
 
