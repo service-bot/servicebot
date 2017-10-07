@@ -44,8 +44,11 @@ class CustomField extends React.Component {
 
     }
 
-    componentDidUpdate(){
-
+    componentDidUpdate(prevProps, prevState){
+        let props = this.props;
+        if(prevProps.myValues.type !== props.myValues.type){
+            props.clearConfig();
+        }
     }
 
     render() {
@@ -179,6 +182,10 @@ CustomField = connect((state, ownProps) => {
             if(!event.currentTarget.value || event.currentTarget.value == 'false'){
                 dispatch(change("servicebotForm", `references.${ownProps.member}.private`, false));
             }
+        },
+        "clearConfig": () => {
+            console.log("We tried to update that prop!")
+            dispatch(change("servicebotForm", `references.${ownProps.member}.config`, {}));
         }
     }
 })(CustomField);

@@ -102,7 +102,7 @@ class ServiceRequestForm extends React.Component {
     }
     render() {
         let props = this.props;
-        const {handleSubmit, formJSON, helpers} = props;
+        const {handleSubmit, formJSON, helpers, error} = props;
         console.log(formJSON.references.service_template_properties);
         console.log(Object.values(widgets));
         let handlers = Object.values(widgets).reduce((acc, widget) => {
@@ -195,6 +195,10 @@ class ServiceRequestForm extends React.Component {
                                 value="submit">
                             {getRequestText()}
                         </button>
+                        {error &&
+                        <strong>
+                            {error}
+                        </strong>}
                     </form>
                 </div>
             </div>
@@ -239,6 +243,8 @@ class ServiceTemplateForm extends React.Component {
         this.retrieveStripeToken = this.retrieveStripeToken.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
         this.updatePrice = this.updatePrice.bind(this);
+        this.submissionPrep = this.submissionPrep.bind(this);
+
 
     }
 
@@ -315,8 +321,6 @@ class ServiceTemplateForm extends React.Component {
     }
 
     async retrieveStripeToken(stripeForm, token = null){ //getToken is the getToken function, token is the token
-        let self = this;
-        console.log("RETRIEVE STRIPE TOKEN WUZ CALLED")
         if(stripeForm){
             this.setState({stripeForm: stripeForm});
         }
@@ -361,6 +365,16 @@ class ServiceTemplateForm extends React.Component {
         });
     }
 
+    submissionPrep(values, callback){
+        let self = this;
+        let tokenGenerator = self.tokenGenerator(values, callback);
+        tokenGenerator.next();
+        self.setState({tokenGenerator}, (state => {
+            self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
+        }))
+
+    }
+
     render () {
         let self = this;
         let initialValues = this.props.service;
@@ -371,19 +385,13 @@ class ServiceTemplateForm extends React.Component {
             'url': `/api/v1/service-templates/${this.props.templateId}/request`
         };
         let successMessage = "Service Requested";
+        let successRoute = "/my-services";
         let helpers = Object.assign(this.state, this.props);
         helpers.updatePrice = self.updatePrice;
         //Gets a token to populate token_id for instance request
         if(!isAuthorized({permissions: "can_administrate"}) &&
             this.state.servicePrice > 0){
-            submissionPrep = function (values, callback){
-                let tokenGenerator = self.tokenGenerator(values, callback);
-                tokenGenerator.next();
-                self.setState({tokenGenerator}, (state => {
-                    self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
-                }))
-
-            };
+            submissionPrep = self.submissionPrep;
         }
 
         return (
@@ -402,6 +410,7 @@ class ServiceTemplateForm extends React.Component {
                     submissionPrep = {submissionPrep}
                     submissionRequest = {submissionRequest}
                     successMessage = {successMessage}
+                    successRoute = {successRoute}
                     handleResponse = {this.handleResponse}
                     helpers = {helpers}
                 />
