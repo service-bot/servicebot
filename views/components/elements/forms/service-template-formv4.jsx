@@ -357,10 +357,6 @@ class FieldLevelValidationForm extends React.Component {
                                        component={inputField} label="Statement Descriptor"
                                        validate={[required, maxLength22]}
                                 />
-                                <Field name="trial_period_days" type="number"
-                                       component={inputField} label="Trial Period (Days)"
-                                       validate={required}
-                                />
                                 <Field name="type" id="type"
                                        component={selectField} label="Billing Type" onChange={changeServiceType}
                                        options={[
@@ -375,22 +371,28 @@ class FieldLevelValidationForm extends React.Component {
                                 }
 
                                 {(serviceTypeValue === 'subscription') &&
-                                <div className="form-group form-group-flex">
-                                    <label className="control-label form-label-flex-md" htmlFor="type">Bill
-                                        Customer Every</label>
-                                    <Field name="interval_count" type="number"
-                                           component={inputField}
-                                           validate={required}
-                                    />
-                                    <Field name="interval" id="interval" component={selectField}
-                                           options={[
-                                               {id: "day", name: "Day"},
-                                               {id: "week", name: "Week"},
-                                               {id: "month", name: "Month"},
-                                               {id: "year", name: "Year"}
-                                           ]}
-                                    />
-                                </div>
+                                    <div>
+                                        <Field name="trial_period_days" type="number"
+                                               component={inputField} label="Trial Period (Days)"
+                                               validate={required}
+                                        />
+                                        <div className="form-group form-group-flex">
+                                            <label className="control-label form-label-flex-md" htmlFor="type">Bill
+                                                Customer Every</label>
+                                            <Field name="interval_count" type="number"
+                                                   component={inputField}
+                                                   validate={required}
+                                            />
+                                            <Field name="interval" id="interval" component={selectField}
+                                                   options={[
+                                                       {id: "day", name: "Day"},
+                                                       {id: "week", name: "Week"},
+                                                       {id: "month", name: "Month"},
+                                                       {id: "year", name: "Year"}
+                                                   ]}
+                                            />
+                                        </div>
+                                    </div>
                                 }
 
                                 {(serviceTypeValue === 'custom') &&
