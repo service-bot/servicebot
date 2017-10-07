@@ -36,6 +36,7 @@ class CustomField extends React.Component {
         let props = this.props;
         if (prevProps.myValues.type !== props.myValues.type) {
             props.clearConfig();
+            props.clearValue();
         }
     }
 
@@ -174,8 +175,11 @@ CustomField = connect((state, ownProps) => {
             }
         },
         "clearConfig": () => {
-            console.log("We tried to update that prop!")
-            dispatch(change("servicebotForm", `references.${ownProps.member}.config`, {}));
+            dispatch(change("servicebotForm", `references.${ownProps.member}.config`, null));
+        },
+        "clearValue": () => {
+            console.log("***CLEARING VALUE")
+            dispatch(change("servicebotForm", `references.${ownProps.member}.data`, null));
         }
     }
 })(CustomField);
