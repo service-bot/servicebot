@@ -89,8 +89,8 @@ class DashboardServiceList extends React.Component {
 
                     {/* Services that are running */}
                     {grouped.running !== undefined &&
-                    <div className="row m-b-10">
-                        <DashboardPageHeading pageTitle="My Services"
+                    <div className="purchases-header row m-b-10">
+                        <DashboardPageHeading pageTitle="Purchased Subscriptions / One Time Services / Custom Orders"
                                               pageDescription="All services including active, unpaid and stopped services."/>
                     </div>
                     }

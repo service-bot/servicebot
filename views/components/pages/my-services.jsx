@@ -77,7 +77,7 @@ class MyServices extends React.Component {
     render () {
         let self = this;
         let pageName = self.props.route.name;
-        let breadcrumbs = [{name:'Home', link:'home'},{name:'My Services', link:null}];
+        let breadcrumbs = [{name:'Home', link:'home'},{name:'My Purchases', link:null}];
 
         if(self.state.loading){
             return (
