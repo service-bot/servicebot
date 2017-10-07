@@ -67,16 +67,16 @@ class ServiceBotBaseForm extends React.Component {
             }
         }
         else {
-            await self.makeCall.bind(this)
+            await self.makeCall(values);
         }
     }
     //NEED TO CHANGE MAKECALL TO AN ASYNC
     //ITS NOT EASY BECAUSE OF HOW SUBMISSIONPREP iS
     //AND MAKE SURE WERE GETTING THE SUBMISSION ERRORS
     async makeCall(values) {
-        let self = this;
         console.log("MAKING A CALL");
         console.log("These are the values", values);
+        let self = this;
         let result = await Fetcher(self.state.submissionRequest.url, self.state.submissionRequest.method, values);
         if (!result.error) {
             console.log("Submission Result", result);

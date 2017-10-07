@@ -306,7 +306,7 @@ class FieldLevelValidationForm extends React.Component {
                                 <h3>Basic Info</h3>
                                 <Field name="name" type="text"
                                        component={inputField} label="Product / Service Name"
-                                       validate={[required, maxLength15]}
+                                       validate={[required]}
                                 />
                                 <Field name="description" type="text"
                                        component={inputField} label="Summary"
