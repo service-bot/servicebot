@@ -539,7 +539,7 @@ class ServiceTemplateForm extends React.Component {
             alertType: 'success',
             message: `${response.name} was saved successfully`,
             show: true,
-            autoDismiss: 400,
+            autoDismiss: 4000,
         };
         this.props.addAlert(successMessage);
         browserHistory.push(`/service-catalog/${response.id}/request`);

@@ -11,15 +11,17 @@ class Message extends React.Component {
     }
 
     componentDidMount(){
-        let {alert, dismiss} = this.props;
-        setTimeout(()=>{
-            return(dismiss(alert.id));
-        }, 4000 );
+        let {alert, dismiss, alert: {id, alertType, message, show, autoDismiss}} = this.props;
+        if(autoDismiss) {
+            setTimeout(() => {
+                return (dismiss(alert));
+            }, autoDismiss);
+        }
     }
 
     dismiss(){
         let {alert, dismiss} = this.props;
-        dismiss(alert.id);
+        dismiss(alert);
     }
 
     render(){
@@ -28,7 +30,7 @@ class Message extends React.Component {
             <div className={`app-message app-message-${alertType || 'info'}`}>
                 <p>
                     {message}
-                    <button onClick={()=>{return(this.dismiss(id))}} id={id}
+                    <button onClick={()=>{return(this.dismiss())}} id={id}
                             className="pull-right btn btn-rounded btn-outline btn-white btn-sm">
                         dismiss
                     </button>
@@ -79,5 +81,5 @@ function mapStateToProps(state){
         alerts : state.alerts
     }
 }
-AppMessage = connect(mapStateToProps, mapDispatchToProps)(AppMessage);
+AppMessage = connect(mapStateToProps, null)(AppMessage);
 export {AppMessage};
