@@ -170,11 +170,11 @@ class NotificationTemplateForm extends React.Component {
                                                 <input name="send_email" type="checkbox" defaultChecked={template.data.send_email}/> <span className="inline"> Send Email</span><br/>
                                                 <input name="send_to_owner" type="checkbox" defaultChecked={template.data.send_to_owner}/> <span className="inline"> Send Email To Owner</span>
                                             </div>
-                                            <div className="service-instance-section">
-                                                <span className="service-instance-section-label"><strong>Additional Recipients</strong></span>
-                                                <span className="help-block">Add recipients directly, these will be people who will also get this email notification for this event.</span>
-                                                <TagsInput onChange={this.handleImage} name="additional_recipients" receiveOnChange={true} receiveValue={true} value={template.data.additional_recipients || []}/>
-                                            </div>
+                                            {/*<div className="service-instance-section">*/}
+                                                {/*<span className="service-instance-section-label"><strong>Additional Recipients</strong></span>*/}
+                                                {/*<span className="help-block">Add recipients directly, these will be people who will also get this email notification for this event.</span>*/}
+                                                {/*<TagsInput  name="additional_recipients" receiveOnChange={true} receiveValue={true} defaultValue={template.data.additional_recipients || []}/>*/}
+                                            {/*</div>*/}
                                             <div className="service-instance-section">
                                                 <span className="service-instance-section-label"><strong>Description</strong></span>
                                                 <p>{template.data.description}</p>

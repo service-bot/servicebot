@@ -44,8 +44,12 @@ class CustomField extends React.Component {
 
     }
 
-    componentDidUpdate(){
-
+    componentDidUpdate(prevProps, prevState){
+        let props = this.props;
+        if(prevProps.myValues.type !== props.myValues.type){
+            props.clearConfig();
+            props.clearValue();
+        }
     }
 
     render() {
@@ -179,6 +183,13 @@ CustomField = connect((state, ownProps) => {
             if(!event.currentTarget.value || event.currentTarget.value == 'false'){
                 dispatch(change("servicebotForm", `references.${ownProps.member}.private`, false));
             }
+        },
+        "clearConfig": () => {
+            dispatch(change("servicebotForm", `references.${ownProps.member}.config`, null));
+        },
+        "clearValue": () => {
+            console.log("***CLEARING VALUE")
+            dispatch(change("servicebotForm", `references.${ownProps.member}.data`, null));
         }
     }
 })(CustomField);
@@ -299,7 +310,7 @@ class FieldLevelValidationForm extends React.Component {
                                 <h3>Basic Info</h3>
                                 <Field name="name" type="text"
                                        component={inputField} label="Product / Service Name"
-                                       validate={[required, maxLength15]}
+                                       validate={[required]}
                                 />
                                 <Field name="description" type="text"
                                        component={inputField} label="Summary"
