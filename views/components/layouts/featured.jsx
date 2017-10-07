@@ -54,15 +54,6 @@ class Featured extends React.Component {
             <div className={`featured`} onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
                 <FeaturedImage image={this.state.imageURL} bgColor={featuredBackgroundColor}/>
                 {this.props.children}
-
-                {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
-                {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
-                                                                filter = {["home_hero_image",
-                                                                    "home_featured_heading",
-                                                                    "home_featured_description",
-                                                                    "home_featured_text_color"]
-                                                                }/>
-                }
             </div>
         );
     }

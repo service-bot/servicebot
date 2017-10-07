@@ -674,14 +674,12 @@ ul.custom-fields-list {
     padding-top: 90px;
     text-align: center;
 }
-.featured > * {
-    position: relative;
-}
 .featured-image {
     position: absolute !important;
     top: 0px;
     height: 100%;
     width: 100%;
+    z-index: 0;
 }
 .featured-icon{
     max-width: 70px;
