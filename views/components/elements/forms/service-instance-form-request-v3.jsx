@@ -2,9 +2,19 @@ import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import 'react-tagsinput/react-tagsinput.css';
 import './css/template-create.css';
-import { Field, Fields,  FormSection,FieldArray, reduxForm, formValueSelector, change, unregisterField, getFormValues } from 'redux-form'
-import {connect } from "react-redux";
-import { RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
+import {
+    Field,
+    Fields,
+    FormSection,
+    FieldArray,
+    reduxForm,
+    formValueSelector,
+    change,
+    unregisterField,
+    getFormValues
+} from 'redux-form'
+import {connect} from "react-redux";
+import {RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import {inputField, selectField, priceField} from "./servicebot-base-field.jsx";
 import BillingSettingsForm from "../../elements/forms/billing-settings-form.jsx";
@@ -70,36 +80,36 @@ const selector = formValueSelector('servicebotForm'); // <-- same as form name
 
 //Custom property
 const renderCustomProperty = (props) => {
-    const { fields, formJSON, meta: { touched, error } } = props;
+    const {fields, formJSON, meta: {touched, error}} = props;
     return (
         <div>
-            <ul>
-            {fields.map((customProperty, index) =>
-            {   let property = widgets[formJSON[index].type];
-                return (<li key={index}>
-                    <Field
-                        name={`${customProperty}.data.value`}
-                        type={formJSON[index].type}
-                        component={property.widget}
-                        label={formJSON[index].prop_label}
-                        // value={formJSON[index].data.value}
-                        formJSON={formJSON[index]}
-                        configValue={formJSON[index].config}
-                    />
-                </li>)}
+            {fields.map((customProperty, index) => {
+                    let property = widgets[formJSON[index].type];
+                    return (
+                        <Field key={index}
+                               name={`${customProperty}.data.value`}
+                               type={formJSON[index].type}
+                               component={property.widget}
+                               label={formJSON[index].prop_label}
+                            // value={formJSON[index].data.value}
+                               formJSON={formJSON[index]}
+                               configValue={formJSON[index].config}
+                        />
+                    )
+                }
             )}
-        </ul>
         </div>
-    )};
-
+    )
+};
 
 
 //The full form
 class ServiceRequestForm extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
     }
+
     render() {
         let props = this.props;
         const {handleSubmit, formJSON, helpers, error} = props;
@@ -116,19 +126,20 @@ class ServiceRequestForm extends React.Component {
         try {
             newPrice = getPrice(formJSON.references.service_template_properties, handlers, formJSON.amount);
             helpers.updatePrice(newPrice);
-        }catch(e){
+        } catch (e) {
             console.error(e);
         }
 
-        let getRequestText = ()=>{
+        let getRequestText = () => {
             let serType = formJSON.type;
-            if (serType == "subscription"){
-                return (<span>{"Subscribe"} <Price value={newPrice}/>{formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' '+formJSON.interval}</span>);
-            }else if (serType == "one_time"){
+            if (serType == "subscription") {
+                return (<span>{"Subscribe"} <Price
+                    value={newPrice}/>{formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' ' + formJSON.interval}</span>);
+            } else if (serType == "one_time") {
                 return (<span>{"Buy"} <Price value={newPrice}/></span>);
-            }else if (serType == "custom"){
+            } else if (serType == "custom") {
                 return ("Request");
-            }else{
+            } else {
                 return (<span><Price value={newPrice}/></span>)
             }
         };
@@ -136,71 +147,69 @@ class ServiceRequestForm extends React.Component {
         const sortedUsers = _.sortBy(users, ['id']);
 
         return (
-            <div>
-{/*                <div className="col-md-3">
-                Tabs
-                <pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>
-                {JSON.stringify(formJSON, null, 2)}
-                </pre>
-                </div>*/}
-                <div className="col-md-12">
-                    <form onSubmit={handleSubmit}>
-                        <div className="row">
-                            <div className="col-md-8">
-                                <Authorizer permissions="can_administrate">
-                                    <Field name="client_id"
-                                           component={selectField}
-                                           label="For Client"
-                                           options={sortedUsers}
-                                           validate={[required]}
-                                    />
-                                </Authorizer>
+            <div className="service-request-form-body">
+                {/*             <div className="col-md-3">
+                 Tabs
+                 <pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>
+                 {JSON.stringify(formJSON, null, 2)}
+                 </pre>
+                 </div>*/}
+                <form onSubmit={handleSubmit}>
+                    <Authorizer permissions="can_administrate">
+                        <Field name="client_id" component={selectField} label="For Client"
+                               options={sortedUsers} validate={[required]}/>
+                    </Authorizer>
 
-                                {!helpers.uid && <div>
-                                    <Field name="email" type="text"
-                                           component={inputField} label="Email Address"
-                                           validate={[required]}/>
+                    {!helpers.uid &&
+                    <div>
+                        <Field name="email" type="text" component={inputField}
+                               label="Email Address" validate={[required]}/>
 
-                                    {helpers.emailExists && <ModalUserLogin
-                                        hide={this.closeUserLoginModal}
-                                        email={this.props.formData.email}
-                                        invitationExists={this.state.invitationExists}
-                                        width="640px"
-                                        serviceCreated={this.state.serviceCreated}/>
-                                    }
-                                    </div>
-                                }
+                        {helpers.emailExists && <ModalUserLogin
+                            hide={this.closeUserLoginModal}
+                            email={this.props.formData.email}
+                            invitationExists={this.state.invitationExists}
+                            width="640px"
+                            serviceCreated={this.state.serviceCreated}/>
+                        }
+                    </div>
+                    }
 
-                                <h3>Custom Fields</h3>
-                                <FormSection name="references">
-                                    <FieldArray name="service_template_properties"
-                                                component={renderCustomProperty}
-                                                formJSON={formJSON.references.service_template_properties}/>
-                                </FormSection>
+                    <h3>Custom Fields</h3>
+                    <FormSection name="references">
+                        <FieldArray name="service_template_properties" component={renderCustomProperty}
+                                    formJSON={formJSON.references.service_template_properties}/>
+                    </FormSection>
 
-                                {helpers.hasCard &&
-                                <div>
-                                    {helpers.stripToken ?
-                                        <div>
-                                            <p className="help-block">You {helpers.card.funding} card in your account ending in: {helpers.card.last4} will be used.</p>
-                                            <span className="help-block">If you wish to use a different card, you can update your card under <Link to="/billing-settings">billing settings.</Link></span>
-                                        </div> :
-                                        <p className="help-block">Using {helpers.card.funding} card ending in: {helpers.card.last4}</p>
-                                    }
-                                </div>
-                                }
-                            </div>
-                        </div>
-                        <button className="btn btn-rounded btn-primary" type="submit"
-                                value="submit">
-                            {getRequestText()}
-                        </button>
-                        {error &&
-                        <strong>
-                            {error}
-                        </strong>}
-                    </form>
-                </div>
+                    {helpers.hasCard &&
+                    <div className="service-request-form-payment">
+                        {helpers.stripToken ?
+                            <div>
+                                <p className="help-block">You {helpers.card.funding} card in your account
+                                    ending in: {helpers.card.last4} will be used.</p>
+                                <span className="help-block">If you wish to use a different card, you can
+                                                update your card under <Link
+                                        to="/billing-settings">billing settings.</Link></span>
+                            </div> :
+                            <p className="help-block">
+                                Using {helpers.card.funding} card endingin: {helpers.card.last4}
+                            </p>
+                        }
+                    </div>
+                    }
+                    <button className="btn btn-rounded btn-primary btn-bar" type="submit" value="submit">
+                        {getRequestText()}
+                    </button>
+                    {error &&
+                    <strong>
+                        {error}
+                    </strong>}
+
+                    {/*<Buttons buttonClass="btn-primary btn-bar" size="lg" position="center" btnType="primary" value="submit"*/}
+                             {/*onClick={()=>{}} loading>*/}
+                        {/*<span>{getRequestText()}</span>*/}
+                    {/*</Buttons>*/}
+                </form>
             </div>
         )
     };
@@ -208,18 +217,17 @@ class ServiceRequestForm extends React.Component {
 
 ServiceRequestForm = connect((state, ownProps) => {
     return {
-        "serviceTypeValue" : selector(state, `type`),
+        "serviceTypeValue": selector(state, `type`),
         formJSON: getFormValues('servicebotForm')(state),
 
     }
-}, (dispatch, ownProps)=> {
-    return {
-    }
+}, (dispatch, ownProps) => {
+    return {}
 })(ServiceRequestForm);
 
 class ServiceTemplateForm extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         let templateId = this.props.templateId || 1;
@@ -248,14 +256,14 @@ class ServiceTemplateForm extends React.Component {
 
     }
 
-    componentWillMount(){
+    componentWillMount() {
         let self = this;
 
         //get the users for the client select list if current user is Admin
-        if(isAuthorized({permissions: "can_administrate"})) {
+        if (isAuthorized({permissions: "can_administrate"})) {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
-                    let userRoleList = response.filter(function(user){
+                    let userRoleList = response.filter(function (user) {
                         return user.references.user_roles[0].role_name === 'user';
                     });
                     self.setState({usersData: userRoleList});
@@ -266,7 +274,7 @@ class ServiceTemplateForm extends React.Component {
         }
 
         //try getting user's fund if current user is NOT Admin
-        if(!isAuthorized({permissions: "can_administrate"})) {
+        if (!isAuthorized({permissions: "can_administrate"})) {
             Fetcher("/api/v1/funds/own").then(function (response) {
                 if (!response.error && response.length == 0) {
                     console.log("fund", response);
@@ -276,7 +284,7 @@ class ServiceTemplateForm extends React.Component {
         }
     }
 
-    componentDidMount(){
+    componentDidMount() {
         let self = this;
         Fetcher(self.state.formURL).then(function (response) {
             if (!response.error) {
@@ -285,60 +293,62 @@ class ServiceTemplateForm extends React.Component {
                 console.log("Error", response.error);
                 self.setState({loading: false});
             }
-        }).catch(function(err){
+        }).catch(function (err) {
             console.log("ERROR!", err);
         });
 
-        if(this.props.uid) {
+        if (this.props.uid) {
             this.checkIfUserHasCard();
         }
     }
 
-    componentDidUpdate(nextProps, nextState){
+    componentDidUpdate(nextProps, nextState) {
         // console.log("next props", nextProps);
         // console.log("next state", nextState);
-        if(nextState.stripToken != this.state.stripToken){
+        if (nextState.stripToken != this.state.stripToken) {
             console.log(nextState.stripToken, this.state.stripToken);
         }
-        if(nextProps.uid && this.state.hasCard === null){
+        if (nextProps.uid && this.state.hasCard === null) {
             this.checkIfUserHasCard();
         }
-        if(nextProps.uid && nextState.serviceCreated){
+        if (nextProps.uid && nextState.serviceCreated) {
             browserHistory.push(`/service-instance/${nextState.serviceCreated.id}`);
         }
     }
 
-    *tokenGenerator(values, callback){
+    *tokenGenerator(values, callback) {
         let token = yield;
         values.token_id = token.id;
         callback(values);
     }
 
-    updatePrice(newPrice){
+    updatePrice(newPrice) {
         console.log("**Update price was called with price", newPrice);
         let self = this;
         self.setState({servicePrice: newPrice});
     }
 
-    async retrieveStripeToken(stripeForm, token = null){ //getToken is the getToken function, token is the token
-        if(stripeForm){
+    async retrieveStripeToken(stripeForm, token = null) { //getToken is the getToken function, token is the token
+        let self = this;
+        console.log("RETRIEVE STRIPE TOKEN WUZ CALLED")
+        if (stripeForm) {
             this.setState({stripeForm: stripeForm});
         }
-        if(token) {
+        if (token) {
             this.setState({stripToken: token});
             this.state.tokenGenerator.next(token)
         }
     }
 
-    closeUserLoginModal(){
+    closeUserLoginModal() {
         this.setState({emailExists: false});
     }
 
-    checkIfUserHasCard(){
+    checkIfUserHasCard() {
         let self = this;
         Fetcher(`/api/v1/users/${self.props.uid}`).then(function (response) {
-            if(!response.error){
-                if(_.has(response, 'references.funds[0]') && _.has(response, 'references.funds[0].source.card')){
+            if (!response.error) {
+                if (_.has(response, 'references.funds[0]') && _.has(response, 'references.funds[0].source.card')) {
                     let fund = _.get(response, 'references.funds[0]');
                     let card = _.get(response, 'references.funds[0].source.card');
                     self.setState({
@@ -353,12 +363,12 @@ class ServiceTemplateForm extends React.Component {
                             address_city: card.address_city,
                             address_state: card.address_state,
                         }
-                    }, function(){
+                    }, function () {
                         console.log("Checked user and found card, state is set to", self.state);
                         return true;
                     });
                 }
-            }else{
+            } else {
                 self.setState({loading: false, hasCard: false});
                 return false;
             }
@@ -389,18 +399,24 @@ class ServiceTemplateForm extends React.Component {
         let helpers = Object.assign(this.state, this.props);
         helpers.updatePrice = self.updatePrice;
         //Gets a token to populate token_id for instance request
-        if(!isAuthorized({permissions: "can_administrate"}) &&
-            this.state.servicePrice > 0){
-            submissionPrep = self.submissionPrep;
+        if (!isAuthorized({permissions: "can_administrate"}) &&
+            this.state.servicePrice > 0) {
+            submissionPrep = function (values, callback) {
+                let tokenGenerator = self.tokenGenerator(values, callback);
+                tokenGenerator.next();
+                self.setState({tokenGenerator}, (state => {
+                    self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
+                }))
+
+            };
         }
 
         return (
             <div>
-                Price: {this.state.servicePrice}
+                {/*Price: {this.state.servicePrice}*/}
 
-                {(!this.state.hasCard &&
-                    !isAuthorized({permissions: "can_administrate"})) &&
-                    this.state.servicePrice > 0 &&
+                {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
+                this.state.servicePrice > 0 &&
                 <BillingSettingsForm context="SERVICE_REQUEST" retrieveStripeToken={this.retrieveStripeToken}/>
                 }
                 <ServiceBotBaseForm
