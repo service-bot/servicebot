@@ -14,8 +14,8 @@ let promisifyProxy = require("../lib/promiseProxy");
 let User = require('./user');
 let _ = require("lodash");
 let references = [
-    {"model":ServiceInstanceProperties, "referenceField": "parent_id", "direction":"from", "readOnly": false},
-    {"model":ServiceInstanceMessages, "referenceField": "service_instance_id", "direction":"from", "readOnly": false},
+    {"model":ServiceInstanceProperties, "referenceField": "parent_id", "direction":"from", "readOnly": true},
+    {"model":ServiceInstanceMessages, "referenceField": "service_instance_id", "direction":"from", "readOnly": true},
     {"model":ServiceInstanceCharges, "referenceField": "service_instance_id", "direction":"from", "readOnly": true},
     {"model":ServiceInstanceCancellations, "referenceField": "service_instance_id", "direction":"from", "readOnly": true},
     {"model":User, "referenceField": "user_id", "direction":"to", "readOnly": true}

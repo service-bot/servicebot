@@ -18,6 +18,7 @@ import {RenderWidget, WidgetList, PriceBreakdown, widgets} from "../../utilities
 import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
 import FileUploadForm from "./file-upload-form.jsx";
 import {inputField, selectField, OnOffToggleField, iconToggleField, priceField} from "./servicebot-base-field.jsx";
+import {addAlert, dismissAlert} from "../../utilities/actions";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import SVGIcons from "../../utilities/svg-icons.jsx";
 let _ = require("lodash");
@@ -533,6 +534,16 @@ class ServiceTemplateForm extends React.Component {
             newTemplateId: response.id,
             success: true
         });
+        let successMessage = {
+            id: Date.now(),
+            alertType: 'success',
+            message: `${response.name} was saved successfully`,
+            show: true,
+            autoDismiss: 4000,
+        };
+        this.props.addAlert(successMessage);
+        browserHistory.push(`/service-catalog/${response.id}/request`);
+        // browserHistory.push(`/manage-catalog/list`);
     }
 
     render() {
@@ -624,5 +635,21 @@ class ServiceTemplateForm extends React.Component {
     }
 }
 
+function mapStateToProps(state){
+    return {
+        alerts : state.alerts
+    }
+}
 
-export default ServiceTemplateForm;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addAlert: (alert) => {
+            return dispatch(addAlert(alert))
+        },
+        dismissAlert: (alert) => {
+            return dispatch(dismissAlert(alert))
+        },
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ServiceTemplateForm);

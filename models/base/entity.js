@@ -18,7 +18,18 @@ var whereFilter = require('knex-filter-loopback').whereFilter;
 
 module.exports = function(tableName, references=[], primaryKey='id', database=knex) {
     var Entity = function (data) {
+        let self = this;
         this.data = data;
+        this.references = new Proxy({}, {
+            get: async function (target, name) {
+                let reference = references.find(ref => ref.model.table === name);
+                if (!reference) {
+                    throw `Reference is not defined.`
+                }
+                return await self.getRelated(reference.model)
+            }
+
+        });
     }
 
     Entity.database = database;
@@ -41,32 +52,33 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
         this.data[name] = value;
     }
 
-    Entity.prototype.getRelated = function(model, callback){
-        if(Entity.references == null || Entity.references.length == 0){
+    function getRelated(model, callback) {
+        if (Entity.references == null || Entity.references.length == 0) {
             callback([]);
         }
         let self = this;
         let reference = Entity.references.find(rel => rel.model.table == model.table);
-        if(!reference){
+        if (!reference) {
             callback([]);
             return;
         }
         let referenceModel = reference.model;
         let referenceField = reference.referenceField;
-        if(reference.direction == "from"){
-            referenceModel.findOnRelative(referenceField, self.get("id"), function(results){
+        if (reference.direction === "from") {
+            referenceModel.findOnRelative(referenceField, self.get("id"), function (results) {
+                console.log(callback);
                 callback(results);
             })
         }
-        else if(reference.direction == "to"){
-            referenceModel.findOnRelative(referenceModel.primaryKey, self.get(referenceField), function(results){
+        else if (reference.direction === "to") {
+            referenceModel.findOnRelative(referenceModel.primaryKey, self.get(referenceField), function (results) {
                 callback(results);
             })
         }
 
     };
 
-    Entity.createPromise =function(entityData){
+    Entity.createPromise = function (entityData) {
         let self = this
         return Entity.database(Entity.table).columnInfo()
                 .then(function (info) {
@@ -101,7 +113,7 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
     };
 
 
-    Entity.prototype.update = function (callback) {
+    function update(callback) {
         var self = this;
         var id = this.get(primaryKey);
         if (!id) {
@@ -137,15 +149,15 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
             });
     };
 
-    Entity.prototype.attachReferences = function (callback) {
+    let attachReferences = function (callback) {
         this.data.references = {};
         let self = this;
-        if(references == null || references.length == 0){
+        if (references == null || references.length == 0) {
             return callback(self);
         }
         for (let reference of references) {
             let referenceModel = reference.model;
-            this.getRelated(referenceModel, function(results){
+            this.getRelated(referenceModel, function (results) {
                 self.data.references[referenceModel.table] = results.map(entity => entity.data);
                 if (Object.keys(self.data.references).length == references.length) {
                     callback(self);
@@ -154,9 +166,10 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
         }
     }
 
+
     Entity.prototype.createReferences = function (referenceData, reference, callback) {
         let self = this;
-        if(reference.readOnly){
+        if (reference.readOnly) {
             console.log("Reference is readonly");
             callback(self);
         }
@@ -180,33 +193,28 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
         }
     }
 
-    Entity.prototype.updateReferences = function (referenceData, reference, callback) {
+    //todo - combine stuff into a single query
+    //todo - possibly dispatch events
+    Entity.prototype.updateReferences = async function (referenceData, reference) {
         let self = this;
-        if(reference.readOnly){
+        if (reference.readOnly) {
             console.log("Reference is readonly");
-            callback(self);
+            this;
         }
         else {
             referenceData.forEach(newChild => (newChild[reference.referenceField] = this.get(primaryKey)));
-            console.log("referenceDate");
-            console.log(referenceData);
-            reference.model.batchUpdate(referenceData, function (response) {
-/*                if (reference.direction == "to") {
-                    self.set(reference.referenceField, response[0][reference.model.primaryKey]);
-                    self.update(function (updatedEntity) {
-                        self.data.references[reference.model.table] = response;
-                        callback(self);
-                    })
-                }
-                else {
-                    self.data.references[reference.model.table] = response;
-                    callback(self);
-                }*/
-                self.data.references[reference.model.table] = response;
-                callback(self);
-            })
+            let references = await this.references[reference.model.table];
+            let removedReferences = await reference.model.batchDelete({
+                not : {id : {"in" : ids}},
+                [reference.referenceField] : self.get(primaryKey)
+            });
+            let upsertedReferences = await reference.model.batchUpdate(referenceData);
+
+            return upsertedReferences;
+
+
         }
-    }
+    };
 
     //TODO: think about no result case, not too happy how handling it now.
 
@@ -237,8 +245,8 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
     };
 
     //Find on relative function will call the findAll function by default. Allowing overrides at a model layer.
-    Entity.findOnRelative = function(key=true, value=true, callback){
-        Entity.findAll(key, value, function(result){
+    Entity.findOnRelative = function (key = true, value = true, callback) {
+        Entity.findAll(key, value, function (result) {
             callback(result);
         })
     };
@@ -370,7 +378,9 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
             });
     };
 
-
+    Entity.batchDelete = async function(filter){
+        return knex(Entity.table).where(whereFilter(filter)).del();
+    };
     /**
      *
      * @param dataArray - array of data objects that are going to be inserted
@@ -396,7 +406,6 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
                     })
             })
     };
-    //promise support
 
     //TODO this batch update work
     let batchUpdate = function (dataArray, callback) {
@@ -424,9 +433,12 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
                 })
             });
     };
-    Entity.batchCreate = promiseProxy(batchCreate);
-    Entity.batchUpdate = promiseProxy(batchUpdate);
+    Entity.batchUpdate = promiseProxy(batchUpdate)
+    Entity.prototype.update = promiseProxy(update, false);
     Entity.findOne = promiseProxy(findOne);
+    Entity.prototype.attachReferences = promiseProxy(attachReferences);
+    Entity.prototype.getRelated = promiseProxy(getRelated);
+    Entity.batchCreate = promiseProxy(batchCreate);
 
 
     return Entity;

@@ -27,9 +27,9 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
             //todo : strip out XSS
             service_description = `${service_description} <hr> ${self.data.detail}`;
         }
-        //Idealize the new service instance
+        //Initialize the new service instance
         let instanceAttributes = {
-            name: instanceRequest.name,
+            name: instanceRequest.name || self.get("name"),
             description: service_description,
             requested_by: instanceRequest.requested_by,
             user_id: instanceRequest.user_id,

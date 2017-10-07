@@ -7,7 +7,7 @@
     "build": "./node_modules/.bin/webpack",
     "dev-client": "./node_modules/.bin/webpack-dev-server --port 3002 --content-base public/",
     "fullStart": "./node_modules/.bin/webpack && node ./bin/www",
-    "debug": "node $NODE_DEBUG_OPTION ./bin/www",
+    "debug": "node $NODE_DEBUG_OPTION ./bin/start",
     "test": "node ./tests/pluginbotTest.js"
   },
   "repository": {
@@ -91,13 +91,13 @@
     "redux-form-validators": "^1.1.0",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.15.6",
-    "redux-saga-router": "^2.1.1",
     "redux-thunk": "^2.2.0",
     "request": "^2.83.0",
     "semver": "^5.4.1",
     "semver-sort": "0.0.4",
     "serve-favicon": "^2.4.3",
     "server-destroy": "^1.0.1",
+    "slug": "^0.9.1",
     "stripe": "^4.25.0",
     "style-loader": "^0.13.2",
     "swagger-jsdoc": "^1.9.7",
