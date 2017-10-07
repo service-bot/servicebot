@@ -85,14 +85,6 @@ let AppRouter = function(props) {
             <Router history={browserHistory}>
                 <Route name="Home" path="/" component={App}>
                     <IndexRoute component={Home}/>
-
-                    <Route path="test-template" component={ServiceTemplateFormV4}/>
-                    <Route path="test-template/:templateId" component={ServiceTemplateFormV4}/>
-                    <Route path="test-base" component={TestBase}/>
-                    <Route path="test-base/:templateId" component={TestBase}/>
-                    <Route path="test-upload/:templateId" component={TestUpload}/>
-                    <Route path="test-request/:templateId" component={ServiceRequestV2}/>
-
                     <Route name="Home" path="home" component={Home}/>
                     <Route name="All Services" path="all-services" component={AllServices}/>
                     <Route name="User Login" path="login" component={Login}/>
@@ -106,7 +98,7 @@ let AppRouter = function(props) {
                            component={ServiceInstance}/>
                     <Route name="Service Instance" path="service-instance/:instanceId" component={ServiceInstance}/>
                     <Route name="Service Catalog" path="service-catalog" component={ServiceCatalog}/>
-                    <Route name="Service Request" path="service-catalog/:templateId/request" component={ServiceRequest}/>
+                    <Route name="Service Request" path="service-catalog/:templateId/request" component={ServiceRequestV2}/>
                     <Route name="Account Settings" path="account-settings/:userId" component={UserForm}/>
                     <Route name="My Profile" path="profile" component={Profile}/>
                     {/* Billing */}
