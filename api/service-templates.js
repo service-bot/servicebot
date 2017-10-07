@@ -452,7 +452,7 @@ module.exports = function (router) {
 
     router.post("/service-templates", auth(), function (req, res, next) {
         req.body.created_by = req.user.get("id");
-        let properties = req.body.references.service_template_properties
+        let properties = req.body.references && req.body.references.service_template_properties;
         if(properties){
             req.body.references.service_template_properties = properties.map(prop => {
                 return {
