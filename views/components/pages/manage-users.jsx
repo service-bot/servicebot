@@ -134,15 +134,9 @@ class ManageUsers extends React.Component {
     openEditRole(dataObject){
         let self = this;
         if(dataObject.id == self.props.user.id){
-            return function (e) {
-                e.preventDefault();
-                self.setState({openMessageModal: {title: 'Alert!', message: 'Editing own role is not allowed!'}});
-            }
+            self.setState({openMessageModal: {title: 'Alert!', message: 'Editing own role is not allowed!'}});
         }else {
-            return function (e) {
-                e.preventDefault();
-                self.setState({openEditRole: true, currentDataObject: dataObject});
-            }
+            self.setState({openEditRole: true, currentDataObject: dataObject});
         }
     }
     closeEditRole(){
@@ -254,7 +248,10 @@ class ManageUsers extends React.Component {
                     {   type: "divider" },
                     {   type: "button",
                         label: 'Edit Role',
-                        action: () => { return (this.openEditRole(row)) }},
+                        action: () => {
+                        console.log("FFFHHFHFFHHF SHAR");
+                        console.log(row)
+                        return (this.openEditRole(row)) }},
                     {   type: "button",
                         label: row.status == 'suspended' ? 'Suspend User' : 'Unsuspend User',
                         action: () => { return (this.openSuspendUser(row)) }},
@@ -312,6 +309,7 @@ class ManageUsers extends React.Component {
                 )
             }
             if(this.state.openEditRole){
+                console.log("Im suppoooosed to open")
                 return (
                     <ModalEditUserRole
                         uid={this.state.currentDataObject.id}
