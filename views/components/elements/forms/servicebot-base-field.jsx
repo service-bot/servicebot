@@ -21,7 +21,7 @@ class inputField extends React.Component {
 
         return(
             <div className={`form-group form-group-flex`}>
-                {label && <label className="control-label form-label-flex-md">{label}</label>}
+                {(label && type !== 'hidden') && <label className="control-label form-label-flex-md">{label}</label>}
                 <div className="form-input-flex">
                     {type === "textarea" && <textarea className={formControlClass} {...input} placeholder={label} autoFocus={autofocus}/> }
                     {(type === "text" || type === "number") && <input className={formControlClass} {...input} placeholder={placeholder || label} type={type} autoFocus={autofocus}/> }

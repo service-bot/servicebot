@@ -3,6 +3,7 @@ var _ = require("lodash");
 var Role = require("../models/role");
 var Permission = require("../models/permission");
 var SystemOption = require("../models/system-options");
+let ServiceCategory = require("../models/service-category");
 let options = require("./system-options");
 let DefaultTemplates = require("./default-notifications");
 let NotificationTemplate = require("../models/notification-template");
@@ -438,6 +439,10 @@ module.exports = function (initConfig) {
                     })
                 }
 
+                let defaultCategory = new ServiceCategory({name:'Uncategorized', description:'Uncategorized Services'});
+                defaultCategory.create((newCategory) => {
+                    console.log("Default Category created")
+                });
 
                 //create default email templates
                 NotificationTemplate.batchCreate(DefaultTemplates.templates, function (emailResult) {

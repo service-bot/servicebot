@@ -129,7 +129,7 @@ class NavBootstrap extends React.Component {
         }else{
             return(
                 <ul className="nav navbar-nav">
-                    <li><Link to="/my-services" style={style}>My Services<span className="sr-only">(current)</span></Link></li>
+                    <li><Link to="/my-services" style={style}>My Purchases<span className="sr-only">(current)</span></Link></li>
                     <li className="dropdown">
                         <a href="#" className="dropdown-toggle" ref="dropdownToggle" data-toggle="dropdown"
                            role="button" aria-haspopup="true" aria-expanded="false" style={style}>Billing <span className="caret"/></a>

@@ -116,7 +116,6 @@ class ServiceRequest extends React.Component {
             };
 
             return (
-
                 <div className="page-service-request">
                     <Featured imageURL={this.state.image}>
                         {this.state.icon ?
@@ -131,11 +130,18 @@ class ServiceRequest extends React.Component {
                         <PageSection>
                             <div className="basic-info col-md-6">
                                 <div className="service-request-details">
-                                    <IconHeading imgIcon="/assets/custom_icons/what_you_are_getting_icon.png" title="What you are getting"/>
+                                    <IconHeading imgIcon="/assets/custom_icons/what_you_are_getting_icon.png"
+                                                 title="What you are getting"/>
                                     <div dangerouslySetInnerHTML={{__html: this.state.service.details}}/>
                                 </div>
                             </div>
-                            <ServiceRequestForm templateId={this.state.id} service={this.state.service}/>
+                            <div className="basic-info col-md-6">
+                                <div className="service-request-form">
+                                    <IconHeading imgIcon="/assets/custom_icons/what_you_are_getting_icon.png"
+                                                 title="Get Your Service"/>
+                                    <ServiceRequestForm templateId={this.state.id} service={this.state.service}/>
+                                </div>
+                            </div>
                         </PageSection>
                     </Content>
                 </div>
