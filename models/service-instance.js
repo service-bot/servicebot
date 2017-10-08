@@ -39,6 +39,9 @@ let buildPayStructure = function (payment_object, callback){
     };
     let new_plan = _.pick(payment_object ,plan_arr);
     let plan = _.assign(default_plan, new_plan);
+    if(plan.amount === null){
+        plan.amount = 0;
+    }
     console.log(plan);
 
     callback(plan);

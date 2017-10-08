@@ -48,7 +48,7 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
                 'user_id': service.get('user_id'),
                 'service_instance_id': service.get('id'),
                 'currency': self.get('currency'),
-                'amount': self.get('amount'),
+                'amount': self.get('amount') || 0,
                 'description': service.get('name')
             };
             let charge = await  Charges.createPromise(charge_obj);

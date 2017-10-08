@@ -207,7 +207,7 @@ class renderCustomProperty extends React.Component {
 
     render() {
         let props = this.props;
-        const {privateValue, fields, meta: {touched, error}} = props;
+        const {templateType, privateValue, fields, meta: {touched, error}} = props;
         console.log("fields", fields.getAll());
         console.log("EMAIL ! ", privateValue);
         return (

@@ -129,7 +129,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
             req.body.id = entity.get("id");
             Object.assign(entity.data, req.body);
             let updatedEntity = await entity.update();
-            let requestReferences = req.body.references;
+            let requestReferences = req.body.references || {};
 
             //todo: combine updateReferences into a single transaction
             for (let reference of references) {

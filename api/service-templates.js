@@ -389,6 +389,7 @@ module.exports = function (router) {
 
                 //currently the permissions that the client app sets get passed here.
                 responseJSON.permissions = await permissionPromise;
+                responseJSON.uid = createdUser.get("id");
 
                 user = createdUser;
 
@@ -408,7 +409,7 @@ module.exports = function (router) {
 
             //adjusted price...
             req_body.amount = res.locals.adjusted_price;
-            req_body.c = res.locals.merged_props;
+            req_body.references.service_template_properties = res.locals.merged_props;
             //elevated accounts can override things
             if (hasPermission) {
                 res.locals.overrides = {

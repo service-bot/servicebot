@@ -22,8 +22,11 @@ import {Price} from "../../utilities/price.jsx";
 import Fetcher from "../../utilities/fetcher.jsx";
 import IconHeading from "../../layouts/icon-heading.jsx";
 import ModalUserLogin from "../modals/modal-user-login.jsx";
-import {setUid, setUser, fetchUsers} from "../../utilities/actions";
 import {addAlert} from "../../utilities/actions";
+import {setUid, fetchUsers, setUser} from "../../utilities/actions";
+import cookie from 'react-cookie';
+
+
 let _ = require("lodash");
 
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
@@ -253,6 +256,7 @@ class ServiceInstanceForm extends React.Component {
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
         this.updatePrice = this.updatePrice.bind(this);
         this.submissionPrep = this.submissionPrep.bind(this);
+        this.handleResponse = this.handleResponse.bind(this);
 
 
     }
@@ -385,6 +389,15 @@ class ServiceInstanceForm extends React.Component {
         }))
 
     }
+    handleResponse(response){
+        if(response.permissions){
+            console.log("SETTIN PERMS", response);
+            localStorage.setItem("permissions", response.permissions);
+            this.props.setUid(response.uid);
+            this.props.setUser(response.uid);
+
+        }
+    }
 
     render () {
         let self = this;
@@ -445,5 +458,17 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-export default connect(mapStateToProps)(ServiceInstanceForm);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setUid: (uid) => {
+            dispatch(setUid(uid))
+        },
+        setUser: (uid) => {
+            fetchUsers(uid, (err, user) => dispatch(setUser(user)));
+        }
+    }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ServiceInstanceForm);
 
