@@ -248,8 +248,10 @@ module.exports = function (router) {
             let req_body = req.body;
             await authPromise(req, res);
             let permission_array = res.locals.permissions || [];
-            let handlers = require("../input_types/handlers")();
-
+            let handlers = (store.getState(true).pluginbot.services.inputHandler || []).reduce((acc, handler) => {
+                acc[handler.name] = handler.handler;
+                return acc;
+            }, {});
             //this is true when user can override things
             let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
             let templatePrice = serviceTemplate.get("amount");
@@ -265,7 +267,7 @@ module.exports = function (router) {
 
 
             if (props) {
-                price = require("../input_types/handleInputs").getPrice(props, handlers, price, true);
+                price = require("../lib/handleInputs").getPrice(props, handlers, price, true);
             }
 
             res.locals.adjusted_price = price;

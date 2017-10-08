@@ -4,7 +4,8 @@ import 'react-tagsinput/react-tagsinput.css';
 import './css/template-create.css';
 import { Field, Fields,  FormSection,FieldArray, reduxForm, formValueSelector, change, unregisterField, getFormValues } from 'redux-form'
 import {connect } from "react-redux";
-import { RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
+import { RenderWidget, WidgetList, SelectWidget} from "../../utilities/widgets";
+import consume from "pluginbot-react/src/consume";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import {inputField, selectField, priceField} from "./servicebot-base-field.jsx";
 import BillingSettingsForm from "../../elements/forms/billing-settings-form.jsx";
@@ -69,8 +70,12 @@ const selector = formValueSelector('servicebotForm'); // <-- same as form name
 // );
 
 //Custom property
-const renderCustomProperty = (props) => {
-    const { fields, formJSON, meta: { touched, error } } = props;
+let renderCustomProperty = (props) => {
+    const { fields, formJSON, meta: { touched, error }, services : {widget} } = props;
+    let widgets = widget.reduce((acc, widget) => {
+        acc[widget.type] = widget;
+        return acc;
+    }, {});
     return (
         <div>
             <ul>
@@ -92,7 +97,7 @@ const renderCustomProperty = (props) => {
         </div>
     )};
 
-
+renderCustomProperty = consume("widget")(renderCustomProperty);
 
 //The full form
 class ServiceRequestForm extends React.Component {
@@ -102,11 +107,9 @@ class ServiceRequestForm extends React.Component {
     }
     render() {
         let props = this.props;
-        const {handleSubmit, formJSON, helpers, error} = props;
+        const {handleSubmit, formJSON, helpers, error, services: {widget}} = props;
         console.log(formJSON.references.service_template_properties);
-        console.log(Object.values(widgets));
-        let handlers = Object.values(widgets).reduce((acc, widget) => {
-            console.log("widget...", widget);
+        let handlers = widget.reduce((acc, widget) => {
             acc[widget.type] = widget.handler;
             return acc;
 
@@ -206,7 +209,7 @@ class ServiceRequestForm extends React.Component {
     };
 }
 
-ServiceRequestForm = connect((state, ownProps) => {
+ServiceRequestForm = consume("widget")(connect((state, ownProps) => {
     return {
         "serviceTypeValue" : selector(state, `type`),
         formJSON: getFormValues('servicebotForm')(state),
@@ -215,7 +218,7 @@ ServiceRequestForm = connect((state, ownProps) => {
 }, (dispatch, ownProps)=> {
     return {
     }
-})(ServiceRequestForm);
+})(ServiceRequestForm));
 
 class ServiceInstanceForm extends React.Component {
 
