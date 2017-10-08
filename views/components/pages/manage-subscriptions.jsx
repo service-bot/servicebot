@@ -287,8 +287,8 @@ class ManageSubscriptions extends React.Component {
                                         <TableHeaderColumn dataField='name'
                                                            dataFormat={this.nameFormatter}
                                                            dataSort={ true }
-                                                           width='200'>
-                                            Subscription Product / Service Name
+                                                           width='150'>
+                                            Subscription / Service Name
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='references'
                                                            dataFormat={this.emailFormatter}

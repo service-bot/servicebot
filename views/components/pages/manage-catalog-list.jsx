@@ -95,7 +95,10 @@ class ManageCatalogList extends React.Component {
         return ( cell.service_categories[0].name );
     }
     publishedFormatter(cell){
-        return ( <span className='status-badge' >{cell ? 'Published' : 'Unpublished'}</span> );
+        //Badge color
+        let color_class = 'status-badge ';
+        color_class += cell ? 'green' : 'red';
+        return ( <span className={color_class} >{cell ? 'Published' : 'Unpublished'}</span> );
     }
     createdFormatter(cell){
         return ( <DateFormat date={cell}/> );
