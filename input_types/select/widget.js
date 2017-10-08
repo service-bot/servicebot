@@ -95,7 +95,7 @@ let SelectWidget = (props) => {
             <label className="control-label form-label-flex-md addon-options-widget-default-value-label">{label}</label>
             <div className="form-input-flex">
                 <select className="form-control addon-options-widget-default-value-select" {...input}>
-                    <option value="">Choose One</option>
+                    <option value="0">Choose One</option>
                     { configValue && configValue.value && configValue.value.map((option, index) =>
                         <option key={index} value={option}>
                             {(configValue.pricing && configValue.pricing.value.hasOwnProperty(option))? (

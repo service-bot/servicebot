@@ -24,14 +24,20 @@ function getPriceAdjustments(properties, handlers) {
         console.log("REDUCING!", properties);
         return properties.reduce((acc, prop) => {
             console.log("UH PROP!", prop, handlers);
-            if (handlers[prop.type] && handlers[prop.type].priceHandler && prop.config && prop.config.pricing && prop.config.pricing.operation) {
+            if (
+                handlers[prop.type] &&
+                handlers[prop.type].priceHandler &&
+                prop.config &&
+                prop.config.pricing &&
+                prop.config.pricing.operation
+            ) {
                 console.log("ADJUSTING!", prop);
                 const adjuster = handlers[prop.type].priceHandler;
                 let valToPUsh = {
                     name: prop.name,
                     type: prop.type,
                     operation: prop.config.pricing.operation,
-                    value: adjuster(prop.data, prop.config)
+                    value: adjuster(prop.data, prop.config) || 0
                 }
                 console.log("PUSH", valToPUsh);
                 acc.push(valToPUsh);
@@ -56,6 +62,9 @@ module.exports = {
             console.log("ADJUSTMENTS!", adjustments);
             return (basePrice + adjustments.reduce((acc, adjustment) => {
                 let operation = adjustment.operation;
+                if(adjustment.value === null || adjustment.value === undefined){
+                    return acc;
+                }
                 switch (operation) {
                     case "add" :
                         acc += cents ? toCents(adjustment.value) : adjustment.value;
@@ -98,6 +107,7 @@ module.exports = {
             return acc;
         }, [])
     },
-    getPriceAdjustments
+    getPriceAdjustments,
+    toCents
 };
 
