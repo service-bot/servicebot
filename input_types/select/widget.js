@@ -3,7 +3,8 @@ import TagsInput from "react-tagsinput"
 import {priceField} from "../../views/components/elements/forms/servicebot-base-field.jsx";
 import handler from "./widgetHandler";
 import CurrencyInput from 'react-currency-input';
-import WidgetPricingInput from '../../views/components/utilities/WidgetPricingInput.jsx';
+import WidgetPricingInput from '../../views/components/utilities/widget-inputs/WidgetPricingInput.jsx';
+import PriceAdjustment from '../../views/components/utilities/widget-inputs/WidgetPriceAdjustment';
 
 
 let Tags = (props) => {
@@ -91,14 +92,12 @@ let SelectWidget = (props) => {
             <div className="form-input-flex">
                 <select className="form-control addon-options-widget-default-value-select" {...input}>
                     <option value="0">Choose One</option>
-                    { configValue && configValue.value && configValue.value.map((option, index) =>
-                        <option key={index} value={option}>
-                            {(configValue.pricing && configValue.pricing.value.hasOwnProperty(option))? (
-                                 `${option} [${configValue.pricing.operation}s $${configValue.pricing.value[option]}]`
-                             ) : (
-                                 `${option}`
-                             )}
-                        </option>
+                    { configValue && configValue.value && configValue.value.map((option, index) => {
+                            let price = configValue.pricing && configValue.pricing.value[option];
+                            return <option key={index} value={option}>
+                                {(price && configValue.pricing.operation) ? <PriceAdjustment price={price} operation={configValue.pricing.operation}/> : `${option}`}
+                            </option>
+                        }
                     )}
                 </select>
             </div>

@@ -51,6 +51,8 @@ var config = function(){
                     }
                 }
             },
+
+
             externals: {
                 servicebot_input_types: JSON.stringify(input_types)
             },

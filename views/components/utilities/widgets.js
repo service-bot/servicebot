@@ -79,4 +79,5 @@ let WidgetList = props => (
     />
 );
 
+
 export {RenderWidget, WidgetList, PriceBreakdown, widgets}

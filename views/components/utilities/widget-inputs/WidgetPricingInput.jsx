@@ -1,6 +1,6 @@
 import React from "react";
 import CurrencyInput from 'react-currency-input';
-import {toCents} from "../../../input_types/handleInputs";
+import {toCents} from "../../../../input_types/handleInputs";
 class WidgetPricingInput extends React.Component{
 
     constructor(props){

@@ -125,6 +125,7 @@ class ServiceRequestForm extends React.Component {
         let newPrice = formJSON.amount;
         try {
             newPrice = getPrice(formJSON.references.service_template_properties, handlers, formJSON.amount);
+            console.log("NEW PRICE!", newPrice);
             helpers.updatePrice(newPrice);
         } catch (e) {
             console.error(e);

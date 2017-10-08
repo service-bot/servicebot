@@ -6,7 +6,7 @@ import React from 'react';
  */
 let Price = function(props){
     return(
-        <span>${props.value}</span>
+        <span>${(props.value/100).toFixed(2)}</span>
     );
 };
 

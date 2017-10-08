@@ -35,7 +35,7 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
             type: self.get("type")
         };
 
-        let submittedProperties = null;
+        let submittedProperties = instanceRequest.references.service_template_properties;
         let ServiceInstance = require('../models/service-instance');
         let service = new ServiceInstance(await ServiceInstance.createPromise(instanceAttributes));
         let props = await service.generateProps(submittedProperties);
