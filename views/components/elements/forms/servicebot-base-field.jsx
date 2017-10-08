@@ -3,6 +3,7 @@ import CurrencyInput from 'react-currency-input';
 import './css/servicebot-base-field.css';
 import ReactTooltip from 'react-tooltip'
 import dollarsToCents from 'dollars-to-cents';
+import {toCents} from "../../../../input_types/handleInputs"
 // import CurrencyInput from 'react-currency-masked-input'
 
 class inputField extends React.Component {
@@ -16,7 +17,6 @@ class inputField extends React.Component {
         let {input, placeholder, label, type, meta: {touched, error, warning}} = props;
         let autofocus = props && props.willAutoFocus;
 
-        console.log("do i have error?", error);
         let formControlClass = `form-control ${touched && error && 'has-error'} ${touched && warning && 'has-warning'}`;
 
         return(
@@ -224,14 +224,16 @@ class priceField extends React.Component {
     handleChange(e, maskedValue, floatvalue) {
         let name = e.target.name;
         let self = this;
-        this.setState({[name]: floatvalue}, () => {
+        let price = this.props.isCents ? toCents(floatvalue) : floatvalue;
+        this.setState({[name]: price}, () => {
             self.props.input.onChange(self.state[name]);
         });
     }
 
     render() {
-        let {input:{name, value, onChange}, label, type, meta: {touched, error, warning}} = this.props;
+        let {isCents, input:{name, value, onChange}, label, type, meta: {touched, error, warning}} = this.props;
         // console.log("Price Input", input);
+        let price = isCents ?  (value/100).toFixed( 2 ) : value;
         console.log("the value", value);
         return (
             <div className={`form-group form-group-flex`}>
@@ -239,7 +241,7 @@ class priceField extends React.Component {
                 <div className="form-input-flex">
                     <CurrencyInput className="form-control" name={name}
                         prefix="$" decimalSeparator="." thousandSeparator="," precision="2"
-                        onChangeEvent={this.handleChange} value={value}
+                        onChangeEvent={this.handleChange} value={price}
                     />
                     {touched && ((error && <span className="form-error">{error}</span>) || (warning &&
                     <span className="form-warning">{warning}</span>))}
@@ -248,5 +250,6 @@ class priceField extends React.Component {
         );
     };
 }
+
 
 export {inputField, selectField, OnOffToggleField, iconToggleField, priceField};

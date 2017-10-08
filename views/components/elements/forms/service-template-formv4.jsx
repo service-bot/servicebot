@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import {RenderWidget, WidgetList, PriceBreakdown, widgets} from "../../utilities/widgets";
 import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
 import FileUploadForm from "./file-upload-form.jsx";
-import {inputField, selectField, OnOffToggleField, iconToggleField, priceField} from "./servicebot-base-field.jsx";
+import {inputField, selectField, OnOffToggleField, iconToggleField, priceField, priceToCents} from "./servicebot-base-field.jsx";
 import {addAlert, dismissAlert} from "../../utilities/actions";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import SVGIcons from "../../utilities/svg-icons.jsx";
@@ -32,9 +32,9 @@ class CustomField extends React.Component {
 
     }
 
-    componentDidUpdate(prevProps, prevState) {
+    componentWillReceiveProps(nextProps) {
         let props = this.props;
-        if (prevProps.myValues.type !== props.myValues.type) {
+        if (nextProps.myValues.type !== props.myValues.type) {
             props.clearConfig();
             props.clearValue();
         }
@@ -371,7 +371,9 @@ class FieldLevelValidationForm extends React.Component {
                                 />
                                 {(serviceTypeValue === 'subscription' || serviceTypeValue === 'one_time') &&
                                 <Field name="amount" type="number"
-                                       component={priceField} label="Amount"/>
+                                       component={priceField}
+                                       isCents={true}
+                                       label="Amount"/>
                                 }
 
                                 {(serviceTypeValue === 'subscription') &&
