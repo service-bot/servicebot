@@ -99,7 +99,12 @@ let systemOptions =
         {"option": "upload_limit", "value": 10, public: false, "type": "system", "data_type": "number"},
         {"option": "service_template_icon_background_color", "value": "#000000", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "service_template_icon_fill_color", "value": "#FFFFFF", public: true, "type": "theme", "data_type": "color_picker"},
-
+        {"option": "purchase_page_featured_area_overlay_color", "value": "#000000", public: true, "type": "theme", "data_type": "color_picker"},
+        {"option": "purchase_page_featured_area_overlay_opacity", "value": "0.6", public: true, "type": "theme", "data_type": "text"},
+        {"option": "purchase_page_featured_area_text_color", "value": "#ffffff", public: true, "type": "theme", "data_type": "color_picker"},
+        {"option": "purchase_page_featured_area_height", "value": "500px", public: true, "type": "theme", "data_type": "text"},
+        {"option": "purchase_page_featured_area_padding_top", "value": "20px", public: true, "type": "theme", "data_type": "text"},
+        {"option": "purchase_page_featured_area_padding_bottom", "value": "20px", public: true, "type": "theme", "data_type": "text"},
     ],
         populateOptions: function(options=systemOptions.options){
             return Promise.all(options.map((option) => {
