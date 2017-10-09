@@ -21,6 +21,17 @@ Inputs->
         'method': 'PUT',
         'url': `/api/v1/service-categories/1`
     };
+*validations - an array of validations for the form
+Ex:
+    validations = {
+      username: [required(), length({ max: 15 })],
+      email:    [required(), email()],
+      age:      [
+        required(),
+        numericality({ int: true }),
+        numericality({ '>=': 18, msg: "You must be at least 18 years old" })
+      ]
+    }
 *handleResponse - A method to be called after a form is submitted. Takes in the result of the submission Response
 *successMessage - The message to be displayed after submission succeeds
 * successRoute - The route to redirect the page to upon successful completion
@@ -50,6 +61,8 @@ class ServiceBotBaseForm extends React.Component {
             helpers: this.props.helpers || {}
         };
         this.submitForm = this.submitForm.bind(this);
+        this.validate = this.validate.bind(this);
+
     }
 
     async submitForm(values) {
@@ -109,6 +122,12 @@ class ServiceBotBaseForm extends React.Component {
 
     }
 
+    validate(values){
+        if(this.props.validations)
+            return this.props.validations(values);
+        else
+            return
+    };
 
     componentDidMount() {
         let self = this;
@@ -125,14 +144,14 @@ class ServiceBotBaseForm extends React.Component {
                 //Check for errors and unauthenticated!
                 let error = values.find(value => value.error);
                 if (!error) {
-                    console.log("NO ERRORS!", values);
                     let requestValues = values.reduce((acc, value, currentIndex) =>
                             (value._name ? {...acc, [value._name]: value} : {...acc, ...value}),
                         self.state.initialValues)
 
                     let initialForm = reduxForm({
                         form: self.props.formName || "servicebotForm",
-                        initialValues: requestValues
+                        initialValues: requestValues,
+                        validate: self.validate,
                     })(self.props.form);
                     self.setState({initializing: false, reduxForm: initialForm});
                 } else {
@@ -148,6 +167,7 @@ class ServiceBotBaseForm extends React.Component {
             let initialForm = reduxForm({
                 form: self.props.formName || "servicebotForm",
                 initialValues: self.state.initialValues,
+                validate: self.validate,
             })(this.props.form);
 
             self.setState({initializing: false, reduxForm: initialForm});

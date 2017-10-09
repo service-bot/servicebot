@@ -16,7 +16,7 @@ import {
 import {connect} from "react-redux";
 import {RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
-import {inputField, selectField, priceField} from "./servicebot-base-field.jsx";
+import {inputField, selectField, widgetField} from "./servicebot-base-field.jsx";
 import BillingSettingsForm from "../../elements/forms/billing-settings-form.jsx";
 import {Price} from "../../utilities/price.jsx";
 import Fetcher from "../../utilities/fetcher.jsx";
@@ -25,6 +25,7 @@ import ModalUserLogin from "../modals/modal-user-login.jsx";
 import {addAlert} from "../../utilities/actions";
 import {setUid, fetchUsers, setUser} from "../../utilities/actions";
 import cookie from 'react-cookie';
+import { required, email, numericality, length } from 'redux-form-validators'
 
 
 let _ = require("lodash");
@@ -37,50 +38,16 @@ if (!Object.values) {
     values.shim();
 }
 
-
-const required = value => value ? undefined : 'Required';
-const maxLength = max => value =>
-    value && value.length > max ? `Must be ${max} characters or less` : undefined;
-const maxLength15 = maxLength(15);
-const maxLength22 = maxLength(22);
-const number = value => value && isNaN(Number(value)) ? 'Must be a number' : undefined;
-const minValue = min => value =>
-    value && value < min ? `Must be at least ${min}` : undefined;
-const minValue18 = minValue(18);
-
-
 const selector = formValueSelector('servicebotForm'); // <-- same as form name
 
-// const customFieldComponent = ({input, label, type, formJSON, config, meta: {touched, error, warning}}) => (
-//     <div className={`form-group form-group-flex`}>
-//         {label && <label className="control-label form-label-flex-md">{label}</label>}
-//         <div className="form-input-flex">
-//             {type === "textarea" && <textarea className="form-control" {...input} placeholder={label}/> }
-//             {(type === "text" || type === "number") && <input className="form-control" {...input} placeholder={label} type={type}/> }
-//             {type === "checkbox" &&
-//                 <div>
-//                 <input className="form-control checkbox" {...input} placeholder={label} type={type}/>
-//                     {config.pricing && `[${config.operation}s ${config.pricing.value}]`}
-//                 </div>
-//             }
-//             {type === "select" &&
-//                 <select className="form-control" {...input} placeholder={label}>
-//                     {config && config.value.map((option, index) =>
-//                         <option key={index} value={option}>
-//                             {(config.pricing && config.pricing.value.hasOwnProperty(option))? (
-//                                 `${option} [${config.operation}s $${config.pricing.value[option]}]`
-//                             ) : (
-//                                 `${option}`
-//                             )}
-//                         </option>
-//                     )
-//                     }
-//                 </select> }
-//             {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span>{warning}</span>)) }
-//         </div>
-//     </div>
-// );
 
+const validateArray = function(value){
+    return "...";
+    return {
+        "references.service_template_properties[0].data.value" : "HELLO?",
+        "_error" : "IUHH..."
+    };
+}
 //Custom property
 const renderCustomProperty = (props) => {
     const {fields, formJSON, meta: {touched, error}} = props;
@@ -92,11 +59,12 @@ const renderCustomProperty = (props) => {
                         <Field key={index}
                                name={`${customProperty}.data.value`}
                                type={formJSON[index].type}
-                               component={property.widget}
+                               component={widgetField}
+                               widget={property.widget}
                                label={formJSON[index].prop_label}
-                            // value={formJSON[index].data.value}
                                formJSON={formJSON[index]}
                                configValue={formJSON[index].config}
+                               validate={required()}
                         />
                     )
                 }
@@ -161,13 +129,13 @@ class ServiceRequestForm extends React.Component {
                 <form onSubmit={handleSubmit}>
                     <Authorizer permissions="can_administrate">
                         <Field name="client_id" component={selectField} label="For Client"
-                               options={sortedUsers} validate={[required]}/>
+                               options={sortedUsers} validate={[required()]}/>
                     </Authorizer>
 
                     {!helpers.uid &&
                     <div>
                         <Field name="email" type="text" component={inputField}
-                               label="Email Address" validate={[required]}/>
+                               label="Email Address" validate={[required(), email()]}/>
 
                         {helpers.emailExists && <ModalUserLogin
                             hide={this.closeUserLoginModal}
@@ -179,7 +147,7 @@ class ServiceRequestForm extends React.Component {
                     </div>
                     }
                     <FormSection name="references">
-                        <FieldArray name="service_template_properties" component={renderCustomProperty}
+                        <FieldArray name="service_template_properties" component={renderCustomProperty} validate={[validateArray]}
                                     formJSON={formJSON.references.service_template_properties}/>
                     </FormSection>
 
@@ -398,6 +366,28 @@ class ServiceInstanceForm extends React.Component {
     }
 
     render () {
+        let formValidation = function(values){
+            console.log(values, "VALUES!!!!");
+            let props = (values.references && values.references.service_template_properties) ? values.references.service_template_properties : [];
+            let re = props ? props.reduce((acc, prop, index) => {
+                if(prop.required && (!prop.data || !prop.data.value)){
+                    acc.references = {
+                        ...acc.references,
+                        service_template_properties : {
+                            ...acc.references.service_template_properties,
+                            [index] : {data : {value : "Required"}}
+
+
+                        },
+
+                    }
+                }
+                return acc;
+            }, {references : {service_template_properties : {}}}) : {};
+            console.log("REEE ", re);
+            return re;
+        }
+
         let self = this;
         let initialValues = this.props.service;
         let initialRequests = [];
@@ -434,6 +424,8 @@ class ServiceInstanceForm extends React.Component {
                     successRoute = {successRoute}
                     handleResponse = {this.handleResponse}
                     helpers = {helpers}
+                    validations={formValidation}
+
                 />
             </div>
         )
