@@ -700,6 +700,9 @@ ul.custom-fields-list {
 /*.featured-price{*/
     /*padding-bottom: 120px;*/
 /*}*/
+.request-featured-section {
+    position: relative;
+}
 
 /* footer */
 .footer {

@@ -44,16 +44,27 @@ class Featured extends React.Component {
     render () {
 
         let featuredBackgroundColor = {};
-
-        if(this.props.options) {
-            let options = this.props.options;
-            featuredBackgroundColor.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
+        let {options, className, style, children, overlay} = this.props;
+        featuredBackgroundColor.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
+        let overlayStyle = {
+          position: 'absolute',
+            height: '100%',
+            width: '100%',
+            top: '0px',
+        };
+        if(overlay){
+            overlayStyle = {
+                ...overlayStyle,
+                ...overlay.style,
+            }
         }
 
         return (
-            <div className={`featured`} onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
+            <div className={`featured ${className}`} style={style}
+                 onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
                 <FeaturedImage image={this.state.imageURL} bgColor={featuredBackgroundColor}/>
-                {this.props.children}
+                {overlay && overlay.show && <div className="hahaha" style={overlayStyle}/>}
+                {children}
             </div>
         );
     }

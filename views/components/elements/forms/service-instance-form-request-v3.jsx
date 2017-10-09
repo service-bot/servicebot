@@ -178,8 +178,6 @@ class ServiceRequestForm extends React.Component {
                         }
                     </div>
                     }
-
-                    <h3>Custom Fields</h3>
                     <FormSection name="references">
                         <FieldArray name="service_template_properties" component={renderCustomProperty}
                                     formJSON={formJSON.references.service_template_properties}/>
