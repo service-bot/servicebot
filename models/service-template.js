@@ -37,31 +37,24 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
             type: self.get("type")
         };
 
-        let submittedProperties = null;
+        let submittedProperties = instanceRequest.references.service_template_properties;
         let ServiceInstance = require('../models/service-instance');
         let service = new ServiceInstance(await ServiceInstance.createPromise(instanceAttributes));
         let props = await service.generateProps(submittedProperties);
-        let plan = instanceRequest;
-
 
         if (self.data.type === 'one_time') {
-
             let charge_obj = {
                 'user_id': service.get('user_id'),
                 'service_instance_id': service.get('id'),
                 'currency': self.get('currency'),
-                'amount': self.get('amount'),
+                'amount': instanceRequest.amount || self.get('amount') || 0,
                 'description': service.get('name')
             };
             let charge = await  Charges.createPromise(charge_obj);
-            let template_plan = self.data;
-            template_plan.amount = 0;
-            template_plan.interval = 'day';
-            plan = template_plan;
         }
+        let plan = (self.data.type === 'one_time' || self.data.type === 'custom') ? {...self.data, amount : 0, interval : "day"} : instanceRequest;
         let payStructure = (instanceRequest.amount === 0 || instanceRequest.amount === undefined) ? null : (await service.buildPayStructure(plan));
         let payPlan = await service.createPayPlan(payStructure);
-
 
         if (instanceAttributes.requested_by === instanceAttributes.user_id) {
             await service.subscribe();

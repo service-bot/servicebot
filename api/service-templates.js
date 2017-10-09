@@ -246,6 +246,7 @@ module.exports = function (router) {
             let references = serviceTemplate.references;
             let props = references ? (await references.service_template_properties) : null;
             let req_body = req.body;
+            let reqProps = req_body.references && req_body.references.service_template_properties || [];
             await authPromise(req, res);
             let permission_array = res.locals.permissions || [];
             let handlers = (store.getState(true).pluginbot.services.inputHandler || []).reduce((acc, handler) => {
@@ -265,12 +266,19 @@ module.exports = function (router) {
             //     return res.status(400).json({error: validationResult});
             // }
 
-
+            //todo: less looping later
+            let mergedProps = props.map(prop => {
+                let propToMerge = reqProps.find(reqProp => reqProp.id === prop.data.id);
+                return propToMerge ? {...prop.data, "data" : propToMerge.data} : prop
+            });
             if (props) {
-                price = require("../lib/handleInputs").getPrice(props, handlers, price, true);
+                price = require("../lib/handleInputs").getPrice(props, handlers, price);
+                console.log("\n\nADJUSTED PRICE\n\n", price);
+
             }
 
             res.locals.adjusted_price = price;
+            res.locals.merged_props = mergedProps;
             if (!req.isAuthenticated()) {
 
                 if (req_body.hasOwnProperty("email")) {
@@ -384,6 +392,7 @@ module.exports = function (router) {
 
                 //currently the permissions that the client app sets get passed here.
                 responseJSON.permissions = await permissionPromise;
+                responseJSON.uid = createdUser.get("id");
 
                 user = createdUser;
 
@@ -403,6 +412,7 @@ module.exports = function (router) {
 
             //adjusted price...
             req_body.amount = res.locals.adjusted_price;
+            req_body.references.service_template_properties = res.locals.merged_props;
             //elevated accounts can override things
             if (hasPermission) {
                 res.locals.overrides = {
@@ -423,7 +433,8 @@ module.exports = function (router) {
 
             let newInstance = await serviceTemplate.requestPromise({
                 ...req_body,
-                ...res.locals.overrides
+                ...res.locals.overrides,
+
             });
 
             res.json({

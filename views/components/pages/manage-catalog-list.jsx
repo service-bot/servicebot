@@ -95,7 +95,10 @@ class ManageCatalogList extends React.Component {
         return ( cell.service_categories[0].name );
     }
     publishedFormatter(cell){
-        return ( <span className='status-badge' >{cell ? 'Published' : 'Unpublished'}</span> );
+        //Badge color
+        let color_class = 'status-badge ';
+        color_class += cell ? 'green' : 'red';
+        return ( <span className={color_class} >{cell ? 'Published' : 'Unpublished'}</span> );
     }
     createdFormatter(cell){
         return ( <DateFormat date={cell}/> );
@@ -169,6 +172,8 @@ class ManageCatalogList extends React.Component {
                             createItemAction={ () => {browserHistory.push('/manage-catalog/create')} }
                             createItemLabel={'Create Product / Service'}
                             fetchRows={this.fetchData}
+                            sortColumn="updated_at"
+                            sortOrder="desc"
                         >
                             <TableHeaderColumn isKey
                                                dataField='id'
@@ -179,7 +184,7 @@ class ManageCatalogList extends React.Component {
                             <TableHeaderColumn dataField='name'
                                                dataSort={ true }
                                                dataFormat={ this.nameFormatter }
-                                               width={350}>
+                                               width={200}>
                                 Product / Service Name
                             </TableHeaderColumn>
                             <TableHeaderColumn dataField='amount'
@@ -197,20 +202,20 @@ class ManageCatalogList extends React.Component {
                             <TableHeaderColumn dataField='references'
                                                dataSort={ true }
                                                dataFormat={ this.categoryFormatter }
-                                               width={200}>
+                                               width={80}>
                                 Category
                             </TableHeaderColumn>
                             <TableHeaderColumn dataField='published'
                                                dataSort={ true }
                                                dataFormat={ this.publishedFormatter }
                                                width={100}>
-                                Category
+                                Status
                             </TableHeaderColumn>
-                            <TableHeaderColumn dataField='created_at'
+                            <TableHeaderColumn dataField='updated_at'
                                                dataSort={ true }
                                                dataFormat={ this.createdFormatter }
                                                width={150}>
-                                Created At
+                                Updated At
                             </TableHeaderColumn>
                             <TableHeaderColumn dataField='Actions'
                                                className={'action-column-header'}

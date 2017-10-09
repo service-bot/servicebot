@@ -2,7 +2,6 @@ import React from 'react';
 import Load from '../../utilities/load.jsx';
 import Fetcher from "../../utilities/fetcher.jsx";
 import {reduxForm, SubmissionError, stopSubmit} from 'redux-form'
-import {connect } from "react-redux";
 import {Link, browserHistory} from 'react-router';
 
 /*
@@ -35,9 +34,12 @@ class ServiceBotBaseForm extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log("NEW BASER FORM!", props);
+
         this.state = {
             submissionResponse: {},
-            loading: true,
+            loading: false,
+            initializing: true,
             success: false,
             initialRequests: this.props.initialRequests,
             submissionRequest: this.props.submissionRequest,
@@ -48,10 +50,6 @@ class ServiceBotBaseForm extends React.Component {
             helpers: this.props.helpers || {}
         };
         this.submitForm = this.submitForm.bind(this);
-
-        this.form = reduxForm({
-            form: 'servicebotForm'  // the unique identifier for all servicebot base forms
-        })(this.props.form);
     }
 
     async submitForm(values) {
@@ -59,17 +57,17 @@ class ServiceBotBaseForm extends React.Component {
         self.setState({loading: true});
         if (self.props.submissionPrep) {
             console.log("submissionprepcalled");
-            try {
-                self.props.submissionPrep(values, self.makeCall.bind(this));
-            }
-            catch (e) {
-                throw e
-            }
+            let promiseToResolve = new Promise(resolve => {
+                self.props.submissionPrep(values, resolve);
+            });
+            let prepResults = await promiseToResolve;
+            await self.makeCall(prepResults);
         }
         else {
             await self.makeCall(values);
         }
     }
+
     //NEED TO CHANGE MAKECALL TO AN ASYNC
     //ITS NOT EASY BECAUSE OF HOW SUBMISSIONPREP iS
     //AND MAKE SURE WERE GETTING THE SUBMISSION ERRORS
@@ -77,7 +75,15 @@ class ServiceBotBaseForm extends React.Component {
         console.log("MAKING A CALL");
         console.log("These are the values", values);
         let self = this;
-        let result = await Fetcher(self.state.submissionRequest.url, self.state.submissionRequest.method, values);
+        let result = null;
+        try {
+            result = await Fetcher(self.state.submissionRequest.url, self.state.submissionRequest.method, values);
+        } catch (e) {
+            console.error("Fetch error", e);
+            self.setState({loading: false});
+            throw new SubmissionError({_error: "Error submitting"})
+        }
+
         if (!result.error) {
             console.log("Submission Result", result);
             if (self.props.handleResponse) {
@@ -86,7 +92,7 @@ class ServiceBotBaseForm extends React.Component {
             }
             console.log("removing state thing")
             self.setState({loading: false, success: true, submissionResponse: result});
-            if(this.props.successRoute){
+            if (this.props.successRoute) {
                 console.log("redirecting browser")
                 browserHistory.push(this.props.successRoute);
             }
@@ -94,62 +100,65 @@ class ServiceBotBaseForm extends React.Component {
         else {
             console.error("submission error", result.error);
             self.setState({loading: false});
-            self.props.endSubmit({_error: result.error.message})
-            //throw new SubmissionError({_error: result.error});
-            if(this.props.failureRoute){
+            // self.props.endSubmit({_error: result.error})
+            throw new SubmissionError({_error: result.error});
+            if (this.props.failureRoute) {
                 browserHistory.push(this.props.failureRoute);
             }
         }
+
     }
+
 
     componentDidMount() {
         let self = this;
         let initialRequests = self.state.initialRequests;
         if (initialRequests && initialRequests.length > 0) {
-            let allRequests = initialRequests.map(requestInfo => {
-                return Fetcher(requestInfo.url, requestInfo.method);
+            let allRequests = initialRequests.map(async requestInfo => {
+                let response = await Fetcher(requestInfo.url, requestInfo.method);
+                if (requestInfo.name) {
+                    response.name = requestInfo.name;
+                }
+                return response;
             });
             Promise.all(allRequests).then(values => {
                 //Check for errors and unauthenticated!
-                let hasError = false;
-                let error;
-                values.map(value => {
-                    if (value.error) {
-                        hasError = true;
-                        error = value.error;
-                    }
-                });
-                if (!hasError) {
-                    let requestValues = self.state.initialValues;
-                    for (let i = 0; i < values.length; i++) {
-                        if (!self.state.initialRequests[i].name) {
-                            //requestValues = values[0];
-                            Object.assign(requestValues, values[i])
-                        }
-                        else {
-                            let objectName = self.state.initialRequests[i].name;
-                            requestValues[objectName] = values[i];
-                        }
-                    }
-                    self.setState({loading: false, initialValues: requestValues});
+                let error = values.find(value => value.error);
+                if (!error) {
+                    let requestValues = values.reduce((acc, value, currentIndex) =>
+                            (value.name ? {...acc, [value.name]: value} : {...acc, ...value}),
+                        self.state.initialValues)
+
+                    let initialForm = reduxForm({
+                        form: self.props.formName || "servicebotForm",
+                        initialValues: requestValues,
+                    })(self.props.form);
+                    self.setState({initializing: false, reduxForm: initialForm});
                 } else {
                     console.error("fetch error", error);
-                    self.setState({loading: false});
+                    self.setState({initializing: false});
                     browserHistory.push(self.state.failureRoute);
 
                 }
             })
         }
         else {
-            self.setState({loading: false});
+            //todo: clean this whole function to not duplicate this code.
+            let initialForm = reduxForm({
+                form: self.props.formName || "servicebotForm",
+                initialValues: self.state.initialValues,
+            })(this.props.form);
+
+            self.setState({initializing: false, reduxForm: initialForm});
         }
     }
 
     render() {
+        if (this.state.initializing) {
+            return (<Load/>);
 
-        if (this.state.loading) {
-            return ( <Load/> );
-        } else if (this.state.success) {
+        }
+        if (this.state.success) {
             return (
                 <div className="p-20">
                     <p><strong>{this.state.successMessage}</strong></p>
@@ -157,20 +166,18 @@ class ServiceBotBaseForm extends React.Component {
                 </div>
             );
         } else {
+            let ReduxFormWrapper = this.state.reduxForm;
+            console.log(this.props.formProps);
+
             return (
-                <div>
-                    <this.form initialValues={this.state.initialValues} onSubmit={this.submitForm}
-                               helpers={this.props.helpers}/>
-                </div>
+                    <div>
+                        {this.state.loading && <Load/>}
+                        <ReduxFormWrapper {...this.props.formProps} helpers={this.props.helpers} onSubmit={this.submitForm} />
+                    </div>
             );
         }
     }
 }
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        endSubmit: (errors)=>{dispatch(stopSubmit('servicebotForm', errors))}
-    }
-};
 
-export default connect(null, mapDispatchToProps)(ServiceBotBaseForm);
+export default ServiceBotBaseForm;

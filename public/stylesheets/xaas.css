@@ -674,14 +674,12 @@ ul.custom-fields-list {
     padding-top: 90px;
     text-align: center;
 }
-.featured > * {
-    position: relative;
-}
 .featured-image {
     position: absolute !important;
     top: 0px;
     height: 100%;
     width: 100%;
+    z-index: 0;
 }
 .featured-icon{
     max-width: 70px;
@@ -702,6 +700,9 @@ ul.custom-fields-list {
 /*.featured-price{*/
     /*padding-bottom: 120px;*/
 /*}*/
+.request-featured-section {
+    position: relative;
+}
 
 /* footer */
 .footer {
@@ -830,4 +831,9 @@ body.login .footer{
     margin-top: 30px;
     font-size: 20px;
     font-weight: bold;
+}
+
+.purchases-header{
+    margin-top: 30px;
+    text-align: center;
 }

@@ -129,7 +129,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
             req.body.id = entity.get("id");
             Object.assign(entity.data, req.body);
             let updatedEntity = await entity.update();
-            let requestReferences = req.body.references;
+            let requestReferences = req.body.references || {};
 
             //todo: combine updateReferences into a single transaction
             for (let reference of references) {
@@ -143,7 +143,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
             next();
         }catch(error){
             console.error(error);
-            res.status(500).send({error});
+            res.status(500).send({error : "error updating"});
         }
     });
 
@@ -152,7 +152,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
         let entity = res.locals.valid_object;
         entity.delete(function (err, result) {
             if(err){
-                res.status(500).send({ error: err })
+                res.status(500).send({ error: "Error deleting" })
             }
             else {
                 store.dispatchEvent(`${model.table}_deleted`, entity);
@@ -168,7 +168,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
         let entity = new model(req.body);
         entity.create(function (err, newEntity) {
             if(err){
-                res.status(500).send({ error: err })
+                res.status(500).send({ error: "Error creating new " + resourceName })
             }
             else {
                 if (references.length === 0 || req.body.references === undefined || req.body.references.length == 0) {

@@ -77,7 +77,7 @@ class MyServices extends React.Component {
     render () {
         let self = this;
         let pageName = self.props.route.name;
-        let breadcrumbs = [{name:'Home', link:'home'},{name:'My Services', link:null}];
+        let breadcrumbs = [{name:'Home', link:'home'},{name:'My Purchases', link:null}];
 
         if(self.state.loading){
             return (
@@ -146,7 +146,7 @@ class MyServices extends React.Component {
                                                      transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                                 <div className="row">
                                     <DashboardWidget widgetIcon="connectdevelop" widgetName="Active Services" widgetData={runningServiceCount || '0'} />
-                                    <DashboardWidget widgetIcon="warning" widgetName="Awaiting for Approvals" widgetData={requestedServiceCount || '0'} />
+                                    <DashboardWidget widgetIcon="warning" widgetName="Needs Action" widgetData={requestedServiceCount || '0'} />
                                     <DashboardWidget widgetIcon="credit-card" widgetName="Upcoming Invoice" widgetData={null} clickAction={self.onOpenInvoiceModal}>
                                         <Price value={nextInvoiceAmountDue}/>
                                     </DashboardWidget>
