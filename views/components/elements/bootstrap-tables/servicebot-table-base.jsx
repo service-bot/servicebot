@@ -129,6 +129,8 @@ class ServiceBotTableBase extends React.Component {
             nextPage: 'Next', // Next page button text
             firstPage: 'First', // First page button text
             lastPage: 'Last',
+            defaultSortName: this.props.sortColumn,
+            defaultSortOrder: this.props.sortOrder
         };
 
         return (

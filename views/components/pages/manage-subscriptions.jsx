@@ -119,8 +119,18 @@ class ManageSubscriptions extends React.Component {
     nameFormatter(cell, row){
         return ( <Link to={`/service-instance/${row.id}`}>{cell}</Link> );
     }
-    emailFormatter(cell){
-        return ( <span className="customer-email">{cell.users[0].email}</span> );
+    emailFormatter(cell, row){
+        console.log("llklklk")
+        console.log(row)
+        return (
+            <div>
+                <div className="badge badge-xs">
+                    <img className="img-circle" src={`/api/v1/users/${row.user_id}/avatar`}/>
+                    <span className="customer-name">{row.references.users[0].name}</span>
+                </div>
+                <span className="customer-email">&nbsp;&nbsp;{cell.users[0].email}</span>
+            </div>
+        );
     }
     typeFormatter(cell, row){
         let interval = cell.interval;
@@ -278,13 +288,11 @@ class ManageSubscriptions extends React.Component {
                                     <ServiceBotTableBase
                                         rows={this.state.rows}
                                         fetchRows={this.fetchData}
+                                        sortColumn="created_at"
+                                        sortOrder="desc"
                                     >
                                         <TableHeaderColumn isKey
-                                                           dataField='user_id'
-                                                           dataFormat={this.userIdFormatter}
-                                                           dataSort={ false }
-                                                           width='30'/>
-                                        <TableHeaderColumn dataField='name'
+                                                           dataField='name'
                                                            dataFormat={this.nameFormatter}
                                                            dataSort={ true }
                                                            width='150'>
@@ -297,16 +305,16 @@ class ManageSubscriptions extends React.Component {
                                             Email
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='payment_plan'
-                                                           dataFormat={this.typeFormatter}
-                                                           dataSort={ true }
-                                                           width='100'>
-                                            Type
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='payment_plan'
                                                            dataFormat={this.amountFormatter}
                                                            dataSort={ true }
                                                            width='80'>
                                             Amount
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='payment_plan'
+                                                           dataFormat={this.typeFormatter}
+                                                           dataSort={ true }
+                                                           width='100'>
+                                            Type
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='status'
                                                            dataFormat={this.statusFormatter}
@@ -314,16 +322,10 @@ class ManageSubscriptions extends React.Component {
                                                            width='80'>
                                             Status
                                         </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='requested_by'
-                                                           dataFormat={this.requestedByFormatter}
-                                                           dataSort={ true }
-                                                           width='80'>
-                                            Requested
-                                        </TableHeaderColumn>
                                         <TableHeaderColumn dataField='created_at'
                                                            dataFormat={this.createdFormatter}
                                                            dataSort={ true }
-                                                           width='80'>
+                                                           width='160'>
                                             Created
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='Actions'

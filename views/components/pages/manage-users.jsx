@@ -345,7 +345,10 @@ class ManageUsers extends React.Component {
                                         createItemAction={this.openInviteUserModal}
                                         createItemLabel="Invite user"
                                         rows={this.state.rows}
-                                        fetchRows={this.fetchData}>
+                                        fetchRows={this.fetchData}
+                                        sortColumn="created_at"
+                                        sortOrder="desc"
+                                    >
                                         <TableHeaderColumn isKey
                                                            dataField='id'
                                                            dataFormat={this.idFormatter}
@@ -354,7 +357,7 @@ class ManageUsers extends React.Component {
                                         <TableHeaderColumn dataField='email'
                                                            dataFormat={this.profileLinkFormatter}
                                                            dataSort={ true }
-                                                           width='200'>
+                                                           width='150'>
                                             Email
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='name'
