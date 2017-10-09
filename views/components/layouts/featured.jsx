@@ -46,13 +46,18 @@ class Featured extends React.Component {
         let featuredBackgroundColor = {};
         let {options, className, style, children, overlay} = this.props;
         featuredBackgroundColor.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
-        const overlayStyle = {
+        let overlayStyle = {
           position: 'absolute',
             height: '100%',
             width: '100%',
             top: '0px',
-            ...overlay.style,
         };
+        if(overlay){
+            overlayStyle = {
+                ...overlayStyle,
+                ...overlay.style,
+            }
+        }
 
         return (
             <div className={`featured ${className}`} style={style}
