@@ -100,7 +100,7 @@ class ManageSubscriptions extends React.Component {
     onOpenActionModal(dataObject){
         this.setState({actionModal: true, currentDataObject: dataObject});
     }
-    onCloseActionModal(){;
+    onCloseActionModal(){
         this.fetchData();
         this.setState({actionModal: false, currentDataObject: {}, lastFetch: Date.now()});
     }
