@@ -100,8 +100,9 @@ class ManageSubscriptions extends React.Component {
     onOpenActionModal(dataObject){
         this.setState({actionModal: true, currentDataObject: dataObject});
     }
-    onCloseActionModal(){
-        this.setState({actionModal: false});
+    onCloseActionModal(){;
+        this.fetchData();
+        this.setState({actionModal: false, currentDataObject: {}, lastFetch: Date.now()});
     }
 
     /**
@@ -120,8 +121,6 @@ class ManageSubscriptions extends React.Component {
         return ( <Link to={`/service-instance/${row.id}`}>{cell}</Link> );
     }
     emailFormatter(cell, row){
-        console.log("llklklk")
-        console.log(row)
         return (
             <div>
                 <div className="badge badge-xs">
