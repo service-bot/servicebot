@@ -220,7 +220,7 @@ ServiceRequestForm = consume("widget")(connect((state, ownProps) => {
         formJSON: getFormValues('servicebotForm')(state),
 
     }
-})(ServiceRequestForm);
+})(ServiceRequestForm));
 
 class ServiceInstanceForm extends React.Component {
 
