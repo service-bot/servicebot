@@ -117,7 +117,7 @@ class ServiceBotBaseForm extends React.Component {
             let allRequests = initialRequests.map(async requestInfo => {
                 let response = await Fetcher(requestInfo.url, requestInfo.method);
                 if (requestInfo.name) {
-                    response.name = requestInfo.name;
+                    response._name = requestInfo.name;
                 }
                 return response;
             });
@@ -125,13 +125,14 @@ class ServiceBotBaseForm extends React.Component {
                 //Check for errors and unauthenticated!
                 let error = values.find(value => value.error);
                 if (!error) {
+                    console.log("NO ERRORS!", values);
                     let requestValues = values.reduce((acc, value, currentIndex) =>
-                            (value.name ? {...acc, [value.name]: value} : {...acc, ...value}),
+                            (value._name ? {...acc, [value._name]: value} : {...acc, ...value}),
                         self.state.initialValues)
 
                     let initialForm = reduxForm({
                         form: self.props.formName || "servicebotForm",
-                        initialValues: requestValues,
+                        initialValues: requestValues
                     })(self.props.form);
                     self.setState({initializing: false, reduxForm: initialForm});
                 } else {
