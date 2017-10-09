@@ -3,7 +3,7 @@ import CurrencyInput from 'react-currency-input';
 import './css/servicebot-base-field.css';
 import ReactTooltip from 'react-tooltip'
 import dollarsToCents from 'dollars-to-cents';
-import {toCents} from "../../../../input_types/handleInputs"
+import {toCents} from "../../../../lib/handleInputs"
 // import CurrencyInput from 'react-currency-masked-input'
 
 

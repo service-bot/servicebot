@@ -5,8 +5,8 @@ import TagsInput from "react-tagsinput"
 import {priceField} from "../../../views/components/elements/forms/servicebot-base-field.jsx";
 import handler from "./widgetHandler";
 import CurrencyInput from 'react-currency-input';
-import WidgetPricingInput from '../../views/components/utilities/widget-inputs/WidgetPricingInput.jsx';
-import PriceAdjustment from '../../views/components/utilities/widget-inputs/WidgetPriceAdjustment';
+import WidgetPricingInput from '../../../views/components/utilities/widget-inputs/WidgetPricingInput.jsx';
+import PriceAdjustment from '../../../views/components/utilities/widget-inputs/WidgetPriceAdjustment';
 
 
 let Tags = (props) => {
