@@ -415,14 +415,7 @@ class ServiceInstanceForm extends React.Component {
         //Gets a token to populate token_id for instance request
         if (!isAuthorized({permissions: "can_administrate"}) &&
             this.state.servicePrice > 0) {
-            submissionPrep = function (values, callback) {
-                let tokenGenerator = self.tokenGenerator(values, callback);
-                tokenGenerator.next();
-                self.setState({tokenGenerator}, (state => {
-                    self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
-                }))
-
-            };
+            submissionPrep = this.submissionPrep;
         }
 
         return (

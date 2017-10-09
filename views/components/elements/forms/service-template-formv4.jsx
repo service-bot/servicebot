@@ -2,7 +2,7 @@ import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import 'react-tagsinput/react-tagsinput.css';
 import './css/template-create.css';
-import {Field, Fields, FormSection, FieldArray, reduxForm, formValueSelector, change, unregisterField, getFormValues} from 'redux-form'
+import {Field, Fields, FormSection, FieldArray, reduxForm, formValueSelector, change, unregisterField, getFormValues, Form} from 'redux-form'
 import {connect} from "react-redux";
 import {RenderWidget, WidgetList, PriceBreakdown, widgets} from "../../utilities/widgets";
 import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
@@ -13,8 +13,11 @@ import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import SVGIcons from "../../utilities/svg-icons.jsx";
 import Load from "../../utilities/load.jsx";
 let _ = require("lodash");
+import { required, email, numericality, length } from 'redux-form-validators'
 
-const required = value => (value || value !== '' || value !== null || value !== undefined) ? undefined : 'Required';
+// const required = value => (value || value !== '' || value !== null || value !== undefined) ? undefined : 'Required';
+// const required = value => ((value || value === 0) ? undefined : 'Required');
+
 const maxLength = max => value =>
     value && value.length > max ? `Must be ${max} characters or less` : undefined;
 const maxLength15 = maxLength(15);
@@ -29,6 +32,7 @@ class CustomField extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log("REBUILDINZG MYSELF", props);
 
     }
 
@@ -58,6 +62,7 @@ class CustomField extends React.Component {
                         name={`${member}.prop_label`}
                         type="text"
                         component={inputField}
+                        validate={required()}
                         placeholder="Custom Property Label"
                     />
                 </div>
@@ -253,7 +258,6 @@ class FieldLevelValidationForm extends React.Component {
 
     constructor(props) {
         super(props);
-
     }
 
     render() {
@@ -273,9 +277,7 @@ class FieldLevelValidationForm extends React.Component {
         };
 
 
-        const {handleSubmit, pristine, reset, submitting, serviceTypeValue, invalid, formJSON, options} = props;
-
-        console.log("my options", options);
+        const {handleSubmit, pristine, reset, submitting, error, serviceTypeValue, invalid, formJSON, options} = props;
 
         const sectionDescriptionStyle = {
             background: _.get(options, 'service_template_icon_background_color.value', '#000000'),
@@ -288,35 +290,31 @@ class FieldLevelValidationForm extends React.Component {
         };
 
         return (
+
             <form onSubmit={handleSubmit}>
-                {/*<div className="col-md-3">
-                 Tabs
-                 <pre className="" style={{maxHeight: 'auto', overflowY: 'scroll'}}>
-                 {JSON.stringify(props, null, 2)}
-                 </pre>
-                 </div>*/}
+                {error && <div>{error}</div>}
                 <div className="row">
                     <div className="col-md-8">
                         <h3>Basic Info</h3>
                         <Field name="name" type="text"
                                component={inputField} label="Product / Service Name"
-                               validate={[required]}
+                               validate={[required()]}
                         />
                         <Field name="description" type="text"
                                component={inputField} label="Summary"
-                               validate={[required]}
+                               validate={[required()  ]}
                         />
                         <Field name="details" type="text"
                                component={WysiwygRedux} label="Details"
-                               validate={[required]}
+                               validate={[required()]}
                         />
                         <Field name="published" type="checkbox"
                                defaultValue={true} color="#0091EA" faIcon="check"
                                component={OnOffToggleField} label="Published?"
                         />
                         <Field name="category_id" type="select"
-                               component={selectField} label="Category" options={formJSON._categories}
-                               validate={[required]}
+                               component={selectField} label="Category" options={formJSON ? formJSON._categories : []}
+                               validate={[required()]}
                         />
                     </div>
                     <div className="col-md-4">
@@ -359,7 +357,6 @@ class FieldLevelValidationForm extends React.Component {
                                 <h3>Payment Details</h3>
                                 <Field name="statement_descriptor" type="hidden"
                                        component={inputField} label="Statement Descriptor"
-                                       validate={[required, maxLength22]}
                                 />
                                 <Field name="type" id="type"
                                        component={selectField} label="Billing Type" onChange={changeServiceType}
@@ -380,14 +377,14 @@ class FieldLevelValidationForm extends React.Component {
                                     <div>
                                         <Field name="trial_period_days" type="number"
                                                component={inputField} label="Trial Period (Days)"
-                                               validate={required}
+                                               validate={required()}
                                         />
                                         <div className="form-group form-group-flex">
                                             <label className="control-label form-label-flex-md" htmlFor="type">Bill
                                                 Customer Every</label>
                                             <Field name="interval_count" type="number"
                                                    component={inputField}
-                                                   validate={required}
+                                                   validate={required()}
                                             />
                                             <Field name="interval" id="interval" component={selectField}
                                                    options={[
@@ -456,8 +453,7 @@ class FieldLevelValidationForm extends React.Component {
                                 <div id="service-submission-box" className="button-box right">
                                     <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>Go
                                         Back</Link>
-                                    <button className="btn btn-rounded btn-primary" type="submit"
-                                            value="submit">
+                                    <button  className="btn btn-rounded btn-primary" type="submit">
                                         Submit
                                     </button>
                                 </div>
@@ -501,26 +497,11 @@ class FieldLevelValidationForm extends React.Component {
     };
 }
 
-FieldLevelValidationForm = connect((state, ownProps) => {
-    return {
-        "options": state.options,
-        "serviceTypeValue": selector(state, `type`),
-        formJSON: getFormValues('servicebotForm')(state),
 
-    }
-}, (dispatch, ownProps) => {
-    return {
-        'setIntervalCount': () => {
-            dispatch(change("serviceTemplateForm", `interval_count`, 1))
-        },
-        'setInterval': () => {
-            dispatch(change("serviceTemplateForm", `interval`, 'day'))
-        },
-        'clearAmount': () => {
-            dispatch(change("serviceTemplateForm", `amount`, 0))
-        }
-    }
-})(FieldLevelValidationForm);
+
+
+
+
 
 class ServiceTemplateForm extends React.Component {
 
@@ -649,6 +630,10 @@ class ServiceTemplateForm extends React.Component {
                                 submissionRequest={submissionRequest}
                                 successMessage={successMessage}
                                 handleResponse={this.handleResponse}
+                                formProps={{
+                                    ...this.props.fieldDispatches,
+                                    ...this.props.fieldState
+                                }}
                             />
                         </div>
                     </div>
@@ -662,6 +647,11 @@ function mapStateToProps(state) {
     return {
         alerts: state.alerts,
         company_name: state.options.company_name,
+        fieldState : {
+            "options": state.options,
+            "serviceTypeValue": selector(state, `type`),
+            formJSON: getFormValues('servicebotForm')(state),
+        }
     }
 }
 
@@ -673,6 +663,18 @@ const mapDispatchToProps = (dispatch) => {
         dismissAlert: (alert) => {
             return dispatch(dismissAlert(alert))
         },
+        fieldDispatches : {
+            'setIntervalCount': () => {
+                dispatch(change("serviceTemplateForm", `interval_count`, 1))
+            },
+            'setInterval': () => {
+                dispatch(change("serviceTemplateForm", `interval`, 'day'))
+            },
+            'clearAmount': () => {
+                dispatch(change("serviceTemplateForm", `amount`, 0))
+            }
+        }
+
     }
 };
 

@@ -6,6 +6,7 @@ import dollarsToCents from 'dollars-to-cents';
 import {toCents} from "../../../../input_types/handleInputs"
 // import CurrencyInput from 'react-currency-masked-input'
 
+
 class inputField extends React.Component {
 
     constructor(props) {
