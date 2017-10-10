@@ -115,7 +115,11 @@ class ServiceRequestForm extends React.Component {
                 return (<span><Price value={newPrice}/></span>)
             }
         };
-        const users = helpers.usersData;
+        //Sort users and if user does not have name set, set it to the email value which will always be there
+        let users = _.map(helpers.usersData, user => {
+            user.name = user.name || user.email;
+            return user
+        });
         const sortedUsers = _.sortBy(users, ['id']);
 
         return (
