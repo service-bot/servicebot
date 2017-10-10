@@ -42,6 +42,9 @@ class CustomField extends React.Component {
             props.clearConfig();
             props.clearValue();
         }
+        if((nextProps.templateType !== props.templateType)){
+            props.clearPricing();
+        }
     }
 
     render() {
@@ -49,7 +52,7 @@ class CustomField extends React.Component {
         let props = this.props;
         let {
             willAutoFocus, index, typeValue, member, myValues, privateValue, requiredValue, promptValue, configValue,
-            setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt
+            setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt, templateType
         } = props;
         if (myValues.prop_label) {
             willAutoFocus = false;
@@ -113,6 +116,7 @@ class CustomField extends React.Component {
 
                 <div id="custom-prop-widget" className="custom-property-field-group">
                     {typeValue && <RenderWidget
+                        showPrice={templateType !== "custom"}
                         member={member}
                         configValue={configValue}
                         widgetType={typeValue}/>
@@ -182,6 +186,9 @@ CustomField = connect((state, ownProps) => {
         "clearConfig": () => {
             dispatch(change("servicebotForm", `references.${ownProps.member}.config`, null));
         },
+        "clearPricing": () => {
+            dispatch(change("servicebotForm", `references.${ownProps.member}.config.pricing`, null));
+        },
         "clearValue": () => {
             console.log("***CLEARING VALUE")
             dispatch(change("servicebotForm", `references.${ownProps.member}.data`, null));
@@ -232,7 +239,7 @@ class renderCustomProperty extends React.Component {
                                     <span className="itf-icon"><i className="fa fa-close"/></span>
                                 </button>
                             </div>
-                            <CustomField member={customProperty} index={index}
+                            <CustomField templateType={templateType} member={customProperty} index={index}
                                          willAutoFocus={fields.length - 1 == index}/>
                         </li>
                     )}
@@ -444,6 +451,7 @@ class FieldLevelValidationForm extends React.Component {
                                 <h3>Custom Fields</h3>
                                 <FormSection name="references">
                                     <FieldArray name="service_template_properties"
+                                                props={{templateType : serviceTypeValue}}
                                                 component={renderCustomProperty}/>
                                 </FormSection>
                                 {/*{props.formJSON.references && props.formJSON.references.service_template_properties &&*/}

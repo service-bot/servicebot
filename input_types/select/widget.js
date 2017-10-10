@@ -62,20 +62,18 @@ class SelectPricing extends React.Component {
     render() {
         let {input, configValue} = this.props;
         let self = this;
-        console.log("selectPrice config value", configValue);
         let operation = configValue && configValue.pricing && configValue.pricing.operation;
         let pricingValue = configValue && configValue.pricing && configValue.pricing.value;
-        console.log(configValue, "!!!");
         return (
             <div className={`addon-options-widget-price-inputs-wrapper`}>
                 {configValue ? configValue.value && configValue.value.map((option, index) => {
                     let input = {
                         onChange : self.handleChange(option),
                         name : option,
-                        value : self.state[option] || pricingValue && pricingValue[option]
+                        value :  pricingValue && pricingValue[option]
                     };
 
-                    return (<WidgetPricingInput input={input} operation={operation}/>);
+                    return (<div>{option} : <WidgetPricingInput input={input} operation={operation}/></div>);
                 }):
                     <span className="addon-widget-price-tip">Add some available options above</span>
                 }
@@ -93,9 +91,9 @@ let SelectWidget = (props) => {
                 <select className="form-control addon-options-widget-default-value-select" {...input}>
                     <option value="0">Choose One</option>
                     { configValue && configValue.value && configValue.value.map((option, index) => {
-                            let price = configValue.pricing && configValue.pricing.value[option];
+                            let price = configValue.pricing && configValue.pricing.value && configValue.pricing.value[option];
                             return <option key={index} value={option}>
-                                {(price && configValue.pricing.operation) ? <PriceAdjustment price={price} operation={configValue.pricing.operation}/> : `${option}`}
+                                {(price && configValue.pricing.operation) ? <div>{option}<PriceAdjustment price={price} operation={configValue.pricing.operation}/></div> : `${option}`}
                             </option>
                         }
                     )}

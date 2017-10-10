@@ -20,14 +20,14 @@ let PriceOperation = (props) => {
 };
 
 const RenderWidget = (props) => {
-    const {member, widgetType, configValue, defaultWidgetValue} = props;
+    const {showPrice, member, widgetType, configValue, defaultWidgetValue} = props;
     const widget = widgets[widgetType];
 
     return (
         <div>
             <FormSection name={`${member}.config`}>
                 {widget.config && <Field name={`value`} component={widget.config}/>}
-                {widget.pricing &&
+                {widget.pricing && showPrice &&
                 <div className="addon-widget-has-pricing">
                     <FormSection name={`pricing`}>
 
