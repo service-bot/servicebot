@@ -551,8 +551,8 @@ class ServiceTemplateForm extends React.Component {
             autoDismiss: 4000,
         };
         this.props.addAlert(successMessage);
-        browserHistory.push(`/service-catalog/${response.id}/request`);
-        // browserHistory.push(`/manage-catalog/list`);
+        // browserHistory.push(`/service-catalog/${response.id}/request`);
+        browserHistory.push(`/manage-catalog/list`);
     }
 
     render() {
