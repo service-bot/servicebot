@@ -272,6 +272,7 @@ class FieldLevelValidationForm extends React.Component {
         let props = this.props;
 
         const changeServiceType = (event, newValue) => {
+            console.log("ChangeServiceType was called", newValue)
             if (newValue === 'one_time') {
                 props.setIntervalCount();
                 props.setInterval();
@@ -608,6 +609,8 @@ class ServiceTemplateForm extends React.Component {
                     category_id: 1,
                     trial_period_days: 0,
                     statement_descriptor: this.props.company_name.value,
+                    interval: 'month',
+                    interval_count: 1,
                 };
                 initialRequests.push(
                     {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
@@ -686,13 +689,13 @@ const mapDispatchToProps = (dispatch) => {
         },
         fieldDispatches : {
             'setIntervalCount': () => {
-                dispatch(change("serviceTemplateForm", `interval_count`, 1))
+                dispatch(change("servicebotForm", `interval_count`, 1))
             },
             'setInterval': () => {
-                dispatch(change("serviceTemplateForm", `interval`, 'day'))
+                dispatch(change("servicebotForm", `interval`, 'day'))
             },
             'clearAmount': () => {
-                dispatch(change("serviceTemplateForm", `amount`, 0))
+                dispatch(change("servicebotForm", `amount`, 0))
             }
         }
 
