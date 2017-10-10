@@ -11,7 +11,7 @@ let widgetField = props => {
 
     return (
         <div className={`form-group form-group-flex`}>
-            {(label && type !== 'hidden') && <label className="control-label form-label-flex-md">{label}</label>}
+            {(label && type !== 'hidden' && type ==='text') && <label className="control-label form-label-flex-md">{label}</label>}
             <div className="form-input-flex">
                 <WidgetComponent
                     {...props}
