@@ -364,7 +364,6 @@ class ServiceInstanceForm extends React.Component {
 
     render () {
         let formValidation = function(values){
-            console.log(values, "VALUES!!!!");
             let props = (values.references && values.references.service_template_properties) ? values.references.service_template_properties : [];
             let re = props.reduce((acc, prop, index) => {
                 if(prop.required && (!prop.data || !prop.data.value)){
@@ -373,26 +372,8 @@ class ServiceInstanceForm extends React.Component {
                 return acc;
             }, {});
             if(Object.keys(re).length === 0){
-                console.log("NO ERRS!");
                 return undefined;
             }
-            // let re = props ? props.reduce((acc, prop, index) => {
-            //     console.log("CURRENT - ", acc, prop);
-            //     if(prop.required && (!prop.data || !prop.data.value)){
-            //         acc.references = {
-            //             ...acc.references,
-            //             service_template_properties : {
-            //                 ...acc.references.service_template_properties,
-            //                 [index] : {data : {value : "Required"}}
-            //
-            //
-            //             },
-            //
-            //         }
-            //     }
-            //     return acc;
-            // }, {references : {service_template_properties : {}}}) : {};
-            console.log("REEE ", re);
             return {references: {service_template_properties : re}};
         }
 

@@ -261,7 +261,7 @@ class renderCustomProperty extends React.Component {
 //The full form
 
 
-class FieldLevelValidationForm extends React.Component {
+class TemplateForm extends React.Component {
 
     constructor(props) {
         super(props);
@@ -568,18 +568,6 @@ class ServiceTemplateForm extends React.Component {
             let imageUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/image`;
             let iconUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/icon`;
 
-            let validations = {
-                username: [required(), length({ max: 15 })],
-                email:    [required(), email()],
-                age:      [
-                    required(),
-                    numericality({ int: true }),
-                    numericality({ '>=': 18, msg: "You must be at least 18 years old" })
-                ]
-            }
-            let propValidation = function(propValues){
-            };
-
             if (this.props.params.templateId) {
                 initialRequests.push({'method': 'GET', 'url': `/api/v1/service-templates/${this.props.params.templateId}`},
                     {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
@@ -648,7 +636,7 @@ class ServiceTemplateForm extends React.Component {
                         </div>
                         <div className="col-md-9">
                             <ServiceBotBaseForm
-                                form={FieldLevelValidationForm}
+                                form={TemplateForm}
                                 initialValues={initialValues}
                                 initialRequests={initialRequests}
                                 submissionRequest={submissionRequest}
