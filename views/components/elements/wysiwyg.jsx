@@ -40,23 +40,29 @@ class WysiwygRedux extends React.Component {
     }
 
     insert(content){
-        $(this.refs.wysiwygArea).redactor("buffer.set");
-        $(this.refs.wysiwygArea).redactor("insert.raw", content);
+        $(this.refs[`wysiwyg_${this.props.name}`]).redactor("buffer.set");
+        $(this.refs[`wysiwyg_${this.props.name}`]).redactor("insert.raw", content);
     }
 
     componentDidMount() {
+        console.log("MOUNTING THE WISIG", this.props);
         var self = this;
-        $(this.refs.wysiwygArea).redactor();
-        $(this.refs.wysiwygArea).on('change.callback.redactor', function(e, data) {
+        $(this.refs[`wysiwyg_${this.props.name}`]).redactor();
+        $(this.refs[`wysiwyg_${this.props.name}`]).on('change.callback.redactor', function(e, data) {
             self.props.input.onChange(e);
         });
 
     }
     render(){
+        let {label, type, meta: {touched, error, warning}} = this.props;
+        let formControlClass = `form-control ${touched && error && 'has-error'} ${touched && warning && 'has-warning'}`;
+
+        console.log("RENDING", this.props);
         return (
-            <div className="form-group">
+            <div className="form-input-flex">
                 {this.props.label && <label className="control-label">{this.props.label}</label>}
-                <textarea onChange={this.props.onChange} name={this.props.name} id="editor" ref="wysiwygArea" value={this.props.input.value}/>
+                <textarea onChange={this.props.onChange} name={this.props.name} id="editor" ref={"wysiwyg_" + this.props.name} value={this.props.input.value}/>
+                {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span className="form-warning">{warning}</span>)) }
             </div>
         );
     }

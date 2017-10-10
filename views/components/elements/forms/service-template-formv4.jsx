@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import {RenderWidget, WidgetList, PriceBreakdown, widgets} from "../../utilities/widgets";
 import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
 import FileUploadForm from "./file-upload-form.jsx";
-import {inputField, selectField, OnOffToggleField, iconToggleField, priceField, priceToCents} from "./servicebot-base-field.jsx";
+import {inputField, selectField, OnOffToggleField, iconToggleField,priceField, priceToCents} from "./servicebot-base-field.jsx";
 import {addAlert, dismissAlert} from "../../utilities/actions";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import SVGIcons from "../../utilities/svg-icons.jsx";
@@ -567,6 +567,18 @@ class ServiceTemplateForm extends React.Component {
             let imageUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/image`;
             let iconUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/icon`;
 
+            let validations = {
+                username: [required(), length({ max: 15 })],
+                email:    [required(), email()],
+                age:      [
+                    required(),
+                    numericality({ int: true }),
+                    numericality({ '>=': 18, msg: "You must be at least 18 years old" })
+                ]
+            }
+            let propValidation = function(propValues){
+            };
+
             if (this.props.params.templateId) {
                 initialRequests.push({'method': 'GET', 'url': `/api/v1/service-templates/${this.props.params.templateId}`},
                     {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
@@ -605,6 +617,7 @@ class ServiceTemplateForm extends React.Component {
                     'url': `/api/v1/service-templates`
                 };
                 successMessage = "Template Created";
+
             }
             return (
                 <div>
