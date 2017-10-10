@@ -42,7 +42,7 @@ class CustomField extends React.Component {
             props.clearConfig();
             props.clearValue();
         }
-        if((nextProps.templateType !== props.templateType)){
+        if((props.templateType && nextProps.templateType !== props.templateType)){
             props.clearPricing();
         }
     }
@@ -184,7 +184,7 @@ CustomField = connect((state, ownProps) => {
             }
         },
         "clearConfig": () => {
-            dispatch(change("servicebotForm", `references.${ownProps.member}.config`, null));
+            dispatch(change("servicebotForm", `references.${ownProps.member}.config`, {}));
         },
         "clearPricing": () => {
             dispatch(change("servicebotForm", `references.${ownProps.member}.config.pricing`, null));
