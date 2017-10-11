@@ -231,7 +231,6 @@ class ManageUsers extends React.Component {
     }
     rowActionsFormatter(cell, row){
         let self = this;
-        console.log("ROW", row)
         return (
             <Dropdown
                 direction="right"
@@ -249,8 +248,6 @@ class ManageUsers extends React.Component {
                     {   type: "button",
                         label: 'Edit Role',
                         action: () => {
-                        console.log("FFFHHFHFFHHF SHAR");
-                        console.log(row)
                         return (this.openEditRole(row)) }},
                     {   type: "button",
                         label: row.status !== 'suspended' ? 'Suspend User' : 'Unsuspend User',
