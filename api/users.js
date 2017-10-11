@@ -277,7 +277,7 @@ module.exports = function (router, passport) {
                 dispatchEvent("user_suspended", user);
                 res.status(200).json(updated_user);
             } else {
-                res.status(400).json({error: err});
+                res.status(400).json({error: "Error suspending the user"});
             }
         });
     });

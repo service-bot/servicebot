@@ -290,9 +290,15 @@ User.prototype.purgeData = function (callback) {
  * This function will cancel all users services in Stripe and internal database. Then will mark the user as suspended.
  * @param callback - Final suspension result, or error.
  */
-User.prototype.suspend = function (callback) {
+User.prototype.suspend = async function () {
     let self = this;
     let ServiceInstances = require('./service-instance');
+    let CancellationRequest = require("./service-instance-cancellation");
+    await CancellationRequest.batchDelete({
+        "user_id" : self.data.id,
+    });
+
+
     ServiceInstances.findAll('user_id', self.data.id, function (services) {
         Promise.all(services.map(function (service) {
             return new Promise(function (resolve, reject) {
@@ -321,6 +327,7 @@ User.prototype.suspend = function (callback) {
             callback(err, null);
         });
     });
+
 };
 
 /**
