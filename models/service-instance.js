@@ -52,7 +52,7 @@ let createPayPlan = function (plan=null, callback){
     let self = this;
     async.waterfall([
         function(callback) {
-            if(plan == null) {
+            if(plan === null) {
                 //Create the plan object based on template information
                 ServiceTemplates.findOne('id', self.data.service_id, function (template) {
                     self.buildPayStructure(template.data, function (plan) {
