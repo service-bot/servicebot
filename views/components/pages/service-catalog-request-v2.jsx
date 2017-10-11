@@ -47,6 +47,10 @@ class ServiceRequest extends React.Component {
         if(this.state.loading){
             return(<span>loading</span>);
         }else {
+            let { options } = this.props;
+            let service_request_title_description = _.get(options, 'service_request_title_description.value', 'What you are getting');
+            let service_request_title_form = _.get(options, 'service_request_title_form.value', 'Get Your Service');
+
             return (
                 <div className="page-service-request">
                     <RequestPageFeatured templateId={this.state.id} templateData={this.state.service}/>
@@ -55,14 +59,14 @@ class ServiceRequest extends React.Component {
                             <div className="basic-info col-md-6">
                                 <div className="service-request-details">
                                     <IconHeading imgIcon="/assets/custom_icons/what_you_are_getting_icon.png"
-                                                 title="What you are getting"/>
+                                                 title={service_request_title_description}/>
                                     <div dangerouslySetInnerHTML={{__html: this.state.service.details}}/>
                                 </div>
                             </div>
                             <div className="basic-info col-md-6">
                                 <div className="service-request-form">
                                     <IconHeading imgIcon="/assets/custom_icons/what_you_are_getting_icon.png"
-                                                 title="Get Your Service"/>
+                                                 title={service_request_title_form}/>
                                     <ServiceRequestForm templateId={this.state.id} service={this.state.service}/>
                                 </div>
                             </div>
@@ -186,6 +190,8 @@ class RequestPageFeatured extends React.Component{
                                              "purchase_page_featured_area_height",
                                              "purchase_page_featured_area_padding_top",
                                              "purchase_page_featured_area_padding_bottom",
+                                             "service_request_title_description",
+                                             "service_request_title_form"
                                          ]}/>
                     }
                 </PageSection>
@@ -195,4 +201,5 @@ class RequestPageFeatured extends React.Component{
 }
 
 RequestPageFeatured = connect((state) => {return {options:state.options}})(RequestPageFeatured);
+ServiceRequest = connect((state) => {return {options:state.options}})(ServiceRequest);
 export default ServiceRequest;

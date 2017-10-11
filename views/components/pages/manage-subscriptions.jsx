@@ -118,7 +118,7 @@ class ManageSubscriptions extends React.Component {
         );
     }
     nameFormatter(cell, row){
-        return ( <Link to={`/service-instance/${row.id}`}>{cell}</Link> );
+        return ( <Link to={`/service-instance/${row.id}`}><b>{cell}</b></Link> );
     }
     emailFormatter(cell, row){
         return (

@@ -42,7 +42,7 @@ class CustomField extends React.Component {
             props.clearConfig();
             props.clearValue();
         }
-        if((nextProps.templateType !== props.templateType)){
+        if((props.templateType && nextProps.templateType !== props.templateType)){
             props.clearPricing();
         }
     }
@@ -184,7 +184,7 @@ CustomField = connect((state, ownProps) => {
             }
         },
         "clearConfig": () => {
-            dispatch(change("servicebotForm", `references.${ownProps.member}.config`, null));
+            dispatch(change("servicebotForm", `references.${ownProps.member}.config`, {}));
         },
         "clearPricing": () => {
             dispatch(change("servicebotForm", `references.${ownProps.member}.config.pricing`, null));
@@ -261,7 +261,7 @@ class renderCustomProperty extends React.Component {
 //The full form
 
 
-class FieldLevelValidationForm extends React.Component {
+class TemplateForm extends React.Component {
 
     constructor(props) {
         super(props);
@@ -272,6 +272,7 @@ class FieldLevelValidationForm extends React.Component {
         let props = this.props;
 
         const changeServiceType = (event, newValue) => {
+            console.log("ChangeServiceType was called", newValue)
             if (newValue === 'one_time') {
                 props.setIntervalCount();
                 props.setInterval();
@@ -567,18 +568,6 @@ class ServiceTemplateForm extends React.Component {
             let imageUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/image`;
             let iconUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/icon`;
 
-            let validations = {
-                username: [required(), length({ max: 15 })],
-                email:    [required(), email()],
-                age:      [
-                    required(),
-                    numericality({ int: true }),
-                    numericality({ '>=': 18, msg: "You must be at least 18 years old" })
-                ]
-            }
-            let propValidation = function(propValues){
-            };
-
             if (this.props.params.templateId) {
                 initialRequests.push({'method': 'GET', 'url': `/api/v1/service-templates/${this.props.params.templateId}`},
                     {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
@@ -608,6 +597,8 @@ class ServiceTemplateForm extends React.Component {
                     category_id: 1,
                     trial_period_days: 0,
                     statement_descriptor: this.props.company_name.value,
+                    interval: 'month',
+                    interval_count: 1,
                 };
                 initialRequests.push(
                     {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
@@ -645,7 +636,7 @@ class ServiceTemplateForm extends React.Component {
                         </div>
                         <div className="col-md-9">
                             <ServiceBotBaseForm
-                                form={FieldLevelValidationForm}
+                                form={TemplateForm}
                                 initialValues={initialValues}
                                 initialRequests={initialRequests}
                                 submissionRequest={submissionRequest}
@@ -686,13 +677,13 @@ const mapDispatchToProps = (dispatch) => {
         },
         fieldDispatches : {
             'setIntervalCount': () => {
-                dispatch(change("serviceTemplateForm", `interval_count`, 1))
+                dispatch(change("servicebotForm", `interval_count`, 1))
             },
             'setInterval': () => {
-                dispatch(change("serviceTemplateForm", `interval`, 'day'))
+                dispatch(change("servicebotForm", `interval`, 'day'))
             },
             'clearAmount': () => {
-                dispatch(change("serviceTemplateForm", `amount`, 0))
+                dispatch(change("servicebotForm", `amount`, 0))
             }
         }
 

@@ -41,13 +41,6 @@ if (!Object.values) {
 const selector = formValueSelector('servicebotForm'); // <-- same as form name
 
 
-const validateArray = function(value){
-    return "...";
-    return {
-        "references.service_template_properties[0].data.value" : "HELLO?",
-        "_error" : "IUHH..."
-    };
-}
 //Custom property
 const renderCustomProperty = (props) => {
     const {fields, formJSON, meta: {touched, error}} = props;
@@ -115,7 +108,11 @@ class ServiceRequestForm extends React.Component {
                 return (<span><Price value={newPrice}/></span>)
             }
         };
-        const users = helpers.usersData;
+        //Sort users and if user does not have name set, set it to the email value which will always be there
+        let users = _.map(helpers.usersData, user => {
+            user.name = user.name || user.email;
+            return user
+        });
         const sortedUsers = _.sortBy(users, ['id']);
 
         return (
@@ -147,7 +144,7 @@ class ServiceRequestForm extends React.Component {
                     </div>
                     }
                     <FormSection name="references">
-                        <FieldArray name="service_template_properties" component={renderCustomProperty} validate={[validateArray]}
+                        <FieldArray name="service_template_properties" component={renderCustomProperty}
                                     formJSON={formJSON.references.service_template_properties}/>
                     </FormSection>
 
@@ -367,25 +364,17 @@ class ServiceInstanceForm extends React.Component {
 
     render () {
         let formValidation = function(values){
-            console.log(values, "VALUES!!!!");
             let props = (values.references && values.references.service_template_properties) ? values.references.service_template_properties : [];
-            let re = props ? props.reduce((acc, prop, index) => {
+            let re = props.reduce((acc, prop, index) => {
                 if(prop.required && (!prop.data || !prop.data.value)){
-                    acc.references = {
-                        ...acc.references,
-                        service_template_properties : {
-                            ...acc.references.service_template_properties,
-                            [index] : {data : {value : "Required"}}
-
-
-                        },
-
-                    }
+                    acc[index] = {data : {value : "Required"}}
                 }
                 return acc;
-            }, {references : {service_template_properties : {}}}) : {};
-            console.log("REEE ", re);
-            return re;
+            }, {});
+            if(Object.keys(re).length === 0){
+                return undefined;
+            }
+            return {references: {service_template_properties : re}};
         }
 
         let self = this;
