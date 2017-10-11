@@ -3,11 +3,10 @@ import {Link, browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Load from "../utilities/load.jsx";
 import Fetcher from '../utilities/fetcher.jsx';
-import Jumbotron from "../layouts/jumbotron.jsx";
-import Content from "../layouts/content.jsx";
 import Dropdown from "../elements/dropdown.jsx";
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import {Price, serviceTypeFormatter} from "../utilities/price.jsx";
-import DateFormat from "../utilities/date-format.jsx";
+import {getFormattedDate} from "../utilities/date-format.jsx";
 import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import ModalPublishingTemplate from "../elements/modals/modal-publishing-template.jsx";
@@ -95,13 +94,14 @@ class ManageCatalogList extends React.Component {
         return ( cell.service_categories[0].name );
     }
     publishedFormatter(cell){
-        //Badge color
         let color_class = 'status-badge ';
         color_class += cell ? 'green' : 'red';
-        return ( <span className={color_class} >{cell ? 'Published' : 'Unpublished'}</span> );
+        return ( `<span class="${color_class}" >${cell ? 'Published' : 'Unpublished'}</span>` );
+        // return ( cell ? 'Published' : 'Unpublished' );
     }
     createdFormatter(cell){
-        return ( <DateFormat date={cell}/> );
+        console.log("what's the cell?", cell);
+        return (getFormattedDate(cell, {time: true}));
     }
     rowActionsFormatter(cell, row){
         let self = this;
@@ -202,18 +202,22 @@ class ManageCatalogList extends React.Component {
                             <TableHeaderColumn dataField='references'
                                                dataSort={ true }
                                                dataFormat={ this.categoryFormatter }
+                                               filterFormatted
                                                width={80}>
                                 Category
                             </TableHeaderColumn>
                             <TableHeaderColumn dataField='published'
                                                dataSort={ true }
                                                dataFormat={ this.publishedFormatter }
+                                               filterFormatted
                                                width={100}>
                                 Status
                             </TableHeaderColumn>
                             <TableHeaderColumn dataField='updated_at'
                                                dataSort={ true }
                                                dataFormat={ this.createdFormatter }
+                                               filter={{type: 'DateFilter'}}
+                                               filterFormatted
                                                width={150}>
                                 Updated At
                             </TableHeaderColumn>

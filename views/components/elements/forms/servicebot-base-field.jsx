@@ -7,32 +7,42 @@ import {toCents} from "../../../../lib/handleInputs"
 // import CurrencyInput from 'react-currency-masked-input'
 
 
-class inputField extends React.Component {
+let widgetField = props => {
+    let {widget, label, type, meta: {touched, error, warning}} = props;
+    let WidgetComponent = widget;
 
-    constructor(props) {
-        super(props);
-    }
-
-    render(){
-        let props = this.props;
-        let {input, placeholder, label, type, meta: {touched, error, warning}} = props;
-        let autofocus = props && props.willAutoFocus;
-
-        let formControlClass = `form-control ${touched && error && 'has-error'} ${touched && warning && 'has-warning'}`;
-
-        return(
-            <div className={`form-group form-group-flex`}>
-                {(label && type !== 'hidden') && <label className="control-label form-label-flex-md">{label}</label>}
-                <div className="form-input-flex">
-                    {type === "textarea" && <textarea className={formControlClass} {...input} placeholder={label} autoFocus={autofocus}/> }
-                    {(type === "text" || type === "number") && <input className={formControlClass} {...input} placeholder={placeholder || label} type={type} autoFocus={autofocus}/> }
-                    {type === "checkbox" && <input className={`${formControlClass} checkbox`} {...input} placeholder={label} type={type} autoFocus={autofocus}/> }
-                    {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span className="form-warning">{warning}</span>)) }
-                </div>
+    return (
+        <div className={`form-group form-group-flex`}>
+            {(label && type !== 'hidden' && type ==='text') && <label className="control-label form-label-flex-md">{label}</label>}
+            <div className="form-input-flex">
+                <WidgetComponent
+                    {...props}
+                />
+                {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span className="form-warning">{warning}</span>)) }
             </div>
-        );
-    }
-}
+        </div>
+    )
+};
+
+let inputField = props => {
+    let {input, placeholder, label, type, meta: {touched, error, warning}} = props;
+    let autofocus = props && props.willAutoFocus;
+
+    let formControlClass = `form-control ${touched && error && 'has-error'} ${touched && warning && 'has-warning'}`;
+
+    return(
+        <div className={`form-group form-group-flex`}>
+            {(label && type !== 'hidden') && <label className="control-label form-label-flex-md">{label}</label>}
+            <div className="form-input-flex">
+                {type === "textarea" && <textarea className={formControlClass} {...input} placeholder={label} autoFocus={autofocus}/> }
+                {(type === "text" || type === "number") && <input className={formControlClass} {...input} placeholder={placeholder || label} type={type} autoFocus={autofocus}/> }
+                {type === "checkbox" && <input className={`${formControlClass} checkbox`} {...input} placeholder={label} type={type} autoFocus={autofocus}/> }
+                {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span className="form-warning">{warning}</span>)) }
+            </div>
+        </div>
+    );
+};
+
 
 class selectField extends React.Component {
 
@@ -139,7 +149,7 @@ class OnOffToggleField extends React.Component {
                     <span style={style} className="itf-icon">
                         <i className={`fa fa-${faIcon}`}/>
                     </span>
-                    <ReactTooltip place="bottom" type="dark" effect="solid"/>
+                    {/*<ReactTooltip place="bottom" type="dark" effect="solid"/>*/}
                     <input className="hidden checkbox"
                            name={name}
                            value={value || this.state.value}
@@ -253,4 +263,4 @@ class priceField extends React.Component {
 }
 
 
-export {inputField, selectField, OnOffToggleField, iconToggleField, priceField};
+export {inputField, widgetField, selectField, OnOffToggleField, iconToggleField, priceField};

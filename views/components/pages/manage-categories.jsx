@@ -1,11 +1,13 @@
 import React from 'react';
 import {browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
 import Load from "../utilities/load.jsx";
 import Fetcher from '../utilities/fetcher.jsx';
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import Dropdown from "../elements/dropdown.jsx";
+import {getFormattedDate} from "../utilities/date-format.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import ModalAddCategory from "../elements/modals/modal-add-category.jsx";
 import ModalDeleteCategory from "../elements/modals/modal-delete-category.jsx";
@@ -94,8 +96,8 @@ class ManageCategories2 extends React.Component {
      * Cell formatters
      * Formats each cell data by passing the function as the dataFormat prop in TableHeaderColumn
      */
-    priceFormatter(cell, row) {
-        return <DateFormat date={cell} time/>;
+    createdFormatter(cell, row) {
+        return getFormattedDate(cell, {time: true});
     }
 
     rowActionsFormatter(cell, row) {
@@ -174,7 +176,8 @@ class ManageCategories2 extends React.Component {
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataSort={ true }
                                                            dataField='created_at'
-                                                           dataFormat={ this.priceFormatter }
+                                                           filterFormatted
+                                                           dataFormat={ this.createdFormatter }
                                                            width={150}>
                                             Created
                                         </TableHeaderColumn>

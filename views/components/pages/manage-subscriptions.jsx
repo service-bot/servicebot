@@ -7,7 +7,7 @@ import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
 import Dropdown from "../elements/dropdown.jsx";
-import {Price, getBillingType} from "../utilities/price.jsx";
+import {Price, getBillingType, getPriceValue} from "../utilities/price.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -118,7 +118,7 @@ class ManageSubscriptions extends React.Component {
         );
     }
     nameFormatter(cell, row){
-        return ( <Link to={`/service-instance/${row.id}`}>{cell}</Link> );
+        return ( <Link to={`/service-instance/${row.id}`}><b>{cell}</b></Link> );
     }
     emailFormatter(cell, row){
         return (
@@ -141,17 +141,17 @@ class ManageSubscriptions extends React.Component {
         let type = row.type.toLowerCase();
         switch(type){
             case 'subscription':
-                return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
+                return ( `<div><span className="status-badge neutral" >${getBillingType(row)}</span> <span class="status-badge black" >${interval}</span></div>` );
             case 'custom':
-                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+                return ( `<span class="status-badge neutral">${getBillingType(row)}</span>` );
             case 'one_time':
-                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+                return ( `<span class="status-badge neutral">${getBillingType(row)}</span>` );
             default:
-                return ( <span className="status-badge grey">{getBillingType(row)}</span> );
+                return ( `<span class="status-badge grey">${getBillingType(row)}</span>` );
         }
     }
     amountFormatter(cell){
-        return ( <span className="subscription-price">{Price({value: cell.amount})}</span> );
+        return ( `<span class="subscription-price">${getPriceValue(cell.amount)}</span>` );
     }
     statusFormatter(cell){
         switch (cell) {
@@ -305,12 +305,14 @@ class ManageSubscriptions extends React.Component {
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='payment_plan'
                                                            dataFormat={this.amountFormatter}
+                                                           filterFormatted
                                                            dataSort={ true }
                                                            width='80'>
                                             Amount
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='payment_plan'
                                                            dataFormat={this.typeFormatter}
+                                                           filterFormatted
                                                            dataSort={ true }
                                                            width='100'>
                                             Type

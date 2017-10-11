@@ -12,7 +12,7 @@ let Checkbox = (props) => {
                 <label className="control-label form-label-flex-md addon-checkbox-widget-default-value-label">{label}</label>
                 <div className="form-input-flex">
                     <OnOffToggleField faIcon="check" color="#0091EA" input={input} type="checkbox"/>
-                    {configValue.pricing && <PriceAdjustment price={configValue.pricing.value} operation={configValue.pricing.operation}/>}
+                    {configValue && configValue.pricing && configValue.pricing.value && <PriceAdjustment price={configValue.pricing.value} operation={configValue.pricing.operation}/>}
                     {/*<input className="form-control addon-checkbox-widget-default-value-input" {...props.input} type="checkbox"/>*/}
                 </div>
             </div>

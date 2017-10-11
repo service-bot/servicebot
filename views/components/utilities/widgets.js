@@ -21,7 +21,7 @@ let PriceOperation = (props) => {
 };
 
 let RenderWidget = (props) => {
-    const {member, widgetType, configValue, defaultWidgetValue} = props;
+    const {showPrice, member, widgetType, configValue, defaultWidgetValue} = props;
     const widget = props.services && props.services.widget && props.services.widget.find(widgetToCheck => widgetToCheck.type === widgetType);
     if (!widget) {
         console.error("widget does not exist ", widgetType);
@@ -30,7 +30,7 @@ let RenderWidget = (props) => {
         <div>
             <FormSection name={`${member}.config`}>
                 {widget.config && <Field name={`value`} component={widget.config}/>}
-                {widget.pricing &&
+                {widget.pricing && showPrice &&
                 <div className="addon-widget-has-pricing">
                     <FormSection name={`pricing`}>
 

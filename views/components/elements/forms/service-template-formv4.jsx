@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 import {RenderWidget, WidgetList, PriceBreakdown, widgets} from "../../utilities/widgets";
 import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
 import FileUploadForm from "./file-upload-form.jsx";
-import {inputField, selectField, OnOffToggleField, iconToggleField, priceField, priceToCents} from "./servicebot-base-field.jsx";
+import {inputField, selectField, OnOffToggleField, iconToggleField,priceField, priceToCents} from "./servicebot-base-field.jsx";
 import {addAlert, dismissAlert} from "../../utilities/actions";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import SVGIcons from "../../utilities/svg-icons.jsx";
@@ -42,6 +42,9 @@ class CustomField extends React.Component {
             props.clearConfig();
             props.clearValue();
         }
+        if((props.templateType && nextProps.templateType !== props.templateType)){
+            props.clearPricing();
+        }
     }
 
     render() {
@@ -49,7 +52,7 @@ class CustomField extends React.Component {
         let props = this.props;
         let {
             willAutoFocus, index, typeValue, member, myValues, privateValue, requiredValue, promptValue, configValue,
-            setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt
+            setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt, templateType
         } = props;
         if (myValues.prop_label) {
             willAutoFocus = false;
@@ -113,6 +116,7 @@ class CustomField extends React.Component {
 
                 <div id="custom-prop-widget" className="custom-property-field-group">
                     {typeValue && <RenderWidget
+                        showPrice={templateType !== "custom"}
                         member={member}
                         configValue={configValue}
                         widgetType={typeValue}/>
@@ -180,7 +184,10 @@ CustomField = connect((state, ownProps) => {
             }
         },
         "clearConfig": () => {
-            dispatch(change("servicebotForm", `references.${ownProps.member}.config`, null));
+            dispatch(change("servicebotForm", `references.${ownProps.member}.config`, {}));
+        },
+        "clearPricing": () => {
+            dispatch(change("servicebotForm", `references.${ownProps.member}.config.pricing`, null));
         },
         "clearValue": () => {
             console.log("***CLEARING VALUE")
@@ -232,7 +239,7 @@ class renderCustomProperty extends React.Component {
                                     <span className="itf-icon"><i className="fa fa-close"/></span>
                                 </button>
                             </div>
-                            <CustomField member={customProperty} index={index}
+                            <CustomField templateType={templateType} member={customProperty} index={index}
                                          willAutoFocus={fields.length - 1 == index}/>
                         </li>
                     )}
@@ -254,7 +261,7 @@ class renderCustomProperty extends React.Component {
 //The full form
 
 
-class FieldLevelValidationForm extends React.Component {
+class TemplateForm extends React.Component {
 
     constructor(props) {
         super(props);
@@ -265,6 +272,7 @@ class FieldLevelValidationForm extends React.Component {
         let props = this.props;
 
         const changeServiceType = (event, newValue) => {
+            console.log("ChangeServiceType was called", newValue)
             if (newValue === 'one_time') {
                 props.setIntervalCount();
                 props.setInterval();
@@ -444,6 +452,7 @@ class FieldLevelValidationForm extends React.Component {
                                 <h3>Custom Fields</h3>
                                 <FormSection name="references">
                                     <FieldArray name="service_template_properties"
+                                                props={{templateType : serviceTypeValue}}
                                                 component={renderCustomProperty}/>
                                 </FormSection>
                                 {/*{props.formJSON.references && props.formJSON.references.service_template_properties &&*/}
@@ -543,8 +552,8 @@ class ServiceTemplateForm extends React.Component {
             autoDismiss: 4000,
         };
         this.props.addAlert(successMessage);
-        browserHistory.push(`/service-catalog/${response.id}/request`);
-        // browserHistory.push(`/manage-catalog/list`);
+        // browserHistory.push(`/service-catalog/${response.id}/request`);
+        browserHistory.push(`/manage-catalog/list`);
     }
 
     render() {
@@ -588,6 +597,8 @@ class ServiceTemplateForm extends React.Component {
                     category_id: 1,
                     trial_period_days: 0,
                     statement_descriptor: this.props.company_name.value,
+                    interval: 'month',
+                    interval_count: 1,
                 };
                 initialRequests.push(
                     {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
@@ -597,6 +608,7 @@ class ServiceTemplateForm extends React.Component {
                     'url': `/api/v1/service-templates`
                 };
                 successMessage = "Template Created";
+
             }
             return (
                 <div>
@@ -624,7 +636,7 @@ class ServiceTemplateForm extends React.Component {
                         </div>
                         <div className="col-md-9">
                             <ServiceBotBaseForm
-                                form={FieldLevelValidationForm}
+                                form={TemplateForm}
                                 initialValues={initialValues}
                                 initialRequests={initialRequests}
                                 submissionRequest={submissionRequest}
@@ -665,13 +677,13 @@ const mapDispatchToProps = (dispatch) => {
         },
         fieldDispatches : {
             'setIntervalCount': () => {
-                dispatch(change("serviceTemplateForm", `interval_count`, 1))
+                dispatch(change("servicebotForm", `interval_count`, 1))
             },
             'setInterval': () => {
-                dispatch(change("serviceTemplateForm", `interval`, 'day'))
+                dispatch(change("servicebotForm", `interval`, 'day'))
             },
             'clearAmount': () => {
-                dispatch(change("serviceTemplateForm", `amount`, 0))
+                dispatch(change("servicebotForm", `amount`, 0))
             }
         }
 
