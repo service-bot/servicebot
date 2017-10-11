@@ -137,7 +137,7 @@ class ServiceBotTableBase extends React.Component {
             <div className="servicebot-table-base">
                 <BootstrapTable data={rows}
                                 deleteRow={ deleteRow }
-                                selectRow={ false }
+                                // selectRow={ false }
                                 exportCSV={ true }
                                 search={ true }
                                 multiColumnSearch={true}
