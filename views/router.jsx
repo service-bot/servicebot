@@ -20,7 +20,6 @@ import ServiceRequest from './components/pages/service-catalog-request.jsx';
 import ServiceCatalog from './components/pages/service-catalog.jsx';
 // User
 import {Notifications} from "./components/pages/notifications.jsx"
-import Users from './components/pages/users.jsx';
 import Login from "./components/elements/forms/login.jsx";
 import ForgotPassword from "./components/elements/forms/forgot-password.jsx";
 import ResetPassword from "./components/elements/forms/reset-password.jsx";
@@ -137,7 +136,6 @@ let AppRouter = function (props) {
                         {/* Query routes */}
                         <Route name="Services" path="manage-subscriptions/:status" component={ManageSubscriptions}/>
                         {/* Other */}
-                        <Route path="users" component={Users}/>
                         <Route path="service-templates/:templateId" component={ServiceTemplateForm}/>
                         <Route name="Manage Subscriptions" path="/service-instance" component={ManageSubscriptions}/>
                         <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
