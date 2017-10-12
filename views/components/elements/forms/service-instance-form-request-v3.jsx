@@ -339,7 +339,6 @@ class ServiceInstanceForm extends React.Component {
 
     handleResponse(response){
         if(response.permissions){
-            console.log("SETTIN PERMS", response);
             localStorage.setItem("permissions", response.permissions);
             this.props.setUid(response.uid);
             this.props.setUser(response.uid);
