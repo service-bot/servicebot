@@ -27,11 +27,9 @@ class ServiceInstanceFiles extends React.Component {
 
     fetchFiles(){
         let self = this;
-        console.log('get files url',self.state.url);
         Fetcher(self.state.url).then(function(response){
             if(response != null){
                 if(!response.error){
-                    console.log("instance files",response);
                     self.setState({loading: false, files : response, lastFetch: Date.now()});
                 }
             }
@@ -45,10 +43,9 @@ class ServiceInstanceFiles extends React.Component {
         let deleteFile = ()=>{
             Fetcher(`/api/v1/service-instances/${this.state.instanceId}/files/${data}`, 'DELETE').then(function (response) {
                 if(!response.error){
-                    console.log('deleted file no error', response);
                     self.fetchFiles();
                 }else{
-                    console.log("delete file error",response);
+                    console.error("delete file error",response);
                 }
             });
         };

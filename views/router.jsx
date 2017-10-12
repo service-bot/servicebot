@@ -6,6 +6,7 @@ import Promise from "promise-polyfill";
 import {setOptions, setUid, setUser, fetchUsers, initializeState} from "./components/utilities/actions"
 import {pluginbot} from "./store"
 import {Provider} from 'react-redux'
+import {StripeProvider} from 'react-stripe-elements';
 import PluginbotProvider from "pluginbot-react/src/provider"
 import cookie from 'react-cookie';
 // App
@@ -19,7 +20,7 @@ import ServiceInstance from './components/pages/service-instance.jsx';
 import ServiceRequest from './components/pages/service-catalog-request.jsx';
 import ServiceCatalog from './components/pages/service-catalog.jsx';
 // User
-import {Notifications} from "./components/pages/notifications.jsx"
+import { Notifications } from "./components/pages/notifications.jsx"
 import Users from './components/pages/users.jsx';
 import Login from "./components/elements/forms/login.jsx";
 import ForgotPassword from "./components/elements/forms/forgot-password.jsx";
@@ -62,17 +63,6 @@ import ServiceRequestV2 from "./components/pages/service-catalog-request-v2.jsx"
 
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
-// Fetcher("/api/v1/system-options/public").then(function(response) {
-//     store.dispatch(setOptions(response));
-// }).then(function() {
-//     // console.log("app will dispatch setUser function", cookie.load("uid"));
-//     fetchUsers(cookie.load("uid"), (err, user) => store.dispatch(setUser(user)));
-// }).catch(function (error) {
-//     console.log("Error", error);
-//     store.dispatch(setOptions(
-//         {backgroundColor: '#000000'}
-//     ));
-// });
 
 
 
@@ -84,6 +74,8 @@ class AppRouter extends React.Component {
         const history = syncHistoryWithStore(browserHistory, this.props.store)
 
         return (<Router history={history}>
+            <StripeProvider apiKey={cookie.load("spk") || "no_public_token"}>
+
             <Route name="Home" path="/" component={App}>
                 <IndexRoute component={Home}/>
 
@@ -149,6 +141,7 @@ class AppRouter extends React.Component {
             <Route name="Embed" path={"/service/:serviceId/embed"} component={Embed}/>
             <Route name="Automated Installation" path="setup" component={Setup}/>
             <Route path='*' component={GenericNotFound}/>
+            </StripeProvider>
         </Router>)
     }
 }

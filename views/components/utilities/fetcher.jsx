@@ -20,13 +20,13 @@ let Fetcher = function(path, method="GET", body, init=null){
         if(method == "POST" || method=="PUT"){
             init.body = JSON.stringify(body)
         }
-        // console.log(init);
+        (init);
 
     }
 
     return fetch(path, init)
         .then(function(response){
-            // console.log("HELLO! " , response);
+            ("HELLO! " , response);
             if(response.status == 404){
                 throw response;
             }

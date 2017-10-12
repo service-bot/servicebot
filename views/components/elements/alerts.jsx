@@ -28,10 +28,7 @@ class Alerts extends React.Component {
 
     componentWillReceiveProps(nextProps){
         let self = this;
-        console.log("next props", nextProps);
-        console.log("this state alert", this.state.alert);
         if(nextProps.message != this.state.alert.message || !this.state.alert.message){
-            console.log('inside set to state');
             self.setState({
                 alert:{
                     type: nextProps.type || 'info',
@@ -39,7 +36,6 @@ class Alerts extends React.Component {
                     icon: nextProps.icon || 'check-circle'
                 }
             }, function () {
-                console.log("new state", self.state);
             })
         }
     }
@@ -49,11 +45,9 @@ class Alerts extends React.Component {
     }
 
     render(){
-        console.log("in rendering");
 
         if(this.state.alert.message){
 
-            console.log("rendering alert");
 
             let type = this.state.alert.type;
             let message = this.state.alert.message;

@@ -31,16 +31,14 @@ class RefundForm extends React.Component {
     fetchInvoice(){
         Fetcher(`/invoices/${this.state.invoice.id}`).then(function (response) {
             if(!response.error){
-                console.log('Invoice is', response);
                 this.setState({loading: false, invoice: response});
             }else{
-                console.log('error', response);
+                console.error('error', response);
             }
         });
     }
 
     handleResponse(response){
-        console.log("inside handle response", response);
 
         if(_.has(response,'data.status') && _.get(response, 'data.status') == "succeeded"){
             this.setState({
@@ -52,7 +50,6 @@ class RefundForm extends React.Component {
                 }
             });
         }else{
-            console.log("this is the RESPONSE", response);
             if(response.type == "StripeInvalidRequestError"){
                 this.setState({alerts: {type: 'danger', message: response.message, icon: 'exclamation-circle'}});
             }else if(response.error){
@@ -60,7 +57,6 @@ class RefundForm extends React.Component {
             }else if(response == null){
                 this.setState({alerts: {type: 'danger', message: 'Response is null', icon: 'exclamation-circle'}});
             }else{
-                console.log("Other error", response);
                 this.setState({alerts: {type: 'danger', message: 'Other error', icon: 'exclamation-circle'}});
             }
         }
@@ -71,7 +67,6 @@ class RefundForm extends React.Component {
         if(this.state.loading){
             return ( <Load/> );
         }else if(this.state.success){
-            console.log("refund success", this.state.response);
             return (
                 <div>
                     <div className="p-20">
@@ -115,7 +110,6 @@ class RefundForm extends React.Component {
             );
         }else{
             //TODO: Add validation functions and pass into DataForm as props
-            console.log("refund failed");
             return (
                 <div className="refund-form">
 

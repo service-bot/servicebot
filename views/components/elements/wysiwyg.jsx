@@ -45,7 +45,6 @@ class WysiwygRedux extends React.Component {
     }
 
     componentDidMount() {
-        console.log("MOUNTING THE WISIG", this.props);
         var self = this;
         $(this.refs[`wysiwyg_${this.props.name}`]).redactor();
         $(this.refs[`wysiwyg_${this.props.name}`]).on('change.callback.redactor', function(e, data) {
@@ -57,7 +56,6 @@ class WysiwygRedux extends React.Component {
         let {label, type, meta: {touched, error, warning}} = this.props;
         let formControlClass = `form-control ${touched && error && 'has-error'} ${touched && warning && 'has-warning'}`;
 
-        console.log("RENDING", this.props);
         return (
             <div className="form-input-flex">
                 {this.props.label && <label className="control-label">{this.props.label}</label>}

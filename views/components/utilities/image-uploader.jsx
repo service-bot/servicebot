@@ -24,8 +24,6 @@ class ImageUploader extends React.Component {
             imageChanged : false
         };
 
-        console.log("image url", this.props.imageURL);
-
         this.onImageSelected = this.onImageSelected.bind(this);
         this.handleImage = this.handleImage.bind(this);
         this.getCoverImage = this.getCoverImage.bind(this);
@@ -38,7 +36,10 @@ class ImageUploader extends React.Component {
                 imageURL: nextProps.imageURL
             });
         }
-        if(this.props.uploadTrigger != nextProps.uploadTrigger){
+    }
+
+    componentDidUpdate(prevProps){
+        if(this.props.uploadTrigger != prevProps.uploadTrigger){
             if(!this.state.imageChanged){
                 if(this.props.handleSuccess){
                     return this.props.handleSuccess();
@@ -80,7 +81,6 @@ class ImageUploader extends React.Component {
         let myImage = document.getElementById(`edit-${this.state.elementID}-img`);
         fetch(this.props.imageGETURL || self.state.imageURL,
             {method: 'GET', header: new Headers({"Content-Type": "application/json"}), credentials: "include"}).then(function(response) {
-            console.log("in get cover image", response);
             if(response.ok){
                 self.setState({hasImage: true});
                 return response.blob();
@@ -100,7 +100,6 @@ class ImageUploader extends React.Component {
     }
 
     handleImage(e){
-        console.log("WE CALLED IT BOIS")
         if(e != undefined)
             e.preventDefault();
         let self = this;
@@ -109,7 +108,6 @@ class ImageUploader extends React.Component {
                     body : new FormData(document.getElementById(`imgform${this.state.elementID}`))
         };
         self.setState({ajaxLoad: true});
-
         Fetcher(self.state.imageURL, null, null, init).then(function(result){
             if(!result.error){
                 self.setState({imageSelected: false, ajaxLoad: false}, function () {
@@ -121,7 +119,6 @@ class ImageUploader extends React.Component {
                     }
                 });
             }else{
-                console.log("failed", result);
                 self.setState({ajaxLoad: false, imageFailed: result.error});
             }
         }).catch(e => {console.error("error getting img", e)});
@@ -130,9 +127,7 @@ class ImageUploader extends React.Component {
     removeImage(e){
         let self = this;
         e.preventDefault();
-        console.log("removing image", self.props.imageGETURL);
         Fetcher(self.props.imageGETURL, "DELETE", null, null).then(function (response) {
-            console.log("in delete image", response);
             if(!response.error){
                 self.setState({hasImage: false, image: false, imageChanged : true});
             }
@@ -141,8 +136,6 @@ class ImageUploader extends React.Component {
     }
 
     render(){
-
-        console.log("image uploader render ");
         return(
             <div className="row">
                 <div className={`col-md-12 edit-${this.state.elementID}-image`}>

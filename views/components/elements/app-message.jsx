@@ -76,7 +76,6 @@ class AppMessage extends React.Component {
 }
 
 function mapStateToProps(state){
-    console.log(state);
     return {
         alerts : state.alerts
     }

@@ -12,22 +12,28 @@ import {
     formValueSelector,
     change,
     unregisterField,
-    getFormValues
+    getFormValues,
+    SubmissionError
 } from 'redux-form'
 import {connect} from "react-redux";
 import {RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import {inputField, selectField, widgetField} from "./servicebot-base-field.jsx";
-import BillingSettingsForm from "../../elements/forms/billing-settings-form.jsx";
+import BillingSettingsForm2 from "../../elements/forms/billing-settings2.jsx";
+
 import {Price} from "../../utilities/price.jsx";
 import Fetcher from "../../utilities/fetcher.jsx";
 import IconHeading from "../../layouts/icon-heading.jsx";
 import ModalUserLogin from "../modals/modal-user-login.jsx";
-import {setUid, setUser, fetchUsers} from "../../utilities/actions";
 import {addAlert} from "../../utilities/actions";
-let _ = require("lodash");
+import {setUid, fetchUsers, setUser} from "../../utilities/actions";
 import cookie from 'react-cookie';
 import { required, email, numericality, length } from 'redux-form-validators'
+import {injectStripe, Elements} from 'react-stripe-elements';
+
+
+let _ = require("lodash");
+
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import {getPrice} from "../../../../lib/handleInputs";
 import values from 'object.values';
@@ -83,7 +89,6 @@ class ServiceRequestForm extends React.Component {
             return acc;
 
         }, {});
-        console.log("MA HANDLERS", handlers);
         let newPrice = formJSON.amount;
         try {
             newPrice = getPrice(formJSON.references.service_template_properties, handlers, formJSON.amount);
@@ -210,7 +215,6 @@ class ServiceInstanceForm extends React.Component {
             loading: true
         };
         this.closeUserLoginModal = this.closeUserLoginModal.bind(this);
-        this.retrieveStripeToken = this.retrieveStripeToken.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
         this.updatePrice = this.updatePrice.bind(this);
         this.submissionPrep = this.submissionPrep.bind(this);
@@ -231,7 +235,6 @@ class ServiceInstanceForm extends React.Component {
                     });
                     self.setState({usersData: userRoleList});
                 } else {
-                    console.log('Error getting users', response);
                 }
             });
         }
@@ -240,7 +243,6 @@ class ServiceInstanceForm extends React.Component {
         if (!isAuthorized({permissions: "can_administrate"})) {
             Fetcher("/api/v1/funds/own").then(function (response) {
                 if (!response.error && response.length == 0) {
-                    console.log("fund", response);
                     self.setState({hasFund: false});
                 }
             });
@@ -253,11 +255,11 @@ class ServiceInstanceForm extends React.Component {
             if (!response.error) {
                 self.setState({loading: false, templateData: response, formData: response});
             } else {
-                console.log("Error", response.error);
+                console.error("Error", response.error);
                 self.setState({loading: false});
             }
         }).catch(function (err) {
-            console.log("ERROR!", err);
+            console.error("ERROR!", err);
         });
 
         if (this.props.uid) {
@@ -266,11 +268,6 @@ class ServiceInstanceForm extends React.Component {
     }
 
     componentDidUpdate(nextProps, nextState) {
-        // console.log("next props", nextProps);
-        // console.log("next state", nextState);
-        if (nextState.stripToken != this.state.stripToken) {
-            console.log(nextState.stripToken, this.state.stripToken);
-        }
         if (nextProps.uid && this.state.hasCard === null) {
             this.checkIfUserHasCard();
         }
@@ -279,29 +276,12 @@ class ServiceInstanceForm extends React.Component {
         }
     }
 
-    *tokenGenerator(values, callback) {
-        let token = yield;
-        values.token_id = token.id;
-        callback(values);
-    }
 
     updatePrice(newPrice) {
-        console.log("**Update price was called with price", newPrice);
         let self = this;
         self.setState({servicePrice: newPrice});
     }
 
-    async retrieveStripeToken(stripeForm, token = null) { //getToken is the getToken function, token is the token
-        let self = this;
-        console.log("RETRIEVE STRIPE TOKEN WUZ CALLED")
-        if (stripeForm) {
-            this.setState({stripeForm: stripeForm});
-        }
-        if (token) {
-            this.setState({stripToken: token});
-            this.state.tokenGenerator.next(token)
-        }
-    }
 
     closeUserLoginModal() {
         this.setState({emailExists: false});
@@ -327,7 +307,6 @@ class ServiceInstanceForm extends React.Component {
                             address_state: card.address_state,
                         }
                     }, function () {
-                        console.log("Checked user and found card, state is set to", self.state);
                         return true;
                     });
                 }
@@ -338,39 +317,38 @@ class ServiceInstanceForm extends React.Component {
         });
     }
 
-    submissionPrep(values, callback){
-        let self = this;
-        let tokenGenerator = self.tokenGenerator(values, callback);
-        tokenGenerator.next();
-        self.setState({tokenGenerator}, (state => {
-            self.state.stripeForm.dispatchEvent(new Event('submit', {'bubble': true}));
-        }))
-
+    async submissionPrep(values){
+        let token = await this.props.stripe.createToken();
+        if(token.error){
+            throw token.error.message
+        }
+        return {...values, token_id : token.token.id};
     }
     handleResponse(response){
         if(response.permissions){
-            console.log("SETTIN PERMS", response);
             localStorage.setItem("permissions", response.permissions);
             this.props.setUid(response.uid);
             this.props.setUser(response.uid);
 
         }
     }
+    formValidation(values){
+        let validation = {};
 
-    render () {
-        let formValidation = function(values){
-            let props = (values.references && values.references.service_template_properties) ? values.references.service_template_properties : [];
-            let re = props.reduce((acc, prop, index) => {
-                if(prop.required && (!prop.data || !prop.data.value)){
-                    acc[index] = {data : {value : "Required"}}
-                }
-                return acc;
-            }, {});
-            if(Object.keys(re).length === 0){
-                return undefined;
+        let props = (values.references && values.references.service_template_properties) ? values.references.service_template_properties : [];
+        let re = props.reduce((acc, prop, index) => {
+            if(prop.required && (!prop.data || !prop.data.value)){
+                acc[index] = {data : {value : "Required"}}
             }
-            return {references: {service_template_properties : re}};
+            return acc;
+        }, {});
+        if(Object.keys(re).length === 0){
+            delete validation.references;
         }
+        return validation;
+
+    }
+    render () {
 
         let self = this;
         let initialValues = this.props.service;
@@ -391,13 +369,15 @@ class ServiceInstanceForm extends React.Component {
         }
 
         return (
+
             <div>
                 {/*Price: {this.state.servicePrice}*/}
 
                 {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
-                this.state.servicePrice > 0 &&
-                <BillingSettingsForm context="SERVICE_REQUEST" retrieveStripeToken={this.retrieveStripeToken}/>
-                }
+                this.state.servicePrice > 0 &&  <BillingSettingsForm2/>}
+
+
+
                 <ServiceBotBaseForm
                     form = {ServiceRequestForm}
                     initialValues = {initialValues}
@@ -408,7 +388,7 @@ class ServiceInstanceForm extends React.Component {
                     successRoute = {successRoute}
                     handleResponse = {this.handleResponse}
                     helpers = {helpers}
-                    validations={formValidation}
+                    validations={this.formValidation}
 
                 />
             </div>
@@ -416,7 +396,19 @@ class ServiceInstanceForm extends React.Component {
 
     }
 }
+ServiceInstanceForm = injectStripe(ServiceInstanceForm);
 
+
+class FormWrapper extends React.Component{
+
+    render(){
+        return (
+            <Elements>
+                <ServiceInstanceForm {...this.props}/>
+            </Elements>
+        )
+    }
+}
 const mapStateToProps = (state, ownProps) => {
     return {
         uid: state.uid,
@@ -437,5 +429,5 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(ServiceInstanceForm);
+export default connect(mapStateToProps, mapDispatchToProps)(FormWrapper);
 

@@ -11,7 +11,6 @@ class ServiceInstancePaymentPlan extends React.Component {
         let paymentPlan = this.props.instancePaymentPlan;
         let owner = this.props.owner;
 
-        console.log("rendering", this.props.service);
         if(paymentPlan != null){
 
             return (

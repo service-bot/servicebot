@@ -27,10 +27,9 @@ class UserRegisterForm extends React.Component {
         self.setState({ajaxLoad: false});
         Fetcher(this.state.formURL, 'PUT', payload).then(function (response) {
             if (!response.error) {
-                console.log("updated", response);
                 self.setState({ajaxLoad: false, success: true, updatedUser: response.results.data}); //change the last one to what u are doing
             }else {
-                console.log(`Server Error:`, response.error);
+                console.error(`Server Error:`, response.error);
                 self.setState({ajaxLoad: false});
             }
         });

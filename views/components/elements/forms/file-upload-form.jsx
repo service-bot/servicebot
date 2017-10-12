@@ -15,13 +15,12 @@ class FileInputForm extends Component {
     }
 
     render() {
-
+        console.log("IN FILE UPLOAD FORM " + this.props.imageUploadURL, this.props.upload)
         return (
             <div className="form-group form-group-flex column">
                 <label>{this.props.label}</label>
                 <ImageUploader elementID={this.props.name} imageStyle="template-image-upload"
                                imageURL={this.props.imageUploadURL}
-                               imageGETURL={this.props.imageUploadURL}
                                uploadTrigger={this.props.upload}
                                uploadButton={false}
                                handleSuccess={this.props.handleImageUploadSuccess}

@@ -51,7 +51,7 @@ class ServiceTemplateForm extends React.Component {
         super(props);
         // if editing an existing template (meaning with and ID)
         if(this.props.params.templateId && this.props.params.templateId !== null ){
-            // console.log("has templateId", this.props.params.templateId);
+            ("has templateId", this.props.params.templateId);
             this.state = {
                 templateId: this.props.params.templateId,
                 template: [],
@@ -69,7 +69,7 @@ class ServiceTemplateForm extends React.Component {
                 uploadTrigger: false
             };
         }else{ // else creating a new template (meaning without an ID)
-            // console.log("no templateId");
+            ("no templateId");
             this.state = {
                 template: {},
                 loading:true,
@@ -115,7 +115,7 @@ class ServiceTemplateForm extends React.Component {
         return new Promise(function(resolve, reject){
             Fetcher(self.state.categories_url).then(function (categories_response) {
                 if(!categories_response.error){
-                    // console.log(categories_response);
+                    (categories_response);
                     self.setState({categories: categories_response}, function(){
                         resolve(categories_response);
                     });
@@ -150,14 +150,14 @@ class ServiceTemplateForm extends React.Component {
 
     replaceTagsInputPlaceholder(){
         let tagsinputs = document.getElementsByClassName('react-tagsinput-input');
-        // console.log('gettnig tags inputs', tagsinputs);
+        ('gettnig tags inputs', tagsinputs);
         if(tagsinputs && tagsinputs.length){
             tagsinputs[0].placeholder = 'Add Values';
         }
     }
 
     componentDidUpdate(prevProps, prevState){
-        // console.log("Updated new state:", this.state);
+        ("Updated new state:", this.state);
         this.replaceTagsInputPlaceholder();
 
         //find the input with error and scroll to it
@@ -168,8 +168,6 @@ class ServiceTemplateForm extends React.Component {
         }
 
         if(prevState.submissionResponse.id != this.state.submissionResponse.id){
-            console.log("previous state", prevState.submissionResponse);
-            console.log("submission was successful", this.state.submissionResponse);
             this.setState({uploadTrigger:true});
         }
     }
@@ -182,9 +180,7 @@ class ServiceTemplateForm extends React.Component {
 
     handleResponse(response){
         let self = this;
-        console.log("state inside handle response", self.state);
         if(_.has(self.state, 'customPropsToRemove') && self.state.customPropsToRemove.length > 0){
-            console.log("has something to delete", self.state.customPropsToRemove);
             _.map(self.state.customPropsToRemove, function(id){
                 Fetcher(`/api/v1/service-template-properties/${id}`, 'delete').then(function (response) {
                     if(response.error){
@@ -200,7 +196,7 @@ class ServiceTemplateForm extends React.Component {
                 self.setState({submissionResponse: response});
             }
         }else{
-            console.log('has errors in handle response', response);
+            console.error('has errors in handle response', response);
         }
     }
 

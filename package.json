@@ -82,6 +82,7 @@
     "react-router-redux": "^4.0.8",
     "react-s-alert": "^1.3.1",
     "react-stepzilla": "^4.6.3",
+    "react-stripe-elements": "^1.1.0",
     "react-tagsinput": "^3.18.0",
     "react-tinymce": "^0.6.0",
     "react-tooltip": "^3.3.1",

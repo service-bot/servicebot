@@ -36,7 +36,6 @@ class ServiceRequestForm extends React.Component {
             hasFund : true,
         };
 
-        console.log("the uid", this.state.uid);
 
         this.getValidators = this.getValidators.bind(this);
         this.handleResponse = this.handleResponse.bind(this);
@@ -53,13 +52,12 @@ class ServiceRequestForm extends React.Component {
         if(isAuthorized({permissions: "can_administrate"})) {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
-                    console.log('getting users in will mount', response);
                     let userRoleList = response.filter(function(user){
                         return user.references.user_roles[0].role_name === 'user';
                     });
                     self.setState({users: userRoleList});
                 } else {
-                    console.log('error getting users', response);
+                    console.error('error getting users', response);
                 }
             });
         }
@@ -68,7 +66,6 @@ class ServiceRequestForm extends React.Component {
         if(!isAuthorized({permissions: "can_administrate"})) {
             Fetcher("/api/v1/funds/own").then(function (response) {
                 if (!response.error && response.length == 0) {
-                    console.log("fund", response);
                     self.setState({hasFund: false});
                 }
             });
@@ -78,17 +75,15 @@ class ServiceRequestForm extends React.Component {
     componentDidMount() {
         let self = this;
 
-        console.log("users", self.state.users);
         Fetcher(self.state.url).then(function (response) {
             if (!response.error) {
-                console.log(response);
                 self.setState({loading: false, template: response});
             } else {
-                console.log("Error", response.error);
+                console.error("Error", response.error);
                 self.setState({loading: false});
             }
         }).catch(function(err){
-            console.log("ERROR!", err);
+            console.error("ERROR!", err);
             browserHistory.push("/");
         })
     }
@@ -100,7 +95,6 @@ class ServiceRequestForm extends React.Component {
             let y = errorInputs[0].offsetParent.offsetTop;
             window.scrollTo(0, y);
         }
-        console.log("request forrm state updated", this.state);
     }
 
     handleResponse(response){
@@ -117,7 +111,7 @@ class ServiceRequestForm extends React.Component {
                 })
             }
         }else{
-            console.log("error response", response);
+            console.error("error response", response);
         }
     }
 
@@ -136,7 +130,6 @@ class ServiceRequestForm extends React.Component {
     }
 
     hideFundsModal(data){
-        console.log("hide fund called", data);
         if(data.default_source){
             this.setState({showFundsModal : false, hasFund : true});
         }else{
@@ -233,7 +226,6 @@ class ServiceRequestForm extends React.Component {
         }else {
 
             if (this.state.submitSuccessful) {
-                console.log("rending submitSuccessful");
                 let responseObj = this.state.submissionResponse;
                 return (
                     <div className="dataform row">
@@ -263,7 +255,7 @@ class ServiceRequestForm extends React.Component {
                 const fields = this.state.template;
                 const subscriptionType = this.state.template.type;
                 const references = this.state.template.references.service_template_properties.length > 0 ? this.state.template.references.service_template_properties : false;
-                // console.log("fields", fields);
+                ("fields", fields);
 
                 let submitButton = <Buttons buttonClass="btn-primary btn-bar" size="lg" btnType="primary" text="Submit Request" type="submit" value="submit"/>;
 
@@ -289,7 +281,7 @@ class ServiceRequestForm extends React.Component {
                     }
                 };
 
-                // console.log("stripe errors xxxxx", this.state.stripeError);
+                ("stripe errors xxxxx", this.state.stripeError);
                 return (
                     <div>
                         {getAlerts()}

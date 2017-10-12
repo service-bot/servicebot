@@ -14,7 +14,6 @@ class ModalPayChargeItem extends React.Component {
         super(props);
         let uid = cookie.load("uid");
         if(this.props.ownerId){
-            console.log("modal pay charge item: owner:", uid);
             uid = this.props.ownerId;
         }
 
@@ -24,9 +23,7 @@ class ModalPayChargeItem extends React.Component {
         let charge_item = false;
 
         if(_.has(service, 'references.charge_items') && _.filter(_.get(service, 'references.charge_items'), (item) => {return item.id==charge;}).length > 0 ){
-            console.log("has charge in it");
             charge_item = _.filter(_.get(service, 'references.charge_items'), (item) => {return item.id==charge;})[0];
-            console.log("the charge item:", charge_item);
         }
 
         let user_url = '/api/v1/users/own';
@@ -34,7 +31,6 @@ class ModalPayChargeItem extends React.Component {
             user_url = `/api/v1/users/${this.props.ownerId}`;
         }
 
-        console.log("my instance passed by props",service);
         this.state = {  loading: false,
             uid: uid,
             email: username,
@@ -52,7 +48,6 @@ class ModalPayChargeItem extends React.Component {
             fund: {},
             card: {}
         };
-        console.log('pay charge url:', this.state.pay_charge_url);
         this.fetcherUserPaymentInfo = this.fetcherUserPaymentInfo.bind(this);
         this.handlePaymentSetup = this.handlePaymentSetup.bind(this);
         this.onPaymentSetupClose = this.onPaymentSetupClose.bind(this);
@@ -67,19 +62,14 @@ class ModalPayChargeItem extends React.Component {
     fetcherUserPaymentInfo(){
         let self = this;
         //try and fetch user's card info from our database
-        console.log("checking user: ", self.state.uid);
-        console.log("the user url from state", self.state.user_url);
         Fetcher(`${self.state.user_url}`).then(function (response) {
-            console.log('response from state user url', response);
             if(!response.error){
                 if(!response[0]){ //if calling /api/v1/user/:uid
-                    console.log("response is object");
                     if(response.references.funds.length > 0){
                         let funds = _.get(response, 'references.funds');
                         if(funds.length > 0){
                             let fund = funds[0];
                             let card = funds[0].source.card;
-                            console.log('user has fund', card);
                             self.setState({ loading: false,
                                 hasCard: true,
                                 paymentSetupModal: false,
@@ -95,7 +85,6 @@ class ModalPayChargeItem extends React.Component {
                         if(funds.length > 0){
                             let fund = funds[0];
                             let card = funds[0].source.card;
-                            console.log('user has fund', card);
                             self.setState({ loading: false,
                                 hasCard: true,
                                 paymentSetupModal: false,
@@ -125,23 +114,18 @@ class ModalPayChargeItem extends React.Component {
         let self = this;
         self.setState({loading:false});
         if(!self.state.hasCard){
-            console.log("checking has card on pay", self.state.hasCard);
             self.handlePaymentSetup();
         }else {
-            console.log("user has card, and fetching pay api");
             Fetcher(self.state.pay_charge_url, "POST", {}).then(function (response) {
                 if (!response.error) {
                     //check stripe response for error
                     if (response.type == "StripeInvalidRequestError") {
                         //check what error it is
-                        console.log("Strip Error", response);
                         //make sure stripe has card and db has card
                         if (response.message == "This customer has no attached payment source") {
-                            console.log("Send user to setup payment method first.");
                             self.handlePaymentSetup();
                         }
                     } else {
-                        console.log("paid");
                         self.setState({loading: false, paid: true});
                     }
                 }
@@ -205,7 +189,6 @@ class ModalPayChargeItem extends React.Component {
                 </Modal>
             );
         }else if(currentModal == 'payment_setup'){
-            console.log("in payment setup from modal pay charge item");
             return( <ModalPaymentSetup ownerId={self.state.uid} modalCallback={self.onPaymentSetupClose} show={self.state.paymentSetupModal} hide={self.onPaymentSetupClose}/> );
         }
 

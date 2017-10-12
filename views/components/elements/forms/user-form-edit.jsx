@@ -13,7 +13,6 @@ class UserFormEdit extends React.Component {
     constructor(props){
         super(props);
         let user = this.props.myUser;
-        console.log("user", user);
         this.state = {
             user: user,
             url: `/api/v1/users/${user.id}`,
@@ -34,7 +33,6 @@ class UserFormEdit extends React.Component {
 
     componentWillReceiveProps(nextProps){
         if(this.props.myUser != nextProps.myUser){
-            console.log("props updated", nextProps.myUser);
             this.setState({ user: nextProps.myUser,
                             url: `/api/v1/users/${nextProps.myUser.id}`,
                             profileImage: `/api/v1/users/${nextProps.myUser.id}/avatar`
@@ -43,7 +41,6 @@ class UserFormEdit extends React.Component {
     }
 
     handleResponse(response){
-        console.log("inside handle response", response);
         if(!response.error){
             this.setState({success: true, currentAction: '_VIEW', user: response.results.data});
         }

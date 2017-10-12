@@ -12,7 +12,6 @@ class ServiceInstanceFormEdit extends React.Component {
         super(props);
         let templateId = this.props.templateId;
         let instance = this.props.myInstance;
-        console.log("template id", templateId);
         this.state = {
             instance: instance,
             templateId: templateId,
@@ -43,7 +42,6 @@ class ServiceInstanceFormEdit extends React.Component {
     }
 
     handleResponse(response){
-        console.log("inside handle response", response);
         if(!response.error){
             this.setState({success: true});
         }
@@ -60,7 +58,6 @@ class ServiceInstanceFormEdit extends React.Component {
     getValidators(){
         //This function dynamically generates validators depending on what custom properties the instance has.
         //requires references: the service template's references.service_template_properties
-        console.log("inside getValidators");
         //Defining general validators
         let validateRequired        = (val) => { return val === 0 || val === false || val != '' && val != null};
         let validateEmptyString     = (val) => { return val.trim() != ''};
@@ -88,7 +85,7 @@ class ServiceInstanceFormEdit extends React.Component {
         //     }
         // });
         //
-        // console.log("validatorJSON", validatorJSON);
+        ("validatorJSON", validatorJSON);
 
         return validatorJSON;
     }
@@ -118,7 +115,6 @@ class ServiceInstanceFormEdit extends React.Component {
             const instance_props = this.state.instance.references.service_instance_properties;
             // const references = this.state.template.references.service_template_properties.length > 0 ? this.state.template.references.service_template_properties : false;
 
-            console.log("my instance", instance);
 
             //TODO: Add validation functions and pass into DataForm as props
             //** Stripe limits the trial days to 2 years

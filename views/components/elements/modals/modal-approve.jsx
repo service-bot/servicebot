@@ -91,10 +91,8 @@ class ModalApprove extends React.Component {
                     if (response.type == "StripeInvalidRequestError") {
                         //check what error it is
                         self.setState({ajaxLoad: false}, ()=>{
-                            console.log("Stripe Error", response);
                             //make sure stripe has card and db has card
                             if (response.message == "This customer has no attached payment source") {
-                                console.log("Send user to setup payment method first.");
                                 self.handlePaymentSetup();
                             }else{
                                 self.setState({

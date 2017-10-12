@@ -11,7 +11,6 @@ class UserEdit extends React.Component {
 
     constructor(props){
         super(props);
-        console.log("this.props.param", this.props.params);
         this.state = {myUser:false, url:`/api/v1/users/${this.props.params.userId}`};
 
         this.fetchUser = this.fetchUser.bind(this);
@@ -29,10 +28,8 @@ class UserEdit extends React.Component {
         let self = this;
         Fetcher(self.state.url).then(function (response) {
             if(!response.error){
-                console.log("my user", response);
                 self.setState({loading: false, myUser: response});
             }else{
-                console.log("error getting user", response);
                 self.setState({loading: false});
             }
         }).catch(function(err){
@@ -60,7 +57,6 @@ class UserEdit extends React.Component {
                 </Authorizer>
             );
         }else {
-            console.log("rendering content");
             return (
                 <Authorizer permissions="can_administrate">
                     <Jumbotron pageName={pageName} location={this.props.location}/>

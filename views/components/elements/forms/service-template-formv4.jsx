@@ -32,7 +32,6 @@ class CustomField extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log("REBUILDINZG MYSELF", props);
 
     }
 
@@ -166,7 +165,6 @@ CustomField = connect((state, ownProps) => {
             }
         },
         "changePrivate": (event) => {
-            console.log("changing private value");
             if (!event.currentTarget.value || event.currentTarget.value == 'false') {
                 dispatch(change("servicebotForm", `references.${ownProps.member}.required`, false));
                 dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, false));
@@ -190,7 +188,6 @@ CustomField = connect((state, ownProps) => {
             dispatch(change("servicebotForm", `references.${ownProps.member}.config.pricing`, null));
         },
         "clearValue": () => {
-            console.log("***CLEARING VALUE")
             dispatch(change("servicebotForm", `references.${ownProps.member}.data`, null));
         }
     }
@@ -206,7 +203,6 @@ class renderCustomProperty extends React.Component {
             customFields: [],
         };
 
-        console.log("render custom props", props);
 
         this.onAdd = this.onAdd.bind(this);
     }
@@ -220,8 +216,6 @@ class renderCustomProperty extends React.Component {
     render() {
         let props = this.props;
         const {templateType, privateValue, fields, meta: {touched, error}} = props;
-        console.log("fields", fields.getAll());
-        console.log("EMAIL ! ", privateValue);
         return (
             <div>
                 <ul className="custom-fields-list">
@@ -272,7 +266,6 @@ class TemplateForm extends React.Component {
         let props = this.props;
 
         const changeServiceType = (event, newValue) => {
-            console.log("ChangeServiceType was called", newValue)
             if (newValue === 'one_time') {
                 props.setIntervalCount();
                 props.setInterval();
@@ -525,6 +518,7 @@ class ServiceTemplateForm extends React.Component {
         this.handleResponse = this.handleResponse.bind(this);
         this.handleImageSuccess = this.handleImageSuccess.bind(this);
         this.handleIconSuccess = this.handleIconSuccess.bind(this);
+        this.submissionPrep = this.submissionPrep.bind(this);
     }
 
     handleImageSuccess() {
@@ -552,12 +546,26 @@ class ServiceTemplateForm extends React.Component {
             autoDismiss: 4000,
         };
         this.props.addAlert(successMessage);
-        // browserHistory.push(`/service-catalog/${response.id}/request`);
         browserHistory.push(`/manage-catalog/list`);
     }
 
-    render() {
+    submissionPrep(values){
+        //remove id's for duplicate template operation
+        if (this.props.params.duplicate) {
+            console.log("We have a duplicate and we want to remove id");
+            delete values.id;
+            values.references.service_template_properties = values.references.service_template_properties.map(prop => {
+                if(prop.id){
+                    delete prop.id;
+                }
+                return prop;
+            })
+        }
+        return values;
+    }
 
+    render() {
+        //Todo change this. this is how we are currently making sure the redux store is populated
         if(!this.props.company_name){
             return (<Load/>);
         }else {
@@ -587,11 +595,9 @@ class ServiceTemplateForm extends React.Component {
                     successMessage = "Template Updated";
                     imageUploadURL = `/api/v1/service-templates/${this.props.params.templateId}/image`;
                     iconUploadURL = `/api/v1/service-templates/${this.props.params.templateId}/icon`;
-
                 }
             }
             else {
-                console.log("my props", this.props);
                 initialValues = {
                     type: 'subscription',
                     category_id: 1,
@@ -608,8 +614,9 @@ class ServiceTemplateForm extends React.Component {
                     'url': `/api/v1/service-templates`
                 };
                 successMessage = "Template Created";
-
             }
+            console.log("Our get url and out put url is " + imageUploadURL, this.state.success);
+
             return (
                 <div>
                     <div className="row">
@@ -639,6 +646,7 @@ class ServiceTemplateForm extends React.Component {
                                 form={TemplateForm}
                                 initialValues={initialValues}
                                 initialRequests={initialRequests}
+                                submissionPrep={this.submissionPrep}
                                 submissionRequest={submissionRequest}
                                 successMessage={successMessage}
                                 handleResponse={this.handleResponse}

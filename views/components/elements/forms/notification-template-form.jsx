@@ -45,7 +45,6 @@ class NotificationTemplateForm extends React.Component {
         Fetcher(self.state.url).then(function(response){
             if(!response.error){
 
-                console.log(response);
                 return response;
             }
         //then get the roles
@@ -68,7 +67,6 @@ class NotificationTemplateForm extends React.Component {
     handleRole(id){
         let self = this;
         return function(e) {
-            console.log("HELLO!");
             const target = e.target;
             if (target.checked) {
                 if (!self.state.roles.includes(id)){
@@ -87,9 +85,7 @@ class NotificationTemplateForm extends React.Component {
         let self = this;
         Fetcher(this.state.url + "/roles", "PUT", this.state.roles).then(function(response2){
             self.setState({success: true});
-            console.log(response2)
         });
-        console.log(response);
     }
 
     handleResetSuccess(){
@@ -107,7 +103,6 @@ class NotificationTemplateForm extends React.Component {
         let self = this;
         return function (e){
             e.preventDefault();
-            console.log('ref templater', self.refs);
             self.refs.wysiwygTemplater.refs.wysiwyg.insert(html);
         }
     }
@@ -121,7 +116,6 @@ class NotificationTemplateForm extends React.Component {
         if(this.state.loading) {
             return <Load/>;
         }else{
-            console.log('the notification template',this.state.template);
             let pageName = this.state.template.data.name || this.props.route.name;
             let template = this.state.template;
             let roles = this.state.templateRoles;
@@ -144,13 +138,10 @@ class NotificationTemplateForm extends React.Component {
                                             <span className="service-instance-section-label"><strong>Select the roles you want this email to be sent to</strong></span>
                                             <span className="help-block">The notification will be sent to all users with the roles.</span>
                                         {allRoles.map(role => {
-                                            console.log(role);
-                                            console.log(roles);
 
                                             let checked = roles.some(function(checkedRole){
                                                 return role.id == checkedRole.data.id
                                             });
-                                            console.log(checked);
 
 
                                             return (

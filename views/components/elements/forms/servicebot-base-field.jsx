@@ -113,7 +113,6 @@ class OnOffToggleField extends React.Component {
     }
 
     toggle(){
-        console.log(this.state);
         let newVal = !this.state.value;
         this.setState({value: newVal});
         // this.props.setValue(newVal);
@@ -128,7 +127,6 @@ class OnOffToggleField extends React.Component {
     }
 
     render(){
-        console.log("icon toggle .props", this.props);
 
         let { faIcon, icon, color, input, input:{name, value, onChange}, label, type} = this.props;
         let style = {};
@@ -176,7 +174,6 @@ class iconToggleField extends React.Component {
     }
 
     toggle(){
-        console.log(this.state);
         let newVal = !this.state.value;
         this.setState({value: newVal});
         this.props.setValue(newVal);
@@ -190,7 +187,6 @@ class iconToggleField extends React.Component {
     }
 
     render(){
-        console.log("icon toggle .props", this.props);
 
         let { faIcon, icon, color, input, input:{name, value, onChange}, label, type, meta: {touched, error, warning} } = this.props;
         let style = {};
@@ -243,9 +239,8 @@ class priceField extends React.Component {
 
     render() {
         let {isCents, input:{name, value, onChange}, label, type, meta: {touched, error, warning}} = this.props;
-        // console.log("Price Input", input);
+        ("Price Input", input);
         let price = isCents ?  (value/100).toFixed( 2 ) : value;
-        console.log("the value", value);
         return (
             <div className={`form-group form-group-flex`}>
                 {label && <label className="control-label form-label-flex-md">{label}</label>}

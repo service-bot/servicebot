@@ -28,7 +28,6 @@ class SignUp extends React.Component {
     }
 
     handleLogin(e){
-        console.log(e);
         e.preventDefault();
         var that = this;
 
@@ -50,7 +49,6 @@ class SignUp extends React.Component {
                 [name] : {$set:value}
             }
         });
-        console.log(formState);
         this.setState(formState);
     }
 

@@ -11,7 +11,6 @@ class ModalDeleteTemplate extends React.Component {
     constructor(props){
         super(props);
         let templateObject = this.props.templateObject;
-        console.log("Initializing ModalDeleteTemplate", templateObject);
         this.state = {  loading: true,
             template: templateObject,
             template_id: templateObject.id,
@@ -31,10 +30,9 @@ class ModalDeleteTemplate extends React.Component {
         let self = this;
         Fetcher(`/api/v1/service-templates/${self.state.template_id}`, "GET", {}).then(function (response) {
             if(!response.error){
-                console.log("delete template", response);
                 self.setState({loading: false, template: response});
             }else{
-                console.log("failed called api delete", `/api/v1/service-templates/${self.state.template_id}`);
+                console.error("failed called api delete", `/api/v1/service-templates/${self.state.template_id}`);
             }
             self.setState({loading: false});
         })
@@ -46,7 +44,6 @@ class ModalDeleteTemplate extends React.Component {
         self.setState({loading:false});
         Fetcher(self.state.action_url, "DELETE", {}).then(function (response) {
             if (!response.error) {
-                console.log("Delete success", response);
                 self.setState({loading: false, current_modal: 'modal_action_success'});
             } else {
                 self.setState({
@@ -57,7 +54,6 @@ class ModalDeleteTemplate extends React.Component {
                         message: 'Service template has attached instances. Cannot delete!'
                     }
                 });
-                console.log(response);
             }
         })
     }

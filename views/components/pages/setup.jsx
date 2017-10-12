@@ -175,7 +175,7 @@ class Setup extends React.Component {
     handleSubmit(e=null){
         let self = this;
         if(e != null) {
-            console.log(e);
+            console.error(e);
             e.preventDefault();
         }
         self.setState({loading: true});
@@ -184,10 +184,8 @@ class Setup extends React.Component {
                 if(!result.error) {
                     self.props.initialize();
                 }else{
-                    console.log("There was an error");
                     self.setState({loading: false});
 
-                    console.log(!result.error);
                 }
             });
     }
@@ -201,7 +199,6 @@ class Setup extends React.Component {
                 [name] : {$set:value}
             }
         });
-        console.log(formState);
         this.setState(formState);
     }
     checkStripe(callback){
@@ -220,7 +217,6 @@ class Setup extends React.Component {
         let self = this;
         Fetcher("/api/v1/check-db", "POST", this.state.form)
             .then(function(result){
-                console.log(result);
                 if(!result.error){
                     if(result.empty){
                         callback();

@@ -47,11 +47,9 @@ class BillingSettingForm extends React.Component {
         let self = this;
         Fetcher(`/api/v1/users/${self.state.uid}`).then(function (response) {
             if(!response.error){
-                console.log("current state's uid", response);
                 if(_.has(response, 'references.funds[0]') && _.has(response, 'references.funds[0].source.card')){
                     let fund = _.get(response, 'references.funds[0]');
                     let card = _.get(response, 'references.funds[0].source.card');
-                    console.log("found card in response", card);
                     self.setState({
                         loading: false,
                         hasCard: true,
@@ -65,7 +63,6 @@ class BillingSettingForm extends React.Component {
                             address_state: card.address_state,
                         }
                     }, function(){
-                        console.log("checked user and found card, state is set to", self.state);
                     });
                 }
             }else{
@@ -125,7 +122,6 @@ class BillingSettingForm extends React.Component {
 
         if(this.props.retrieveStripeToken){
             let form = document.getElementById('payment-form');
-            console.log("giving the stripe form to request form");
             this.props.retrieveStripeToken(form, null);
         }
     }
@@ -139,7 +135,6 @@ class BillingSettingForm extends React.Component {
         let form = document.getElementById('payment-form');
         form.addEventListener('submit', function(event) {
             event.preventDefault();
-            console.log("got submit event, personal information", self.state.personalInformation);
             stripe.createToken(card, self.state.personalInformation).then(function(result) {
                 if (result.error || result.err) {
                     // Inform the user if there was an error

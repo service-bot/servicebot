@@ -40,7 +40,6 @@ class ManageNotificationTemplates extends React.Component {
 
         Fetcher('/api/v1/notification-templates').then(function (response) {
             if (!response.error) {
-                console.log("notification template data", response);
                 self.setState({rows: response});
             }
             self.setState({loading: false});

@@ -22,7 +22,6 @@ class ModalInvoice extends React.Component {
             uid: uid,
             email: username,
         };
-        console.log("Modal Invoice Loaded");
         this.fetchNextInvoice = this.fetchNextInvoice.bind(this);
     }
 
@@ -33,20 +32,15 @@ class ModalInvoice extends React.Component {
     fetchNextInvoice(){
         let self = this;
         Fetcher(self.state.url).then(function(response){
-            console.log("modal invoice response:", response);
             if(response != null){
-                console.log("modal invoice response is not null");
                 if(!response.error){
-                    console.log("modal invoice response has no error", response);
                     self.setState({nextInvoice : response});
                     return response
                 }
             }
         }).then(function (data) {
-            console.log('data');
             Fetcher(`/api/v1/users/own`).then(function (response) {
                if(response != null && !response.error){
-                   console.log("got user object", response)
                    self.setState({loading: false, currentUser: response[0]});
                }else{
                    self.setState({loading: false});

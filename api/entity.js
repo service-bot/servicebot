@@ -142,7 +142,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
             store.dispatchEvent(`${model.table}_updated`, updatedEntity);
             next();
         }catch(error){
-            console.error(error);
+            console.error("Server error updating entity: " + error);
             res.status(500).send({error : "error updating"});
         }
     });
@@ -152,6 +152,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
         let entity = res.locals.valid_object;
         entity.delete(function (err, result) {
             if(err){
+                console.error("Server error deleting entity: " + err);
                 res.status(500).send({ error: "Error deleting" })
             }
             else {
@@ -168,6 +169,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
         let entity = new model(req.body);
         entity.create(function (err, newEntity) {
             if(err){
+                console.error("Server error creating entity: " + err);
                 res.status(500).send({ error: "Error creating new " + resourceName })
             }
             else {

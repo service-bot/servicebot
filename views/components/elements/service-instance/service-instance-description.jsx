@@ -41,7 +41,6 @@ class ServiceInstanceDescription extends React.Component {
 
     render () {
 
-        console.log('height', this.state.descriptionHeight);
         return (
             <div className="">
                 <div className="service-instance-section">

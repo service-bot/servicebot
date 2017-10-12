@@ -15,7 +15,8 @@ Inputs->
         {'method': 'GET', 'url': `/api/v1/service-templates/1`},
         {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
     ];
-*submissionPrep -
+*submissionPrep - A method that either returns values, or a promise that resolves values. Thrown errors will be created
+   as submission error
 *submissionRequest - A request object with just the method and url for the form to be submitted to. Ex:
     const submissionRequest = {
         'method': 'PUT',
@@ -45,7 +46,6 @@ class ServiceBotBaseForm extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log("NEW BASER FORM!", props);
 
         this.state = {
             submissionResponse: {},
@@ -67,17 +67,19 @@ class ServiceBotBaseForm extends React.Component {
 
     async submitForm(values) {
         let self = this;
-        self.setState({loading: true});
-        if (self.props.submissionPrep) {
-            console.log("submissionprepcalled");
-            let promiseToResolve = new Promise(resolve => {
-                self.props.submissionPrep(values, resolve);
-            });
-            let prepResults = await promiseToResolve;
-            await self.makeCall(prepResults);
-        }
-        else {
-            await self.makeCall(values);
+        try {
+            self.setState({loading: true});
+            if (self.props.submissionPrep) {
+                let prepResults = await self.props.submissionPrep(values);
+                await self.makeCall(prepResults);
+            }
+            else {
+                await self.makeCall(values);
+            }
+        }catch(e){
+            console.error("Something happened submitting", e);
+            self.setState({loading : false});
+            throw new SubmissionError({_error: e});
         }
     }
 
@@ -85,8 +87,6 @@ class ServiceBotBaseForm extends React.Component {
     //ITS NOT EASY BECAUSE OF HOW SUBMISSIONPREP iS
     //AND MAKE SURE WERE GETTING THE SUBMISSION ERRORS
     async makeCall(values) {
-        console.log("MAKING A CALL");
-        console.log("These are the values", values);
         let self = this;
         let result = null;
         try {
@@ -94,19 +94,15 @@ class ServiceBotBaseForm extends React.Component {
         } catch (e) {
             console.error("Fetch error", e);
             self.setState({loading: false});
-            throw new SubmissionError({_error: "Error submitting"})
+            throw "Error submitting"
         }
 
         if (!result.error) {
-            console.log("Submission Result", result);
             if (self.props.handleResponse) {
-                console.log("Handling response!!")
                 self.props.handleResponse(result)
             }
-            console.log("removing state thing")
             self.setState({loading: false, success: true, submissionResponse: result});
             if (this.props.successRoute) {
-                console.log("redirecting browser")
                 browserHistory.push(this.props.successRoute);
             }
         }
@@ -114,7 +110,7 @@ class ServiceBotBaseForm extends React.Component {
             console.error("submission error", result.error);
             self.setState({loading: false});
             // self.props.endSubmit({_error: result.error})
-            throw new SubmissionError({_error: result.error});
+            throw result.error;
             if (this.props.failureRoute) {
                 browserHistory.push(this.props.failureRoute);
             }
@@ -188,7 +184,6 @@ class ServiceBotBaseForm extends React.Component {
             );
         } else {
             let ReduxFormWrapper = this.state.reduxForm;
-            console.log(this.props.formProps);
 
             return (
                     <div>

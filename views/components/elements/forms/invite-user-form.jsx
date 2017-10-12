@@ -21,7 +21,6 @@ class InviteUserForm extends React.Component {
     }
 
     handleResponse(response){
-        console.log("inside handle response", response);
         if(!response.error){
             this.setState({success: true, response: response});
         }else{

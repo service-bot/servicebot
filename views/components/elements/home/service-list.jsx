@@ -48,9 +48,7 @@ class ServiceList extends React.Component {
     componentWillReceiveProps(nextProps){
         let self = this;
         if(nextProps.url != this.props.url){
-            console.log("updated props url", nextProps.url);
             Fetcher(nextProps.url).then(function(response){
-                console.log("url response", response);
                 if(!response.error){
                     self.setState({services : response});
                 }

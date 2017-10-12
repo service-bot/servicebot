@@ -52,7 +52,6 @@ class ManageCatalogList extends React.Component {
         Fetcher(url).then(function (response) {
             if (!response.error) {
                 self.setState({rows: response});
-                console.log("my api data", self.state.rows);
             }
             self.setState({loading: false});
         });
@@ -100,7 +99,6 @@ class ManageCatalogList extends React.Component {
         // return ( cell ? 'Published' : 'Unpublished' );
     }
     createdFormatter(cell){
-        console.log("what's the cell?", cell);
         return (getFormattedDate(cell, {time: true}));
     }
     rowActionsFormatter(cell, row){

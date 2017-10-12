@@ -56,7 +56,7 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
         let payStructure = (instanceRequest.amount === 0 || instanceRequest.amount === undefined) ? null : (await service.buildPayStructure(plan));
         let payPlan = await service.createPayPlan(payStructure);
 
-        if (instanceAttributes.requested_by === instanceAttributes.user_id) {
+        if (instanceAttributes.requested_by === instanceAttributes.user_id || self.data.type === "custom") {
             await service.subscribe();
         }
 
