@@ -518,6 +518,7 @@ class ServiceTemplateForm extends React.Component {
         this.handleResponse = this.handleResponse.bind(this);
         this.handleImageSuccess = this.handleImageSuccess.bind(this);
         this.handleIconSuccess = this.handleIconSuccess.bind(this);
+        this.submissionPrep = this.submissionPrep.bind(this);
     }
 
     handleImageSuccess() {
@@ -545,12 +546,26 @@ class ServiceTemplateForm extends React.Component {
             autoDismiss: 4000,
         };
         this.props.addAlert(successMessage);
-        // browserHistory.push(`/service-catalog/${response.id}/request`);
         browserHistory.push(`/manage-catalog/list`);
     }
 
-    render() {
+    submissionPrep(values){
+        //remove id's for duplicate template operation
+        if (this.props.params.duplicate) {
+            console.log("We have a duplicate and we want to remove id");
+            delete values.id;
+            values.references.service_template_properties = values.references.service_template_properties.map(prop => {
+                if(prop.id){
+                    delete prop.id;
+                }
+                return prop;
+            })
+        }
+        return values;
+    }
 
+    render() {
+        //Todo change this. this is how we are currently making sure the redux store is populated
         if(!this.props.company_name){
             return (<Load/>);
         }else {
@@ -580,7 +595,6 @@ class ServiceTemplateForm extends React.Component {
                     successMessage = "Template Updated";
                     imageUploadURL = `/api/v1/service-templates/${this.props.params.templateId}/image`;
                     iconUploadURL = `/api/v1/service-templates/${this.props.params.templateId}/icon`;
-
                 }
             }
             else {
@@ -600,8 +614,9 @@ class ServiceTemplateForm extends React.Component {
                     'url': `/api/v1/service-templates`
                 };
                 successMessage = "Template Created";
-
             }
+            console.log("Our get url and out put url is " + imageUploadURL, this.state.success);
+
             return (
                 <div>
                     <div className="row">
@@ -631,6 +646,7 @@ class ServiceTemplateForm extends React.Component {
                                 form={TemplateForm}
                                 initialValues={initialValues}
                                 initialRequests={initialRequests}
+                                submissionPrep={this.submissionPrep}
                                 submissionRequest={submissionRequest}
                                 successMessage={successMessage}
                                 handleResponse={this.handleResponse}

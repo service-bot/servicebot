@@ -24,7 +24,6 @@ class ImageUploader extends React.Component {
             imageChanged : false
         };
 
-
         this.onImageSelected = this.onImageSelected.bind(this);
         this.handleImage = this.handleImage.bind(this);
         this.getCoverImage = this.getCoverImage.bind(this);
@@ -37,7 +36,10 @@ class ImageUploader extends React.Component {
                 imageURL: nextProps.imageURL
             });
         }
-        if(this.props.uploadTrigger != nextProps.uploadTrigger){
+    }
+
+    componentDidUpdate(prevProps){
+        if(this.props.uploadTrigger != prevProps.uploadTrigger){
             if(!this.state.imageChanged){
                 if(this.props.handleSuccess){
                     return this.props.handleSuccess();
@@ -106,7 +108,6 @@ class ImageUploader extends React.Component {
                     body : new FormData(document.getElementById(`imgform${this.state.elementID}`))
         };
         self.setState({ajaxLoad: true});
-
         Fetcher(self.state.imageURL, null, null, init).then(function(result){
             if(!result.error){
                 self.setState({imageSelected: false, ajaxLoad: false}, function () {
@@ -135,7 +136,6 @@ class ImageUploader extends React.Component {
     }
 
     render(){
-
         return(
             <div className="row">
                 <div className={`col-md-12 edit-${this.state.elementID}-image`}>

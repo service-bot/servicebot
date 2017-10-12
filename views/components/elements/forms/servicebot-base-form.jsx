@@ -15,7 +15,8 @@ Inputs->
         {'method': 'GET', 'url': `/api/v1/service-templates/1`},
         {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
     ];
-*submissionPrep -
+*submissionPrep - A method that either returns values, or a promise that resolves values. Thrown errors will be created
+   as submission error
 *submissionRequest - A request object with just the method and url for the form to be submitted to. Ex:
     const submissionRequest = {
         'method': 'PUT',

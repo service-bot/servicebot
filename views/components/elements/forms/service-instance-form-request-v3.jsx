@@ -212,7 +212,6 @@ class ServiceInstanceForm extends React.Component {
             loading: true
         };
         this.closeUserLoginModal = this.closeUserLoginModal.bind(this);
-        this.retrieveStripeToken = this.retrieveStripeToken.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
         this.updatePrice = this.updatePrice.bind(this);
         this.submissionPrep = this.submissionPrep.bind(this);
@@ -318,7 +317,6 @@ class ServiceInstanceForm extends React.Component {
     }
 
     async submissionPrep(values){
-        let self = this;
         let token = await this.props.stripe.createToken();
         if(token.error){
             throw token.error.message
