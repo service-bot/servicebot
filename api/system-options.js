@@ -150,7 +150,7 @@ module.exports = function (router) {
     });
 
     router.get(`/system-options/version`, auth(), function (req, res, next) {
-        res.status("200").send({version:appPackage.version});
+        res.status(200).send({version:appPackage.version});
     });
 
 
