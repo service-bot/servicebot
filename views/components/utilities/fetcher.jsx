@@ -20,7 +20,7 @@ let Fetcher = function(path, method="GET", body, init=null){
         if(method == "POST" || method=="PUT"){
             init.body = JSON.stringify(body)
         }
-        (init);
+
 
     }
 

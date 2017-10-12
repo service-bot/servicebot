@@ -15,13 +15,13 @@ class Buttons extends React.Component {
         let myLink = _.isFunction(link) ? link(this.props.active) : link;
 
         if(myLink){
-            (typeof myLink);
+
             let linkArray = myLink.split('/');
             if(linkArray.indexOf(':id') > -1){
 
                 linkArray[linkArray.indexOf(':id')] = id;
                 let resultLink = linkArray.join('/');
-                (resultLink);
+
                 return resultLink;
             }
         }

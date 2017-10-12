@@ -115,7 +115,7 @@ class ServiceTemplateForm extends React.Component {
         return new Promise(function(resolve, reject){
             Fetcher(self.state.categories_url).then(function (categories_response) {
                 if(!categories_response.error){
-                    (categories_response);
+
                     self.setState({categories: categories_response}, function(){
                         resolve(categories_response);
                     });
@@ -150,7 +150,7 @@ class ServiceTemplateForm extends React.Component {
 
     replaceTagsInputPlaceholder(){
         let tagsinputs = document.getElementsByClassName('react-tagsinput-input');
-        ('gettnig tags inputs', tagsinputs);
+
         if(tagsinputs && tagsinputs.length){
             tagsinputs[0].placeholder = 'Add Values';
         }

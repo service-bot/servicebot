@@ -393,7 +393,7 @@ class DataForm extends React.Component {
                 }
 
                 const formState = update(currState, set);
-                (currState, set);
+
                 if(self.props.onUpdate) {
                     self.props.onUpdate(JSON.stringify(formState));
                 }

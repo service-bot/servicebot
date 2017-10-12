@@ -52,7 +52,7 @@ class ServiceRequestFormV2 extends React.Component {
         if(isAuthorized({permissions: "can_administrate"})) {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
-                    ('User Data', response);
+
                     let userRoleList = response.filter(function(user){
                         return user.references.user_roles[0].role_name === 'user';
                     });

@@ -79,7 +79,6 @@ class DataTable extends React.Component {
                 self.setState({resObjs : response});
             }
             self.setState({loading:false});
-            (self.state);
         });
     }
 
@@ -131,7 +130,7 @@ class DataTable extends React.Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         let searchURL = `${this.state.url}/search?key=name&value=${value}`;
-        (searchURL);
+
         self.setState({searchURL: searchURL}, function(){
             self.handleReFetch(self.state.searchURL);
         })
@@ -145,12 +144,12 @@ class DataTable extends React.Component {
                 self.setState({resObjs : response});
             }
             self.setState({loading:false});
-            (self.state);
+
         });
     }
 
     rowClasses(dataObj){
-        ('Dt rowClasses', dataObj);
+
         if(this.props.rowClasses && _.isFunction(this.props.rowClasses)){
 
             return(this.props.rowClasses(dataObj));
