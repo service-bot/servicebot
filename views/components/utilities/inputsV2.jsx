@@ -69,7 +69,7 @@ class Inputs extends React.Component {
     }
 
     handlePriceChange(e){
-        ("handlePriceChange", e);
+
         let self = this;
         let value = e.target.value || e.target.defaultValue;
 
@@ -140,7 +140,6 @@ class Inputs extends React.Component {
         }
 
         if(type == "text" || type == "number" || type == "hidden"){
-            ("passed in value", defaultValue);
             return (
                 <div className={`form-group ${error ? 'has-error' : ''} ${type == 'hidden' ? 'hidden' : ''}`}>
                     {label &&

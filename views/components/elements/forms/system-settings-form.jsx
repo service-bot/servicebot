@@ -100,7 +100,6 @@ class SystemSettingsForm extends React.Component {
         let self = this;
         self.setState({ajaxLoad: true});
         let payload = _.toArray(self.state.system_settings);
-        ("payload", payload);
         Fetcher('/api/v1/system-options', 'PUT', payload).then(function(response){
             if(!response.error){
                 self.setState({ajaxLoad: false, success: true});

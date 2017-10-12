@@ -265,8 +265,8 @@ class ServiceInstanceForm extends React.Component {
     }
 
     componentDidUpdate(nextProps, nextState) {
-        ("next props", nextProps);
-        ("next state", nextState);
+
+
         if (nextProps.uid && this.state.hasCard === null) {
             this.checkIfUserHasCard();
         }

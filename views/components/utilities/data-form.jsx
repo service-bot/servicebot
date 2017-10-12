@@ -261,23 +261,23 @@ class DataForm extends React.Component {
             let childValidators = self.props.validators.references || false;
 
             //Validating dataForm inputs
-            ("form before validation: ",form);
+
             for (var prop in form){
                 if(_.isFunction(validators[prop])) {
                     //validation functions will return true or an error object
                     let testResult = validators[prop](form[prop]);
                     if (testResult===true) {
-                        ("validating " + prop + " = " + form[prop] + ": ", "Pass");
+
                     } else {
                         _.set(errors, `${prop}`, {error: testResult.error});
-                        ("validating " + prop + " = " + form[prop] + ": ", testResult.error);
+
                     }
                 }
             }
 
             if(childValidators){
                 //Validating dataChild inputs
-                ("formChildren: ", formChildren);
+
                 //accessing path formChild.references
                 for (var model in formChildren){
                     //accessing path formChild.references[modelName]
@@ -410,7 +410,7 @@ class DataForm extends React.Component {
 
     render(){
         let children = this.recursiveInputModifier(this.props.children, null, null);
-        ("In Rendering: result children: ", children);
+
         return (
             <form id={this.props.id} className="dataform">
                 {this.state.ajaxLoad && <Load/> }

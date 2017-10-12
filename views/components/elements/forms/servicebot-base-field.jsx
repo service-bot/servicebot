@@ -237,7 +237,7 @@ class priceField extends React.Component {
 
     render() {
         let {isCents, input:{name, value, onChange}, label, type, meta: {touched, error, warning}} = this.props;
-        ("Price Input", input);
+
         let price = isCents ?  (value/100).toFixed( 2 ) : value;
         return (
             <div className={`form-group form-group-flex`}>

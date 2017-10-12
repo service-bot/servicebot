@@ -77,7 +77,6 @@ import ServiceRequestV2 from "./components/pages/service-catalog-request-v2.jsx"
 store.dispatch(initializedState);
 
 store.subscribe(() => {
-    ("store changed", store.getState());
 });
 
 let AppRouter = function (props) {

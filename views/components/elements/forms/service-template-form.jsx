@@ -51,7 +51,7 @@ class ServiceTemplateForm extends React.Component {
         super(props);
         // if editing an existing template (meaning with and ID)
         if(this.props.params.templateId && this.props.params.templateId !== null ){
-            ("has templateId", this.props.params.templateId);
+
             this.state = {
                 templateId: this.props.params.templateId,
                 template: [],
@@ -69,7 +69,7 @@ class ServiceTemplateForm extends React.Component {
                 uploadTrigger: false
             };
         }else{ // else creating a new template (meaning without an ID)
-            ("no templateId");
+
             this.state = {
                 template: {},
                 loading:true,
@@ -157,7 +157,7 @@ class ServiceTemplateForm extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState){
-        ("Updated new state:", this.state);
+
         this.replaceTagsInputPlaceholder();
 
         //find the input with error and scroll to it

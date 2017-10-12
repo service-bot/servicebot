@@ -18,7 +18,7 @@ class Buttons extends React.Component {
             (typeof myLink);
             let linkArray = myLink.split('/');
             if(linkArray.indexOf(':id') > -1){
-                ("found");
+
                 linkArray[linkArray.indexOf(':id')] = id;
                 let resultLink = linkArray.join('/');
                 (resultLink);

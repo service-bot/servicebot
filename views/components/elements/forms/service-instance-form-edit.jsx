@@ -85,7 +85,7 @@ class ServiceInstanceFormEdit extends React.Component {
         //     }
         // });
         //
-        ("validatorJSON", validatorJSON);
+
 
         return validatorJSON;
     }

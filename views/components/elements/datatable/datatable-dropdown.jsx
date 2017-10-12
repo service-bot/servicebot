@@ -27,7 +27,7 @@ class Dropdown extends React.Component {
             (typeof myLink);
             let linkArray = myLink.split('/');
             if(linkArray.indexOf(':id') > -1){
-                ("found");
+
                 linkArray[linkArray.indexOf(':id')] = id;
                 let resultLink = linkArray.join('/');
                 (resultLink);
@@ -42,7 +42,7 @@ class Dropdown extends React.Component {
         if(_.isFunction(button.onClick)){
             let myFunction = button.onClick;
             let myData = self.state.dataObject;
-            ("the onclick function", myFunction);
+
             return(
               <Link to={this.processDropDownButtons(button.link, this.props.id)} style={button.style} onClick={myFunction(myData)}>
                   { _.isFunction(button.name) ? button.name(myData) : button.name }

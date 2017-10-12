@@ -255,7 +255,7 @@ class ServiceRequestForm extends React.Component {
                 const fields = this.state.template;
                 const subscriptionType = this.state.template.type;
                 const references = this.state.template.references.service_template_properties.length > 0 ? this.state.template.references.service_template_properties : false;
-                ("fields", fields);
+
 
                 let submitButton = <Buttons buttonClass="btn-primary btn-bar" size="lg" btnType="primary" text="Submit Request" type="submit" value="submit"/>;
 
@@ -281,7 +281,6 @@ class ServiceRequestForm extends React.Component {
                     }
                 };
 
-                ("stripe errors xxxxx", this.state.stripeError);
                 return (
                     <div>
                         {getAlerts()}

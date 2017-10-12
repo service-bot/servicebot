@@ -94,8 +94,8 @@ class ServiceRequestFormV2 extends React.Component {
     }
 
     componentDidUpdate(nextProps, nextState){
-        ("next props", nextProps);
-        ("next state", nextState);
+
+
         if(nextState.stripToken != this.state.stripToken){
         }
         if(nextProps.uid && this.state.hasCard === null){
@@ -113,7 +113,7 @@ class ServiceRequestFormV2 extends React.Component {
         }
         if(token) {
             this.setState({stripToken: token}, function () {
-                ("Stripe token", self.state.stripToken);
+
                 self.handleSubmission();
             });
         }
@@ -217,7 +217,7 @@ class ServiceRequestFormV2 extends React.Component {
 
             let getRequestText = ()=>{
                 let serType = myService.type;
-                ("service type",myService.type);
+
                 if (serType == "subscription"){
                     return ("Subscribe");
                 }else if (serType == "one_time"){

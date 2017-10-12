@@ -74,7 +74,7 @@ class DataTable extends React.Component {
         let url = self.state.url;
         //todo: Can refactgor to reuse a fetch function as for the search
         Fetcher(url).then(function(response){
-            ("response", response);
+
             if(!response.error){
                 self.setState({resObjs : response});
             }
@@ -87,7 +87,7 @@ class DataTable extends React.Component {
         //todo: Need to handle the columns with references object
         let self = this;
         let myAccessArray = new Array(accessArray);
-        ("In recurAccess(), reading 1 of: ", accessArray.length, " with key: ", accessArray[0], " from: ", obj);
+
         if(accessArray.length==1){
             if(obj !== null && obj[accessArray[0]] !== null){
                 let type = typeof(obj[accessArray[0]]);
@@ -111,17 +111,17 @@ class DataTable extends React.Component {
         let self = this;
         let array = self.state.resObjs;
         let colString = _.toLower(column.toString());
-        ("column name", column, colString);
+
         colString = _.replace(colString, ' ', '_');
-        ("Sorting By: ", colString);
-        ("before sort", array[0]);
+
+
         if(self.state.sortOrder == "desc"){
             let newObjs = _.orderBy(array, [colString], ['asc']);
-            ("after sort asc", newObjs[0]);
+
             self.setState({resObjs: newObjs, sortedBy: column, sortOrder: 'asc'});
         }else{
             let newObjs = _.orderBy(array, [colString], ['desc']);
-            ("after sort desc", newObjs[0]);
+
             self.setState({resObjs: newObjs, sortedBy: column, sortOrder: 'desc'});
         }
     }
@@ -140,7 +140,7 @@ class DataTable extends React.Component {
     handleReFetch(url){
         let self = this;
         Fetcher(url).then(function(response){
-            ("response", response);
+
             if(!response.error){
                 self.setState({resObjs : response});
             }
@@ -152,7 +152,7 @@ class DataTable extends React.Component {
     rowClasses(dataObj){
         ('Dt rowClasses', dataObj);
         if(this.props.rowClasses && _.isFunction(this.props.rowClasses)){
-            ("DT has rowClassses in prop and is function");
+
             return(this.props.rowClasses(dataObj));
         }
     }
@@ -162,7 +162,7 @@ class DataTable extends React.Component {
             return ( <Load/> );
         }else {
             if(this.state.resObjs.length) {
-                ("FIRST", this.state.resObjs[0]);
+
                 return (
                     <div id="tables-datatable" className={`table-responsive ${this.props.className}`}>
                         {this.state.headingText &&
