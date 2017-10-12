@@ -18,11 +18,9 @@ class ModalPaymentSetup extends React.Component {
         let currentUserId = cookie.load("uid");
         let uid = currentUserId
 
-        console.log("modal payment setup opened");
 
         if(this.props.ownerId){
             uid = this.props.ownerId;
-            console.log("modalPaymentSetup: owner", uid);
         }
         this.state = {form: 'credit_card', ownerId: uid, currentUserId: currentUserId};
         this.handleCreditCard = this.handleCreditCard.bind(this);
@@ -48,7 +46,6 @@ class ModalPaymentSetup extends React.Component {
     }
     handleResponse(response){
         if(response.created || response.data){
-            console.log('inside payment setup modal', response);
             this.handleModalCallback(response);
         }
     }

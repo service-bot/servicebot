@@ -27,11 +27,9 @@ class ServiceInstanceMessage extends React.Component {
 
     fetchMessages(){
         let self = this;
-        console.log('get messages url',self.state.url);
         Fetcher(self.state.url).then(function(response){
             if(response != null){
                 if(!response.error){
-                    console.log("instance messages",response);
                     self.setState({messages : response});
                 }
             }
@@ -64,7 +62,6 @@ class ServiceInstanceMessage extends React.Component {
                     return "#";
                 }
             };
-            console.log("the messages", messages);
             if(messages.length > 0){
                 return (
                     <div className="service-instance-section">

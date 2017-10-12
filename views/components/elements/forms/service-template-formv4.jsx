@@ -32,7 +32,6 @@ class CustomField extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log("REBUILDINZG MYSELF", props);
 
     }
 
@@ -166,7 +165,6 @@ CustomField = connect((state, ownProps) => {
             }
         },
         "changePrivate": (event) => {
-            console.log("changing private value");
             if (!event.currentTarget.value || event.currentTarget.value == 'false') {
                 dispatch(change("servicebotForm", `references.${ownProps.member}.required`, false));
                 dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, false));
@@ -190,7 +188,6 @@ CustomField = connect((state, ownProps) => {
             dispatch(change("servicebotForm", `references.${ownProps.member}.config.pricing`, null));
         },
         "clearValue": () => {
-            console.log("***CLEARING VALUE")
             dispatch(change("servicebotForm", `references.${ownProps.member}.data`, null));
         }
     }
@@ -206,7 +203,6 @@ class renderCustomProperty extends React.Component {
             customFields: [],
         };
 
-        console.log("render custom props", props);
 
         this.onAdd = this.onAdd.bind(this);
     }
@@ -220,8 +216,6 @@ class renderCustomProperty extends React.Component {
     render() {
         let props = this.props;
         const {templateType, privateValue, fields, meta: {touched, error}} = props;
-        console.log("fields", fields.getAll());
-        console.log("EMAIL ! ", privateValue);
         return (
             <div>
                 <ul className="custom-fields-list">
@@ -272,7 +266,6 @@ class TemplateForm extends React.Component {
         let props = this.props;
 
         const changeServiceType = (event, newValue) => {
-            console.log("ChangeServiceType was called", newValue)
             if (newValue === 'one_time') {
                 props.setIntervalCount();
                 props.setInterval();
@@ -591,7 +584,6 @@ class ServiceTemplateForm extends React.Component {
                 }
             }
             else {
-                console.log("my props", this.props);
                 initialValues = {
                     type: 'subscription',
                     category_id: 1,

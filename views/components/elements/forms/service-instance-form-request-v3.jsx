@@ -18,7 +18,6 @@ import {connect} from "react-redux";
 import {RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import {inputField, selectField, widgetField} from "./servicebot-base-field.jsx";
-import BillingSettingsForm from "../../elements/forms/billing-settings-form.jsx";
 import BillingSettingsForm2 from "../../elements/forms/billing-settings2.jsx";
 
 import {Price} from "../../utilities/price.jsx";
@@ -27,7 +26,6 @@ import IconHeading from "../../layouts/icon-heading.jsx";
 import ModalUserLogin from "../modals/modal-user-login.jsx";
 import {addAlert} from "../../utilities/actions";
 import {setUid, fetchUsers, setUser} from "../../utilities/actions";
-import cookie from 'react-cookie';
 import { required, email, numericality, length } from 'redux-form-validators'
 import {injectStripe, Elements} from 'react-stripe-elements';
 
@@ -81,19 +79,14 @@ class ServiceRequestForm extends React.Component {
     render() {
         let props = this.props;
         const {handleSubmit, formJSON, helpers, error} = props;
-        console.log(formJSON.references.service_template_properties);
-        console.log(Object.values(widgets));
         let handlers = Object.values(widgets).reduce((acc, widget) => {
-            console.log("widget...", widget);
             acc[widget.type] = widget.handler;
             return acc;
 
         }, {});
-        console.log("MA HANDLERS", handlers);
         let newPrice = formJSON.amount;
         try {
             newPrice = getPrice(formJSON.references.service_template_properties, handlers, formJSON.amount);
-            console.log("NEW PRICE!", newPrice);
             helpers.updatePrice(newPrice);
         } catch (e) {
             console.error(e);
@@ -240,7 +233,6 @@ class ServiceInstanceForm extends React.Component {
                     });
                     self.setState({usersData: userRoleList});
                 } else {
-                    console.log('Error getting users', response);
                 }
             });
         }
@@ -249,7 +241,6 @@ class ServiceInstanceForm extends React.Component {
         if (!isAuthorized({permissions: "can_administrate"})) {
             Fetcher("/api/v1/funds/own").then(function (response) {
                 if (!response.error && response.length == 0) {
-                    console.log("fund", response);
                     self.setState({hasFund: false});
                 }
             });
@@ -262,11 +253,11 @@ class ServiceInstanceForm extends React.Component {
             if (!response.error) {
                 self.setState({loading: false, templateData: response, formData: response});
             } else {
-                console.log("Error", response.error);
+                console.error("Error", response.error);
                 self.setState({loading: false});
             }
         }).catch(function (err) {
-            console.log("ERROR!", err);
+            console.error("ERROR!", err);
         });
 
         if (this.props.uid) {
@@ -275,8 +266,8 @@ class ServiceInstanceForm extends React.Component {
     }
 
     componentDidUpdate(nextProps, nextState) {
-        // console.log("next props", nextProps);
-        // console.log("next state", nextState);
+        ("next props", nextProps);
+        ("next state", nextState);
         if (nextProps.uid && this.state.hasCard === null) {
             this.checkIfUserHasCard();
         }
@@ -287,7 +278,6 @@ class ServiceInstanceForm extends React.Component {
 
 
     updatePrice(newPrice) {
-        console.log("**Update price was called with price", newPrice);
         let self = this;
         self.setState({servicePrice: newPrice});
     }
@@ -317,7 +307,6 @@ class ServiceInstanceForm extends React.Component {
                             address_state: card.address_state,
                         }
                     }, function () {
-                        console.log("Checked user and found card, state is set to", self.state);
                         return true;
                     });
                 }

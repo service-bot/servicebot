@@ -23,7 +23,6 @@ class ServiceInstanceFormEdit extends React.Component {
     }
 
     handleResponse(response){
-        console.log("inside handle response", response);
         if(!response.error){
             this.setState({success: true, ajaxLoad: false});
         }else{
@@ -42,7 +41,6 @@ class ServiceInstanceFormEdit extends React.Component {
     getValidators(references = null){
         //This function dynamically generates validators depending on what custom properties the instance has.
         //optional references: the service template's references.service_template_properties
-        console.log("inside getValidators");
         //Defining general validators
         let validateRequired        = (val) => { return val === 0 || val === false || val != '' && val != null};
         let validateEmptyString     = (val) => { return val.trim() != ''};
@@ -55,7 +53,6 @@ class ServiceInstanceFormEdit extends React.Component {
             'description' : validateDescription
         };
 
-        console.log("validatorJSON", validatorJSON);
 
         return validatorJSON;
     }

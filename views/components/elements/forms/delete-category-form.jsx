@@ -23,14 +23,10 @@ class DeleteCategoryForm extends React.Component {
 
     fetchDeleteCategory(){
         let self = this;
-        console.log("HELLO!");
-        console.log(this.state.url);
         Fetcher(this.state.url, 'DELETE').then(function (response) {
-            console.log("in fetch delete category", response);
             if(!response.error){
                 self.setState({success: true, response: response});
             }else{
-                console.log("error delete category", response);
                 self.setState({
                     alerts: {
                         type: 'danger',
@@ -47,7 +43,6 @@ class DeleteCategoryForm extends React.Component {
         if(this.state.loading){
             return ( <Load/> );
         }else if(this.state.success){
-            console.log("success response", this.state.response);
             return (
                 <div>
                     <div className="p-20">

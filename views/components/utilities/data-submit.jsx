@@ -29,17 +29,13 @@ class DataSubmit extends React.Component {
         let self = this;
         Fetcher(self.state.formURL).then(function (response) {
             if (!response.error) {
-                console.log("Service Template", response);
                 self.setState({loading: false, templateData: response, formData: response});
             } else {
-                console.log("Error", response.error);
                 self.setState({loading: false});
             }
         }).catch(function(err){
-            console.log("ERROR!", err);
         });
 
-        console.log("DataSubmit mounted", this);
 
     }
 
@@ -78,11 +74,9 @@ class DataSubmit extends React.Component {
 
         Fetcher(this.state.formURL, 'POST', payload).then(function(response){
             if(!response.error){
-                console.log('submission response', response);
                 self.setState({ajaxLoad: false, success: true});
             }else{
                 self.setState({ajaxLoad: false});
-                console.log(`Problem PUT ${self.state.formURL}`, response.error);
             }
         });
 

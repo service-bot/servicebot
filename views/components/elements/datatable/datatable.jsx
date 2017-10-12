@@ -48,7 +48,6 @@ class DataTable extends React.Component {
         if(this.props.get){
             this.fetchData()
         }else if(this.props.dataObj){
-            console.log("I got data obj", this.props.dataObj);
             this.setState({loading: false, resObjs: this.props.dataObj});
         }
     }
@@ -66,7 +65,6 @@ class DataTable extends React.Component {
             }
         }
         if(this.props.dataObj !== nextProps.dataObj){
-            console.log("dataObj updated!!", nextProps.dataObj);
             this.setState({resObjs: nextProps.dataObj});
         }
     }
@@ -76,12 +74,12 @@ class DataTable extends React.Component {
         let url = self.state.url;
         //todo: Can refactgor to reuse a fetch function as for the search
         Fetcher(url).then(function(response){
-            // console.log("response", response);
+            ("response", response);
             if(!response.error){
                 self.setState({resObjs : response});
             }
             self.setState({loading:false});
-            // console.log(self.state);
+            (self.state);
         });
     }
 
@@ -89,10 +87,9 @@ class DataTable extends React.Component {
         //todo: Need to handle the columns with references object
         let self = this;
         let myAccessArray = new Array(accessArray);
-        // console.log("In recurAccess(), reading 1 of: ", accessArray.length, " with key: ", accessArray[0], " from: ", obj);
+        ("In recurAccess(), reading 1 of: ", accessArray.length, " with key: ", accessArray[0], " from: ", obj);
         if(accessArray.length==1){
             if(obj !== null && obj[accessArray[0]] !== null){
-                // console.log("Returning [0]: " + accessArray[0] + ": " + obj[accessArray[0]] + " type: " + typeof(obj[accessArray[0]]));
                 let type = typeof(obj[accessArray[0]]);
                 if(type == "boolean"){
                     return obj[accessArray[0]] ? "True" : "False";
@@ -102,7 +99,6 @@ class DataTable extends React.Component {
             return "null";
         }else {
             let newObj = obj[accessArray.shift()];
-            // console.log("newObj", newObj);
             if(typeof(newObj) != "undefined" && newObj !== null){
                 return self.recursiveAccess(accessArray, newObj);
             }else{
@@ -115,17 +111,17 @@ class DataTable extends React.Component {
         let self = this;
         let array = self.state.resObjs;
         let colString = _.toLower(column.toString());
-        // console.log("column name", column, colString);
+        ("column name", column, colString);
         colString = _.replace(colString, ' ', '_');
-        // console.log("Sorting By: ", colString);
-        // console.log("before sort", array[0]);
+        ("Sorting By: ", colString);
+        ("before sort", array[0]);
         if(self.state.sortOrder == "desc"){
             let newObjs = _.orderBy(array, [colString], ['asc']);
-            // console.log("after sort asc", newObjs[0]);
+            ("after sort asc", newObjs[0]);
             self.setState({resObjs: newObjs, sortedBy: column, sortOrder: 'asc'});
         }else{
             let newObjs = _.orderBy(array, [colString], ['desc']);
-            // console.log("after sort desc", newObjs[0]);
+            ("after sort desc", newObjs[0]);
             self.setState({resObjs: newObjs, sortedBy: column, sortOrder: 'desc'});
         }
     }
@@ -135,7 +131,7 @@ class DataTable extends React.Component {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         let searchURL = `${this.state.url}/search?key=name&value=${value}`;
-        // console.log(searchURL);
+        (searchURL);
         self.setState({searchURL: searchURL}, function(){
             self.handleReFetch(self.state.searchURL);
         })
@@ -144,19 +140,19 @@ class DataTable extends React.Component {
     handleReFetch(url){
         let self = this;
         Fetcher(url).then(function(response){
-            // console.log("response", response);
+            ("response", response);
             if(!response.error){
                 self.setState({resObjs : response});
             }
             self.setState({loading:false});
-            // console.log(self.state);
+            (self.state);
         });
     }
 
     rowClasses(dataObj){
-        // console.log('Dt rowClasses', dataObj);
+        ('Dt rowClasses', dataObj);
         if(this.props.rowClasses && _.isFunction(this.props.rowClasses)){
-            // console.log("DT has rowClassses in prop and is function");
+            ("DT has rowClassses in prop and is function");
             return(this.props.rowClasses(dataObj));
         }
     }
@@ -166,7 +162,7 @@ class DataTable extends React.Component {
             return ( <Load/> );
         }else {
             if(this.state.resObjs.length) {
-                // console.log("FIRST", this.state.resObjs[0]);
+                ("FIRST", this.state.resObjs[0]);
                 return (
                     <div id="tables-datatable" className={`table-responsive ${this.props.className}`}>
                         {this.state.headingText &&

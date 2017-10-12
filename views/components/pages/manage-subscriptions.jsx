@@ -70,7 +70,6 @@ class ManageSubscriptions extends React.Component {
 
         Fetcher(url).then(function (response) {
             if (!response.error) {
-                console.log('subscription data', response);
                 self.setState({rows: response});
             }
         }).then(function (){
@@ -85,7 +84,6 @@ class ManageSubscriptions extends React.Component {
         let self = this;
         Fetcher('/api/v1/users').then(function (response) {
             if(!response.error){
-                console.log('all users', response);
                 self.setState({loading: false, allUsers: response});
             }else{
                 self.setState({loading: false});
@@ -244,7 +242,6 @@ class ManageSubscriptions extends React.Component {
 
         let renderModals = ()=> {
             if(self.state.actionModal){
-                console.log("current instance", self.state.currentDataObject);
                 switch (self.state.currentDataObject.status){
                     case 'requested':
                         return(
@@ -267,7 +264,7 @@ class ManageSubscriptions extends React.Component {
                     case 'cancelled':
                         return(null);
                     default:
-                        console.log("Error in status", self.state.currentDataObject.status);
+                        console.error("Error in status", self.state.currentDataObject.status);
                         return(null);
                 }
             }

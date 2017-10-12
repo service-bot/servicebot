@@ -61,7 +61,6 @@ class Login extends React.Component {
 
                 //if there was an alert in the state and store, dismiss it
                 if(self.state.alerts.length){
-                    console.log("trying to dismiss alert");
 
                     const removedAlert = self.props.alerts.filter(alert => alert.id !== self.state.alerts[0].id);
 
@@ -94,7 +93,6 @@ class Login extends React.Component {
         }
 
         if(this.props.email){
-            console.log("has email", this.props.email);
             const formState = update(this.state, { form: {email: {$set: this.props.email}}});
             this.setState(formState);
         }
@@ -104,7 +102,7 @@ class Login extends React.Component {
     }
 
     componentDidUpdate(){
-        // console.log("updated state", this.state);
+        ("updated state", this.state);
     }
 
     goToLogin(){

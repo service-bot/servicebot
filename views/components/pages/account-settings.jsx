@@ -42,9 +42,7 @@ class UserForm extends React.Component {
             body : new FormData(document.getElementById("imgform"))
         };
 
-        console.log(e.target);
         Fetcher(`${this.state.url}/avatar`, null, null, init).then(function(result){
-            console.log(result);
         });
     }
 

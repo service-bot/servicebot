@@ -669,8 +669,6 @@ const FieldLevelValidationForm = function(props){
 
     const {handleSubmit, pristine, reset, submitting, error, serviceTypeValue, invalid, formJSON, options} = props;
 
-    console.log("my options", formJSON);
-
     // const sectionDescriptionStyle = {
     //     background: _.get(options, 'service_template_icon_background_color.value', '#000000'),
     //     height: "100px",
@@ -907,7 +905,6 @@ class ServiceTemplateForm extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log("NEW TEMPLATE FORM");
         this.state = {
             newTemplateId: 0,
             success: false,

@@ -20,16 +20,13 @@ class ForgotPassword extends React.Component {
     }
 
     handleReset(e) {
-        console.log(e);
         e.preventDefault();
         let self = this;
         if (!self.state.form.email) {
             this.setState({submitted: self.state.submitted+1});
-            console.log("email field is required", this.state.submitted);
         }else{
             Fetcher("/api/v1/auth/reset-password", "POST", self.state.form).then(function (result) {
                 if (!result.error) {
-                    console.log(result);
                     localStorage.setItem("permissions", result.permissions);
                     self.setState({success:true});
                 }
@@ -45,7 +42,6 @@ class ForgotPassword extends React.Component {
             form: {
                 [name] : {$set:value}}
         });
-        console.log(formState);
         this.setState(formState);
     }
 

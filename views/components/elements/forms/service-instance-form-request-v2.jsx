@@ -52,13 +52,13 @@ class ServiceRequestFormV2 extends React.Component {
         if(isAuthorized({permissions: "can_administrate"})) {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
-                    // console.log('User Data', response);
+                    ('User Data', response);
                     let userRoleList = response.filter(function(user){
                         return user.references.user_roles[0].role_name === 'user';
                     });
                     self.setState({usersData: userRoleList});
                 } else {
-                    console.log('Error getting users', response);
+                    console.error('Error getting users', response);
                 }
             });
         }
@@ -67,7 +67,6 @@ class ServiceRequestFormV2 extends React.Component {
         if(!isAuthorized({permissions: "can_administrate"})) {
             Fetcher("/api/v1/funds/own").then(function (response) {
                 if (!response.error && response.length == 0) {
-                    console.log("fund", response);
                     self.setState({hasFund: false});
                 }
             });
@@ -81,11 +80,11 @@ class ServiceRequestFormV2 extends React.Component {
             if (!response.error) {
                 self.setState({loading: false, templateData: response, formData: response});
             } else {
-                console.log("Error", response.error);
+                console.error("Error", response.error);
                 self.setState({loading: false});
             }
         }).catch(function(err){
-            console.log("ERROR!", err);
+            console.error("ERROR!", err);
         });
 
         if(this.props.uid) {
@@ -95,10 +94,9 @@ class ServiceRequestFormV2 extends React.Component {
     }
 
     componentDidUpdate(nextProps, nextState){
-        // console.log("next props", nextProps);
-        // console.log("next state", nextState);
+        ("next props", nextProps);
+        ("next state", nextState);
         if(nextState.stripToken != this.state.stripToken){
-            console.log(nextState.stripToken, this.state.stripToken);
         }
         if(nextProps.uid && this.state.hasCard === null){
             this.checkIfUserHasCard();
@@ -115,7 +113,7 @@ class ServiceRequestFormV2 extends React.Component {
         }
         if(token) {
             this.setState({stripToken: token}, function () {
-                // console.log("Stripe token", self.state.stripToken);
+                ("Stripe token", self.state.stripToken);
                 self.handleSubmission();
             });
         }
@@ -147,7 +145,7 @@ class ServiceRequestFormV2 extends React.Component {
                         }
                     } else {
                         self.setState({ajaxLoad: false});
-                        console.log(`Server Error:`, response.error);
+                        console.error(`Server Error:`, response.error);
                         if(response.error == "This email already exists in the system"){
                             self.setState({emailExists: true, formResponseError: response.error});
                         }else if(response.error == "Invitation already exists for this user"){
@@ -156,10 +154,10 @@ class ServiceRequestFormV2 extends React.Component {
                     }
                 });
             }else{
-                console.log("Errors found by validators", payload);
+                console.error("Errors found by validators", payload);
             }
         }else{
-            console.log("User doesn't have card nor a stripe token");
+            console.error("User doesn't have card nor a stripe token");
         }
     }
 
@@ -187,7 +185,6 @@ class ServiceRequestFormV2 extends React.Component {
                             address_state: card.address_state,
                         }
                     }, function(){
-                        console.log("Checked user and found card, state is set to", self.state);
                         return true;
                     });
                 }
@@ -220,7 +217,7 @@ class ServiceRequestFormV2 extends React.Component {
 
             let getRequestText = ()=>{
                 let serType = myService.type;
-                // console.log("service type",myService.type);
+                ("service type",myService.type);
                 if (serType == "subscription"){
                     return ("Subscribe");
                 }else if (serType == "one_time"){
@@ -291,7 +288,6 @@ class ServiceRequestFormV2 extends React.Component {
                                         <Inputs type={reference.prop_input_type} label={reference.prop_label} name="value"
                                                 disabled={!reference.prompt_user && !isAuthorized({permissions: 'can_administrate'})}
                                                 defaultValue={reference.value}
-                                                onChange={console.log("OK")}
                                                 options={reference.prop_values}
                                                 refName="service_template_properties" refID={reference.id}
                                                 validator={reference.required && validateRequired}

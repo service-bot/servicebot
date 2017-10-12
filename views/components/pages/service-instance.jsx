@@ -91,7 +91,6 @@ class ServiceInstance extends React.Component {
         Fetcher(self.state.url).then(function(response){
             if(response != null){
                 if(!response.error){
-                    console.log("my instance",response);
                     self.setState({instance : response});
                 }
             }
@@ -108,7 +107,6 @@ class ServiceInstance extends React.Component {
     }
 
     handleApprove(event){
-        console.log("hi");
         event.preventDefault();
         this.setState({ approveModal : true});
     }
@@ -296,7 +294,6 @@ class ServiceInstance extends React.Component {
             //Gather data first
             if( self.state.instance){
                 let service = self.state.instance;
-                console.log("the service instance", service);
                 id = service.id;
                 owner = service.references.users[0];
                 ownerId = service.user_id;

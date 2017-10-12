@@ -23,12 +23,10 @@ class ResetPassword extends React.Component {
 
 
     handleReset(e){
-        console.log(e);
         e.preventDefault();
         let that = this;
         Fetcher(this.state.resetPassURL, "POST", that.state.form).then(function(result){
             if(!result.error) {
-                console.log(result);
                 localStorage.setItem("permissions", result.permissions);
                 browserHistory.push("/login");
             }
@@ -43,7 +41,6 @@ class ResetPassword extends React.Component {
             form: {
                 [name] : {$set:value}}
         });
-        console.log(formState);
         this.setState(formState);
     }
 
@@ -59,7 +56,6 @@ class ResetPassword extends React.Component {
 
         Fetcher(this.state.resetPassURL).then(function (response) {
             if(response.isValid){
-                console.log('yes..');
             }else{
                 return browserHistory.push("/");
             }

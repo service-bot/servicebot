@@ -12,10 +12,9 @@ class SearchServiceBar extends React.Component {
         let self = this;
         Fetcher('/api/v1/service-categories').then(function (response) {
             if(!response.error){
-                console.log("categories response", response);
                 self.setState({categories: response});
             }else{
-                console.log("error", response);
+                console.error("error", response);
             }
         })
     }

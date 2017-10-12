@@ -45,7 +45,6 @@ class ServiceBotBaseForm extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log("NEW BASER FORM!", props);
 
         this.state = {
             submissionResponse: {},
@@ -70,7 +69,6 @@ class ServiceBotBaseForm extends React.Component {
         try {
             self.setState({loading: true});
             if (self.props.submissionPrep) {
-                console.log("submissionprepcalled");
                 let prepResults = await self.props.submissionPrep(values);
                 await self.makeCall(prepResults);
             }
@@ -104,7 +102,6 @@ class ServiceBotBaseForm extends React.Component {
             }
             self.setState({loading: false, success: true, submissionResponse: result});
             if (this.props.successRoute) {
-                console.log("redirecting browser")
                 browserHistory.push(this.props.successRoute);
             }
         }
@@ -186,7 +183,6 @@ class ServiceBotBaseForm extends React.Component {
             );
         } else {
             let ReduxFormWrapper = this.state.reduxForm;
-            console.log(this.props.formProps);
 
             return (
                     <div>

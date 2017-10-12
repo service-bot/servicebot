@@ -157,19 +157,15 @@ let initializedState = async function(dispatch){
     };
     initialState.options = await Fetcher("/api/v1/system-options/public");
     try {
-        console.log("before checking cookie for uid");
         if (cookie.load("uid")) { // if user is logged in
             initialState.user = (await Fetcher("/api/v1/users/own"))[0];
             //Set the version of the application if the user is logged in
             let version = await Fetcher("/api/v1/system-options/version");
             initialState.options = {...initialState.options, version:version.version};
-            console.log("user loaded");
             if(initialState.user.status === 'invited'){
-                console.log('user is invited, set redux store alert');
                 initialState.alerts = [...initialState.alerts, {id: '1', message: 'Please check your email and set your password to complete your account.', show: true}];
                 // initialState.alerts = [...initialState.alerts, {id: '2', message: 'A dummy alert.', show: true}];
             }else{
-                console.log('user is not invited');
             }
             initialState.notifications = await Fetcher("/api/v1/notifications/own");
             if(isAuthorized({permissions: "put_email_templates_id"})){

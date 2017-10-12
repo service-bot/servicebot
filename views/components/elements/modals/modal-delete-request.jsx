@@ -33,7 +33,6 @@ class ModalDeleteRequest extends React.Component {
             Fetcher(self.state.action_url, "DELETE", {}).then(function (response) {
                 if (!response.error) {
                     //check stripe response for error
-                    console.log("deleted", response);
                     self.setState({loading: false, current_modal: 'model_delete_success'});
                 }
                 self.setState({loading: false});

@@ -22,7 +22,7 @@ class Featured extends React.Component {
 
     componentWillReceiveProps(nextProps){
         if(nextProps.imageURL){
-            // console.log("Featured Image got new image", nextProps.imageURL);
+            ("Featured Image got new image", nextProps.imageURL);
             this.setState({imageURL: nextProps.imageURL});
         }
     }

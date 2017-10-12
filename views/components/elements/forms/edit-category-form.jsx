@@ -31,7 +31,6 @@ class EditCategoryForm extends React.Component {
         Fetcher(self.state.url).then(function(response){
             if(response != null){
                 if(!response.error){
-                    console.log(response);
                     self.setState({loading:false, category: response});
                 }
             }

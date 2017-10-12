@@ -22,7 +22,6 @@ class ServiceInstanceMessageForm extends React.Component {
     }
 
     handleResponse(response){
-        console.log("inside handle response", response);
         this.props.handleComponentUpdating();
         this.setState({ajaxLoad: false});
     }
@@ -38,7 +37,6 @@ class ServiceInstanceMessageForm extends React.Component {
             'message' : validateMessage,
         };
 
-        console.log("validatorJSON", validatorJSON);
 
         return validatorJSON;
     }

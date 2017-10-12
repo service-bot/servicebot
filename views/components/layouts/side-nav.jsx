@@ -59,9 +59,6 @@ class SlideNavLinks extends React.Component {
     }
 
     render(){
-
-        console.log('current user', this.props.user);
-
         let myLinks = this.getLinksByPermission();
 
         if(myLinks) {
@@ -107,14 +104,12 @@ class SlideNavLinks extends React.Component {
 class SideNav extends React.Component {
 
     handleLinkClick(){
-        console.log("handleLinkClick");
         document.body.classList.remove('layout-collapsed');
         document.getElementById("sidebar-backdrop").classList.remove('in');
         document.getElementById("sidebar-backdrop").classList.remove('fade');
     }
 
     render () {
-        console.log("options side nav", this.props.options);
         let style = {};
         if(this.props.options){
             if(this.props.options.primary_theme_background_color){

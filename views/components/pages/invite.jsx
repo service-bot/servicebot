@@ -11,7 +11,6 @@ class SignUp extends React.Component {
     }
 
     componentWillMount(){
-        console.log(`/api/v1/invitation/${this.props.params.token}`)
         Fetcher(`/api/v1/invitation/${this.props.params.token}`)
             .catch(function (err) {
                 return browserHistory.push("/404");

@@ -4,7 +4,6 @@ import {isAuthorized} from '../../utilities/authorizer.jsx';
 class ServiceInstanceFields extends React.Component {
 
     render () {
-        console.log("service custom props", this.props.instanceProperties);
         return (
             <div className="service-instance-section">
                 <span className="service-instance-section-label">Custom Fields</span>

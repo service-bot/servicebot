@@ -9,19 +9,16 @@ class DashboardServiceListItemCharge extends React.Component {
         super(props);
         let serviceInstanceId = this.props.serviceInstanceId;
         this.state = { chargeItems: [], url: `/api/v1/service-instances/${serviceInstanceId}/awaiting-charges`, loading:true};
-        console.log(this.state.url);
     }
 
     componentDidMount() {
         let self = this;
         Fetcher(self.state.url).then(function(response){
-            console.log(response);
             if(!response.error){
                 self.setState({chargeItems : response});
             }
             self.setState({loading:false});
         })
-        console.log(this.state.chargeItems);
     }
 
     render () {

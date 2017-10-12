@@ -72,7 +72,6 @@ class ManageUsers extends React.Component {
         let self = this;
         Fetcher('/api/v1/users').then(function (response) {
             if (!response.error) {
-                console.log("user data", response);
                 self.setState({rows: response});
             }
             self.setState({loading: false});
@@ -306,7 +305,6 @@ class ManageUsers extends React.Component {
                 )
             }
             if(this.state.openEditRole){
-                console.log("Im suppoooosed to open")
                 return (
                     <ModalEditUserRole
                         uid={this.state.currentDataObject.id}

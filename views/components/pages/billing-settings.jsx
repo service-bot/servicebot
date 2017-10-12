@@ -20,7 +20,6 @@ class BillingSettings extends React.Component {
     }
     render () {
         let pageName = this.props.route.name;
-        console.log("props", this.props);
         return(
             <Authorizer>
                 <Jumbotron pageName={pageName} location={this.props.location}/>

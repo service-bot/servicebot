@@ -64,7 +64,7 @@ import ServiceRequestV2 from "./components/pages/service-catalog-request-v2.jsx"
 // Fetcher("/api/v1/system-options/public").then(function(response) {
 //     store.dispatch(setOptions(response));
 // }).then(function() {
-//     // console.log("app will dispatch setUser function", cookie.load("uid"));
+//     ("app will dispatch setUser function", cookie.load("uid"));
 //     fetchUsers(cookie.load("uid"), (err, user) => store.dispatch(setUser(user)));
 // }).catch(function (error) {
 //     console.log("Error", error);
@@ -77,7 +77,7 @@ import ServiceRequestV2 from "./components/pages/service-catalog-request-v2.jsx"
 store.dispatch(initializedState);
 
 store.subscribe(() => {
-    // console.log("store changed", store.getState());
+    ("store changed", store.getState());
 });
 
 let AppRouter = function (props) {

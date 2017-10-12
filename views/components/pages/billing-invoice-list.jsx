@@ -52,11 +52,10 @@ class BillingInvoiceList extends React.Component {
         let self = this;
         Fetcher(self.state.url).then(function (response) {
            if (!response.error){
-               console.log(response);
                self.setState({invoice: response});
                return response;
            }else{
-               console.log(response.error);
+               console.error(response.error);
                self.setState({loading: false});
            }
         }).then(function(response){
@@ -72,20 +71,16 @@ class BillingInvoiceList extends React.Component {
         if(self.state.currentUser == data.user_id){
             Fetcher('/api/v1/users/own').then(function (response) {
                 if(!response.error){
-                    console.log("own user object",response);
                     self.setState({loading: false, invoiceOwner: response[0]});
                 }else{
-                    console.log("error own user object", response);
                     self.setState({loading: false});
                 }
             });
         }else{
             Fetcher(`/api/v1/users/${data.user_id}`).then(function (response) {
                 if(!response.error){
-                    console.log("admin getting user object", response);
                     self.setState({loading: false, invoiceOwner: response});
                 }else{
-                    console.log("error admin / other user getting user object", response);
                     self.setState({loading: false});
                 }
             });

@@ -19,13 +19,11 @@ class DashboardServiceList extends React.Component {
 
     componentWillReceiveProps(nextProps){
         if(this.props.services == nextProps.services){
-            console.log("updating list component in componentWillReceiveProps");
             this.setState({services: nextProps.services});
         }
     }
 
     handleComponentUpdating(){
-        console.log("re-fetching the service instances data");
         // this.fetchServiceInstances()
         this.props.handleComponentUpdating();
     }
@@ -46,7 +44,6 @@ class DashboardServiceList extends React.Component {
             );
         }
         else {
-            console.log(this.state.services);
             //grouping services by their status for displaying in groups
             const grouped = _.groupBy(this.state.services, 'status');
             return (

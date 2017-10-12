@@ -124,7 +124,6 @@ class MyServices extends React.Component {
                 }
             };
 
-            console.log('my color', widgetColor());
 
             const currentModal = ()=> {
                 if(self.state.InvoiceModal){
@@ -134,7 +133,6 @@ class MyServices extends React.Component {
                 }
             };
 
-            console.log("store's user", userStatus);
 
             return(
                 <Authorizer>

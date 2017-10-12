@@ -32,10 +32,8 @@ class Home extends React.Component {
         const target = event.currentTarget;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         if(value != ''){
-            console.log("has value", value);
             this.setState({serviceUrl : "/api/v1/service-templates/search?key=name&value=" + value, searchValue:value});
         }else{
-            console.log("no value", value);
             this.setState({serviceUrl : "/api/v1/service-templates", searchValue:""});
         }
     }
@@ -155,7 +153,6 @@ class HomeFeatures extends React.Component{
         let featuredHeading, featuredDescription = "";
 
         let options = this.props.options;
-        console.log("my options", options);
         featuredHeading = _.get(options, 'home_featured_heading.value', '"You can set this heading in system options');
         featuredDescription = _.get(options, 'home_featured_description.value', "You can set this text in system options");
 

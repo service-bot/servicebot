@@ -24,11 +24,10 @@ class DeleteUserForm extends React.Component {
     fetchSuspendUser(){
         let self = this;
         Fetcher(this.state.url, 'DELETE').then(function (response) {
-            console.log("in fetch delete user", response);
             if(!response.error){
                 self.setState({success: true, response: response});
             }else{
-                console.log("error delete user", response);
+                console.error("error delete user", response);
                 self.setState({
                     alerts: {
                         type: 'danger',
@@ -45,7 +44,6 @@ class DeleteUserForm extends React.Component {
         if(this.state.loading){
             return ( <Load/> );
         }else if(this.state.success){
-            console.log("success response", this.state.response);
             return (
                 <div>
                     <div className="p-20">

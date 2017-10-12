@@ -30,7 +30,6 @@ class UserFormEditRole extends React.Component {
         let self = this;
         Fetcher("/api/v1/roles", "GET").then(function (response) {
             if(!response.error){
-                console.log("roles", response);
                 self.setState({loading: false, roles: response});
             }
             self.setState({loading: false});
@@ -44,10 +43,9 @@ class UserFormEditRole extends React.Component {
         self.setState({ajaxLoad: false});
         Fetcher(this.state.formURL, 'PUT', payload).then(function (response) {
             if (!response.error) {
-                console.log("updated user", response);
                 self.setState({ajaxLoad: false, success: true, updatedUser: response.results.data});
             }else {
-                console.log(`Server Error:`, response.error);
+                console.error(`Server Error:`, response.error);
                 self.setState({ajaxLoad: false});
             }
         });
@@ -78,7 +76,6 @@ class UserFormEditRole extends React.Component {
                 )
             }else{
 
-                console.log("current row user", this.props.user.role_id);
                 return (
                     <div className="edit-user-role-form">
                         <div className="p-20">
