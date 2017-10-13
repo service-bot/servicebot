@@ -54,8 +54,6 @@ import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
 //Tests
 import ServiceTemplateFormV4 from "./components/elements/forms/service-template-formv4.jsx";
-import TestBase from "./components/elements/forms/test-base.jsx";
-import TestUpload from "./components/elements/forms/file-upload-form.jsx";
 import ServiceRequestV2 from "./components/pages/service-catalog-request-v2.jsx"
 
 
