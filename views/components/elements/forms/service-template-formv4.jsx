@@ -15,17 +15,6 @@ import Load from "../../utilities/load.jsx";
 let _ = require("lodash");
 import { required, email, numericality, length } from 'redux-form-validators'
 
-// const required = value => (value || value !== '' || value !== null || value !== undefined) ? undefined : 'Required';
-// const required = value => ((value || value === 0) ? undefined : 'Required');
-
-const maxLength = max => value =>
-    value && value.length > max ? `Must be ${max} characters or less` : undefined;
-const maxLength15 = maxLength(15);
-const maxLength22 = maxLength(22);
-const number = value => value && isNaN(Number(value)) ? 'Must be a number' : undefined;
-const minValue = min => value =>
-    value && value < min ? `Must be at least ${min}` : undefined;
-const minValue18 = minValue(18);
 const selector = formValueSelector('servicebotForm'); // <-- same as form name
 
 class CustomField extends React.Component {
@@ -293,6 +282,7 @@ class TemplateForm extends React.Component {
         return (
 
             <form onSubmit={handleSubmit}>
+                {JSON.stringify(formJSON)}
                 {error && <div>{error}</div>}
                 <div className="row">
                     <div className="col-md-8">
@@ -303,7 +293,7 @@ class TemplateForm extends React.Component {
                         />
                         <Field name="description" type="text"
                                component={inputField} label="Summary"
-                               validate={[required()  ]}
+                               validate={[required()]}
                         />
                         <Field name="details" type="text"
                                component={WysiwygRedux} label="Details"
@@ -371,7 +361,9 @@ class TemplateForm extends React.Component {
                                 <Field name="amount" type="number"
                                        component={priceField}
                                        isCents={true}
-                                       label="Amount"/>
+                                       label="Amount"
+                                       validate={numericality({ '>': 0.00 })}
+                                />
                                 }
 
                                 {(serviceTypeValue === 'subscription') &&
@@ -605,6 +597,7 @@ class ServiceTemplateForm extends React.Component {
                     statement_descriptor: this.props.company_name.value,
                     interval: 'month',
                     interval_count: 1,
+                    amount: 0
                 };
                 initialRequests.push(
                     {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
