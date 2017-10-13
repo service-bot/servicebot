@@ -129,7 +129,6 @@ class AppRouter extends React.Component {
                 {/* Query routes */}
                 <Route name="Services" path="manage-subscriptions/:status" component={ManageSubscriptions}/>
                 {/* Other */}
-                <Route path="users" component={Users}/>
                 <Route path="service-templates/:templateId" component={ServiceTemplateForm}/>
                 <Route name="Manage Subscriptions" path="/service-instance"
                        component={ManageSubscriptions}/>

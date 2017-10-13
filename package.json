@@ -41,7 +41,7 @@
     "fetch-retry": "^1.1.1",
     "form-data": "^2.3.1",
     "glob": "^7.1.2",
-    "helmet": "^3.8.2",
+    "helmet": "^3.9.0",
     "http": "0.0.0",
     "immutability-helper": "^2.4.0",
     "imports-loader": "^0.7.1",
@@ -103,7 +103,7 @@
     "swagger-jsdoc": "^1.9.7",
     "underscore": "^1.8.3",
     "wait-for-port": "0.0.2",
-    "webpack": "^3.6.0",
+    "webpack": "^3.7.1",
     "whatwg-fetch": "^2.0.3",
     "xss": "^0.3.4"
   },
