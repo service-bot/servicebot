@@ -18,7 +18,7 @@ import {connect} from "react-redux";
 import {RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import {inputField, selectField, widgetField} from "./servicebot-base-field.jsx";
-import BillingSettingsForm2 from "../../elements/forms/billing-settings2.jsx";
+import {CardSection} from "../../elements/forms/billing-settings-form.jsx";
 
 import {Price} from "../../utilities/price.jsx";
 import Fetcher from "../../utilities/fetcher.jsx";
@@ -374,7 +374,7 @@ class ServiceInstanceForm extends React.Component {
                 {/*Price: {this.state.servicePrice}*/}
 
                 {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
-                this.state.servicePrice > 0 &&  <BillingSettingsForm2/>}
+                this.state.servicePrice > 0 &&  <CardSection/>}
 
 
 

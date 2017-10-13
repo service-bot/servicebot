@@ -179,7 +179,7 @@ class ServiceBotBaseForm extends React.Component {
             return (
                 <div className="p-20">
                     <p><strong>{this.state.successMessage}</strong></p>
-                    <p>{this.state.submissionResponse.name || 'something went wrong.'}</p>
+                    <p><i className="fa fa-check" aria-hidden="true"/></p>
                 </div>
             );
         } else {
