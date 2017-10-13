@@ -67,12 +67,12 @@ class SetupAdmin extends React.Component{
                 </p>
                 <div className="row">
                     <label className="control-label">Admin Email:</label>
-                    <input className="form-control" value={this.props.state.admin_user} onChange={this.props.inputChange} name="admin_user" />
+                    <input required type="email" className="form-control" value={this.props.state.admin_user} onChange={this.props.inputChange} name="admin_user" />
                 </div>
 
                 <div className="row">
                     <label className="control-label">Admin Password:</label>
-                    <input className="form-control" type="password" value={this.props.state.admin_password} onChange={this.props.inputChange} name="admin_password"/>
+                    <input minLength="4" required className="form-control" type="password" value={this.props.state.admin_password} onChange={this.props.inputChange} name="admin_password"/>
                 </div>
                 <hr/>
 
@@ -86,11 +86,11 @@ class SetupAdmin extends React.Component{
                 </div>
                 <div className="row">
                     <label className="control-label">Business Phone #:</label>
-                    <input className="form-control" value={this.props.state.company_phone_number} onChange={this.props.inputChange} name="company_phone_number"/>
+                    <input type="tel" className="form-control" value={this.props.state.company_phone_number} onChange={this.props.inputChange} name="company_phone_number"/>
                 </div>
                 <div className="row">
                     <label className="control-label">Business Email:</label>
-                    <input className="form-control" value={this.props.state.company_email} onChange={this.props.inputChange} name="company_email"/>
+                    <input type="email" className="form-control" value={this.props.state.company_email} onChange={this.props.inputChange} name="company_email"/>
                 </div>
                 <div className="row">
                     <label className="control-label">Site URL:</label>
@@ -235,13 +235,9 @@ class Setup extends React.Component {
             {name: 'Stripe API Keys', onNext: this.checkStripe, component: <SetupStripe state={this.state.form} inputChange={this.handleInputChange} />},
             {name: 'Configuration', component: <SetupAdmin state={this.state.form} inputChange={this.handleInputChange}/>}
         ];
-
-        if(this.state.loading){
-            return ( <Load/> );
-        }else{
         return(
-
             <div style={{backgroundColor: '#0097f1', minHeight: 100+'vh'}}>
+                {this.state.loading && <Load/>}
                 <div className="installation row">
                     <div className="installation-logo col-md-8">
                         <img src="/assets/logos/logo-installation.png" />
@@ -250,9 +246,9 @@ class Setup extends React.Component {
                     <div className="installation-form col-md-4">
                     <Content>
                         <Alert stack={{limit: 3}} position='bottom'/>
-                        <form>
+                        <form onSubmit={this.handleSubmit}>
                             {/*{JSON.stringify(this.state.form)}*/}
-                            <Multistep handleSubmit={this.handleSubmit} steps={steps}/>
+                            <Multistep  steps={steps}/>
                             <br/>
                         </form>
                     </Content>
@@ -260,7 +256,7 @@ class Setup extends React.Component {
                 </div>
             </div>
         );
-    }}
+    }
 }
 
 
