@@ -101,7 +101,7 @@ class ServiceBotTableBase extends React.Component {
 
         const customChildren = React.Children.map(children,
             (child) => React.cloneElement(child, {
-                filter: child.props.filter === false ? false : self.state.advancedFilter
+                filter: child.props.filter ? child.props.filter : self.state.advancedFilter
             })
         );
 

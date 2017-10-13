@@ -149,7 +149,7 @@ class ManageSubscriptions extends React.Component {
         }
     }
     amountFormatter(cell){
-        return ( `<span class="subscription-price">${getPriceValue(cell.amount)}</span>` );
+        return (cell.amount);
     }
     statusFormatter(cell){
         switch (cell) {
@@ -331,7 +331,7 @@ class ManageSubscriptions extends React.Component {
                                                            columnClassName={'action-column'}
                                                            dataFormat={ this.rowActionsFormatter }
                                                            width='80'
-                                                           filter={false}>
+                                                           searchable={false}>
                                         </TableHeaderColumn>
                                     </ServiceBotTableBase>
                                 </div>
