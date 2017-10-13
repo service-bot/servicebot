@@ -102,7 +102,6 @@ class Login extends React.Component {
     }
 
     componentDidUpdate(){
-        ("updated state", this.state);
     }
 
     goToLogin(){

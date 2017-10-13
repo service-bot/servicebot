@@ -3,6 +3,7 @@ import { TwitterPicker, SketchPicker } from 'react-color';
 let _ = require("lodash");
 let values = require('object.values');
 
+
 if(!Object.values){
     values.shim();
 }
@@ -107,7 +108,6 @@ class Inputs extends React.Component {
     }
 
     handleChange(e){
-        ("input event: ", e);
 
         let value = e.target.value || e.target.defaultValue;
         if(this.props.dependentFunction){
@@ -201,7 +201,7 @@ class Inputs extends React.Component {
         }
 
         if(type == "text" || type == "number" || type == "hidden" || type == "email" || type == "password"){
-            ("passed in value", defaultValue);
+
             return (
                 <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''} ${type == 'hidden' ? 'hidden' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}

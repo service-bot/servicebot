@@ -67,7 +67,7 @@ class ServiceRequest extends React.Component {
             let objectURL = URL.createObjectURL(myBlob);
             self.setState({image: objectURL});
         }).catch(function(error) {
-            ("There was problem fetching your image:" + imageURL + " " + error);
+
         });
     }
 
@@ -82,7 +82,7 @@ class ServiceRequest extends React.Component {
             let objectURL = URL.createObjectURL(myBlob);
             self.setState({icon: objectURL});
         }).catch(function(error) {
-            ("There was problem fetching your image:" + error.message);
+
         });
     }
 

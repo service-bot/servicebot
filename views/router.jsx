@@ -20,8 +20,7 @@ import ServiceInstance from './components/pages/service-instance.jsx';
 import ServiceRequest from './components/pages/service-catalog-request.jsx';
 import ServiceCatalog from './components/pages/service-catalog.jsx';
 // User
-import { Notifications } from "./components/pages/notifications.jsx"
-import Users from './components/pages/users.jsx';
+import {Notifications} from "./components/pages/notifications.jsx"
 import Login from "./components/elements/forms/login.jsx";
 import ForgotPassword from "./components/elements/forms/forgot-password.jsx";
 import ResetPassword from "./components/elements/forms/reset-password.jsx";
@@ -57,8 +56,6 @@ import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
 //Tests
 import ServiceTemplateFormV4 from "./components/elements/forms/service-template-formv4.jsx";
-import TestBase from "./components/elements/forms/test-base.jsx";
-import TestUpload from "./components/elements/forms/file-upload-form.jsx";
 import ServiceRequestV2 from "./components/pages/service-catalog-request-v2.jsx"
 
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'

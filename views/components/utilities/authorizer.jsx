@@ -15,7 +15,7 @@ let isAuthorized = function(props) {
         // let user_perms = JSON.parse((cookie.load("permissions").slice(2)));
 
         let required_perms = props.permissions ? props.permissions : [];
-        ("permissions", props.permissions);
+
         if(typeof required_perms == "string"){
             required_perms = [required_perms];
         }

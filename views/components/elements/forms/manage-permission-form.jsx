@@ -19,7 +19,7 @@ class RoleToggle extends React.Component {
 
     handleChange(e){
         if(e.currentTarget.checked){
-            ("turned on");
+
             this.setState({yes: true});
             this.props.onChange({
                 role: this.state.role,
@@ -27,7 +27,7 @@ class RoleToggle extends React.Component {
                 yes: true
             });
         }else{
-            ("turned off");
+
             this.setState({yes: false});
             this.props.onChange({
                 role: this.state.role,

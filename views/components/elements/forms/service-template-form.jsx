@@ -51,7 +51,7 @@ class ServiceTemplateForm extends React.Component {
         super(props);
         // if editing an existing template (meaning with and ID)
         if(this.props.params.templateId && this.props.params.templateId !== null ){
-            ("has templateId", this.props.params.templateId);
+
             this.state = {
                 templateId: this.props.params.templateId,
                 template: [],
@@ -69,7 +69,7 @@ class ServiceTemplateForm extends React.Component {
                 uploadTrigger: false
             };
         }else{ // else creating a new template (meaning without an ID)
-            ("no templateId");
+
             this.state = {
                 template: {},
                 loading:true,
@@ -115,7 +115,7 @@ class ServiceTemplateForm extends React.Component {
         return new Promise(function(resolve, reject){
             Fetcher(self.state.categories_url).then(function (categories_response) {
                 if(!categories_response.error){
-                    (categories_response);
+
                     self.setState({categories: categories_response}, function(){
                         resolve(categories_response);
                     });
@@ -150,14 +150,14 @@ class ServiceTemplateForm extends React.Component {
 
     replaceTagsInputPlaceholder(){
         let tagsinputs = document.getElementsByClassName('react-tagsinput-input');
-        ('gettnig tags inputs', tagsinputs);
+
         if(tagsinputs && tagsinputs.length){
             tagsinputs[0].placeholder = 'Add Values';
         }
     }
 
     componentDidUpdate(prevProps, prevState){
-        ("Updated new state:", this.state);
+
         this.replaceTagsInputPlaceholder();
 
         //find the input with error and scroll to it

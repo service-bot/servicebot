@@ -2,7 +2,6 @@ import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import Load from '../../utilities/load.jsx';
 import Inputs from "../../utilities/inputsV2.jsx";
-import BillingSettingsForm from "../../elements/forms/billing-settings-form.jsx";
 import { formBuilder } from "../../utilities/form-builder";
 import Buttons from "../../elements/buttons.jsx";
 import {Price} from "../../utilities/price.jsx";
@@ -52,7 +51,7 @@ class ServiceRequestFormV2 extends React.Component {
         if(isAuthorized({permissions: "can_administrate"})) {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
-                    ('User Data', response);
+
                     let userRoleList = response.filter(function(user){
                         return user.references.user_roles[0].role_name === 'user';
                     });
@@ -94,8 +93,8 @@ class ServiceRequestFormV2 extends React.Component {
     }
 
     componentDidUpdate(nextProps, nextState){
-        ("next props", nextProps);
-        ("next state", nextState);
+
+
         if(nextState.stripToken != this.state.stripToken){
         }
         if(nextProps.uid && this.state.hasCard === null){
@@ -113,7 +112,7 @@ class ServiceRequestFormV2 extends React.Component {
         }
         if(token) {
             this.setState({stripToken: token}, function () {
-                ("Stripe token", self.state.stripToken);
+
                 self.handleSubmission();
             });
         }
@@ -217,7 +216,7 @@ class ServiceRequestFormV2 extends React.Component {
 
             let getRequestText = ()=>{
                 let serType = myService.type;
-                ("service type",myService.type);
+
                 if (serType == "subscription"){
                     return ("Subscribe");
                 }else if (serType == "one_time"){

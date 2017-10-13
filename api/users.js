@@ -269,16 +269,16 @@ module.exports = function (router, passport) {
         });
     });
 
-    router.post("/users/:id(\\d+)/suspend", validate(User), auth(null, User, "id"), function (req, res) {
+    router.post("/users/:id(\\d+)/suspend", validate(User), auth(null, User, "id"), async function (req, res) {
         let user = res.locals.valid_object;
-        user.suspend(function (err, updated_user) {
-            if(!err) {
-                store.dispatchEvent("user_suspended", user);
-                res.status(200).json(updated_user);
-            } else {
-                res.status(400).json({error: "Error suspending the user"});
-            }
-        });
+        try {
+            let updatedUser = await user.suspend();
+            store.dispatchEvent("user_suspended", updatedUser);
+            res.status(200).json(updatedUser);
+
+        }catch(e) {
+            res.status(400).json({error: "Error suspending the user"});
+        }
     });
 
     router.post("/users/:id(\\d+)/unsuspend", validate(User), auth(null, User, "id"), function (req, res) {

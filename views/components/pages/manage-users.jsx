@@ -229,32 +229,35 @@ class ManageUsers extends React.Component {
         );
     }
     rowActionsFormatter(cell, row){
-        let self = this;
+        let dropdownOptions = [
+            {   type: "button",
+                label: row.references.funds.length ? 'Edit Credit Card' : 'Add Credit Card',
+                action: () => { return (this.openEditCreditCard(row)) }},
+            {   type: "button",
+                label: 'Edit User',
+                action: () => { browserHistory.push(`/manage-users/${row.id}`) }},
+            {   type: "button",
+                label: 'Manage Services',
+                action: () => { browserHistory.push(`/manage-subscriptions/?uid=${row.id}`) }},
+            {   type: "divider" },
+            {   type: "button",
+                label: 'Edit Role',
+                action: () => {
+                    return (this.openEditRole(row)) }},
+            {   type: "button",
+                label: row.status !== 'suspended' ? 'Suspend User' : 'Unsuspend User',
+                action: () => { return (this.openSuspendUser(row)) }},
+            {   type: "button",
+                label: 'Delete User',
+                action: () => { return (this.openDeleteUser(row)) }},
+        ];
+        if(row.status === 'invited') {
+            dropdownOptions = dropdownOptions.filter(op => op.label !== 'Suspend User');
+        }
         return (
             <Dropdown
                 direction="right"
-                dropdown={[
-                    {   type: "button",
-                        label: row.references.funds.length ? 'Edit Credit Card' : 'Add Credit Card',
-                        action: () => { return (this.openEditCreditCard(row)) }},
-                    {   type: "button",
-                        label: 'Edit User',
-                        action: () => { browserHistory.push(`/manage-users/${row.id}`) }},
-                    {   type: "button",
-                        label: 'Manage Services',
-                        action: () => { browserHistory.push(`/manage-subscriptions/?uid=${row.id}`) }},
-                    {   type: "divider" },
-                    {   type: "button",
-                        label: 'Edit Role',
-                        action: () => {
-                        return (this.openEditRole(row)) }},
-                    {   type: "button",
-                        label: row.status !== 'suspended' ? 'Suspend User' : 'Unsuspend User',
-                        action: () => { return (this.openSuspendUser(row)) }},
-                    {   type: "button",
-                        label: 'Delete User',
-                        action: () => { return (this.openDeleteUser(row)) }},
-                ]}
+                dropdown={dropdownOptions}
             />
         );
     }

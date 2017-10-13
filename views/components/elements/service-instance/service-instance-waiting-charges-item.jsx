@@ -1,6 +1,8 @@
 import React from 'react';
 import {Price} from '../../utilities/price.jsx';
 import Buttons from "../../elements/buttons.jsx";
+import {isAuthorized} from "../../utilities/authorizer.jsx";
+
 
 class ServiceInstanceWaitingChargesItem extends React.Component {
 
@@ -24,7 +26,9 @@ class ServiceInstanceWaitingChargesItem extends React.Component {
                 <div className="xaas-data xaas-charge"><span>{self.state.chargeItem.description}</span></div>
                 <div className="xaas-data xaas-price"><span><Price value={self.state.chargeItem.amount}/></span></div>
                 <div className="xaas-data xaas-action">
-                    <Buttons btnType="primary" text="Make Payment" onClick={self.onPayCharge}/>
+                    {isAuthorized({permissions: 'can_administrate'}) &&
+                        <Buttons btnType="primary" text="Make Payment" onClick={self.onPayCharge}/>
+                    }
                 </div>
             </div>
         );

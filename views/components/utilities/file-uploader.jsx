@@ -66,7 +66,6 @@ class FileUploader extends React.Component {
         };
         self.setState({ajaxLoad: true});
 
-        (e.target);
         Fetcher(self.state.fileURL, null, null, init).then(function(result){
             if(!result.error){
                 self.setState({fileSelected: false, ajaxLoad: false}, function () {

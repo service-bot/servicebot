@@ -24,14 +24,13 @@ class UserFormRegister extends React.Component {
     }
 
     handleResponse(response) {
-        ("inside handle response", response);
+
         if (!response.error) {
             localStorage.setItem("permissions", response.permissions);
             this.props.setUid(cookie.load("uid"));
             this.props.setUser(cookie.load("uid"));
             this.setState({success: true});
 
-            ("LOCATION!", that.props.location);
             if (this.props.location.state && this.props.location.state.fromLogin) {
                 return browserHistory.go(-2);
             }
