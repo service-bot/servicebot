@@ -24,13 +24,14 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
             get: async function (target, name) {
                 let reference = references.find(ref => ref.model.table === name);
                 if (!reference) {
+                    console.log(name);
                     throw `Reference is not defined.`
                 }
                 return await self.getRelated(reference.model)
             }
 
         });
-    }
+    };
 
     Entity.database = database;
     Entity.table = tableName;
@@ -202,6 +203,9 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
             this;
         }
         else {
+
+            //
+            let ids = referenceData.reduce((acc, refInstance) => acc.concat(refInstance.id || []), []);
             referenceData.forEach(newChild => (newChild[reference.referenceField] = this.get(primaryKey)));
             let references = await this.references[reference.model.table];
             let removedReferences = await reference.model.batchDelete({

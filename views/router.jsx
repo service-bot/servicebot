@@ -70,9 +70,8 @@ class AppRouter extends React.Component {
     render(){
         const history = syncHistoryWithStore(browserHistory, this.props.store)
 
-        return (<Router history={history}>
-            <StripeProvider apiKey={cookie.load("spk") || "no_public_token"}>
-
+        return (
+            <Router history={history}>
             <Route name="Home" path="/" component={App}>
                 <IndexRoute component={Home}/>
 
@@ -137,8 +136,8 @@ class AppRouter extends React.Component {
             <Route name="Embed" path={"/service/:serviceId/embed"} component={Embed}/>
             <Route name="Automated Installation" path="setup" component={Setup}/>
             <Route path='*' component={GenericNotFound}/>
-            </StripeProvider>
-        </Router>)
+        </Router>
+        )
     }
 }
 let mapDispatch = function(dispatch){
@@ -163,9 +162,11 @@ class AppWrapper extends React.Component {
         let props = this.props;
         if (this.state.pluginbot) {
             return (
+            <StripeProvider apiKey={cookie.load("spk") || "no_public_token"}>
                 <PluginbotProvider pluginbot={this.state.pluginbot}>
                     <AppRouter store={this.state.pluginbot.store}/>
                 </PluginbotProvider>
+            </StripeProvider>
             );
         }else{
             return <div>Initializing...</div>

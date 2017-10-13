@@ -142,7 +142,7 @@ module.exports = function (router, model, resourceName, userCorrelator) {
             store.dispatchEvent(`${model.table}_updated`, updatedEntity);
             next();
         }catch(error){
-            console.error("Server error updating entity: " + error);
+            console.error("Server error updating entity: ", error);
             res.status(500).send({error : "error updating"});
         }
     });
