@@ -3,7 +3,6 @@ import {browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
-import {BillingForm} from "../elements/forms/billing-settings2.jsx";
 import {connect} from "react-redux";
 
 class BillingSettings extends React.Component {

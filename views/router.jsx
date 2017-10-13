@@ -6,7 +6,6 @@ import {setOptions, setUid, setUser, fetchUsers, initializeState} from "./compon
 import {store, initializedState} from "./store"
 import {Provider} from 'react-redux'
 import {StripeProvider} from 'react-stripe-elements';
-import BillingSettings2 from "./components/elements/forms/billing-settings2.jsx";
 import cookie from 'react-cookie';
 // App
 import App from "./components/app.jsx";
