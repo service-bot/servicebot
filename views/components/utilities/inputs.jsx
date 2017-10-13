@@ -3,6 +3,7 @@ import { TwitterPicker, SketchPicker } from 'react-color';
 let _ = require("lodash");
 let values = require('object.values');
 
+
 if(!Object.values){
     values.shim();
 }
