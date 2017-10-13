@@ -148,9 +148,7 @@ class CreditCardForm extends React.Component {
                         submissionRequest={submissionRequest}
                         successMessage={"Fund added successfully"}
                         handleResponse={this.props.handleResponse}
-
                     />
-
                 </div>
             </div>
         );
