@@ -39,7 +39,7 @@ Ex:
 *failureRoute - The route for the browser to redirect to if there’s a failure
 *helpers - any properties needed to pass to the form for functionality
 Note:
-Form is name 'servicebotForm' is selector is needed
+Form name is 'servicebotForm' if selector is needed
  */
 
 class ServiceBotBaseForm extends React.Component {
@@ -128,6 +128,7 @@ class ServiceBotBaseForm extends React.Component {
     componentDidMount() {
         let self = this;
         let initialRequests = self.state.initialRequests;
+        console.log("We got our initial requests", initialRequests)
         if (initialRequests && initialRequests.length > 0) {
             let allRequests = initialRequests.map(async requestInfo => {
                 let response = await Fetcher(requestInfo.url, requestInfo.method);

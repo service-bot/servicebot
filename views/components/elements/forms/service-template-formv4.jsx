@@ -608,7 +608,6 @@ class ServiceTemplateForm extends React.Component {
                 };
                 successMessage = "Template Created";
             }
-            console.log("Our get url and out put url is " + imageUploadURL, this.state.success);
 
             return (
                 <div>
