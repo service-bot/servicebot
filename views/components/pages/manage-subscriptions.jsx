@@ -55,17 +55,18 @@ class ManageSubscriptions extends React.Component {
         let {props, params, params: {status}, location: {query: {uid} } } = this.props;
         let url = '/api/v1/service-instances';
 
-        if(this.props.params.status) {
-            if (status == 'running') {
+        if(status !== undefined) {
+            if (status === 'running') {
                 url = '/api/v1/service-instances/search?key=status&value=running';
-            } else if (status == 'requested') {
+            } else if (status === 'requested') {
                 url = '/api/v1/service-instances/search?key=status&value=requested';
-            } else if (status == 'waiting_cancellation') {
+            } else if (status === 'waiting_cancellation') {
                 url = '/api/v1/service-instances/search?key=status&value=waiting_cancellation';
             }
         }
-        if(_.has(props, 'location.query.uid')) {
+        if(uid !== undefined) {
             url = `/api/v1/service-instances/search?key=user_id&value=${uid}`;
+            console.log("get services by uid", url);
         }
 
         Fetcher(url).then(function (response) {
@@ -131,10 +132,10 @@ class ManageSubscriptions extends React.Component {
     }
     typeFormatter(cell, row){
         let interval = cell.interval;
-        if(interval == 'day') { interval = 'Daily'; }
-        else if (interval == 'week') { interval = 'Weekly'; }
-        else if (interval == 'month') { interval = 'Monthly'; }
-        else if (interval == 'year') { interval = 'Yearly'; }
+        if(interval === 'day') { interval = 'Daily'; }
+        else if (interval === 'week') { interval = 'Weekly'; }
+        else if (interval === 'month') { interval = 'Monthly'; }
+        else if (interval === 'year') { interval = 'Yearly'; }
 
         let type = row.type.toLowerCase();
         switch(type){
