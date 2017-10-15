@@ -124,7 +124,7 @@ class ManageSubscriptions extends React.Component {
             <div>
                 <div className="badge badge-xs">
                     <img className="img-circle" src={`/api/v1/users/${row.user_id}/avatar`}/>
-                    <span className="customer-name">{row.references.users[0].name}</span>
+                    {/*<span className="customer-name">{row.references.users[0].name}</span>*/}
                 </div>
                 <span className="customer-email">&nbsp;&nbsp;{cell.users[0].email}</span>
             </div>
