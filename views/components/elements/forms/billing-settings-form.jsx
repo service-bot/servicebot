@@ -10,7 +10,7 @@ import {Field,} from 'redux-form'
 class CardSection extends React.Component {
     render() {
         return (
-            <div className="p-20 form-group" id="card-element">
+            <div className="form-group" id="card-element">
                 <CardElement style={{
                     base: {
                         color: '#32325d',
