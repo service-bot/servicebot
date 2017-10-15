@@ -11,10 +11,13 @@ class AdminEditingGear extends React.Component {
     }
 
     render(){
+        let {toggle, name} = this.props
+
         if(isAuthorized({permissions: ["can_administrate"]})) {
             return (
                 <div className="admin-editing-gear">
-                <span onClick={this.props.toggle}>
+                <span onClick={toggle}>
+                    {name && <span>{name}</span>}
                     <i className="fa fa-gear"/>
                 </span>
                 </div>

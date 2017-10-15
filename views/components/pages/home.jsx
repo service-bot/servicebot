@@ -86,7 +86,7 @@ class Home extends React.Component {
                                 style={{marginTop: '15px'}}
                                 onClick={()=>{browserHistory.push('/all-services')}}
                             />
-                            {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
+                            {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode} name="Featured Services Settings"/>}
                             {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
                                                                             filter = {["featured_service_heading",
                                                                                 "service_box_body_text_color",
@@ -176,7 +176,7 @@ class HomeFeatures extends React.Component{
                         {/*<SearchServiceBar searchValue={this.state.searchValue} handleChange={this.handleChange}/>*/}
                         {/*}*/}
                         {this.state.editingGear &&
-                        <AdminEditingGear toggle={this.toggleEditingMode}/>
+                        <AdminEditingGear toggle={this.toggleEditingMode} name="Featured Section Settings"/>
                         }
                     </div>
                     {this.state.editingMode &&
