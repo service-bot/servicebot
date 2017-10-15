@@ -1,40 +1,23 @@
 import React from 'react';
 import {Link, browserHistory} from 'react-router';
-import 'react-tagsinput/react-tagsinput.css';
-import './css/template-create.css';
-import {
-    Field,
-    Fields,
-    FormSection,
-    FieldArray,
-    reduxForm,
-    formValueSelector,
-    change,
-    unregisterField,
-    getFormValues,
-    SubmissionError
-} from 'redux-form'
+import {required, email} from 'redux-form-validators'
+import {injectStripe, Elements} from 'react-stripe-elements';
+import {Field, FormSection, FieldArray, formValueSelector, getFormValues,} from 'redux-form'
 import {connect} from "react-redux";
-import {RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
-import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
-import {inputField, selectField, widgetField} from "./servicebot-base-field.jsx";
-import {CardSection} from "../../elements/forms/billing-settings-form.jsx";
-
 import {Price} from "../../utilities/price.jsx";
 import Fetcher from "../../utilities/fetcher.jsx";
-import IconHeading from "../../layouts/icon-heading.jsx";
-import ModalUserLogin from "../modals/modal-user-login.jsx";
-import {addAlert} from "../../utilities/actions";
+import {widgets, SelectWidget} from "../../utilities/widgets";
+import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import {setUid, fetchUsers, setUser} from "../../utilities/actions";
-import { required, email, numericality, length } from 'redux-form-validators'
-import {injectStripe, Elements} from 'react-stripe-elements';
-
-
-let _ = require("lodash");
-
+import {inputField, selectField, widgetField} from "./servicebot-base-field.jsx";
+import {CardSection} from "../../elements/forms/billing-settings-form.jsx";
+import ModalUserLogin from "../modals/modal-user-login.jsx";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import {getPrice} from "../../../../input_types/handleInputs";
 import values from 'object.values';
+import 'react-tagsinput/react-tagsinput.css';
+import './css/template-create.css';
+let _ = require("lodash");
 
 if (!Object.values) {
     values.shim();
@@ -94,12 +77,18 @@ class ServiceRequestForm extends React.Component {
 
         let getRequestText = () => {
             let serType = formJSON.type;
-            if (serType == "subscription") {
-                return (<span>{"Subscribe"} <Price
-                    value={newPrice}/>{formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' ' + formJSON.interval}</span>);
-            } else if (serType == "one_time") {
-                return (<span>{"Buy"} <Price value={newPrice}/></span>);
-            } else if (serType == "custom") {
+            if (serType === "subscription") {
+                return (
+                    <span>{"Subscribe"}
+                        <Price value={newPrice}/>
+                        {formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' ' + formJSON.interval}
+                    </span>
+                );
+            } else if (serType === "one_time") {
+                return (
+                    <span>{"Buy"} <Price value={newPrice}/></span>
+                );
+            } else if (serType === "custom") {
                 return ("Request");
             } else {
                 return (<span><Price value={newPrice}/></span>)
@@ -228,7 +217,7 @@ class ServiceInstanceForm extends React.Component {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
                     let userRoleList = response.filter(function (user) {
-                        return user.references.user_roles[0].role_name === 'user';
+                        return user.references.user_roles[0].role_name === 'user' && user.status !== 'suspended';
                     });
                     self.setState({usersData: userRoleList});
                 } else {
