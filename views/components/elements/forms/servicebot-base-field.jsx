@@ -28,13 +28,29 @@ let inputField = props => {
 
     let formControlClass = `form-control ${touched && error && 'has-error'} ${touched && warning && 'has-warning'}`;
 
+    let getInputField = (type)=>{
+      switch(type){
+          case 'textarea':
+              return (
+                  <textarea className={formControlClass} {...input} placeholder={label} autoFocus={autofocus}/>
+              );
+              break;
+          case 'checkbox':
+              return (
+                  <input className={`${formControlClass} checkbox`} {...input} placeholder={label} type={type} autoFocus={autofocus}/>
+              );
+          default:
+              return (
+                  <input className={formControlClass} {...input} placeholder={placeholder || label} type={type} autoFocus={autofocus}/>
+              )
+      }
+    };
+
     return(
         <div className={`form-group form-group-flex`}>
             {(label && type !== 'hidden') && <label className="control-label form-label-flex-md">{label}</label>}
             <div className="form-input-flex">
-                {type === "textarea" && <textarea className={formControlClass} {...input} placeholder={label} autoFocus={autofocus}/> }
-                {(type === "text" || type === "number") && <input className={formControlClass} {...input} placeholder={placeholder || label} type={type} autoFocus={autofocus}/> }
-                {type === "checkbox" && <input className={`${formControlClass} checkbox`} {...input} placeholder={label} type={type} autoFocus={autofocus}/> }
+                {getInputField(type)}
                 {touched && ((error && <span className="form-error">{error}</span>) || (warning && <span className="form-warning">{warning}</span>)) }
             </div>
         </div>
