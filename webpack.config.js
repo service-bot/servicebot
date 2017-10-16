@@ -7,23 +7,9 @@ const CONFIG_PATH = path.resolve(__dirname, './config/pluginbot.config.js');
 const PLUGIN_DIR = path.resolve(__dirname, "./plugins");
 const MODULES = path.resolve(__dirname, "node_modules");
 var APP_DIR2 = path.resolve(__dirname, '.');
-var INPUTS_DIR = path.resolve(__dirname, 'input_types');
-
-let glob = require("glob");
-let pluginConfig = new Promise((resolve, reject) => {
-    glob('./input_types/**/widget.js', (err, files) => {
-        let plugins = files.map((file) => {
-            return file.split("/")[2]
-        });
-        console.log(plugins);
-        resolve(plugins);
-    })
-});
-
 
 var config = async function () {
     let configBuilder = require("pluginbot/config");
-    let input_types = await  pluginConfig;
     let pluginConfigs = await configBuilder.buildClientConfig(CONFIG_PATH);
     let pluginMap = await configBuilder.buildClientPluginMap(CONFIG_PATH);
     let plugins =

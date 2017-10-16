@@ -97,7 +97,7 @@ module.exports = {
 
         };
         let routeDefinition = yield call(routes, configurationManager);
-        yield provide({routeDefinition, configurationManager: configurationManager})
+        yield provide({routeDefinition, configurationManager})
 
     }
 
