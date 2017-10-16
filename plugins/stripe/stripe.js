@@ -22,33 +22,12 @@ let run = function*(config, provide, services){
         require("./api/webhook")(database),
         ...require("./api/reconfigure")(database),
         require("./api/import")(database),
-        {
-            "endpoint" : "/hello/world",
-            "method" : "get",
-            "permissions" : [],
-            "description" : "ello",
-            "middleware" : [function(req,res){
-                console.log("HELLO WORLD!");
-                res.json({hello : "world"});
-            }]
-        }
     ];
 
 
 
     yield call(createDB, database);
-    let pluginOption = new PluginOption(
-        function(){
-            return "YEAH I'M HERE";
-        },
-        null,
-        "testoption",
-        "payment",
-        "text",
-        true
-
-    );
-    yield provide({routeDefinition, pluginOption});
+    yield provide({routeDefinition});
 };
 
 module.exports = {run};

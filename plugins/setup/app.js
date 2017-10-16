@@ -22,6 +22,13 @@ module.exports = function* (appConfig, app) {
             }
         });
 
+        api.get(`/api/v1/system-options/file/brand_logo`, function (req, res, next) {
+            if (setupDisabled) {
+                return next();
+            }
+            return res.sendFile(path.resolve(__dirname, "../../public/assets/logos/servicebot-logo.png"));
+        });
+
 
         api.post("/api/v1/check-db", function (req, res, next) {
             if (setupDisabled) {
