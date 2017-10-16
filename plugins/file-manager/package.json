@@ -1,0 +1,13 @@
+{
+  "name": "file-manager",
+  "version": "0.0.1",
+  "dependencies": {
+    
+  },
+  "pluginbot" : {
+    "server" : {
+      "main" : "index.js",
+      "consumes" : ["database"]
+    }
+  }
+}
