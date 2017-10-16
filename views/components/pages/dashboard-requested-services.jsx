@@ -89,6 +89,7 @@ class DashboardRequestedServices extends React.Component {
                                        dataField='user_id'
                                        dataFormat={this.userIdFormatter}
                                        dataSort={ false }
+                                       searchable={false}
                                        width='80'
                                        filter={false}/>
                     <TableHeaderColumn dataField='name'
@@ -107,6 +108,7 @@ class DashboardRequestedServices extends React.Component {
                                        className={'action-column-header'}
                                        columnClassName={'action-column'}
                                        dataFormat={ this.rowActionsFormatter }
+                                       searchable={false}
                                        width='80'
                                        filter={false}>
                     </TableHeaderColumn>

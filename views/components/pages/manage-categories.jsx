@@ -159,12 +159,7 @@ class ManageCategories2 extends React.Component {
                                         fetchRows={this.fetchData}
                                     >
                                         <TableHeaderColumn isKey
-                                                           dataField='id'
-                                                           dataSort={ true }
-                                                           width={100}>
-                                            ID
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='name'
+                                                           dataField='name'
                                                            dataSort={ true }
                                                            width={350}>
                                             Category Name
@@ -178,6 +173,7 @@ class ManageCategories2 extends React.Component {
                                                            dataField='created_at'
                                                            filterFormatted
                                                            dataFormat={ this.createdFormatter }
+                                                           searchable={false}
                                                            width={150}>
                                             Created
                                         </TableHeaderColumn>
@@ -185,6 +181,7 @@ class ManageCategories2 extends React.Component {
                                                            className={'action-column-header'}
                                                            columnClassName={'action-column'}
                                                            dataFormat={ this.rowActionsFormatter }
+                                                           searchable={false}
                                                            width={100}
                                                            filter={false}>
                                         </TableHeaderColumn>
