@@ -1,8 +1,9 @@
 let consume = require("pluginbot/effects/consume");
 let {call} = require("redux-saga/effects");
+let PluginOption = require("../../models/services/pluginOption");
 let run = function*(config, provide, services){
   let database = yield consume(services.database);
-  //todo: move this to some installation script
+  //todo: move this to some installation script when it's more fleshed out
     let createDB = function(database){
       return database.schema.hasTable('stripe_event_logs').hasTable('stripe').then(function(exists){
             if(exists.every(e => !e)){
@@ -36,7 +37,18 @@ let run = function*(config, provide, services){
 
 
     yield call(createDB, database);
-    yield provide({routeDefinition});
+    let pluginOption = new PluginOption(
+        function(){
+            return "YEAH I'M HERE";
+        },
+        null,
+        "testoption",
+        "payment",
+        "text",
+        true
+
+    );
+    yield provide({routeDefinition, pluginOption});
 };
 
 module.exports = {run};

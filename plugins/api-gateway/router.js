@@ -37,6 +37,7 @@ module.exports = function* (router, routeDefinition, authService) {
     while (true) {
 
         let {ResourceDefinition, endpoint, method, middleware, permissions, description} = yield consume(routeDefinition);
+        console.log("GOT A NEW ROUTE DEF!", endpoint);
         let newRoute = require("express").Router();
 
         let routePath = ResourceDefinition ? `/${ResourceDefinition.name}${endpoint}` : endpoint;
