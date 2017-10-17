@@ -164,7 +164,7 @@ module.exports = {
             if (req.path.split("/")[3] == "embed" && req.method === 'GET') {
                 res.removeHeader('X-Frame-Options');
             }
-            res.render("main");
+            res.render("main", {bundle : appConfig.bundle_path});
             // res.sendFile(path.resolve(__dirname, "../..", 'public', 'index.html'))
         })
 

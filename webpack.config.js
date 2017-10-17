@@ -105,7 +105,7 @@ var config = async function () {
             loaders: [
                 {
                     test: /\.jsx?/,
-                    include : [APP_DIR, INPUTS_DIR, APP_DIR2 + "/node_modules\/pluginbot-react", APP_DIR2 + "/node_modules\/pluginbot"],
+                    include : [APP_DIR, APP_DIR2 + "/node_modules\/pluginbot-react", APP_DIR2 + "/node_modules\/pluginbot"],
                     loader: 'babel-loader'
                 },
                 {

@@ -15,7 +15,7 @@ module.exports = {
         let initialConfig = null;
         if(!dbConf){
             console.log("No Database config defined, start setup!");
-            yield provide({startTrigger : true});
+            yield provide({startSetup : {dbConfig : false}});
             console.log("waiting for DB CONFIG");
             dbConf = yield consume(services.dbConfig);
             initialConfig = yield consume(services.initialConfig);
@@ -32,7 +32,7 @@ module.exports = {
             console.log("DB EMPTY");
             if(!initialConfig){
                 console.log("starting setup");
-                yield provide({startTrigger : true});
+                yield provide({startSetup : {dbConfig : true}});
                 initialConfig = yield consume(services.initialConfig);
             }
             yield call(initializeDB, database);

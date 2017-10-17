@@ -4,6 +4,8 @@ let consume = require("pluginbot/effects/consume");
 let routes = require("./routes");
 
 
+//todo: move population of initial to this plugin.
+
 //todo: handle bad plugin options - errors will suck now probably - don't like all these parameters either../
 function* getPluginOptions(publicOnly=false, valueOnly=false){
 

@@ -1,4 +1,3 @@
-var SystemOption = require("../models/system-options");
 //the default system options
 let systemOptions =
     {
@@ -107,8 +106,10 @@ let systemOptions =
             {"option": "purchase_page_featured_area_padding_bottom", "value": "20", public: true, "type": "theme", "data_type": "text"},
             {"option": "service_request_title_description", "value": "What you are getting", public: true, "type": "theme", "data_type": "text"},
             {"option": "service_request_title_form", "value": "Get your service", public: true, "type": "theme", "data_type": "text"},
+            {"option": "footer_text", "value": "Powered by <a href='https://servicebot.io'>servicebot.io</a>", public: false, "type": "theme", "data_type": "text"},
+
         ],
-        populateOptions: function(options=systemOptions.options, model=SystemOption){
+        populateOptions: function(options, model){
             return Promise.all(options.map((option) => {
                 return new Promise((resolve, reject) => {
                     new model(option).create((err, result) => {

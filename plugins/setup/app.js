@@ -4,10 +4,12 @@ let {eventChannel, END} = require("redux-saga");
 let {take} = require("redux-saga/effects")
 
 
-module.exports = function* (appConfig, app) {
+module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
 
 
     const channel = eventChannel(emitter => {
+
+        //todo move setup disabled into a .use instead of duplicate code everywhere..
         let setupDisabled = false;
         let api = express.Router();
         app.get('/', function (req, res, next) {
@@ -22,6 +24,22 @@ module.exports = function* (appConfig, app) {
             }
         });
 
+        api.get("/api/v1/setup/steps", function(req,res,next){
+            if (setupDisabled) {
+                return next();
+            }
+            let steps = [];
+            if(!dbConfigExists){
+                steps.push("database");
+            }
+            if(!initialConfig.stripe_public || !initialConfig.stripe_secret){
+                steps.push("stripe");
+            }
+            if (!initialConfig.admin_user || !initialConfig.admin_password || !initialConfig.company_name || !initialConfig.company_email) {
+                steps.push("configuration");
+            }
+            res.json(steps);
+        });
         api.get(`/api/v1/system-options/file/brand_logo`, function (req, res, next) {
             if (setupDisabled) {
                 return next();
@@ -92,16 +110,22 @@ module.exports = function* (appConfig, app) {
             if (setupDisabled) {
                 return next();
             }
+            if (!dbconfig.db_host || !dbconfig.db_user || !dbconfig.db_name || !dbconfig.db_password) {
+                res.status(400).json({error: "Database values are required!"});
+            }
 
-            let initialConfig = req.body;
+            let config = {
+                ...initialConfig,
+                ...req.body,
+            }
 
-            if (!initialConfig.admin_user || !initialConfig.admin_password || !initialConfig.company_name || !initialConfig.company_email) {
+            if (!config.admin_user || !config.admin_password || !config.company_name || !config.company_email) {
                 return res.status(400).json({error: 'All fields are required'});
             }
 
             try {
-                require("../../bin/setup")(initialConfig, function (env) {
-                    emitter({initialConfig, response: res});
+                require("../../bin/setup")(config, function (env) {
+                    emitter({config, response: res});
                     emitter(END);
                 });
             } catch (e) {
@@ -114,7 +138,7 @@ module.exports = function* (appConfig, app) {
             if (setupDisabled) {
                 return next();
             }
-            response.render("main");
+            response.render("main", {bundle : appConfig.bundle_path});
         });
 
         return () => {

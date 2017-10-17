@@ -7,7 +7,7 @@
   "pluginbot" : {
     "server" : {
       "main" : "setup.js",
-      "consumes" : ["startTrigger", "expressApp"]
+      "consumes" : ["startSetup", "expressApp"]
     }
   }
 }

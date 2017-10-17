@@ -97,7 +97,7 @@ let basePlugins = function() {
 
     return [
         {"path" : `${PLUGIN_DIRECTORY}/database`, dbConfig : getDBConf()},
-        {"path" : `${PLUGIN_DIRECTORY}/setup`, appConfig : getAppConf()},
+        {"path" : `${PLUGIN_DIRECTORY}/setup`, initialConfig : getInitialConfig(), appConfig : getAppConf()},
         {"path" : `${PLUGIN_DIRECTORY}/system-options`},
         {"path" : `${PLUGIN_DIRECTORY}/api-gateway`, appConfig : getAppConf()},
         {"path" : `${PLUGIN_DIRECTORY}/stripe`},
@@ -108,10 +108,21 @@ let basePlugins = function() {
     ];
 };
 
+let getInitialConfig = function(){
+    return {
+        admin_user : process.env.ADMIN_USER,
+        admin_password : process.env.ADMIN_PASSWORD,
+        company_name : process.env.VIRTUAL_HOST && process.env.VIRTUAL_HOST.split(".")[0],
+        company_email : process.env.ADMIN_USER,
+        hostname : process.env.VIRTUAL_HOST,
+    };
+};
+
 let getAppConf = function(){
     return {
 
         "port" : process.env.PORT || 3000,
+        "bundle_path" : "/build/bundle.js",
         "ssl_port" : process.env.SSL_PORT || 3001,
         "certificate_path" : process.env.CERTIFICATES || null, //ssl not mandatory
     };

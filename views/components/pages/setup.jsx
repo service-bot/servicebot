@@ -148,7 +148,8 @@ class Setup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            form : {}
+            form : {},
+            steps : []
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -158,7 +159,9 @@ class Setup extends React.Component {
 
     }
 
-    componentDidMount(){
+    async componentDidMount(){
+        let steps = await Fetcher("/api/v1/setup/steps");
+        this.setState({steps});
         document.getElementById('servicebot-loader').classList.add('move-out');
         if(this.props.options.text_size){
             browserHistory.push("home");
@@ -229,12 +232,27 @@ class Setup extends React.Component {
     render () {
         let pageName = this.props.route.name || 'ServiceBot Setup';
         let breadcrumbs = [{name:'Welcome to ServiceBot', link:'/setup'}];
+        if(this.state.steps.length === 0){
+            return (<Load/>);
+        }
+        const stepMap = {
+            "database": {
+                name: 'Database Connection',
+                onNext: this.checkDB,
+                component: <SetupDB state={this.state.form} inputChange={this.handleInputChange}/>
+            },
+            "stripe": {
+                name: 'Stripe API Keys',
+                onNext: this.checkStripe,
+                component: <SetupStripe state={this.state.form} inputChange={this.handleInputChange}/>
+            },
+            "configuration": {
+                name: 'Configuration',
+                component: <SetupAdmin state={this.state.form} inputChange={this.handleInputChange}/>
+            }
+        };
 
-        const steps = [
-            {name: 'Database Connection', onNext : this.checkDB, component: <SetupDB state={this.state.form} inputChange={this.handleInputChange}/>},
-            {name: 'Stripe API Keys', onNext: this.checkStripe, component: <SetupStripe state={this.state.form} inputChange={this.handleInputChange} />},
-            {name: 'Configuration', component: <SetupAdmin state={this.state.form} inputChange={this.handleInputChange}/>}
-        ];
+        let steps = this.state.steps.map(step => stepMap[step]);
         return(
             <div style={{backgroundColor: '#0097f1', minHeight: 100+'vh'}}>
                 {this.state.loading && <Load/>}
