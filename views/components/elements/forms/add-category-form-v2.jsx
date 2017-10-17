@@ -42,7 +42,7 @@ let AddCategoryForm = function(props) {
     }
 
     return (
-            <div>
+            <div className="p-20">
                 <ServiceBotBaseForm
                     form = {Category}
                     submissionRequest = {submissionRequest}

@@ -92,12 +92,7 @@ class ManageNotificationTemplates extends React.Component {
                                         fetchRows={this.fetchData}
                                     >
                                         <TableHeaderColumn isKey
-                                                           dataField='id'
-                                                           dataSort={ false }
-                                                           width='30'>
-                                            ID
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='subject'
+                                                            dataField='subject'
                                                            dataFormat={this.subjectFormatter}
                                                            dataSort={ true }
                                                            width='250'>
@@ -111,6 +106,7 @@ class ManageNotificationTemplates extends React.Component {
                                         <TableHeaderColumn dataField='updated_at'
                                                            dataFormat={this.updatedAtFormatter}
                                                            dataSort={ true }
+                                                           searchable={false}
                                                            width='150'>
                                             Updated At
                                         </TableHeaderColumn>
@@ -118,6 +114,7 @@ class ManageNotificationTemplates extends React.Component {
                                                            className={'action-column-header'}
                                                            columnClassName={'action-column'}
                                                            dataFormat={ this.rowActionsFormatter }
+                                                           searchable={false}
                                                            width='80'
                                                            filter={false}>
                                         </TableHeaderColumn>

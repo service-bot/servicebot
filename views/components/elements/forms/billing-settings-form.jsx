@@ -5,14 +5,12 @@ import {get, has} from "lodash";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import {inputField} from "./servicebot-base-field.jsx";
 import {required} from 'redux-form-validators'
-
 import {Field,} from 'redux-form'
-
 
 class CardSection extends React.Component {
     render() {
         return (
-            <div className="p-20 form-group" id="card-element">
+            <div className="form-group" id="card-element">
                 <CardElement style={{
                     base: {
                         color: '#32325d',
@@ -33,7 +31,6 @@ class CardSection extends React.Component {
         );
     }
 }
-
 
 class BillingForm extends React.Component {
     render() {

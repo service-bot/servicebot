@@ -139,17 +139,25 @@ class ManageSubscriptions extends React.Component {
         let type = row.type.toLowerCase();
         switch(type){
             case 'subscription':
-                return ( `<div><span className="status-badge neutral" >${getBillingType(row)}</span> <span class="status-badge black" >${interval}</span></div>` );
+                return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
             case 'custom':
-                return ( `<span class="status-badge neutral">${getBillingType(row)}</span>` );
+                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
             case 'one_time':
-                return ( `<span class="status-badge neutral">${getBillingType(row)}</span>` );
+                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
             default:
-                return ( `<span class="status-badge grey">${getBillingType(row)}</span>` );
+                return ( <span className="status-badge grey">{getBillingType(row)}</span> );
         }
     }
+    typeDataValue(cell, row){
+        console.log("Ffffff");
+        console.log(row)
+        return (row.type);
+    }
     amountFormatter(cell){
-        return (cell.amount);
+        return (<Price value={cell.amount}/>);
+    }
+    emailDataValue(cell){
+        return cell.users[0].email;
     }
     statusFormatter(cell){
         switch (cell) {
@@ -273,6 +281,11 @@ class ManageSubscriptions extends React.Component {
         if(this.state.loading){
             return ( <Load/> );
         }else {
+            const qualityType = {
+                0: 'good',
+                1: 'bad',
+                2: 'unknown'
+            };
             return (
                 <Authorizer permissions={["can_administrate", "can_manage"]}>
                     <Jumbotron pageName={pageName} location={this.props.location}/>
@@ -297,21 +310,22 @@ class ManageSubscriptions extends React.Component {
                                         <TableHeaderColumn dataField='references'
                                                            dataFormat={this.emailFormatter}
                                                            dataSort={ true }
+                                                           filterValue={this.emailDataValue}
                                                            width='150'>
                                             Email
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='payment_plan'
                                                            dataFormat={this.amountFormatter}
-                                                           filterFormatted
                                                            dataSort={ true }
+                                                           searchable={false}
                                                            width='80'>
                                             Amount
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='payment_plan'
                                                            dataFormat={this.typeFormatter}
-                                                           filterFormatted
                                                            dataSort={ true }
-                                                           width='100'>
+                                                           filterValue={this.typeDataValue}
+                                                           width='120'>
                                             Type
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='status'
@@ -323,6 +337,7 @@ class ManageSubscriptions extends React.Component {
                                         <TableHeaderColumn dataField='created_at'
                                                            dataFormat={this.createdFormatter}
                                                            dataSort={ true }
+                                                           searchable={false}
                                                            width='160'>
                                             Created
                                         </TableHeaderColumn>

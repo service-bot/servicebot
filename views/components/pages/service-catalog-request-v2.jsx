@@ -180,7 +180,7 @@ class RequestPageFeatured extends React.Component{
                         <h1 className="featured-price" style={featuredTextStyle}>{getPrice(templateData)}</h1>
                     </div>
                     {this.state.editingGear &&
-                    <AdminEditingGear toggle={this.toggleEditingMode}/>
+                    <AdminEditingGear toggle={this.toggleEditingMode} name="Heading Settings"/>
                     }
                     {this.state.editingMode &&
                     <AdminEditingSidebar toggle={this.toggleEditingMode}

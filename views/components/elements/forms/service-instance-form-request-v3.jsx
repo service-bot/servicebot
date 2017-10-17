@@ -27,9 +27,9 @@ import IconHeading from "../../layouts/icon-heading.jsx";
 import ModalUserLogin from "../modals/modal-user-login.jsx";
 import {addAlert} from "../../utilities/actions";
 import {setUid, fetchUsers, setUser} from "../../utilities/actions";
-import cookie from 'react-cookie';
 import { required, email, numericality, length } from 'redux-form-validators'
 import {injectStripe, Elements} from 'react-stripe-elements';
+import cookie from 'react-cookie';
 
 
 let _ = require("lodash");
@@ -80,6 +80,7 @@ class ServiceRequestForm extends React.Component {
     constructor(props) {
         super(props);
     }
+
     render() {
         let props = this.props;
         const {handleSubmit, formJSON, helpers, error, services: {widget}} = props;
@@ -98,12 +99,18 @@ class ServiceRequestForm extends React.Component {
 
         let getRequestText = () => {
             let serType = formJSON.type;
-            if (serType == "subscription") {
-                return (<span>{"Subscribe"} <Price
-                    value={newPrice}/>{formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' ' + formJSON.interval}</span>);
-            } else if (serType == "one_time") {
-                return (<span>{"Buy"} <Price value={newPrice}/></span>);
-            } else if (serType == "custom") {
+            if (serType === "subscription") {
+                return (
+                    <span>{"Subscribe"}
+                        <Price value={newPrice}/>
+                        {formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' ' + formJSON.interval}
+                    </span>
+                );
+            } else if (serType === "one_time") {
+                return (
+                    <span>{"Buy"} <Price value={newPrice}/></span>
+                );
+            } else if (serType === "custom") {
                 return ("Request");
             } else {
                 return (<span><Price value={newPrice}/></span>)
@@ -230,7 +237,7 @@ class ServiceInstanceForm extends React.Component {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
                     let userRoleList = response.filter(function (user) {
-                        return user.references.user_roles[0].role_name === 'user';
+                        return user.references.user_roles[0].role_name === 'user' && user.status !== 'suspended';
                     });
                     self.setState({usersData: userRoleList});
                 } else {
@@ -267,6 +274,8 @@ class ServiceInstanceForm extends React.Component {
     }
 
     componentDidUpdate(nextProps, nextState) {
+
+
         if (nextProps.uid && this.state.hasCard === null) {
             this.checkIfUserHasCard();
         }
@@ -323,6 +332,7 @@ class ServiceInstanceForm extends React.Component {
         }
         return {...values, token_id : token.token.id};
     }
+
     handleResponse(response){
         if(response.permissions){
             localStorage.setItem("permissions", response.permissions);

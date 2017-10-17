@@ -194,7 +194,7 @@ class ManageUsers extends React.Component {
         }
         return ( <span className={color} >{cell}</span> );
     }
-    roleFormatter(cell, row){
+    roleFormatter(cell){
         return ( cell.user_roles[0].role_name );
     }
 
@@ -351,6 +351,7 @@ class ManageUsers extends React.Component {
                                                            dataField='id'
                                                            dataFormat={this.idFormatter}
                                                            dataSort={ false }
+                                                           searchable={false}
                                                            width='30'/>
                                         <TableHeaderColumn dataField='email'
                                                            dataFormat={this.profileLinkFormatter}
@@ -373,18 +374,21 @@ class ManageUsers extends React.Component {
                                         <TableHeaderColumn dataField='references'
                                                            dataFormat={this.roleFormatter}
                                                            dataSort={ true }
+                                                           filterValue={this.roleFormatter}
                                                            width='80'>
                                             Role
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='last_login'
                                                            dataFormat={this.lastLoginFormatter}
                                                            dataSort={ true }
+                                                           searchable={false}
                                                            width='100'>
                                             Last Login
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='created_at'
                                                            dataFormat={this.createdAtFormatter}
                                                            dataSort={ true }
+                                                           searchable={false}
                                                            width='100'>
                                             Created At
                                         </TableHeaderColumn>
@@ -392,6 +396,7 @@ class ManageUsers extends React.Component {
                                                            className={'action-column-header'}
                                                            columnClassName={'action-column'}
                                                            dataFormat={ this.rowActionsFormatter }
+                                                           searchable={false}
                                                            width='80'
                                                            filter={false}>
                                         </TableHeaderColumn>
