@@ -104,6 +104,10 @@ module.exports = {
         };
         let routeDefinition = yield call(routes, configurationManager);
         yield provide({routeDefinition, configurationManager})
+        let initialPublic = yield call(configurationManager.getConfigurations, true);
+
+        //app needs options todo: can this be done better?
+        yield put({type: "FINISHED_SETUP", options : initialPublic });
 
     }
 

@@ -19,7 +19,7 @@ class GenericNotFound extends React.Component {
     }
 
     componentWillUnmount(){
-        store.dispatch(initializedState);
+        store.dispatch(initializedState());
         document.body.classList.remove('page-404');
     }
 

@@ -110,9 +110,6 @@ module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
             if (setupDisabled) {
                 return next();
             }
-            if (!dbconfig.db_host || !dbconfig.db_user || !dbconfig.db_name || !dbconfig.db_password) {
-                res.status(400).json({error: "Database values are required!"});
-            }
 
             let config = {
                 ...initialConfig,
@@ -125,7 +122,7 @@ module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
 
             try {
                 require("../../bin/setup")(config, function (env) {
-                    emitter({config, response: res});
+                    emitter({initialConfig: config, response: res});
                     emitter(END);
                 });
             } catch (e) {

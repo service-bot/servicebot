@@ -3,7 +3,7 @@ let fs = require("fs")
 let crypto = require("crypto")
 let setup = function(config, callback){
     crypto.randomBytes(30, function (err, buffer) {
-        const secret = crypto.randomBytes(256).toString("hex");
+        const secret = crypto.randomBytes(32).toString("hex");
 
         let salt = buffer.toString("hex");
 

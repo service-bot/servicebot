@@ -25,8 +25,8 @@ module.exports = {
                 yield provide({dbConfig});
             }
             yield provide({initialConfig});
-            yield take(cancelChannel);
-            response.json({message: "Setup complete"});
+            let finish = yield take(cancelChannel);
+            response.json({message: "Setup complete", options : finish.options});
         }
         finally {
             console.log("CLOSIN DOWN THE SETUP!");

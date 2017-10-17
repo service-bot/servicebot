@@ -44,7 +44,6 @@ module.exports = function(database, initConfig){
                         name: "admin"
                     });
 
-
                     admin.createWithStripe(stripeOptions,function (err, result) {
                         if(err){
                             console.error(err);

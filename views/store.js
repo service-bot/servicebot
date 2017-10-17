@@ -152,37 +152,40 @@ const rootReducer = {
 // });
 
 
-let initializedState = async function(dispatch){
-    let initialState = {
-        allForms : {},
-        options: {},
-        notifications: [],
-        system_notifications: [],
-        alerts: [],
-        uid : cookie.load("uid")
-    };
-    initialState.options = await Fetcher("/api/v1/system-options/public");
-    try {
-        if (cookie.load("uid")) { // if user is logged in
-            initialState.user = (await Fetcher("/api/v1/users/own"))[0];
-            //Set the version of the application if the user is logged in
-            let version = await Fetcher("/api/v1/system-options/version");
-            initialState.options = {...initialState.options, version:version.version};
-            if(initialState.user.status === 'invited'){
-                initialState.alerts = [...initialState.alerts, {id: '1', message: 'Please check your email and set your password to complete your account.', show: true}];
-                // initialState.alerts = [...initialState.alerts, {id: '2', message: 'A dummy alert.', show: true}];
-            }else{
-            }
-            initialState.notifications = await Fetcher("/api/v1/notifications/own");
-            if(isAuthorized({permissions: "put_email_templates_id"})){
-                initialState.system_notifications = await Fetcher("/api/v1/notifications/system");
+let initializedState = function(initialOptions=null){
+    return async function(dispatch){
+        let initialState = {
+            allForms : {},
+            options: {},
+            notifications: [],
+            system_notifications: [],
+            alerts: [],
+            uid : cookie.load("uid")
+        };
+        initialState.options = initialOptions || await Fetcher("/api/v1/system-options/public");
+        try {
+            if (cookie.load("uid")) { // if user is logged in
+                initialState.user = (await Fetcher("/api/v1/users/own"))[0];
+                //Set the version of the application if the user is logged in
+                let version = await Fetcher("/api/v1/system-options/version");
+                initialState.options = {...initialState.options, version:version.version};
+                if(initialState.user.status === 'invited'){
+                    initialState.alerts = [...initialState.alerts, {id: '1', message: 'Please check your email and set your password to complete your account.', show: true}];
+                    // initialState.alerts = [...initialState.alerts, {id: '2', message: 'A dummy alert.', show: true}];
+                }else{
+                }
+                initialState.notifications = await Fetcher("/api/v1/notifications/own");
+                if(isAuthorized({permissions: "put_email_templates_id"})){
+                    initialState.system_notifications = await Fetcher("/api/v1/notifications/system");
+                }
             }
         }
+        catch(err){
+            console.error("Error initializing state: ", err)
+            initialState.options.backgroundColor = "#000000";
+        }
+        return dispatch(initializeState(initialState));
     }
-    catch(err){
-        initialState.options.backgroundColor = "#000000";
-    }
-    return dispatch(initializeState(initialState));
 };
 
 

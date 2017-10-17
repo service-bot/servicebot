@@ -243,8 +243,7 @@ module.exports = function (router) {
     let validateServiceRequest = async function (req, res, next) {
         try {
             let serviceTemplate = res.locals.valid_object;
-            let references = serviceTemplate.references;
-            let props = references ? (await references.service_template_properties) : null;
+            let props = (await ServiceTemplate.getRelated("service_template_properties")) || null;
             let req_body = req.body;
             let reqProps = req_body.references && req_body.references.service_template_properties || [];
             await authPromise(req, res);

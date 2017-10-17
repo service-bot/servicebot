@@ -1,5 +1,5 @@
 let {eventChannel, END} = require("redux-saga");
-let {take, fork, spawn} = require("redux-saga/effects");
+let {take, fork, spawn, call} = require("redux-saga/effects");
 
 
 function* reqSaga(requestChannel, sagaMiddleware){
@@ -15,18 +15,20 @@ function* reqSaga(requestChannel, sagaMiddleware){
  *
  * @param saga - saga that takes in req res next params
  */
-//todo: need promise support to resolve at correct time...
+
 module.exports = function*(saga){
+    let middleware = null;
     const channel = eventChannel(emitter => {
-        let middleware = function(req, res, next){
+
+        //this code is synchronously called so not toooo bad
+        middleware = function(req, res, next){
             emitter({req, res, next});
         };
-        setTimeout(emitter, 500, middleware);
+
         return () => {
             console.error("unsubscribe...")
         }
     });
-    let middleware = yield take(channel);
     let requestHandler = yield spawn(reqSaga, channel, saga);
     return middleware;
 }

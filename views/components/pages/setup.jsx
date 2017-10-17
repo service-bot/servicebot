@@ -185,7 +185,7 @@ class Setup extends React.Component {
         Fetcher("/setup", "POST", self.state.form)
             .then(function(result){
                 if(!result.error) {
-                    self.props.initialize();
+                    self.props.initialize(result.options);
                 }else{
                     self.setState({loading: false});
 
@@ -279,7 +279,7 @@ class Setup extends React.Component {
 
 
 let mapDispatch = function(dispatch){
-    return { initialize : () => dispatch(initializedState) }
+    return { initialize : (initialOptions) => dispatch(initializedState(initialOptions)) }
 }
 
 export default connect((state) => {return {"options" : state.options}}, mapDispatch )(Setup);

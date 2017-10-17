@@ -20,17 +20,21 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
     var Entity = function (data) {
         let self = this;
         this.data = data;
-        this.references = new Proxy({}, {
-            get: async function (target, name) {
-                let reference = references.find(ref => ref.model.table === name);
-                if (!reference) {
-                    console.log(name);
-                    throw `Reference is not defined.`
-                }
-                return await self.getRelated(reference.model)
-            }
-
-        });
+        // this.references = new Proxy({}, {
+        //     get: async function (target, name) {
+        //         let reference = references.find(ref => ref.model.table === name);
+        //         try {
+        //             if (!reference) {
+        //                 console.log(name);
+        //                 throw `Reference is not defined on ${Entity.table}.`
+        //             }
+        //             return await self.getRelated(reference.model)
+        //         }catch(e){
+        //             console.error("ERRRRROR!!!!", e);
+        //         }
+        //     }
+        //
+        // });
     };
 
     Entity.database = database;
@@ -207,7 +211,7 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
             //
             let ids = referenceData.reduce((acc, refInstance) => acc.concat(refInstance.id || []), []);
             referenceData.forEach(newChild => (newChild[reference.referenceField] = this.get(primaryKey)));
-            let references = await this.references[reference.model.table];
+            let references = await this.getRelated(reference.model.table);
             let removedReferences = await reference.model.batchDelete({
                 not : {id : {"in" : ids}},
                 [reference.referenceField] : self.get(primaryKey)

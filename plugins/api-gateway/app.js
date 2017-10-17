@@ -194,7 +194,6 @@ module.exports = {
             //res.render('error');
         });
 
-        yield put({type: "FINISHED_SETUP"});
 
 
     }

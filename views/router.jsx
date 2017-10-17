@@ -141,7 +141,7 @@ class AppRouter extends React.Component {
     }
 }
 let mapDispatch = function(dispatch){
-    return { initialize : () => dispatch(require("./store").initializedState) }
+    return { initialize : () => dispatch(require("./store").initializedState()) }
 }
 
 AppRouter = connect(null, mapDispatch)(AppRouter);
