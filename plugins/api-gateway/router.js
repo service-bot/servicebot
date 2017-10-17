@@ -45,5 +45,4 @@ module.exports = function* (router, routeDefinition, authService) {
         newRoute[method.toLowerCase()](routePath, authMiddleware(permissions, ResourceDefinition), ...middleware);
         router.use(newRoute);
     }
-
 };
