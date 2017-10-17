@@ -109,7 +109,7 @@ module.exports = function* (appConfig, app) {
             }
         });
 
-
+        //todo - figure out how to have this be served by the api gateway
         app.get('/setup', function (request, response, next) {
             if (setupDisabled) {
                 return next();

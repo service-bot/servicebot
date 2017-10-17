@@ -64,13 +64,6 @@ module.exports = function(database, initConfig){
 
 
     return new Promise(function (resolve, reject) {
-            // //ensure required system-options exist in database
-            // console.log("database initialized - checking to see if system-options exist")
-            // options.populateOptions(systemOptions).then((result) => {
-            //     console.log(result);
-            //     resolve(false);
-            // });
-
             let initialRoleMap = {
                 "admin": [],
                 "staff": [],
@@ -131,7 +124,7 @@ module.exports = function(database, initConfig){
                     let userRole = roles.filter(role => role['role_name'] == 'user')[0];
                     systemOptions.push({
                             "option": "default_user_role",
-                            public: true,
+                            "public": true,
                             "type": "system",
                             "data_type": "user_role",
                             "value": userRole['id']

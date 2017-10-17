@@ -25,6 +25,10 @@ module.exports = {
     run: function* (config, provide, services) {
         let db = yield consume(services.database);
         let Settings = require('../../models/system-options');
+        let defaultOptions = require("./default-options");
+
+        //populate options
+        yield call(defaultOptions.populateOptions, defaultOptions.options, Settings);
         let initialOptions = yield call(Settings.getOptions);
 
         //todo: this is bad - can lose properties in initialization because not consuming. - fix by consuming!

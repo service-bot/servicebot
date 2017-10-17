@@ -314,7 +314,7 @@ let buildTables = async function(knex) {
             table.timestamps(true, true);
         });
 
-        console.log("***** All Tables successfully created *****");
+    console.log("***** All Tables successfully created *****");
 
 
 };
