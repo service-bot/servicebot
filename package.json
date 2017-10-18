@@ -105,7 +105,7 @@
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
-    "react-hot-loader": "^3.0.0",
+    "react-hot-loader": "^3.1.1",
     "supertest": "^3.0.0",
     "tape": "^4.8.0",
     "webpack-dev-server": "^1.14.1"
