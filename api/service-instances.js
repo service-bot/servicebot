@@ -69,15 +69,14 @@ module.exports = function(router) {
         });
     });
 
-    router.post('/service-instances/:id/cancel', validate(ServiceInstance), auth(), function(req, res, next) {
+    router.post('/service-instances/:id/cancel', validate(ServiceInstance), auth(), async function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        instance_object.unsubscribe(function (err, result) {
-            if(!err) {
-                res.json(result);
-            } else {
-                res.json(err);
-            }
-        });
+        try {
+            let result = await instance_object.unsubscribe();
+            res.json(result);
+        } catch (err) {
+            res.json(err);
+        }
     });
 
 
