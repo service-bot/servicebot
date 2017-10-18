@@ -325,7 +325,7 @@ class ServiceInstanceForm extends React.Component {
         let props = (values.references && values.references.service_template_properties) ? values.references.service_template_properties : [];
         let re = props.reduce((acc, prop, index) => {
             if(prop.required && (!prop.data || !prop.data.value)){
-                acc[index] = {data : {value : "Required"}}
+                acc[index] = {data : {value : "is required"}}
             }
             return acc;
         }, {});
