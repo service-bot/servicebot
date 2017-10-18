@@ -136,7 +136,7 @@ var config = async function () {
 
         ]
     }
-    return [  app,plugins]
+    return [ app, plugins]
 };
 
 

@@ -68,7 +68,7 @@ let auth = function(permission=null, model=null, correlation_id="user_id", bypas
                 console.log("permission for " + req.route.path + " is " + permissionToCheck);
             }
         }catch(e){
-            console.log(e);
+            console.error(e);
         }
         isAuthorized(req.user, permissionToCheck, bypassPermissions,  function (status, shouldBypass, permissions) {
             res.locals.permissions = permissions;

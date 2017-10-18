@@ -150,7 +150,7 @@ class SystemSettingsForm extends React.Component {
             );
         }else{
             let self = this;
-            let group = _.groupBy(this.state.system_settings, (setting)=>{return setting.type ? setting.type : other});
+            let group = _.groupBy(this.state.system_settings, (setting)=>{return setting.type ? setting.type : "other"});
             let types = _.uniq(_.map(this.state.system_settings, (setting) => setting.type));
             let colorSettings = _.map(this.state.system_settings, (s)=> {
                 if(s.data_type == 'color_picker' && s.value != "undefined" && s.value != undefined){
