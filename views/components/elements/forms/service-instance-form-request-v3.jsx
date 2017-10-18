@@ -61,11 +61,13 @@ let renderCustomProperty = (props) => {
                             key={index}
                             name={`${customProperty}.data.value`}
                             type={formJSON[index].type}
-                            component={property.widget}
+                            widget={property.widget}
+                            component={widgetField}
                             label={formJSON[index].prop_label}
                             // value={formJSON[index].data.value}
                             formJSON={formJSON[index]}
                             configValue={formJSON[index].config}
+                            validate={required()}
                         />)}
             )}
         </div>
@@ -342,7 +344,6 @@ class ServiceInstanceForm extends React.Component {
         }
     }
     formValidation(values){
-        let validation = {};
 
         let props = (values.references && values.references.service_template_properties) ? values.references.service_template_properties : [];
         let re = props.reduce((acc, prop, index) => {
@@ -351,6 +352,8 @@ class ServiceInstanceForm extends React.Component {
             }
             return acc;
         }, {});
+        let validation = {references : {service_template_properties : re}};
+
         if(Object.keys(re).length === 0){
             delete validation.references;
         }
@@ -378,7 +381,6 @@ class ServiceInstanceForm extends React.Component {
         }
 
         return (
-
             <div>
                 {/*Price: {this.state.servicePrice}*/}
 
