@@ -29,16 +29,12 @@ SECRET_KEY=${secret}`;
         fs.writeFile(envPath, env, {flag: 'wx'}, function (err) {
             if (err) {
 
-                console.log("env exists")
+                console.error("env exists")
 
             } else {
                 require('dotenv').config({path: envPath});
                 require("../config/db").raw('select 1+1 as result').then(function () {
-                    console.log("!!???");
                     callback(env);
-
-                    console.log("env  generated, starting app ");
-                    console.log("???")
                 }).catch(function(err){
                     fs.unlink(envPath);
 

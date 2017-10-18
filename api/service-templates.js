@@ -16,7 +16,6 @@ let mkdirp = require("mkdirp");
 let path = require("path");
 let _ = require("lodash");
 let xss = require('xss');
-let dispatchEvent = require("../config/redux/store").dispatchEvent;
 let store = require("../config/redux/store");
 //todo: generify single file upload for icon, image, avatar, right now duplicate code
 let iconFilePath = ServiceTemplate.iconFilePath;
@@ -340,11 +339,20 @@ module.exports = function (router) {
 
             //is the user authenticated (are they logged in)?
             let isNew = !req.isAuthenticated();
+            let store = require('../config/redux/store');
 
+            //todo: once in plugin this code needs big changes
+            let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;
+            if(lifecycleManager) {
+                lifecycleManager = lifecycleManager[0];
+                await lifecycleManager.preProvision({
+                    request: req_body,
+                    template: serviceTemplate.data
+                });
+            }
             //if it's a new user request we need to create an account, invitation
             if (isNew && serviceTemplate.get('published')) {
 
-                let store = require('../config/redux/store');
                 let globalProps = store.getState().options;
                 let roleId = globalProps['default_user_role'];
                 let newUser = new User({"email": req_body.email, "role_id": roleId, "status": "invited"});
@@ -437,6 +445,13 @@ module.exports = function (router) {
                 ...res.locals.overrides,
 
             });
+            if(lifecycleManager) {
+                await lifecycleManager.postProvision({
+                    request: req_body,
+                    instance: newInstance.data,
+                    template: serviceTemplate.data
+                });
+            }
 
             res.json({
                 ...responseJSON,
@@ -447,13 +462,13 @@ module.exports = function (router) {
                 if (isNew) {
                     newInstance.set("api", responseJSON.api);
                     newInstance.set("url", responseJSON.url);
-                    dispatchEvent("service_instance_requested_new_user", newInstance);
+                    store.dispatchEvent("service_instance_requested_new_user", newInstance);
 
                 } else if (req.uid !== newInstance.get("user_id")) {
-                    dispatchEvent("service_instance_requested_for_user", newInstance);
+                    store.dispatchEvent("service_instance_requested_for_user", newInstance);
 
                 } else {
-                    dispatchEvent("service_instance_requested_by_user", newInstance);
+                    store.dispatchEvent("service_instance_requested_by_user", newInstance);
                 }
             }catch(e){
                 console.error("error during dispatchin", e);

@@ -1,0 +1,13 @@
+{
+  "name": "service-lifecycle",
+  "version": "0.0.1",
+  "dependencies": {
+    
+  },
+  "pluginbot" : {
+    "server" : {
+      "main" : "main.js",
+      "consumes" : ["lifecycleHook"]
+      }
+    }
+}
