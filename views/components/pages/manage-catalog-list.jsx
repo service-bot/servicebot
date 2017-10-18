@@ -174,12 +174,7 @@ class ManageCatalogList extends React.Component {
                             sortOrder="desc"
                         >
                             <TableHeaderColumn isKey
-                                               dataField='id'
-                                               dataSort={ true }
-                                               width={100}>
-                                ID
-                            </TableHeaderColumn>
-                            <TableHeaderColumn dataField='name'
+                                            dataField='name'
                                                dataSort={ true }
                                                dataFormat={ this.nameFormatter }
                                                width={200}>
@@ -188,12 +183,14 @@ class ManageCatalogList extends React.Component {
                             <TableHeaderColumn dataField='amount'
                                                dataSort={ true }
                                                dataFormat={ this.priceFormatter }
+                                               searchable={false}
                                                width={100}>
                                 Pricing
                             </TableHeaderColumn>
                             <TableHeaderColumn dataField='type'
                                                dataSort={ true }
                                                dataFormat={ this.paymentTypeFormatter }
+                                               searchable={false}
                                                width={100}>
                                 Type
                             </TableHeaderColumn>
@@ -201,12 +198,13 @@ class ManageCatalogList extends React.Component {
                                                dataSort={ true }
                                                dataFormat={ this.categoryFormatter }
                                                filterFormatted
-                                               width={80}>
+                                               width={120}>
                                 Category
                             </TableHeaderColumn>
                             <TableHeaderColumn dataField='published'
                                                dataSort={ true }
                                                dataFormat={ this.publishedFormatter }
+                                               searchable={false}
                                                filterFormatted
                                                width={100}>
                                 Status
@@ -214,7 +212,7 @@ class ManageCatalogList extends React.Component {
                             <TableHeaderColumn dataField='updated_at'
                                                dataSort={ true }
                                                dataFormat={ this.createdFormatter }
-                                               filter={{type: 'DateFilter'}}
+                                               searchable={false}
                                                filterFormatted
                                                width={150}>
                                 Updated At
@@ -223,8 +221,8 @@ class ManageCatalogList extends React.Component {
                                                className={'action-column-header'}
                                                columnClassName={'action-column'}
                                                dataFormat={ this.rowActionsFormatter }
-                                               width={100}
-                                               filter={false}>
+                                               searchable={false}
+                                               width={100}>
                             </TableHeaderColumn>
                         </ServiceBotTableBase>
                         {renderModals()}

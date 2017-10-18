@@ -55,18 +55,17 @@ class ManageSubscriptions extends React.Component {
         let {props, params, params: {status}, location: {query: {uid} } } = this.props;
         let url = '/api/v1/service-instances';
 
-        if(status !== undefined) {
-            if (status === 'running') {
+        if(this.props.params.status) {
+            if (status == 'running') {
                 url = '/api/v1/service-instances/search?key=status&value=running';
-            } else if (status === 'requested') {
+            } else if (status == 'requested') {
                 url = '/api/v1/service-instances/search?key=status&value=requested';
-            } else if (status === 'waiting_cancellation') {
+            } else if (status == 'waiting_cancellation') {
                 url = '/api/v1/service-instances/search?key=status&value=waiting_cancellation';
             }
         }
-        if(uid !== undefined) {
+        if(_.has(props, 'location.query.uid')) {
             url = `/api/v1/service-instances/search?key=user_id&value=${uid}`;
-            console.log("get services by uid", url);
         }
 
         Fetcher(url).then(function (response) {
@@ -124,7 +123,7 @@ class ManageSubscriptions extends React.Component {
             <div>
                 <div className="badge badge-xs">
                     <img className="img-circle" src={`/api/v1/users/${row.user_id}/avatar`}/>
-                    {/*<span className="customer-name">{row.references.users[0].name}</span>*/}
+                    <span className="customer-name">{row.references.users[0].name}</span>
                 </div>
                 <span className="customer-email">&nbsp;&nbsp;{cell.users[0].email}</span>
             </div>
@@ -132,25 +131,33 @@ class ManageSubscriptions extends React.Component {
     }
     typeFormatter(cell, row){
         let interval = cell.interval;
-        if(interval === 'day') { interval = 'Daily'; }
-        else if (interval === 'week') { interval = 'Weekly'; }
-        else if (interval === 'month') { interval = 'Monthly'; }
-        else if (interval === 'year') { interval = 'Yearly'; }
+        if(interval == 'day') { interval = 'Daily'; }
+        else if (interval == 'week') { interval = 'Weekly'; }
+        else if (interval == 'month') { interval = 'Monthly'; }
+        else if (interval == 'year') { interval = 'Yearly'; }
 
         let type = row.type.toLowerCase();
         switch(type){
             case 'subscription':
-                return ( `<div><span className="status-badge neutral" >${getBillingType(row)}</span> <span class="status-badge black" >${interval}</span></div>` );
+                return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
             case 'custom':
-                return ( `<span class="status-badge neutral">${getBillingType(row)}</span>` );
+                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
             case 'one_time':
-                return ( `<span class="status-badge neutral">${getBillingType(row)}</span>` );
+                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
             default:
-                return ( `<span class="status-badge grey">${getBillingType(row)}</span>` );
+                return ( <span className="status-badge grey">{getBillingType(row)}</span> );
         }
     }
+    typeDataValue(cell, row){
+        console.log("Ffffff");
+        console.log(row)
+        return (row.type);
+    }
     amountFormatter(cell){
-        return (cell.amount);
+        return (<Price value={cell.amount}/>);
+    }
+    emailDataValue(cell){
+        return cell.users[0].email;
     }
     statusFormatter(cell){
         switch (cell) {
@@ -274,6 +281,11 @@ class ManageSubscriptions extends React.Component {
         if(this.state.loading){
             return ( <Load/> );
         }else {
+            const qualityType = {
+                0: 'good',
+                1: 'bad',
+                2: 'unknown'
+            };
             return (
                 <Authorizer permissions={["can_administrate", "can_manage"]}>
                     <Jumbotron pageName={pageName} location={this.props.location}/>
@@ -298,21 +310,22 @@ class ManageSubscriptions extends React.Component {
                                         <TableHeaderColumn dataField='references'
                                                            dataFormat={this.emailFormatter}
                                                            dataSort={ true }
+                                                           filterValue={this.emailDataValue}
                                                            width='150'>
                                             Email
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='payment_plan'
                                                            dataFormat={this.amountFormatter}
-                                                           filterFormatted
                                                            dataSort={ true }
+                                                           searchable={false}
                                                            width='80'>
                                             Amount
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='payment_plan'
                                                            dataFormat={this.typeFormatter}
-                                                           filterFormatted
                                                            dataSort={ true }
-                                                           width='100'>
+                                                           filterValue={this.typeDataValue}
+                                                           width='120'>
                                             Type
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='status'
@@ -324,6 +337,7 @@ class ManageSubscriptions extends React.Component {
                                         <TableHeaderColumn dataField='created_at'
                                                            dataFormat={this.createdFormatter}
                                                            dataSort={ true }
+                                                           searchable={false}
                                                            width='160'>
                                             Created
                                         </TableHeaderColumn>

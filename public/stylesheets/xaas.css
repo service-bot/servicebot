@@ -837,3 +837,7 @@ body.login .footer{
     margin-top: 30px;
     text-align: center;
 }
+
+.react-bs-table .react-bs-container-header>table>thead>tr>th {
+    vertical-align: top !important;
+}
