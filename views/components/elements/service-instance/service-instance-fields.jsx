@@ -14,7 +14,6 @@ class ServiceInstanceFields extends React.Component {
                             <div key={"item-" + field.id} className="col-xs-12 col-sm-4 col-md-3">
                                 <span className="block color-grey-600 label">{field.prop_label}</span>
                                 <p className="service-instance-field-text block">{field.data && field.data.value}</p>
-                                {console.log(field)}
                             </div>
                     ))}
                 </div>
