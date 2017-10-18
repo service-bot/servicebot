@@ -184,28 +184,6 @@ let subscribe = function (callback) {
     }
 }
 
-
-
-let unsubscribe = function (callback) {
-    let self = this;
-    if(self.data.subscription_id) {
-        //Remove the subscription from Stripe
-        Stripe().connection.subscriptions.del(self.data.subscription_id, function (err, confirmation) {
-            if (!err) {
-                self.data.subscription_id = null;
-                self.data.status = "cancelled";
-                self.update(function (err, updated_instance) {
-                    callback(err, updated_instance);
-                });
-            } else {
-                callback(err, null);
-            }
-        });
-    } else {
-        callback(null, 'Service is has no current subscription!');
-    }
-}
-
 let requestCancellation = function (callback) {
     let self = this;
     //Making sure there is only one cancellation request
@@ -299,7 +277,6 @@ let deleteFiles = function(callback){
 
 };
 
-
 ServiceInstance.prototype.changePrice = function (newPlan) {
     let self = this;
     return new Promise(function (resolve, reject) {
@@ -335,12 +312,26 @@ ServiceInstance.prototype.changePrice = function (newPlan) {
     });
 };
 
+ServiceInstance.prototype.unsubscribe = async function () {
+    try {
+        if(this.data.subscription_id) {
+            //Remove the subscription from Stripe
+            await Stripe().connection.subscriptions.del(this.data.subscription_id);
+        }
+        this.data.subscription_id = null;
+        this.data.status = "cancelled";
+        return this.update();
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+}
+
 
 //todo: clean this up so they really support promises.
 ServiceInstance.prototype.buildPayStructure = promisifyProxy(buildPayStructure);
 ServiceInstance.prototype.createPayPlan = promisifyProxy(createPayPlan, false)
 ServiceInstance.prototype.subscribe = promisifyProxy(subscribe, false);
-ServiceInstance.prototype.unsubscribe = promisifyProxy(unsubscribe, false)
 ServiceInstance.prototype.deletePayPlan = promisifyProxy(deletePayPlan);
 ServiceInstance.prototype.requestCancellation = promisifyProxy(requestCancellation);
 ServiceInstance.prototype.generateProps = promisifyProxy(generateProps);

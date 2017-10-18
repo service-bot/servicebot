@@ -149,8 +149,6 @@ class ManageSubscriptions extends React.Component {
         }
     }
     typeDataValue(cell, row){
-        console.log("Ffffff");
-        console.log(row)
         return (row.type);
     }
     amountFormatter(cell){
@@ -189,6 +187,15 @@ class ManageSubscriptions extends React.Component {
     }
     rowActionsFormatter(cell, row){
         let self = this;
+        let status = row.status;
+        let customAction = {};
+        if(status !== "cancelled") {
+            customAction = {
+                type: "button",
+                label: this.dropdownStatusFormatter(row),
+                action: () => {self.onOpenActionModal(row)}
+            };
+        }
 
         return (
             <Dropdown
@@ -201,26 +208,21 @@ class ManageSubscriptions extends React.Component {
                     {   type: "button",
                         label: 'View Invoice',
                         action: () => { browserHistory.push(`/billing-history/${row.user_id}`) }},
-                    {   type: "button",
-                        label: this.dropdownStatusFormatter(row),
-                        action: () => {self.onOpenActionModal(row)}, },
+                    customAction,
                 ]}
             />
         );
     }
+
     dropdownStatusFormatter(dataObject){
         let status = dataObject.status;
         const statusString = _.toLower(status);
-        if(statusString == "requested"){
-            return "Delete Request";
-        }else if(statusString == "running"){
-            return "Cancel Service";
-        }else if(statusString == "waiting_cancellation"){
+        if(statusString == "waiting_cancellation"){
             return "Manage Cancellation";
         }else if(statusString == "cancelled"){
-            return "Cancelled";
-        }else if(statusString == "waiting"){
             return null;
+        }else {
+            return "Cancel Service";
         }
         return "Error";
     }
@@ -251,18 +253,6 @@ class ManageSubscriptions extends React.Component {
         let renderModals = ()=> {
             if(self.state.actionModal){
                 switch (self.state.currentDataObject.status){
-                    case 'requested':
-                        return(
-                            <ModalDeleteRequest myInstance={self.state.currentDataObject}
-                                                show={self.state.actionModal}
-                                                hide={self.onCloseActionModal}/>
-                        );
-                    case 'running':
-                        return(
-                            <ModalRequestCancellation myInstance={self.state.currentDataObject}
-                                                      show={self.state.actionModal}
-                                                      hide={self.onCloseActionModal}/>
-                        );
                     case 'waiting_cancellation':
                         return(
                             <ModalManageCancellation myInstance={self.state.currentDataObject}
@@ -270,8 +260,17 @@ class ManageSubscriptions extends React.Component {
                                                      hide={self.onCloseActionModal}/>
                         );
                     case 'cancelled':
-                        return(null);
+                        return(
+                            <ModalRequestCancellation myInstance={self.state.currentDataObject}
+                                                      show={self.state.actionModal}
+                                                      hide={self.onCloseActionModal}/>
+                        );
                     default:
+                        return(
+                            <ModalRequestCancellation myInstance={self.state.currentDataObject}
+                                                      show={self.state.actionModal}
+                                                      hide={self.onCloseActionModal}/>
+                        );
                         console.error("Error in status", self.state.currentDataObject.status);
                         return(null);
                 }
@@ -331,14 +330,14 @@ class ManageSubscriptions extends React.Component {
                                         <TableHeaderColumn dataField='status'
                                                            dataFormat={this.statusFormatter}
                                                            dataSort={ true }
-                                                           width='80'>
+                                                           width='100'>
                                             Status
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='created_at'
                                                            dataFormat={this.createdFormatter}
                                                            dataSort={ true }
                                                            searchable={false}
-                                                           width='160'>
+                                                           width='140'>
                                             Created
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='Actions'

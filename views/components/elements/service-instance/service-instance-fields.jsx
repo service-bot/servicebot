@@ -13,7 +13,7 @@ class ServiceInstanceFields extends React.Component {
                         (!field.private || isAuthorized({permissions: 'can_administrate'})) &&
                             <div key={"item-" + field.id} className="col-xs-12 col-sm-4 col-md-3">
                                 <span className="block color-grey-600 label">{field.prop_label}</span>
-                                <p className="service-instance-field-text block">{field.data.value}</p>
+                                <p className="service-instance-field-text block">{field.data && field.data.value}</p>
                             </div>
                     ))}
                 </div>
