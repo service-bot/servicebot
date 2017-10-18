@@ -42,7 +42,6 @@ const renderCustomProperty = (props) => {
                                label={formJSON[index].prop_label}
                                formJSON={formJSON[index]}
                                configValue={formJSON[index].config}
-                               validate={required()}
                         />
                     )
                 }
