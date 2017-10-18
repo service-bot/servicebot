@@ -243,7 +243,7 @@ module.exports = function (router) {
     let validateServiceRequest = async function (req, res, next) {
         try {
             let serviceTemplate = res.locals.valid_object;
-            let props = (await ServiceTemplate.getRelated("service_template_properties")) || null;
+            let props = (await serviceTemplate.getRelated("service_template_properties")) || null;
             let req_body = req.body;
             let reqProps = req_body.references && req_body.references.service_template_properties || [];
             await authPromise(req, res);
@@ -272,7 +272,6 @@ module.exports = function (router) {
             });
             if (props) {
                 price = require("../lib/handleInputs").getPrice(props, handlers, price);
-                console.log("\n\nADJUSTED PRICE\n\n", price);
 
             }
 
@@ -344,6 +343,7 @@ module.exports = function (router) {
 
             //if it's a new user request we need to create an account, invitation
             if (isNew && serviceTemplate.get('published')) {
+
                 let store = require('../config/redux/store');
                 let globalProps = store.getState().options;
                 let roleId = globalProps['default_user_role'];
@@ -401,10 +401,10 @@ module.exports = function (router) {
             }
 
 
-
+            let newFund = null;
             //if token_id exists, create/update the user's fund
             if (req_body.token_id && req_body.token_id !== '') {
-                let newFund = await Fund.promiseFundCreateOrUpdate(user.get('id'), req_body.token_id);
+                newFund = Fund.promiseFundCreateOrUpdate(user.get('id'), req_body.token_id);
             }
 
             //create the service instance
@@ -430,6 +430,8 @@ module.exports = function (router) {
                 }
             }
 
+            await  newFund;
+
             let newInstance = await serviceTemplate.requestPromise({
                 ...req_body,
                 ...res.locals.overrides,
@@ -441,17 +443,20 @@ module.exports = function (router) {
                 ...newInstance.data
             });
 
-            //events!
-            if(isNew){
-                newInstance.set("api", responseJSON.api);
-                newInstance.set("url", responseJSON.url);
-                dispatchEvent("service_instance_requested_new_user", newInstance);
+            try {
+                if (isNew) {
+                    newInstance.set("api", responseJSON.api);
+                    newInstance.set("url", responseJSON.url);
+                    dispatchEvent("service_instance_requested_new_user", newInstance);
 
-            }else if(req.uid !== newInstance.get("user_id")){
-                dispatchEvent("service_instance_requested_for_user", newInstance);
+                } else if (req.uid !== newInstance.get("user_id")) {
+                    dispatchEvent("service_instance_requested_for_user", newInstance);
 
-            }else{
-                dispatchEvent("service_instance_requested_by_user", newInstance);
+                } else {
+                    dispatchEvent("service_instance_requested_by_user", newInstance);
+                }
+            }catch(e){
+                console.error("error during dispatchin", e);
             }
 
         } catch (error) {

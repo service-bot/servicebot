@@ -2,6 +2,7 @@ let express = require('express')
 let path = require("path");
 let {eventChannel, END} = require("redux-saga");
 let {take} = require("redux-saga/effects")
+let CONFIG_PATH = path.resolve(__dirname, "../../", "config/pluginbot.config.js")
 
 
 module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
@@ -131,11 +132,15 @@ module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
         });
 
         //todo - figure out how to have this be served by the api gateway
-        app.get('/setup', function (request, response, next) {
+        app.get('/setup', async function (request, response, next) {
             if (setupDisabled) {
                 return next();
             }
-            response.render("main", {bundle : appConfig.bundle_path});
+
+            let configBuilder = require("pluginbot/config");
+            let clientPlugins = Object.keys((await configBuilder.buildClientConfig(CONFIG_PATH)).plugins);
+
+            response.render("main", {bundle : appConfig.bundle_path, plugins : clientPlugins});
         });
 
         return () => {

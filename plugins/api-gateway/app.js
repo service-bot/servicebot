@@ -11,6 +11,7 @@ var helmet = require('helmet')
 let consume = require("pluginbot/effects/consume");
 let {call, put, spawn, takeEvery} = require("redux-saga/effects")
 let HOME_PATH = path.resolve(__dirname, "../../", "public");
+let CONFIG_PATH = path.resolve(__dirname, "../../", "config/pluginbot.config.js")
 let createServer = require("./server");
 
 //todo: store sagas in store?
@@ -160,11 +161,14 @@ module.exports = {
         });
 
 
-        app.get('*', function (req, res) {
+        app.get('*', async function (req, res) {
             if (req.path.split("/")[3] == "embed" && req.method === 'GET') {
                 res.removeHeader('X-Frame-Options');
             }
-            res.render("main", {bundle : appConfig.bundle_path});
+
+            let configBuilder = require("pluginbot/config");
+            let clientPlugins = Object.keys((await configBuilder.buildClientConfig(CONFIG_PATH)).plugins);
+            res.render("main", {bundle : appConfig.bundle_path, plugins : clientPlugins});
             // res.sendFile(path.resolve(__dirname, "../..", 'public', 'index.html'))
         })
 
