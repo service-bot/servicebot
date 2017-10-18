@@ -322,7 +322,6 @@ class ServiceInstanceForm extends React.Component {
         }
     }
     formValidation(values){
-        let validation = {};
 
         let props = (values.references && values.references.service_template_properties) ? values.references.service_template_properties : [];
         let re = props.reduce((acc, prop, index) => {
@@ -331,6 +330,8 @@ class ServiceInstanceForm extends React.Component {
             }
             return acc;
         }, {});
+        let validation = {references : {service_template_properties : re}};
+
         if(Object.keys(re).length === 0){
             delete validation.references;
         }
