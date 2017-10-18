@@ -354,8 +354,9 @@ class ServiceInstanceForm extends React.Component {
         helpers.updatePrice = self.updatePrice;
         //Gets a token to populate token_id for instance request
         if (!isAuthorized({permissions: "can_administrate"}) &&
-            this.state.servicePrice > 0) {
-            submissionPrep = this.submissionPrep;
+            this.state.servicePrice > 0 &&
+            !this.state.hasCard) {
+                submissionPrep = this.submissionPrep;
         }
 
         return (
