@@ -347,7 +347,7 @@ module.exports = function (router) {
                 lifecycleManager = lifecycleManager[0];
                 await lifecycleManager.preProvision({
                     request: req_body,
-                    template: serviceTemplate.data
+                    template: serviceTemplate
                 });
             }
             //if it's a new user request we need to create an account, invitation
@@ -448,8 +448,8 @@ module.exports = function (router) {
             if(lifecycleManager) {
                 await lifecycleManager.postProvision({
                     request: req_body,
-                    instance: newInstance.data,
-                    template: serviceTemplate.data
+                    instance: newInstance,
+                    template: serviceTemplate
                 });
             }
 
