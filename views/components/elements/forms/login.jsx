@@ -7,7 +7,7 @@ import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import Alert from 'react-s-alert';
 import Buttons from '../buttons.jsx';
 import {connect} from "react-redux";
-import {setUid, setUser, fetchUsers, setVersion, addAlert, dismissAlert} from "../../utilities/actions";
+import {setUid, setUser, fetchUsers, setVersion, addAlert, dismissAlert, setPermissions} from "../../utilities/actions";
 import cookie from 'react-cookie';
 let _ = require("lodash");
 
@@ -34,7 +34,7 @@ class Login extends React.Component {
             if(!result.error) {
 
                 localStorage.setItem("permissions", result.permissions);
-
+                self.props.setPermissions(result.permissions);
                 fetchUsers(cookie.load("uid"), (err, user) => (self.props.setUser(user)));
 
                 //update redux store with the uid
@@ -204,6 +204,8 @@ const mapDispatchToProps = (dispatch) => {
         dismissAlert: (alert) => {
             return dispatch(dismissAlert(alert))
         },
+        setPermissions : permissions => dispatch(setPermissions(permissions))
+
     }
 };
 

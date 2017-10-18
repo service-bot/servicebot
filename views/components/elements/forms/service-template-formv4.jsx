@@ -14,9 +14,8 @@ import SVGIcons from "../../utilities/svg-icons.jsx";
 import Load from "../../utilities/load.jsx";
 let _ = require("lodash");
 import { required, email, numericality, length } from 'redux-form-validators'
-
-const selector = formValueSelector('servicebotForm'); // <-- same as form name
-
+const TEMPLATE_FORM_NAME = "serviceTemplateForm"
+const selector = formValueSelector(TEMPLATE_FORM_NAME); // <-- same as form name
 class CustomField extends React.Component {
 
     constructor(props) {
@@ -129,55 +128,55 @@ CustomField = connect((state, ownProps) => {
     return {
         "setPrivate": (val) => {
             if (val == true) {
-                dispatch(change("servicebotForm", `references.${ownProps.member}.private`, true));
-                dispatch(change("servicebotForm", `references.${ownProps.member}.required`, false));
-                dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, true));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, false));
             } else {
-                dispatch(change("servicebotForm", `references.${ownProps.member}.private`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
             }
         },
         "setRequired": (val) => {
             if (val == true) {
-                dispatch(change("servicebotForm", `references.${ownProps.member}.required`, true));
-                dispatch(change("servicebotForm", `references.${ownProps.member}.private`, false));
-                dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, true));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, true));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, true));
             } else {
-                dispatch(change("servicebotForm", `references.${ownProps.member}.required`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, false));
             }
         },
         "setPrompt": (val) => {
             if (val == true) {
-                dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, true));
-                dispatch(change("servicebotForm", `references.${ownProps.member}.private`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, true));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
             } else {
-                dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, false));
             }
         },
         "changePrivate": (event) => {
             if (!event.currentTarget.value || event.currentTarget.value == 'false') {
-                dispatch(change("servicebotForm", `references.${ownProps.member}.required`, false));
-                dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, false));
             }
         },
         "changeRequired": (event) => {
             if (!event.currentTarget.value || event.currentTarget.value == 'false') {
-                dispatch(change("servicebotForm", `references.${ownProps.member}.private`, false));
-                dispatch(change("servicebotForm", `references.${ownProps.member}.prompt_user`, true));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, true));
             }
         },
         "changePrompt": (event) => {
             if (!event.currentTarget.value || event.currentTarget.value == 'false') {
-                dispatch(change("servicebotForm", `references.${ownProps.member}.private`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
             }
         },
         "clearConfig": () => {
-            dispatch(change("servicebotForm", `references.${ownProps.member}.config`, {}));
+            dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.config`, {}));
         },
         "clearPricing": () => {
-            dispatch(change("servicebotForm", `references.${ownProps.member}.config.pricing`, null));
+            dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.config.pricing`, null));
         },
         "clearValue": () => {
-            dispatch(change("servicebotForm", `references.${ownProps.member}.data`, null));
+            dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.data`, null));
         }
     }
 })(CustomField);
@@ -635,6 +634,7 @@ class ServiceTemplateForm extends React.Component {
                         <div className="col-md-9">
                             <ServiceBotBaseForm
                                 form={TemplateForm}
+                                formName={TEMPLATE_FORM_NAME}
                                 initialValues={initialValues}
                                 initialRequests={initialRequests}
                                 submissionPrep={this.submissionPrep}
@@ -661,7 +661,7 @@ function mapStateToProps(state) {
         fieldState : {
             "options": state.options,
             "serviceTypeValue": selector(state, `type`),
-            formJSON: getFormValues('servicebotForm')(state),
+            formJSON: getFormValues(TEMPLATE_FORM_NAME)(state),
         }
     }
 }
@@ -676,13 +676,13 @@ const mapDispatchToProps = (dispatch) => {
         },
         fieldDispatches : {
             'setIntervalCount': () => {
-                dispatch(change("servicebotForm", `interval_count`, 1))
+                dispatch(change(TEMPLATE_FORM_NAME, `interval_count`, 1))
             },
             'setInterval': () => {
-                dispatch(change("servicebotForm", `interval`, 'day'))
+                dispatch(change( TEMPLATE_FORM_NAME, `interval`, 'day'))
             },
             'clearAmount': () => {
-                dispatch(change("servicebotForm", `amount`, 0))
+                dispatch(change(TEMPLATE_FORM_NAME, `amount`, 0))
             }
         }
 

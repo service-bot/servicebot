@@ -4,7 +4,7 @@ import NavBootstrap from "./layouts/nav-bootstrap.jsx"
 import Footer from "./layouts/footer.jsx"
 import {browserHistory} from 'react-router';
 import {connect} from "react-redux";
-import {setUid, setUser, dismissAlert} from "./utilities/actions"
+import {setUid, setUser, dismissAlert, setPermissions} from "./utilities/actions"
 import { store } from "../store"
 
 class App extends React.Component {
@@ -56,6 +56,7 @@ let mapDispatchToProps = function(dispatch){
             dispatch(setUid(null));
             dispatch(dismissAlert([]));
             dispatch(setUser(null));
+            dispatch(setPermissions([]));
 
         }}
 }

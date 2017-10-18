@@ -42,7 +42,7 @@ if (!Object.values) {
     values.shim();
 }
 
-const selector = formValueSelector('servicebotForm'); // <-- same as form name
+const selector = formValueSelector('serviceInstanceRequestForm'); // <-- same as form name
 
 
 //Custom property
@@ -193,7 +193,7 @@ class ServiceRequestForm extends React.Component {
 ServiceRequestForm = consume("widget")(connect((state, ownProps) => {
     return {
         "serviceTypeValue" : selector(state, `type`),
-        formJSON: getFormValues('servicebotForm')(state),
+        formJSON: getFormValues('serviceInstanceRequestForm')(state),
 
     }
 })(ServiceRequestForm));
@@ -396,6 +396,7 @@ class ServiceInstanceForm extends React.Component {
                     successMessage = {successMessage}
                     successRoute = {successRoute}
                     handleResponse = {this.handleResponse}
+                    formName="serviceInstanceRequestForm"
                     helpers = {helpers}
                     validations={this.formValidation}
 

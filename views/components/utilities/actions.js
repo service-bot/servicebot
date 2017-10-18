@@ -7,6 +7,7 @@ import Fetcher from '../utilities/fetcher.jsx';
 export const SET_OPTIONS = 'SET_OPTIONS';
 export const SET_VERSION = 'SET_VERSION';
 export const SET_UID = 'SET_UID';
+export const SET_PERMISSIONS = "SET_PERMISSIONS";
 export const SET_USER = "SET_USER";
 export const ADD_NOTIFICATION = "ADD_NOTIFICATION";
 export const SET_NOTIFICATIONS = "SET_NOTIFICATIONS";
@@ -91,6 +92,10 @@ export function setUid(uid) {
 
 export function setUser(user) {
     return { type: SET_USER, user }
+}
+
+export function setPermissions(permissions){
+    return { type : SET_PERMISSIONS, permissions}
 }
 
 export function setFormData(name, formData){

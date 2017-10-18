@@ -2,7 +2,7 @@ import React from 'react';
 import Load from '../../utilities/load.jsx';
 import {Link, browserHistory} from 'react-router';
 import {DataForm} from "../../utilities/data-form.jsx";
-import {setUid, fetchUsers, setUser} from "../../utilities/actions";
+import {setUid, fetchUsers, setUser, setPermissions} from "../../utilities/actions";
 import {connect} from "react-redux";
 import cookie from 'react-cookie';
 import Inputs from '../../utilities/inputs.jsx';
@@ -31,6 +31,7 @@ class UserFormInvite extends React.Component {
         //Get the response
         if (!response.error) {
             localStorage.setItem("permissions", response.permissions);
+            this.props.setPermissions(response.permissions);
             this.props.setUid(cookie.load("uid"));
             this.props.setUser(cookie.load("uid"));
             this.setState({
@@ -136,7 +137,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setUser: (uid) => {
             fetchUsers(uid, (err, user) => dispatch(setUser(user)));
-        }
+        },
+        setPermissions : permissions => dispatch(setPermissions(permissions))
+
     }
 };
 
