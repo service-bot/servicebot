@@ -19,6 +19,7 @@ class Jumbotron extends React.Component {
         }
     }
 
+
     render () {
 
         let style = {jumbotron:{}, breadcrumbs:{}};
@@ -36,7 +37,8 @@ class Jumbotron extends React.Component {
                     <div className="top-navigation">
                         <div className="nav nav-inline top-navigation-links">
                             <h3 className="display-3" style={style.jumbotron}>{this.props.pageName}</h3>
-                            <Breadcrumbs location={this.props.location} color={style.breadcrumbs}/>
+                            {this.props.subtitle && <span>{this.props.subtitle}</span>}
+                            {this.props.location && <Breadcrumbs location={this.props.location} color={style.breadcrumbs}/>}
                         </div>
                         {/*<SearchDashboard/>*/}
                     </div>

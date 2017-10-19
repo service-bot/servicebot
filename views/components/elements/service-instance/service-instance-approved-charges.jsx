@@ -36,9 +36,11 @@ class ServiceInstanceApprovedCharges extends React.Component {
 
     render () {
         return (
-            <div className="service-instance-section">
-                <span className="service-instance-section-label">Approved Line Items</span>
-                <div className="table-responsive service-block">
+            <div className="service-instance-box">
+                <div className="service-instance-box-title">
+                    <span>Approved Line Items</span>
+                </div>
+                <div className="service-instance-box-content">
                     <p>Service line items are one time charges for standalone services performed related to this service within current pay period.</p>
                     <Datatable dataObj={this.props.instanceApprovedItems}
                                col={['description', 'amount', 'updated_at', 'approved']}
