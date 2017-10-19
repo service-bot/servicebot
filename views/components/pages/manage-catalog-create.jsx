@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link, browserHistory} from 'react-router';
-import ServiceTemplateForm from '../elements/forms/service-template-formv4.jsx';
+import ServiceTemplateForm from '../elements/forms/service-template-form.jsx';
 
 class ManageCatalogCreate extends React.Component {
 

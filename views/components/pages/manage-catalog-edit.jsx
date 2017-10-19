@@ -1,5 +1,5 @@
 import React from 'react';
-import ServiceTemplateForm from '../elements/forms/service-template-formv4.jsx';
+import ServiceTemplateForm from '../elements/forms/service-template-form.jsx';
 
 class ManageCatalogEdit extends React.Component {
 

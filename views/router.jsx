@@ -1,8 +1,5 @@
 import React from 'react';
-import {render} from 'react-dom';
 import {Router, Route, IndexRoute, IndexRedirect, browserHistory} from 'react-router';
-import Promise from "promise-polyfill";
-import {setOptions, setUid, setUser, fetchUsers, initializeState} from "./components/utilities/actions"
 import {store, initializedState} from "./store"
 import {Provider} from 'react-redux'
 import {StripeProvider} from 'react-stripe-elements';
@@ -13,9 +10,8 @@ import Home from "./components/pages/home.jsx";
 import AllServices from "./components/pages/all-services.jsx";
 // Dashboard (My Services)
 import MyServices from './components/pages/my-services.jsx';
-import ModalInvoice from './components/elements/modals/modal-invoice.jsx';
 import ServiceInstance from './components/pages/service-instance.jsx';
-import ServiceRequest from './components/pages/service-catalog-request.jsx';
+import ServiceRequest from "./components/pages/service-catalog-request.jsx"
 import ServiceCatalog from './components/pages/service-catalog.jsx';
 // User
 import {Notifications} from "./components/pages/notifications.jsx"
@@ -52,23 +48,6 @@ import ServiceInstanceForm from "./components/elements/forms/service-instance-fo
 import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
-//Tests
-import ServiceTemplateFormV4 from "./components/elements/forms/service-template-formv4.jsx";
-import ServiceRequestV2 from "./components/pages/service-catalog-request-v2.jsx"
-
-
-// Fetcher("/api/v1/system-options/public").then(function(response) {
-//     store.dispatch(setOptions(response));
-// }).then(function() {
-//     ("app will dispatch setUser function", cookie.load("uid"));
-//     fetchUsers(cookie.load("uid"), (err, user) => store.dispatch(setUser(user)));
-// }).catch(function (error) {
-//     console.log("Error", error);
-//     store.dispatch(setOptions(
-//         {backgroundColor: '#000000'}
-//     ));
-// });
-
 
 store.dispatch(initializedState);
 
@@ -97,7 +76,7 @@ let AppRouter = function (props) {
                         <Route name="Service Instance" path="service-instance/:instanceId" component={ServiceInstance}/>
                         <Route name="Service Catalog" path="service-catalog" component={ServiceCatalog}/>
                         <Route name="Service Request" path="service-catalog/:templateId/request"
-                               component={ServiceRequestV2}/>
+                               component={ServiceRequest}/>
                         <Route name="Account Settings" path="account-settings/:userId" component={UserForm}/>
                         <Route name="My Profile" path="profile" component={Profile}/>
                         {/* Billing */}
@@ -128,7 +107,6 @@ let AppRouter = function (props) {
                             <Route name="Create Template" path="create" component={ManageCatalogCreate}/>
                             <Route name="Edit Template" path=":templateId" component={ManageCatalogEdit}/>
                             <Route name="Duplicate Template" path=":templateId/duplicate" component={ManageCatalogDuplicate}/>
-                            {/*<Route name="Edit Template" path=":templateId/edit" component={ManageCatalogEdit}/>*/}
                         </Route>
                         {/* Query routes */}
                         <Route name="Services" path="manage-subscriptions/:status" component={ManageSubscriptions}/>
