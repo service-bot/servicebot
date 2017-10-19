@@ -82,7 +82,7 @@ class DashboardRequestedServices extends React.Component {
         }else {
             return (
                 <ServiceBotTableBase
-                    noDataText="There is no newly ordered products / services yet!"
+                    noDataText="There are no newly ordered products / services yet!"
                     rows={this.state.rows}
                     fetchRows={this.fetchData}>
                     <TableHeaderColumn isKey
