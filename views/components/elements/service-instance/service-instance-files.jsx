@@ -74,24 +74,30 @@ class ServiceInstanceFiles extends React.Component {
             )
         }else {
             return (
-                <div className="service-instance-section">
-                    <span className="service-instance-section-label">Files</span>
-                    <DataTable parentState={this.state}
-                               dataObj={this.state.files}
-                               col={['data.name', 'data.mimetype', 'data.created_at', 'data.id']}
-                               colNames={['Name', 'Type', 'Uploaded On','Actions']}
-                               mod_data-mimetype={this.modDataMimeType}
-                               mod_data-id={this.modDataID}
-                               mod_data-created_at={this.modDataCreatedAt}
-                               nullMessage="Upload files"
-                    />
-                    <FileUploader elementID="service-file"
-                                  fileStyle="service-file"
-                                  name="files"
-                                  uploadButton={true}
-                                  fileURL={`/api/v1/service-instances/${this.props.instanceId}/files`}
-                                  handleSuccess={this.fetchFiles}
-                    />
+                <div className="service-instance-box">
+                    <div className="service-instance-box-title">
+                        <div>Files</div>
+                        <div className="react-buttons right ">
+                            <FileUploader elementID="service-file"
+                                          fileStyle="service-file"
+                                          name="files"
+                                          uploadButton={true}
+                                          fileURL={`/api/v1/service-instances/${this.props.instanceId}/files`}
+                                          handleSuccess={this.fetchFiles}
+                            />
+                        </div>
+                    </div>
+                    <div className="service-instance-box-content">
+                        <DataTable parentState={this.state}
+                                   dataObj={this.state.files}
+                                   col={['data.name', 'data.mimetype', 'data.created_at', 'data.id']}
+                                   colNames={['Name', 'Type', 'Uploaded On','Actions']}
+                                   mod_data-mimetype={this.modDataMimeType}
+                                   mod_data-id={this.modDataID}
+                                   mod_data-created_at={this.modDataCreatedAt}
+                                   nullMessage="Upload files"
+                        />
+                    </div>
                 </div>
             )
         }

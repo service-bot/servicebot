@@ -771,6 +771,55 @@ body.login .footer{
     animation: displayMessage 1s;
 }
 
+#content-title{
+    display: none;
+}
+
+.invited-user-profile {
+    line-height: 30px;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.purchases-header{
+    margin-top: 30px;
+    text-align: center;
+}
+
+.react-bs-table .react-bs-container-header>table>thead>tr>th {
+    vertical-align: top !important;
+}
+
+/*
+    Service Instance page
+ */
+.service-instance-box {
+    margin: 0 0 12px;
+    background: #fff;
+    border-radius: 4px;
+    /*box-shadow: 0 7px 14px 0 rgba(50,50,93,.1), 0 3px 6px 0 rgba(0,0,0,.07);*/
+    border: solid 1px #cfdaea;
+    overflow: hidden;
+}
+.service-instance-box-title {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    box-shadow: inset 0 -1px #c9d5e0;
+    color: black;
+    background: #d9e1ea;
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+}
+.service-instance-box-content{
+    height: auto;
+    padding: 10px 20px;
+}
+
 @keyframes displayMessage {
     0%{
         margin-top: -10px;
@@ -819,25 +868,4 @@ body.login .footer{
         flex-basis: 100%;
         padding: 5px 0px 5px;
     }
-}
-
-#content-title{
-    display: none;
-}
-
-.invited-user-profile {
-    line-height: 30px;
-    text-align: center;
-    margin-top: 30px;
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.purchases-header{
-    margin-top: 30px;
-    text-align: center;
-}
-
-.react-bs-table .react-bs-container-header>table>thead>tr>th {
-    vertical-align: top !important;
 }

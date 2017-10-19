@@ -183,8 +183,8 @@ class ServiceRequestForm extends React.Component {
                     </strong>}
 
                     {/*<Buttons buttonClass="btn-primary btn-bar" size="lg" position="center" btnType="primary" value="submit"*/}
-                             {/*onClick={()=>{}} loading>*/}
-                        {/*<span>{getRequestText()}</span>*/}
+                    {/*onClick={()=>{}} loading>*/}
+                    {/*<span>{getRequestText()}</span>*/}
                     {/*</Buttons>*/}
                 </form>
             </div>
@@ -348,7 +348,7 @@ class ServiceInstanceForm extends React.Component {
         let props = (values.references && values.references.service_template_properties) ? values.references.service_template_properties : [];
         let re = props.reduce((acc, prop, index) => {
             if(prop.required && (!prop.data || !prop.data.value)){
-                acc[index] = {data : {value : "Required"}}
+                acc[index] = {data : {value : "is required"}}
             }
             return acc;
         }, {});
@@ -378,7 +378,7 @@ class ServiceInstanceForm extends React.Component {
         if (!isAuthorized({permissions: "can_administrate"}) &&
             this.state.servicePrice > 0 &&
             !this.state.hasCard) {
-                submissionPrep = this.submissionPrep;
+            submissionPrep = this.submissionPrep;
         }
 
         return (

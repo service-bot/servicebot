@@ -83,9 +83,6 @@ class ServiceBotBaseForm extends React.Component {
         }
     }
 
-    //NEED TO CHANGE MAKECALL TO AN ASYNC
-    //ITS NOT EASY BECAUSE OF HOW SUBMISSIONPREP iS
-    //AND MAKE SURE WERE GETTING THE SUBMISSION ERRORS
     async makeCall(values) {
         let self = this;
         let result = null;

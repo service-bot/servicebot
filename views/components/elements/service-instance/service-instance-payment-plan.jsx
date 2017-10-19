@@ -17,9 +17,11 @@ class ServiceInstancePaymentPlan extends React.Component {
                 <div className="">
 
                     <Authorizer permissions={['can_administrate']}>
-                        <div className="service-instance-section">
-                            <span className="service-instance-section-label">Customer Information</span>
-                            <div id="instance-owner">
+                        <div className="service-instance-box">
+                            <div className="service-instance-box-title">
+                                <span>Customer Information</span>
+                            </div>
+                            <div id="instance-owner" className="service-instance-box-content">
                                 <div>
                                     <span><i className="fa fa-envelope"/>{owner.email}</span><br/>
                                     <span><i className="fa fa-user"/>{owner.name}</span><br/>
@@ -32,42 +34,46 @@ class ServiceInstancePaymentPlan extends React.Component {
                         </div>
                     </Authorizer>
 
-                    <div id="payment-plan-box" className="service-instance-section">
-                        <span className="service-instance-section-label">Payment Information</span>
-                        <div className="row">
-                            <div className="payment-plan-fields col-xs-6 col-md-4">
-                                <span className="block color-grey-600 label">Status</span>
-                                <div>
-                                    <span className="payment-plan-field-text">{this.props.status ? this.props.status : "No Status"}</span>
-                                    {this.props.status == "requested" && <InfoToolTip title="You service will start running and charges will only be posted after you approve the request. You can approve it using the approve button below." text="i" placement="right"/>}
+                    <div id="payment-plan-box" className="service-instance-box">
+                        <div className="service-instance-box-title">
+                            <span>Payment Information</span>
+                        </div>
+                        <div className="service-instance-box-content">
+                            <div className="row">
+                                <div className="payment-plan-fields col-xs-6 col-md-4">
+                                    <span className="block color-grey-600 label">Status</span>
+                                    <div>
+                                        <span className="payment-plan-field-text">{this.props.status ? this.props.status : "No Status"}</span>
+                                        {this.props.status == "requested" && <InfoToolTip title="You service will start running and charges will only be posted after you approve the request. You can approve it using the approve button below." text="i" placement="right"/>}
+                                    </div>
+                                    {this.props.status == "requested" && <Buttons text="Approve Now" position="left" btnType="info" size="md" onClick={this.props.approval}/>}
                                 </div>
-                                {this.props.status == "requested" && <Buttons text="Approve Now" position="left" btnType="info" size="md" onClick={this.props.approval}/>}
-                            </div>
-                            <div className="payment-plan-fields col-xs-6 col-md-4">
-                                <span className="block color-grey-600 label">Billing Type</span>
-                                <div>
-                                    <span className="payment-plan-field-text">{getBillingType(this.props.service)}</span>
+                                <div className="payment-plan-fields col-xs-6 col-md-4">
+                                    <span className="block color-grey-600 label">Billing Type</span>
+                                    <div>
+                                        <span className="payment-plan-field-text">{getBillingType(this.props.service)}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="payment-plan-fields col-xs-6 col-md-4">
-                                <span className="block color-grey-600 label">Price</span>
-                                <div>
-                                    <span className="payment-plan-field-text">{getPrice(this.props.service.payment_plan, this.props.service.type)}</span>
+                                <div className="payment-plan-fields col-xs-6 col-md-4">
+                                    <span className="block color-grey-600 label">Price</span>
+                                    <div>
+                                        <span className="payment-plan-field-text">{getPrice(this.props.service.payment_plan, this.props.service.type)}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            {/*<div className="payment-plan-fields col-xs-6 col-md-4">*/}
-                                {/*<span className="block color-grey-600 label">Currency</span>*/}
-                                {/*<h5 className="color-grey-700">{paymentPlan.currency ? paymentPlan.currency : "N/A"}</h5>*/}
-                            {/*</div>*/}
-                            {/*<div className="payment-plan-fields col-xs-6 col-md-4">*/}
-                                {/*<span className="block color-grey-600 label">Payment Interval</span>*/}
-                                {/*<h5 className="color-grey-700">{paymentPlan.interval ? paymentPlan.interval : "N/A"}</h5>*/}
-                            {/*</div>*/}
+                                {/*<div className="payment-plan-fields col-xs-6 col-md-4">*/}
+                                    {/*<span className="block color-grey-600 label">Currency</span>*/}
+                                    {/*<h5 className="color-grey-700">{paymentPlan.currency ? paymentPlan.currency : "N/A"}</h5>*/}
+                                {/*</div>*/}
+                                {/*<div className="payment-plan-fields col-xs-6 col-md-4">*/}
+                                    {/*<span className="block color-grey-600 label">Payment Interval</span>*/}
+                                    {/*<h5 className="color-grey-700">{paymentPlan.interval ? paymentPlan.interval : "N/A"}</h5>*/}
+                                {/*</div>*/}
 
-                            {/*<div className="payment-plan-fields col-xs-6 col-md-4">*/}
-                                {/*<span className="block color-grey-600 label">Trial Days</span>*/}
-                                {/*<h5 className="color-grey-700">{paymentPlan.trial_period_days? paymentPlan.trial_period_days : "None"}</h5>*/}
-                            {/*</div>*/}
+                                {/*<div className="payment-plan-fields col-xs-6 col-md-4">*/}
+                                    {/*<span className="block color-grey-600 label">Trial Days</span>*/}
+                                    {/*<h5 className="color-grey-700">{paymentPlan.trial_period_days? paymentPlan.trial_period_days : "None"}</h5>*/}
+                                {/*</div>*/}
+                            </div>
                         </div>
                     </div>
                 </div>

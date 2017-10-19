@@ -236,7 +236,7 @@ class ServiceInstance extends React.Component {
 
     getAdditionalCharges(myInstance, myInstanceChargeItems) {
         let self = this;
-        if(myInstance.status !== 'cancelled' || myInstance.status !== 'requested') {
+        if(myInstance.status !== 'cancelled') {
             if (myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) {
                 return (
                     <div id="service-instance-waiting" className="row">
@@ -269,7 +269,7 @@ class ServiceInstance extends React.Component {
 
     render () {
         let self = this;
-        let pageName = this.props.route.name;
+        let pageName = `Purchased Item: `;
         if(this.state.loading){
             return (
                 <Authorizer>
@@ -289,7 +289,7 @@ class ServiceInstance extends React.Component {
             const myInstance = this.state.instance;
             const myInstanceChargeItems = _.groupBy(myInstance.references.charge_items, 'approved');
             let id, name, amount, interval, owner, ownerId = null;
-            pageName = myInstance.name;
+            pageName = `Purchased Item: ${myInstance.name}`;
 
             //Gather data first
             if( self.state.instance){
@@ -331,23 +331,20 @@ class ServiceInstance extends React.Component {
 
             return(
                 <Authorizer>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <Jumbotron pageName={pageName} subtitle={myInstance.description} />
                     <div className="page-service-instance">
                         <Content>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'} transitionAppear={true} transitionEnter={true} transitionLeave={true}
                                                      transitionAppearTimeout={1000} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                                 <div className="row">
-                                    <div className="col-xs-10">
-                                        <ContentTitle icon="server" title={myInstance.name}/>
-                                    </div>
-                                    <div className="col-xs-2">
+                                    <div className="col-md-10 col-md-offset-1 m-b-20">
                                         {self.getActionButtons(myInstance)}
                                     </div>
                                 </div>
 
                                 {_.has(myInstance, 'references.service_instance_cancellations[0].id') &&
                                 <div className="row">
-                                    <div className="col-md-8 col-md-offset-2">
+                                    <div className="col-md-10 col-md-offset-1">
                                         <div className="alert alert-warning" role="alert">
                                             <Link to="#" className="btn btn-warning btn-outline btn-rounded btn-sm pull-right" onClick={self.handleUndoCancel}>View Cancellation Request</Link>
                                             <i className="fa fa-exclamation-circle"/>
@@ -359,9 +356,8 @@ class ServiceInstance extends React.Component {
 
                                 {this.getAdditionalCharges(myInstance, myInstanceChargeItems)}
 
-                                <div id="service-instance-description" className="row">
-                                    <div className="col-md-8 col-md-offset-2">
-                                        <ServiceInstanceDescription service={myInstance} instanceDescription={myInstance.description}/>
+                                <div id="service-instance-detail" className="row">
+                                    <div className="col-md-10 col-md-offset-1">
                                         <ServiceInstancePaymentPlan key={Object.id}
                                                                     owner={owner}
                                                                     service={myInstance}
@@ -373,7 +369,7 @@ class ServiceInstance extends React.Component {
 
                                 {myInstance.references.service_instance_properties.length > 0 &&
                                 <div id="service-instance-fields" className="row">
-                                    <div className="col-md-8 col-md-offset-2">
+                                    <div className="col-md-10 col-md-offset-1">
                                         <ServiceInstanceFields instanceProperties={myInstance.references.service_instance_properties}/>
                                     </div>
                                 </div>
@@ -381,20 +377,20 @@ class ServiceInstance extends React.Component {
 
                                 {(myInstanceChargeItems.true && myInstanceChargeItems.true.length > 0) &&
                                 <div id="service-instance-approved-charges" className="row">
-                                    <div className="col-md-8 col-md-offset-2">
+                                    <div className="col-md-10 col-md-offset-1">
                                         <ServiceInstanceApprovedCharges instanceApprovedItems={myInstanceChargeItems.true}/>
                                     </div>
                                 </div>
                                 }
 
                                 <div id="service-instance-files" className="row">
-                                    <div className="col-md-8 col-md-offset-2">
+                                    <div className="col-md-10 col-md-offset-1">
                                         <ServiceInstanceFiles instanceId={self.state.instanceId}/>
                                     </div>
                                 </div>
 
                                 <div id="service-instance-message" className="row">
-                                    <div className="col-md-8 col-md-offset-2">
+                                    <div className="col-md-10 col-md-offset-1">
                                         <ServiceInstanceMessage instanceId={self.state.instanceId}/>
                                     </div>
                                 </div>
