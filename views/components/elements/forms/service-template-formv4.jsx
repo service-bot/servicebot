@@ -282,7 +282,6 @@ class TemplateForm extends React.Component {
         return (
 
             <form onSubmit={handleSubmit}>
-                {JSON.stringify(formJSON)}
                 {error && <div>{error}</div>}
                 <div className="row">
                     <div className="col-md-8">
