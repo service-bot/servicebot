@@ -3,7 +3,7 @@ var path = require('path');
 
 var BUILD_DIR = path.resolve(__dirname, 'public/build');
 var APP_DIR = path.resolve(__dirname, 'views');
-const CONFIG_PATH = path.resolve(__dirname, './config/pluginbot.config.js');
+const CONFIG_PATH = process.env.CONFIG_PATH || path.resolve(__dirname, './config/pluginbot.config.js');
 const PLUGIN_DIR = path.resolve(__dirname, "./plugins");
 const MODULES = path.resolve(__dirname, "node_modules");
 var APP_DIR2 = path.resolve(__dirname, '.');

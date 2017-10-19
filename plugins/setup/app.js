@@ -2,7 +2,6 @@ let express = require('express')
 let path = require("path");
 let {eventChannel, END} = require("redux-saga");
 let {take} = require("redux-saga/effects")
-let CONFIG_PATH = path.resolve(__dirname, "../../", "config/pluginbot.config.js")
 
 
 module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
@@ -136,6 +135,8 @@ module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
             if (setupDisabled) {
                 return next();
             }
+
+            const CONFIG_PATH = appConfig.configPath;
 
             let configBuilder = require("pluginbot/config");
             let clientPlugins = Object.keys((await configBuilder.buildClientConfig(CONFIG_PATH)).plugins);

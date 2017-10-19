@@ -120,7 +120,7 @@ let getInitialConfig = function(){
 
 let getAppConf = function(){
     return {
-
+        "configPath" : __dirname,
         "port" : process.env.PORT || 3000,
         "bundle_path" : process.env.BUNDLE_PATH || "/build/bundle.js",
         "ssl_port" : process.env.SSL_PORT || 3001,

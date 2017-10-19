@@ -11,7 +11,6 @@ var helmet = require('helmet')
 let consume = require("pluginbot/effects/consume");
 let {call, put, spawn, takeEvery} = require("redux-saga/effects")
 let HOME_PATH = path.resolve(__dirname, "../../", "public");
-let CONFIG_PATH = path.resolve(__dirname, "../../", "config/pluginbot.config.js")
 let createServer = require("./server");
 
 //todo: store sagas in store?
@@ -37,6 +36,7 @@ module.exports = {
 
         //wait for database to become available
         let database = yield consume(services.database);
+        let CONFIG_PATH = appConfig.configPath;
         let Settings = require('../../models/system-options');
         let injectProperties = require("../../middleware/property-injector");
         require('../../config/passport.js')(passport);
