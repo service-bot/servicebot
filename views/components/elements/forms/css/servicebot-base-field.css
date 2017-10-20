@@ -22,6 +22,14 @@
     font-size: 12px;
     margin-top: -4px;
 }
+.form-level-errors, .form-level-warnings{
+    margin-bottom: 15px;
+}
+.form-level-errors .form-error, .form-level-warnings .form-warning{
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
 .form-error{
     background: #ff6565;
 }

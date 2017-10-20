@@ -282,9 +282,12 @@ class TemplateForm extends React.Component {
         return (
 
             <form onSubmit={handleSubmit}>
-                {error && <div>{error}</div>}
                 <div className="row">
                     <div className="col-md-8">
+                        <div className="form-level-errors">
+                            {error && <div className="form-error">{error}</div>}
+                        </div>
+                        <div className="form-level-warnings"/>
                         <h3>Basic Info</h3>
                         <Field name="name" type="text"
                                component={inputField} label="Product / Service Name"
