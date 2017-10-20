@@ -78,7 +78,7 @@ module.exports = {
                 let updatedCore = yield Settings.batchUpdate(groupedUpdates.core);
 
                 //todo: 🚨🚨🚨🚨 pluginbot needs consume current - this is currently bad practice since it's not consuming services.
-                let pluginOptions = yield select((state) => state.pluginbot.services.pluginOption) || [];
+                let pluginOptions = (yield select((state) => state.pluginbot.services.pluginOption)) || [];
                 let mappedPluginOption = pluginOptions.reduce((acc, option) => {
                     acc[option.name] = option;
                     return acc;
