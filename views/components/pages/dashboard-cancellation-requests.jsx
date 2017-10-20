@@ -86,7 +86,7 @@ class DashboardCancellationRequests extends React.Component {
         }else {
             return (
                 <ServiceBotTableBase
-                    noDataText='Great! There is no pending cancellation requests!'
+                    noDataText='Great! There are no pending cancellation requests!'
                     rows={this.state.rows}
                     fetchRows={this.fetchData}>
                     <TableHeaderColumn isKey

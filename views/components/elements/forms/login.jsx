@@ -2,6 +2,7 @@ import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import Content from '../../layouts/content.jsx';
 import Fetcher from "../../utilities/fetcher.jsx";
+import Load from "../../utilities/load.jsx";
 import update from "immutability-helper";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import Alert from 'react-s-alert';
@@ -110,13 +111,16 @@ class Login extends React.Component {
 
     render () {
 
-        if(this.props.modal && this.props.email){
-            return (
-                <Content>
-                    <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
-                        <form className="sign-in">
-                            {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
-                            {this.state.invitationExists &&
+        if(!this.props.options.allow_registration) {
+            return( <Load/> );
+        }else{
+            if (this.props.modal && this.props.email) {
+                return (
+                    <Content>
+                        <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
+                            <form className="sign-in">
+                                {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
+                                {this.state.invitationExists &&
                                 <div>
                                     <h3 className="text-center">Account confirmation email is sent to {this.props.email}?</h3>
                                     <p>Please check your email to complete your account before continue.</p>
@@ -126,64 +130,83 @@ class Login extends React.Component {
                                         <span>I already confirmed my account, continue.</span>
                                     </Buttons>
                                 </div>
-                            }
+                                }
 
-                            {!this.state.invitationExists &&
-                            <div>
-                                <h3>Login as: {this.props.email}</h3>
-                                <p>Please login to continue</p>
-                                <div className={`form-group ${this.state.errors && 'has-error   '}`}>
-                                    <input onChange={this.handleInputChange}  id="password" type="password" name="password" className="form-control"/>
-                                    <span className="bmd-help">Password</span>
-                                    {this.state.errors && <span className="help-block">{this.state.errors}</span>}
+                                {!this.state.invitationExists &&
+                                <div>
+                                    <h3>Login as: {this.props.email}</h3>
+                                    <p>Please login to continue</p>
+                                    <div className={`form-group ${this.state.errors && 'has-error   '}`}>
+                                        <input onChange={this.handleInputChange} id="password" type="password"
+                                               name="password" className="form-control"/>
+                                        <span className="bmd-help">Password</span>
+                                        {this.state.errors && <span className="help-block">{this.state.errors}</span>}
+                                    </div>
+                                    <button onClick={this.handleLogin} type='submit'
+                                            className="btn btn-raised btn-lg btn-primary btn-block">Sign in
+                                    </button>
+                                    <p className="sign-up-link"><Link
+                                        to={{pathname: "/forgot-password", state: {fromLogin: false}}}> Forgot
+                                        Password</Link></p>
                                 </div>
-                                <button onClick={this.handleLogin} type='submit' className="btn btn-raised btn-lg btn-primary btn-block">Sign in</button>
-                                <p className="sign-up-link"><Link to={{pathname:"/forgot-password", state:{fromLogin: false}}}> Forgot Password</Link> </p>
-                            </div>
-                            }
-                        </form>
-                    </div>
-                </Content>
-            )
-        }else{
-            return(
-                <Authorizer anonymous={true}>
-                    <Content>
-                        {/*<div className="left-panel col-md-6">adsf</div>*/}
-                        <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
-                            <form className="sign-in">
-                                {/*<Alert stack={{limit: 3}} position='bottom'/>*/}
-                                {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
-                                <h3>User Login</h3>
-                                <p>Please enter your email address and password to login</p>
-
-                                <div className="form-group">
-                                    <label htmlFor="sign-in-2-email" className="bmd-label-floating">Email address</label>
-                                    <input onChange={this.handleInputChange} id="email" type="text" name="email" defaultValue={this.props.email || ''} className="form-control"/>
-                                    {!this.props.modal && <span className="bmd-help">Please enter your email</span>}
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="sign-in-1-password" className="bmd-label-floating">Password</label>
-                                    <input onChange={this.handleInputChange}  id="password" type="password" name="password" className="form-control"/>
-                                    <span className="bmd-help">Please enter your password</span>
-                                </div>
-                                <button onClick={this.handleLogin} type='submit' className="btn btn-raised btn-lg btn-primary btn-block">Sign in</button>
-                                <p className="sign-up-link">Don't have an account?
-                                    <span><Link to={{pathname:"/signup", state:{fromLogin: true}}}> Sign up here</Link> or </span>
-                                    <Link to={{pathname:"/forgot-password", state:{fromLogin: false}}}> Forgot Password</Link>
-                                </p>
+                                }
                             </form>
                         </div>
                     </Content>
-                </Authorizer>
-            );
+                )
+            } else {
+                return (
+                    <Authorizer anonymous={true}>
+                        <Content>
+                            {/*<div className="left-panel col-md-6">adsf</div>*/}
+                            <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
+                                <form className="sign-in">
+                                    {/*<Alert stack={{limit: 3}} position='bottom'/>*/}
+                                    {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
+                                    <h3>User Login</h3>
+                                    <p>Please enter your email address and password to login</p>
+
+                                    <div className="form-group">
+                                        <label htmlFor="sign-in-2-email" className="bmd-label-floating">Email
+                                            address</label>
+                                        <input onChange={this.handleInputChange} id="email" type="text" name="email"
+                                               defaultValue={this.props.email || ''} className="form-control"/>
+                                        {!this.props.modal && <span className="bmd-help">Please enter your email</span>}
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="sign-in-1-password"
+                                               className="bmd-label-floating">Password</label>
+                                        <input onChange={this.handleInputChange} id="password" type="password"
+                                               name="password" className="form-control"/>
+                                        <span className="bmd-help">Please enter your password</span>
+                                    </div>
+                                    <button onClick={this.handleLogin} type='submit'
+                                            className="btn btn-raised btn-lg btn-primary btn-block">Sign in
+                                    </button>
+                                    {(this.props.options && this.props.options.allow_registration.value == 'true') &&
+                                    <p className="sign-up-link">Don't have an account?
+                                        <span><Link to={{
+                                            pathname: "/signup",
+                                            state: {fromLogin: true}
+                                        }}> Sign up here</Link> or </span>
+                                        <Link to={{pathname: "/forgot-password", state: {fromLogin: false}}}> Forgot
+                                            Password</Link>
+                                    </p>
+                                    }
+                                </form>
+                            </div>
+                        </Content>
+                    </Authorizer>
+                );
+            }
         }
     }
 }
 
 function mapStateToProps(state){
     return {
-        alerts : state.alerts
+        alerts : state.alerts,
+        options: state.options
     }
 }
 

@@ -39,11 +39,11 @@ let getBillingType = (myService)=>{
     let serType = myService.type;
 
     if (serType == "subscription"){
-        return ("Subscription");
+        return ("Subscription Billing");
     }else if (serType == "one_time"){
-        return ("One Time Charge");
+        return ("Charge Based Billing");
     }else if (serType == "custom"){
-        return ("Custom Service");
+        return ("Charge Based Billing");
     }else{
         return ("Other")
     }

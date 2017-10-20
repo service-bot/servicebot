@@ -4,8 +4,38 @@ import Buttons from '../../elements/buttons.jsx';
 import Avatar from '../../elements/avatar.jsx';
 import {Authorizer} from '../../utilities/authorizer.jsx';
 import InfoToolTip from "../../elements/tooltips/info-tooltip.jsx";
+import DashboardWidget from "../../elements/my-services/dashboard-widget.jsx";
 
 class ServiceInstancePaymentPlan extends React.Component {
+
+    getServiceStatus(){
+        let self = this;
+        if(self.props.status == "requested") {
+            return (
+                <DashboardWidget widgetColor="#0d9e6a" clickAction={this.props.approval} widgetIcon="mouse-pointer" widgetData="Pay Now" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="widget-hover" />);
+        } else if(self.props.status == "running") {
+            return (<DashboardWidget widgetColor="#0069ff" clickAction={this.props.cancel} widgetIcon="check" widgetData="Active Item" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="cancel" />);
+        }  else if(self.props.status == "waiting_cancellation") {
+            return (<DashboardWidget widgetColor="#ffa000" clickAction={this.props.cancelUndo} widgetIcon="hourglass-end" widgetData="Cancel Pending" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="cancel-pending" />);
+        } else if(self.props.status == "cancelled") {
+            return (<DashboardWidget widgetColor="#000000" clickAction={this.props.approval} widgetIcon="times" widgetData="Cancel Pending" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="restart" />);
+        } else {
+            return (null);
+        }
+    }
+
+    getServiceType(){
+        if(this.props.service.type == "subscription") {
+            return (
+                <div>
+                    <DashboardWidget plain={true} widgetIcon="circle" widgetData={this.props.service.name} widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-l-5 p-r-5" />
+                    <DashboardWidget plain={true} widgetIcon="circle" widgetData={getPrice(this.props.service.payment_plan, this.props.service.type)} widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-l-5 p-l-5" />
+                </div>
+            );
+        } else {
+            return (<DashboardWidget plain={true} widgetIcon="circle" widgetData={this.props.service.name} widgetClass="col-xs-12 col-sm-6 col-md-8 col-xl-8 p-l-5" />)
+        }
+    }
 
     render () {
         let paymentPlan = this.props.instancePaymentPlan;
@@ -34,47 +64,9 @@ class ServiceInstancePaymentPlan extends React.Component {
                         </div>
                     </Authorizer>
 
-                    <div id="payment-plan-box" className="service-instance-box">
-                        <div className="service-instance-box-title">
-                            <span>Payment Information</span>
-                        </div>
-                        <div className="service-instance-box-content">
-                            <div className="row">
-                                <div className="payment-plan-fields col-xs-6 col-md-4">
-                                    <span className="block color-grey-600 label">Status</span>
-                                    <div>
-                                        <span className="payment-plan-field-text">{this.props.status ? this.props.status : "No Status"}</span>
-                                        {this.props.status == "requested" && <InfoToolTip title="You service will start running and charges will only be posted after you approve the request. You can approve it using the approve button below." text="i" placement="right"/>}
-                                    </div>
-                                    {this.props.status == "requested" && <Buttons text="Approve Now" position="left" btnType="info" size="md" onClick={this.props.approval}/>}
-                                </div>
-                                <div className="payment-plan-fields col-xs-6 col-md-4">
-                                    <span className="block color-grey-600 label">Billing Type</span>
-                                    <div>
-                                        <span className="payment-plan-field-text">{getBillingType(this.props.service)}</span>
-                                    </div>
-                                </div>
-                                <div className="payment-plan-fields col-xs-6 col-md-4">
-                                    <span className="block color-grey-600 label">Price</span>
-                                    <div>
-                                        <span className="payment-plan-field-text">{getPrice(this.props.service.payment_plan, this.props.service.type)}</span>
-                                    </div>
-                                </div>
-                                {/*<div className="payment-plan-fields col-xs-6 col-md-4">*/}
-                                    {/*<span className="block color-grey-600 label">Currency</span>*/}
-                                    {/*<h5 className="color-grey-700">{paymentPlan.currency ? paymentPlan.currency : "N/A"}</h5>*/}
-                                {/*</div>*/}
-                                {/*<div className="payment-plan-fields col-xs-6 col-md-4">*/}
-                                    {/*<span className="block color-grey-600 label">Payment Interval</span>*/}
-                                    {/*<h5 className="color-grey-700">{paymentPlan.interval ? paymentPlan.interval : "N/A"}</h5>*/}
-                                {/*</div>*/}
-
-                                {/*<div className="payment-plan-fields col-xs-6 col-md-4">*/}
-                                    {/*<span className="block color-grey-600 label">Trial Days</span>*/}
-                                    {/*<h5 className="color-grey-700">{paymentPlan.trial_period_days? paymentPlan.trial_period_days : "None"}</h5>*/}
-                                {/*</div>*/}
-                            </div>
-                        </div>
+                    <div className="row">
+                        {this.getServiceStatus()}
+                        {this.getServiceType()}
                     </div>
                 </div>
             );

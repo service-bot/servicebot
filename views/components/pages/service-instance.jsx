@@ -208,29 +208,23 @@ class ServiceInstance extends React.Component {
         let self = this;
 
         return (
-            <div className="btn-group pull-right">
-                <button type="button" ref="dropdownToggle3" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Actions <span className="caret"/>
-                </button>
-                <ul className="dropdown-menu dropdown-menu-right">
-                    <Authorizer permissions="can_administrate">
-                        <li><Link to="#" onClick={self.handleEditInstanceModal}>Edit Instance</Link></li>
-                    </Authorizer>
-                    <Authorizer permissions="can_administrate">
-                        <li><Link to="#" onClick={self.handleEditPaymentModal}>Edit Payment Plan</Link></li>
-                    </Authorizer>
-                    {instance.status == 'running' &&
-                    <Authorizer permissions="can_administrate">
-                        <li><Link to="#" onClick={self.handleAddChargeItemModal}>Add Line Item</Link></li>
-                    </Authorizer>
-                    }
-                    <Authorizer permissions="can_administrate">
-                        <li role="separator" className="divider"/>
-                    </Authorizer>
-                    {/*<li><Link to="#" onClick={self.handleViewPaymentModal}>View Payment History</Link></li>*/}
-                    {self.getStatusButtons()}
-                </ul>
-            </div>
+            <Authorizer permissions="can_administrate">
+                <div className="btn-group pull-right">
+                    <button type="button" ref="dropdownToggle3" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Actions <span className="caret"/>
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-right">
+                            <li><Link to="#" onClick={self.handleEditInstanceModal}>Edit Instance</Link></li>
+                            <li><Link to="#" onClick={self.handleEditPaymentModal}>Edit Payment Plan</Link></li>
+                            {instance.status == 'running' &&
+                                <li><Link to="#" onClick={self.handleAddChargeItemModal}>Add Line Item</Link></li>
+                            }
+                            <li role="separator" className="divider"/>
+                            {/*<li><Link to="#" onClick={self.handleViewPaymentModal}>View Payment History</Link></li>*/}
+                            {self.getStatusButtons()}
+                    </ul>
+                </div>
+            </Authorizer>
         );
     }
 
@@ -240,7 +234,7 @@ class ServiceInstance extends React.Component {
             if (myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) {
                 return (
                     <div id="service-instance-waiting" className="row">
-                        <div className="col-md-8 col-md-offset-2">
+                        <div className="col-md-10 col-md-offset-1">
                             <ServiceInstanceWaitingCharges handlePayAllCharges={self.handlePayAllChargesModal}
                                                            handlePayChargeItem={self.handlePayChargeItemModal}
                                                            instanceWaitingItems={myInstanceChargeItems.false}/>
@@ -248,28 +242,13 @@ class ServiceInstance extends React.Component {
                     </div>
                 );
             } else { return null; }
-        } else {
-            return (
-                <div id="service-instance-waiting" className="row">
-                    <div className="col-md-8 col-md-offset-2">
-                        <div className="service-block service-action-block">
-                            <div className="xaas-dashboard">
-                                <div className="xaas-row cancelled">
-                                    <div className="xaas-title xaas-has-child">
-                                        <b>Service is Cancelled!</b>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
         }
     }
 
     render () {
         let self = this;
-        let pageName = `Purchased Item: `;
+        let pageName = `Purchased Item`;
+
         if(this.state.loading){
             return (
                 <Authorizer>
@@ -289,7 +268,9 @@ class ServiceInstance extends React.Component {
             const myInstance = this.state.instance;
             const myInstanceChargeItems = _.groupBy(myInstance.references.charge_items, 'approved');
             let id, name, amount, interval, owner, ownerId = null;
-            pageName = `Purchased Item: ${myInstance.name}`;
+            if(myInstance.status == "requested") {
+                pageName = `Requested Item`;
+            }
 
             //Gather data first
             if( self.state.instance){
@@ -331,7 +312,7 @@ class ServiceInstance extends React.Component {
 
             return(
                 <Authorizer>
-                    <Jumbotron pageName={pageName} subtitle={myInstance.description} />
+                    <Jumbotron pageName={pageName} subtitle={`${myInstance.description} . ${myInstance.subscription_id || ""}`} />
                     <div className="page-service-instance">
                         <Content>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'} transitionAppear={true} transitionEnter={true} transitionLeave={true}
@@ -342,20 +323,6 @@ class ServiceInstance extends React.Component {
                                     </div>
                                 </div>
 
-                                {_.has(myInstance, 'references.service_instance_cancellations[0].id') &&
-                                <div className="row">
-                                    <div className="col-md-10 col-md-offset-1">
-                                        <div className="alert alert-warning" role="alert">
-                                            <Link to="#" className="btn btn-warning btn-outline btn-rounded btn-sm pull-right" onClick={self.handleUndoCancel}>View Cancellation Request</Link>
-                                            <i className="fa fa-exclamation-circle"/>
-                                            There is a pending cancellation request for this service.
-                                        </div>
-                                    </div>
-                                </div>
-                                }
-
-                                {this.getAdditionalCharges(myInstance, myInstanceChargeItems)}
-
                                 <div id="service-instance-detail" className="row">
                                     <div className="col-md-10 col-md-offset-1">
                                         <ServiceInstancePaymentPlan key={Object.id}
@@ -363,9 +330,14 @@ class ServiceInstance extends React.Component {
                                                                     service={myInstance}
                                                                     instancePaymentPlan={myInstance.payment_plan}
                                                                     status={myInstance.status}
-                                                                    approval={this.handleApprove}/>
+                                                                    approval={self.handleApprove}
+                                                                    cancel={self.handleCancel}
+                                                                    cancelUndo={self.handleUndoCancel}
+                                        />
                                     </div>
                                 </div>
+
+                                {this.getAdditionalCharges(myInstance, myInstanceChargeItems)}
 
                                 {myInstance.references.service_instance_properties.length > 0 &&
                                 <div id="service-instance-fields" className="row">

@@ -1,69 +1,231 @@
 import React from 'react';
 import {Link, browserHistory} from 'react-router';
-import Load from '../../utilities/load.jsx';
+import {required, email} from 'redux-form-validators'
+import {injectStripe, Elements} from 'react-stripe-elements';
+import {Field, FormSection, FieldArray, formValueSelector, getFormValues,} from 'redux-form'
+import {connect} from "react-redux";
+import {Price} from "../../utilities/price.jsx";
 import Fetcher from "../../utilities/fetcher.jsx";
-import Inputs from "../../utilities/inputs.jsx";
-import {DataForm, DataChild} from "../../utilities/data-form.jsx";
-import DateFormat from "../../utilities/date-format.jsx";
+import {widgets, SelectWidget} from "../../utilities/widgets";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
-import ModalPaymentSetup from "../../elements/modals/modal-payment-setup.jsx";
-import Buttons from "../../elements/buttons.jsx";
-import Alerts from "../../elements/alerts.jsx";
-import BillingSettingsForm from "../../elements/forms/billing-settings-form.jsx";
-import IconHeading from "../../layouts/icon-heading.jsx";
-import { connect } from 'react-redux';
-
+import {setUid, fetchUsers, setUser} from "../../utilities/actions";
+import {inputField, selectField, widgetField} from "./servicebot-base-field.jsx";
+import {CardSection} from "../../elements/forms/billing-settings-form.jsx";
+import ModalUserLogin from "../modals/modal-user-login.jsx";
+import ServiceBotBaseForm from "./servicebot-base-form.jsx";
+import {getPrice} from "../../../../input_types/handleInputs";
+import values from 'object.values';
+import 'react-tagsinput/react-tagsinput.css';
+import './css/template-create.css';
 let _ = require("lodash");
 
+if (!Object.values) {
+    values.shim();
+}
+
+const selector = formValueSelector('servicebotForm'); // <-- same as form name
+
+
+//Custom property
+const renderCustomProperty = (props) => {
+    const {fields, formJSON, meta: {touched, error}} = props;
+    return (
+        <div>
+            {fields.map((customProperty, index) => {
+                    let property = widgets[formJSON[index].type];
+                    return (
+                        <Field key={index}
+                               name={`${customProperty}.data.value`}
+                               type={formJSON[index].type}
+                               component={widgetField}
+                               widget={property.widget}
+                               label={formJSON[index].prop_label}
+                               formJSON={formJSON[index]}
+                               configValue={formJSON[index].config}
+                        />
+                    )
+                }
+            )}
+        </div>
+    )
+};
+
+
+//The full form
 class ServiceRequestForm extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
-        let templateId = this.props.templateId;
-        this.state = {
-            uid: this.props.uid,
-            templateId: templateId,
-            template: {},
-            url: "/api/v1/service-templates/" + templateId + "/request",
-            users: {},
-            usersURL: "/api/v1/users",
-            stripeError: false,
-            loading: true,
-            submitSuccessful: false,
-            submissionResponse: false,
-            showPaymentInputs: false,
-            showFundsModal : false,
-            hasFund : true,
-        };
-
-
-        this.getValidators = this.getValidators.bind(this);
-        this.handleResponse = this.handleResponse.bind(this);
-        this.showFundsModal = this.showFundsModal.bind(this);
-        this.hideFundsModal = this.hideFundsModal.bind(this);
-        this.togglePaymentInputs = this.togglePaymentInputs.bind(this);
-        this.onUpdate = this.onUpdate.bind(this);
     }
 
-    componentWillMount(){
+    render() {
+        let props = this.props;
+        const {handleSubmit, formJSON, helpers, error} = props;
+        let handlers = Object.values(widgets).reduce((acc, widget) => {
+            acc[widget.type] = widget.handler;
+            return acc;
+
+        }, {});
+        let newPrice = formJSON.amount;
+        try {
+            newPrice = getPrice(formJSON.references.service_template_properties, handlers, formJSON.amount);
+            helpers.updatePrice(newPrice);
+        } catch (e) {
+            console.error(e);
+        }
+
+        let getRequestText = () => {
+            let serType = formJSON.type;
+            if (serType === "subscription") {
+                return (
+                    <span>{"Subscribe"}
+                        <Price value={newPrice}/>
+                        {formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' ' + formJSON.interval}
+                    </span>
+                );
+            } else if (serType === "one_time") {
+                return (
+                    <span>{"Buy"} <Price value={newPrice}/></span>
+                );
+            } else if (serType === "custom") {
+                return ("Request");
+            } else {
+                return (<span><Price value={newPrice}/></span>)
+            }
+        };
+        //Sort users and if user does not have name set, set it to the email value which will always be there
+        let users = _.map(helpers.usersData, user => {
+            user.name = user.name || user.email;
+            return user
+        });
+        const sortedUsers = _.sortBy(users, ['id']);
+
+        return (
+            <div className="service-request-form-body">
+                {/*             <div className="col-md-3">
+                 Tabs
+                 <pre className="" style={{maxHeight: '300px', overflowY: 'scroll'}}>
+                 {JSON.stringify(formJSON, null, 2)}
+                 </pre>
+                 </div>*/}
+                <form onSubmit={handleSubmit}>
+                    <Authorizer permissions="can_administrate">
+                        <Field name="client_id" component={selectField} label="For Client"
+                               options={sortedUsers} validate={[required()]}/>
+                    </Authorizer>
+
+                    {!helpers.uid &&
+                    <div>
+                        <Field name="email" type="text" component={inputField}
+                               label="Email Address" validate={[required(), email()]}/>
+
+                        {helpers.emailExists && <ModalUserLogin
+                            hide={this.closeUserLoginModal}
+                            email={this.props.formData.email}
+                            invitationExists={this.state.invitationExists}
+                            width="640px"
+                            serviceCreated={this.state.serviceCreated}/>
+                        }
+                    </div>
+                    }
+                    <FormSection name="references">
+                        <FieldArray name="service_template_properties" component={renderCustomProperty}
+                                    formJSON={formJSON.references.service_template_properties}/>
+                    </FormSection>
+
+                    {helpers.hasCard &&
+                    <div className="service-request-form-payment">
+                        {helpers.stripToken ?
+                            <div>
+                                <p className="help-block">You {helpers.card.funding} card in your account
+                                    ending in: {helpers.card.last4} will be used.</p>
+                                <span className="help-block">If you wish to use a different card, you can
+                                                update your card under <Link
+                                        to="/billing-settings">billing settings.</Link></span>
+                            </div> :
+                            <p className="help-block">
+                                Using {helpers.card.funding} card endingin: {helpers.card.last4}
+                            </p>
+                        }
+                    </div>
+                    }
+                    <button className="btn btn-rounded btn-primary btn-bar" type="submit" value="submit">
+                        {getRequestText()}
+                    </button>
+                    {error &&
+                    <strong>
+                        {error}
+                    </strong>}
+
+                    {/*<Buttons buttonClass="btn-primary btn-bar" size="lg" position="center" btnType="primary" value="submit"*/}
+                             {/*onClick={()=>{}} loading>*/}
+                        {/*<span>{getRequestText()}</span>*/}
+                    {/*</Buttons>*/}
+                </form>
+            </div>
+        )
+    };
+}
+
+ServiceRequestForm = connect((state, ownProps) => {
+    return {
+        "serviceTypeValue": selector(state, `type`),
+        formJSON: getFormValues('servicebotForm')(state),
+
+    }
+}, (dispatch, ownProps) => {
+    return {}
+})(ServiceRequestForm);
+
+class ServiceInstanceForm extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        let templateId = this.props.templateId || 1;
+        this.state = {
+            uid: this.props.uid,
+            stripToken: null,
+            templateId: templateId,
+            templateData: this.props.service,
+            formData: this.props.service,
+            formURL: "/api/v1/service-templates/" + templateId + "/request",
+            formResponseData: null,
+            formResponseError: null,
+            serviceCreated: null,
+            servicePrice: this.props.service.amount,
+            usersData: {},
+            usersURL: "/api/v1/users",
+            hasCard: null,
+            loading: true
+        };
+        this.closeUserLoginModal = this.closeUserLoginModal.bind(this);
+        this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
+        this.updatePrice = this.updatePrice.bind(this);
+        this.submissionPrep = this.submissionPrep.bind(this);
+        this.handleResponse = this.handleResponse.bind(this);
+
+
+    }
+
+    componentWillMount() {
         let self = this;
 
         //get the users for the client select list if current user is Admin
-        if(isAuthorized({permissions: "can_administrate"})) {
+        if (isAuthorized({permissions: "can_administrate"})) {
             Fetcher(self.state.usersURL).then(function (response) {
                 if (!response.error) {
-                    let userRoleList = response.filter(function(user){
-                        return user.references.user_roles[0].role_name === 'user';
+                    let userRoleList = response.filter(function (user) {
+                        return user.references.user_roles[0].role_name === 'user' && user.status !== 'suspended';
                     });
-                    self.setState({users: userRoleList});
+                    self.setState({usersData: userRoleList});
                 } else {
-                    console.error('error getting users', response);
                 }
             });
         }
 
         //try getting user's fund if current user is NOT Admin
-        if(!isAuthorized({permissions: "can_administrate"})) {
+        if (!isAuthorized({permissions: "can_administrate"})) {
             Fetcher("/api/v1/funds/own").then(function (response) {
                 if (!response.error && response.length == 0) {
                     self.setState({hasFund: false});
@@ -74,366 +236,191 @@ class ServiceRequestForm extends React.Component {
 
     componentDidMount() {
         let self = this;
-
-        Fetcher(self.state.url).then(function (response) {
+        Fetcher(self.state.formURL).then(function (response) {
             if (!response.error) {
-                self.setState({loading: false, template: response});
+                self.setState({loading: false, templateData: response, formData: response});
             } else {
                 console.error("Error", response.error);
                 self.setState({loading: false});
             }
-        }).catch(function(err){
+        }).catch(function (err) {
             console.error("ERROR!", err);
-            browserHistory.push("/");
-        })
+        });
+
+        if (this.props.uid) {
+            this.checkIfUserHasCard();
+        }
     }
 
-    componentDidUpdate(){
-        //find the input with error and scroll to it
-        let errorInputs = document.getElementsByClassName('has-error');
-        if(errorInputs.length){
-            let y = errorInputs[0].offsetParent.offsetTop;
-            window.scrollTo(0, y);
+    componentDidUpdate(nextProps, nextState) {
+
+
+        if (nextProps.uid && this.state.hasCard === null) {
+            this.checkIfUserHasCard();
         }
+        if (nextProps.uid && nextState.serviceCreated) {
+            browserHistory.push(`/service-instance/${nextState.serviceCreated.id}`);
+        }
+    }
+
+
+    updatePrice(newPrice) {
+        let self = this;
+        self.setState({servicePrice: newPrice});
+    }
+
+
+    closeUserLoginModal() {
+        this.setState({emailExists: false});
+    }
+
+    checkIfUserHasCard() {
+        let self = this;
+        Fetcher(`/api/v1/users/${self.props.uid}`).then(function (response) {
+            if (!response.error) {
+                if (_.has(response, 'references.funds[0]') && _.has(response, 'references.funds[0].source.card')) {
+                    let fund = _.get(response, 'references.funds[0]');
+                    let card = _.get(response, 'references.funds[0].source.card');
+                    self.setState({
+                        loading: false,
+                        hasCard: true,
+                        fund: fund,
+                        card: card,
+                        personalInformation: {
+                            name: card.name,
+                            address_line1: card.address_line1,
+                            address_line2: card.address_line2,
+                            address_city: card.address_city,
+                            address_state: card.address_state,
+                        }
+                    }, function () {
+                        return true;
+                    });
+                }
+            } else {
+                self.setState({loading: false, hasCard: false});
+                return false;
+            }
+        });
+    }
+
+    async submissionPrep(values){
+        let token = await this.props.stripe.createToken();
+        if(token.error){
+            throw token.error.message
+        }
+        return {...values, token_id : token.token.id};
     }
 
     handleResponse(response){
-        let self = this;
-        if(!response.error && !response.err){
-            if(response.data){
-                let responseObj = response.data;
-                self.setState({submitSuccessful: true, submissionResponse: responseObj});
-            }else if(!isNaN(response)){
-                Fetcher(`/api/v1/service-instances/${response}`).then(function(instance) {
-                    if (!instance.error) {
-                        self.setState({submitSuccessful: true, submissionResponse: instance});
-                    }
-                })
+        if(response.permissions){
+            localStorage.setItem("permissions", response.permissions);
+            this.props.setUid(response.uid);
+            this.props.setUser(response.uid);
+
+        }
+    }
+    formValidation(values){
+
+        let props = (values.references && values.references.service_template_properties) ? values.references.service_template_properties : [];
+        let re = props.reduce((acc, prop, index) => {
+            if(prop.required && (!prop.data || !prop.data.value)){
+                acc[index] = {data : {value : "is required"}}
             }
-        }else{
-            console.error("error response", response);
+            return acc;
+        }, {});
+        let validation = {references : {service_template_properties : re}};
+
+        if(Object.keys(re).length === 0){
+            delete validation.references;
         }
+        return validation;
+
     }
-
-    togglePaymentInputs(e){
-        e.preventDefault();
-        if(this.state.showPaymentInputs){
-            this.setState({showPaymentInputs : false});
-        }else{
-            this.setState({showPaymentInputs : true});
-        }
-    }
-
-    showFundsModal(e){
-        e.preventDefault();
-        this.setState({showFundsModal : true});
-    }
-
-    hideFundsModal(data){
-        if(data.default_source){
-            this.setState({showFundsModal : false, hasFund : true});
-        }else{
-            this.setState({showFundsModal : false});
-        }
-    }
-
-    onUpdate(form){
-        //getting the form JSON string from DataForm on update
-        this.setState({form: form});
-    }
-
-    getValidators(references){
-        //This function dynamically generates validators depending on what custom properties the instance has.
-        //requires references: the service template's references.service_template_properties
-        //Defining generic validators
-        let validateRequired        = (val) => { return val === 0 || val === false || val != '' && val != null};
-        let validateEmptyString     = (val) => { return (val.trim() != '')};
-        let validateNumber          = (val) => { return !isNaN(parseFloat(val)) && isFinite(val) };
-        let validateBoolean         = (val) => { return val === true || val === false || val === 'true' || val === 'false'};
-        //Defining validators
-        let validateClientId        = (val) => { return validateRequired(val) || {error:"Field client is required."}};
-        let validateName            = (val) => { return validateRequired(val) && validateEmptyString(val) || {error:"field name is required"}};
-        let validateDescriptor      = (val) => { return validateRequired(val) && validateEmptyString(val) || {error:"field service description is required"}};
-        let validateDescription     = (val) => { return validateRequired(val) && validateEmptyString(val) || {error:"field service description is required"}};
-        let validateTrialDay        = (val) => { return (validateRequired(val) && validateNumber(val) && val >= 0) || {error:"Field trial days is required and must be a number greater than or equal 0"}};
-        let validateAmount          = (val) => { return (validateRequired(val) && validateNumber(val) && val >= 0) || {error:"Field amount is required and must be a number greater than or equal 0"}};
-        let validateCurrency        = (val) => { return (validateRequired(val) && val === 'USD')};
-        let validateInterval        = (val) => { return (validateRequired(val) && (val == 'day' || val == 'week' || val == 'month' || val == 'year')) || {error:"Field interval must be day, week, month or year."}};
-        let validateProrated        = (val) => { return (validateRequired(val) && validateBoolean(val)) || {error: "Field prorated is required and must be boolean."}};
-
-        let validatorJSON = {
-            'client_id'             : validateClientId,
-            'name'                  : validateName,
-            'description'           : validateDescription,
-            'statement_descriptor'  : validateDescriptor,
-            'trial_period_days'     : validateTrialDay,
-            'amount'                : validateAmount,
-            'currency'              : validateCurrency,
-            'interval'              : validateInterval,
-            'subscription_prorate'  : validateProrated,
-            'references'        : {
-                service_template_properties :{}
-            }
-        };
-
-        let clientValidatorJSON = {'references':{service_template_properties:{}}};
-
-        let myFields = _.filter(references, {prompt_user: true});
-
-        myFields.forEach(field => {
-            if (field.required) {
-                //define validator based on each input type
-                if (field.prop_input_type == 'text') {
-                    //TODO: might have bug with value = 0
-                    let validateRequiredText = (val) => {return validateRequired(val) && validateEmptyString(val) || {error:`Field ${field.name} is required.`}};
-                    _.set(validatorJSON.references.service_template_properties, [field.name, 'value'] , validateRequiredText);
-                    _.set(clientValidatorJSON.references.service_template_properties, [field.name, 'value'] , validateRequiredText);
-                }
-            }
-        });
-
-        if(!isAuthorized({permissions: "can_administrate"})){
-            return clientValidatorJSON;
-        }
-        return validatorJSON;
-    }
-
-    getConfirmationPageButtons(responseObj){
-        if(!isAuthorized({permissions: "can_administrate"})){
-            return (
-                <div>
-                    <Buttons containerClass="inline" text="View Your Services" btnType="primary"
-                             onClick={()=>{browserHistory.push('/my-services')}}/>
-                    <Buttons containerClass="inline" text="View The Service"
-                             onClick={()=>{browserHistory.push(`/service-instance/${responseObj.id}`)}}/>
-                </div>
-            );
-        }else{
-            return (
-                <div>
-                    <Buttons containerClass="inline" text="Manage All Services" btnType="primary"
-                             onClick={()=>{browserHistory.push('/manage-subscriptions')}}/>
-                    <Buttons containerClass="inline" text="View The Service"
-                             onClick={()=>{browserHistory.push(`/service-instance/${responseObj.id}`)}}/>
-                </div>
-            );
-        }
-    }
-
     render () {
-        if(this.state.loading){
-            return ( <Load type="content"/> );
-        }else {
 
-            if (this.state.submitSuccessful) {
-                let responseObj = this.state.submissionResponse;
-                return (
-                    <div className="dataform row">
-                        <div className="col-md-6 col-md-offset-3">
-                            <h2>Your service has been created.</h2>
-                            <ul>
-                                <li>Client: {responseObj.user_id}</li>
-                                <li>Requested by: {responseObj.requested_by}</li>
-                                <li>Status: {responseObj.status}</li>
-                                <li>Created on: <DateFormat date={responseObj.created_at}/></li>
-                                <li>Name: {responseObj.name}</li>
-                            </ul>
-                            <hr/>
-                            <div dangerouslySetInnerHTML={{__html: responseObj.description}}/>
-                            {this.getConfirmationPageButtons(responseObj)}
-                        </div>
-                    </div>
-                );
-            } else {
-
-                const users = this.state.users;
-                const sortedUsers = _.sortBy(users, ['id']);
-                let userOptions = (userList)=> {
-                    return _.map(userList, (user)=>{ return new Object({[user.email]: user.id}) } );
-                };
-                let userOptionList = userOptions(sortedUsers);
-                const fields = this.state.template;
-                const subscriptionType = this.state.template.type;
-                const references = this.state.template.references.service_template_properties.length > 0 ? this.state.template.references.service_template_properties : false;
-
-
-                let submitButton = <Buttons buttonClass="btn-primary btn-bar" size="lg" btnType="primary" text="Submit Request" type="submit" value="submit"/>;
-
-                if(this.state.template.amount > 0 && !this.state.hasFund){
-                    submitButton = <Buttons buttonClass="btn-primary" btnType="primary" text="Submit Request" onClick={this.showFundsModal}/>
-                }
-
-                let getAlerts = ()=>{
-                    if(this.state.stripeError ){
-                        if(isAuthorized({permissions: "can_administrate"})){
-                            return (
-                                <Alerts type="danger" message={this.state.stripeError.message}
-                                       position={{position: 'fixed', bottom: true}}
-                                       icon="exclamation-circle" />
-                            );
-                        }else{
-                            return (
-                                <Alerts type="danger" message={'System Error: Please contact admin for assistance.'}
-                                       position={{position: 'fixed', bottom: true}}
-                                       icon="exclamation-circle" />
-                            );
-                        }
-                    }
-                };
-
-                return (
-                    <div>
-                        {getAlerts()}
-                        <DataForm validators={this.getValidators(references)}
-                                  handleResponse={this.handleResponse}
-                                  onUpdate={this.onUpdate}
-                                  beforeSubmit={this.getStripeToken}
-                                  url={`/api/v1/service-templates/${this.state.templateId}/request`}>
-
-                            <div className="row">
-                                <div className="basic-info col-md-6">
-                                    <div className="service-request-details">
-                                        <IconHeading imgIcon="/assets/custom_icons/what_you_are_getting_icon.png" title="What you are getting"/>
-                                        <div dangerouslySetInnerHTML={{__html: this.state.template.details}}/>
-                                    </div>
-                                </div>
-                                <div className="basic-info col-md-6">
-                                    <div className="service-request-form">
-                                        <IconHeading imgIcon="/assets/custom_icons/get_your_service_icon.png" title="Get your service"/>
-
-                                        <Authorizer permissions="can_administrate">
-                                            <div className="basic-info-input-group">
-                                                <Inputs type="select" label="For Client" name="client_id"
-                                                        value={sortedUsers.map(function (user) {
-                                                            return user.id
-                                                        })[0]}
-                                                        options={userOptionList}
-                                                        onChange={function () {
-                                                        }} receiveOnChange={true} receiveValue={true}/>
-
-                                                <Inputs type="text" label="Name" name="name" defaultValue={fields.name}
-                                                        onChange={function () {
-                                                        }} receiveOnChange={true} receiveValue={true}/>
-
-                                                <Inputs type="text" label="Description" name="description"
-                                                        defaultValue={fields.description}
-                                                        onChange={function () {
-                                                        }} receiveOnChange={true} receiveValue={true}/>
-                                            </div>
-
-                                            {this.state.showPaymentInputs &&
-                                                <div className="payment-plan-input-group">
-                                                    <h4>Payment Info</h4>
-
-                                                    <Inputs type="text" maxLength="22" label="Statement Descriptor"
-                                                            name="statement_descriptor" defaultValue={fields.statement_descriptor}
-                                                            onChange={function () {
-                                                            }} receiveOnChange={true} receiveValue={true}/>
-
-                                                    <Inputs type="number" label="Trial Period" name="trial_period_days"
-                                                            defaultValue={fields.trial_period_days}
-                                                            onChange={function () {
-                                                            }} receiveOnChange={true} receiveValue={true}/>
-
-                                                    <Inputs disabled={subscriptionType != 'subscription'} type="price" label="Amount" name="amount" defaultValue={fields.amount}
-                                                            onChange={function () {
-                                                            }} receiveOnChange={true} receiveValue={true}/>
-
-                                                    <Inputs type="hidden" disabled label="Currency" name="currency"
-                                                            defaultValue={fields.currency}
-                                                            onChange={function () {
-                                                            }} receiveOnChange={true} receiveValue={true}/>
-
-
-                                                    {/* TODO: need frontend validation for monthly cannot be <= 12 */}
-
-                                                    {subscriptionType == 'subscription' &&
-                                                    <div>
-                                                        <Inputs type="select" label="Interval" name="interval"
-                                                                defaultValue={fields.interval}
-                                                                options={[{'Daily': 'day'}, {'Weekly': 'week'}, {'Monthly': 'month'}, {'Yearly': 'year'}]}
-                                                                onChange={function () {
-                                                                }} receiveOnChange={true} receiveValue={true}/>
-
-                                                        <Inputs type="number" label="Interval Count" name="interval_count"
-                                                                defaultValue={fields.interval_count}/>
-
-                                                        <Inputs type="select" label="Prorated?" name="subscription_prorate"
-                                                                defaultValue={fields.subscription_prorate}
-                                                                options={[{true: 'Yes'}, {false: 'No'}]}
-                                                                onChange={function () {
-                                                                }} receiveOnChange={true} receiveValue={true}/>
-                                                    </div>
-                                                    }
-
-                                                </div>
-                                            }
-                                            <Buttons text={this.state.showPaymentInputs ? 'Basic' : 'Advanced'}
-                                                     onClick={this.togglePaymentInputs}/>
-                                        </Authorizer>
-
-                                        {!this.state.uid &&
-                                            <Inputs type="text" label="Email Address" name="email" onChange={function () {
-                                            }} receiveOnChange={true} receiveValue={true}/>
-                                        }
-
-                                        {this.state.stripToken &&
-                                            <Inputs type="hidden" name="token_id" value={this.state.stripToken} onChange={function () {
-                                            }} receiveOnChange={true} receiveValue={true}/>
-                                        }
-
-                                        {references &&
-                                            <div className="additional-info-input-group">
-                                                <Authorizer permissions="can_administrate">
-                                                    <h4>Customer Information</h4>
-                                                </Authorizer>
-                                                {references.map(reference => (
-                                                    (!reference.private || isAuthorized({permissions: 'can_administrate'})) &&
-                                                    <div key={`custom-fields-${reference.prop_label}`}>
-                                                        <DataChild modelName="service_template_properties"
-                                                                   objectName={reference.name}>
-                                                            <input type="hidden" name="id" value={reference.id}/>
-                                                            <Inputs type={reference.prop_input_type}
-                                                                    label={reference.prop_label}
-                                                                    name="value"
-                                                                    disabled={!reference.prompt_user && !isAuthorized({permissions: 'can_administrate'})}
-                                                                    defaultValue={reference.value}
-                                                                    options={reference.prop_values}
-                                                                    onChange={function () {
-                                                                    }} receiveOnChange={true} receiveValue={true}/>
-                                                        </DataChild>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        }
-
-                                        {
-                                            <BillingSettingsForm context="SERVICE_REQUEST"/>
-                                        }
-
-                                        <div id="request-submission-box">
-                                            {submitButton}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </DataForm>
-
-
-
-                        {(this.state.showFundsModal) &&
-                            <ModalPaymentSetup hide={this.hideFundsModal}
-                                               modalCallback={this.hideFundsModal}
-                                               message={
-                                                   {title: "Looks like you don't have a payment source in your account, let's setup your payment method here first.",
-                                                    body: "You will be able to continue you service request once your payment method is setup."}
-                                               }/>
-                        }
-                    </div>
-                );
-            }
+        let self = this;
+        let initialValues = this.props.service;
+        let initialRequests = [];
+        let submissionPrep;
+        let submissionRequest = {
+            'method': 'POST',
+            'url': `/api/v1/service-templates/${this.props.templateId}/request`
+        };
+        let successMessage = "Service Requested";
+        let successRoute = "/my-services";
+        if(isAuthorized({permissions: "can_administrate"})){
+            successRoute = "/dashboard";
         }
+        let helpers = Object.assign(this.state, this.props);
+        helpers.updatePrice = self.updatePrice;
+        //Gets a token to populate token_id for instance request
+        if (!isAuthorized({permissions: "can_administrate"}) &&
+            this.state.servicePrice > 0 &&
+            !this.state.hasCard) {
+                submissionPrep = this.submissionPrep;
+        }
+
+        return (
+
+            <div>
+                {/*Price: {this.state.servicePrice}*/}
+
+                {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
+                this.state.servicePrice > 0 &&  <CardSection/>}
+
+
+
+                <ServiceBotBaseForm
+                    form = {ServiceRequestForm}
+                    initialValues = {initialValues}
+                    initialRequests = {initialRequests}
+                    submissionPrep = {submissionPrep}
+                    submissionRequest = {submissionRequest}
+                    successMessage = {successMessage}
+                    successRoute = {successRoute}
+                    handleResponse = {this.handleResponse}
+                    helpers = {helpers}
+                    validations={this.formValidation}
+
+                />
+            </div>
+        )
+
     }
 }
+ServiceInstanceForm = injectStripe(ServiceInstanceForm);
 
-export default connect((state) => {return {uid:state.uid}})(ServiceRequestForm);
+
+class FormWrapper extends React.Component{
+
+    render(){
+        return (
+            <Elements>
+                <ServiceInstanceForm {...this.props}/>
+            </Elements>
+        )
+    }
+}
+const mapStateToProps = (state, ownProps) => {
+    return {
+        uid: state.uid,
+        user: state.user || null,
+        options: state.options
+    }
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setUid: (uid) => {
+            dispatch(setUid(uid))
+        },
+        setUser: (uid) => {
+            fetchUsers(uid, (err, user) => dispatch(setUser(user)));
+        }
+    }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(FormWrapper);
+

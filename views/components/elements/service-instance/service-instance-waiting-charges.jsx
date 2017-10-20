@@ -22,8 +22,8 @@ class ServiceInstanceWaitingCharges extends React.Component {
         return (
             <div className="service-block service-action-block">
                 <div className="xaas-dashboard">
-                    <div className="xaas-row waiting">
-                        <div className="xaas-title xaas-has-child">
+                    <div className="service-instance-box red">
+                        <div className="service-instance-box-title">
                             <div className="xaas-data xaas-service">
                                 <span>Action Required!</span>
                             </div>
@@ -31,7 +31,7 @@ class ServiceInstanceWaitingCharges extends React.Component {
                                 <Buttons btnType="primary" text="Pay All" onClick={self.onPayAllCharges}/>
                             </div>
                         </div>
-                        <div className="xaas-body">
+                        <div className="service-instance-box-content">
                             {this.props.instanceWaitingItems.map(item => (
                                 <ServiceInstanceWaitingChargesItem key={"item-" + item.id} handlePayChargeItem={self.onPayCharge} chargeItem={item}/>
                             ))}
