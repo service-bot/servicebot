@@ -61,10 +61,10 @@ Charge.prototype.cancel = function (callback) {
     async.series([
         function (callback) {
             if((self.data.period_end < currentTimestamp) && self.data.period_end){
-                err = 'Charge has already been processed. Cannot delete! Please process refund.';
+                let err = 'Charge has already been processed. Cannot delete! Please process refund.';
                 callback(err, null);
             } else {
-                output = 'Charge is removable';
+                let output = 'Charge is removable';
                 callback(null, output);
             }
         },
@@ -75,14 +75,14 @@ Charge.prototype.cancel = function (callback) {
                     callback(err, confirmation);
                 });
             } else {
-                output = 'Stripe removal bypassed.';
+               let output = 'Stripe removal bypassed.';
                 callback(null, output);
             }
         },
         function (callback) {
             //Finally remove the charge from the database.
             self.delete(function(result){
-                output = 'Charge has been removed from database.';
+                let output = 'Charge has been removed from database.';
                 callback(null, output);
             });
         }
