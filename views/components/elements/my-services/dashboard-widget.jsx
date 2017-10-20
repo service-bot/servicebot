@@ -34,22 +34,33 @@ class DashboardWidget extends React.Component {
         const widgetContent = (
 
             <div className="text-widget-1 color-white" style={style.widgetDark}>
-                <div className={`text-widget-wrapper`} style={style.widgetDark}>
+                {!self.props.plain &&
+                <div className={`text-widget-wrapper ${self.props.widgetHoverClass}`} style={style.widgetDark}>
                     <div className={`text-widget-item col-xs-4`} style={style.widget}>
                         <i className={`fa fa-${self.props.widgetIcon} fa-2x`}/>
                     </div>
                     <div className="text-widget-item col-xs-8">
                         <div className="title">{self.props.widgetName}</div>
-                        <div className="subtitle"><span className="">{self.props.widgetData || this.props.children}</span></div>
+                        <div className="subtitle"><span
+                            className="">{self.props.widgetData || this.props.children}</span></div>
                     </div>
                 </div>
+                ||
+                <div className={`text-widget-wrapper plain ${self.props.widgetHoverClass}`} style={style.widget}>
+                    <div className="text-widget-item col-xs-12">
+                        <div className="title">{self.props.widgetName}</div>
+                        <div className="subtitle"><span
+                            className="">{self.props.widgetData || this.props.children}</span></div>
+                    </div>
+                </div>
+                }
             </div>
 
         );
 
         if(this.props.link){
             return (
-                <div className="col-xs-12 col-sm-6 col-md-3 col-xl-3">
+                <div className={self.props.widgetClass || "col-xs-12 col-sm-6 col-md-3 col-xl-3"}>
                     <Link to={self.props.linkTo} >
                         {widgetContent}
                     </Link>
@@ -57,7 +68,7 @@ class DashboardWidget extends React.Component {
             );
         }else if(this.props.clickAction){
             return(
-                <div className="col-xs-12 col-sm-6 col-md-3 col-xl-3">
+                <div className={self.props.widgetClass || "col-xs-12 col-sm-6 col-md-3 col-xl-3"}>
                     <Link to='' onClick={self.props.clickAction}>
                         {widgetContent}
                     </Link>
@@ -65,7 +76,7 @@ class DashboardWidget extends React.Component {
             );
         }else{
             return (
-                <div className="col-xs-12 col-sm-6 col-md-3 col-xl-3">
+                <div className={self.props.widgetClass || "col-xs-12 col-sm-6 col-md-3 col-xl-3"}>
                     {widgetContent}
                 </div>
             );

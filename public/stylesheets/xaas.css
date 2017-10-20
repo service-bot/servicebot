@@ -820,6 +820,15 @@ body.login .footer{
     padding: 10px 20px;
 }
 
+.service-instance-box.red .service-instance-box-title {
+    background: #da0304;
+    box-shadow: inset 0 -1px #d90303;
+    color: #ffffff;
+}
+.service-instance-box.red {
+    border: solid 1px #d90303;
+}
+
 @keyframes displayMessage {
     0%{
         margin-top: -10px;

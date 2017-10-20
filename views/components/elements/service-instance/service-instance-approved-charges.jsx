@@ -38,7 +38,7 @@ class ServiceInstanceApprovedCharges extends React.Component {
         return (
             <div className="service-instance-box">
                 <div className="service-instance-box-title">
-                    <span>Approved Line Items</span>
+                    <span>Approved Charges</span>
                 </div>
                 <div className="service-instance-box-content">
                     <p>Service line items are one time charges for standalone services performed related to this service within current pay period.</p>

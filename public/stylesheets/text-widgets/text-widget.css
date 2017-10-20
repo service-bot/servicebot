@@ -3,6 +3,16 @@
   align-items: center;
   border-radius: 5px;
 }
+.text-widget-wrapper.plain{
+  padding: 10px 0;
+  text-align: center;
+  vertical-align: middle;
+  min-height: 97px;
+  background-color: rgb(217, 225, 234) !important;
+  color: #454b52;
+  /*border: 1px solid #bbc5ce;*/
+}
+
 .text-widget-1 {
   margin: 10px 0;
   height: auto;
@@ -26,4 +36,17 @@
 
 .text-widget-1 .subtitle {
   font-size: 1.2rem;
+}
+
+.widget-hover:hover{
+  background: #055d3d !important;
+}
+.cancel:hover{
+  background: #004498 !important;
+}
+.cancel-pending:hover{
+  background: #ef9505 !important;
+}
+.restart:hover{
+  background: #055d3d !important;
 }
