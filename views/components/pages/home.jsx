@@ -138,6 +138,7 @@ class HomeFeatures extends React.Component{
     render(){
         let featuredAreaStyle = this.props.featuredAreaStyle || {
                 position: 'absolute',
+                width: '100%',
                 height: '100%',
                 top: '50%',
                 left: '50%',
