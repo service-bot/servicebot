@@ -27,7 +27,7 @@ import IconHeading from "../../layouts/icon-heading.jsx";
 import ModalUserLogin from "../modals/modal-user-login.jsx";
 import {addAlert} from "../../utilities/actions";
 import {setUid, fetchUsers, setUser} from "../../utilities/actions";
-import { required, email, numericality, length } from 'redux-form-validators'
+import {required, email, numericality, length} from 'redux-form-validators'
 import {injectStripe, Elements} from 'react-stripe-elements';
 import cookie from 'react-cookie';
 
@@ -47,15 +47,15 @@ const selector = formValueSelector('serviceInstanceRequestForm'); // <-- same as
 
 //Custom property
 let renderCustomProperty = (props) => {
-    const { fields, formJSON, meta: { touched, error }, services : {widget} } = props;
+    const {fields, formJSON, meta: {touched, error}, services: {widget}} = props;
     let widgets = widget.reduce((acc, widget) => {
         acc[widget.type] = widget;
         return acc;
     }, {});
     return (
         <div>
-            {fields.map((customProperty, index) =>
-                {   let property = widgets[formJSON[index].type];
+            {fields.map((customProperty, index) => {
+                    let property = widgets[formJSON[index].type];
                     return (
                         <Field
                             key={index}
@@ -68,10 +68,12 @@ let renderCustomProperty = (props) => {
                             formJSON={formJSON[index]}
                             configValue={formJSON[index].config}
                             validate={required()}
-                        />)}
+                        />)
+                }
             )}
         </div>
-    )};
+    )
+};
 
 renderCustomProperty = consume("widget")(renderCustomProperty);
 
@@ -194,7 +196,7 @@ class ServiceRequestForm extends React.Component {
 
 ServiceRequestForm = consume("widget")(connect((state, ownProps) => {
     return {
-        "serviceTypeValue" : selector(state, `type`),
+        "serviceTypeValue": selector(state, `type`),
         formJSON: getFormValues('serviceInstanceRequestForm')(state),
 
     }
@@ -202,7 +204,7 @@ ServiceRequestForm = consume("widget")(connect((state, ownProps) => {
 
 class ServiceInstanceForm extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
 
         let templateId = this.props.templateId || 1;
@@ -327,40 +329,42 @@ class ServiceInstanceForm extends React.Component {
         });
     }
 
-    async submissionPrep(values){
+    async submissionPrep(values) {
         let token = await this.props.stripe.createToken();
-        if(token.error){
+        if (token.error) {
             throw token.error.message
         }
-        return {...values, token_id : token.token.id};
+        return {...values, token_id: token.token.id};
     }
 
-    handleResponse(response){
-        if(response.permissions){
+    handleResponse(response) {
+        if (response.permissions) {
             localStorage.setItem("permissions", response.permissions);
             this.props.setUid(response.uid);
             this.props.setUser(response.uid);
 
         }
     }
-    formValidation(values){
+
+    formValidation(values) {
 
         let props = (values.references && values.references.service_template_properties) ? values.references.service_template_properties : [];
         let re = props.reduce((acc, prop, index) => {
-            if(prop.required && (!prop.data || !prop.data.value)){
-                acc[index] = {data : {value : "is required"}}
+            if (prop.required && (!prop.data || !prop.data.value)) {
+                acc[index] = {data: {value: "is required"}}
             }
             return acc;
         }, {});
-        let validation = {references : {service_template_properties : re}};
+        let validation = {references: {service_template_properties: re}};
 
-        if(Object.keys(re).length === 0){
+        if (Object.keys(re).length === 0) {
             delete validation.references;
         }
         return validation;
 
     }
-    render () {
+
+    render() {
 
         let self = this;
         let initialValues = this.props.service;
@@ -372,6 +376,10 @@ class ServiceInstanceForm extends React.Component {
         };
         let successMessage = "Service Requested";
         let successRoute = "/my-services";
+        if (isAuthorized({permissions: "can_administrate"})) {
+            successRoute = "/dashboard";
+        }
+
         let helpers = Object.assign(this.state, this.props);
         helpers.updatePrice = self.updatePrice;
         //Gets a token to populate token_id for instance request
@@ -386,21 +394,20 @@ class ServiceInstanceForm extends React.Component {
                 {/*Price: {this.state.servicePrice}*/}
 
                 {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
-                this.state.servicePrice > 0 &&  <CardSection/>}
-
+                this.state.servicePrice > 0 && <CardSection/>}
 
 
                 <ServiceBotBaseForm
-                    form = {ServiceRequestForm}
-                    initialValues = {initialValues}
-                    initialRequests = {initialRequests}
-                    submissionPrep = {submissionPrep}
-                    submissionRequest = {submissionRequest}
-                    successMessage = {successMessage}
-                    successRoute = {successRoute}
-                    handleResponse = {this.handleResponse}
+                    form={ServiceRequestForm}
+                    initialValues={initialValues}
+                    initialRequests={initialRequests}
+                    submissionPrep={submissionPrep}
+                    submissionRequest={submissionRequest}
+                    successMessage={successMessage}
+                    successRoute={successRoute}
+                    handleResponse={this.handleResponse}
                     formName="serviceInstanceRequestForm"
-                    helpers = {helpers}
+                    helpers={helpers}
                     validations={this.formValidation}
 
                 />
@@ -409,12 +416,13 @@ class ServiceInstanceForm extends React.Component {
 
     }
 }
+
 ServiceInstanceForm = injectStripe(ServiceInstanceForm);
 
 
-class FormWrapper extends React.Component{
+class FormWrapper extends React.Component {
 
-    render(){
+    render() {
         return (
             <Elements>
                 <ServiceInstanceForm {...this.props}/>
@@ -422,6 +430,7 @@ class FormWrapper extends React.Component{
         )
     }
 }
+
 const mapStateToProps = (state, ownProps) => {
     return {
         uid: state.uid,
