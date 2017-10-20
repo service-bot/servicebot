@@ -310,8 +310,12 @@ class Notifications extends React.Component{
                         <div className="row m-b-20">
                             <div className="col-xs-12">
                                 <ContentTitle icon="user" title="Notifications"/>
-                                <p><strong>System Notifications</strong></p>
-                                {isAuthorized({permissions: "put_notification_templates_id"}) && <NotificationList notificationType="_SYSTEM"/>}
+                                {isAuthorized({permissions: "put_notification_templates_id"}) &&
+                                    <div>
+                                        <p><strong>System Notifications</strong></p>
+                                        <NotificationList notificationType="_SYSTEM"/>
+                                    </div>
+                                }
                                 <p><strong>User Notifications</strong></p>
                                 <NotificationList/>
                             </div>
