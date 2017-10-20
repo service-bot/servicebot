@@ -111,7 +111,6 @@ class Login extends React.Component {
 
     render () {
 
-        console.log("first", this.props.options);
         if(!this.props.options.allow_registration) {
             return( <Load/> );
         }else{
