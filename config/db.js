@@ -8,7 +8,8 @@ var config = {
 
 var knex = require('knex')({
     client: 'pg',
-    connection: config
+    connection: config,
+    pool: { min: 0, max: 10 }
 });
 
 

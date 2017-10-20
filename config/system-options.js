@@ -106,7 +106,9 @@ let systemOptions =
         {"option": "purchase_page_featured_area_padding_top", "value": "20", public: true, "type": "theme", "data_type": "text"},
         {"option": "purchase_page_featured_area_padding_bottom", "value": "20", public: true, "type": "theme", "data_type": "text"},
         {"option": "service_request_title_description", "value": "What you are getting", public: true, "type": "theme", "data_type": "text"},
-        {"option": "service_request_title_form", "value": "Get your service", public: true, "type": "theme", "data_type": "text"}
+        {"option": "service_request_title_form", "value": "Get your service", public: true, "type": "theme", "data_type": "text"},
+        {"option": "google_analytics", public: true, "type": "system", "data_type": "text"},
+
     ],
         populateOptions: function(options=systemOptions.options, model=SystemOption){
             return Promise.all(options.map((option) => {

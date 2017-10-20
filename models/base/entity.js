@@ -71,7 +71,6 @@ module.exports = function(tableName, references=[], primaryKey='id', database=kn
         let referenceField = reference.referenceField;
         if (reference.direction === "from") {
             referenceModel.findOnRelative(referenceField, self.get("id"), function (results) {
-                console.log(callback);
                 callback(results);
             })
         }

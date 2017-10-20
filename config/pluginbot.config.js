@@ -20,7 +20,6 @@ let fs = require("fs");
 let path = require("path");
 let dotenv = require("dotenv");
 //todo: move this into plugin
-let knex = require ("knex");
 const PLUGIN_DIRECTORY = path.resolve(__dirname, "../plugins");
 const PLUGIN_TABLE = "plugins";
 
@@ -38,7 +37,9 @@ module.exports = async function(){
 
         let db = require('knex')({
             client: 'pg',
-            connection: getDBConf()
+            connection: getDBConf(),
+            pool: { min: 0, max: 10 }
+
         });
 
         plugins = await getEnabledPlugins(db);
@@ -104,6 +105,7 @@ let basePlugins = function() {
         {"path" : `${PLUGIN_DIRECTORY}/authorization`},
         {"path" : `${PLUGIN_DIRECTORY}/core-input-types`},
         {"path" : `${PLUGIN_DIRECTORY}/service-lifecycle`},
+        {"path" : `${PLUGIN_DIRECTORY}/client-plugins/google-analytics`},
         {"path" : `${PLUGIN_DIRECTORY}/updates`, "interval" : 86400000, "master" : "https://hub.servicebot.io/api/v1/announcements"}
     ];
 };
