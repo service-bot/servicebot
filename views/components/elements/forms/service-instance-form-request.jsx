@@ -1,54 +1,79 @@
 import React from 'react';
 import {Link, browserHistory} from 'react-router';
-import {required, email} from 'redux-form-validators'
-import {injectStripe, Elements} from 'react-stripe-elements';
-import {Field, FormSection, FieldArray, formValueSelector, getFormValues,} from 'redux-form'
-import {connect} from "react-redux";
-import {Price} from "../../utilities/price.jsx";
-import Fetcher from "../../utilities/fetcher.jsx";
-import {widgets, SelectWidget} from "../../utilities/widgets";
-import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
-import {setUid, fetchUsers, setUser} from "../../utilities/actions";
-import {inputField, selectField, widgetField} from "./servicebot-base-field.jsx";
-import {CardSection} from "../../elements/forms/billing-settings-form.jsx";
-import ModalUserLogin from "../modals/modal-user-login.jsx";
-import ServiceBotBaseForm from "./servicebot-base-form.jsx";
-import {getPrice} from "../../../../input_types/handleInputs";
-import values from 'object.values';
 import 'react-tagsinput/react-tagsinput.css';
 import './css/template-create.css';
+import consume from "pluginbot-react/src/consume";
+import {
+    Field,
+    Fields,
+    FormSection,
+    FieldArray,
+    reduxForm,
+    formValueSelector,
+    change,
+    unregisterField,
+    getFormValues,
+    SubmissionError
+} from 'redux-form'
+import {connect} from "react-redux";
+import {RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
+import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
+import {inputField, selectField, widgetField} from "./servicebot-base-field.jsx";
+import {CardSection} from "../../elements/forms/billing-settings-form.jsx";
+
+import {Price} from "../../utilities/price.jsx";
+import Fetcher from "../../utilities/fetcher.jsx";
+import IconHeading from "../../layouts/icon-heading.jsx";
+import ModalUserLogin from "../modals/modal-user-login.jsx";
+import {addAlert} from "../../utilities/actions";
+import {setUid, fetchUsers, setUser} from "../../utilities/actions";
+import { required, email, numericality, length } from 'redux-form-validators'
+import {injectStripe, Elements} from 'react-stripe-elements';
+import cookie from 'react-cookie';
+
+
 let _ = require("lodash");
+
+import ServiceBotBaseForm from "./servicebot-base-form.jsx";
+import {getPrice} from "../../../../lib/handleInputs";
+import values from 'object.values';
 
 if (!Object.values) {
     values.shim();
 }
 
-const selector = formValueSelector('servicebotForm'); // <-- same as form name
+const selector = formValueSelector('serviceInstanceRequestForm'); // <-- same as form name
 
 
 //Custom property
-const renderCustomProperty = (props) => {
-    const {fields, formJSON, meta: {touched, error}} = props;
+let renderCustomProperty = (props) => {
+    const { fields, formJSON, meta: { touched, error }, services : {widget} } = props;
+    let widgets = widget.reduce((acc, widget) => {
+        acc[widget.type] = widget;
+        return acc;
+    }, {});
     return (
         <div>
-            {fields.map((customProperty, index) => {
-                    let property = widgets[formJSON[index].type];
+            {fields.map((customProperty, index) =>
+                {   let property = widgets[formJSON[index].type];
                     return (
-                        <Field key={index}
-                               name={`${customProperty}.data.value`}
-                               type={formJSON[index].type}
-                               component={widgetField}
-                               widget={property.widget}
-                               label={formJSON[index].prop_label}
-                               formJSON={formJSON[index]}
-                               configValue={formJSON[index].config}
-                        />
-                    )
-                }
+                        <Field
+                            key={index}
+                            name={`${customProperty}.data.value`}
+                            type={formJSON[index].type}
+                            widget={property.widget}
+                            component={widgetField}
+                            label={formJSON[index].prop_label}
+                            // value={formJSON[index].data.value}
+                            formJSON={formJSON[index]}
+                            configValue={formJSON[index].config}
+                            validate={required()}
+                        />)}
             )}
         </div>
-    )
-};
+    )};
+
+renderCustomProperty = consume("widget")(renderCustomProperty);
 
 
 //The full form
@@ -60,8 +85,8 @@ class ServiceRequestForm extends React.Component {
 
     render() {
         let props = this.props;
-        const {handleSubmit, formJSON, helpers, error} = props;
-        let handlers = Object.values(widgets).reduce((acc, widget) => {
+        const {handleSubmit, formJSON, helpers, error, services: {widget}} = props;
+        let handlers = widget.reduce((acc, widget) => {
             acc[widget.type] = widget.handler;
             return acc;
 
@@ -158,8 +183,8 @@ class ServiceRequestForm extends React.Component {
                     </strong>}
 
                     {/*<Buttons buttonClass="btn-primary btn-bar" size="lg" position="center" btnType="primary" value="submit"*/}
-                             {/*onClick={()=>{}} loading>*/}
-                        {/*<span>{getRequestText()}</span>*/}
+                    {/*onClick={()=>{}} loading>*/}
+                    {/*<span>{getRequestText()}</span>*/}
                     {/*</Buttons>*/}
                 </form>
             </div>
@@ -167,19 +192,17 @@ class ServiceRequestForm extends React.Component {
     };
 }
 
-ServiceRequestForm = connect((state, ownProps) => {
+ServiceRequestForm = consume("widget")(connect((state, ownProps) => {
     return {
-        "serviceTypeValue": selector(state, `type`),
-        formJSON: getFormValues('servicebotForm')(state),
+        "serviceTypeValue" : selector(state, `type`),
+        formJSON: getFormValues('serviceInstanceRequestForm')(state),
 
     }
-}, (dispatch, ownProps) => {
-    return {}
-})(ServiceRequestForm);
+})(ServiceRequestForm));
 
 class ServiceInstanceForm extends React.Component {
 
-    constructor(props) {
+    constructor(props){
         super(props);
 
         let templateId = this.props.templateId || 1;
@@ -349,20 +372,16 @@ class ServiceInstanceForm extends React.Component {
         };
         let successMessage = "Service Requested";
         let successRoute = "/my-services";
-        if(isAuthorized({permissions: "can_administrate"})){
-            successRoute = "/dashboard";
-        }
         let helpers = Object.assign(this.state, this.props);
         helpers.updatePrice = self.updatePrice;
         //Gets a token to populate token_id for instance request
         if (!isAuthorized({permissions: "can_administrate"}) &&
             this.state.servicePrice > 0 &&
             !this.state.hasCard) {
-                submissionPrep = this.submissionPrep;
+            submissionPrep = this.submissionPrep;
         }
 
         return (
-
             <div>
                 {/*Price: {this.state.servicePrice}*/}
 
@@ -380,6 +399,7 @@ class ServiceInstanceForm extends React.Component {
                     successMessage = {successMessage}
                     successRoute = {successRoute}
                     handleResponse = {this.handleResponse}
+                    formName="serviceInstanceRequestForm"
                     helpers = {helpers}
                     validations={this.formValidation}
 
