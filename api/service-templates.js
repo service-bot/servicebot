@@ -242,6 +242,7 @@ module.exports = function (router) {
                 acc[handler.name] = handler.handler;
                 return acc;
             }, {});
+            console.log(handlers, "HANDLERS!");
             //this is true when user can override things
             let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
             let templatePrice = serviceTemplate.get("amount");
@@ -261,9 +262,10 @@ module.exports = function (router) {
                 return propToMerge ? {...prop.data, "data" : propToMerge.data} : prop
             });
             if (props) {
-                price = require("../lib/handleInputs").getPrice(props, handlers, price);
+                price = require("../lib/handleInputs").getPrice(mergedProps, handlers, price);
 
             }
+            console.log("PRICE FOR INSTANCE: " + price);
 
             res.locals.adjusted_price = price;
             res.locals.merged_props = mergedProps;
