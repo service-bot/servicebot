@@ -27,9 +27,8 @@ function* run(config, provide, channels) {
     let  { initialState } = yield take("INITIALIZE");
     if(initialState.options.google_analytics && initialState.options.google_analytics.value ){
         console.log("intial!!!!!", initialState.options.google_analytics.value);
-        ReactGA.initialize("UA-108357784-1", {
+        ReactGA.initialize(initialState.options.google_analytics.value, {
             'cookieDomain': 'none',
-            "debug" : true,
             gaOptions: {
                 userId: initialState.uid
             }
