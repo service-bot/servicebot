@@ -349,6 +349,9 @@ class ServiceInstanceForm extends React.Component {
         };
         let successMessage = "Service Requested";
         let successRoute = "/my-services";
+        if(isAuthorized({permissions: "can_administrate"})){
+            successRoute = "/dashboard";
+        }
         let helpers = Object.assign(this.state, this.props);
         helpers.updatePrice = self.updatePrice;
         //Gets a token to populate token_id for instance request
