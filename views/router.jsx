@@ -55,8 +55,8 @@ import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
 //Tests
-import ServiceTemplateFormV4 from "./components/elements/forms/service-template-formv4.jsx";
-import ServiceRequestV2 from "./components/pages/service-catalog-request-v2.jsx"
+import ServiceTemplateFormV4 from "./components/elements/forms/service-template-form.jsx";
+import ServiceRequestV2 from "./components/pages/service-catalog-request.jsx"
 
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
