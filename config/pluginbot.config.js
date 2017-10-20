@@ -28,7 +28,6 @@ module.exports = async function(){
     if(!envExists()){
         plugins = basePlugins();
     }else{
-        console.log("environment file detected");
         //bring in environment variables
 
         let envPath = path.resolve(__dirname, '../env/.env');
@@ -90,7 +89,6 @@ let envExists = function() {
 
 let getEnabledPlugins = async function(db){
     let pluginTableExists = await db.schema.hasTable(PLUGIN_TABLE);
-    console.log("plugin table exists: ", pluginTableExists);
     return  await (pluginTableExists ? db(PLUGIN_TABLE).where("enabled", true) : basePlugins());
 
 }
