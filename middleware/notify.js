@@ -68,8 +68,6 @@ var notifier = function(templateName, userCorrelator="user_id", targetObject=nul
 
                                 additional_recipients.forEach(address => {
                                     if (address != targetUser.get("email")) {
-                                        console.log("SENDING TO " + address);
-                                        console.log("4th email method!!")
                                         sendMail(address, message, subject);
                                     }
                                 })

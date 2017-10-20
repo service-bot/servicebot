@@ -101,7 +101,6 @@ module.exports = function (router) {
         file.user_id = req.user.get('id');
         file.name = file.originalname;
         File.findFile(iconFilePath, req.params.id, function (templateIcon) {
-            console.log(templateIcon)
             if (templateIcon.length > 0) {
                 let iconToDelete = templateIcon[0];
                 iconToDelete.delete(function () {
@@ -109,7 +108,6 @@ module.exports = function (router) {
             }
             let icon = new File(file);
             icon.create(function (err, result) {
-                console.log(result);
                 result.message = "Icon Uploaded"
                 res.json(result);
             })
@@ -118,7 +116,6 @@ module.exports = function (router) {
     });
     router.delete("/service-templates/:id(\\d+)/icon", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function (req, res, next) {
         File.findFile(iconFilePath, req.params.id, function (icon) {
-            console.log(icon);
             icon[0].delete(function () {
                 res.json({message: "File Deleted!"});
             })
@@ -169,7 +166,6 @@ module.exports = function (router) {
         file.user_id = req.user.get('id');
         file.name = file.originalname;
         File.findFile(imageFilePath, req.params.id, function (image) {
-            console.log(image)
             if (image.length > 0) {
                 let imageToDelete = image[0];
                 imageToDelete.delete(function () {
@@ -177,7 +173,6 @@ module.exports = function (router) {
             }
             let imageToCreate = new File(file);
             imageToCreate.create(function (err, result) {
-                console.log(result);
                 result.message = "Image Uploaded"
                 res.json(result);
             })
@@ -191,7 +186,6 @@ module.exports = function (router) {
         serviceTemplate.getRelated(ServiceTemplateProperty, function (props) {
             //this object for authenticated call
             res.locals.valid_object.data.references[ServiceTemplateProperty.table] = props.map(entity => entity.data);
-            console.log(res.locals.valid_object);
             if (serviceTemplate.get('published') == true) {
 
                 if (!req.isAuthenticated()) {
@@ -211,17 +205,14 @@ module.exports = function (router) {
 
     });
     router.get('/service-templates/:id/request', auth(), function (req, res, next) {
-        console.log("authenticated user");
 
         let serviceTemplate = res.locals.valid_object;
         let permission_array = res.locals.permissions;
         let hasPermission = (permission_array.some(p => p.get("permission_name") == "can_administrate" || p.get("permission_name") == "can_manage"));
         if (serviceTemplate.get('published') == true || hasPermission) {
-            console.log("got in here")
             res.json(serviceTemplate.data);
         }
         else {
-            console.log("moved along")
             next();
         }
     });

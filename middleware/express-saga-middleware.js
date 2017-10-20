@@ -4,9 +4,7 @@ let {take, fork, spawn, call} = require("redux-saga/effects");
 
 function* reqSaga(requestChannel, sagaMiddleware){
     while(true){
-        console.log("WAITIN FOR THE REQUESZTS!");
         let {req, res, next} = yield take(requestChannel);
-        console.log("GOTTA REQUEST!");
         yield fork(sagaMiddleware, req, res, next);
 
     }

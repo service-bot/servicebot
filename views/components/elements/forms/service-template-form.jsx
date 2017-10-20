@@ -509,7 +509,6 @@ class ServiceTemplateForm extends React.Component {
 
                                     let defaultOptions = null;
                                     if(prop.prop_input_type == "select"){
-                                        console.log("IN SELECT!");
                                         defaultOptions = (
                                             <div>
                                                 <label>Available Values</label>

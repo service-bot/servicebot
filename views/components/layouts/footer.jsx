@@ -35,7 +35,6 @@ class Footer extends React.Component {
                     <Link className="powerby-servicebot" target="_blank" to="http://www.servicebot.io" style={footerTextStyle}> servicebot.io</Link>
                 </p>
                 {this.props.services.footerComponent && this.props.services.footerComponent.map((comp, index) => {
-                    console.log(comp);
                     return (<div>
                         {comp}
                     </div>)
