@@ -6,7 +6,7 @@
     "start": "node ./bin/start",
     "build": "./node_modules/.bin/webpack",
     "dev-client": "./node_modules/.bin/webpack-dev-server --port 3002 --content-base public/",
-    "fullStart": "./node_modules/.bin/webpack && node ./bin/www",
+    "fullStart": "./node_modules/.bin/webpack && node ./bin/start",
     "debug": "node $NODE_DEBUG_OPTION ./bin/start"
   },
   "repository": {
