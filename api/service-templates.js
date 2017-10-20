@@ -242,7 +242,7 @@ module.exports = function (router) {
     let validateServiceRequest = async function (req, res, next) {
         try {
             let serviceTemplate = res.locals.valid_object;
-            let props = (await serviceTemplate.getRelated("service_template_properties")) || null;
+            let props = (await serviceTemplate.getRelated(ServiceTemplateProperty)) || null;
             let req_body = req.body;
             let reqProps = req_body.references && req_body.references.service_template_properties || [];
             await authPromise(req, res);
@@ -452,7 +452,6 @@ module.exports = function (router) {
                     template: serviceTemplate
                 });
             }
-
             res.json({
                 ...responseJSON,
                 ...newInstance.data

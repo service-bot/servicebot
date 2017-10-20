@@ -88,7 +88,7 @@ let SelectWidget = (props) => {
     let {input, configValue, label} = props;
     return (
         <div className="form-group form-group-flex addon-options-widget-default-value-wrapper">
-            <label className="control-label form-label-flex-md addon-options-widget-default-value-label">{label}</label>
+            {label && <label className="control-label form-label-flex-md addon-options-widget-default-value-label">{label}</label>}
             <div className="form-input-flex">
                 <select className="form-control addon-options-widget-default-value-select" {...input}>
                     <option value="0">Choose One</option>

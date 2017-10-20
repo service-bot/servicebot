@@ -211,6 +211,7 @@ let generateProps = function (submittedProperties=null, callback) {
     ServiceTemplates.findOne('id', self.data.service_id, function (serviceTemplate) {
         //Get all service template properties
         serviceTemplate.getRelated(ServiceTemplateProperties, function (resultProperties) {
+            console.log(resultProperties, "RESULT PROPS!");
             let instanceProperties = [];
             let templateProperties = resultProperties.map(entity => entity.data);
             let submittedMap = _.keyBy(submittedProperties, 'id');
@@ -218,7 +219,7 @@ let generateProps = function (submittedProperties=null, callback) {
             for (let templateProperty of templateProperties){
                 //Update property value to request value if passed. Otherwise, keep template prop
                 if(submittedProperties) {
-                    if (templateProperty.prompt_user == true) {
+                    if (templateProperty.prompt_user === true) {
                         if (submittedMap.hasOwnProperty(templateProperty.id)) {
                             templateProperty.data = submittedMap[templateProperty.id].data;
                             // templateProperty.config = submittedMap[templateProperty.id].config
@@ -236,7 +237,7 @@ let generateProps = function (submittedProperties=null, callback) {
             });
         });
     });
-}
+};
 
 let getAllAwaitingCharges = function (callback) {
     let self = this;

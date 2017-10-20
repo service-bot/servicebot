@@ -41,7 +41,6 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
         let ServiceInstance = require('../models/service-instance');
         let service = new ServiceInstance(await ServiceInstance.createPromise(instanceAttributes));
         let props = await service.generateProps(submittedProperties);
-
         if (self.data.type === 'one_time') {
             let charge_obj = {
                 'user_id': service.get('user_id'),
