@@ -10,9 +10,13 @@ class ServiceInstancePaymentPlan extends React.Component {
 
     getServiceStatus(){
         let self = this;
+        console.log("ffofoo")
+        console.log(this.props.allCharges)
         if(self.props.status == "requested") {
             return (
                 <DashboardWidget widgetColor="#0d9e6a" clickAction={this.props.approval} widgetIcon="mouse-pointer" widgetData="Pay Now" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="widget-hover" />);
+        } else if(this.props.allCharges.false && this.props.allCharges.false.length > 0) {
+            return(<DashboardWidget widgetColor="#0d9e6a" clickAction={this.props.handleAllCharges} widgetIcon="mouse-pointer" widgetData="Pay Now" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="widget-hover" />)
         } else if(self.props.status == "running") {
             return (<DashboardWidget widgetColor="#0069ff" clickAction={this.props.cancel} widgetIcon="check" widgetData="Active Item" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="cancel" />);
         }  else if(self.props.status == "waiting_cancellation") {
@@ -45,29 +49,27 @@ class ServiceInstancePaymentPlan extends React.Component {
 
             return (
                 <div className="">
-
-                    <Authorizer permissions={['can_administrate']}>
-                        <div className="service-instance-box">
-                            <div className="service-instance-box-title">
-                                <span>Customer Information</span>
-                            </div>
-                            <div id="instance-owner" className="service-instance-box-content">
-                                <div>
-                                    <span><i className="fa fa-envelope"/>{owner.email}</span><br/>
-                                    <span><i className="fa fa-user"/>{owner.name}</span><br/>
-                                    <span><i className="fa fa-phone"/>{owner.phone}</span>
-                                </div>
-                                <div>
-                                    <Avatar key={`owner-avatar-${owner.id}`} linked={true} size="xl" uid={owner.id}/>
-                                </div>
-                            </div>
-                        </div>
-                    </Authorizer>
-
                     <div className="row">
                         {this.getServiceStatus()}
                         {this.getServiceType()}
                     </div>
+                    <Authorizer permissions={['can_administrate']}>
+                        <div className="service-instance-box black">
+                            <div className="service-instance-box-title black">
+                                <span>Customer Information</span>
+                            </div>
+                            <div id="instance-owner" className="service-instance-box-content">
+                                <div>
+                                    {owner.email && <div><span><i className="fa fa-envelope"/>Email: {owner.email}</span><br/></div>}
+                                    {owner.name &&  <div><span><i className="fa fa-user"/>Name: {owner.name}</span><br/></div>}
+                                    {owner.phone && <span><i className="fa fa-phone"/>Phone #: {owner.phone}</span>}
+                                </div>
+                                <div>
+                                    <Avatar key={`owner-avatar-${owner.id}`} linked={true} size="lg" uid={owner.id}/>
+                                </div>
+                            </div>
+                        </div>
+                    </Authorizer>
                 </div>
             );
         }else{

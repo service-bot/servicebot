@@ -7,7 +7,7 @@ class ServiceInstanceFields extends React.Component {
         return (
             <div className="service-instance-box">
                 <div className="service-instance-box-title">
-                    <span>Custom Fields</span>
+                    <span>Request Details</span>
                 </div>
                 <div className="service-instance-box-content">
                     <span className="m-b-20 block label color-grey-600">Information collected from customer.</span>

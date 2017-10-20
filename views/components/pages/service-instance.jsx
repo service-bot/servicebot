@@ -21,6 +21,7 @@ import ModalEditInstance from '../elements/modals/modal-edit-instance.jsx';
 import ModalEditPaymentPlan from '../elements/modals/modal-edit-payment-plan.jsx';
 import ModalAddChargeItem from '../elements/modals/modal-add-charge-item.jsx';
 import ModalPayChargeItem from '../elements/modals/modal-pay-charge-item.jsx';
+import ModalCancelChargeItem from '../elements/modals/modal-cancel-charge-item.jsx';
 import ModalPayAllCharges from '../elements/modals/modal-pay-all-charges.jsx';
 import ServiceInstanceFiles from '../elements/service-instance/service-instance-files.jsx';
 import $ from "jquery";
@@ -44,7 +45,10 @@ class ServiceInstance extends React.Component {
                         editPaymentModal: false,
                         addChargeItemModal: false,
                         payChargeItemModal: false,
+                        cancelChargeItemModal: false,
                         payChargeItemId: false,
+                        cancelChargeItemId: false,
+                        cancelChargeItem: false,
                         payAllChargesModal: false};
         this.fetchInstance = this.fetchInstance.bind(this);
         this.handleApprove = this.handleApprove.bind(this);
@@ -65,6 +69,8 @@ class ServiceInstance extends React.Component {
         this.onAddChargeItemModalClose = this.onAddChargeItemModalClose.bind(this);
         this.handlePayChargeItemModal = this.handlePayChargeItemModal.bind(this);
         this.onPayChargeItemModalClose = this.onPayChargeItemModalClose.bind(this);
+        this.handleCancelChargeItemModal = this.handleCancelChargeItemModal.bind(this);
+        this.onCancelChargeItemModalClose = this.onCancelChargeItemModalClose.bind(this);
         this.handlePayAllChargesModal = this.handlePayAllChargesModal.bind(this);
         this.onPayAllChargesModalClose = this.onPayAllChargesModalClose.bind(this);
         this.getAdditionalCharges = this.getAdditionalCharges.bind(this);
@@ -179,6 +185,16 @@ class ServiceInstance extends React.Component {
         this.handleComponentUpdating();
     }
 
+    handleCancelChargeItemModal(chargeId = false){
+        if(chargeId !== false){
+            this.setState({ cancelChargeItemModal: true, cancelChargeItemId: chargeId});
+        }
+    }
+    onCancelChargeItemModalClose(){
+        this.setState({ cancelChargeItemModal: false});
+        this.handleComponentUpdating();
+    }
+
     handlePayAllChargesModal(){
         this.setState({payAllChargesModal: true});
     }
@@ -234,10 +250,14 @@ class ServiceInstance extends React.Component {
             if (myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) {
                 return (
                     <div id="service-instance-waiting" className="row">
-                        <div className="col-md-10 col-md-offset-1">
+                        <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
                             <ServiceInstanceWaitingCharges handlePayAllCharges={self.handlePayAllChargesModal}
                                                            handlePayChargeItem={self.handlePayChargeItemModal}
-                                                           instanceWaitingItems={myInstanceChargeItems.false}/>
+                                                           handleCancelChargeItem={self.handleCancelChargeItemModal}
+                                                           instanceWaitingItems={myInstanceChargeItems.false}
+                                                           serviceInstance={myInstance}
+                                                           serviceInstanceCharges={myInstanceChargeItems}
+                            />
                         </div>
                     </div>
                 );
@@ -305,7 +325,9 @@ class ServiceInstance extends React.Component {
                     return( <ModalAddChargeItem myInstance={self.state.instance} show={self.state.editPaymentModal} hide={self.onAddChargeItemModalClose}/> );
                 }else if(self.state.payChargeItemModal){
                     return( <ModalPayChargeItem myInstance={self.state.instance} ownerId={ownerId} chargeId={self.state.payChargeItemId} show={self.state.payChargeItemModal} hide={self.onPayChargeItemModalClose}/> );
-                }else if(self.state.payAllChargesModal){
+                } else if(self.state.cancelChargeItemModal){
+                    return( <ModalCancelChargeItem myInstance={self.state.instance} ownerId={ownerId} chargeId={self.state.cancelChargeItemId} show={self.state.cancelChargeItemModal} hide={self.onCancelChargeItemModalClose}/> );
+                } else if(self.state.payAllChargesModal){
                     return( <ModalPayAllCharges myInstance={self.state.instance} ownerId={ownerId} show={self.state.payAllChargesModal} hide={self.onPayAllChargesModalClose}/> );
                 }
             };
@@ -318,13 +340,13 @@ class ServiceInstance extends React.Component {
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'} transitionAppear={true} transitionEnter={true} transitionLeave={true}
                                                      transitionAppearTimeout={1000} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                                 <div className="row">
-                                    <div className="col-md-10 col-md-offset-1 m-b-20">
+                                    <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2 m-b-20">
                                         {self.getActionButtons(myInstance)}
                                     </div>
                                 </div>
 
                                 <div id="service-instance-detail" className="row">
-                                    <div className="col-md-10 col-md-offset-1">
+                                    <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
                                         <ServiceInstancePaymentPlan key={Object.id}
                                                                     owner={owner}
                                                                     service={myInstance}
@@ -333,36 +355,38 @@ class ServiceInstance extends React.Component {
                                                                     approval={self.handleApprove}
                                                                     cancel={self.handleCancel}
                                                                     cancelUndo={self.handleUndoCancel}
+                                                                    allCharges={myInstanceChargeItems}
+                                                                    handleAllCharges={self.handlePayAllChargesModal}
                                         />
                                     </div>
                                 </div>
 
                                 {this.getAdditionalCharges(myInstance, myInstanceChargeItems)}
 
-                                {myInstance.references.service_instance_properties.length > 0 &&
-                                <div id="service-instance-fields" className="row">
-                                    <div className="col-md-10 col-md-offset-1">
-                                        <ServiceInstanceFields instanceProperties={myInstance.references.service_instance_properties}/>
-                                    </div>
-                                </div>
-                                }
-
                                 {(myInstanceChargeItems.true && myInstanceChargeItems.true.length > 0) &&
                                 <div id="service-instance-approved-charges" className="row">
-                                    <div className="col-md-10 col-md-offset-1">
+                                    <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
                                         <ServiceInstanceApprovedCharges instanceApprovedItems={myInstanceChargeItems.true}/>
                                     </div>
                                 </div>
                                 }
 
+                                {myInstance.references.service_instance_properties.length > 0 &&
+                                <div id="service-instance-fields" className="row">
+                                    <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
+                                        <ServiceInstanceFields instanceProperties={myInstance.references.service_instance_properties}/>
+                                    </div>
+                                </div>
+                                }
+
                                 <div id="service-instance-files" className="row">
-                                    <div className="col-md-10 col-md-offset-1">
+                                    <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
                                         <ServiceInstanceFiles instanceId={self.state.instanceId}/>
                                     </div>
                                 </div>
 
                                 <div id="service-instance-message" className="row">
-                                    <div className="col-md-10 col-md-offset-1">
+                                    <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
                                         <ServiceInstanceMessage instanceId={self.state.instanceId}/>
                                     </div>
                                 </div>

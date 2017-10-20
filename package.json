@@ -102,7 +102,7 @@
     "swagger-jsdoc": "^1.9.7",
     "underscore": "^1.8.3",
     "wait-for-port": "0.0.2",
-    "webpack": "^3.7.1",
+    "webpack": "^3.8.1",
     "whatwg-fetch": "^2.0.3",
     "xss": "^0.3.4"
   },
