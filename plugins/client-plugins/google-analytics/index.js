@@ -14,7 +14,6 @@ let actionHandler = function(action, state){
             return {
                 category : "Forms",
                 action : "Start Submit " + action.meta.form,
-                label : JSON.stringify(state.forms[action.meta.form].values)
             };
         case  "@@redux-form/SET_SUBMIT_FAILED" :
             let form = state.forms[action.meta.form];
