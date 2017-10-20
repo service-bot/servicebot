@@ -5,12 +5,6 @@ import ReactGA  from 'react-ga';
 
 let actionHandler = function(action){
     switch(action.type){
-        case "@@router/LOCATION_CHANGE" :
-            return {
-                category : "Navigation",
-                action : "@@router/LOCATION_CHANGE",
-                label : 'navigated to ' + action.payload.pathname
-            };
         case "@@redux-form/SET_SUBMIT_SUCCEEDED":
             return {
                 category : "Redux Form",
@@ -22,6 +16,7 @@ let actionHandler = function(action){
     }
 }
 
+
 function* run(config, provide, channels) {
     //todo pull initialize from channel?
     let  { initialState } = yield take("INITIALIZE");
@@ -29,14 +24,18 @@ function* run(config, provide, channels) {
         console.log("intial!!!!!", initialState.options.google_analytics.value);
         ReactGA.initialize(initialState.options.google_analytics.value, {
             'cookieDomain': 'none',
-            gaOptions: {
-                userId: initialState.uid
-            }
 
         });
+        if(initialState.uid){
+            ReactGA.set({ userId: initialState.uid, test : "hello", user : initialState.options.user });
+        }
         yield takeEvery(actionHandler, function*(action){
             ReactGA.event(actionHandler(action));
         });
+        yield takeEvery("@@router/LOCATION_CHANGE", function*(action){
+            ReactGA.set({ page: action.payload.pathname});
+            ReactGA.pageview(action.payload.pathname);
+        })
     }
 }
 export {run};
