@@ -3,14 +3,27 @@ import consume from "pluginbot/effects/consume"
 import ReactGA  from 'react-ga';
 
 
-let actionHandler = function(action){
+let actionHandler = function(action, state){
     switch(action.type){
         case "@@redux-form/SET_SUBMIT_SUCCEEDED":
             return {
-                category : "Redux Form",
-                action : "@@redux-form/SET_SUBMIT_SUCCEEDED",
-                label : "successfully submitted " + action.meta.form
+                category : "Forms",
+                action : "Successfully submitted " + action.meta.form
             };
+        case "@@redux-form/START_SUBMIT":
+            return {
+                category : "Forms",
+                action : "Start Submit " + action.meta.form,
+                label : JSON.stringify(state.forms[action.meta.form].values)
+            };
+        case  "@@redux-form/SET_SUBMIT_FAILED" :
+            let form = state.forms[action.meta.form];
+            let label = form.error || JSON.stringify(form.syncErrors)
+            return {
+                category : "Forms",
+                action : "Submit Failed " + action.meta.form,
+                label
+            }
         default:
             return false
     }
@@ -22,15 +35,13 @@ function* run(config, provide, channels) {
     let  { initialState } = yield take("INITIALIZE");
     if(initialState.options.google_analytics && initialState.options.google_analytics.value ){
         console.log("intial!!!!!", initialState.options.google_analytics.value);
-        ReactGA.initialize(initialState.options.google_analytics.value, {
-            'cookieDomain': 'none',
-
-        });
+        ReactGA.initialize(initialState.options.google_analytics.value);
         if(initialState.uid){
-            ReactGA.set({ userId: initialState.uid, test : "hello", user : initialState.options.user });
+            ReactGA.set({ userId: initialState.uid });
         }
         yield takeEvery(actionHandler, function*(action){
-            ReactGA.event(actionHandler(action));
+            let state = yield select();
+            ReactGA.event(actionHandler(action, state));
         });
         yield takeEvery("@@router/LOCATION_CHANGE", function*(action){
             ReactGA.set({ page: action.payload.pathname});
