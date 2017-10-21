@@ -16,6 +16,9 @@ let actionHandler = function(action, state){
                 action : "Start Submit " + action.meta.form,
             };
         case  "@@redux-form/SET_SUBMIT_FAILED" :
+            if(!state){
+                return
+            }
             let form = state.form[action.meta.form];
             let label = form.error || JSON.stringify(form.syncErrors)
             return {
