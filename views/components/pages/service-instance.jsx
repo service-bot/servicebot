@@ -334,7 +334,8 @@ class ServiceInstance extends React.Component {
 
             return(
                 <Authorizer>
-                    <Jumbotron pageName={pageName} subtitle={`${myInstance.description} . ${myInstance.subscription_id || ""}`} />
+                    <Jumbotron pageName={pageName} subtitle={`${myInstance.description}`} />
+                    {/*<Jumbotron pageName={pageName} subtitle={`${myInstance.description} . ${myInstance.subscription_id || ""}`} />*/}
                     <div className="page-service-instance">
                         <Content>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'} transitionAppear={true} transitionEnter={true} transitionLeave={true}
