@@ -120,7 +120,11 @@ let subscribe = function (callback) {
         new Promise(function (resolve, reject) {
             User.findOne('id', self.data.user_id, function (user) {
                 if (user.data) {
-                    return resolve(user.data.customer_id);
+                    if(user.data.status === "suspended") {
+                        return reject('ERROR: User is suspended, restart of instances are not allowed!');
+                    } else {
+                        return resolve(user.data.customer_id);
+                    }
                 } else {
                     return reject('ERROR: No User Found!');
                 }
