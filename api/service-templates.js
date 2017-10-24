@@ -495,6 +495,11 @@ module.exports = function (router) {
         })
     });
 
+    router.put(`/service-templates/:id(\\d+)`, validate(ServiceTemplate), auth(), function(req, res, next) {
+        req.body.trial_period_days = req.body.trial_period_days || 0;
+        next();
+    });
+
 
     router.get("/service-templates/public", function (req, res, next) {
         let key = "published";
