@@ -104,7 +104,6 @@ module.exports = function(router) {
             charge.create(function (err, charge_item) {
                 res.json(charge_item);
                 store.dispatchEvent("service_instance_charge_added", instance_object);
-                next();
             });
         } else {
             res.json({'error':'Payment plan is required prior to adding charges.'});
