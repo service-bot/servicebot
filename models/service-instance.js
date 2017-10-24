@@ -278,7 +278,7 @@ let deleteFiles = function(callback){
 
 };
 
-ServiceInstance.prototype.changePrice = function (newPlan) {
+ServiceInstance.prototype.changePrice = async function (newPlan) {
     let self = this;
     return new Promise(function (resolve, reject) {
         self.deletePayPlan(function (result) {
@@ -301,10 +301,19 @@ ServiceInstance.prototype.changePrice = function (newPlan) {
             Stripe().connection.subscriptions.update(self.data.subscription_id, { plan: updated_instance.data.payment_plan.id }, function(err, subscription) {
                     if(!err) {
                         updated_instance.data.status = 'running';
+                        //Only instances with larger than $0 amount will be set to subscriptions
+                        if(updated_instance.data.payment_plan.amount > 0) {
+                            updated_instance.data.type = 'subscription';
+                        } else {
+                            updated_instance.data.type = 'custom';
+                        }
                         updated_instance.update(function (err, instance) {
                             return resolve(instance);
                         });
                     } else {
+                        console.error("ERROR")
+                        console.log(err)
+                        console.log("YOOO")
                         return reject(err);
                     }
                 }

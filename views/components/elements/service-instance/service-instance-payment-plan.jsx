@@ -14,7 +14,7 @@ class ServiceInstancePaymentPlan extends React.Component {
         console.log(this.props.allCharges)
         if(self.props.status == "requested") {
             return (
-                <DashboardWidget widgetColor="#0d9e6a" clickAction={this.props.approval} widgetIcon="mouse-pointer" widgetData="Pay Now" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="widget-hover" />);
+                <DashboardWidget widgetColor="#0d9e6a" clickAction={this.props.approval} widgetIcon="usd" widgetData="Pay Now" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="widget-hover" />);
         } else if(this.props.allCharges.false && this.props.allCharges.false.length > 0) {
             return(<DashboardWidget widgetColor="#0d9e6a" clickAction={this.props.handleAllCharges} widgetIcon="mouse-pointer" widgetData="Pay Now" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="widget-hover" />)
         } else if(self.props.status == "running") {
