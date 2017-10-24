@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 var BUILD_DIR = path.resolve(__dirname, 'public/build');
 var APP_DIR = path.resolve(__dirname, 'views');
@@ -47,11 +48,7 @@ var config = async function () {
 
             plugins: [
 
-                // new webpack.optimize.UglifyJsPlugin({
-                //     compress: {
-                //         warnings: false
-                //     }
-                // }),
+                // new UglifyJsPlugin(),
                 // new webpack.DefinePlugin({
                 //     'process.env': {
                 //         NODE_ENV: JSON.stringify('production')
@@ -123,11 +120,7 @@ var config = async function () {
             new webpack.HotModuleReplacementPlugin(),
 
 
-            // new webpack.optimize.UglifyJsPlugin({
-            //     compress: {
-            //         warnings: false
-            //     }
-            // }),
+            // new UglifyJsPlugin(),
             // new webpack.DefinePlugin({
             //     'process.env': {
             //         NODE_ENV: JSON.stringify('production')

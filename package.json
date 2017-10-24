@@ -49,6 +49,7 @@
     "jsonwebtoken": "^7.4.3",
     "knex": "^0.12.9",
     "knex-filter-loopback": "^0.1.0",
+    "kubernetes-client": "^3.16.0",
     "lodash": "^4.17.4",
     "mkdirp": "^0.5.1",
     "morgan": "^1.9.0",
@@ -112,6 +113,7 @@
     "react-hot-loader": "^3.0.0-beta.7",
     "supertest": "^3.0.0",
     "tape": "^4.8.0",
+    "uglifyjs-webpack-plugin": "^1.0.1",
     "webpack-dev-server": "^1.14.1"
   }
 }
