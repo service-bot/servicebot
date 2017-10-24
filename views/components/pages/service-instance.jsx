@@ -222,26 +222,30 @@ class ServiceInstance extends React.Component {
 
     getActionButtons(instance){
         let self = this;
-
-        return (
-            <Authorizer permissions="can_administrate">
-                <div className="btn-group pull-right">
-                    <button type="button" ref="dropdownToggle3" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Actions <span className="caret"/>
-                    </button>
-                    <ul className="dropdown-menu dropdown-menu-right">
+        //Only view actions for non-suspended users
+        if(instance.references.users[0].status != "suspended") {
+            return (
+                <Authorizer permissions="can_administrate">
+                    <div className="btn-group pull-right">
+                        <button type="button" ref="dropdownToggle3" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Actions <span className="caret"/>
+                        </button>
+                        <ul className="dropdown-menu dropdown-menu-right">
                             <li><Link to="#" onClick={self.handleEditInstanceModal}>Edit Instance</Link></li>
                             <li><Link to="#" onClick={self.handleEditPaymentModal}>Edit Payment Plan</Link></li>
                             {instance.status == 'running' &&
-                                <li><Link to="#" onClick={self.handleAddChargeItemModal}>Add Line Item</Link></li>
+                            <li><Link to="#" onClick={self.handleAddChargeItemModal}>Add Line Item</Link></li>
                             }
                             <li role="separator" className="divider"/>
                             {/*<li><Link to="#" onClick={self.handleViewPaymentModal}>View Payment History</Link></li>*/}
                             {self.getStatusButtons()}
-                    </ul>
-                </div>
-            </Authorizer>
-        );
+                        </ul>
+                    </div>
+                </Authorizer>
+            );
+        } else {
+            return null;
+        }
     }
 
     getAdditionalCharges(myInstance, myInstanceChargeItems) {

@@ -123,7 +123,6 @@ class ManageSubscriptions extends React.Component {
             <div>
                 <div className="badge badge-xs">
                     <img className="img-circle" src={`/api/v1/users/${row.user_id}/avatar`}/>
-                    <span className="customer-name">{row.references.users[0].name}</span>
                 </div>
                 <span className="customer-email">&nbsp;&nbsp;{cell.users[0].email}</span>
             </div>
@@ -296,7 +295,7 @@ class ManageSubscriptions extends React.Component {
                                     <ServiceBotTableBase
                                         rows={this.state.rows}
                                         fetchRows={this.fetchData}
-                                        sortColumn="created_at"
+                                        sortColumn="updated_at"
                                         sortOrder="desc"
                                     >
                                         <TableHeaderColumn isKey
@@ -333,12 +332,12 @@ class ManageSubscriptions extends React.Component {
                                                            width='100'>
                                             Status
                                         </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='created_at'
+                                        <TableHeaderColumn dataField='updated_at'
                                                            dataFormat={this.createdFormatter}
                                                            dataSort={ true }
                                                            searchable={false}
                                                            width='140'>
-                                            Created
+                                            Updated
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='Actions'
                                                            className={'action-column-header'}

@@ -211,7 +211,6 @@ let generateProps = function (submittedProperties=null, callback) {
     ServiceTemplates.findOne('id', self.data.service_id, function (serviceTemplate) {
         //Get all service template properties
         serviceTemplate.getRelated(ServiceTemplateProperties, function (resultProperties) {
-            console.log(resultProperties, "RESULT PROPS!");
             let instanceProperties = [];
             let templateProperties = resultProperties.map(entity => entity.data);
             let submittedMap = _.keyBy(submittedProperties, 'id');
@@ -311,9 +310,7 @@ ServiceInstance.prototype.changePrice = async function (newPlan) {
                             return resolve(instance);
                         });
                     } else {
-                        console.error("ERROR")
                         console.log(err)
-                        console.log("YOOO")
                         return reject(err);
                     }
                 }
