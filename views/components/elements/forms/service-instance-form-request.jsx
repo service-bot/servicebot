@@ -171,7 +171,7 @@ class ServiceRequestForm extends React.Component {
                                         to="/billing-settings">billing settings.</Link></span>
                             </div> :
                             <p className="help-block">
-                                Using {helpers.card.funding} card endingin: {helpers.card.last4}
+                                Using {helpers.card.funding} card ending in: {helpers.card.last4}
                             </p>
                         }
                     </div>
