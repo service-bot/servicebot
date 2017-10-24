@@ -102,6 +102,7 @@ let basePlugins = function() {
         {"path" : `${PLUGIN_DIRECTORY}/api-gateway`, appConfig : getAppConf()},
         {"path" : `${PLUGIN_DIRECTORY}/stripe`},
         {"path" : `${PLUGIN_DIRECTORY}/authorization`},
+        {"path" : `${PLUGIN_DIRECTORY}/notification`},
         {"path" : `${PLUGIN_DIRECTORY}/core-input-types`},
         {"path" : `${PLUGIN_DIRECTORY}/service-lifecycle`},
         {"path" : `${PLUGIN_DIRECTORY}/client-plugins/google-analytics`},
