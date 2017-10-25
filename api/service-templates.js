@@ -246,9 +246,7 @@ module.exports = function (router) {
             //this is true when user can override things
             let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
             let templatePrice = serviceTemplate.get("amount");
-
-            let price = hasPermission ? (req_body.price_override || templatePrice) : templatePrice;
-
+            let price = hasPermission ? (req_body.amount || templatePrice) : templatePrice;
 
             //todo: this doesn't do anthing yet, needs to check the "passed" props not the ones on the original...
             // let validationResult = props ? validateProperties(props, handlers) : [];
@@ -265,7 +263,9 @@ module.exports = function (router) {
                 price = require("../lib/handleInputs").getPrice(mergedProps, handlers, price);
 
             }
-            console.log("PRICE FOR INSTANCE: " + price);
+
+            //set trial period to 0 if null
+            res.locals.valid_object.data.trial_period_days = res.locals.valid_object.data.trial_period_days || 0;
 
             res.locals.adjusted_price = price;
             res.locals.merged_props = mergedProps;
@@ -476,6 +476,7 @@ module.exports = function (router) {
 
     router.post("/service-templates", auth(), function (req, res, next) {
         req.body.created_by = req.user.get("id");
+        req.body.trial_period_days = req.body.trial_period_days || 0;
         let properties = req.body.references && req.body.references.service_template_properties;
         if(properties){
             req.body.references.service_template_properties = properties.map(prop => {
@@ -492,6 +493,11 @@ module.exports = function (router) {
                 next();
             }
         })
+    });
+
+    router.put(`/service-templates/:id(\\d+)`, validate(ServiceTemplate), auth(), function(req, res, next) {
+        req.body.trial_period_days = req.body.trial_period_days || 0;
+        next();
     });
 
 

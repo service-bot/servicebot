@@ -18,7 +18,7 @@ import {
 import {connect} from "react-redux";
 import {RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
-import {inputField, selectField, widgetField} from "./servicebot-base-field.jsx";
+import {inputField, selectField, widgetField, priceField} from "./servicebot-base-field.jsx";
 import {CardSection} from "../../elements/forms/billing-settings-form.jsx";
 
 import {Price} from "../../utilities/price.jsx";
@@ -139,6 +139,12 @@ class ServiceRequestForm extends React.Component {
                     <Authorizer permissions="can_administrate">
                         <Field name="client_id" component={selectField} label="For Client"
                                options={sortedUsers} validate={[required()]}/>
+                        <Field name="amount" type="number"
+                               component={priceField}
+                               isCents={true}
+                               label="OverRide Amount"
+                               validate={numericality({ '>': 0.00 })}
+                        />
                     </Authorizer>
 
                     {!helpers.uid &&
@@ -171,7 +177,7 @@ class ServiceRequestForm extends React.Component {
                                         to="/billing-settings">billing settings.</Link></span>
                             </div> :
                             <p className="help-block">
-                                Using {helpers.card.funding} card endingin: {helpers.card.last4}
+                                Using {helpers.card.funding} card ending in: {helpers.card.last4}
                             </p>
                         }
                     </div>

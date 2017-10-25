@@ -1,10 +1,11 @@
-module.exports = function(database, initConfig){
+module.exports = function (database, initConfig) {
 
 
     //todo: move dependencies into plugins
     let options = require("../../config/system-options");
     let systemOptions = options.options;
     let SystemOption = require("../../models/system-options");
+    let ServiceCategory = require("../models/service-category");
     let Permission = require("../../models/permission");
     let NotificationTemplate = require("../../models/notification-template");
     let User = require("../../models/user");
@@ -12,7 +13,6 @@ module.exports = function(database, initConfig){
     let Role = require("../../models/role");
     let DefaultTemplates = require("../../config/default-notifications");
     let additionalPermissions = ["can_administrate", "can_manage"];
-
 
 
     let assignPermissionPromise = function (initConfig, permission_objects, initialRoleMap) {
@@ -44,8 +44,8 @@ module.exports = function(database, initConfig){
                         name: "admin"
                     });
 
-                    admin.createWithStripe(stripeOptions,function (err, result) {
-                        if(err){
+                    admin.createWithStripe(stripeOptions, function (err, result) {
+                        if (err) {
                             console.error(err);
                             reject(err);
                         }
@@ -54,12 +54,11 @@ module.exports = function(database, initConfig){
 
                 })
 
-            }else{
+            } else {
                 reject("no admin defined, can't initialize...");
             }
         })
     }
-
 
 
     return new Promise(function (resolve, reject) {
@@ -113,6 +112,10 @@ module.exports = function(database, initConfig){
                 })
             }
 
+            let defaultCategory = new ServiceCategory({name: 'Uncategorized', description: 'Uncategorized Services'});
+            defaultCategory.create((newCategory) => {
+                console.log("Default Category created")
+            });
 
             //create default email templates
             NotificationTemplate.batchCreate(DefaultTemplates.templates, function (emailResult) {

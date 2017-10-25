@@ -2,3 +2,5 @@ node_modules
 npm-debug.log
 .isalt
 .env
+/public/build/bundle.js
+/env/.env

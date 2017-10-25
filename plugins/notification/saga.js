@@ -1,6 +1,6 @@
 let consume = require("pluginbot/effects/consume");
 let {call, put, takeEvery, all, fork} = require('redux-saga/effects')
-let setOptions = require("./actions").setOptions;
+let setOptions = require("../../config/redux/actions").setOptions;
 
 function getNotificationSagas() {
     //todo move table to be managed by THIS plugin

@@ -18,7 +18,7 @@ SMTP_USER=${config.smtp_user || process.env.SMTP_USER}
 SMTP_PASSWORD=${config.smtp_password || process.env.SMTP_PASSWORD}
 SMTP_PORT=${config.smtp_port || process.env.SMTP_PORT}
 INSTANCE_SALT=${process.env.INSTANCE_SALT || config.salt || salt}
-SECRET_KEY=${secret}`;
+SECRET_KEY=${process.env.SECRET_KEY || secret}`;
 
         let envPath = path.join(__dirname, '../env/.env')
         let envFolder = path.join(__dirname, "../env");

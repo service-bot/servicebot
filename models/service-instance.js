@@ -120,7 +120,11 @@ let subscribe = function (callback) {
         new Promise(function (resolve, reject) {
             User.findOne('id', self.data.user_id, function (user) {
                 if (user.data) {
-                    return resolve(user.data.customer_id);
+                    if(user.data.status === "suspended") {
+                        return reject('ERROR: User is suspended, restart of instances are not allowed!');
+                    } else {
+                        return resolve(user.data.customer_id);
+                    }
                 } else {
                     return reject('ERROR: No User Found!');
                 }
@@ -211,7 +215,6 @@ let generateProps = function (submittedProperties=null, callback) {
     ServiceTemplates.findOne('id', self.data.service_id, function (serviceTemplate) {
         //Get all service template properties
         serviceTemplate.getRelated(ServiceTemplateProperties, function (resultProperties) {
-            console.log(resultProperties, "RESULT PROPS!");
             let instanceProperties = [];
             let templateProperties = resultProperties.map(entity => entity.data);
             let submittedMap = _.keyBy(submittedProperties, 'id');
@@ -278,7 +281,7 @@ let deleteFiles = function(callback){
 
 };
 
-ServiceInstance.prototype.changePrice = function (newPlan) {
+ServiceInstance.prototype.changePrice = async function (newPlan) {
     let self = this;
     return new Promise(function (resolve, reject) {
         self.deletePayPlan(function (result) {
@@ -301,10 +304,17 @@ ServiceInstance.prototype.changePrice = function (newPlan) {
             Stripe().connection.subscriptions.update(self.data.subscription_id, { plan: updated_instance.data.payment_plan.id }, function(err, subscription) {
                     if(!err) {
                         updated_instance.data.status = 'running';
+                        //Only instances with larger than $0 amount will be set to subscriptions
+                        if(updated_instance.data.payment_plan.amount > 0) {
+                            updated_instance.data.type = 'subscription';
+                        } else {
+                            updated_instance.data.type = 'custom';
+                        }
                         updated_instance.update(function (err, instance) {
                             return resolve(instance);
                         });
                     } else {
+                        console.log(err)
                         return reject(err);
                     }
                 }
