@@ -99,6 +99,7 @@ Charge.prototype.cancel = function (callback) {
 /**
  * Override of the "findOnRelative" function to filter charges for the current billing period and unapproved ones.
  */
+/* Commenting out this code to allow all charges to be attached to the service instance
 Charge.findOnRelative = function(key, value, callback){
     let currentTimestamp = Math.ceil(_.now()/1000);
     Charge.findAll(key, value, function(props){
@@ -111,6 +112,6 @@ Charge.findOnRelative = function(key, value, callback){
             return include;
         }));
     });
-};
+};*/
 
 module.exports = Charge;

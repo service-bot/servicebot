@@ -290,12 +290,15 @@ class ServiceInstance extends React.Component {
             );
         }else{
             const myInstance = this.state.instance;
+            console.log(myInstance.references.charge_items)
             const myInstanceChargeItems = _.groupBy(myInstance.references.charge_items, 'approved');
             let id, name, amount, interval, owner, ownerId = null;
             if(myInstance.status == "requested") {
                 pageName = `Requested Item`;
             }
 
+            console.log("Dsdf")
+            console.log(myInstanceChargeItems)
             //Gather data first
             if( self.state.instance){
                 let service = self.state.instance;

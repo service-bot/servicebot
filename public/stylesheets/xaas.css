@@ -795,7 +795,7 @@ body.login .footer{
 /*
     Service Instance page
  */
-.service-instance-box {
+.service-instance-box, .Collapsible {
     margin: 0 0 12px;
     background: #fff;
     border-radius: 4px;
@@ -803,7 +803,7 @@ body.login .footer{
     border: solid 1px #cfdaea;
     overflow: hidden;
 }
-.service-instance-box-title {
+.service-instance-box-title, .Collapsible__trigger {
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 10px;
@@ -818,6 +818,9 @@ body.login .footer{
 .service-instance-box-content{
     height: auto;
     padding: 10px 20px;
+}
+.Collapsible__contentOuter {
+    padding: 0 20px;
 }
 
 .service-instance-box.red .service-instance-box-title {
