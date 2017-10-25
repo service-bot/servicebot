@@ -28,7 +28,7 @@ class Profile extends React.Component {
     }
 
     componentDidMount(){
-        if(!isAuthorized({})){
+        if(!isAuthorized({uid : this.props.uid})){
             return browserHistory.push("/login");
         } else {
             this.fetchUser();
@@ -39,10 +39,9 @@ class Profile extends React.Component {
         let self = this;
         Fetcher(self.state.url).then(function (response) {
             if(!response.error){
-                console.log("my user", response);
                 self.setState({loading: false, myUser: response});
             }else{
-                console.log("error getting user", response);
+                console.error("error getting user", response);
                 self.setState({loading: false});
             }
         })
@@ -81,7 +80,6 @@ class Profile extends React.Component {
                 </div>
             );
         }else {
-            console.log("rendering content");
             return (
                 <div>
                     <Jumbotron pageName={pageName} location={this.props.location}/>

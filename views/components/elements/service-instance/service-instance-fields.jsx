@@ -1,22 +1,25 @@
 import React from 'react';
 import {isAuthorized} from '../../utilities/authorizer.jsx';
-
+import ServiceInstanceField from "./service-instance-field.jsx"
 class ServiceInstanceFields extends React.Component {
 
     render () {
-        console.log("service custom props", this.props.instanceProperties);
         return (
-            <div className="service-instance-section">
-                <span className="service-instance-section-label">Custom Fields</span>
-                <span className="m-b-20 block label color-grey-600">Information collected from customer.</span>
-                <div className="row">
-                    {this.props.instanceProperties.map( field => (
-                        (!field.private || isAuthorized({permissions: 'can_administrate'})) &&
-                            <div key={"item-" + field.id} className="col-xs-12 col-sm-4 col-md-3">
-                                <span className="block color-grey-600 label">{field.prop_label}</span>
-                                <p className="service-instance-field-text block">{field.value}</p>
-                            </div>
-                    ))}
+            <div className="service-instance-box">
+                <div className="service-instance-box-title">
+                    <span>Request Details</span>
+                </div>
+                <div className="service-instance-box-content">
+                    <span className="m-b-20 block label color-grey-600">These fields were selected during the request process of this item. They are
+                    shown exactly as entered initially.</span>
+                    <div className="row">
+                        {this.props.instanceProperties.map( field => {
+                            if(field.data) {
+                                return (<div className="form-group form-group-flex"><ServiceInstanceField key={"item-" + field.id} field={field}/></div>)
+                            }
+
+                        })}
+                    </div>
                 </div>
             </div>
         );

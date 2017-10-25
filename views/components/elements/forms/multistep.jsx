@@ -58,7 +58,7 @@ class Multistep extends React.Component {
         let stepComponent = stepToRender.component;
         let nextButton = <button className="btn btn-rounded btn-default" onClick={self.stepForward}>Next</button>;
         if(currentStep == this.props.steps.length - 1){
-            nextButton = <button className="btn btn-rounded btn-success" onClick={self.props.handleSubmit}>Submit</button>;
+            nextButton = <button className="btn btn-rounded btn-success" type="submit" >Submit</button>;
         }
 
 

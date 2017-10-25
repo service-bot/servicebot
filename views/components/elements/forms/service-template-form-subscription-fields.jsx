@@ -108,7 +108,7 @@ class ServiceTemplateFormSubscriptionFields extends React.Component {
 
     render () {
         let defaultData = this.state.data;
-        // console.log('THIS IS HOW IT LOOKS LIKE: ',this.state.data);
+
         let serviceType = this.state.serviceType;
         let serviceFields = ()=> {
             if (serviceType == '_SUBSCRIPTION') {

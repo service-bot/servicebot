@@ -112,7 +112,7 @@ User.prototype.promiseStripeReconnect = function () {
 /**
  * Overriding the User create function to also add Stripe customer creation and attachment.
  */
-User.prototype.createWithStripe = function (callback) {
+let createWithStripe = function (options, callback) {
     let self = this;
     self.data.email = self.data.email.toLowerCase();
     let customer_obj = {
@@ -121,7 +121,7 @@ User.prototype.createWithStripe = function (callback) {
     };
 
     //Create Stripe Customer:
-    Stripe().connection.customers.create(customer_obj, function(err, customer) {
+    Stripe(options).connection.customers.create(customer_obj, function(err, customer) {
         if(!err){
             console.log(`Stripe Customer Created: ${customer.id}`);
             self.data.customer_id = customer.id;
@@ -141,6 +141,17 @@ User.prototype.createWithStripe = function (callback) {
         }
     });
 };
+
+//allows to pass option override, no longer relying 100% on store.
+User.prototype.createWithStripe = new Proxy(createWithStripe, {
+    apply : function(target, thisArg, argList){
+        if(argList.length === 2){
+            target.bind(thisArg)(...argList)
+        }else{
+            target.bind(thisArg)(undefined, ...argList);
+        }
+    }
+});
 
 User.prototype.updateWithStripe = function (callback) {
     let self = this;
@@ -290,37 +301,32 @@ User.prototype.purgeData = function (callback) {
  * This function will cancel all users services in Stripe and internal database. Then will mark the user as suspended.
  * @param callback - Final suspension result, or error.
  */
-User.prototype.suspend = function (callback) {
+//THERES NO CALLBACK
+//THIS WAS CHANGED BUT CALLBACK NOT REMOVED
+User.prototype.suspend = async function () {
     let self = this;
-    let ServiceInstances = require('./service-instance');
-    ServiceInstances.findAll('user_id', self.data.id, function (services) {
-        Promise.all(services.map(function (service) {
-            return new Promise(function (resolve, reject) {
-                service.unsubscribe(function (err, result) {
-                    if(!err) {
-                        return resolve(`Service ${service.data.id} was cancelled.`);
-                    } else {
-                        return reject(`ERROR cancelling service ID ${service.data.id}`);
-                    }
-                });
-            });
-        })).then(function () {
-            return new Promise(function (resolve, reject) {
-                self.data.status = 'suspended';
-                self.update(function (err, user) {
-                    if(!err) {
-                        return resolve(`User ${self.data.id} is now suspended.`);
-                    } else {
-                        return reject(`ERROR suspending user ${self.data.id}`);
-                    }
-                });
-            });
-        }).then(function (result) {
-            callback(null, result);
-        }).catch(function (err) {
-            callback(err, null);
+    console.log('User status: ', self.data.status);
+    if(self.data.status !== 'invited' && self.data.status !== 'suspended') {
+        let ServiceInstances = require('./service-instance');
+        let CancellationRequest = require("./service-instance-cancellation");
+        await CancellationRequest.batchDelete({
+            "user_id": self.data.id,
         });
-    });
+
+        let instancesToCancel = await ServiceInstances.find({
+            "user_id" : self.data.id
+        });
+
+        for(let instance of instancesToCancel){
+            await instance.unsubscribe();
+        }
+        self.data.status = "suspended";
+        return await self.update();
+
+    }
+    else{
+        throw 'User can not be invited or already suspended'
+    }
 };
 
 /**
@@ -329,14 +335,19 @@ User.prototype.suspend = function (callback) {
  */
 User.prototype.unsuspend = function (callback) {
     let self = this;
-    self.data.status = 'active';
-    self.update(function (err, user) {
-        if(!err) {
-            callback(null, user);
-        } else {
-            callback(err, null);
-        }
-    });
+    if(self.data.status === 'suspended') {
+        self.data.status = 'active';
+        self.update(function (err, user) {
+            if (!err) {
+                callback(null, user);
+            } else {
+                callback(err, null);
+            }
+        });
+    }
+    else{
+        callback('User is not suspended', null);
+    }
 };
 
 //TODO: Implement User.prototype.update override once the above create is simplified. Implement when doing user setting page.

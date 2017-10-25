@@ -23,7 +23,6 @@ class ServiceInstanceFormEdit extends React.Component {
     }
 
     handleResponse(response){
-        console.log("inside handle response", response);
         if(!response.error && response.type != 'StripeInvalidRequestError'){
             this.setState({success: true, submitting: false});
         }else{
@@ -48,7 +47,6 @@ class ServiceInstanceFormEdit extends React.Component {
     getValidators(references = null){
         //This function dynamically generates validators depending on what custom properties the instance has.
         //optional references: the service template's references.service_template_properties
-        console.log("inside getValidators");
         //Defining general validators
         let validateRequired        = (val) => { return val === 0 || val === false || val != '' && val != null};
         let validateEmptyString     = (val) => { return val.trim() != ''};
@@ -66,7 +64,6 @@ class ServiceInstanceFormEdit extends React.Component {
             'interval_count'    : validateIntervalCount,
         };
 
-        console.log("validatorJSON", validatorJSON);
 
         return validatorJSON;
     }
@@ -96,7 +93,6 @@ class ServiceInstanceFormEdit extends React.Component {
 
             if(this.state.instance.payment_plan != null){
                 const paymentPlan = this.state.instance.payment_plan;
-                console.log("my payment plan", paymentPlan);
 
                 let getAlerts = ()=> {
 

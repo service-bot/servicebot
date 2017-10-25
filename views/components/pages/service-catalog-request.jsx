@@ -1,13 +1,16 @@
 import React from 'react';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Content from "../layouts/content.jsx";
-import ServiceRequestForm from "../elements/forms/service-instance-form-request-v2.jsx"
+import ServiceRequestForm from "../elements/forms/service-instance-form-request.jsx"
 import PageSection from "../layouts/page-section.jsx";
 import Featured from "../layouts/featured.jsx";
+import {AdminEditingGear, AdminEditingSidebar} from "../layouts/admin-sidebar.jsx";
 import Fetcher from "../utilities/fetcher.jsx"
-import {Price} from "../utilities/price.jsx";
+import {Price, getPrice} from "../utilities/price.jsx";
 import { connect } from 'react-redux';
 let _ = require("lodash");
+import IconHeading from "../layouts/icon-heading.jsx";
+
 
 
 class ServiceRequest extends React.Component {
@@ -18,29 +21,14 @@ class ServiceRequest extends React.Component {
         this.state = {
             loading: true,
             id: this.props.params.templateId,
-            image: null,
-            icon: null,
             service: null,
-            systemOptions: this.props.options || {},
         };
 
         this.getService = this.getService.bind(this);
-        this.getCoverImage = this.getCoverImage.bind(this);
-        this.getIcon = this.getIcon.bind(this);
-        this.createMarkup = this.createMarkup.bind(this);
-    }
-
-    componentWillReceiveProps(nextProps){
-        if(nextProps.options){
-            this.setState({systemOptions: nextProps.options});
-        }
     }
 
     componentDidMount(){
-
         this.getService();
-        this.getCoverImage();
-        this.getIcon();
     }
 
     getService(){
@@ -49,10 +37,68 @@ class ServiceRequest extends React.Component {
             if(!response.error){
                 self.setState({service : response});
             }else{
-                console.log("Error getting template request data", response);
+                console.error("Error getting template request data", response);
             }
             self.setState({loading:false});
         });
+    }
+
+    render () {
+        if(this.state.loading){
+            return(<span>loading</span>);
+        }else {
+            let { options } = this.props;
+            let service_request_title_description = _.get(options, 'service_request_title_description.value', 'What you are getting');
+            let service_request_title_form = _.get(options, 'service_request_title_form.value', 'Get Your Service');
+
+            return (
+                <div className="page-service-request">
+                    <RequestPageFeatured templateId={this.state.id} templateData={this.state.service}/>
+                    <Content>
+                        <PageSection>
+                            <div className="basic-info col-md-6">
+                                <div className="service-request-details">
+                                    <IconHeading imgIcon="/assets/custom_icons/what_you_are_getting_icon.png"
+                                                 title={service_request_title_description}/>
+                                    <div dangerouslySetInnerHTML={{__html: this.state.service.details}}/>
+                                </div>
+                            </div>
+                            <div className="basic-info col-md-6">
+                                <div className="service-request-form">
+                                    <IconHeading imgIcon="/assets/custom_icons/what_you_are_getting_icon.png"
+                                                 title={service_request_title_form}/>
+                                    <ServiceRequestForm templateId={this.state.id} service={this.state.service}/>
+                                </div>
+                            </div>
+                        </PageSection>
+                    </Content>
+                </div>
+            );
+        }
+    }
+}
+
+
+class RequestPageFeatured extends React.Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            id: this.props.templateId,
+            image: null,
+            icon: null,
+            editingMode: false,
+            editingGear: false
+        };
+        this.getCoverImage = this.getCoverImage.bind(this);
+        this.getIcon = this.getIcon.bind(this);
+        this.toggleEditingMode = this.toggleEditingMode.bind(this);
+        this.toggleOnEditingGear = this.toggleOnEditingGear.bind(this);
+        this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
+    }
+
+    componentDidMount(){
+        this.getCoverImage();
+        this.getIcon();
     }
 
     getCoverImage(){
@@ -67,7 +113,7 @@ class ServiceRequest extends React.Component {
             let objectURL = URL.createObjectURL(myBlob);
             self.setState({image: objectURL});
         }).catch(function(error) {
-            // console.log("There was problem fetching your image:" + imageURL + " " + error);
+
         });
     }
 
@@ -82,58 +128,78 @@ class ServiceRequest extends React.Component {
             let objectURL = URL.createObjectURL(myBlob);
             self.setState({icon: objectURL});
         }).catch(function(error) {
-            // console.log("There was problem fetching your image:" + error.message);
+
         });
     }
 
-    createMarkup(html) {
-        return {__html: html};
+    toggleEditingMode(){
+        if(this.state.editingMode){
+            this.setState({editingMode: false})
+        }else{
+            this.setState({editingMode: true})
+        }
+    }
+    toggleOnEditingGear(){
+        this.setState({editingGear: true})
+    }
+    toggleOffEditingGear(){
+        this.setState({editingGear: false})
     }
 
-    render () {
-        if(this.state.loading){
-            return(<span>loading</span>);
-        }else {
-            let getPrice = () => {
-                let myService = this.state.service;
-                let serType = myService.type;
-                if (serType == "subscription") {
-                    return (
-                        <span>
-                        <Price value={myService.amount}/>
-                            {myService.interval_count == 1 ? ' /' : ' / ' + myService.interval_count} {' ' + myService.interval}
-                    </span>
-                    );
-                } else if (serType == "one_time") {
-                    return (<span><Price value={myService.amount}/></span>);
-                } else if (serType == "custom") {
-                    return false;
-                } else {
-                    return (<span><Price value={myService.amount}/></span>)
-                }
-            };
+    render(){
+        let { templateData, templateData: {id, name, amount, description}, options } = this.props;
 
-            return (
+        const featuredStyle = {
+            height: _.get(options, 'purchase_page_featured_area_height.value', 'auto'),
+            minHeight: _.get(options, 'purchase_page_featured_area_height.value', 'auto'),
+            paddingTop: _.get(options, 'purchase_page_featured_area_padding_top.value', '90px'),
+            paddingBottom: _.get(options, 'purchase_page_featured_area_padding_bottom.value', '0px'),
+        };
 
-                <div className="page-service-request">
-                    <Featured imageURL={this.state.image}>
-                        {this.state.icon ?
-                            <img className="featured-icon" src={this.state.icon} alt="icon"/> :
-                            <div className="featured-icon"/>
-                        }
-                        <h1 className="featured-title">{this.state.service && this.state.service.name}</h1>
-                        <p className="featured-body">{this.state.service && this.state.service.description}</p>
-                        <h1 className="featured-price">{getPrice()}</h1>
-                    </Featured>
-                    <Content>
-                        <PageSection>
-                            <ServiceRequestForm templateId={this.state.id}/>
-                        </PageSection>
-                    </Content>
-                </div>
-            );
-        }
+        const featuredOverlayStyle = {
+            backgroundColor: _.get(options, 'purchase_page_featured_area_overlay_color.value', '#000000'),
+            opacity: _.get(options, 'purchase_page_featured_area_overlay_opacity.value', '0'),
+        };
+
+        const featuredTextStyle = {
+            color: _.get(options, 'purchase_page_featured_area_text_color.value', '#ffffff'),
+        };
+
+        return(
+            <Featured imageURL={this.state.image} style={featuredStyle} overlay={{show: true, style: featuredOverlayStyle,}}>
+                <PageSection className="request-featured-section"
+                             onMouseEnter={this.toggleOnEditingGear}
+                             onMouseLeave={this.toggleOffEditingGear}>
+                    {this.state.icon ?
+                        <img className="featured-icon" src={this.state.icon} alt="icon"/> :
+                        <div className="featured-icon"/>
+                    }
+                    <div className="request-featured-section" style={featuredTextStyle}>
+                        <h1 className="featured-title" style={featuredTextStyle}>{name}</h1>
+                        <p className="featured-body" style={featuredTextStyle}>{description}</p>
+                        <h1 className="featured-price" style={featuredTextStyle}>{getPrice(templateData)}</h1>
+                    </div>
+                    {this.state.editingGear &&
+                    <AdminEditingGear toggle={this.toggleEditingMode} name="Heading Settings"/>
+                    }
+                    {this.state.editingMode &&
+                    <AdminEditingSidebar toggle={this.toggleEditingMode}
+                                         filter = {["purchase_page_featured_area_overlay_color",
+                                             "purchase_page_featured_area_overlay_opacity",
+                                             "purchase_page_featured_area_text_color",
+                                             "purchase_page_featured_area_height",
+                                             "purchase_page_featured_area_padding_top",
+                                             "purchase_page_featured_area_padding_bottom",
+                                             "service_request_title_description",
+                                             "service_request_title_form"
+                                         ]}/>
+                    }
+                </PageSection>
+            </Featured>
+        );
     }
 }
 
-export default connect((state) => {return {options:state.options}})(ServiceRequest);
+RequestPageFeatured = connect((state) => {return {options:state.options}})(RequestPageFeatured);
+ServiceRequest = connect((state) => {return {options:state.options}})(ServiceRequest);
+export default ServiceRequest;

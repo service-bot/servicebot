@@ -12,38 +12,42 @@ Charge.prototype.approve = function (callback) {
     let self = this;
 
     User.findById(self.data.user_id, function (user_object) {
-        //Initiate the charge fee
-        let charge_item = {
-            customer : user_object.data.customer_id,
-            amount: self.data.amount,
-            currency: self.data.currency,
-            description: self.data.description,
-            subscription: self.data.subscription_id
-        };
-        //Approve charge in Stripe
-        Stripe().connection.invoiceItems.create(charge_item, function(err, invoiceItem) {
-            //Change the status in the database to approved
-            if(!err){
-                //Get the current start billing date of the subscription
-                Stripe().connection.subscriptions.retrieve(self.data.subscription_id, function(subscription_err, subscription) {
-                    if(!subscription_err){
-                        self.data.approved = true;
-                        self.data.item_id = invoiceItem.id;
-                        self.data.period_start = subscription.current_period_start;
-                        self.data.period_end = subscription.current_period_end;
-                        //Update the Charge item in the database
-                        self.update(function () {
-                            callback(invoiceItem);
-                        });
-                    } else {
-                        console.log(`Error retrieving subscription detail from Stripe ${err}`);
-                        callback(subscription_err);
-                    }
-                });
-            } else {
-                console.log(`Error adding charge item to Stripe ${err}`);
-                callback(err);
-            }
+        let ServiceInstance = require('./service-instance');
+        //Only approve if the charge is attached to an instance
+        ServiceInstance.findOne('id',self.data.service_instance_id, function (service) {
+            //Initiate the charge fee
+            let charge_item = {
+                customer : user_object.data.customer_id,
+                amount: self.data.amount,
+                currency: self.data.currency,
+                description: self.data.description,
+                subscription: service.data.subscription_id
+            };
+            //Approve charge in Stripe
+            Stripe().connection.invoiceItems.create(charge_item, function(err, invoiceItem) {
+                //Change the status in the database to approved
+                if(!err){
+                    //Get the current start billing date of the subscription
+                    Stripe().connection.subscriptions.retrieve(service.data.subscription_id, function(subscription_err, subscription) {
+                        if(!subscription_err){
+                            self.data.approved = true;
+                            self.data.item_id = invoiceItem.id;
+                            self.data.period_start = subscription.current_period_start;
+                            self.data.period_end = subscription.current_period_end;
+                            //Update the Charge item in the database
+                            self.update(function () {
+                                callback(null, invoiceItem);
+                            });
+                        } else {
+                            console.log(`Error retrieving subscription detail from Stripe ${err}`);
+                            callback(null, subscription_err);
+                        }
+                    });
+                } else {
+                    console.log(`Error adding charge item to Stripe ${err}`);
+                    callback(err);
+                }
+            });
         });
     });
 }
@@ -57,10 +61,10 @@ Charge.prototype.cancel = function (callback) {
     async.series([
         function (callback) {
             if((self.data.period_end < currentTimestamp) && self.data.period_end){
-                err = 'Charge has already been processed. Cannot delete! Please process refund.';
+                let err = 'Charge has already been processed. Cannot delete! Please process refund.';
                 callback(err, null);
             } else {
-                output = 'Charge is removable';
+                let output = 'Charge is removable';
                 callback(null, output);
             }
         },
@@ -71,14 +75,14 @@ Charge.prototype.cancel = function (callback) {
                     callback(err, confirmation);
                 });
             } else {
-                output = 'Stripe removal bypassed.';
+               let output = 'Stripe removal bypassed.';
                 callback(null, output);
             }
         },
         function (callback) {
             //Finally remove the charge from the database.
             self.delete(function(result){
-                output = 'Charge has been removed from database.';
+                let output = 'Charge has been removed from database.';
                 callback(null, output);
             });
         }
@@ -95,6 +99,7 @@ Charge.prototype.cancel = function (callback) {
 /**
  * Override of the "findOnRelative" function to filter charges for the current billing period and unapproved ones.
  */
+/* Commenting out this code to allow all charges to be attached to the service instance
 Charge.findOnRelative = function(key, value, callback){
     let currentTimestamp = Math.ceil(_.now()/1000);
     Charge.findAll(key, value, function(props){
@@ -107,6 +112,6 @@ Charge.findOnRelative = function(key, value, callback){
             return include;
         }));
     });
-};
+};*/
 
 module.exports = Charge;

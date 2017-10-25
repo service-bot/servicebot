@@ -19,7 +19,7 @@ class RoleToggle extends React.Component {
 
     handleChange(e){
         if(e.currentTarget.checked){
-            // console.log("turned on");
+
             this.setState({yes: true});
             this.props.onChange({
                 role: this.state.role,
@@ -27,7 +27,7 @@ class RoleToggle extends React.Component {
                 yes: true
             });
         }else{
-            // console.log("turned off");
+
             this.setState({yes: false});
             this.props.onChange({
                 role: this.state.role,
@@ -79,10 +79,8 @@ class ManagePermissionForm extends React.Component {
         let self = this;
         Fetcher(self.state.managePermissionsUrl).then(function (response) {
             if(!response.error){
-                console.log("managePermission response obj", response);
                 self.setState({permissionMap: response});
             }else{
-                console.log("managePermission response obj error", response);
                 self.setState({loading: false});
             }
         });
@@ -92,10 +90,9 @@ class ManagePermissionForm extends React.Component {
         let self = this;
         Fetcher(self.state.getPermissionsUrl).then(function (response) {
             if(!response.error){
-                console.log("permissions response obj", response);
                 self.setState({permissions: response});
             }else{
-                console.log("permissions response obj error", response);
+                console.error("permissions response obj error", response);
                 self.setState({loading: false});
             }
         });
@@ -105,17 +102,15 @@ class ManagePermissionForm extends React.Component {
         let self = this;
         Fetcher(self.state.getRolesUrl).then(function (response) {
             if(!response.error){
-                console.log("roles response obj", response);
                 self.setState({loading: false, roles: response});
             }else{
-                console.log("roles response obj error", response);
+                console.error("roles response obj error", response);
                 self.setState({loading: false});
             }
         });
     }
 
     handleResponse(response){
-        console.log("inside handle response", response);
         if(!response.error){
             this.setState({success: true});
         }
@@ -129,7 +124,6 @@ class ManagePermissionForm extends React.Component {
 
     handleTogglePermission(data){
         let self = this;
-        console.log('toggle permission', data);
         let index = _.findIndex(self.state.permissionMap, function (role) { return role.role_id == data.role; });
         let currentPermissions = self.state.permissionMap[index].permission_ids;
         if(!data.yes){
@@ -138,16 +132,12 @@ class ManagePermissionForm extends React.Component {
             let newPermissions = _.difference(currentPermissions, removePermissions);
             let newPermissionMap = self.state.permissionMap;
             newPermissionMap[index].permission_ids = newPermissions;
-            console.log("new permission map (remove permission)", newPermissionMap);
             self.setState({changed: true, permissionMap: newPermissionMap});
         }else{
             //adding permission to state
-            console.log("in add", currentPermissions);
             let newPermissions = _.concat(currentPermissions, data.permission);
-            console.log(`added permission ${data.permission}`, newPermissions);
             let newPermissionMap = self.state.permissionMap;
             newPermissionMap[index].permission_ids = newPermissions;
-            console.log("new permission map (add permission)", newPermissionMap);
             self.setState({changed: true, permissionMap: newPermissionMap});
         }
     }
@@ -157,7 +147,6 @@ class ManagePermissionForm extends React.Component {
         self.setState({ajaxLoad: true});
         Fetcher(self.state.managePermissionsUrl, 'POST', self.state.permissionMap).then(function (response) {
             if(!response.error){
-                console.log("managePermission save response obj", response);
                 self.setState({success: true, ajaxLoad: false});
             }else{
                 self.setState({ajaxLoad: false});

@@ -1,14 +1,15 @@
+let consume = require("pluginbot/effects/consume");
 
-module.exports = function setup(options, imports, register) {
-    let analytics = require("../../lib/analytics");
+    let run = function*(config, provide, services) {
+    let database = yield consume(services.database);
+    console.log("bad");
     let request = require("request");
     let semver = require("semver");
-    let _ = require("lodash");
-    console.log(process.env.npm_package_version);
-    //logic for creating tables
-    let knex = imports.knex;
-    let master = options.master;
-    let interval = options.interval; //24 hours
+        let analytics = require("../../lib/analytics");
+
+        let _ = require("lodash");
+    let master = config.master;
+    let interval = config.interval; //24 hours
     let Notification = require("../../models/notifications");
     let dispatchEvent = require("../../config/redux/store").dispatchEvent;
     let salt = process.env.INSTANCE_SALT
@@ -38,7 +39,7 @@ module.exports = function setup(options, imports, register) {
                            let data = notification.data;
                            return Notification.createPromise(data)
                                .then((result) => {
-                                   dispatchEvent("master_notification_created", result);
+                                   store.dispatchEvent("master_notification_created", result);
                                    return result;
                                })
                                .catch((err) => {
@@ -62,11 +63,6 @@ module.exports = function setup(options, imports, register) {
 
 
     checkMaster();
-
-
-
-
-    register(null, {
-        //define services this plugin provides...
-    });
 };
+
+module.exports = {run};

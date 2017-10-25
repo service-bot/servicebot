@@ -3,6 +3,7 @@ import { TwitterPicker, SketchPicker } from 'react-color';
 let _ = require("lodash");
 let values = require('object.values');
 
+
 if(!Object.values){
     values.shim();
 }
@@ -38,7 +39,6 @@ class Inputs extends React.Component {
             this.props.onChange(this.props.defaultValue || this.props.value);
         }
         if(this.props.buildFormData && this.props.validator){
-            console.log("mounted input, has buildFormData and validator");
             this.props.buildFormData(this.props.name, this.props.defaultValue, this.props.refName || null, this.props.refID || null, this.props.validator);
         }
     }
@@ -59,7 +59,6 @@ class Inputs extends React.Component {
         }
 
         if(this.state.type == 'color_picker'){
-            console.log("trying to remove listener on unmount");
             document.removeEventListener('click', this.clickInsideListener);
         }
     }
@@ -109,7 +108,6 @@ class Inputs extends React.Component {
     }
 
     handleChange(e){
-        // console.log("input event: ", e);
 
         let value = e.target.value || e.target.defaultValue;
         if(this.props.dependentFunction){
@@ -126,7 +124,6 @@ class Inputs extends React.Component {
     }
 
     handlePriceChange(e){
-        console.log("handlePriceChange", e);
         let self = this;
         let value = e.target.value || e.target.defaultValue;
 
@@ -154,7 +151,6 @@ class Inputs extends React.Component {
     }
 
     handleColorPickerChange(color, e){
-        console.log(color);
 
         //change the color picker colors
         let currentColor = this.state.value;
@@ -205,7 +201,7 @@ class Inputs extends React.Component {
         }
 
         if(type == "text" || type == "number" || type == "hidden" || type == "email" || type == "password"){
-            // console.log("passed in value", defaultValue);
+
             return (
                 <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''} ${type == 'hidden' ? 'hidden' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}
@@ -289,7 +285,6 @@ class Inputs extends React.Component {
             );
         }else if(type == "color_picker"){
 
-            console.log("color picker color:", this.state.value);
             return (
                 <div key={`color_picker_${this.state.name}`} id={`color_picker_${this.state.name}`}
                      className={`form-group color-picker-input ${error ? 'has-error' : ''}`}>

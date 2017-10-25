@@ -33,7 +33,6 @@ class ModalDeleteRequest extends React.Component {
             Fetcher(self.state.action_url, "DELETE", {}).then(function (response) {
                 if (!response.error) {
                     //check stripe response for error
-                    console.log("deleted", response);
                     self.setState({loading: false, current_modal: 'model_delete_success'});
                 }
                 self.setState({loading: false});
@@ -56,7 +55,7 @@ class ModalDeleteRequest extends React.Component {
 
         if(currentModal == 'model_delete'){
             return(
-                <Modal modalTitle={pageName} show={self.props.show} hide={self.props.hide} hideFooter={true} top="40%" width="490px">
+                <Modal modalTitle={pageName} icon="fa-trash" show={self.props.show} hide={self.props.hide} hideFooter={true} top="40%" width="490px">
                     <div className="table-responsive">
                         <div className="p-20">
                             <div className="row">

@@ -1,14 +1,14 @@
 import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
+import Load from "../utilities/load.jsx";
+import Fetcher from '../utilities/fetcher.jsx';
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
-import DataTable from "../elements/datatable/datatable.jsx";
-import Dropdown from "../elements/datatable/datatable-dropdown.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
+import Dropdown from "../elements/dropdown.jsx";
 import DateFormat from "../utilities/date-format.jsx";
-import ModalAddCategory from "../elements/modals/modal-add-category.jsx";
-import ModalDeleteCategory from "../elements/modals/modal-delete-category.jsx";
+import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
 
 class ManageNotificationTemplates extends React.Component {
 
@@ -16,61 +16,116 @@ class ManageNotificationTemplates extends React.Component {
         super(props);
 
         this.state = {
+            rows: {},
             currentDataObject: {},
-            lastFetch: Date.now()
+            lastFetch: Date.now(),
+            loading: true,
+            advancedFilter: null,
         };
     }
 
-    componentDidMount(){
-        if(!isAuthorized({permissions:"can_administrate"})){
+    componentDidMount() {
+        if (!isAuthorized({permissions: "can_administrate"})) {
             return browserHistory.push("/login");
         }
-
+        this.fetchData();
     }
 
-    modName(data, dataObj){
-        return( <Link to={`notification-templates/${dataObj.id}`}>{data}</Link>);
+    /**
+     * Fetches Table Data
+     * Sets the state with the fetched data for use in ServiceBotTableBase's props.row
+     */
+    fetchData() {
+        let self = this;
+
+        Fetcher('/api/v1/notification-templates').then(function (response) {
+            if (!response.error) {
+                self.setState({rows: response});
+            }
+            self.setState({loading: false});
+        });
     }
-    modCreatedAt(data, dataObj){
-        return (<DateFormat date={data} time/>);
+
+    /**
+     * Cell formatters
+     * Formats each cell data by passing the function as the dataFormat prop in TableHeaderColumn
+     */
+    subjectFormatter(cell, row){
+        return( <Link to={`/notification-templates/${row.id}`}>{cell}</Link>);
     }
-    modUpdatedAt(data, dataObj){
-        return (<DateFormat date={data} time/>)
+    createdAtFormatter(cell){
+        return (<DateFormat date={cell} time/>);
+    }
+    updatedAtFormatter(cell){
+        return (<DateFormat date={cell} time/>)
+    }
+    rowActionsFormatter(cell, row){
+        return (
+            <Dropdown
+                direction="right"
+                dropdown={[
+                    {   type: "button",
+                        label: 'Edit Template',
+                        action: () => { browserHistory.push(`/notification-templates/${row.id}`) }
+                    },
+                ]}
+            />
+        );
     }
 
     render () {
         let pageName = this.props.route.name;
 
-        return(
-            <Authorizer permissions="can_administrate">
-                <Jumbotron pageName={pageName} location={this.props.location}/>
-                <div className="page-service-instance">
-                    <Content>
-                        <div className="row m-b-20">
-                            <div className="col-xs-12">
-                                <ContentTitle icon="cog" title="Manage Notification Templates"/>
-                                <DataTable get="/api/v1/notification-templates"
-                                           col={['id', 'subject', 'description', 'updated_at']}
-                                           colNames={['ID', 'Subject', 'Description', 'Updated At']}
-                                           mod_subject={this.modName}
-                                           mod_updated_at={this.modUpdatedAt}
-                                           lastFetch={this.state.lastFetch}
-                                           dropdown={
-                                               [{
-                                                   name:'Actions',
-                                                   direction: 'right',
-                                                   buttons:[
-                                                       {id: 1, name: 'Edit Template', link: '/notification-templates/:id'},
-                                                   ]}
-                                               ]
-                                           }
-                                />
+        if( this.state.loading ){
+            return ( <Load/> );
+        }else {
+            return (
+                <Authorizer permissions="can_administrate">
+                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <div className="page-service-instance">
+                        <Content>
+                            <div className="row m-b-20">
+                                <div className="col-xs-12">
+                                    <ContentTitle icon="cog" title="Manage Notification Templates"/>
+                                    <ServiceBotTableBase
+                                        rows={this.state.rows}
+                                        fetchRows={this.fetchData}
+                                    >
+                                        <TableHeaderColumn isKey
+                                                            dataField='subject'
+                                                           dataFormat={this.subjectFormatter}
+                                                           dataSort={ true }
+                                                           width='250'>
+                                            Subject
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='description'
+                                                           dataSort={ true }
+                                                           width='350'>
+                                            Description
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='updated_at'
+                                                           dataFormat={this.updatedAtFormatter}
+                                                           dataSort={ true }
+                                                           searchable={false}
+                                                           width='150'>
+                                            Updated At
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='Actions'
+                                                           className={'action-column-header'}
+                                                           columnClassName={'action-column'}
+                                                           dataFormat={ this.rowActionsFormatter }
+                                                           searchable={false}
+                                                           width='80'
+                                                           filter={false}>
+                                        </TableHeaderColumn>
+                                    </ServiceBotTableBase>
+                                </div>
                             </div>
-                        </div>
-                    </Content>
-                </div>
-            </Authorizer>
-        );
+                        </Content>
+                    </div>
+                </Authorizer>
+            );
+        }
     }
 }
 

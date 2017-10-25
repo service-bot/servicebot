@@ -11,7 +11,7 @@ let Invoice = require('../../../models/invoice');
 let dispatchEvent = require("../../../config/redux/store").dispatchEvent;
 
 
-module.exports = function(router, knex, stripe) {
+module.exports = function(knex, stripe) {
 
     /**
      * This function will import all Stripe users to ServiceBot by looping through every customer object from Stripe.
@@ -149,7 +149,7 @@ module.exports = function(router, knex, stripe) {
                                         console.log(frontEndUrl);
                                         user.set('url', frontEndUrl);
                                         user.set('api', apiUrl);
-                                        dispatchEvent("user_invited", user);
+                                        store.dispatchEvent("user_invited", user);
                                     }
                                     return resolve(user);
                                 });
@@ -320,7 +320,7 @@ module.exports = function(router, knex, stripe) {
     };
 
 
-    router.post(`/stripe/import`, function(req, res, next){
+    let importMiddleware = function(req, res, next){
         let protocol = req.protocol;
         let host = req.hostname;
         let notifyUsers = false;
@@ -342,5 +342,13 @@ module.exports = function(router, knex, stripe) {
             console.log(err);
             res.status(400).json(err);
         });
-    });
-}
+    };
+
+    return {
+                endpoint : "/stripe/import",
+                method : "post",
+                middleware : [importMiddleware],
+                permissions : [],
+                description : "Imports data from stripe"
+    };
+};

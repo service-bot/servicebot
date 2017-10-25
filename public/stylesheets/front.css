@@ -219,7 +219,7 @@ body.front  .main .page-on-top.one-service{
     padding: 60px 350px 100px;
 }
 
-textarea:focus, input:focus, button:focus, select:focus { outline: none; color: inherit;}
+textarea:focus, input:focus, button:focus, select:focus { outline: none; }
 
 /* animation */
 @-webkit-keyframes jump {

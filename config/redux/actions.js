@@ -22,6 +22,7 @@ actions.setEventSagas = function(event_sagas){
 }
 
 actions.setOptions = function(options){
+    console.log("SET OPTION!");
     return { type: actions.SET_OPTIONS, options }
 }
 

@@ -1,3 +1,24 @@
+input, .form-control {
+    font-size: 16px;
+    font-weight: 300;
+    padding: 6px 10px;
+    border: 1px solid #c1e4fe;
+    border-radius: 6px;
+    height: 36px;
+    line-height: 19px;
+}
+input:focus, .form-control:focus {
+    border: 1px solid #4eb7f5;
+}
+input:hover, .form-control:hover{
+    background: #eaf7ff;
+}
+textarea:focus, input:focus, button:focus, .form-control:focus {
+    outline: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
 .price-input{
     position: relative;
     height: 34px;
@@ -51,6 +72,12 @@
     position: relative;
 }
 /* TagsInput tags input*/
+
+.react-tagsinput{
+    padding-top: 0px !important;
+    border-radius: 4px;
+    border-color: #c1e4fe !important;
+}
 input.react-tagsinput-input::placeholder {
     color: #0091ea;
 }
@@ -58,9 +85,12 @@ input.react-tagsinput-input:before {content: "Add Available Values";position: re
 
 input.react-tagsinput-input {
     margin-top: 0px;
-    padding: 0px;
+    padding: 5px;
     margin-bottom: 0px;
-    /* padding: 0px; */
+    border: none;
+    font-size: 16px !important;
+    font-weight: 100 !important;
+    width: 111px !important;
 }
 
 span.react-tagsinput-tag {
@@ -70,6 +100,8 @@ span.react-tagsinput-tag {
     color: white;
     padding: 0px 6px;
     margin: 0px 5px 0px 0px;
+    font-size: 16px;
+    font-weight: 100;
 }
 
 a.react-tagsinput-remove {
@@ -86,9 +118,22 @@ a.react-tagsinput-remove {
     margin-bottom: 12px;
 }
 
+input[type=checkbox], input[type=radio]{
+    margin-top: 0px;
+}
+
 /* flex form groups */
 .form-group-flex {
     display: flex;
+}
+.form-label-flex-md {
+    flex-basis: 200px;
+}
+.form-input-flex{
+    flex-grow: 1;
+}
+.form-group-flex .form-error{
+    flex-basis: 100%;
 }
 .form-group-flex.column{
     flex-direction: column;

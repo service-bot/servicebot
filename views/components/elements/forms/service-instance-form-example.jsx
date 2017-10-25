@@ -11,7 +11,6 @@ class ServiceInstanceForm extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log("service instance form params", this.props.params);
         this.state = { files:[], template: {}, url: "/api/v1/service-instances/" + props.params.instanceId, loading:true};
         this.handleFiles = this.handleFiles.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -23,7 +22,6 @@ class ServiceInstanceForm extends React.Component {
             if(!response.error){
                 Fetcher(that.state.url + "/files").then(function(files){
                     if(!response.error) {
-                        console.log(response);
                         that.setState({loading:false, template: response, files: files});
                     }else{
                         that.setState({loading:false});
@@ -74,7 +72,6 @@ class ServiceInstanceForm extends React.Component {
             return(
                 <div>
                     {/* handle file upload */}
-                    {console.log(this.state.files)}
                     {JSON.stringify(this.state.files)}
                     {/* display files */}
                     {this.state.files.map(file => (

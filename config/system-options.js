@@ -97,12 +97,23 @@ let systemOptions =
         {"option": "featured_service_show_all_button_text", "value": "Show All", public: true, "type": "featured services", "data_type": "text"},
         {"option": "featured_service_section_background_color", "value": "#FFFFFF", public: true, "type": "featured services", "data_type": "color_picker"},
         {"option": "upload_limit", "value": 10, public: false, "type": "system", "data_type": "number"},
+        {"option": "service_template_icon_background_color", "value": "#000000", public: true, "type": "theme", "data_type": "color_picker"},
+        {"option": "service_template_icon_fill_color", "value": "#FFFFFF", public: true, "type": "theme", "data_type": "color_picker"},
+        {"option": "purchase_page_featured_area_overlay_color", "value": "#000000", public: true, "type": "theme", "data_type": "color_picker"},
+        {"option": "purchase_page_featured_area_overlay_opacity", "value": "0.6", public: true, "type": "theme", "data_type": "text"},
+        {"option": "purchase_page_featured_area_text_color", "value": "#ffffff", public: true, "type": "theme", "data_type": "color_picker"},
+        {"option": "purchase_page_featured_area_height", "value": "500", public: true, "type": "theme", "data_type": "text"},
+        {"option": "purchase_page_featured_area_padding_top", "value": "20", public: true, "type": "theme", "data_type": "text"},
+        {"option": "purchase_page_featured_area_padding_bottom", "value": "20", public: true, "type": "theme", "data_type": "text"},
+        {"option": "service_request_title_description", "value": "What you are getting", public: true, "type": "theme", "data_type": "text"},
+        {"option": "service_request_title_form", "value": "Get your service", public: true, "type": "theme", "data_type": "text"},
+        {"option": "google_analytics", public: true, "type": "system", "data_type": "text"},
 
     ],
-        populateOptions: function(options=systemOptions.options){
+        populateOptions: function(options=systemOptions.options, model=SystemOption){
             return Promise.all(options.map((option) => {
                 return new Promise((resolve, reject) => {
-                    new SystemOption(option).create((err, result) => {
+                    new model(option).create((err, result) => {
                         if(err){
                             if(err.code == 23505) {
                                 resolve(`option ${option.option} already exists`);

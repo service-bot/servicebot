@@ -4,7 +4,7 @@ import Load from '../../utilities/load.jsx';
 import Fetcher from "../../utilities/fetcher.jsx"
 import {browserHistory} from 'react-router';
 import Modal from '../../utilities/modal.jsx';
-import BillingSettingForm from '../forms/billing-settings-form.jsx';
+import {BillingForm} from '../forms/billing-settings-form.jsx';
 import Buttons from '../../elements/buttons.jsx';
 
 /**
@@ -18,11 +18,9 @@ class ModalPaymentSetup extends React.Component {
         let currentUserId = cookie.load("uid");
         let uid = currentUserId
 
-        console.log("modal payment setup opened");
 
         if(this.props.ownerId){
             uid = this.props.ownerId;
-            console.log("modalPaymentSetup: owner", uid);
         }
         this.state = {form: 'credit_card', ownerId: uid, currentUserId: currentUserId};
         this.handleCreditCard = this.handleCreditCard.bind(this);
@@ -48,7 +46,6 @@ class ModalPaymentSetup extends React.Component {
     }
     handleResponse(response){
         if(response.created || response.data){
-            console.log('inside payment setup modal', response);
             this.handleModalCallback(response);
         }
     }
@@ -62,7 +59,7 @@ class ModalPaymentSetup extends React.Component {
         if(this.props.message){
             return ( this.props.message.title );
         }else {
-            if (this.state.currentUserId == this.state.ownerId) {
+            if (this.state.currentUserId === this.state.ownerId) {
                 return ( `Looks like you don't have a payment source in your account, let's setup your payment here first.` );
             } else {
                 return ( `Looks like this user doesn't have a payment source in their account, let's setup a payment for them first.` );
@@ -91,14 +88,14 @@ class ModalPaymentSetup extends React.Component {
                             <div className="col-xs-12">
                                 <p><strong>{self.getModalMessageTitle()}</strong></p>
                                 <p className="small">{self.getModalMessageBody()}</p>
-                                {self.state.form == 'credit_card' &&
-                                    <div><BillingSettingForm ownerId={self.state.ownerId} modalCallback={self.handleResponse}/></div>
+                                {self.state.form === 'credit_card' &&
+                                    <div><BillingForm uid={self.state.ownerId} handleResponse={self.handleResponse}/></div>
                                 }
                             </div>
                         </div>
                     </div>
                     <div className={`modal-footer text-right p-b-20`}>
-                        {self.state.form == 'credit_card' ?
+                        {self.state.form === 'credit_card' ?
                             <Buttons text="Back" btnType="default" onClick={self.handleBackBtn}/>
                             :
                             <div>

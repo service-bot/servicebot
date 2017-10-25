@@ -9,7 +9,6 @@ class BillingInvoice extends React.Component {
 
     constructor(props){
         super(props);
-        console.log("billing invoice param", this.props.params);
     }
 
     componentDidMount(){

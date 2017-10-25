@@ -34,7 +34,6 @@ class FileUploader extends React.Component {
             });
         }
         if(nextProps.uploadTrigger){
-            console.log("got upload trigger = true", nextProps.uploadTrigger);
             this.handleFile();
         }
     }
@@ -46,9 +45,7 @@ class FileUploader extends React.Component {
     onFileSelected(e){
         let self = this;
         self.setState({loadingFile: true});
-        console.log("file selected", e.currentTarget.value);
         let src = e.currentTarget;
-        console.log("the file", src.files[0]);
 
         self.setState({loadingFile: false, fileSelected: true, theFile: src.files[0]}, function () {
             self.handleFile();
@@ -60,7 +57,6 @@ class FileUploader extends React.Component {
     }
 
     handleFile(e){
-        console.log("inside handle file");
         if(e != undefined)
             e.preventDefault();
         let self = this;
@@ -68,20 +64,17 @@ class FileUploader extends React.Component {
             credentials : "include",
             body : new FormData(document.getElementById(`fileform${this.state.elementID}`))
         };
-        console.log("init", init);
         self.setState({ajaxLoad: true});
 
-        // console.log(e.target);
         Fetcher(self.state.fileURL, null, null, init).then(function(result){
             if(!result.error){
-                console.log("uploaded", result);
                 self.setState({fileSelected: false, ajaxLoad: false}, function () {
                     if(self.props.handleSuccess){
                         self.props.handleSuccess();
                     }
                 });
             }else{
-                console.log("failed", result);
+                console.error("failed", result);
                 self.setState({ajaxLoad: false});
             }
         });

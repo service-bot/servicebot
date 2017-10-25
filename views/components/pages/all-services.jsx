@@ -28,10 +28,9 @@ class AllServices extends React.Component {
         let self = this;
         Fetcher('/api/v1/service-categories').then(function (response) {
             if(!response.error){
-                console.log("categories response", response);
                 self.setState({categories: response});
             }else{
-                console.log("error", response);
+                console.error("error", response);
             }
         })
     }
@@ -40,10 +39,8 @@ class AllServices extends React.Component {
         const target = event.currentTarget;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         if(value && value != 0){
-            console.log("has value", value);
             this.setState({serviceUrl : "/api/v1/service-templates/search?key=category_id&value=" + value, searchValue: value});
         }else{
-            console.log("no value", value);
             this.setState({serviceUrl : "/api/v1/service-templates/public", searchValue: ""});
         }
     }

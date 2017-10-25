@@ -47,7 +47,6 @@ class ModalManageCancellation extends React.Component {
 
         Fetcher(self.state.undo_cancel_url, "POST", {}).then(function (response) {
             if (!response.error) {
-                console.log("cancel success", response);
                 self.setState({loading: false, current_modal: 'model_undo_cancel_success'});
             }
             self.setState({loading: false});
@@ -61,7 +60,6 @@ class ModalManageCancellation extends React.Component {
 
         Fetcher(self.state.confirm_cancel_url, "POST", {}).then(function (response) {
             if (!response.error) {
-                console.log("cancel success", response);
                 self.setState({loading: false, current_modal: 'model_confirm_cancel_success'});
             }
             self.setState({loading: false});
@@ -75,7 +73,6 @@ class ModalManageCancellation extends React.Component {
 
         Fetcher(self.state.reject_cancel_url, "POST", {}).then(function (response) {
             if (!response.error) {
-                console.log("cancel rejected", response);
                 self.setState({loading: false, current_modal: 'model_reject_cancel_success'});
             }
             self.setState({loading: false});

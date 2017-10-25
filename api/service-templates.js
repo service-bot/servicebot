@@ -16,11 +16,12 @@ let mkdirp = require("mkdirp");
 let path = require("path");
 let _ = require("lodash");
 let xss = require('xss');
-let dispatchEvent = require("../config/redux/store").dispatchEvent;
 let store = require("../config/redux/store");
 //todo: generify single file upload for icon, image, avatar, right now duplicate code
 let iconFilePath = ServiceTemplate.iconFilePath;
 let imageFilePath = ServiceTemplate.imageFilePath;
+let slug = require("slug");
+let validateProperties = require("../lib/handleInputs").validateProperties;
 
 
 let iconStorage = multer.diskStorage({
@@ -46,16 +47,14 @@ let imageStorage = multer.diskStorage({
 });
 
 
-let uploadLimit = function(){
+let uploadLimit = function () {
 
     return store.getState().options.upload_limit * 1000000;
 
 }
 
 
-
-
-const emptyImage = new Buffer([ 0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x2c, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x44, 0x01, 0x00, 0x3b]);
+const emptyImage = new Buffer([0x47, 0x49, 0x46, 0x38, 0x39, 0x61, 0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x2c, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0x02, 0x02, 0x44, 0x01, 0x00, 0x3b]);
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 
 
@@ -81,25 +80,27 @@ module.exports = function (router) {
                 };
                 let abs = path.resolve(__dirname, "../" + file.get("path"));
 
-                res.sendFile(abs, options,(err) => {
-                    if(err) {
+                res.sendFile(abs, options, (err) => {
+                    if (err) {
                         res.status(500).json({error: err})
                     }
                 })
             } else {
-                res.status(404).json({"error" : "image not found"})
+                res.status(404).json({"error": "image not found"})
 
                 // res.send(emptyImage, { 'Content-Type': 'image/gif' }, 404);
             }
         })
 
     });
-    router.put('/service-templates/:id(\\d+)/icon', auth(null, ServiceTemplate, 'created_by'), multer({storage: iconStorage, limits : {fileSize : uploadLimit()}}).single("template-icon"), function (req, res, next) {
+    router.put('/service-templates/:id(\\d+)/icon', auth(null, ServiceTemplate, 'created_by'), multer({
+        storage: iconStorage,
+        limits: {fileSize: uploadLimit()}
+    }).single("template-icon"), function (req, res, next) {
         let file = req.file;
         file.user_id = req.user.get('id');
         file.name = file.originalname;
         File.findFile(iconFilePath, req.params.id, function (templateIcon) {
-            console.log(templateIcon)
             if (templateIcon.length > 0) {
                 let iconToDelete = templateIcon[0];
                 iconToDelete.delete(function () {
@@ -107,27 +108,25 @@ module.exports = function (router) {
             }
             let icon = new File(file);
             icon.create(function (err, result) {
-                console.log(result);
                 result.message = "Icon Uploaded"
                 res.json(result);
             })
         })
 
     });
-    router.delete("/service-templates/:id(\\d+)/icon", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
+    router.delete("/service-templates/:id(\\d+)/icon", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function (req, res, next) {
         File.findFile(iconFilePath, req.params.id, function (icon) {
-            console.log(icon);
-            icon[0].delete(function(){
-                res.json({message:"File Deleted!"});
+            icon[0].delete(function () {
+                res.json({message: "File Deleted!"});
             })
         })
     });
 
 
-    router.delete("/service-templates/:id(\\d+)/image", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function(req, res, next){
+    router.delete("/service-templates/:id(\\d+)/image", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function (req, res, next) {
         File.findFile(imageFilePath, req.params.id, function (image) {
-            image[0].delete(function(){
-                res.json({message:"File Deleted!"});
+            image[0].delete(function () {
+                res.json({message: "File Deleted!"});
             })
         })
     });
@@ -146,25 +145,27 @@ module.exports = function (router) {
                 let abs = path.resolve(__dirname, "../" + file.get("path"));
 
                 res.sendFile(abs, options, (err) => {
-                    if(err) {
+                    if (err) {
                         res.status(500).json({error: err})
                     }
                 })
             } else {
                 //todo: default image logic goes here
-                res.status(404).json({"error" : "image not found"})
+                res.status(404).json({"error": "image not found"})
                 // res.send(emptyImage, { 'Content-Type': 'image/gif' }, 404);
             }
         })
 
     });
 
-    router.put('/service-templates/:id(\\d+)/image', auth(null, ServiceTemplate, 'created_by'), multer({storage: imageStorage, limits : {fileSize : uploadLimit()}}).single('template-image'), function (req, res, next) {
+    router.put('/service-templates/:id(\\d+)/image', auth(null, ServiceTemplate, 'created_by'), multer({
+        storage: imageStorage,
+        limits: {fileSize: uploadLimit()}
+    }).single('template-image'), function (req, res, next) {
         let file = req.file;
         file.user_id = req.user.get('id');
         file.name = file.originalname;
         File.findFile(imageFilePath, req.params.id, function (image) {
-            console.log(image)
             if (image.length > 0) {
                 let imageToDelete = image[0];
                 imageToDelete.delete(function () {
@@ -172,7 +173,6 @@ module.exports = function (router) {
             }
             let imageToCreate = new File(file);
             imageToCreate.create(function (err, result) {
-                console.log(result);
                 result.message = "Image Uploaded"
                 res.json(result);
             })
@@ -183,44 +183,129 @@ module.exports = function (router) {
     router.get('/service-templates/:id/request', validate(ServiceTemplate), function (req, res, next) {
         let serviceTemplate = res.locals.valid_object;
         serviceTemplate.data.references = {};
-            serviceTemplate.getRelated(ServiceTemplateProperty, function (props) {
-                //this object for authenticated call
-                res.locals.valid_object.data.references[ServiceTemplateProperty.table] = props.map(entity => entity.data);
-                console.log(res.locals.valid_object);
-                if(serviceTemplate.get('published') == true) {
+        serviceTemplate.getRelated(ServiceTemplateProperty, function (props) {
+            //this object for authenticated call
+            res.locals.valid_object.data.references[ServiceTemplateProperty.table] = props.map(entity => entity.data);
+            if (serviceTemplate.get('published') == true) {
 
-                    if (!req.isAuthenticated()) {
-                        let publicProps = _.filter(props, (prop => !prop.data.private));
-                        serviceTemplate.data.references[ServiceTemplateProperty.table] = publicProps.map(entity => entity.data);
-                        delete serviceTemplate.data.overhead;
-                        res.json(serviceTemplate.data);
-                    }
-                    else {
-                        next();
-                    }
+                if (!req.isAuthenticated()) {
+                    let publicProps = _.filter(props, (prop => !prop.data.private));
+                    serviceTemplate.data.references[ServiceTemplateProperty.table] = publicProps.map(entity => entity.data);
+                    delete serviceTemplate.data.overhead;
+                    res.json(serviceTemplate.data);
                 }
                 else {
-                        next();
-                    }
-            });
+                    next();
+                }
+            }
+            else {
+                next();
+            }
+        });
 
     });
     router.get('/service-templates/:id/request', auth(), function (req, res, next) {
-        console.log("authenticated user");
 
         let serviceTemplate = res.locals.valid_object;
         let permission_array = res.locals.permissions;
         let hasPermission = (permission_array.some(p => p.get("permission_name") == "can_administrate" || p.get("permission_name") == "can_manage"));
-        if(serviceTemplate.get('published') == true || hasPermission) {
-            console.log("got in here")
+        if (serviceTemplate.get('published') == true || hasPermission) {
             res.json(serviceTemplate.data);
         }
         else {
-            console.log("moved along")
             next();
         }
     });
 
+    //added reject to auth cuz it needs to handle failures, preventing memory leaks
+    let authPromise = function(req, res){
+        return new Promise((resolve, reject) => {
+            if(req.isAuthenticated()){
+                auth()(req, res, resolve, reject)
+            }else{
+                resolve();
+            }
+        })
+    };
+
+
+    //middleware to validate and adjust price.. todo: move price adjjustment somewhere else
+    let validateServiceRequest = async function (req, res, next) {
+        try {
+            let serviceTemplate = res.locals.valid_object;
+            let props = (await serviceTemplate.getRelated(ServiceTemplateProperty)) || null;
+            let req_body = req.body;
+            let reqProps = req_body.references && req_body.references.service_template_properties || [];
+            await authPromise(req, res);
+            let permission_array = res.locals.permissions || [];
+            let handlers = (store.getState(true).pluginbot.services.inputHandler || []).reduce((acc, handler) => {
+                acc[handler.name] = handler.handler;
+                return acc;
+            }, {});
+            console.log(handlers, "HANDLERS!");
+            //this is true when user can override things
+            let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
+            let templatePrice = serviceTemplate.get("amount");
+            let price = hasPermission ? (req_body.amount || templatePrice) : templatePrice;
+
+            //todo: this doesn't do anthing yet, needs to check the "passed" props not the ones on the original...
+            // let validationResult = props ? validateProperties(props, handlers) : [];
+            // if (validationResult.length > 0) {
+            //     return res.status(400).json({error: validationResult});
+            // }
+
+            //todo: less looping later
+            let mergedProps = props.map(prop => {
+                let propToMerge = reqProps.find(reqProp => reqProp.id === prop.data.id);
+                return propToMerge ? {...prop.data, "data" : propToMerge.data} : prop
+            });
+            if (props) {
+                price = require("../lib/handleInputs").getPrice(mergedProps, handlers, price);
+
+            }
+
+            //set trial period to 0 if null
+            res.locals.valid_object.data.trial_period_days = res.locals.valid_object.data.trial_period_days || 0;
+
+            res.locals.adjusted_price = price;
+            res.locals.merged_props = mergedProps;
+            if (!req.isAuthenticated()) {
+
+                if (req_body.hasOwnProperty("email")) {
+                    let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                    if (!req_body.email.match(mailFormat)) {
+                        return res.status(400).json({error: 'Invalid email format'});
+                    }
+                } else {
+                    return res.status(400).json({error: 'Must have property: email'});
+                }
+
+                if ((!req_body.hasOwnProperty("token_id") || req_body.token_id === '') && price !== 0) {
+                    return res.status(400).json({error: 'Must have property: token_id'});
+                }
+
+                let user = await User.findOne("email", req_body.email);
+                if (user.data) {
+                    let invitation = await Invitation.findOne("user_id", user.get("id"));
+                    if (invitation.data) {
+                        return res.status(400).json({error: 'User has already been invited'});
+
+                    } else {
+                        return res.status(400).json({error: 'Email already exists'});
+                    }
+                }
+
+
+
+
+            }
+            return next();
+
+        }catch(error){
+            console.error("error validating....", error);
+            res.status(500).json({error});
+        }
+    }
 
     /**
      * The request function will request a new service instance for an unauthenticated user
@@ -230,208 +315,201 @@ module.exports = function (router) {
      * service template request details
      *
      */
-    router.post("/service-templates/:id/request", validate(ServiceTemplate), function (req, res, next) {
-        if (!req.isAuthenticated()) {
-            let serviceTemplate = res.locals.valid_object;
-            if(serviceTemplate.get('published') == true) {
-                let req_body = req.body;
-                let permission_array = res.locals.permissions;
-                let req_body_email, req_body_token_id;
-                if (req_body.hasOwnProperty("email")) {
-                    let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-                    if (req_body.email.match(mailFormat)) {
-                        req_body_email = req_body.email;
-                    }
-                    else {
-                        res.status(400).json({error: 'Invalid email format'});
-                    }
-                } else {
-                    res.status(400).json({error: 'Must have property: email'});
-                }
 
-                if (req_body.hasOwnProperty("token_id")) {
-                    if (req_body.token_id != '') {
-                        req_body_token_id = req_body.token_id;
-                    }
-                    else {
-                        res.status(400).json({error: 'token_id can not be empty'});
-                    }
-                } else {
-                    res.status(400).json({error: 'Must have property: token_id'});
-                }
-                //get default_user_role
-                let store = require('../config/redux/store');
+    router.post("/service-templates/:id/request", validate(ServiceTemplate), validateServiceRequest, async function (req, res, next) {
+        try {
+            let serviceTemplate = res.locals.valid_object;
+            let references = serviceTemplate.references;
+            let props = references ? references.service_template_properties : null;
+            let req_body = req.body;
+            let Promise = require("bluebird");
+            let permission_array = res.locals.permissions || [];
+            let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
+
+            let responseJSON = {};
+            //using promiseProxy for non-standard callbacks
+            let user = req.user;
+
+            //is the user authenticated (are they logged in)?
+            let isNew = !req.isAuthenticated();
+            let store = require('../config/redux/store');
+
+            //todo: once in plugin this code needs big changes
+            let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;
+            if(lifecycleManager) {
+                lifecycleManager = lifecycleManager[0];
+                await lifecycleManager.preProvision({
+                    request: req_body,
+                    template: serviceTemplate
+                });
+            }
+            //if it's a new user request we need to create an account, invitation
+            if (isNew && serviceTemplate.get('published')) {
+
                 let globalProps = store.getState().options;
                 let roleId = globalProps['default_user_role'];
-                let newUser = new User({"email": req_body_email, "role_id": roleId, "status": "invited"});
-                new Promise((resolve, reject) => {
-                    //Check for existing user email
-                    User.findOne("email", req_body_email, foundUser => {
-                        if (foundUser.data) {
-                            let userId = foundUser.get('id');
-                            Invitation.findOne("user_id", userId, foundInvitation => {
-                                if (foundInvitation.data) {
-                                    reject('Invitation already exists for this user')
-                                }
-                                else {
-                                    reject('This email already exists in the system')
-                                }
-                            })
+                let newUser = new User({"email": req_body.email, "role_id": roleId, "status": "invited"});
+
+                //promisify the createWithStripe function
+                let createUser = Promise.promisify(newUser.createWithStripe, {context: newUser});
+
+                //create the new user
+                let createdUser = await createUser();
+                let invite = new Invitation({"user_id": createdUser.get("id")});
+                let createInvite = Promise.promisify(invite.create, {context: invite});
+
+                //create the invitation for the user.
+                let createdInvite = await createInvite();
+
+                let user_role = new Role({id : createdUser.get("role_id")}) ;
+
+                // todo : remove this once it supports promises
+                let permissionPromise = new Promise(resolve => {
+                    user_role.getPermissions(function (perms) {
+                        let permission_names = perms.map(perm => perm.data.permission_name);
+                        return resolve(permission_names);
+                    });
+                });
+
+                let loginPromise = new Promise((resolve, reject) => {
+                    req.logIn(createdUser, {session: true}, (err) => {
+                        if (err) {
+                            reject(err);
                         }
-                        else {
-                            resolve()
+                        else{
+                            resolve();
                         }
                     });
-                })
-                    .then(() => {
-                        //create new user
-                        return new Promise((resolve, reject) => {
-                            newUser.createWithStripe((err, resultUser) => {
-                                if (!err) {
-                                    req.logIn(resultUser, {session: true}, function (err) {
-                                        if (!err) {
-                                            console.log("user logged in!");
-                                            resolve(resultUser);
-                                        } else {
-                                            console.error("Issue logging in: ", err)
-                                            resolve(resultUser);
-                                        }
 
-                                    });
-                                }
-                                else {
-                                    reject(err);
-                                }
-                            });
-                        });
-                    })
-                    .then(resultUser => {
-                        //create invitation
-                        return new Promise((resolve, reject) => {
-                            let invite = new Invitation({"user_id": resultUser.get("id")});
-                            invite.create((err, result) => {
-                                if (!err) {
-                                    res.locals.apiUrl = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + result.get("token");
-                                    res.locals.frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
-                                    EventLogs.logEvent(resultUser.get('id'), `user ${resultUser.get('email')} was created by self request`);
-                                    resolve(resultUser);
-                                } else {
-                                    reject(err);
-                                }
-                            });
-                        });
-                    })
-                    .then(resultUser => {
-                        //create fund
-                        console.log("TOKEN", req_body_token_id);
-                        return Fund.promiseFundCreateOrUpdate(resultUser.get('id'), req_body_token_id);
-                    })
-                    .then(fund => {
-                        //create service instance
-                        return serviceTemplate.requestPromise(fund.get('user_id'), req_body, permission_array);
-                    })
-                    .then(service => {
-                        //Send the mail based on the requester
-                        return new Promise((resolve, reject) => {
-                            service.set('api', res.locals.apiUrl);
-                            service.set('url', res.locals.frontEndUrl);
-                            dispatchEvent("service_instance_requested_new_user", service);
-                            // mailer('request_service_instance_new_user', 'user_id', service)(req, res, next);
-                            //TODO whats going on here @bsears?
-                            let user_role = new Role({"id": 3});
-                            user_role.getPermissions(function (perms) {
-                                let permission_names = perms.map(perm => perm.data.permission_name);
-                                service.set("permissions", permission_names);
-                                return resolve(service);
-                            });
-                        });
-                    })
-                    .then(service => {
-                        //create event log
-                        return new Promise((resolve, reject) => {
-                            EventLogs.logEvent(service.get('user_id'), `service-templates ${service.get('service_id')} was requested by user ${service.get('user_id')} and service-instance was created`);
-                            res.status(200).json(service.data);
-                            return resolve(service);
-                        });
-                    })
-                    .catch(err => {
-                        console.error('Service template request from new user error: ', err);
-                        res.status(400).json({error: err});
-                    });
+                });
+
+                //log in the user (give them a cookie)
+                await loginPromise;
+
+                //set some data for the response
+                responseJSON.api = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + createdInvite.get("token");
+                responseJSON.url = req.protocol + '://' + req.get('host') + "/invitation/" + createdInvite.get("token");
+
+                //currently the permissions that the client app sets get passed here.
+                responseJSON.permissions = await permissionPromise;
+                responseJSON.uid = createdUser.get("id");
+
+                user = createdUser;
+
+
+            }else if(!serviceTemplate.get('published') && !hasPermission){
+                return res.status(403).json({"error" : "Unauthorized"});
             }
-            else {
-                next();
+
+
+            let newFund = null;
+            //if token_id exists, create/update the user's fund
+            if (req_body.token_id && req_body.token_id !== '') {
+                newFund = Fund.promiseFundCreateOrUpdate(user.get('id'), req_body.token_id);
             }
-        }
-        else {
-            next();
-        }
-    });
+
+            //create the service instance
+
+            //adjusted price...
+            req_body.amount = res.locals.adjusted_price;
+            req_body.references.service_template_properties = res.locals.merged_props;
+            //elevated accounts can override things
+            if (hasPermission) {
+                res.locals.overrides = {
+                    user_id : req_body.client_id || req.user.get("id"),
+                    requested_by : req.user.get("id"),
+                    description : req_body.description || serviceTemplate.get("description"),
+                    name : req_body.name || serviceTemplate.get("name")
+                };
 
 
-    /**
-     * The request function will request a new service instance for an authenticated user
-     */
-    router.post("/service-templates/:id/request", validate(ServiceTemplate), auth(), function (req, res, next) {
-        let serviceTemplate = res.locals.valid_object;
-        let req_uid = req.user.get("id");
-        let req_body = req.body;
-        let permission_array = res.locals.permissions;
-        let hasPermission = (permission_array.some(p => p.get("permission_name") == "can_administrate" || p.get("permission_name") == "can_manage"));
-        if(serviceTemplate.get('published') == true || hasPermission) {
-            new Promise((resolve, reject) => {
-                if (req_body.hasOwnProperty("token_id")) {
-                    if (req_body.token_id != '') {
-                        return resolve(Fund.promiseFundCreateOrUpdate(req_uid, req_body.token_id))
-                    }
-                    else {
-                        return resolve();
-                    }
-                } else {
-                    return resolve();
+            }else{
+                res.locals.overrides = {
+                    user_id : req.user.get("id"),
+                    requested_by : req.user.get("id"),
+
                 }
-            })
-                .then(() => serviceTemplate.requestPromise(req_uid, req_body, permission_array))
-                .then(function (service) {
+            }
 
-                    //Send the main based on the requester
-                    return new Promise(function (resolve, reject) {
-                        console.log(service);
-                        if (service.data.user_id == req_uid) {
-                            dispatchEvent("service_instance_requested_by_user", service);
-                        } else {
-                            dispatchEvent("service_instance_requested_for_user", service);
-                        }
-                        return resolve(service);
-                    });
-                })
-                .then(function (service) {
-                    return new Promise(function (resolve, reject) {
-                        // EventLogs.logEvent(req.user.get('id'), `service-templates ${req.params.id} was requested by user ${req.user.get('email')} and service-instance was created`);
-                        res.status(200).json(service.data);
-                        return resolve(service);
-                    });
-                }).catch(function (err) {
-                console.log(err);
-                res.status(400).json({error: err});
+            await  newFund;
+
+            let newInstance = await serviceTemplate.requestPromise({
+                ...req_body,
+                ...res.locals.overrides,
+
             });
+            if(lifecycleManager) {
+                await lifecycleManager.postProvision({
+                    request: req_body,
+                    instance: newInstance,
+                    template: serviceTemplate
+                });
+            }
+            res.json({
+                ...responseJSON,
+                ...newInstance.data
+            });
+
+            try {
+                if (isNew) {
+                    newInstance.set("api", responseJSON.api);
+                    newInstance.set("url", responseJSON.url);
+                    store.dispatchEvent("service_instance_requested_new_user", newInstance);
+
+                } else if (req.uid !== newInstance.get("user_id")) {
+                    store.dispatchEvent("service_instance_requested_for_user", newInstance);
+
+                } else {
+                    store.dispatchEvent("service_instance_requested_by_user", newInstance);
+                }
+            }catch(e){
+                console.error("error during dispatchin", e);
+            }
+
+        } catch (error) {
+            return res.status(500).json({error});
         }
-        else {
-            res.status(401).json({error: "Unauthenticated"});
-        }
+
+
     });
 
 
     router.post("/service-templates", auth(), function (req, res, next) {
         req.body.created_by = req.user.get("id");
+        req.body.trial_period_days = req.body.trial_period_days || 0;
+        let properties = req.body.references && req.body.references.service_template_properties;
+        if(properties){
+            req.body.references.service_template_properties = properties.map(prop => {
+                return {
+                    ...prop,
+                    name : slug(prop.prop_label)
+                };
+            });
+        }
         ServiceTemplate.findAll("name", req.body.name, (templates) => {
-            if(templates && templates.length > 0){
-                res.status(400).json({error : "Service template name already in use"})
-            }else{
+            if (templates && templates.length > 0) {
+                res.status(400).json({error: "Service template name already in use"})
+            } else {
                 next();
             }
         })
     });
+
+    router.put(`/service-templates/:id(\\d+)`, validate(ServiceTemplate), auth(), function(req, res, next) {
+        req.body.trial_period_days = req.body.trial_period_days || 0;
+        let properties = req.body.references && req.body.references.service_template_properties;
+        if(properties){
+            req.body.references.service_template_properties = properties.map(prop => {
+                return {
+                    ...prop,
+                    name : slug(prop.prop_label)
+                };
+            });
+        }
+        //todo: add validation for name.
+        next();
+    });
+
 
     router.get("/service-templates/public", function (req, res, next) {
         let key = "published";

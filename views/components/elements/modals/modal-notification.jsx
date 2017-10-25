@@ -22,7 +22,6 @@ class ModalNotification extends React.Component {
     render () {
         let pageName = "Notification Message";
         let notification = this.props.notification;
-        console.log("open notificatioin", notification);
 
         return (
             <Modal modalTitle={pageName} hide={this.props.hide} icon="fa-bell">

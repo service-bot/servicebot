@@ -12,7 +12,6 @@ class ManageCatalogCreate extends React.Component {
         var self = this;
         return(
             <div className="col-xs-12">
-                <p>Service Template Create Form</p>
                 <ServiceTemplateForm params = {{'templateId': null}}/>
             </div>
         );

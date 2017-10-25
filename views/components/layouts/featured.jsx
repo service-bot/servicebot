@@ -22,7 +22,7 @@ class Featured extends React.Component {
 
     componentWillReceiveProps(nextProps){
         if(nextProps.imageURL){
-            // console.log("Featured Image got new image", nextProps.imageURL);
+
             this.setState({imageURL: nextProps.imageURL});
         }
     }
@@ -44,25 +44,27 @@ class Featured extends React.Component {
     render () {
 
         let featuredBackgroundColor = {};
-
-        if(this.props.options) {
-            let options = this.props.options;
-            featuredBackgroundColor.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
+        let {options, className, style, children, overlay} = this.props;
+        featuredBackgroundColor.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
+        let overlayStyle = {
+          position: 'absolute',
+            height: '100%',
+            width: '100%',
+            top: '0px',
+        };
+        if(overlay){
+            overlayStyle = {
+                ...overlayStyle,
+                ...overlay.style,
+            }
         }
 
         return (
-            <div className={`featured`} onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
+            <div className={`featured ${className}`} style={style}
+                 onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
                 <FeaturedImage image={this.state.imageURL} bgColor={featuredBackgroundColor}/>
-                {this.props.children}
-
-                {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
-                {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
-                                                                filter = {["home_hero_image",
-                                                                    "home_featured_heading",
-                                                                    "home_featured_description",
-                                                                    "home_featured_text_color"]
-                                                                }/>
-                }
+                {overlay && overlay.show && <div className="hahaha" style={overlayStyle}/>}
+                {children}
             </div>
         );
     }

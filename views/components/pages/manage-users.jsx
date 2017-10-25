@@ -1,12 +1,16 @@
 import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
+import Load from "../utilities/load.jsx";
+import Fetcher from '../utilities/fetcher.jsx';
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
-import DataTable from "../elements/datatable/datatable.jsx";
-import Dropdown from "../elements/datatable/datatable-dropdown.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
+import Dropdown from "../elements/dropdown.jsx";
 import DateFormat from "../utilities/date-format.jsx";
+import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
+import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+
 import ModalInviteUser from "../elements/modals/modal-invite-user.jsx";
 import ModalSuspendUser from "../elements/modals/modal-suspend-user.jsx";
 import ModalUnsuspendUser from "../elements/modals/modal-unsuspend-user.jsx";
@@ -15,6 +19,7 @@ import ModalAddFund from "../elements/modals/modal-add-fund.jsx";
 import ModalEditUserRole from "../elements/modals/modal-edit-user-role.jsx";
 import Modal from '../utilities/modal.jsx';
 import { connect } from 'react-redux';
+let _ = require("lodash");
 
 class ManageUsers extends React.Component {
 
@@ -28,8 +33,11 @@ class ManageUsers extends React.Component {
             openDeleteUserModal: false,
             openEditRole: false,
             openMessageModal: null,
+            rows: {},
             currentDataObject: {},
-            lastFetch: Date.now()
+            lastFetch: Date.now(),
+            loading: true,
+            advancedFilter: null,
         };
 
         this.openInviteUserModal = this.openInviteUserModal.bind(this);
@@ -46,46 +54,133 @@ class ManageUsers extends React.Component {
         this.dropdownStatus = this.dropdownStatus.bind(this);
         this.openMessageModal = this.openMessageModal.bind(this);
         this.closeMessageModal = this.closeMessageModal.bind(this);
+        this.rowActionsFormatter = this.rowActionsFormatter.bind(this);
     }
 
-    dropdownStatus(dataObject){
-        let status = dataObject.status;
-        const statusString = _.toLower(status);
-        if(statusString == "suspended"){
-            return "Activate User";
-        }else{
-            return "Suspend User";
+    componentDidMount() {
+        if (!isAuthorized({permissions: "can_administrate"})) {
+            return browserHistory.push("/login");
         }
-        return "Error";
+        this.fetchData();
     }
 
-    modID(data){
+    /**
+     * Fetches Table Data
+     * Sets the state with the fetched data for use in ServiceBotTableBase's props.row
+     */
+    fetchData() {
+        let self = this;
+        Fetcher('/api/v1/users').then(function (response) {
+            if (!response.error) {
+                self.setState({rows: response});
+            }
+            self.setState({loading: false});
+        });
+    }
+
+    /**
+     * Modal Controls
+     * Open and close modals by setting the state for rendering the modals,
+     */
+    openEditCreditCard(dataObject){
+        this.setState({ openEditCreditCard: true, currentDataObject: dataObject });
+    }
+    closeEditCreditCard(){
+        this.fetchData();
+        this.setState({ openEditCreditCard: false, currentDataObject: {}, lastFetch: Date.now()});
+    }
+
+    openInviteUserModal(dataObject){
+        this.setState({ openInviteUserModal: true, currentDataObject: dataObject });
+    }
+    closeInviteUserModal(){
+        this.fetchData();
+        this.setState({ openInviteUserModal: false, currentDataObject: {}, lastFetch: Date.now()});
+    }
+    openSuspendUser(dataObject){
+        if(dataObject.id == this.props.user.id){
+            this.setState({
+                openMessageModal: {
+                    title: 'Alert!',
+                    message: 'Suspending own user is not allowed!'
+                }
+            });
+        }else {
+            let status = dataObject.status;
+            const statusString = _.toLower(status);
+            if (statusString == "suspended") {
+                this.setState({
+                    openUnsuspendUserModal: true,
+                    currentDataObject: dataObject,
+                });
+            } else {
+                this.setState({
+                    openSuspendUserModal: true,
+                    currentDataObject: dataObject
+                });
+            }
+        }
+    }
+    closeSuspendUser(){
+        this.fetchData();
+        this.setState({openSuspendUserModal: false, currentDataObject: {}, lastFetch: Date.now()});
+    }
+
+    closeUnsuspendUser(){
+        this.fetchData();
+        this.setState({openUnsuspendUserModal: false, currentDataObject: {}, lastFetch: Date.now()});
+    }
+    openEditRole(dataObject){
+        let self = this;
+        if(dataObject.id == self.props.user.id){
+            self.setState({openMessageModal: {title: 'Alert!', message: 'Editing own role is not allowed!'}});
+        }else {
+            self.setState({openEditRole: true, currentDataObject: dataObject});
+        }
+    }
+    closeEditRole(){
+        this.fetchData();
+        this.setState({openEditRole: false, currentDataObject: {}, lastFetch: Date.now()});
+    }
+    openDeleteUser(dataObject){
+        if(dataObject.id == this.props.user.id){
+            this.setState({openMessageModal: {title: 'Alert!', message: 'Deleting own user is not allowed!'}});
+        }else {
+            this.setState({openDeleteUserModal: true, currentDataObject: dataObject});
+        }
+    }
+    closeDeleteUser(){
+        this.fetchData();
+        this.setState({openDeleteUserModal: false,  currentDataObject: {}, lastFetch: Date.now()});
+    }
+    openMessageModal(title, message){
+        this.setState({openMessageModal: {title: title, message: message}});
+    }
+    closeMessageModal(){
+        this.fetchData();
+        this.setState({openMessageModal: null});
+    }
+    viewUser(dataObject){
+        browserHistory.push(`/manage-users/${dataObject.id}`);
+    }
+    viewUserServices(dataObject){
+        browserHistory.push(`/manage-subscriptions/?uid=${dataObject.id}`);
+    }
+
+    /**
+     * Cell formatters
+     * Formats each cell data by passing the function as the dataFormat prop in TableHeaderColumn
+     */
+    idFormatter(cell){
         return (
             <div className="badge badge-xs">
-                <img className="img-circle" src={`/api/v1/users/${data}/avatar`} alt="..."/>
+                <img className="img-circle" src={`/api/v1/users/${cell}/avatar`}/>
             </div>
         );
     }
-
-    modName(data, dataObj){
-        if(data != "null") {
-            return (
-                <Link to={`/manage-users/${dataObj.id}`}>{data}</Link>
-            );
-        } else {
-            return (<span />);
-        }
-    }
-
-    modEmail(data, dataObj) {
-        return (
-            <Link to={`/manage-users/${dataObj.id}`}>{data}</Link>
-        );
-    }
-
-    modStatus(data, dataObj) {
+    statusFormatter(cell, row) {
         let color = 'status-badge ';
-        switch (data.toLowerCase()) {
+        switch ( cell.toLowerCase() ) {
             case 'active':
                 color += 'green'; break;
             case 'invited':
@@ -97,174 +192,128 @@ class ManageUsers extends React.Component {
             default:
                 color += 'grey';
         }
-        return (
-            <span className={color} >{data}</span>
-        );
+        return ( <span className={color} >{cell}</span> );
+    }
+    roleFormatter(cell){
+        return ( cell.user_roles[0].role_name );
     }
 
-    modLastLogin(data, dataObj){
-        if(dataObj.last_login != null){
+
+    dropdownStatus(dataObject){
+        let status = dataObject.status;
+        const statusString = _.toLower(status);
+        if(statusString == "suspended"){
+            return "Activate User";
+        }else{
+            return "Suspend User";
+        }
+        return "Error";
+    }
+    lastLoginFormatter(cell, row){
+        if(row.last_login != null){
             return (
-                <DateFormat time={true} date={dataObj.last_login}/>
+                <DateFormat time={true} date={row.last_login}/>
             );
         }else{
             return 'Never';
         }
     }
-    modCreatedAt(data, dataObj){
+    createdAtFormatter(cell, row){
         return (
-            <DateFormat date={dataObj.created_at} time={true}/>
+            <DateFormat date={row.created_at} time={true}/>
+        );
+    }
+    profileLinkFormatter(cell, row){
+        return (
+            <Link to={`/manage-users/${row.id}`}>{cell}</Link>
+        );
+    }
+    rowActionsFormatter(cell, row){
+        let dropdownOptions = [
+            {   type: "button",
+                label: row.references.funds.length ? 'Edit Credit Card' : 'Add Credit Card',
+                action: () => { return (this.openEditCreditCard(row)) }},
+            {   type: "button",
+                label: 'Edit User',
+                action: () => { browserHistory.push(`/manage-users/${row.id}`) }},
+            {   type: "button",
+                label: 'Manage Services',
+                action: () => { browserHistory.push(`/manage-subscriptions/?uid=${row.id}`) }},
+            {   type: "divider" },
+            {   type: "button",
+                label: 'Edit Role',
+                action: () => {
+                    return (this.openEditRole(row)) }},
+            {   type: "button",
+                label: row.status !== 'suspended' ? 'Suspend User' : 'Unsuspend User',
+                action: () => { return (this.openSuspendUser(row)) }},
+            {   type: "button",
+                label: 'Delete User',
+                action: () => { return (this.openDeleteUser(row)) }},
+        ];
+        if(row.status === 'invited') {
+            dropdownOptions = dropdownOptions.filter(op => op.label !== 'Suspend User');
+        }
+        return (
+            <Dropdown
+                direction="right"
+                dropdown={dropdownOptions}
+            />
         );
     }
 
-    componentDidMount(){
-        if(!isAuthorized({permissions:"can_administrate"})){
-            return browserHistory.push("/login");
-        }
-    }
-
-    openEditCreditCard(dataObject){
-        let self = this;
-        return function(e) {
-            e.preventDefault();
-            self.setState({ openEditCreditCard: true, currentDataObject: dataObject });
-        }
-    }
-    closeEditCreditCard(){
-        this.setState({ openEditCreditCard: false, currentDataObject: {}, lastFetch: Date.now()});
-    }
-
-    openInviteUserModal(dataObject){
-        let self = this;
-        return function(e) {
-            e.preventDefault();
-            self.setState({ openInviteUserModal: true, currentDataObject: dataObject });
-        }
-    }
-    closeInviteUserModal(){
-        this.setState({ openInviteUserModal: false, currentDataObject: {}, lastFetch: Date.now()});
-    }
-
-    viewUser(dataObject){
-        return function (e) {
-            e.preventDefault();
-            browserHistory.push(`/manage-users/${dataObject.id}`);
-        }
-    }
-    viewUserServices(dataObject){
-        return function (e) {
-            e.preventDefault();
-            browserHistory.push(`/manage-subscriptions/?uid=${dataObject.id}`);
-        }
-    }
-
-    openSuspendUser(dataObject){
-        let self = this;
-        if(dataObject.id == self.props.user.id){
-            return function (e) {
-                e.preventDefault();
-                self.setState({openMessageModal: {title: 'Alert!', message: 'Suspending own user is not allowed!'}});
-            }
-        }else {
-            return function (e) {
-                e.preventDefault();
-                let status = dataObject.status;
-                const statusString = _.toLower(status);
-                if (statusString == "suspended") {
-                    self.setState({openUnsuspendUserModal: true, currentDataObject: dataObject});
-                }
-                else {
-                    self.setState({openSuspendUserModal: true, currentDataObject: dataObject});
-                }
-            }
-        }
-    }
-    closeSuspendUser(){
-        this.setState({openSuspendUserModal: false, currentDataObject: {}, lastFetch: Date.now()});
-    }
-
-    closeUnsuspendUser(){
-        this.setState({openUnsuspendUserModal: false, currentDataObject: {}, lastFetch: Date.now()});
-    }
-
-    openEditRole(dataObject){
-        let self = this;
-        if(dataObject.id == self.props.user.id){
-            return function (e) {
-                e.preventDefault();
-                self.setState({openMessageModal: {title: 'Alert!', message: 'Editing own role is not allowed!'}});
-            }
-        }else {
-            return function (e) {
-                e.preventDefault();
-                self.setState({openEditRole: true, currentDataObject: dataObject});
-            }
-        }
-    }
-
-    closeEditRole(){
-        this.setState({openEditRole: false, currentDataObject: {}, lastFetch: Date.now()});
-    }
-
-    openDeleteUser(dataObject){
-        let self = this;
-        if(dataObject.id == self.props.user.id){
-            return function (e) {
-                e.preventDefault();
-                self.setState({openMessageModal: {title: 'Alert!', message: 'Deleting own user is not allowed!'}});
-            }
-        }else {
-            return function (e) {
-                e.preventDefault();
-                self.setState({openDeleteUserModal: true, currentDataObject: dataObject});
-            }
-        }
-    }
-    closeDeleteUser(){
-        this.setState({openDeleteUserModal: false,  currentDataObject: {}, lastFetch: Date.now()});
-    }
-
-    openMessageModal(title, message){
-        this.setState({openMessageModal: {title: title, message: message}});
-    }
-    closeMessageModal(){
-        this.setState({openMessageModal: null});
-    }
-
-
     render () {
         let pageName = this.props.route.name;
-        let breadcrumbs = [{name:'Home', link:'home'},{name:'My Services', link:'/my-services'},{name:pageName, link:null}];
 
         let getModals = ()=> {
             if(this.state.openInviteUserModal){
                 return (
-                    <ModalInviteUser show={this.state.openInviteUserModal} hide={this.closeInviteUserModal}/>
+                    <ModalInviteUser
+                        show={this.state.openInviteUserModal}
+                        hide={this.closeInviteUserModal}
+                    />
                 )
             }
             if(this.state.openSuspendUserModal){
                 return (
-                    <ModalSuspendUser uid={this.state.currentDataObject.id} show={this.state.openSuspendUserModal} hide={this.closeSuspendUser}/>
+                    <ModalSuspendUser
+                        uid={this.state.currentDataObject.id}
+                        show={this.state.openSuspendUserModal}
+                        hide={this.closeSuspendUser}/>
                 )
             }
             if(this.state.openUnsuspendUserModal){
                 return (
-                    <ModalUnsuspendUser uid={this.state.currentDataObject.id} show={this.state.openSuspendUserModal} hide={this.closeUnsuspendUser}/>
+                    <ModalUnsuspendUser
+                        uid={this.state.currentDataObject.id}
+                        show={this.state.openSuspendUserModal}
+                        hide={this.closeUnsuspendUser}/>
                 )
             }
             if(this.state.openDeleteUserModal){
                 return (
-                    <ModalDeleteUser uid={this.state.currentDataObject.id} show={this.state.openDeleteUserModal} hide={this.closeDeleteUser}/>
+                    <ModalDeleteUser
+                        uid={this.state.currentDataObject.id}
+                        show={this.state.openDeleteUserModal}
+                        hide={this.closeDeleteUser}/>
                 )
             }
             if(this.state.openEditCreditCard){
                 return (
-                    <ModalAddFund uid={this.state.currentDataObject.id} user={this.state.currentDataObject} show={this.state.openDeleteUserModal} hide={this.closeEditCreditCard}/>
+                    <ModalAddFund
+                        uid={this.state.currentDataObject.id}
+                        user={this.state.currentDataObject}
+                        show={this.state.openDeleteUserModal}
+                        hide={this.closeEditCreditCard}/>
                 )
             }
             if(this.state.openEditRole){
                 return (
-                    <ModalEditUserRole uid={this.state.currentDataObject.id} user={this.state.currentDataObject} show={this.state.openEditRole} hide={this.closeEditRole}/>
+                    <ModalEditUserRole
+                        uid={this.state.currentDataObject.id}
+                        user={this.state.currentDataObject}
+                        show={this.state.openEditRole}
+                        hide={this.closeEditRole}/>
                 )
             }
             if(this.state.openMessageModal){
@@ -279,50 +328,91 @@ class ManageUsers extends React.Component {
             }
         };
 
-        return(
-            <Authorizer permissions="can_administrate">
-                <Jumbotron pageName={pageName} location={this.props.location}/>
-                <div className="page-service-instance">
-                    <Content>
-                        <ContentTitle icon="cog" title="Manage all your users here"/>
-                        <div className="row pull-right p-b-15 p-r-15">
-                            <Dropdown name="Actions" direction="right"
-                                  dropdown={[
-                                      {id: 'invitenewuser', name: 'Invite New User', link: '#', onClick: this.openInviteUserModal}
-                                  ]}/>
-                        </div>
-                        <DataTable get="/api/v1/users"
-                                   col={['id', 'email', 'name', 'status', 'references.user_roles.0.role_name', 'last_login', 'created_at']}
-                                   colNames={['', 'Email', 'Name', 'Status', 'Role', 'Last Login', 'Created At']}
-                                   mod_id={this.modID}
-                                   mod_email={this.modEmail}
-                                   mod_name={this.modName}
-                                   mod_status={this.modStatus}
-                                   mod_last_login={this.modLastLogin}
-                                   mod_created_at={this.modCreatedAt}
-                                   lastFetch={this.state.lastFetch}
-                                   dropdown={
-                                       [{
-                                           name:'Actions',
-                                           direction: 'right',
-                                           buttons:[
-                                               {id: 1, name: 'Edit Credit Card', link: '#', onClick: this.openEditCreditCard},
-                                               {id: 2, name: 'Edit User', link: '#', onClick: this.viewUser},
-                                               {id: 3, name: 'Manage Services', link: '#', onClick: this.viewUserServices},
-                                               {id: 4, name: 'divider'},
-                                               {id: 5, name: 'Edit Role', link: '#', onClick: this.openEditRole},
-                                               {id: 6, name: this.dropdownStatus, link: '#', onClick: this.openSuspendUser},
-                                               {id: 7, name: 'Delete User', link: '#', onClick: this.openDeleteUser, style: {color: "#ff3535"}},
-                                           ]}
-                                       ]
-                                   }
-                        />
-                        {getModals()}
-                    </Content>
-                </div>
-            </Authorizer>
-        );
+        if( this.state.loading ){
+            return ( <Load/> );
+        }else {
+            return (
+                <Authorizer permissions="can_administrate">
+                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <div className="page-service-instance">
+                        <Content>
+                            <div className="row m-b-20">
+                                <div className="col-xs-12">
+                                    <ContentTitle icon="cog" title="Manage all your users here"/>
+                                    <ServiceBotTableBase
+                                        createItemAction={this.openInviteUserModal}
+                                        createItemLabel="Invite user"
+                                        rows={this.state.rows}
+                                        fetchRows={this.fetchData}
+                                        sortColumn="created_at"
+                                        sortOrder="desc"
+                                    >
+                                        <TableHeaderColumn isKey
+                                                           dataField='id'
+                                                           dataFormat={this.idFormatter}
+                                                           dataSort={ false }
+                                                           searchable={false}
+                                                           width='30'/>
+                                        <TableHeaderColumn dataField='email'
+                                                           dataFormat={this.profileLinkFormatter}
+                                                           dataSort={ true }
+                                                           width='150'>
+                                            Email
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='name'
+                                                           dataFormat={this.profileLinkFormatter}
+                                                           dataSort={ true }
+                                                           width='80'>
+                                            name
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='status'
+                                                           dataFormat={this.statusFormatter}
+                                                           dataSort={ true }
+                                                           width='80'>
+                                            Status
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='references'
+                                                           dataFormat={this.roleFormatter}
+                                                           dataSort={ true }
+                                                           filterValue={this.roleFormatter}
+                                                           width='80'>
+                                            Role
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='last_login'
+                                                           dataFormat={this.lastLoginFormatter}
+                                                           dataSort={ true }
+                                                           searchable={false}
+                                                           width='100'>
+                                            Last Login
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='created_at'
+                                                           dataFormat={this.createdAtFormatter}
+                                                           dataSort={ true }
+                                                           searchable={false}
+                                                           width='100'>
+                                            Created At
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='Actions'
+                                                           className={'action-column-header'}
+                                                           columnClassName={'action-column'}
+                                                           dataFormat={ this.rowActionsFormatter }
+                                                           searchable={false}
+                                                           width='80'
+                                                           filter={false}>
+                                        </TableHeaderColumn>
+                                    </ServiceBotTableBase>
+                                </div>
+                            </div>
+                            {getModals()}
+                        </Content>
+                    </div>
+                </Authorizer>
+            );
+        }
     }
 }
 
-export default connect((state) => {return {user: state.user}})(ManageUsers);
+export default connect(
+    (state) => {
+        return ( {user: state.user} );
+    })(ManageUsers);

@@ -50,10 +50,9 @@ class SystemSettingsForm extends React.Component {
         let self = this;
         Fetcher(self.state.url).then(function (response) {
             if(!response.error){
-                console.log("system-settings", response);
                 self.setState({loading: false, system_settings: response});
             }else{
-                console.log("system setting error", response);
+                console.error("system setting error", response);
                 self.setState({loading: false});
             }
         });
@@ -63,7 +62,6 @@ class SystemSettingsForm extends React.Component {
         let self = this;
         Fetcher(self.state.rolesUrl).then(function (response) {
             if(!response.error){
-                console.log("roles", response);
                 let userRoles = response.map(role => {
                         let roleKey = role.id;
                         let value = role.role_name;
@@ -72,14 +70,13 @@ class SystemSettingsForm extends React.Component {
                 );
                 self.setState({loading: false, roles: userRoles});
             }else{
-                console.log("getting roles error", response);
+                console.error("getting roles error", response);
                 self.setState({loading: false});
             }
         });
     }
 
     handleResponse(response){
-        console.log("inside handle response", response);
         if(!response.error){
             this.setState({success: true});
         }
@@ -103,7 +100,6 @@ class SystemSettingsForm extends React.Component {
         let self = this;
         self.setState({ajaxLoad: true});
         let payload = _.toArray(self.state.system_settings);
-        // console.log("payload", payload);
         Fetcher('/api/v1/system-options', 'PUT', payload).then(function(response){
             if(!response.error){
                 self.setState({ajaxLoad: false, success: true});
@@ -111,7 +107,7 @@ class SystemSettingsForm extends React.Component {
 
             }else{
                 self.setState({ajaxLoad: false});
-                console.log('Problem PUT /api/v1/system-options');
+                console.error('Problem PUT /api/v1/system-options');
             }
         });
     }
@@ -154,18 +150,16 @@ class SystemSettingsForm extends React.Component {
             );
         }else{
             let self = this;
-            let group = _.groupBy(this.state.system_settings, (setting)=>{return setting.type ? setting.type : other});
+            let group = _.groupBy(this.state.system_settings, (setting)=>{return setting.type ? setting.type : "other"});
             let types = _.uniq(_.map(this.state.system_settings, (setting) => setting.type));
             let colorSettings = _.map(this.state.system_settings, (s)=> {
                 if(s.data_type == 'color_picker' && s.value != "undefined" && s.value != undefined){
-                    console.log(s);
                     return s.value
                 }else{
                     return null
                 }});
             colorSettings = _.remove(colorSettings, null);
             colorSettings = _.union(colorSettings, ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#F78DA7', '#9900EF']);
-            console.log("colorSettings", colorSettings);
             //for side panel settings
             if(this.props.filter){
                 return(
@@ -229,7 +223,6 @@ class SystemSettingsForm extends React.Component {
                     </div>
                 )
             }else { // for system settings page
-                console.log("system options", this.props.options.value);
 
                 let tabStyle = (type) => {
                     let tabColor = this.props.options.button_primary_color.value;

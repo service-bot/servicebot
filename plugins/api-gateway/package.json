@@ -1,0 +1,13 @@
+{
+  "name": "api-gateway",
+  "version": "0.0.1",
+  "dependencies": {
+    
+  },
+  "pluginbot" : {
+    "server" : {
+      "main" : "app.js",
+      "consumes" : ["database", "routeDefinition", "authService"]
+    }
+  }
+}

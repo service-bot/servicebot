@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>ServiceBot - Service Automation System</title>
+        <meta name="description" content="Services served and managed in a single app">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/load.css">
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" />
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <!-- CSS -->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/global.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/colors.css">
+        <!--<link rel="stylesheet" type="text/css" href="/stylesheets/animate.css">-->
+        <link rel="stylesheet" type="text/css" href="/stylesheets/layouts/default-sidebar.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/layouts/top-navigation.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/elements/left-sidebar.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/elements/top-navigation.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/elements/jumbotron.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/helpers/margin.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/helpers/padding.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/icons/font-awesome.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/pages/sign-in.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/text-widgets/text-widget.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/tables/datatable.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/tables/react-tables.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/ui/breadcrumbs.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/ui/buttons.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/ui/modals.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas-dashboard.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/front.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/front-cards.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/manage-catalog-create.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/badges.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/buttons.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/admin-sidebar.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/alerts.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/tabs.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/cards.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/invoice.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/invoice-modal.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/inputs.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/forms.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/embed.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/sky.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/notifications.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/stripe.css">
+        <script src="https://js.stripe.com/v3/"></script>
+
+    </head>
+    <body id="servicebotio" data-layout="top-navigation-1" data-sidebar="primary" data-navbar="primary">
+        <div id="servicebot-loader" class="no-print">
+            <img src="/api/v1/system-options/file/brand_logo" alt="ServiceBot">
+            <div class="loading"></div>
+        </div>
+        <div id="app"/>
+
+        <script type="text/javascript">
+            //remove the loader for embed route
+            if(window.location.pathname.match(/(service\/\d*\/embed)/g)){
+                document.getElementById('servicebot-loader').style.visibility = "hidden";
+            }
+        </script>
+        {{#each plugins}}
+            <script src="/build/plugins/{{this}}.js" type="text/javascript"></script>
+        {{/each}}
+
+
+
+        <script src="{{bundle}}" type="text/javascript"></script>
+        <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+        <script src="/bower_components/lodash/dist/lodash.min.js"></script>
+        <script src="/js/scripts/functions.js"></script>
+        <script src="/js/scripts/icons/font-awesome.js"></script>
+        <script src="/js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+        <div id="sidebar-backdrop" class="left-sidebar-backdrop"></div>
+    </body>
+</html>

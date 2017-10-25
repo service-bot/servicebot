@@ -1,742 +1,695 @@
 import React from 'react';
 import {Link, browserHistory} from 'react-router';
-import Load from '../../utilities/load.jsx';
-import Fetcher from "../../utilities/fetcher.jsx"
-import {DataForm, DataChild} from "../../utilities/data-form.jsx";
-import TagsInput from "react-tagsinput"
-import Inputs from "../../utilities/inputs.jsx";
 import 'react-tagsinput/react-tagsinput.css';
 import './css/template-create.css';
-import DataFromReview from "./service-template-form-review.jsx";
-import {Wysiwyg} from "../../elements/wysiwyg.jsx";
-import ServiceTemplateFormSubscriptionFields from './service-template-form-subscription-fields.jsx';
-import Buttons from "../../elements/buttons.jsx";
-import ModalAddCategory from "../modals/modal-add-category.jsx";
-import ImageUploader from "../../utilities/image-uploader.jsx";
+import {Field, Fields, FormSection, FieldArray, reduxForm, formValueSelector, change, unregisterField, getFormValues, Form} from 'redux-form'
+import {connect} from "react-redux";
+import {RenderWidget, WidgetList, PriceBreakdown, widgets} from "../../utilities/widgets";
+import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
+import FileUploadForm from "./file-upload-form.jsx";
+import {inputField, selectField, OnOffToggleField, iconToggleField,priceField, priceToCents} from "./servicebot-base-field.jsx";
+import {addAlert, dismissAlert} from "../../utilities/actions";
+import ServiceBotBaseForm from "./servicebot-base-form.jsx";
+import SVGIcons from "../../utilities/svg-icons.jsx";
+import Load from "../../utilities/load.jsx";
 let _ = require("lodash");
-/**
- * TO DO FOR VALIDATION HANDLING:
- *
- * 1. Define a validation object which will be added as a property to a dataform formatted:
- *      {
- *      "fieldname" : validationFunction,
- *      "fieldname2" :validationFunction,
- *      ...
- *      ...
- *      "references" : {
- *          "modelName1" : {
- *              "fieldname3" : validationFunction,
- *              ...
- *          }
- *      }
- *
- * 2. In the dataform submit function, look through each field and run the validation function, the function should either
- *    return true, false, or an error string
- *
- * 3. if anything returns false or error string do not continue with submission of form - instead build a
- *    new state wi where each validation error should be included in the object that contains the error (either top level or inside a model object)
- *    and the error text should be displayed as a mouse over tooltip or something... the validation function cal also call Alert to display information at the bottom of screen
- *
- * 4. When the state change is initiated, each datachild will be given an error object if it contains any fields that contain errors in it's props
- *
- * 5. when the datachild's rendering it's components we will check the name of each component and if the field's name matches the error object it will do something to the component
- *    (either pass a prop or class or something) and make sure if it's not a standard input have the component handle the data it is receiving.
- *
- * 6. when the bad fields are fixed, submit again and run validators again, this process will repeat if errors are detected again, otherwise form should continue with submission process.
- *
- */
-class ServiceTemplateForm extends React.Component {
+import { required, email, numericality, length } from 'redux-form-validators'
+const TEMPLATE_FORM_NAME = "serviceTemplateForm"
+const selector = formValueSelector(TEMPLATE_FORM_NAME); // <-- same as form name
+class CustomField extends React.Component {
 
     constructor(props) {
         super(props);
-        // if editing an existing template (meaning with and ID)
-        if(this.props.params.templateId && this.props.params.templateId !== null ){
-            // console.log("has templateId", this.props.params.templateId);
-            this.state = {
-                templateId: this.props.params.templateId,
-                template: [],
-                url: "/api/v1/service-templates/" + props.params.templateId,
-                loading: true,
-                submitSuccessful: false,
-                submissionResponse: false,
-                files: [],
-                customPropsCount: 0,
-                newProperties: [],
-                categories_url: "/api/v1/service-categories",
-                templateImageURL: `/api/v1/service-templates/${this.props.params.templateId}/image`,
-                categories: [],
-                currentAction: '_EDIT',
-                uploadTrigger: false
-            };
-        }else{ // else creating a new template (meaning without an ID)
-            // console.log("no templateId");
-            this.state = {
-                template: {},
-                loading:true,
-                submitSuccessful: false,
-                submissionResponse: false,
-                customPropsCount: 0,
-                newProperties: [],
-                templateImageURL: '/assets/custom_icons/upload.png',
-                categories_url: "/api/v1/service-categories",
-                categories: [],
-                files: [],
-                customPropsToRemove: [],
-                currentAction: '_CREATE',
-                addCategoryModal: false,
-                uploadTrigger: false
-            };
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+        let props = this.props;
+        if (nextProps.myValues.type !== props.myValues.type) {
+            props.clearConfig();
+            props.clearValue();
         }
-        this.fetchCategories = this.fetchCategories.bind(this);
-        this.handleResponse = this.handleResponse.bind(this);
-        this.handleAddProp = this.handleAddProp.bind(this);
-        this.handleDeleteProp = this.handleDeleteProp.bind(this);
-        this.onUpdate = this.onUpdate.bind(this);
-        this.processForm = this.processForm.bind(this);
-        this.inputTypesFilter = this.inputTypesFilter.bind(this);
-        this.advanceOptionsFilter = this.advanceOptionsFilter.bind(this);
-        this.getFormData = this.getFormData.bind(this);
-        this.getServiceType = this.getServiceType.bind(this);
-        this.openAddCategoryModal = this.openAddCategoryModal.bind(this);
-        this.closeAddCategoryModal = this.closeAddCategoryModal.bind(this);
-        this.onImageChanged = this.onImageChanged.bind(this);
-        this.handleImageUploadSuccess = this.handleImageUploadSuccess.bind(this);
-    }
-
-    componentWillMount(){
-        let self = this;
-
-        this.fetchCategories();
-    }
-
-    fetchCategories(){
-        let self = this;
-
-        return new Promise(function(resolve, reject){
-            Fetcher(self.state.categories_url).then(function (categories_response) {
-                if(!categories_response.error){
-                    // console.log(categories_response);
-                    self.setState({categories: categories_response}, function(){
-                        resolve(categories_response);
-                    });
-                }else{
-                    console.error("category error", categories_response.error);
-                    reject(categories_response.error);
-                }
-            })
-        });
-    }
-
-
-
-    componentDidMount() {
-        var self = this;
-        if(this.props.params.templateId && this.props.params.templateId !== null){
-            Fetcher(self.state.url).then(function(response){
-                if(!response.error){
-                    self.setState({loading:false, template: response});
-                }else{
-                    self.setState({loading:false});
-                }
-            }).catch(function(err){
-                browserHistory.push("/");
-            })
-        }else{
-            self.setState({loading:false});
+        if((props.templateType && nextProps.templateType !== props.templateType)){
+            props.clearPricing();
         }
-
-        this.replaceTagsInputPlaceholder();
-    }
-
-    replaceTagsInputPlaceholder(){
-        let tagsinputs = document.getElementsByClassName('react-tagsinput-input');
-        // console.log('gettnig tags inputs', tagsinputs);
-        if(tagsinputs && tagsinputs.length){
-            tagsinputs[0].placeholder = 'Add Values';
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState){
-        // console.log("Updated new state:", this.state);
-        this.replaceTagsInputPlaceholder();
-
-        //find the input with error and scroll to it
-        let errorInputs = document.getElementsByClassName('has-error');
-        if(errorInputs.length){
-            let y = errorInputs[0].offsetTop;
-            window.scrollTo(0, y);
-        }
-
-        if(prevState.submissionResponse.id != this.state.submissionResponse.id){
-            console.log("previous state", prevState.submissionResponse);
-            console.log("submission was successful", this.state.submissionResponse);
-            this.setState({uploadTrigger:true});
-        }
-    }
-
-    handleImageUploadSuccess(){
-        if(!this.state.submitSuccessful) {
-            this.setState({submitSuccessful: true});
-        }
-    }
-
-    handleResponse(response){
-        let self = this;
-        console.log("state inside handle response", self.state);
-        if(_.has(self.state, 'customPropsToRemove') && self.state.customPropsToRemove.length > 0){
-            console.log("has something to delete", self.state.customPropsToRemove);
-            _.map(self.state.customPropsToRemove, function(id){
-                Fetcher(`/api/v1/service-template-properties/${id}`, 'delete').then(function (response) {
-                    if(response.error){
-                        console.error("problem encountered during deletion of service template properties with id: " + id);
-                    }
-                })
-            })
-        }
-        if(!response.error){
-            if(!this.state.imageChanged) {
-                self.setState({submissionResponse: response, submitSuccessful: true});
-            }else{
-                self.setState({submissionResponse: response});
-            }
-        }else{
-            console.log('has errors in handle response', response);
-        }
-    }
-
-    handleAddProp(e){
-        e.preventDefault();
-        this.setState({ customPropsCount: this.state.customPropsCount + 1,
-            newProperties : this.state.newProperties.concat({objectName:"newProp" + this.state.customPropsCount})});
-    }
-    handleDeleteProp(objectName){
-        let self = this;
-        return function(e) {
-            e.preventDefault();
-            self.setState({newProperties : self.state.newProperties.filter(function(prop){
-                return prop.objectName != objectName;
-            })});
-        }
-    }
-    handleDeleteOriginalProp(id){
-        let self = this;
-        return function(e) {
-            e.preventDefault();
-            let arrayOfProps = self.state.template.references.service_template_properties;
-            let newArrayOfProps = [];
-            let newTemplate = self.state.template;
-            _.map(arrayOfProps, function(prop){
-               if(prop.id != id){
-                   newArrayOfProps = _.concat(newArrayOfProps, prop);
-               }
-            });
-            self.setState({ template : _.set(newTemplate, 'references.service_template_properties', newArrayOfProps),
-                            customPropsToRemove: _.concat(self.state.customPropsToRemove, id)});
-        }
-    }
-    //This is for the input type selection for the custom fields
-    inputTypesFilter(parentValue){
-        return function(child){
-            if(child.type && child.props.isTags && parentValue == 'select'){
-                return true;
-            }else if(child.type && child.props.type == 'select' && child.props.name == 'value' && parentValue == 'select') {
-                return true;
-            }else if(child.type && child.props.type == 'text' && child.props.name == 'value' && parentValue == 'text'){
-                return true;
-            }else if(child.type && child.props.type == 'checkbox' && parentValue == 'checkbox'){
-                return true;
-            }else{
-                return false;
-            }
-        }
-    }
-    //This is for the section with Private, required and prompt user.
-    advanceOptionsFilter(parentValue){
-        return function(child){
-            if(parentValue == 'false'){
-                if(child.props.name == 'required' || child.props.name == 'prompt_user' || child.props.name == "prompt_user2" ){
-                    //return true to render the child, false to skip rendering the currrent child.
-                    return true;
-                }
-            }
-        }
-    }
-
-    //This a a helper function to access data in this.state.form
-    getFormData(data, path){
-        let myData = null;
-        if(data && path){
-            myData =_.get(data, path);
-            if(_.has(myData, 'prop_values')){
-                return myData.prop_values;
-            }
-        }
-        return false;
-    }
-
-    onImageChanged(){
-        this.setState({imageChanged: true});
-    }
-
-    onUpdate(form){
-        //getting the form JSON string from DataForm on update
-        this.setState({form: form});
-    }
-
-    getServiceType(){
-        let self = this;
-        if(this.state.currentAction == "_EDIT"){
-            let templateData = self.state.template;
-            let interval = templateData.interval;
-            let interval_count = templateData.interval_count;
-
-            if (interval == 'day' && interval_count == '1'){
-                return ('_ONE_TIME');
-            }else if (interval == 'day' && (interval_count == null || interval_count == 'undefined')){
-                return ('_CUSTOM');
-            }else{
-                return ('_SUBSCRIPTION');
-            }
-        }else{
-            return false;
-        }
-    }
-
-    openAddCategoryModal(){
-        this.setState({addCategoryModal: true});
-    }
-    closeAddCategoryModal(){
-        let self = this;
-        this.fetchCategories().then(function (fetchResponse) {
-            self.setState({addCategoryModal: false});
-        }, function (fetchError) {
-            console.log('fetch new categories error', fetchError);
-        });
-    }
-
-    processForm(id = null){
-        let self = this;
-        let reviewJSON, categories, templateData = null;
-        let formData = false;
-        let templateDataChild = [];
-        let submissionURL = "/api/v1/service-templates";
-        let submission_method = "POST";
-        if(id){
-            templateData = self.state.template;
-            templateDataChild = self.state.template.references.service_template_properties;
-            if(!self.props.params.duplicate) {
-                submissionURL = submissionURL + '/' + id;
-                submission_method = "PUT";
-            }else{
-                templateDataChild.map(child => {
-                    return child;
-                })
-            }
-        }
-        if(this.state.form) {
-            reviewJSON = self.state.form;
-
-            //save the data for later use in the form
-            formData = JSON.parse(self.state.form);
-        }
-        if(this.state.categories && this.state.categories.length > 0 ){
-            categories = self.state.categories;
-        }
-
-        //Defining general validators
-        let validateRequired        = (val) => { return val === 0 || val === false || val != '' && val != null};
-        let validateStringNoSpace   = (val) => { return typeof(val) == 'string' && val.indexOf(' ') == -1};
-        let validateEmptyString     = (val) => { return val.trim() != ''};
-        let validateNumber          = (val) => { return !isNaN(parseFloat(val)) && isFinite(val) };
-        let validateBoolean         = (val) => { return val === true || val === false || val === 'true' || val === 'false'};
-        //Defining validators
-        let validateName            = (val) => { return validateRequired(val) && validateEmptyString(val) || {error:"Field name is required."}};
-        let validateDescription     = (val) => { return validateRequired(val) && validateEmptyString(val) || {error:"field description is required"}};
-        let validatePublished       = (val) => { return validateBoolean(val) || {error:"Field published must be a boolean"}};
-        let validateCategory        = (val) => { return (validateRequired(val) && validateNumber(val)) || {error:"Field category must be a valid ID"}};
-        let validateTrialDay        = (val) => { return (validateRequired(val) && validateNumber(val) && val >= 0) || {error:"Field trial days is required and must be a number greater than or equal 0"}};
-        let validateAmount          = (val) => { return (validateRequired(val) && validateNumber(val) && val >= 0) || {error:"Field amount is required and must be a number greater than or equal 0"}};
-        let validateCurrency        = (val) => { return (validateRequired(val) && val === 'USD')};
-        let validateInterval        = (val) => { return (validateRequired(val) && (val == 'day' || val == 'week' || val == 'month' || val == 'year')) || {error:"Field interval must be day, week, month or year."}};
-        // let validateIntervalCount   = (val) => { return (validateRequired(val) && validateNumber(val) && val >= 1) || {error:"Field interval count is required and must be a number greater than 0"}};
-        let validateIntervalCount   = () => { return (true) };
-        let validateProrated        = (val) => { return (validateRequired(val) && validateBoolean(val)) || {error: "Field prorated is required and must be boolean."}};
-        //Defining DataChild validators
-        let validateCustomPropName          = (val) => { return (validateRequired(val) && validateEmptyString(val)) || {error: "Field label is required."}};
-        // let validateCustomPropMachineName   = (val) => { return (validateRequired(val) && validateStringNoSpace(val) && validateEmptyString(val)) || {error: "Field machine name is required and must not have any space, use _ instead."}};
-        let validateCustomPropInputType     = (val) => { return (validateRequired(val) && (val == "text" || val == "select" || val == "checkbox")) || {error: "Field input type is required and must be text, select or checkbox"}};
-        let validateCustomPropPrivate       = (val) => { return (validateRequired(val) && validateBoolean(val)) || {error: "Field private is required and must be boolean."}};
-        let validateCustomPropRequired      = (val) => { return (validateRequired(val) && validateBoolean(val)) || {error: "Field required is required and must be boolean."}};
-        let validateCustomPropPromptUser    = (val) => { return (validateRequired(val) && validateBoolean(val)) || {error: "Field prompt user is required and must be boolean."}};
-        //Setting up an validator object that will be passed into DataFrom through props, object key must match a form input name.
-        let validators = {
-            'name'              : validateName,
-            'description'       : validateDescription,
-            'published'         : validatePublished,
-            'category_id'       : validateCategory,
-            'trial_period_days' : validateTrialDay,
-            'amount'            : validateAmount,
-            'currency'          : validateCurrency,
-            'interval'          : validateInterval,
-            'interval_count'    : validateIntervalCount,
-            'subscription_prorate': validateProrated,
-            'references'        : {
-                service_template_properties :{
-                    'prop_label'        : validateCustomPropName,
-                    // 'name'              : validateCustomPropMachineName,
-                    'prop_input_type'   : validateCustomPropInputType,
-                    'private'           : validateCustomPropPrivate,
-                    'required'          : validateCustomPropRequired,
-                    'prompt_user'       : validateCustomPropPromptUser
-                }
-            }
-        };
-
-        let imageUploadURL = (this.state.templateId && !this.props.params.duplicate) ?
-            `/api/v1/service-templates/${this.state.templateId}/image` :
-            `/api/v1/service-templates/${this.state.submissionResponse.id}/image`;
-
-        let iconUploadURL = (this.state.templateId && !this.props.params.duplicate) ?
-            `/api/v1/service-templates/${this.state.templateId}/icon` :
-            `/api/v1/service-templates/${this.state.submissionResponse.id}/icon`;
-
-        console.log("template image urls", imageUploadURL, iconUploadURL);
-        //Returning stuff to be rendered (the input fields)
-        return (
-            <div>
-                <DataForm validators={validators} onUpdate={self.onUpdate} handleResponse={self.handleResponse} url={submissionURL} method={submission_method}>
-                    <div className="row">
-                        <div className="col-sm-12 col-md-4">
-                            <div id="service-basic-info" className="p-20">
-                                <h3>Basic Info</h3>
-
-                                <div className="form-group form-group-flex column">
-                                    <label>Upload Cover Image</label>
-                                    <ImageUploader elementID="template-image" imageStyle="template-image-upload"
-                                                   imageURL={`/api/v1/service-templates/${this.state.submissionResponse.id}/image`}
-                                                   imageGETURL={imageUploadURL}
-                                                   uploadTrigger={this.state.uploadTrigger}
-                                                   uploadButton={false}
-                                                   handleSuccess={this.handleImageUploadSuccess}
-                                                   onChange={this.onImageChanged}
-                                                   imageRemovable={true}
-                                                   name="template-image"/>
-                                </div>
-
-                                <div className="form-group form-group-flex column">
-                                    <label>Upload Icon</label>
-                                    <ImageUploader elementID="template-icon" imageStyle="template-image-upload"
-                                                   imageURL={`/api/v1/service-templates/${this.state.submissionResponse.id}/icon`}
-                                                   imageGETURL={iconUploadURL}
-                                                   uploadTrigger={this.state.uploadTrigger}
-                                                   uploadButton={false}
-                                                   handleSuccess={this.handleImageUploadSuccess}
-                                                   onChange={this.onImageChanged}
-                                                   imageRemovable={true}
-                                                   name="template-icon"/>
-                                </div>
-
-                                <Inputs type="text" name="name" label="Service Name" defaultValue={templateData && templateData.name}
-                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                <Inputs type="text" name="description" label="Summary" defaultValue={templateData && templateData.description}
-                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                <div className="form-group">
-                                    <label className="control-label">Service Details</label>
-                                    <Wysiwyg name="details" value={templateData && templateData.details} ref="wysiwyg"
-                                             onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                </div>
-
-                                <Inputs type={'select'} name="published" label="Published?" defaultValue={true}
-                                        options={[{'Yes':true},{'No':false}]}
-                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                <div className="form-group">
-                                    <label className="">Category</label>
-                                    <div className="form-group-flex">
-                                        <select id="category_id" className="form-control" defaultValue={templateData ? templateData.category_id : 1} name="category_id" onChange={this.props.onChange}>
-                                            {categories && categories.map(cat => (
-                                                <option key={`category-${cat.id}`} value={cat.id}>{cat.name}</option>
-                                            ))}
-                                        </select>
-                                        <Buttons buttonClass="btn btn-flat btn-info" btnType="link" text="Add" onClick={this.openAddCategoryModal}/>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div className="col-sm-12 col-md-4">
-                            <div id="service-payment-info" className="p-20">
-                                <h3>Payment Info</h3>
-
-                                <Inputs type="text" maxLength="22" name="statement_descriptor" label="Statement Descriptor" defaultValue={templateData && templateData.statement_descriptor}
-                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                <Inputs type="number" name="trial_period_days" label="Trial Period (Days)" defaultValue={templateData ? templateData.trial_period_days : 0}
-                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                <Inputs type="hidden" name="currency" label="Currency" defaultValue={(templateData && templateData.currency) ? templateData.currency : "USD"}
-                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                <ServiceTemplateFormSubscriptionFields form={formData} templateData={templateData} serviceType={this.getServiceType()} formAction={self.state.currentAction}
-                                                                       onChange={function(){}} receiveOnChange={true} receiveValue={true} />
-
-                            </div>
-                        </div>
-                        <div className="col-sm-12 col-md-4">
-                            <div id="service-custom-props" className="p-20">
-                                <h3>Custom Fields</h3>
-                                <p className="help-block">You can add custom fields for collecting additional information from customers.</p>
-                                {/* This is loading original DataChild data for Editing or Copying */}
-                                {templateDataChild.map(function(prop){
-
-                                    let defaultValue = null;
-                                    if(prop.prop_input_type == "text"){
-                                        defaultValue = (
-                                            <Inputs type="text" name="value" label="Default Value" defaultValue={prop.value}
-                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                        );
-                                    }else if(prop.prop_input_type == "select"){
-                                        defaultValue = (
-                                            <Inputs type={'select'} name="value" label="Default Value" defaultValue={prop.value ? prop.value : null}
-                                                    options={prop.prop_values}
-                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true} />
-                                        );
-                                    }
-                                    else if(prop.prop_input_type == "checkbox"){
-                                        defaultValue = (
-                                            <Inputs type="checkbox" name="value" label="Default Value" defaultValue={prop.value == "true"}
-                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                        );
-                                    }
-
-                                    let defaultOptions = null;
-                                    if(prop.prop_input_type == "select"){
-                                        console.log("IN SELECT!");
-                                        defaultOptions = (
-                                            <div>
-                                                <label>Available Values</label>
-                                                <TagsInput onlyUnique={true} name="prop_values" value={prop.prop_values ? prop.prop_values : []}
-                                                           isTags={true} onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                            </div>);
-                                    }else{
-                                        console.log("propblem getting the default options", prop);
-                                    }
-
-                                    return (
-                                        <DataChild key={prop.name} modelName="service_template_properties" objectName={prop.name}>
-                                            <h3>Custom Properties</h3>
-
-                                            <div className="button-box space-between">
-                                                <div><strong>{prop.prop_label}</strong></div>
-                                                <button className="btn btn-flat btn-info" onClick={self.handleDeleteOriginalProp(prop.id)}>Remove</button>
-                                            </div>
-
-                                            {!self.props.params.duplicate && <Inputs type="hidden" name="id" defaultValue={prop.id}
-                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}/>}
-
-                                            <CustomPropNameField name="prop_label" objectName={prop.name} defaultValues={{label: prop.prop_label, name: prop.name}}
-                                                                 onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                            <Inputs type={'select'} disabled name="prop_input_type" label="Input Type" defaultValue={prop.prop_input_type ? prop.prop_input_type : 'text'}
-                                                    options={[{'Text Box':'text'},{'Select List':'select'},{'Check Box':'checkbox'}]} filter={self.inputTypesFilter}
-                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true} />
-
-                                            {defaultOptions}
-                                            {defaultValue}
-
-                                            <Inputs type="select" name="private" label="Private?" defaultValue={prop.private ? prop.private : false}
-                                                    options={[{'Yes': true}, {'No': false}]} filter={self.advanceOptionsFilter}
-                                                    manageDependency={[{name: "prompt_user", dependsOn: "required", valFun : function(value, child){
-                                                        child.props.onChange((value != "false").toString());
-                                                    }
-                                                    }]}
-                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}>
-
-                                                <Inputs type="select" name="required" label="Required?" unmountValue={false} defaultValue={prop.required}
-                                                        options={[{'Yes': true}, {'No': false}]}
-                                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                                <Inputs type="select" name="prompt_user" label="Prompt User" unmountValue={false} defaultValue={prop.prompt_user}
-                                                        options={[{'Yes': true}, {'No': false}]}
-                                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                            </Inputs>
-
-                                        </DataChild>
-                                    );
-                                })}
-
-                                {/* Rendering new prop fields */}
-                                {this.state.newProperties.map(function(prop){
-                                    return (
-                                        <DataChild key={prop.objectName} modelName="service_template_properties" objectName={prop.objectName}>
-
-                                            <div className="button-box space-between">
-                                                <div><strong>{`New Custom Field`}</strong></div>
-                                                <button className="btn btn-flat btn-info" onClick={self.handleDeleteProp(prop.objectName)}>Remove</button>
-                                            </div>
-
-                                            <CustomPropNameField name="prop_label" objectName={prop.objectName}
-                                                                 onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                            <Inputs type={'select'} name="prop_input_type" label="Input Type" defaultValue={'text'}
-                                                    options={[{'Text Box':'text'},{'Select List':'select'},{'Check Box':'checkbox'}]} filter={self.inputTypesFilter}
-                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true} >
-
-                                                <TagsInput onlyUnique={true} name="prop_values" value={[]}
-                                                           isTags={true} onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-
-                                                <Inputs type="text" name="value" label="Default Value" defaultValue=""
-                                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                                <Inputs type="select" name="value" label="Select a Default Value" defaultValue={0 || ''}
-                                                        options={self.getFormData(formData, `form.references.service_template_properties[${prop.objectName}]`) || []}
-                                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                                <Inputs type="checkbox" name="value" label="Default Value" defaultValue={false}
-                                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                            </Inputs>
-
-                                            <Inputs type="select" name="private" label="Private?" defaultValue={false}
-                                                    options={[{'Yes': true}, {'No': false}]} filter={self.advanceOptionsFilter}
-                                                    manageDependency={[{name: "prompt_user", dependsOn: "required", valFun : function(value, child){
-                                                        child.props.onChange((value != "false").toString());
-                                                    }
-                                                    }]}
-                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}>
-
-                                                <Inputs type="select" name="required" label="Required?" unmountValue={false} defaultValue={false}
-                                                        options={[{'Yes': true}, {'No': false}]}
-                                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                                <Inputs type="select" name="prompt_user" label="Prompt User" unmountValue={false} defaultValue={true}
-                                                        options={[{'Yes': true}, {'No': false}]}
-                                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                            </Inputs>
-
-                                        </DataChild>
-                                    )
-                                })}
-                            </div>
-                            <div id="service-custom-props-add" className="button-box right">
-                                <button className="btn btn-rounded btn-info" href="#" onClick={this.handleAddProp}>Add Property</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="service-submission-box" className="button-box right">
-                        <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>Go Back</Link>
-                        <button className="btn btn-rounded btn-primary" type="submit" value="submit">
-                            {self.state.currentAction == '_CREATE' ? 'Create Service' :
-                                self.state.currentAction == '_EDIT' ? 'Submit Changes' : 'Submit'}</button>
-                    </div>
-                </DataForm>
-                {/*<DataFromReview reviewJSON={reviewJSON}/>*/}
-            </div>
-        );
     }
 
     render() {
 
-        if(this.state.loading){
-            return <Load/>;
-        }else {
-            if(this.state.submitSuccessful) {
-                return (
-                    <div>
-                        <p><strong>Your service has been created.</strong></p>
-                        <ul>
-                            <li>Name: {this.state.submissionResponse.name}</li>
-                            <li>Description: {this.state.submissionResponse.description}</li>
-                        </ul>
-                        <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>View Services</Link>
-                    </div>
-                )
-            }else {
+        let props = this.props;
+        let {
+            willAutoFocus, index, typeValue, member, myValues, privateValue, requiredValue, promptValue, configValue,
+            setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt, templateType
+        } = props;
+        if (myValues.prop_label) {
+            willAutoFocus = false;
+        }
+        return (
+            <div className="custom-property-fields">
+                <div id="custom-prop-name" className="custom-property-field-group">
+                    <Field
+                        willAutoFocus={willAutoFocus}
+                        name={`${member}.prop_label`}
+                        type="text"
+                        component={inputField}
+                        validate={required()}
+                        placeholder="Custom Property Label"
+                    />
+                </div>
 
-                let getModals = ()=> {
-                    if(this.state.addCategoryModal){
-                        return (
-                            <ModalAddCategory show={this.state.addCategoryModal} hide={this.closeAddCategoryModal}/>
-                        )
+                <div id="custom-prop-type" className="custom-property-field-group">
+                    <WidgetList name={`${member}.type`} id="type"/>
+                </div>
+
+                <div id="custom-prop-settings" className="custom-property-field-group">
+                    {!privateValue && !requiredValue &&
+                    <Field
+                        onChange={changePrompt}
+                        setValue={setPrompt}
+                        name={`${member}.prompt_user`}
+                        type="checkbox"
+                        label={promptValue ? "Prompt User" : "Set Prompt User"}
+                        defaultValue={true}
+                        color="#0091EA"
+                        faIcon="eye"
+                        component={iconToggleField}
+                    />
                     }
-                };
+                    {!privateValue &&
+                    <Field
+                        onChange={changeRequired}
+                        setValue={setRequired}
+                        name={`${member}.required`}
+                        type="checkbox"
+                        label={requiredValue ? "Required" : "Set Required"}
+                        color="#FF1744"
+                        faIcon="check"
+                        component={iconToggleField}
+                    />
+                    }
+                    {!requiredValue && !promptValue &&
+                    <Field
+                        onChange={changePrivate}
+                        setValue={setPrivate}
+                        name={`${member}.private`}
+                        type="checkbox"
+                        label={privateValue ? "Private" : "Set Private"}
+                        color="#424242"
+                        faIcon="hand-paper-o"
+                        component={iconToggleField}
+                    />
+                    }
+                </div>
 
-                if (this.props.params.templateId && this.props.params.templateId !== null) {
-                    return (
-                        <div>
-                            {this.processForm(this.props.params.templateId)}
-                            {getModals()}
-                        </div>
-                    );
-                } else {
-                    return (
-                        <div>
-                            {this.processForm()}
-                            {getModals()}
-                        </div>
-                    );
-                }
-            }
-        }
-    }
-
-}
-
-class CustomPropNameField extends React.Component {
-
-    //This is for hiding machine name and set it to whatever label is replacing spaces with _
-    constructor(props){
-        super(props);
-        this.state = {
-            objectName: this.props.objectName,
-            label: this.props.defaultValues ? this.props.defaultValues.label : '',
-            name : this.props.defaultValues ? this.props.defaultValues.name : '',
-            firstLoad : true
-        };
-
-        this.myChange = this.myChange.bind(this);
-    }
-
-    componentDidMount(){
-            this.props.onChange(this.state.label, null, "prop_label");
-            this.props.onChange(this.state.name, null, "name");
-            this.setState({firstLoad: false});
-    }
-
-    myChange(e){
-        let objectName = this.state.objectName;
-        let labelVal = e.target.value;
-        let nameVal = labelVal.replace(/ /g,"_").toLowerCase();
-
-        let set = {"form" : {"references" : {"service_template_properties" : {[objectName] : {$merge: {"prop_label" : labelVal, "name" : nameVal}}}}}};
-        this.props.onChange(null, set);
-    }
-
-    render(){
-        let change = this.myChange;
-        if(this.state.firstLoad){
-            change = this.props.onChange;
-        }
-        let defaultLabel = this.state.label || '';
-        let defaultName = this.state.name || '';
-
-
-       return(
-            <div>
-                <div className={`form-group ${this.props.error ? 'has-error' : ''} ${this.props.warning ? 'has-warning' : ''}`}>
-                    <label className="control-label">Label</label>
-                    <input className={this.props.error ? this.props.className : 'form-control'}
-                           ref="label" type="text" name="prop_label" label="Name" defaultValue={defaultLabel} onChange={change}/>
-                    {this.props.error && <span className="help-block">{this.props.error}</span> }
-                    {this.props.warning && <span className="help-block">{this.props.warning}</span> }
-                    <input ref="name" type="hidden" name="name" label="Machine Name" defaultValue={defaultName} onChange={change}/>
+                <div id="custom-prop-widget" className="custom-property-field-group">
+                    {typeValue && <RenderWidget
+                        showPrice={templateType !== "custom"}
+                        member={member}
+                        configValue={configValue}
+                        widgetType={typeValue}/>
+                    }
                 </div>
             </div>
-       );
+        )
+    };
+}
 
+CustomField = connect((state, ownProps) => {
+    return {
+        "privateValue": selector(state, "references.service_template_properties")[ownProps.index].private,
+        "requiredValue": selector(state, "references.service_template_properties")[ownProps.index].required,
+        "promptValue": selector(state, "references.service_template_properties")[ownProps.index].prompt_user,
+        "typeValue": selector(state, "references.service_template_properties")[ownProps.index].type,
+        "configValue": selector(state, `references.service_template_properties`)[ownProps.index].config,
+        "myValues": selector(state, `references.${ownProps.member}`)
+
+    }
+}, (dispatch, ownProps) => {
+    return {
+        "setPrivate": (val) => {
+            if (val == true) {
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, true));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, false));
+            } else {
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
+            }
+        },
+        "setRequired": (val) => {
+            if (val == true) {
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, true));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, true));
+            } else {
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, false));
+            }
+        },
+        "setPrompt": (val) => {
+            if (val == true) {
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, true));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
+            } else {
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, false));
+            }
+        },
+        "changePrivate": (event) => {
+            if (!event.currentTarget.value || event.currentTarget.value == 'false') {
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, false));
+            }
+        },
+        "changeRequired": (event) => {
+            if (!event.currentTarget.value || event.currentTarget.value == 'false') {
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, true));
+            }
+        },
+        "changePrompt": (event) => {
+            if (!event.currentTarget.value || event.currentTarget.value == 'false') {
+                dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
+            }
+        },
+        "clearConfig": () => {
+            dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.config`, {}));
+        },
+        "clearPricing": () => {
+            dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.config.pricing`, null));
+        },
+        "clearValue": () => {
+            dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.data`, null));
+        }
+    }
+})(CustomField);
+
+//Custom property
+class renderCustomProperty extends React.Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            customFields: [],
+        };
+
+
+        this.onAdd = this.onAdd.bind(this);
+    }
+
+    onAdd(e) {
+        e.preventDefault();
+        const {privateValue, fields, meta: {touched, error}} = this.props;
+        return (fields.push({}));
+    }
+
+    render() {
+        let props = this.props;
+        const {templateType, privateValue, fields, meta: {touched, error}} = props;
+        return (
+            <div>
+                <ul className="custom-fields-list">
+                    {fields.map((customProperty, index) =>
+                        <li className="custom-field-item" key={index}>
+                            <div className="custom-field-name">
+                                {/*{fields.get(index).prop_label ?*/}
+                                {/*<p>{fields.get(index).prop_label}</p> : <p>Field #{index + 1}</p>*/}
+                                {/*}*/}
+                                <button className="btn btn-rounded custom-field-button iconToggleField"
+                                        id="custom-field-delete-button"
+                                        type="button"
+                                        title="Remove Field"
+                                        onClick={() => fields.remove(index)}>
+                                    <span className="itf-icon"><i className="fa fa-close"/></span>
+                                </button>
+                            </div>
+                            <CustomField templateType={templateType} member={customProperty} index={index}
+                                         willAutoFocus={fields.length - 1 == index}/>
+                        </li>
+                    )}
+                    <li className="custom-field-item">
+                        <div className="form-group form-group-flex">
+                            <input className="form-control custom-property-add-field-toggle" autoFocus={false}
+                                   placeholder="Add Custom Field ..." onClick={this.onAdd}/>
+                        </div>
+                        {/*<button className="btn btn-rounded" type="button" onClick={this.onAdd}>Add Field</button>*/}
+                        {touched && error && <span>{error}</span>}
+                    </li>
+                </ul>
+            </div>
+        )
+    };
+}
+
+
+//The full form
+
+
+class TemplateForm extends React.Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+
+        let props = this.props;
+
+        const changeServiceType = (event, newValue) => {
+            if (newValue === 'one_time') {
+                props.setIntervalCount();
+                props.setInterval();
+            }
+            else if (newValue === 'custom') {
+                props.setIntervalCount();
+                props.setInterval();
+                props.clearAmount();
+            }
+        };
+
+
+        const {handleSubmit, pristine, reset, submitting, error, serviceTypeValue, invalid, formJSON, options} = props;
+
+        const sectionDescriptionStyle = {
+            background: _.get(options, 'service_template_icon_background_color.value', '#000000'),
+            height: "100px",
+            width: "100px",
+            padding: "30px",
+            marginLeft: "50%",
+            transform: "translateX(-50%)",
+            borderRadius: "50%",
+        };
+
+        return (
+
+            <form onSubmit={handleSubmit}>
+                <div className="row">
+                    <div className="col-md-8">
+                        <div className="form-level-errors">
+                            {error && <div className="form-error">{error}</div>}
+                        </div>
+                        <div className="form-level-warnings"/>
+                        <h3>Basic Info</h3>
+                        <Field name="name" type="text"
+                               component={inputField} label="Product / Service Name"
+                               validate={[required()]}
+                        />
+                        <Field name="description" type="text"
+                               component={inputField} label="Summary"
+                               validate={[required()]}
+                        />
+                        <Field name="details" type="text"
+                               component={WysiwygRedux} label="Details"
+                               validate={[required()]}
+                        />
+                        <Field name="published" type="checkbox"
+                               defaultValue={true} color="#0091EA" faIcon="check"
+                               component={OnOffToggleField} label="Published?"
+                        />
+                        <Field name="category_id" type="select"
+                               component={selectField} label="Category" options={formJSON ? formJSON._categories : []}
+                               validate={[required()]}
+                        />
+                    </div>
+                    <div className="col-md-4">
+                        <div style={sectionDescriptionStyle}>
+                            <SVGIcons id="basic-info-svg" width="40px" height="40px"
+                                      fillColor={_.get(options, 'service_template_icon_fill_color.value', '#ffffff')}>
+                                <path
+                                    d="M421.648,74.336L349.664,2.352C348.216,0.896,346.216,0,344,0H96C73.944,0,56,17.944,56,40v400c0,22.056,17.944,40,40,40    h288c22.056,0,40-17.944,40-40V80C424,77.784,423.104,75.784,421.648,74.336z M352,27.312L396.688,72H352V27.312z M408,440    c0,13.232-10.768,24-24,24H96c-13.232,0-24-10.768-24-24V40c0-13.232,10.768-24,24-24h240v64c0,4.424,3.584,8,8,8h64V440z"/>
+                                <path
+                                    d="m128 112c-17.648 0-32 14.352-32 32s14.352 32 32 32 32-14.352 32-32-14.352-32-32-32zm0 48c-8.824 0-16-7.176-16-16s7.176-16 16-16 16 7.176 16 16-7.176 16-16 16z"/>
+                                <path
+                                    d="m128 200c-17.648 0-32 14.352-32 32s14.352 32 32 32 32-14.352 32-32-14.352-32-32-32zm0 48c-8.824 0-16-7.176-16-16s7.176-16 16-16 16 7.176 16 16-7.176 16-16 16z"/>
+                                <path
+                                    d="m128 288c-17.648 0-32 14.352-32 32s14.352 32 32 32 32-14.352 32-32-14.352-32-32-32zm0 48c-8.824 0-16-7.176-16-16s7.176-16 16-16 16 7.176 16 16-7.176 16-16 16z"/>
+                                <path
+                                    d="m128 376c-17.648 0-32 14.352-32 32s14.352 32 32 32 32-14.352 32-32-14.352-32-32-32zm0 48c-8.824 0-16-7.176-16-16s7.176-16 16-16 16 7.176 16 16-7.176 16-16 16z"/>
+                                <rect x="176" y="152" width="208" height="16"/>
+                                <rect x="184" y="40" width="112" height="16"/>
+                                <rect x="160" y="72" width="160" height="16"/>
+                                <rect x="176" y="240" width="208" height="16"/>
+                                <rect x="176" y="328" width="208" height="16"/>
+                                <rect x="176" y="416" width="208" height="16"/>
+                                <rect x="240" y="120" width="16" height="16"/>
+                                <rect x="208" y="120" width="16" height="16"/>
+                                <rect x="176" y="120" width="16" height="16"/>
+                            </SVGIcons>
+                        </div>
+                        <p className="help-block">Enter the basic information about your service. Summary will
+                            be
+                            shown to users in the product / service listing pages, such as the home page
+                            featured
+                            items. Details will be shown on each individual products / services page.</p>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <hr/>
+                        <div className="row">
+                            <div className="col-md-8">
+                                <h3>Payment Details</h3>
+                                <Field name="statement_descriptor" type="hidden"
+                                       component={inputField} label="Statement Descriptor"
+                                />
+                                <Field name="type" id="type"
+                                       component={selectField} label="Billing Type" onChange={changeServiceType}
+                                       options={[
+                                           {id: "subscription", name: "Subscription"},
+                                           {id: "one_time", name: "One Time"},
+                                           {id: "custom", name: "Custom"},
+                                       ]}
+                                />
+                                {(serviceTypeValue === 'subscription' || serviceTypeValue === 'one_time') &&
+                                <Field name="amount" type="number"
+                                       component={priceField}
+                                       isCents={true}
+                                       label="Amount"
+                                       validate={numericality({ '>': 0.00 })}
+                                />
+                                }
+
+                                {(serviceTypeValue === 'subscription') &&
+                                <div>
+                                    <Field name="trial_period_days" type="number"
+                                           component={inputField} label="Trial Period (Days)"
+                                           validate={required()}
+                                    />
+                                    <div className="form-group form-group-flex">
+                                        <label className="control-label form-label-flex-md" htmlFor="type">Bill
+                                            Customer Every</label>
+                                        <Field name="interval_count" type="number"
+                                               component={inputField}
+                                               validate={required()}
+                                        />
+                                        <Field name="interval" id="interval" component={selectField}
+                                               options={[
+                                                   {id: "day", name: "Day"},
+                                                   {id: "week", name: "Week"},
+                                                   {id: "month", name: "Month"},
+                                                   {id: "year", name: "Year"}
+                                               ]}
+                                        />
+                                    </div>
+                                </div>
+                                }
+
+                                {(serviceTypeValue === 'custom') &&
+                                <div>
+                                    <p>You will be able to add custom service charges after an instance of
+                                        this service as been created for a customer.
+                                    </p>
+                                </div>
+                                }
+                            </div>
+                            <div className="col-md-4">
+                                <div style={sectionDescriptionStyle}>
+                                    <SVGIcons id="custom-field-svg" width="40px" height="40px"
+                                              fillColor={_.get(options, 'service_template_icon_fill_color.value', '#ffffff')}>
+                                        <path
+                                            d="m282.95 138.1h-188.63c-5.578 0-10.105 4.52-10.105 10.105 0 5.578 4.527 10.105 10.105 10.105h188.63c5.578 0 10.105-4.527 10.105-10.105 0-5.585-4.527-10.105-10.105-10.105z"/>
+                                        <path
+                                            d="m282.95 198.74h-188.63c-5.578 0-10.105 4.52-10.105 10.105 0 5.578 4.527 10.105 10.105 10.105h188.63c5.578 0 10.105-4.527 10.105-10.105 0-5.585-4.527-10.105-10.105-10.105z"/>
+                                        <path
+                                            d="m424.42 138.1h-67.368c-5.578 0-10.105 4.52-10.105 10.105 0 5.578 4.527 10.105 10.105 10.105h67.368c5.578 0 10.105-4.527 10.105-10.105 0-5.585-4.527-10.105-10.105-10.105z"/>
+                                        <path
+                                            d="m424.42 198.74h-67.368c-5.578 0-10.105 4.52-10.105 10.105 0 5.578 4.527 10.105 10.105 10.105h67.368c5.578 0 10.105-4.527 10.105-10.105 0-5.585-4.527-10.105-10.105-10.105z"/>
+                                        <path
+                                            d="m420.75 356.95c-6.494-4.749-13.703-7.209-20.662-9.189-0.108-0.027-0.195-0.047-0.303-0.081v-34.383c4.084 1.018 7.197 2.466 9.252 4.083 1.899 1.482 3.126 3.052 3.968 4.803 0.843 1.752 1.307 3.766 1.313 6.218 0 5.578 4.527 10.105 10.105 10.105s10.105-4.527 10.105-10.105c0-5.153-1.058-10.274-3.288-14.929-3.322-7.02-9.27-12.732-16.748-16.351-4.372-2.129-9.317-3.543-14.686-4.42v-3.018c0-5.585-4.527-10.105-10.105-10.105s-10.105 4.52-10.105 10.105v2.56c-3.947 0.525-7.64 1.387-10.975 2.661-8.286 3.12-14.511 8.569-18.318 14.686-3.84 6.13-5.43 12.746-5.436 18.809-0.027 6.272 1.516 12.146 4.473 16.936 2.566 4.204 6.05 7.424 9.728 9.836 6.481 4.21 13.535 6.332 20.366 8.172 0.055 0.013 0.101 0.027 0.148 0.04v37.645c-4.069-0.93-7.249-2.445-9.405-4.278-3.388-2.965-5.039-6.434-5.106-11.304 0-5.585-4.527-10.105-10.105-10.105s-10.105 4.52-10.105 10.105c-0.074 10.321 4.412 20.17 12.254 26.725 6.022 5.093 13.743 8.233 22.467 9.425v2.863c0 5.585 4.527 10.105 10.105 10.105s10.105-4.52 10.105-10.105v-3.214c6.858-0.984 13.407-2.836 19.253-6.447 4.581-2.857 8.65-6.892 11.372-11.978 2.749-5.079 4.102-11.028 4.089-17.375 0.013-6.608-1.421-12.679-4.238-17.772-2.438-4.452-5.839-8.015-9.518-10.723zm-41.154-14.59c-4.473-1.421-8.11-2.991-10.28-4.682-1.529-1.158-2.419-2.23-3.086-3.509-0.646-1.3-1.139-2.978-1.152-5.76-7e-3 -3.362 1.253-7.464 4.278-10.523 1.536-1.557 3.537-2.978 6.447-4.096 1.105-0.425 2.392-0.775 3.793-1.071v29.641zm33.057 50.856c-0.728 1.34-1.637 2.425-2.923 3.463-1.899 1.536-4.749 2.917-8.549 3.86-0.418 0.108-0.95 0.142-1.381 0.236v-31.932c2.244 0.775 4.306 1.589 6.003 2.519 3.065 1.631 5.026 3.328 6.306 5.261 1.26 1.954 2.177 4.386 2.209 8.819-0.014 3.618-0.708 5.988-1.665 7.774z"/>
+                                        <path
+                                            d="m269.47 309.89h-161.68c-14.82 0-26.948 12.126-26.948 26.948v40.421c0 14.82 12.126 26.947 26.948 26.947h161.68c14.82 0 26.948-12.126 26.948-26.947v-40.421c0-14.822-12.127-26.948-26.947-26.948zm0 74.105h-161.68c-3.651 0-6.737-3.086-6.737-6.737v-40.421c0-3.651 3.086-6.737 6.737-6.737h161.68c3.651 0 6.737 3.086 6.737 6.737v40.421h1e-3c-1e-3 3.651-3.086 6.737-6.737 6.737z"/>
+                                        <path
+                                            d="m485.05 26.947h-53.895v13.473c0 7.445-6.036 13.473-13.473 13.473-7.438 0-13.473-6.03-13.473-13.473v-13.473h-53.895v13.473c0 7.445-6.036 13.473-13.473 13.473s-13.473-6.03-13.473-13.473v-13.473h-53.895v13.473c0 7.445-6.036 13.473-13.473 13.473s-13.473-6.03-13.473-13.473v-13.473h-53.895v13.473c0 7.445-6.036 13.473-13.473 13.473-7.438 0-13.473-6.03-13.473-13.473v-13.473h-53.899v13.473c0 7.445-6.036 13.473-13.473 13.473s-13.473-6.03-13.473-13.473v-13.473h-53.895c-14.822 0-26.948 12.126-26.948 26.948v404.21c0 14.82 12.126 26.948 26.948 26.948h458.1c14.82 0 26.947-12.126 26.947-26.948v-404.21c0-14.822-12.127-26.948-26.948-26.948zm0 437.9h-458.1c-3.651 0-6.737-3.086-6.737-6.737v-404.21c0-3.651 3.086-6.737 6.737-6.737h34.364c3.126 15.353 16.742 26.947 33.004 26.947s29.884-11.594 33.004-26.947h14.828c3.126 15.353 16.742 26.947 33.004 26.947s29.884-11.594 33.004-26.947h14.828c3.126 15.353 16.742 26.947 33.004 26.947s29.884-11.594 33.004-26.947h14.828c3.126 15.353 16.742 26.947 33.004 26.947s29.884-11.594 33.004-26.947h14.828c3.126 15.353 16.742 26.947 33.004 26.947s29.884-11.594 33.004-26.947h34.391c3.651 0 6.737 3.086 6.737 6.737v404.21h1e-3c-4e-3 3.651-3.09 6.737-6.741 6.737z"/>
+                                    </SVGIcons>
+                                    {/*<img id="custom-fields-svg" src="/assets/custom_icons/custom_fields.svg"/>*/}
+                                </div>
+                                <p className="help-block">Setup payment details. This will be how your customers
+                                    will be charged. For example, you can setup a recurring charge for your
+                                    product
+                                    / service by setting Billing Type to Subscription and define how often your
+                                    customer will get charged automatically.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <hr/>
+                        <div className="row">
+                            <div className="col-md-8">
+                                <h3>Custom Fields</h3>
+                                <FormSection name="references">
+                                    <FieldArray name="service_template_properties"
+                                                props={{templateType : serviceTypeValue}}
+                                                component={renderCustomProperty}/>
+                                </FormSection>
+                                {/*{props.formJSON.references && props.formJSON.references.service_template_properties &&*/}
+                                {/*<PriceBreakdown*/}
+                                {/*inputs={props.formJSON.references.service_template_properties}/>*/}
+                                {/*}*/}
+                                <div id="service-submission-box" className="button-box right">
+                                    <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>Go
+                                        Back</Link>
+                                    <button  className="btn btn-rounded btn-primary" type="submit">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                            <div className="col-md-4">
+                                <div style={sectionDescriptionStyle}>
+                                    <SVGIcons id="custom-field-svg" width="40px" height="40px"
+                                              fillColor={_.get(options, 'service_template_icon_fill_color.value', '#ffffff')}>
+                                        <path
+                                            d="m448 376c-5.648 0-11.168 1.536-16 4.36v-36.36c0-4.424-3.584-8-8-8h-52.36c2.824-4.832 4.36-10.352 4.36-16 0-17.648-14.352-32-32-32s-32 14.352-32 32c0 5.648 1.536 11.168 4.36 16h-52.36c-4.416 0-8 3.576-8 8v36.36c-4.832-2.824-10.352-4.36-16-4.36-17.648 0-32 14.352-32 32s14.352 32 32 32c5.648 0 11.168-1.536 16-4.36v36.36c0 4.424 3.584 8 8 8h160c4.416 0 8-3.576 8-8v-36.36c4.832 2.824 10.352 4.36 16 4.36 17.648 0 32-14.352 32-32s-14.352-32-32-32zm0 48c-4.512 0-8.72-1.896-11.832-5.36-1.512-1.68-3.672-2.64-5.944-2.64h-6.224c-4.416 0-8 3.576-8 8v40h-144v-40c0-4.424-3.584-8-8-8h-6.224c-2.264 0-4.424 0.96-5.944 2.64-3.112 3.464-7.32 5.36-11.832 5.36-8.824 0-16-7.176-16-16s7.176-16 16-16c4.512 0 8.72 1.896 11.832 5.36 1.512 1.68 3.672 2.64 5.944 2.64h6.224c4.416 0 8-3.576 8-8v-40h56c4.416 0 8-3.576 8-8v-6.224c0-2.264-0.96-4.424-2.64-5.936-3.456-3.12-5.36-7.328-5.36-11.84 0-8.824 7.176-16 16-16s16 7.176 16 16c0 4.512-1.904 8.72-5.36 11.832-1.68 1.52-2.64 3.672-2.64 5.944v6.224c0 4.424 3.584 8 8 8h56v40c0 4.424 3.584 8 8 8h6.224c2.264 0 4.424-0.96 5.944-2.64 3.112-3.464 7.32-5.36 11.832-5.36 8.824 0 16 7.176 16 16s-7.176 16-16 16z"/>
+                                        <path
+                                            d="m472 0h-464c-4.416 0-8 3.576-8 8v248c0 4.424 3.584 8 8 8h152c4.416 0 8-3.576 8-8v-48c0-4.424-3.584-8-8-8h-6.224c-2.264 0-4.424 0.96-5.944 2.64-3.112 3.464-7.32 5.36-11.832 5.36-8.824 0-16-7.176-16-16s7.176-16 16-16c4.512 0 8.72 1.896 11.832 5.36 1.512 1.68 3.672 2.64 5.944 2.64h6.224c4.416 0 8-3.576 8-8v-40h56c4.416 0 8-3.576 8-8v-6.224c0-2.264-0.96-4.424-2.64-5.936-3.456-3.12-5.36-7.328-5.36-11.84 0-8.824 7.176-16 16-16s16 7.176 16 16c0 4.512-1.904 8.72-5.36 11.832-1.68 1.52-2.64 3.672-2.64 5.944v6.224c0 4.424 3.584 8 8 8h56v40c0 4.424 3.584 8 8 8h6.224c2.264 0 4.424-0.96 5.944-2.64 3.112-3.464 7.32-5.36 11.832-5.36 8.824 0 16 7.176 16 16s-7.176 16-16 16c-4.512 0-8.72-1.896-11.832-5.36-1.512-1.68-3.672-2.64-5.944-2.64h-6.224c-4.416 0-8 3.576-8 8v48c0 4.424 3.584 8 8 8h152c4.416 0 8-3.576 8-8v-248c0-4.424-3.584-8-8-8zm-8 248h-136v-28.36c4.832 2.824 10.352 4.36 16 4.36 17.648 0 32-14.352 32-32s-14.352-32-32-32c-5.648 0-11.168 1.536-16 4.36v-36.36c0-4.424-3.584-8-8-8h-52.36c2.824-4.832 4.36-10.352 4.36-16 0-17.648-14.352-32-32-32s-32 14.352-32 32c0 5.648 1.536 11.168 4.36 16h-52.36c-4.416 0-8 3.576-8 8v36.36c-4.832-2.824-10.352-4.36-16-4.36-17.648 0-32 14.352-32 32s14.352 32 32 32c5.648 0 11.168-1.536 16-4.36v28.36h-136v-232h448v232z"/>
+                                        <path
+                                            d="m237.66 162.34c-3.128-3.128-8.184-3.128-11.312 0l-32 32 11.312 11.312 18.344-18.344v76.688h16v-76.688l18.344 18.344 11.312-11.312-32-32z"/>
+                                        <rect x="224" y="280" width="16" height="16"/>
+                                        <rect x="224" y="312" width="16" height="16"/>
+                                        <rect x="224" y="344" width="16" height="16"/>
+                                        <rect x="48" y="280" width="16" height="16"/>
+                                        <rect x="48" y="312" width="16" height="16"/>
+                                        <rect x="48" y="344" width="16" height="16"/>
+                                        <rect x="48" y="376" width="16" height="16"/>
+                                        <rect x="48" y="408" width="16" height="16"/>
+                                        <rect x="80" y="408" width="16" height="16"/>
+                                        <rect x="112" y="408" width="16" height="16"/>
+                                        <rect x="144" y="408" width="16" height="16"/>
+                                        <rect x="176" y="408" width="16" height="16"/>
+                                    </SVGIcons>
+                                </div>
+                                <p className="help-block">Define custom fields. You can collect additional
+                                    information from your customers by defining custom fields. Each custom field
+                                    can also be used as "Add-Ons" to your product / services. For example, if
+                                    you define a custom field for number of rooms to be cleaned, you can set an
+                                    additional cost that will be charged toward your customer when they select
+                                    the number of rooms to be cleaned.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        )
+    };
+}
+
+
+
+
+
+
+
+class ServiceTemplateForm extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            newTemplateId: 0,
+            success: false,
+            imageSuccess: false,
+            iconSuccess: false
+        };
+        this.handleResponse = this.handleResponse.bind(this);
+        this.handleImageSuccess = this.handleImageSuccess.bind(this);
+        this.handleIconSuccess = this.handleIconSuccess.bind(this);
+        this.submissionPrep = this.submissionPrep.bind(this);
+    }
+
+    handleImageSuccess() {
+        this.setState({
+            imageSuccess: true
+        });
+    }
+
+    handleIconSuccess() {
+        this.setState({
+            iconSuccess: true
+        });
+    }
+
+    handleResponse(response) {
+        this.setState({
+            newTemplateId: response.id,
+            success: true
+        });
+        let successMessage = {
+            id: Date.now(),
+            alertType: 'success',
+            message: `${response.name} was saved successfully`,
+            show: true,
+            autoDismiss: 4000,
+        };
+        this.props.addAlert(successMessage);
+        browserHistory.push(`/manage-catalog/list`);
+    }
+
+    submissionPrep(values){
+        //remove id's for duplicate template operation
+        if (this.props.params.duplicate) {
+            console.log("We have a duplicate and we want to remove id");
+            delete values.id;
+            values.references.service_template_properties = values.references.service_template_properties.map(prop => {
+                if(prop.id){
+                    delete prop.id;
+                }
+                return prop;
+            })
+        }
+        return values;
+    }
+
+    render() {
+        //Todo change this. this is how we are currently making sure the redux store is populated
+        if(!this.props.company_name){
+            return (<Load/>);
+        }else {
+            let initialValues = {};
+            let initialRequests = [];
+            let submissionRequest = {};
+            let successMessage = "Template Updated";
+            let imageUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/image`;
+            let iconUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/icon`;
+
+            if (this.props.params.templateId) {
+                initialRequests.push({'method': 'GET', 'url': `/api/v1/service-templates/${this.props.params.templateId}`},
+                    {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
+                );
+                if (this.props.params.duplicate) {
+                    submissionRequest = {
+                        'method': 'POST',
+                        'url': `/api/v1/service-templates`
+                    };
+                    successMessage = "Template Duplicated";
+                }
+                else {
+                    submissionRequest = {
+                        'method': 'PUT',
+                        'url': `/api/v1/service-templates/${this.props.params.templateId}`
+                    };
+                    successMessage = "Template Updated";
+                    imageUploadURL = `/api/v1/service-templates/${this.props.params.templateId}/image`;
+                    iconUploadURL = `/api/v1/service-templates/${this.props.params.templateId}/icon`;
+                }
+            }
+            else {
+                initialValues = {
+                    type: 'subscription',
+                    category_id: 1,
+                    trial_period_days: 0,
+                    statement_descriptor: this.props.company_name.value,
+                    interval: 'month',
+                    interval_count: 1,
+                    amount: 0
+                };
+                initialRequests.push(
+                    {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
+                );
+                submissionRequest = {
+                    'method': 'POST',
+                    'url': `/api/v1/service-templates`
+                };
+                successMessage = "Template Created";
+            }
+
+            return (
+                <div>
+                    <div className="row">
+                        <div className="col-md-3">
+                            {(!this.state.imageSuccess || !this.state.iconSuccess || !this.state.success) &&
+                            <div>
+
+                                <FileUploadForm
+                                    upload={this.state.success}
+                                    imageUploadURL={imageUploadURL}
+                                    name="template-image"
+                                    label="Upload Cover Image"
+                                    handleImageUploadSuccess={this.handleImageSuccess}
+                                />
+                                <FileUploadForm
+                                    upload={this.state.success}
+                                    imageUploadURL={iconUploadURL}
+                                    name="template-icon"
+                                    label="Upload Icon Image"
+                                    handleImageUploadSuccess={this.handleIconSuccess}
+                                />
+                            </div>
+                            }
+                        </div>
+                        <div className="col-md-9">
+                            <ServiceBotBaseForm
+                                form={TemplateForm}
+                                formName={TEMPLATE_FORM_NAME}
+                                initialValues={initialValues}
+                                initialRequests={initialRequests}
+                                submissionPrep={this.submissionPrep}
+                                submissionRequest={submissionRequest}
+                                successMessage={successMessage}
+                                handleResponse={this.handleResponse}
+                                formProps={{
+                                    ...this.props.fieldDispatches,
+                                    ...this.props.fieldState
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )
+        }
     }
 }
 
-export default ServiceTemplateForm;
+function mapStateToProps(state) {
+    return {
+        alerts: state.alerts,
+        company_name: state.options.company_name,
+        fieldState : {
+            "options": state.options,
+            "serviceTypeValue": selector(state, `type`),
+            formJSON: getFormValues(TEMPLATE_FORM_NAME)(state),
+        }
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addAlert: (alert) => {
+            return dispatch(addAlert(alert))
+        },
+        dismissAlert: (alert) => {
+            return dispatch(dismissAlert(alert))
+        },
+        fieldDispatches : {
+            'setIntervalCount': () => {
+                dispatch(change(TEMPLATE_FORM_NAME, `interval_count`, 1))
+            },
+            'setInterval': () => {
+                dispatch(change( TEMPLATE_FORM_NAME, `interval`, 'day'))
+            },
+            'clearAmount': () => {
+                dispatch(change(TEMPLATE_FORM_NAME, `amount`, 0))
+            }
+        }
+
+    }
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ServiceTemplateForm);

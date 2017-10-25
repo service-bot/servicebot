@@ -19,12 +19,12 @@ Role.prototype.delete = function (callback) {
     knex('roles_to_permissions').where('role_id', id).del()
         .then(callback())
         .catch(function(err){
-            console.log(err);
+            console.error(err);
         });
     knex('user_roles').where('id', id).del()
         .then(callback())
         .catch(function(err){
-            console.log(err);
+            console.error(err);
         });
 };
 
@@ -43,10 +43,8 @@ Role.prototype.assignPermission = function (permissions, callback) {
     });
     // insert.role_id = this.data.id;
     // insert.permission_id = permission.get('id');
-    console.log(insert);
     knex('roles_to_permissions').returning('id').insert(insert)
         .then(function(result){
-            console.log(self);
             self.set("id", result[0]);
             callback(self);
         })
@@ -58,8 +56,6 @@ Role.prototype.assignPermission = function (permissions, callback) {
 
 //todo: improve to not delete
 Role.prototype.setPermissions = function(permissions, callback){
-    console.log("PERMISSIONS!");
-    console.log(permissions)
     let self = this;
     knex('roles_to_permissions').where("role_id", self.get("id")).delete()
         .then(function(result){
@@ -74,8 +70,9 @@ Role.prototype.setPermissions = function(permissions, callback){
         })
 
 }
+let promiseProxy = require("../lib/promiseProxy");
 
-Role.prototype.getPermissions = function(callback){
+let getPermissions = function(callback){
     let roleId = this.get('id');
     knex(Permission.table).whereIn("id", function(){
       this.select("permission_id").from("roles_to_permissions").where("role_id", roleId)
@@ -85,6 +82,9 @@ Role.prototype.getPermissions = function(callback){
         console.log(err);
     })
 };
+
+Role.prototype.getPermissions = promiseProxy(getPermissions);
+
 
 Role.prototype.getUsers = function(callback){
     require("./user").findAll("role_id", this.get("id"), function(result){
@@ -125,6 +125,9 @@ Role.prototype.hasPermission = function (permission, callback) {
         });
     }
 };
+
+
+
 
 
 

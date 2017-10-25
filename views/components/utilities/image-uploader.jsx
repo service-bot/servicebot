@@ -20,10 +20,9 @@ class ImageUploader extends React.Component {
             loadingImage: false,
             success: false,
             image: true,
-            imageFailed: false
+            imageFailed: false,
+            imageChanged : false
         };
-
-        console.log("image url", this.props.imageURL);
 
         this.onImageSelected = this.onImageSelected.bind(this);
         this.handleImage = this.handleImage.bind(this);
@@ -32,15 +31,22 @@ class ImageUploader extends React.Component {
     }
 
     componentWillReceiveProps(nextProps){
-        console.log("this image url", this.props.imageURL);
-        console.log("next image url", nextProps.imageURL);
         if(nextProps.imageURL != this.state.imageURL){
             this.setState({
                 imageURL: nextProps.imageURL
             });
         }
-        if(nextProps.uploadTrigger){
-            console.log("got upload trigger = true", nextProps.uploadTrigger);
+    }
+
+    componentDidUpdate(prevProps){
+        if(this.props.uploadTrigger != prevProps.uploadTrigger){
+            if(!this.state.imageChanged){
+                if(this.props.handleSuccess){
+                    return this.props.handleSuccess();
+                }else{
+                    return;
+                }
+            }
             this.handleImage();
         }
     }
@@ -58,7 +64,7 @@ class ImageUploader extends React.Component {
 
         fileReader.addEventListener("load", function () {
             targetImg.src = fileReader.result;
-            self.setState({loadingImage: false, imageSelected: true, image: true}, function () {
+            self.setState({loadingImage: false, imageSelected: true, image: true, imageChanged : true}, function () {
                 targetImg.classList.remove("no-image-yet");
             });
         }, false);
@@ -75,7 +81,6 @@ class ImageUploader extends React.Component {
         let myImage = document.getElementById(`edit-${this.state.elementID}-img`);
         fetch(this.props.imageGETURL || self.state.imageURL,
             {method: 'GET', header: new Headers({"Content-Type": "application/json"}), credentials: "include"}).then(function(response) {
-            console.log("in get cover image", response);
             if(response.ok){
                 self.setState({hasImage: true});
                 return response.blob();
@@ -103,7 +108,6 @@ class ImageUploader extends React.Component {
                     body : new FormData(document.getElementById(`imgform${this.state.elementID}`))
         };
         self.setState({ajaxLoad: true});
-
         Fetcher(self.state.imageURL, null, null, init).then(function(result){
             if(!result.error){
                 self.setState({imageSelected: false, ajaxLoad: false}, function () {
@@ -115,7 +119,6 @@ class ImageUploader extends React.Component {
                     }
                 });
             }else{
-                console.log("failed", result);
                 self.setState({ajaxLoad: false, imageFailed: result.error});
             }
         }).catch(e => {console.error("error getting img", e)});
@@ -124,19 +127,15 @@ class ImageUploader extends React.Component {
     removeImage(e){
         let self = this;
         e.preventDefault();
-        console.log("removing image", self.props.imageGETURL);
         Fetcher(self.props.imageGETURL, "DELETE", null, null).then(function (response) {
-            console.log("in delete image", response);
             if(!response.error){
-                self.setState({hasImage: false, image: false});
+                self.setState({hasImage: false, image: false, imageChanged : true});
             }
         }).catch(e => {console.error("error removing img", e)});
 
     }
 
     render(){
-
-        console.log("image uploader render ");
         return(
             <div className="row">
                 <div className={`col-md-12 edit-${this.state.elementID}-image`}>

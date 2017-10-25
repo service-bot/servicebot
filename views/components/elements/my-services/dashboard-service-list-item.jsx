@@ -101,7 +101,6 @@ class DashboardServiceListItem extends React.Component {
 
             let getPrice = ()=>{
                 let serType = myService.type;
-                console.log("the ser type", serType);
                 if (serType == "subscription"){
                     return (
                         <span>
@@ -114,7 +113,6 @@ class DashboardServiceListItem extends React.Component {
                 }else if (serType == "custom"){
                     return (<span/>);
                 }else{
-                    console.log("here", serType);
                     return (<span><Price value={myService.payment_plan.amount}/></span>)
                 }
             };

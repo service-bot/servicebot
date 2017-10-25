@@ -41,7 +41,7 @@ let isAuthorized = function (user, permission, bypassPermissions, callback){
 
 //todo: move parameters into a config json... icky icky!
 let auth = function(permission=null, model=null, correlation_id="user_id", bypassPermissions=["can_administrate"]) {
-    return function (req, res, next) {
+    return function (req, res, next, reject=(err)=>{}) {
         // if user is authenticated in the session, call the next() to call the next request handler
         // Passport adds this method to request object. A middleware is allowed to add properties to
         // request and response object
@@ -50,11 +50,11 @@ let auth = function(permission=null, model=null, correlation_id="user_id", bypas
         let permissionToCheck = permission;
 
         if (!req.isAuthenticated()) {
-            return res.status(401).json({"error": "Unauthenticated"});
+            return reject(res.status(401).json({"error": "Unauthenticated"}));
         }
 
         if(req.user.data.status == "suspended"){
-            return res.status(401).json({"error" : "Account suspended"});
+            return reject(res.status(401).json({"error" : "Account suspended"}));
         }
 
         try {
@@ -68,7 +68,7 @@ let auth = function(permission=null, model=null, correlation_id="user_id", bypas
                 console.log("permission for " + req.route.path + " is " + permissionToCheck);
             }
         }catch(e){
-            console.log(e);
+            console.error(e);
         }
         isAuthorized(req.user, permissionToCheck, bypassPermissions,  function (status, shouldBypass, permissions) {
             res.locals.permissions = permissions;
@@ -86,7 +86,7 @@ let auth = function(permission=null, model=null, correlation_id="user_id", bypas
                                 console.log("user owns id " + id + "or has can_manage")
                                 return next();
                             }
-                            return res.status(401).json({error: "Unauthorized user"});
+                            return reject(res.status(401).json({error: "Unauthorized user"}));
 
                         });
                         return;
@@ -96,7 +96,7 @@ let auth = function(permission=null, model=null, correlation_id="user_id", bypas
                     }
                 }
                 else{
-                    return res.status(401).json({error: "Unauthorized user"});
+                    return reject(res.status(401).json({error: "Unauthorized user"}));
                 }
             }
         });

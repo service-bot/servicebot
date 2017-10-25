@@ -15,13 +15,13 @@ class Buttons extends React.Component {
         let myLink = _.isFunction(link) ? link(this.props.active) : link;
 
         if(myLink){
-            // console.log(typeof myLink);
+
             let linkArray = myLink.split('/');
             if(linkArray.indexOf(':id') > -1){
-                // console.log("found");
+
                 linkArray[linkArray.indexOf(':id')] = id;
                 let resultLink = linkArray.join('/');
-                // console.log(resultLink);
+
                 return resultLink;
             }
         }
@@ -29,10 +29,8 @@ class Buttons extends React.Component {
     }
 
     handleClick(e){
-        console.log("clicked button");
         e.preventDefault();
         if(this.props.onClick){
-            console.log("handling chick");
             this.props.onClick(this.props.dataObject);
         }
     }

@@ -1,10 +1,13 @@
 import React from 'react';
 import {render} from 'react-dom';
-import { Router, Route, IndexRoute, IndexRedirect, browserHistory } from 'react-router';
+import {Router, Route, IndexRoute, IndexRedirect, browserHistory} from 'react-router';
+import {connect} from "react-redux";
 import Promise from "promise-polyfill";
-import {setOptions,setUid, setUser, fetchUsers, initializeState} from "./components/utilities/actions"
-import { store, initializedState } from "./store"
-import { Provider } from 'react-redux'
+import {setOptions, setUid, setUser, fetchUsers, initializeState} from "./components/utilities/actions"
+import {pluginbot} from "./store"
+import {Provider} from 'react-redux'
+import {StripeProvider} from 'react-stripe-elements';
+import PluginbotProvider from "pluginbot-react/src/provider"
 import cookie from 'react-cookie';
 // App
 import App from "./components/app.jsx";
@@ -17,8 +20,7 @@ import ServiceInstance from './components/pages/service-instance.jsx';
 import ServiceRequest from './components/pages/service-catalog-request.jsx';
 import ServiceCatalog from './components/pages/service-catalog.jsx';
 // User
-import { Notifications } from "./components/pages/notifications.jsx"
-import Users from './components/pages/users.jsx';
+import {Notifications} from "./components/pages/notifications.jsx"
 import Login from "./components/elements/forms/login.jsx";
 import ForgotPassword from "./components/elements/forms/forgot-password.jsx";
 import ResetPassword from "./components/elements/forms/reset-password.jsx";
@@ -53,93 +55,124 @@ import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
 //Tests
-import ServiceRequestFormV2 from "./components/elements/forms/service-instance-form-request-v2.jsx";
+import ServiceTemplateFormV4 from "./components/elements/forms/service-template-form.jsx";
+import ServiceRequestV2 from "./components/pages/service-catalog-request.jsx"
 
-// Fetcher("/api/v1/system-options/public").then(function(response) {
-//     store.dispatch(setOptions(response));
-// }).then(function() {
-//     // console.log("app will dispatch setUser function", cookie.load("uid"));
-//     fetchUsers(cookie.load("uid"), (err, user) => store.dispatch(setUser(user)));
-// }).catch(function (error) {
-//     console.log("Error", error);
-//     store.dispatch(setOptions(
-//         {backgroundColor: '#000000'}
-//     ));
-// });
+import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 
-store.dispatch(initializedState);
 
-store.subscribe(()=>{
-    // console.log("store changed", store.getState());
-});
 
-let AppRouter = function(props) {
+class AppRouter extends React.Component {
+    componentWillMount(){
+        this.props.initialize()
+    }
+    render(){
+        const history = syncHistoryWithStore(browserHistory, this.props.store)
 
-    return (
-        <Provider store={store}>
-            <Router history={browserHistory}>
-                <Route name="Home" path="/" component={App}>
-                    <IndexRoute component={Home}/>
-                    <Route path="test" component={ServiceRequestFormV2}/>
-                    {/*<Route path="test2" component={FormTest}/>*/}
-                    <Route name="Home" path="home" component={Home}/>
-                    <Route name="All Services" path="all-services" component={AllServices}/>
-                    <Route name="User Login" path="login" component={Login}/>
-                    <Route name="Forgot Password" path="forgot-password" component={ForgotPassword}/>
-                    <Route name="Reset Password" path="reset-password/:uid/:token" component={ResetPassword}/>
-                    <Route name="User Sign Up" path="signup" component={SignUp}/>
-                    <Route name="Finish Your Registration" path="invitation/:token" component={InviteComplete}/>
-                    <Route name="My Services" path="my-services" component={MyServices}/>
-                    <Route name="My Services" path="my-services/service-instance/" component={MyServices}/>
-                    <Route name="Service Instance" path="my-services/service-instance/:instanceId"
-                           component={ServiceInstance}/>
-                    <Route name="Service Instance" path="service-instance/:instanceId" component={ServiceInstance}/>
-                    <Route name="Service Catalog" path="service-catalog" component={ServiceCatalog}/>
-                    <Route name="Service Request" path="service-catalog/:templateId/request" component={ServiceRequest}/>
-                    <Route name="Account Settings" path="account-settings/:userId" component={UserForm}/>
-                    <Route name="My Profile" path="profile" component={Profile}/>
-                    {/* Billing */}
-                    <Route name="Billing History" path="billing-history" component={BillingHistory}/>
-                    <Route name="Billing History" path="billing-history/:uid" component={BillingHistory}/>
-                    <Route name="Billing History" path="billing-history/invoice/:invoiceId" component={BillingInvoice}/>
-                    <Route name="Invoice" path="invoice/:invoiceId" component={BillingInvoice}/>
-                    <Route name="Billing Settings" path="billing-settings" component={BillingSettings}/>
-                    <Route name="Billing Settings" path="billing-settings/:userId" component={BillingSettings}/>
-                    {/* Admin */}
-                    <Route name="Dashboard" path="dashboard" component={Dashboard}/>
-                    <Route name="Notifications" path="notifications" component={Notifications}/>
-                    <Route name="System Settings" path="system-settings" component={SystemSettings}/>
-                    <Route name="Stripe Settings" path="stripe-settings" component={StripeSettings}/>
-                    <Route name="Manage Users" path="manage-users" component={ManageUsers}/>
-                    <Route name="Edit User" path="manage-users/:userId" components={UserEdit}/>
-                    <Route name="Manage Subscriptions" path="manage-subscriptions" component={ManageSubscriptions}/>
-                    <Route name="Manage Categories" path="manage-categories" component={ManageCategories}/>
-                    <Route name="Manage Permission" path="manage-permission" component={ManagePermission}/>
-                    <Route name="Manage Notification Templates" path="notification-templates" components={ManageNotificationTemplates}/>
-                    <Route name="Notification Template" path="notification-templates/:id" component={NotificationTemplateForm}/>
-                    <Route name="Manage Catalog" path="manage-catalog" component={ManageCatalog}>
-                        <IndexRoute component={ManageCatalogList}/>
-                        <Route name="Manage Catalog" path="list" component={ManageCatalogList}/>
-                        <Route name="Create Template" path="create" component={ManageCatalogCreate}/>
-                        <Route name="Edit Template" path=":templateId" component={ManageCatalogEdit}/>
-                        <Route name="Duplicate Template" path=":templateId/duplicate" component={ManageCatalogDuplicate}/>
-                        <Route name="Edit Template" path=":templateId/edit" component={ManageCatalogEdit}/>
-                    </Route>
-                    {/* Query routes */}
-                    <Route name="Services" path="manage-subscriptions/:status" component={ManageSubscriptions}/>
-                    {/* Other */}
-                    <Route path="users" component={Users}/>
-                    <Route path="service-templates/:templateId" component={ServiceTemplateForm}/>
-                    <Route name="Manage Subscriptions" path="/service-instance" component={ManageSubscriptions}/>
-                    <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
+        return (
+            <Router history={history}>
+            <Route name="Home" path="/" component={App}>
+                <IndexRoute component={Home}/>
+
+                <Route name="Home" path="home" component={Home}/>
+                <Route name="All Services" path="all-services" component={AllServices}/>
+                <Route name="User Login" path="login" component={Login}/>
+                <Route name="Forgot Password" path="forgot-password" component={ForgotPassword}/>
+                <Route name="Reset Password" path="reset-password/:uid/:token" component={ResetPassword}/>
+                <Route name="User Sign Up" path="signup" component={SignUp}/>
+                <Route name="Finish Your Registration" path="invitation/:token" component={InviteComplete}/>
+                <Route name="My Purchases" path="my-services" component={MyServices}/>
+                <Route name="My Purchases" path="my-services/service-instance/" component={MyServices}/>
+                <Route name="Service Instance" path="my-services/service-instance/:instanceId"
+                       component={ServiceInstance}/>
+                <Route name="Service Instance" path="service-instance/:instanceId"
+                       component={ServiceInstance}/>
+                <Route name="Service Catalog" path="service-catalog" component={ServiceCatalog}/>
+                <Route name="Service Request" path="service-catalog/:templateId/request"
+                       component={ServiceRequestV2}/>
+                <Route name="Account Settings" path="account-settings/:userId" component={UserForm}/>
+                <Route name="My Profile" path="profile" component={Profile}/>
+                {/* Billing */}
+                <Route name="Billing History" path="billing-history" component={BillingHistory}/>
+                <Route name="Billing History" path="billing-history/:uid" component={BillingHistory}/>
+                <Route name="Billing History" path="billing-history/invoice/:invoiceId"
+                       component={BillingInvoice}/>
+                <Route name="Invoice" path="invoice/:invoiceId" component={BillingInvoice}/>
+                <Route name="Billing Settings" path="billing-settings" component={BillingSettings}/>
+                <Route name="Billing Settings" path="billing-settings/:userId" component={BillingSettings}/>
+                {/* Admin */}
+                <Route name="Dashboard" path="dashboard" component={Dashboard}/>
+                <Route name="Notifications" path="notifications" component={Notifications}/>
+                <Route name="System Settings" path="system-settings" component={SystemSettings}/>
+                <Route name="Stripe Settings" path="stripe-settings" component={StripeSettings}/>
+                <Route name="Manage Users" path="manage-users" component={ManageUsers}/>
+                <Route name="Edit User" path="manage-users/:userId" components={UserEdit}/>
+                <Route name="Manage Subscriptions" path="manage-subscriptions"
+                       component={ManageSubscriptions}/>
+                <Route name="Manage Categories" path="manage-categories" component={ManageCategories}/>
+                <Route name="Manage Permission" path="manage-permission" component={ManagePermission}/>
+                <Route name="Manage Notification Templates" path="notification-templates"
+                       components={ManageNotificationTemplates}/>
+                <Route name="Notification Template" path="notification-templates/:id"
+                       component={NotificationTemplateForm}/>
+                <Route name="Manage Catalog" path="manage-catalog" component={ManageCatalog}>
+                    <IndexRoute component={ManageCatalogList}/>
+                    <Route name="Manage Catalog" path="list" component={ManageCatalogList}/>
+                    <Route name="Create Template" path="create" component={ManageCatalogCreate}/>
+                    <Route name="Edit Template" path=":templateId" component={ManageCatalogEdit}/>
+                    <Route name="Duplicate Template" path=":templateId/duplicate"
+                           component={ManageCatalogDuplicate}/>
+                    {/*<Route name="Edit Template" path=":templateId/edit" component={ManageCatalogEdit}/>*/}
                 </Route>
-                <Route name="Embed" path={"/service/:serviceId/embed"} component={Embed}/>
-                <Route name="Automated Installation" path="setup" component={Setup}/>
-                <Route path='*' component={GenericNotFound}/>
-            </Router>
-        </Provider>
-    );
+                {/* Query routes */}
+                <Route name="Services" path="manage-subscriptions/:status" component={ManageSubscriptions}/>
+                {/* Other */}
+                <Route path="service-templates/:templateId" component={ServiceTemplateForm}/>
+                <Route name="Manage Subscriptions" path="/service-instance"
+                       component={ManageSubscriptions}/>
+                <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
+            </Route>
+            <Route name="Embed" path={"/service/:serviceId/embed"} component={Embed}/>
+            <Route name="Automated Installation" path="setup" component={Setup}/>
+            <Route path='*' component={GenericNotFound}/>
+        </Router>
+        )
+    }
 }
-export default AppRouter;
+let mapDispatch = function(dispatch){
+    return { initialize : () => dispatch(require("./store").initializedState()) }
+}
+
+AppRouter = connect(null, mapDispatch)(AppRouter);
+
+
+class AppWrapper extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
+
+    async componentDidMount() {
+        let pluginbot = await require("./store").pluginbot;
+        this.setState({pluginbot});
+    }
+
+    render() {
+        let props = this.props;
+        if (this.state.pluginbot) {
+            return (
+            <StripeProvider apiKey={cookie.load("spk") || "no_public_token"}>
+                <PluginbotProvider pluginbot={this.state.pluginbot}>
+                    <AppRouter store={this.state.pluginbot.store}/>
+                </PluginbotProvider>
+            </StripeProvider>
+            );
+        }else{
+            return <div>Initializing...</div>
+        }
+    }
+}
+
+export default AppWrapper;
 

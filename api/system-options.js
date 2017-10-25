@@ -7,7 +7,6 @@ let multer = require("multer");
 let File = require("../models/file");
 let mkdirp = require("mkdirp");
 let path = require("path");
-let dispatchEvent = require("../config/redux/store").dispatchEvent;
 let systemFilePath = "uploads/system-options";
 let appPackage = require("../package.json");
 let store = require("../config/redux/store")
@@ -73,14 +72,14 @@ module.exports = function (router) {
     // });
 
 
-    router.get(`/system-options/public`, function (req, res, next) {
-        SystemOption.findAll("public", true, function (results) {
-            res.json(results.reduce((acc, entity) => {
-                acc[entity.data.option] = entity.data;
-                return acc;
-            }, {}));
-        });
-    });
+    // router.get(`/system-options/public`, function (req, res, next) {
+    //     SystemOption.findAll("public", true, function (results) {
+    //         res.json(results.reduce((acc, entity) => {
+    //             acc[entity.data.option] = entity.data;
+    //             return acc;
+    //         }, {}));
+    //     });
+    // });
 
 
     // router.get('/system-options', function (req, res, next) {
@@ -129,28 +128,28 @@ module.exports = function (router) {
     //     })
     // });
 
-    router.put('/system-options', auth(), function (req, res, next) {
-        let updateData = req.body;
-        SystemOption.findAll("public", true, function (options) {
-            let filteredUpdates = updateData.filter((option) => {
-                return options.some((publicOption) => option.option == publicOption.get("option"));
-            })
-
-            SystemOption.batchUpdate(filteredUpdates, function (result) {
-                let updated = result.reduce((settings, setting)=>{
-                    console.log(setting);
-                    settings[setting[0].option] = setting[0].value;
-                    return settings;
-                }, {});
-                dispatchEvent("system_options_updated", updated);
-                EventLogs.logEvent(req.user.get('id'), `system-options were updated by user ${req.user.get('email')}`);
-                res.json(result);
-            })
-        });
-    });
+    // router.put('/system-options', auth(), function (req, res, next) {
+    //     let updateData = req.body;
+    //     SystemOption.findAll("public", true, function (options) {
+    //         let filteredUpdates = updateData.filter((option) => {
+    //             return options.some((publicOption) => option.option == publicOption.get("option"));
+    //         })
+    //
+    //         SystemOption.batchUpdate(filteredUpdates, function (result) {
+    //             let updated = result.reduce((settings, setting)=>{
+    //                 console.log(setting);
+    //                 settings[setting[0].option] = setting[0].value;
+    //                 return settings;
+    //             }, {});
+    //             store.dispatchEvent("system_options_updated", updated);
+    //             EventLogs.logEvent(req.user.get('id'), `system-options were updated by user ${req.user.get('email')}`);
+    //             res.json(result);
+    //         })
+    //     });
+    // });
 
     router.get(`/system-options/version`, auth(), function (req, res, next) {
-        res.status("200").send({version:appPackage.version});
+        res.status(200).send({version:appPackage.version});
     });
 
 

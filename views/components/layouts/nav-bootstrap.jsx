@@ -127,25 +127,29 @@ class NavBootstrap extends React.Component {
                 </ul>
             )
         }else{
+
             return(
                 <ul className="nav navbar-nav">
-                    <li><Link to="/my-services" style={style}>My Services<span className="sr-only">(current)</span></Link></li>
-                    <li className="dropdown">
-                        <a href="#" className="dropdown-toggle" ref="dropdownToggle" data-toggle="dropdown"
-                           role="button" aria-haspopup="true" aria-expanded="false" style={style}>Billing <span className="caret"/></a>
-                        <ul className="dropdown-menu">
-                            <li><Link onClick={this.onOpenInvoiceModal}>Upcoming Invoice</Link></li>
-                            <li><Link to={`/billing-history/${this.props.uid}`}>Billing History</Link></li>
-                            <li><Link to={`/billing-settings/${this.props.uid}`}>Billing Settings</Link></li>
-                        </ul>
-                    </li>
+                    <li><Link to="/my-services" style={style}>My Account<span className="sr-only">(current)</span></Link></li>
+                    <li><Link to={`/billing-history/${this.props.uid}`}>Billing History</Link></li>
+                    <li><Link to={`/billing-settings/${this.props.uid}`}>Payment Method</Link></li>
+                    {/*<li className="dropdown">*/}
+                        {/*<a href="#" className="dropdown-toggle" ref="dropdownToggle" data-toggle="dropdown"*/}
+                           {/*role="button" aria-haspopup="true" aria-expanded="false" style={style}>Billing <span className="caret"/></a>*/}
+                        {/*<ul className="dropdown-menu">*/}
+                            {/*<li><Link onClick={this.onOpenInvoiceModal}>Upcoming Invoice</Link></li>*/}
+                            {/*<li><Link to={`/billing-history/${this.props.uid}`}>Billing History</Link></li>*/}
+                            {/*<li><Link to={`/billing-settings/${this.props.uid}`}>Billing Settings</Link></li>*/}
+                        {/*</ul>*/}
+                    {/*</li>*/}
                 </ul>
             )
         }
     }
 
     getLivemode(){
-        let livemode = cookie.load("spk").substring(3, 7);
+        let pk = cookie.load("spk")
+        let livemode =  pk ? pk.substring(3, 7) : "";
         if(livemode.toUpperCase() == "TEST") {
             return ( <span className="notification-badge"><strong>Test Mode Payments</strong></span> );
         } else {

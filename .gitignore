@@ -5,4 +5,4 @@ node_modules/*
 .idea
 npm-debug.log*
 /uploads/*
-/env/.env
+env

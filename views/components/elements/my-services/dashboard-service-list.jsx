@@ -19,13 +19,11 @@ class DashboardServiceList extends React.Component {
 
     componentWillReceiveProps(nextProps){
         if(this.props.services == nextProps.services){
-            console.log("updating list component in componentWillReceiveProps");
             this.setState({services: nextProps.services});
         }
     }
 
     handleComponentUpdating(){
-        console.log("re-fetching the service instances data");
         // this.fetchServiceInstances()
         this.props.handleComponentUpdating();
     }
@@ -46,7 +44,6 @@ class DashboardServiceList extends React.Component {
             );
         }
         else {
-            console.log(this.state.services);
             //grouping services by their status for displaying in groups
             const grouped = _.groupBy(this.state.services, 'status');
             return (
@@ -89,8 +86,8 @@ class DashboardServiceList extends React.Component {
 
                     {/* Services that are running */}
                     {grouped.running !== undefined &&
-                    <div className="row m-b-10">
-                        <DashboardPageHeading pageTitle="My Services"
+                    <div className="purchases-header row m-b-10">
+                        <DashboardPageHeading pageTitle="Purchased Subscriptions / One Time Services / Custom Orders"
                                               pageDescription="All services including active, unpaid and stopped services."/>
                     </div>
                     }

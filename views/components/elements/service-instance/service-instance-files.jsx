@@ -27,11 +27,9 @@ class ServiceInstanceFiles extends React.Component {
 
     fetchFiles(){
         let self = this;
-        console.log('get files url',self.state.url);
         Fetcher(self.state.url).then(function(response){
             if(response != null){
                 if(!response.error){
-                    console.log("instance files",response);
                     self.setState({loading: false, files : response, lastFetch: Date.now()});
                 }
             }
@@ -45,10 +43,9 @@ class ServiceInstanceFiles extends React.Component {
         let deleteFile = ()=>{
             Fetcher(`/api/v1/service-instances/${this.state.instanceId}/files/${data}`, 'DELETE').then(function (response) {
                 if(!response.error){
-                    console.log('deleted file no error', response);
                     self.fetchFiles();
                 }else{
-                    console.log("delete file error",response);
+                    console.error("delete file error",response);
                 }
             });
         };
@@ -77,24 +74,30 @@ class ServiceInstanceFiles extends React.Component {
             )
         }else {
             return (
-                <div className="service-instance-section">
-                    <span className="service-instance-section-label">Files</span>
-                    <DataTable parentState={this.state}
-                               dataObj={this.state.files}
-                               col={['data.name', 'data.mimetype', 'data.created_at', 'data.id']}
-                               colNames={['Name', 'Type', 'Uploaded On','Actions']}
-                               mod_data-mimetype={this.modDataMimeType}
-                               mod_data-id={this.modDataID}
-                               mod_data-created_at={this.modDataCreatedAt}
-                               nullMessage="Upload files"
-                    />
-                    <FileUploader elementID="service-file"
-                                  fileStyle="service-file"
-                                  name="files"
-                                  uploadButton={true}
-                                  fileURL={`/api/v1/service-instances/${this.props.instanceId}/files`}
-                                  handleSuccess={this.fetchFiles}
-                    />
+                <div className="service-instance-box">
+                    <div className="service-instance-box-title">
+                        <div>Files</div>
+                        <div className="react-buttons right ">
+                            <FileUploader elementID="service-file"
+                                          fileStyle="service-file"
+                                          name="files"
+                                          uploadButton={true}
+                                          fileURL={`/api/v1/service-instances/${this.props.instanceId}/files`}
+                                          handleSuccess={this.fetchFiles}
+                            />
+                        </div>
+                    </div>
+                    <div className="service-instance-box-content">
+                        <DataTable parentState={this.state}
+                                   dataObj={this.state.files}
+                                   col={['data.name', 'data.mimetype', 'data.created_at', 'data.id']}
+                                   colNames={['Name', 'Type', 'Uploaded On','Actions']}
+                                   mod_data-mimetype={this.modDataMimeType}
+                                   mod_data-id={this.modDataID}
+                                   mod_data-created_at={this.modDataCreatedAt}
+                                   nullMessage="Upload files"
+                        />
+                    </div>
                 </div>
             )
         }

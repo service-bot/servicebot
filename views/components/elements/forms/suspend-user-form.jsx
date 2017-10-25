@@ -24,11 +24,10 @@ class SuspendUserForm extends React.Component {
     fetchSuspendUser(){
         let self = this;
         Fetcher(this.state.url, 'POST').then(function (response) {
-            console.log("in fetch suspend user", response);
             if(!response.error){
                 self.setState({success: true, response: response});
             }else{
-                console.log("error suspending user", response);
+                console.error("error suspending user", response);
             }
         })
     }
@@ -38,7 +37,6 @@ class SuspendUserForm extends React.Component {
         if(this.state.loading){
             return ( <Load/> );
         }else if(this.state.success){
-            console.log("success response", this.state.response);
             return (
                 <div>
                     <div className="p-20">

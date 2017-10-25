@@ -41,12 +41,13 @@ class ServiceInstanceDescription extends React.Component {
 
     render () {
 
-        console.log('height', this.state.descriptionHeight);
         return (
             <div className="">
-                <div className="service-instance-section">
-                    <span className="service-instance-section-label">{this.props.service.name}</span>
-                    <div id="service-description" className="instance-details" style={this.getToggleStyle()}
+                <div className="service-instance-box">
+                    <div className="service-instance-box-title">
+                        <span>{this.props.service.name}</span>
+                    </div>
+                    <div id="service-description" className="service-instance-box-content" style={this.getToggleStyle()}
                          dangerouslySetInnerHTML={this.createMarkup(this.props.instanceDescription)}/>
                     { this.state.descriptionHeight > 315 &&
                         <div className="instance-details-toggle">

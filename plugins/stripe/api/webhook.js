@@ -6,8 +6,10 @@ let Logger = require('../models/logger');
 let User = require('../../../models/user');
 let ServiceInstance = require('../../../models/service-instance');
 let Invoice = require('../../../models/invoice');
-let dispatchEvent = require("../../../config/redux/store").dispatchEvent;
-module.exports = function(router, knex, stripe) {
+
+module.exports = function(knex) {
+    let stripe = require('../../../config/stripe');
+    let store = require("../../../config/redux/store");
 
     /**
      * This function will retrieve an event from Stripe using the event id to validate post request
@@ -120,7 +122,7 @@ module.exports = function(router, knex, stripe) {
     // invoice.updated [Sync the invoice]
     // ping
 
-    router.post(`/stripe/webhook`, function(req, res, next){
+    let webhook = function(req, res, next){
         let event_id = req.body.id;
         async.waterfall([
             function (callback) {
@@ -171,7 +173,7 @@ module.exports = function(router, knex, stripe) {
                         case 'invoice.payment_failed':
                             invoiceFailedEvent(event, function (user) {
                                 console.log(user);
-                                dispatchEvent("payment_failure", user);
+                                store.dispatchEvent("payment_failure", user);
                             });
                             break;
                         default:
@@ -182,7 +184,14 @@ module.exports = function(router, knex, stripe) {
                 res.sendStatus(200);
             }
         ]);
-    });
+    };
 
-    return router;
+    return {
+        endpoint : "stripe/webhook",
+        method : "get",
+        middleware : [webhook],
+        permissions : [],
+        description : "Stripe Webhook"
+
+    };
 }

@@ -24,6 +24,7 @@
     height: 25px;
     width: 25px;
     padding: 1px;
+    margin-top: -1px;
 }
 .badge.badge-sm {
     border: 0px;

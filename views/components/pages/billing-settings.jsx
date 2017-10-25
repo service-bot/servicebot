@@ -3,7 +3,8 @@ import {browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
-import BillingSettingsForm from "../elements/forms/billing-settings-form.jsx";
+import {BillingForm} from "../elements/forms/billing-settings-form.jsx";
+import {connect} from "react-redux";
 
 class BillingSettings extends React.Component {
 
@@ -20,7 +21,6 @@ class BillingSettings extends React.Component {
     }
     render () {
         let pageName = this.props.route.name;
-        console.log("props", this.props);
         return(
             <Authorizer>
                 <Jumbotron pageName={pageName} location={this.props.location}/>
@@ -28,7 +28,7 @@ class BillingSettings extends React.Component {
                     <Content>
                         <div className="row m-b-20">
                             <div className="col-md-6 col-md-offset-3">
-                                <BillingSettingsForm/>
+                                <BillingForm uid={this.props.uid}/>
                             </div>
                         </div>
                     </Content>
@@ -38,4 +38,6 @@ class BillingSettings extends React.Component {
     }
 }
 
-export default BillingSettings;
+export default connect(state => ({
+    uid : state.uid
+}))(BillingSettings)

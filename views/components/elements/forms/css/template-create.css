@@ -21,3 +21,88 @@
 .button-box.left > *{
     margin-right: 5px;
 }
+
+/* custom properties */
+.custom-field-item {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin: 10px 0px;
+}
+.custom-property-field-group {
+    margin-right: 8px;
+}
+.custom-property-fields{
+    display: flex;
+    flex-wrap: wrap;
+}
+.custom-property-fields .form-group-flex{
+    margin-bottom: 0px;
+}
+#custom-prop-name{
+    width: 45%;
+}
+#custom-prop-type{
+    width: 20%
+}
+#custom-prop-settings{
+    width: 30%
+}
+#custom-prop-settings > div {
+    float: left;
+    width: 40px;
+}
+#custom-prop-widget{
+    width: 100%;
+    margin-top: 5px;
+}
+#custom-field-delete-button{
+    background-color: #ffffff;
+    color: #dedede;
+    border-radius: 20px;
+}
+.custom-field-item .form-group{
+    margin-bottom: 0px;
+}
+.custom-property-add-field-toggle {
+    border-color: #eeeeee;
+}
+
+/* select options widget */
+.addon-options-widget-config-input-wrapper,
+.addon-options-widget-pricing-inputs-wrapper,
+.addon-options-widget-pricing-operation-wrapper,
+.addon-options-widget-default-value-wrapper,
+.addon-text-widget-input-wrapper,
+.addon-widget-pricing-inputs-wrapper,
+.addon-checkbox-widget-default-value-wrapper{
+    margin: 5px 0px !important;
+}
+.addon-options-widget-price-inputs-wrapper,
+.addon-checkbox-widget-price-inputs-wrapper{
+    width: 100% ;
+}
+.addon-options-widget-pricing-input-label {
+    flex-basis: 277px;
+}
+.addon-widget-pricing-input-label {
+    flex-basis: 282px;
+}
+.addon-options-widget-price-input {
+    border: none;
+    border-bottom: 1px solid #eee;
+    border-radius: 0px;
+}
+.addon-options-widget-price-input:focus{
+    border-radius: 4px;
+}
+.addon-options-widget-price-inputs {
+    margin-bottom: 5px !important;
+}
+
+/* checkbox widget */
+.addon-widget-price-tip{
+    display: block;
+    width: 100%;
+    color: #dfdfdf;
+    border-bottom: 1px solid #eee;
+}

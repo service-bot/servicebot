@@ -47,12 +47,10 @@ class NavNotification extends React.Component{
     }
 
     dismiss(dataObj){
-        console.log("dismissing", dataObj);
         let self = this;
         let read = {read: true};
         Fetcher(`/api/v1/notifications/${dataObj.id}`, 'PUT', read).then(function (response) {
             if(!response.error){
-                console.log('dismissed response', response);
                 self.setState({lastFetch: Date.now()});
                 //dismiss the notification in the Redux store
                 self.props.setNotification(response);
@@ -61,12 +59,10 @@ class NavNotification extends React.Component{
     }
 
     openNotificationDropdown(){
-        console.log('clicked open');
         let unread = this.props.notifications.filter(notification => !notification.read);
         this.setState({openNotificationDropdown: true});
     }
     closeNotificationDropdown(){
-        console.log('clicked close');
         this.setState({openNotificationDropdown: false});
     }
 
@@ -185,17 +181,12 @@ class NotificationList extends React.Component{
         this.closeMessageModel = this.closeMessageModel.bind(this);
     }
 
-    componentWillReceiveProps(nextProps){
-        console.log("getting new props", nextProps);
-    }
 
     dismiss(dataObj){
-        console.log("dismissing", dataObj);
         let self = this;
         let read = {read: true};
         Fetcher(`/api/v1/notifications/${dataObj.id}`, 'PUT', read).then(function (response) {
             if(!response.error){
-                console.log('dismissed response', response);
                 self.setState({lastFetch: Date.now()});
                 //dismiss the notification in the Redux store
                 self.props.setNotification(response);
@@ -230,10 +221,8 @@ class NotificationList extends React.Component{
 
     rowClasses(dataObj){
         if(!dataObj.read){
-            console.log('returning unread');
             return 'unread';
         }else{
-            console.log('returning read');
             return 'read';
         }
     }
@@ -243,7 +232,6 @@ class NotificationList extends React.Component{
         this.dismiss(dataObj);
     }
     closeMessageModel(){
-        console.log("clicked close");
         this.setState({viewMessage: null});
     }
 
@@ -267,7 +255,6 @@ class NotificationList extends React.Component{
         let notifications = notificationType == '_SYSTEM' ? this.props.system_notifications : this.props.notifications;
         let notificationsNullMessage = notificationType == '_SYSTEM' ? "No system notifications at this time" : "No notifications at this time";
 
-        console.log("readering notificationlist", notifications);
 
         return (
             <div>
@@ -294,24 +281,20 @@ class Notifications extends React.Component{
         this.state = {
             "url" : "/api/v1/notifications"
         };
-        console.log("Notifications props", this.props);
     }
     componentDidMount() {
         let self = this;
         Fetcher(self.state.url + "/own")
             .then(function(response){
                 if(!response.error){
-                    console.log(response);
                     return self.props.setNotifications(response);
                 }
             })
             .then(response => {
                 if(isAuthorized({permissions: "put_notification_templates_id"})){
-                    console.log("system")
                     return Fetcher(self.state.url + "/system")
 
                 }else{
-                    console.log("BAD");
                     throw "not authorized for system"
                 }
             })
@@ -327,8 +310,12 @@ class Notifications extends React.Component{
                         <div className="row m-b-20">
                             <div className="col-xs-12">
                                 <ContentTitle icon="user" title="Notifications"/>
-                                <p><strong>System Notifications</strong></p>
-                                {isAuthorized({permissions: "put_notification_templates_id"}) && <NotificationList notificationType="_SYSTEM"/>}
+                                {isAuthorized({permissions: "put_notification_templates_id"}) &&
+                                    <div>
+                                        <p><strong>System Notifications</strong></p>
+                                        <NotificationList notificationType="_SYSTEM"/>
+                                    </div>
+                                }
                                 <p><strong>User Notifications</strong></p>
                                 <NotificationList/>
                             </div>
@@ -341,7 +328,6 @@ class Notifications extends React.Component{
 }
 
 function mapStateToProps(state){
-    console.log(state);
     return {
         system_notifications: state.system_notifications,
         notifications : state.notifications
@@ -349,9 +335,9 @@ function mapStateToProps(state){
 }
 function mapDispatchToProps(dispatch){
     return {
-        setNotifications : (notifications, system=false) => {console.log("SYS", system, notifications); return dispatch(setNotifications(notifications, system))},
+        setNotifications : (notifications, system=false) => { return dispatch(setNotifications(notifications, system))},
         setNotification : (notification, system=false)=> { return dispatch(setNotification(notification, system))},
-        setSystemNotifications : (notifications, system=true) => {console.log("SYS", system, notifications); return dispatch(setSystemNotifications(notifications, system))},
+        setSystemNotifications : (notifications, system=true) => { return dispatch(setSystemNotifications(notifications, system))},
 
         addNotification : (notification, system=false) => { return dispatch(addNotification(notification, system)) }
     }

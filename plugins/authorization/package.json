@@ -1,0 +1,13 @@
+{
+  "name": "authorization",
+  "version": "0.0.1",
+  "dependencies": {
+    
+  },
+  "pluginbot" : {
+    "server" : {
+      "main" : "auth.js",
+      "consumes" : ["database"]
+    }
+  }
+}

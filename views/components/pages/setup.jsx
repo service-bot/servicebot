@@ -12,7 +12,7 @@ import Multistep from "../elements/forms/multistep.jsx"
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import "../../../public/stylesheets/xaas/installation.css";
-import {store,initializedState } from "../../store.js"
+import { initializedState } from "../../store.js"
 import { connect } from "react-redux";
 
 class SetupDB extends React.Component{
@@ -67,12 +67,12 @@ class SetupAdmin extends React.Component{
                 </p>
                 <div className="row">
                     <label className="control-label">Admin Email:</label>
-                    <input className="form-control" value={this.props.state.admin_user} onChange={this.props.inputChange} name="admin_user" />
+                    <input required type="email" className="form-control" value={this.props.state.admin_user} onChange={this.props.inputChange} name="admin_user" />
                 </div>
 
                 <div className="row">
                     <label className="control-label">Admin Password:</label>
-                    <input className="form-control" type="password" value={this.props.state.admin_password} onChange={this.props.inputChange} name="admin_password"/>
+                    <input minLength="4" required className="form-control" type="password" value={this.props.state.admin_password} onChange={this.props.inputChange} name="admin_password"/>
                 </div>
                 <hr/>
 
@@ -86,11 +86,11 @@ class SetupAdmin extends React.Component{
                 </div>
                 <div className="row">
                     <label className="control-label">Business Phone #:</label>
-                    <input className="form-control" value={this.props.state.company_phone_number} onChange={this.props.inputChange} name="company_phone_number"/>
+                    <input type="tel" className="form-control" value={this.props.state.company_phone_number} onChange={this.props.inputChange} name="company_phone_number"/>
                 </div>
                 <div className="row">
                     <label className="control-label">Business Email:</label>
-                    <input className="form-control" value={this.props.state.company_email} onChange={this.props.inputChange} name="company_email"/>
+                    <input type="email" className="form-control" value={this.props.state.company_email} onChange={this.props.inputChange} name="company_email"/>
                 </div>
                 <div className="row">
                     <label className="control-label">Site URL:</label>
@@ -148,7 +148,8 @@ class Setup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            form : {}
+            form : {},
+            steps : []
         }
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -158,7 +159,9 @@ class Setup extends React.Component {
 
     }
 
-    componentDidMount(){
+    async componentDidMount(){
+        let steps = await Fetcher("/api/v1/setup/steps");
+        this.setState({steps});
         document.getElementById('servicebot-loader').classList.add('move-out');
         if(this.props.options.text_size){
             browserHistory.push("home");
@@ -175,25 +178,17 @@ class Setup extends React.Component {
     handleSubmit(e=null){
         let self = this;
         if(e != null) {
-            console.log(e);
+            console.error(e);
             e.preventDefault();
         }
         self.setState({loading: true});
         Fetcher("/setup", "POST", self.state.form)
             .then(function(result){
                 if(!result.error) {
-                    fetch("/api/v1/service-templates/public",{retries:5, retryDelay:3000})
-                        .then(function(result){
-                            if(!result.error){
-                                store.dispatch(initializedState);
-                                browserHistory.push('home')
-                            }
-                        })
+                    self.props.initialize(result.options);
                 }else{
-                    console.log("There was an error");
                     self.setState({loading: false});
 
-                    console.log(!result.error);
                 }
             });
     }
@@ -207,7 +202,6 @@ class Setup extends React.Component {
                 [name] : {$set:value}
             }
         });
-        console.log(formState);
         this.setState(formState);
     }
     checkStripe(callback){
@@ -226,7 +220,6 @@ class Setup extends React.Component {
         let self = this;
         Fetcher("/api/v1/check-db", "POST", this.state.form)
             .then(function(result){
-                console.log(result);
                 if(!result.error){
                     if(result.empty){
                         callback();
@@ -239,19 +232,30 @@ class Setup extends React.Component {
     render () {
         let pageName = this.props.route.name || 'ServiceBot Setup';
         let breadcrumbs = [{name:'Welcome to ServiceBot', link:'/setup'}];
+        if(this.state.steps.length === 0){
+            return (<Load/>);
+        }
+        const stepMap = {
+            "database": {
+                name: 'Database Connection',
+                onNext: this.checkDB,
+                component: <SetupDB state={this.state.form} inputChange={this.handleInputChange}/>
+            },
+            "stripe": {
+                name: 'Stripe API Keys',
+                onNext: this.checkStripe,
+                component: <SetupStripe state={this.state.form} inputChange={this.handleInputChange}/>
+            },
+            "configuration": {
+                name: 'Configuration',
+                component: <SetupAdmin state={this.state.form} inputChange={this.handleInputChange}/>
+            }
+        };
 
-        const steps = [
-            {name: 'Database Connection', onNext : this.checkDB, component: <SetupDB state={this.state.form} inputChange={this.handleInputChange}/>},
-            {name: 'Stripe API Keys', onNext: this.checkStripe, component: <SetupStripe state={this.state.form} inputChange={this.handleInputChange} />},
-            {name: 'Configuration', component: <SetupAdmin state={this.state.form} inputChange={this.handleInputChange}/>}
-        ];
-
-        if(this.state.loading){
-            return ( <Load/> );
-        }else{
+        let steps = this.state.steps.map(step => stepMap[step]);
         return(
-
             <div style={{backgroundColor: '#0097f1', minHeight: 100+'vh'}}>
+                {this.state.loading && <Load/>}
                 <div className="installation row">
                     <div className="installation-logo col-md-8">
                         <img src="/assets/logos/logo-installation.png" />
@@ -260,9 +264,9 @@ class Setup extends React.Component {
                     <div className="installation-form col-md-4">
                     <Content>
                         <Alert stack={{limit: 3}} position='bottom'/>
-                        <form>
+                        <form onSubmit={this.handleSubmit}>
                             {/*{JSON.stringify(this.state.form)}*/}
-                            <Multistep handleSubmit={this.handleSubmit} steps={steps}/>
+                            <Multistep  steps={steps}/>
                             <br/>
                         </form>
                     </Content>
@@ -270,7 +274,12 @@ class Setup extends React.Component {
                 </div>
             </div>
         );
-    }}
+    }
 }
 
-export default connect((state) => {return {"options" : state.options}})(Setup);
+
+let mapDispatch = function(dispatch){
+    return { initialize : (initialOptions) => dispatch(initializedState(initialOptions)) }
+}
+
+export default connect((state) => {return {"options" : state.options}}, mapDispatch )(Setup);

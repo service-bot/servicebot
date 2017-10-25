@@ -1,174 +1,89 @@
 import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
+import Load from "../utilities/load.jsx";
+import Fetcher from '../utilities/fetcher.jsx';
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
-import DataTable from "../elements/datatable/datatable.jsx";
-import ContentTitle from "../layouts/content-title.jsx"
-import Fetcher from "../utilities/fetcher.jsx";
-import Load from "../utilities/load.jsx";
-import {Price, getBillingType} from "../utilities/price.jsx";
+import ContentTitle from "../layouts/content-title.jsx";
+import Dropdown from "../elements/dropdown.jsx";
+import {Price, getBillingType, getPriceValue} from "../utilities/price.jsx";
 import DateFormat from "../utilities/date-format.jsx";
+import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
+import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import ModalRequestCancellation from "../elements/modals/modal-request-cancellation.jsx";
 import ModalManageCancellation from "../elements/modals/modal-manage-cancellation.jsx";
 import ModalDeleteRequest from "../elements/modals/modal-delete-request.jsx";
-import InfoToolTip from "../elements/tooltips/info-tooltip.jsx";
 let _ = require("lodash");
 
 class ManageSubscriptions extends React.Component {
 
     constructor(props){
-        if(!isAuthorized({permissions:["can_administrate", "can_manage"]})){
-            browserHistory.push("/my-services");
-        }
-
         super(props);
 
         this.state = {
+            actionModal: false,
+            allUsers: {},
+            rows: {},
+            currentDataObject: {},
+            lastFetch: Date.now(),
             loading: true,
-            actionModal:false,
-            currentDataObject: false,
-            allUsers: {}
+            advancedFilter: null,
         };
 
-        // console.log("my props params", this.props.params);
         this.fetchAllUsers = this.fetchAllUsers.bind(this);
-        this.dropdownStatus = this.dropdownStatus.bind(this);
-        this.modRequestedBy = this.modRequestedBy.bind(this);
+        this.dropdownStatusFormatter = this.dropdownStatusFormatter.bind(this);
         this.onOpenActionModal = this.onOpenActionModal.bind(this);
         this.onCloseActionModal = this.onCloseActionModal.bind(this);
+        this.rowActionsFormatter = this.rowActionsFormatter.bind(this);
+        this.requestedByFormatter = this.requestedByFormatter.bind(this);
     }
 
-    dropdownStatus(dataObject){
-        let status = dataObject.status;
-        const statusString = _.toLower(status);
-        if(statusString == "requested"){
-            return "Delete Request";
-        }else if(statusString == "running"){
-            return "Cancel Service";
-        }else if(statusString == "waiting_cancellation"){
-            return "Manage Cancellation";
-        }else if(statusString == "cancelled"){
-            return null;
-        }else if(statusString == "waiting"){
-            return null;
+    componentDidMount() {
+        if (!isAuthorized({permissions: "can_administrate"})) {
+            return browserHistory.push("/login");
         }
-        return "Error";
+        this.fetchData();
     }
 
-    modName(data, resObj){
-        return (
-            <Link to={`/service-instance/${resObj.id}`}>{data}</Link>
-        );
-    }
-    modSubscriptionId(data){
-        if(data != 'null') {
-            return (
-                <InfoToolTip title={data} text="i" placement="left"/>
-            );
-        } else {
-            return <span />;
-        }
-    }
-
-    modType(data, dataObj){
-        let interval;
-        if(data == 'day') { interval = 'Dayli'; }
-        else if (data == 'week') { interval = 'Weekly'; }
-        else if (data == 'month') { interval = 'Monthly'; }
-        else if (data == 'year') { interval = 'Yearly'; }
-        else { interval = data; }
-
-        let type = dataObj.type;
-        if(type.toLowerCase() == 'subscription') {
-            return (
-                <div>
-                    <span className="status-badge neutral" >{getBillingType(dataObj)}</span> <span className="status-badge black" >{interval}</span>
-                </div>
-            );
-        } else if (type.toLowerCase() == 'custom') {
-            return (
-                <span className="status-badge neutral">{getBillingType(dataObj)}</span>
-            );
-        } else if (type.toLowerCase() == 'one_time') {
-            return (
-                <span className="status-badge neutral">{getBillingType(dataObj)}</span>
-            );
-        } else {
-            return (
-                <span className="status-badge grey">{getBillingType(dataObj)}</span>
-            );
-        }
-    }
-    modRequestedBy(data){
-        if(data && data != null){
-            let user = _.find(this.state.allUsers, function (user) {
-                return user.id == data
-            });
-            if(user!= undefined){
-                return user.name || user.email;
-            }
-            return data;
-        }
-        return data;
-    }
-    modAmount(data){
-        return (
-            <b><Price value={data}/></b>
-        );
-    }
-    modCreated(data){
-        // console.log("created data", data);
-        return (
-            <DateFormat date={data} time/>
-        );
-    }
-    modStatus(data){
-        switch (data) {
-            case 'requested':
-                return (<span className='status-badge blue' >Requested</span>);
-            case 'running':
-                return (<span className='status-badge green' >Running</span>);
-            case 'waiting_cancellation':
-                return (<span className='status-badge yellow' >Waiting Cancellation</span>);
-            case 'cancelled':
-                return (<span className='status-badge grey' >Cancelled</span>);
-            default:
-                return (<span className='status-badge grey' >{data}</span>);
-        }
-    }
-    modUserId(data){
-        return (
-            <div className="badge badge-xs">
-                <img className="img-circle" src={`/api/v1/users/${data}/avatar`} alt="..."/>
-            </div>
-        );
-    }
-
-    onOpenActionModal(dataObject){
+    /**
+     * Fetches Table Data
+     * Sets the state with the fetched data for use in ServiceBotTableBase's props.row
+     */
+    fetchData() {
         let self = this;
-        return function(e) {
-            // console.log("clicked on unpub button", dataObject);
-            e.preventDefault();
-            self.setState({actionModal: true, currentDataObject: dataObject});
+        let {props, params, params: {status}, location: {query: {uid} } } = this.props;
+        let url = '/api/v1/service-instances';
+
+        if(this.props.params.status) {
+            if (status == 'running') {
+                url = '/api/v1/service-instances/search?key=status&value=running';
+            } else if (status == 'requested') {
+                url = '/api/v1/service-instances/search?key=status&value=requested';
+            } else if (status == 'waiting_cancellation') {
+                url = '/api/v1/service-instances/search?key=status&value=waiting_cancellation';
+            }
         }
-    }
-    onCloseActionModal(){
-        this.setState({actionModal: false});
+        if(_.has(props, 'location.query.uid')) {
+            url = `/api/v1/service-instances/search?key=user_id&value=${uid}`;
+        }
+
+        Fetcher(url).then(function (response) {
+            if (!response.error) {
+                self.setState({rows: response});
+            }
+        }).then(function (){
+            self.fetchAllUsers();
+        });
     }
 
-    goToInvoices(dataObject){
-        return function(e) {
-            e.preventDefault();
-            browserHistory.push(`/billing-history/${dataObject.user_id}`);
-        }
-    }
-
+    /**
+     * Fetches Other Data
+     */
     fetchAllUsers(){
         let self = this;
         Fetcher('/api/v1/users').then(function (response) {
             if(!response.error){
-                console.log('all users', response);
                 self.setState({loading: false, allUsers: response});
             }else{
                 self.setState({loading: false});
@@ -176,69 +91,199 @@ class ManageSubscriptions extends React.Component {
         })
     }
 
-    componentDidMount(){
-        if(!isAuthorized({permissions: "can_administrate"})){
-            return browserHistory.push("/login");
-        }
-        this.fetchAllUsers();
+    /**
+     * Modal Controls
+     * Open and close modals by setting the state for rendering the modals,
+     */
+    onOpenActionModal(dataObject){
+        this.setState({actionModal: true, currentDataObject: dataObject});
     }
+    onCloseActionModal(){
+        this.fetchData();
+        this.setState({actionModal: false, currentDataObject: {}, lastFetch: Date.now()});
+    }
+
+    /**
+     * Cell formatters
+     * Formats each cell data by passing the function as the dataFormat prop in TableHeaderColumn
+     */
+    userIdFormatter(cell, row){
+        return (
+            <div className="badge badge-xs">
+                <img className="img-circle" src={`/api/v1/users/${cell}/avatar`}/>
+                <span className="customer-name">{row.references.users[0].name}</span>
+            </div>
+        );
+    }
+    nameFormatter(cell, row){
+        return ( <Link to={`/service-instance/${row.id}`}><b>{cell}</b></Link> );
+    }
+    emailFormatter(cell, row){
+        return (
+            <div>
+                <div className="badge badge-xs">
+                    <img className="img-circle" src={`/api/v1/users/${row.user_id}/avatar`}/>
+                </div>
+                <span className="customer-email">&nbsp;&nbsp;{cell.users[0].email}</span>
+            </div>
+        );
+    }
+    typeFormatter(cell, row){
+        let interval = cell.interval;
+        if(interval == 'day') { interval = 'Daily'; }
+        else if (interval == 'week') { interval = 'Weekly'; }
+        else if (interval == 'month') { interval = 'Monthly'; }
+        else if (interval == 'year') { interval = 'Yearly'; }
+
+        let type = row.type.toLowerCase();
+        switch(type){
+            case 'subscription':
+                return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
+            case 'custom':
+                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+            case 'one_time':
+                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+            default:
+                return ( <span className="status-badge grey">{getBillingType(row)}</span> );
+        }
+    }
+    typeDataValue(cell, row){
+        return (row.type);
+    }
+    amountFormatter(cell){
+        return (<Price value={cell.amount}/>);
+    }
+    emailDataValue(cell){
+        return cell.users[0].email;
+    }
+    statusFormatter(cell){
+        switch (cell) {
+            case 'requested':
+                return ( <span className='status-badge blue' >Requested</span> );
+            case 'running':
+                return ( <span className='status-badge green' >Running</span> );
+            case 'waiting_cancellation':
+                return ( <span className='status-badge yellow' >Waiting Cancellation</span> );
+            case 'cancelled':
+                return ( <span className='status-badge grey' >Cancelled</span> );
+            default:
+                return ( <span className='status-badge grey' >{cell}</span> );
+        }
+    }
+    createdFormatter(cell){
+        return ( <DateFormat date={cell} time/> );
+    }
+    requestedByFormatter(cell){
+        if(cell && cell != null){
+            let user = _.find(this.state.allUsers, function (user) {
+                return user.id == cell
+            });
+            if(user!= undefined){
+                return user.name || user.email;
+            }
+            return cell;
+        }
+    }
+    rowActionsFormatter(cell, row){
+        let self = this;
+        let status = row.status;
+        let customAction = {};
+        if(status !== "cancelled") {
+            customAction = {
+                type: "button",
+                label: this.dropdownStatusFormatter(row),
+                action: () => {self.onOpenActionModal(row)}
+            };
+        }
+
+        return (
+            <Dropdown
+                direction="right"
+                dropdown={[
+                    {   type: "button",
+                        label: 'View',
+                        action: () => { browserHistory.push(`/service-instance/${row.id}`) }},
+                    {   type: "divider" },
+                    {   type: "button",
+                        label: 'View Invoice',
+                        action: () => { browserHistory.push(`/billing-history/${row.user_id}`) }},
+                    customAction,
+                ]}
+            />
+        );
+    }
+
+    dropdownStatusFormatter(dataObject){
+        let status = dataObject.status;
+        const statusString = _.toLower(status);
+        if(statusString == "waiting_cancellation"){
+            return "Manage Cancellation";
+        }else if(statusString == "cancelled"){
+            return null;
+        }else {
+            return "Cancel Service";
+        }
+        return "Error";
+    }
+
     render () {
         let self = this;
         let pageName = this.props.route.name;
         let pageTitle = 'Manage your services here';
-        let breadcrumbs = [{name:'Home', link:'home'},{name:'My Services', link:'/my-services'},{name:pageName, link:null}];
-        let url = '/api/v1/service-instances';
 
         if(this.props.params.status) {
             if (this.props.params.status == 'running') {
                 pageName = 'Running Services';
                 pageTitle = 'Manage your running services here.';
-                url = '/api/v1/service-instances/search?key=status&value=running';
             } else if (this.props.params.status == 'requested') {
                 pageName = 'Requested Services';
                 pageTitle = 'Manage your requested services here.';
-                url = '/api/v1/service-instances/search?key=status&value=requested';
             } else if (this.props.params.status == 'waiting_cancellation') {
                 pageName = 'Service Cancellations';
                 pageTitle = 'Approve or deny service cancellations here.';
-                url = '/api/v1/service-instances/search?key=status&value=waiting_cancellation';
             }
         }
         if(_.has(this.props, 'location.query.uid')) {
             let uid = this.props.location.query.uid;
             pageName = `Services for user ${uid}`;
             pageTitle = `Manage user ${uid} services here.`;
-            url = `/api/v1/service-instances/search?key=user_id&value=${uid}`;
         }
 
-        let currentModal = ()=> {
+        let renderModals = ()=> {
             if(self.state.actionModal){
-                console.log("current instance", self.state.currentDataObject);
                 switch (self.state.currentDataObject.status){
-                    case 'requested':
-                        return(
-                            <ModalDeleteRequest myInstance={self.state.currentDataObject} show={self.state.actionModal} hide={self.onCloseActionModal}/>
-                        );
-                    case 'running':
-                        return(
-                            <ModalRequestCancellation myInstance={self.state.currentDataObject} show={self.state.actionModal} hide={self.onCloseActionModal}/>
-                        );
                     case 'waiting_cancellation':
                         return(
-                            <ModalManageCancellation myInstance={self.state.currentDataObject} show={self.state.actionModal} hide={self.onCloseActionModal}/>
+                            <ModalManageCancellation myInstance={self.state.currentDataObject}
+                                                     show={self.state.actionModal}
+                                                     hide={self.onCloseActionModal}/>
                         );
                     case 'cancelled':
-                        return(null);
+                        return(
+                            <ModalRequestCancellation myInstance={self.state.currentDataObject}
+                                                      show={self.state.actionModal}
+                                                      hide={self.onCloseActionModal}/>
+                        );
                     default:
-                        console.log("Error in status", self.state.currentDataObject.status);
+                        return(
+                            <ModalRequestCancellation myInstance={self.state.currentDataObject}
+                                                      show={self.state.actionModal}
+                                                      hide={self.onCloseActionModal}/>
+                        );
+                        console.error("Error in status", self.state.currentDataObject.status);
                         return(null);
                 }
             }
         };
 
         if(this.state.loading){
-            return (<Load/>);
+            return ( <Load/> );
         }else {
+            const qualityType = {
+                0: 'good',
+                1: 'bad',
+                2: 'unknown'
+            };
             return (
                 <Authorizer permissions={["can_administrate", "can_manage"]}>
                     <Jumbotron pageName={pageName} location={this.props.location}/>
@@ -247,41 +292,64 @@ class ManageSubscriptions extends React.Component {
                             <div className="row m-b-20">
                                 <div className="col-xs-12">
                                     <ContentTitle icon="cog" title={pageTitle}/>
-                                    <DataTable parentState={this.state}
-                                               get={url}
-                                               col={['user_id', 'references.users.0.email', 'name', 'subscription_id', 'payment_plan.interval', 'payment_plan.amount', 'status', 'created_at']}
-                                               colNames={['', 'User ID', 'Service', ' ', 'Type', 'Amount', 'Status', 'Created At']}
-                                               statusCol="status"
-                                               mod_user_id={this.modUserId}
-                                               mod_name={this.modName}
-                                               mod_subscription_id={this.modSubscriptionId}
-                                               mod_created_at={this.modCreated}
-                                               mod_payment_plan-amount={this.modAmount}
-                                               mod_status={this.modStatus}
-                                               mod_payment_plan-interval={this.modType}
-                                               dropdown={[{
-                                                   name: 'Actions', direction: 'right', buttons: [
-                                                       {id: 1, name: 'View', link: '/service-instance/:id'},
-                                                       {id: 2, name: 'divider'},
-                                                       {
-                                                           id: 4,
-                                                           name: 'View Invoices',
-                                                           link: '#',
-                                                           onClick: this.goToInvoices
-                                                       },
-                                                       {
-                                                           id: 5,
-                                                           name: this.dropdownStatus,
-                                                           link: '#',
-                                                           onClick: this.onOpenActionModal,
-                                                           style: {color: "#ff3535"}
-                                                       }]
-                                               }]}
-                                    />
-                                    {currentModal()}
+                                    <ServiceBotTableBase
+                                        rows={this.state.rows}
+                                        fetchRows={this.fetchData}
+                                        sortColumn="updated_at"
+                                        sortOrder="desc"
+                                    >
+                                        <TableHeaderColumn isKey
+                                                           dataField='name'
+                                                           dataFormat={this.nameFormatter}
+                                                           dataSort={ true }
+                                                           width='150'>
+                                            Subscription / Service Name
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='references'
+                                                           dataFormat={this.emailFormatter}
+                                                           dataSort={ true }
+                                                           filterValue={this.emailDataValue}
+                                                           width='150'>
+                                            Email
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='payment_plan'
+                                                           dataFormat={this.amountFormatter}
+                                                           dataSort={ true }
+                                                           searchable={false}
+                                                           width='80'>
+                                            Amount
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='payment_plan'
+                                                           dataFormat={this.typeFormatter}
+                                                           dataSort={ true }
+                                                           filterValue={this.typeDataValue}
+                                                           width='120'>
+                                            Type
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='status'
+                                                           dataFormat={this.statusFormatter}
+                                                           dataSort={ true }
+                                                           width='100'>
+                                            Status
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='updated_at'
+                                                           dataFormat={this.createdFormatter}
+                                                           dataSort={ true }
+                                                           searchable={false}
+                                                           width='140'>
+                                            Updated
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='Actions'
+                                                           className={'action-column-header'}
+                                                           columnClassName={'action-column'}
+                                                           dataFormat={ this.rowActionsFormatter }
+                                                           width='80'
+                                                           searchable={false}>
+                                        </TableHeaderColumn>
+                                    </ServiceBotTableBase>
                                 </div>
                             </div>
-
+                            {renderModals()}
                         </Content>
                     </div>
                 </Authorizer>

@@ -4,6 +4,8 @@ import {Link, browserHistory} from 'react-router';
 import Fetcher from "../../utilities/fetcher.jsx";
 import update from "immutability-helper";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
+import {connect} from "react-redux";
+import {setPermissions} from "../../utilities/actions";
 
 class ResetPassword extends React.Component {
 
@@ -23,13 +25,13 @@ class ResetPassword extends React.Component {
 
 
     handleReset(e){
-        console.log(e);
         e.preventDefault();
-        let that = this;
-        Fetcher(this.state.resetPassURL, "POST", that.state.form).then(function(result){
+        let self = this;
+        Fetcher(this.state.resetPassURL, "POST", this.state.form).then(function(result){
             if(!result.error) {
-                console.log(result);
                 localStorage.setItem("permissions", result.permissions);
+                self.props.setPermissions(result.permissions);
+
                 browserHistory.push("/login");
             }
         })
@@ -43,7 +45,6 @@ class ResetPassword extends React.Component {
             form: {
                 [name] : {$set:value}}
         });
-        console.log(formState);
         this.setState(formState);
     }
 
@@ -59,7 +60,6 @@ class ResetPassword extends React.Component {
 
         Fetcher(this.state.resetPassURL).then(function (response) {
             if(response.isValid){
-                console.log('yes..');
             }else{
                 return browserHistory.push("/");
             }
@@ -89,4 +89,4 @@ class ResetPassword extends React.Component {
     }
 }
 
-export default ResetPassword;
+export default connect(null, (dispatch => ({setPermissions : (permissions) => dispatch(setPermissions(permissions))})))(ResetPassword);

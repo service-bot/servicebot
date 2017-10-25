@@ -10,7 +10,6 @@ class ModalPublishingTemplate extends React.Component {
     constructor(props){
         super(props);
         let templateObject = this.props.templateObject;
-        console.log("Initializing ModalPublishingTemplate", templateObject);
         this.state = {  loading: true,
                         template: templateObject,
                         template_id: templateObject.id,
@@ -30,10 +29,8 @@ class ModalPublishingTemplate extends React.Component {
         let self = this;
         Fetcher(`/api/v1/service-templates/${self.state.template_id}`, "GET", {}).then(function (response) {
             if(!response.error){
-                console.log("template", response);
                 self.setState({loading: false, template: response});
             }
-            console.log("failed called api", `/api/v1/service-templates/${self.state.template_id}`);
             self.setState({loading: false});
         })
     }
@@ -45,7 +42,6 @@ class ModalPublishingTemplate extends React.Component {
 
         Fetcher(self.state.unpublish_url, "PUT", {"published": "false"}).then(function (response) {
             if (!response.error) {
-                console.log("Unpublish success", response);
                 self.setState({loading: false, current_modal: 'model_publishing_action_success'});
             }
             self.setState({loading: false});
@@ -59,7 +55,6 @@ class ModalPublishingTemplate extends React.Component {
 
         Fetcher(self.state.unpublish_url, "PUT", {"published": "true"}).then(function (response) {
             if (!response.error) {
-                console.log("Publish success", response);
                 self.setState({loading: false, current_modal: 'model_publishing_action_success'});
             }
             self.setState({loading: false});

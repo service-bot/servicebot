@@ -1,9 +1,14 @@
 import React from 'react';
 import {Link, browserHistory} from 'react-router';
-import DataTable from "../elements/datatable/datatable.jsx";
-import Dropdown from "../elements/datatable/datatable-dropdown.jsx"
-import ContentTitle from "../layouts/content-title.jsx"
-import DateFormat from "../utilities/date-format.jsx";
+import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
+import Load from "../utilities/load.jsx";
+import Fetcher from '../utilities/fetcher.jsx';
+import Dropdown from "../elements/dropdown.jsx";
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+import {Price, serviceTypeFormatter} from "../utilities/price.jsx";
+import {getFormattedDate} from "../utilities/date-format.jsx";
+import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
+import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import ModalPublishingTemplate from "../elements/modals/modal-publishing-template.jsx";
 import ModalDeleteTemplate from "../elements/modals/modal-delete-template.jsx";
 
@@ -11,120 +16,220 @@ class ManageCatalogList extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {  publishingModal: false,
-                        deleteModal: false,
-                        currentDataObject: false
+
+        this.state = {
+            publishingModal: false,
+            deleteModal: false,
+            rows: {},
+            currentDataObject: {},
+            lastFetch: Date.now(),
+            loading: true,
+            advancedFilter: null,
         };
 
-        this.dropdownPublish = this.dropdownPublish.bind(this);
-        this.dropdownPublishLink = this.dropdownPublishLink.bind(this);
+        this.fetchData = this.fetchData.bind(this);
         this.onOpenPublishingModal = this.onOpenPublishingModal.bind(this);
         this.onClosePublishingModal = this.onClosePublishingModal.bind(this);
         this.onOpenDeleteModal = this.onOpenDeleteModal.bind(this);
         this.onCloseDeleteModal = this.onCloseDeleteModal.bind(this);
+        this.rowActionsFormatter = this.rowActionsFormatter.bind(this);
     }
 
-    dropdownPublish(dataObject){
-        let published = dataObject.published;
-        return published ? "Unpublish" : "Publish";
-    }
-    dropdownPublishLink(dataObject){
-        let published = dataObject.published;
-        return published ? "/manage-catalog/:id/unpublish" : "/manage-catalog/:id/publish";
-    }
-
-    onOpenPublishingModal(dataObject){
-        let self = this;
-        return function(e) {
-            // console.log("clicked on unpub button", dataObject);
-            e.preventDefault();
-            self.setState({publishingModal: true, currentDataObject: dataObject});
+    componentDidMount() {
+        if (!isAuthorized({permissions: "can_administrate"})) {
+            return browserHistory.push("/login");
         }
+        this.fetchData();
+    }
+
+    /**
+     * Fetches Table Data
+     * Sets the state with the fetched data for use in ServiceBotTableBase's props.row
+     */
+    fetchData() {
+        let self = this;
+        let url = '/api/v1/service-templates';
+        Fetcher(url).then(function (response) {
+            if (!response.error) {
+                self.setState({rows: response});
+            }
+            self.setState({loading: false});
+        });
+    }
+
+    /**
+     * Modal Controls
+     * Open and close modals by setting the state for rendering the modals,
+     */
+    onOpenPublishingModal(row){
+        this.setState({publishingModal: true, currentDataObject: row});
     }
     onClosePublishingModal(){
-        event.preventDefault();
-        this.setState({publishingModal: false});
+        this.fetchData();
+        this.setState({publishingModal: false, currentDataObject: {}, lastFetch: Date.now()});
     }
-    onOpenDeleteModal(dataObject){
-        let self = this;
-        return function(e) {
-            e.preventDefault();
-            self.setState({deleteModal: true, currentDataObject: dataObject});
-        }
+    onOpenDeleteModal(row){
+        this.setState({deleteModal: true, currentDataObject: row});
     }
     onCloseDeleteModal(){
-        event.preventDefault();
-        this.setState({deleteModal: false});
+        this.fetchData();
+        this.setState({deleteModal: false, currentDataObject: {}, lastFetch: Date.now()});
     }
 
-    modName(data, resObj){
-        return(
-            <Link to={`/manage-catalog/${resObj.id}/edit`}>{data}</Link>
-        );
+    /**
+     * Cell formatters
+     * Formats each cell data by passing the function as the dataFormat prop in TableHeaderColumn
+     */
+    nameFormatter(cell, row){
+        return ( <Link to={`/manage-catalog/${row.id}`}>{cell}</Link> );
     }
-    modCreated(data){
-        return (
-            <DateFormat date={data}/>
-        );
+    priceFormatter(cell){
+        return ( <Price value={cell}/> );
     }
-
-    modPublished(data, dataObj) {
-        let color = 'status-badge ';
-        switch (data.toLowerCase()) {
-            case 'true':
-                color += 'green'; break;
-            case 'false':
-                color += 'red'; break;
-            default:
-                color += 'grey';
-        }
+    paymentTypeFormatter(cell, row){
+        return ( serviceTypeFormatter(row) );
+    }
+    categoryFormatter(cell){
+        return ( cell.service_categories[0].name );
+    }
+    publishedFormatter(cell){
+        let color_class = 'status-badge ';
+        color_class += cell ? 'green' : 'red';
+        return ( `<span class="${color_class}" >${cell ? 'Published' : 'Unpublished'}</span>` );
+        // return ( cell ? 'Published' : 'Unpublished' );
+    }
+    createdFormatter(cell){
+        return (getFormattedDate(cell, {time: true}));
+    }
+    rowActionsFormatter(cell, row){
+        let self = this;
         return (
-            <span className={color} >{data}</span>
+            <Dropdown
+                direction="right"
+                dropdown={[
+                    {
+                        type: "button",
+                        label: "Edit Item",
+                        action: () => {browserHistory.push(`/manage-catalog/${row.id}`)},
+                    },
+                    {
+                        type: "button",
+                        label: "Duplicate Item",
+                        action: () => {browserHistory.push(`/manage-catalog/${row.id}/duplicate`)},
+                    },
+                    {
+                        type: "button",
+                        label: "Request for User",
+                        action: () => {browserHistory.push(`/service-catalog/${row.id}/request`)},
+                    },
+                    {
+                        type: "divider"
+                    },
+                    {
+                        type: "button",
+                        label: row.published ? 'Unpublish Item' : 'Publish Item',
+                        action: () => {self.onOpenPublishingModal(row)},
+                    },
+                    {
+                        type: "button",
+                        label: "Delete Item",
+                        action: () => {self.onOpenDeleteModal(row)},
+                    },
+                ]}
+            />
         );
     }
 
     render () {
-
-        let self = this;
-
-        const currentModal = ()=> {
-            if(self.state.publishingModal){
+        let pageName = this.props.route.name;
+        let renderModals = ()=> {
+            if (this.state.publishingModal) {
                 return(
-                    <ModalPublishingTemplate templateObject={self.state.currentDataObject} show={self.state.publishingModal} hide={self.onClosePublishingModal}/>
+                    <ModalPublishingTemplate templateObject={this.state.currentDataObject}
+                                             show={this.state.publishingModal}
+                                             hide={this.onClosePublishingModal}/>
                 );
-            }else if(self.state.deleteModal){
+            }
+            if (this.state.deleteModal) {
                 return(
-                    <ModalDeleteTemplate templateObject={self.state.currentDataObject} show={self.state.deleteModal} hide={self.onCloseDeleteModal}/>
+                    <ModalDeleteTemplate templateObject={this.state.currentDataObject}
+                                         show={this.state.deleteModal}
+                                         hide={this.onCloseDeleteModal}/>
                 );
             }
         };
 
-        return (
-            <div className="col-xs-12">
-                <ContentTitle icon="cog" title="Manage all your services here"/>
-                <div className="row pull-right p-b-15 p-r-15">
-                    <Dropdown name="Actions" direction="right" dropdown={[{id: 'servicetemplateaction', name: 'Create New Service', link: '/manage-catalog/create'}]}/>
+        if (this.state.loading){
+            return ( <Load/> );
+        } else {
+            return (
+                <div className="row m-b-20">
+                    <div className="col-xs-12">
+                        <ServiceBotTableBase
+                            rows={this.state.rows}
+                            createItemAction={ () => {browserHistory.push('/manage-catalog/create')} }
+                            createItemLabel={'Create Product / Service'}
+                            fetchRows={this.fetchData}
+                            sortColumn="updated_at"
+                            sortOrder="desc"
+                        >
+                            <TableHeaderColumn isKey
+                                            dataField='name'
+                                               dataSort={ true }
+                                               dataFormat={ this.nameFormatter }
+                                               width={200}>
+                                Product / Service Name
+                            </TableHeaderColumn>
+                            <TableHeaderColumn dataField='amount'
+                                               dataSort={ true }
+                                               dataFormat={ this.priceFormatter }
+                                               searchable={false}
+                                               width={100}>
+                                Pricing
+                            </TableHeaderColumn>
+                            <TableHeaderColumn dataField='type'
+                                               dataSort={ true }
+                                               dataFormat={ this.paymentTypeFormatter }
+                                               searchable={false}
+                                               width={100}>
+                                Type
+                            </TableHeaderColumn>
+                            <TableHeaderColumn dataField='references'
+                                               dataSort={ true }
+                                               dataFormat={ this.categoryFormatter }
+                                               filterFormatted
+                                               width={120}>
+                                Category
+                            </TableHeaderColumn>
+                            <TableHeaderColumn dataField='published'
+                                               dataSort={ true }
+                                               dataFormat={ this.publishedFormatter }
+                                               searchable={false}
+                                               filterFormatted
+                                               width={100}>
+                                Status
+                            </TableHeaderColumn>
+                            <TableHeaderColumn dataField='updated_at'
+                                               dataSort={ true }
+                                               dataFormat={ this.createdFormatter }
+                                               searchable={false}
+                                               filterFormatted
+                                               width={150}>
+                                Updated At
+                            </TableHeaderColumn>
+                            <TableHeaderColumn dataField='Actions'
+                                               className={'action-column-header'}
+                                               columnClassName={'action-column'}
+                                               dataFormat={ this.rowActionsFormatter }
+                                               searchable={false}
+                                               width={100}>
+                            </TableHeaderColumn>
+                        </ServiceBotTableBase>
+                        {renderModals()}
+                    </div>
                 </div>
-                {/* no slash at the end of the api url */}
-                <DataTable parentState={this.state}
-                           get="/api/v1/service-templates"
-                           col={['id', 'name', 'references.service_categories.0.name', 'published', 'references.users.0.name', 'created_at']}
-                           colNames={['ID', 'Name', 'Category', 'Published', 'Created By', 'Created At']}
-                           statusCol="published"
-                           mod_name={this.modName}
-                           mod_published={this.modPublished}
-                           mod_created_at={this.modCreated}
-                           dropdown={[{name:'Actions', direction: 'right', buttons:[
-                                        {id: 1, name: 'Edit', link: '/manage-catalog/:id/edit'},
-                                        {id: 2, name: 'Duplicate', link: '/manage-catalog/:id/duplicate'},
-                                        {id: 3, name: 'Request for User', link: '/service-catalog/:id/request'},
-                                        {id: 4, name: 'divider'},
-                                        {id: 5, name: this.dropdownPublish, link: '#', onClick: this.onOpenPublishingModal},
-                                        {id: 6, name: 'Delete Service', link: '#', onClick: this.onOpenDeleteModal, style: {color: "#ff3535"}}]
-                                    }]}/>
-                {currentModal()}
-            </div>
-        );
+            );
+        }
     }
 }
 

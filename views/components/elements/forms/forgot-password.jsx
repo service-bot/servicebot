@@ -3,6 +3,9 @@ import {Link, browserHistory} from 'react-router';
 import Fetcher from "../../utilities/fetcher.jsx";
 import update from "immutability-helper";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
+import {setPermissions} from "../../utilities/actions";
+import {connect} from "react-redux";
+
 import Content from "../../layouts/content.jsx"
 
 class ForgotPassword extends React.Component {
@@ -20,17 +23,15 @@ class ForgotPassword extends React.Component {
     }
 
     handleReset(e) {
-        console.log(e);
         e.preventDefault();
         let self = this;
         if (!self.state.form.email) {
             this.setState({submitted: self.state.submitted+1});
-            console.log("email field is required", this.state.submitted);
         }else{
             Fetcher("/api/v1/auth/reset-password", "POST", self.state.form).then(function (result) {
                 if (!result.error) {
-                    console.log(result);
                     localStorage.setItem("permissions", result.permissions);
+
                     self.setState({success:true});
                 }
             })
@@ -45,7 +46,6 @@ class ForgotPassword extends React.Component {
             form: {
                 [name] : {$set:value}}
         });
-        console.log(formState);
         this.setState(formState);
     }
 
@@ -106,4 +106,4 @@ class ForgotPassword extends React.Component {
     }
 }
 
-export default ForgotPassword;
+export default connect(null, (dispatch => ({setPermissions : (permissions) => dispatch(setPermissions(permissions))})))(ForgotPassword);

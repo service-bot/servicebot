@@ -1,0 +1,15 @@
+{
+  "name": "core-input-types",
+  "version": "0.0.1",
+  "dependencies": {
+    
+  },
+  "pluginbot" : {
+    "server" : {
+      "main" : "server.js"
+    },
+    "client" : {
+      "main" : "client.js"
+    }
+  }
+}

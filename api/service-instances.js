@@ -62,22 +62,21 @@ module.exports = function(router) {
         let instance_object = res.locals.valid_object;
         instance_object.changePrice(req.body).then(function (updated_subscription) {
             res.json(updated_subscription);
-            dispatchEvent("service_instance_updated", updated_subscription);
+            store.dispatchEvent("service_instance_updated", updated_subscription);
             next();
         }).catch(function (err) {
             res.json(err);
         });
     });
 
-    router.post('/service-instances/:id/cancel', validate(ServiceInstance), auth(), function(req, res, next) {
+    router.post('/service-instances/:id/cancel', validate(ServiceInstance), auth(), async function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        instance_object.unsubscribe(function (err, result) {
-            if(!err) {
-                res.json(result);
-            } else {
-                res.json(err);
-            }
-        });
+        try {
+            let result = await instance_object.unsubscribe();
+            res.json(result);
+        } catch (err) {
+            res.json(err);
+        }
     });
 
 
@@ -86,7 +85,7 @@ module.exports = function(router) {
         instance_object.requestCancellation(function(result){
             res.locals.json = result;
             next();
-            dispatchEvent("service_instance_cancellation_requested", instance_object);
+            store.dispatchEvent("service_instance_cancellation_requested", instance_object);
         });
     });
 
@@ -104,8 +103,7 @@ module.exports = function(router) {
             let charge = new Charge(charge_obj);
             charge.create(function (err, charge_item) {
                 res.json(charge_item);
-                dispatchEvent("service_instance_charge_added", instance_object);
-                next();
+                store.dispatchEvent("service_instance_charge_added", instance_object);
             });
         } else {
             res.json({'error':'Payment plan is required prior to adding charges.'});

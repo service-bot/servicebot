@@ -2,7 +2,7 @@ import React from 'react';
 import Load from '../../utilities/load.jsx';
 import {Link, browserHistory} from 'react-router';
 import {DataForm} from "../../utilities/data-form.jsx";
-import {setUid, fetchUsers, setUser} from "../../utilities/actions";
+import {setUid, fetchUsers, setUser, setPermissions} from "../../utilities/actions";
 import {connect} from "react-redux";
 import cookie from 'react-cookie';
 import Inputs from '../../utilities/inputs.jsx';
@@ -24,14 +24,15 @@ class UserFormRegister extends React.Component {
     }
 
     handleResponse(response) {
-        // console.log("inside handle response", response);
+
         if (!response.error) {
             localStorage.setItem("permissions", response.permissions);
             this.props.setUid(cookie.load("uid"));
             this.props.setUser(cookie.load("uid"));
+            this.props.setPermissions(response.permissions);
+
             this.setState({success: true});
 
-            // console.log("LOCATION!", that.props.location);
             if (this.props.location.state && this.props.location.state.fromLogin) {
                 return browserHistory.go(-2);
             }
@@ -55,7 +56,6 @@ class UserFormRegister extends React.Component {
             }
         };
         let validateName = (val) => {
-            console.log("validating name", val);
             if(isEmpty(val)){
                 return {error: "Name is required!"};
             }else{
@@ -63,7 +63,6 @@ class UserFormRegister extends React.Component {
             }
         };
         let validatePhone = (val) => {
-            console.log("validating phone", val);
             if(isEmpty(val)){
                 return {error: "Phone is required!"};
             }else{
@@ -163,7 +162,8 @@ const mapDispatchToProps = (dispatch) => {
         },
         setUser: (uid) => {
             fetchUsers(uid, (err, user) => dispatch(setUser(user)));
-        }
+        },
+        setPermissions : permissions => dispatch(setPermissions(permissions))
     }
 };
 

@@ -32,7 +32,6 @@ class ModalRequestCancellation extends React.Component {
 
         Fetcher(self.state.cancel_url, "POST", {}).then(function (response) {
             if (!response.error) {
-                console.log("cancel success", response);
                 self.setState({loading: false, current_modal: 'model_cancel_success'});
             }
             self.setState({loading: false});
@@ -46,7 +45,6 @@ class ModalRequestCancellation extends React.Component {
 
         Fetcher(self.state.cancel_request_url, "POST", {}).then(function (response) {
             if (!response.error) {
-                console.log("cancel success", response);
                 self.setState({loading: false, current_modal: 'model_cancel_request_success'});
             }
             self.setState({loading: false});

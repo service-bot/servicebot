@@ -7,13 +7,16 @@ import Buttons from "../buttons.jsx";
 import {DataForm} from "../../utilities/data-form.jsx";
 import DateFormat from '../../utilities/date-format.jsx';
 import ImageUploader from '../../utilities/image-uploader.jsx';
+import ServiceBotBaseForm from "./servicebot-base-form.jsx";
+import {inputField} from "./servicebot-base-field.jsx";
+import {Field,} from 'redux-form';
+import { required, email, numericality, length } from 'redux-form-validators';
 
 class UserFormEdit extends React.Component {
 
     constructor(props){
         super(props);
         let user = this.props.myUser;
-        console.log("user", user);
         this.state = {
             user: user,
             url: `/api/v1/users/${user.id}`,
@@ -34,7 +37,6 @@ class UserFormEdit extends React.Component {
 
     componentWillReceiveProps(nextProps){
         if(this.props.myUser != nextProps.myUser){
-            console.log("props updated", nextProps.myUser);
             this.setState({ user: nextProps.myUser,
                             url: `/api/v1/users/${nextProps.myUser.id}`,
                             profileImage: `/api/v1/users/${nextProps.myUser.id}/avatar`
@@ -43,7 +45,6 @@ class UserFormEdit extends React.Component {
     }
 
     handleResponse(response){
-        console.log("inside handle response", response);
         if(!response.error){
             this.setState({success: true, currentAction: '_VIEW', user: response.results.data});
         }
@@ -77,69 +78,60 @@ class UserFormEdit extends React.Component {
     render () {
         if(this.state.loading){
             return ( <Load/> );
-        }else if(!this.state.loading && this.state.currentAction == '_EDITING'){
+        }else if(!this.state.loading && this.state.currentAction === '_EDITING'){
             let user = this.state.user;
+
+            let initialRequests = [{'method': 'GET', 'url': this.state.url}];
+            let submissionRequest = {
+                'method': 'PUT',
+                'url': this.state.url,
+            };
+
+            let validations = values => {
+                const errors = {};
+                if(values.password !== values.password2){
+                    errors.password2 = "Password must match";
+                }
+                return errors;
+            };
 
             if(user){
                 return (
-                        <div className="row">
-                            {this.getMessage()}
-                            <div className="basic-info col-md-6 col-md-offset-3">
-                                <div className="profile-header">
-                                    <div><h3 className="p-b-20">Editing {user.email}</h3></div>
-                                    <div>
-                                        <small>Last Login: {user.last_login != null ? <DateFormat time={true} date={user.last_login}/> : 'Never'}</small><br/>
-                                        <small>User Status: {user.status}</small>
-                                    </div>
+                    <div className="row">
+                        {this.getMessage()}
+                        <div className="basic-info col-md-6 col-md-offset-3">
+                            <div className="profile-header">
+                                <div><h3 className="p-b-20">Editing {user.email}</h3></div>
+                                <div>
+                                    <small>
+                                        Last Login: {user.last_login !== null ?
+                                        <DateFormat time={true} date={user.last_login}/> :
+                                        'Never'}
+                                    </small><br/>
+                                    <small>User Status: {user.status}</small>
                                 </div>
-                                <div className="row">
-                                    <div className="col-md-12 form-group-flex column centered p-b-10">
-                                        <label className="control-label">Upload Avatar</label>
-                                        {/*<ImageUploader name="template-icon" elementID="template-image" imageStyle="badge badge-lg"*/}
-                                                       {/*imageURL={`/api/v1/service-templates/25/icon`} />*/}
-                                        <ImageUploader name="avatar" elementID="avatar" imageStyle="badge badge-xl"
-                                                       imageURL={`${this.state.url}/avatar`} imageGETURL={`${this.state.url}/avatar`}
-                                                       uploadButton={true} reloadNotice="Please reload the application."/>
-                                    </div>
-                                    <div className="col-md-12">
-                                        <div className="row">
-                                            <DataForm handleResponse={this.handleResponse} url={this.state.url} method={'PUT'}>
-                                                <div className="col-md-6">
-                                                    <Inputs type="text" label="Name" name="name" defaultValue={user.name}
-                                                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                                    <Inputs type="text" label="Email" name="email" value={user.email}
-                                                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                                    <Inputs type="text" label="Phone Number" name="phone" value={user.phone}
-                                                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                                </div>
-                                                <div className="col-md-6">
-                                                    {/*<div className="form-group">*/}
-                                                        {/*<label className="control-label">Password</label>*/}
-                                                        {/*<input className="form-control" type="password" name="current_password"/>*/}
-                                                    {/*</div>*/}
-
-                                                    <div className="form-group">
-                                                        <label className="control-label">Change Password</label>
-                                                        <input className="form-control" type="password" name="password" onChange={this.validatePassword}/>
-                                                    </div>
-
-                                                    {/*<div className="form-group">*/}
-                                                        {/*<label className="control-label">Confirm Password</label>*/}
-                                                        {/*<input className="form-control" type="password" name="password2" onChange={this.validatePassword}/>*/}
-                                                    {/*</div>*/}
-                                                </div>
-                                                <div className="col-md-12 text-right">
-                                                    <Buttons containerClass="inline" btnType="primary" text="Save Profile" type="submit" value="submit"/>
-                                                    <Buttons containerClass="inline" btnType="default" text="cancel" onClick={this.onStopEdit}/>
-                                                </div>
-                                            </DataForm>
-                                        </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-md-12 form-group-flex column centered p-b-10">
+                                    <label className="control-label">Upload Avatar</label>
+                                    <ImageUploader name="avatar" elementID="avatar" imageStyle="badge badge-xl"
+                                                   imageURL={`${this.state.url}/avatar`} imageGETURL={`${this.state.url}/avatar`}
+                                                   uploadButton={true} reloadNotice="Please reload the application."/>
+                                </div>
+                                <div id="add-category-form" className="col-md-12">
+                                    <div className="row">
+                                        <ServiceBotBaseForm
+                                            form={userFormElements}
+                                            initialRequests = {initialRequests}
+                                            validations={validations}
+                                            submissionRequest={submissionRequest}
+                                            handleResponse={this.handleResponse}
+                                        />
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 );
             }else{
                 return(
@@ -149,7 +141,7 @@ class UserFormEdit extends React.Component {
                     </div>
                 )
             }
-        }else if(!this.state.loading && this.state.currentAction == '_VIEW'){
+        }else if(!this.state.loading && this.state.currentAction === '_VIEW'){
 
             let user = this.state.user;
 
@@ -201,6 +193,25 @@ class UserFormEdit extends React.Component {
             }
         }
     }
+}
+
+function userFormElements(props){
+    return (
+        <form>
+            <Field name="name" type="text" validate={required()}
+                   component={inputField} label="Name"/>
+            <Field name="email" type="email" validate={required()}
+                   component={inputField} label="Email"/>
+            <Field name="phone" type="tel"
+                   component={inputField} label="Phone Number"/>
+            <Field name="password" type="password"
+                component={inputField} label="Change Password"/>
+            <Field name="password2" type="password"
+                   component={inputField} label="Confirm Password"/>
+            <Buttons containerClass="inline" btnType="primary" text="Save Profile" type="submit" value="submit" onClick={props.handleSubmit}/>
+            <Buttons containerClass="inline" btnType="default" text="cancel" onClick={this.onStopEdit}/>
+        </form>
+    )
 }
 
 export default UserFormEdit;

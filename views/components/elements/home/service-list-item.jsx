@@ -44,7 +44,7 @@ class ServiceListItem extends React.Component {
             let objectURL = URL.createObjectURL(myBlob);
             self.setState({image: objectURL});
         }).catch(function(error) {
-            // console.log("There was problem fetching your image:" + error.message);
+
         });
     }
 
@@ -59,7 +59,7 @@ class ServiceListItem extends React.Component {
             let objectURL = URL.createObjectURL(myBlob);
             self.setState({icon: objectURL});
         }).catch(function(error) {
-            // console.log("There was problem fetching your image:" + error.message);
+
         });
     }
 

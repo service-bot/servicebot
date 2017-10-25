@@ -12,7 +12,6 @@ class ServiceInstanceFormEdit extends React.Component {
         super(props);
         let templateId = this.props.templateId;
         let instance = this.props.myInstance;
-        console.log("template id", templateId);
         this.state = {
             instance: instance,
             templateId: templateId,
@@ -29,19 +28,20 @@ class ServiceInstanceFormEdit extends React.Component {
 
     componentDidMount() {
         let self = this;
-        Fetcher(self.state.url).then(function(response){
-            if(response != null){
-                if(!response.error){
-                    console.log(response);
-                    self.setState({loading:false, template: response});
-                }
-            }
-            self.setState({loading:false});
-        })
+                    self.setState({loading:false});
+
+        // Fetcher(self.state.url).then(function(response){
+        //     if(response != null){
+        //         if(!response.error){
+        //             console.log(response);
+        //             self.setState({loading:false, template: response});
+        //         }
+        //     }
+        //     self.setState({loading:false});
+        // })
     }
 
     handleResponse(response){
-        console.log("inside handle response", response);
         if(!response.error){
             this.setState({success: true});
         }
@@ -55,10 +55,9 @@ class ServiceInstanceFormEdit extends React.Component {
         }
     }
 
-    getValidators(references){
+    getValidators(){
         //This function dynamically generates validators depending on what custom properties the instance has.
         //requires references: the service template's references.service_template_properties
-        console.log("inside getValidators");
         //Defining general validators
         let validateRequired        = (val) => { return val === 0 || val === false || val != '' && val != null};
         let validateEmptyString     = (val) => { return val.trim() != ''};
@@ -69,24 +68,24 @@ class ServiceInstanceFormEdit extends React.Component {
         let validatorJSON = {
             'name'              : validateName,
             'description'       : validateDescription,
-            'references'        : {
-                service_instance_properties :{}
-            }
+            // 'references'        : {
+            //     service_instance_properties :{}
+            // }
         };
 
-        let myFields = _.filter(references, {prompt_user: true});
+        // let myFields = _.filter(references, {prompt_user: true});
+        //
+        // myFields.forEach(field => {
+        //     if (field.required) {
+        //         //define validator based on each input type
+        //         if (field.prop_input_type == 'text') {
+        //             let validateRequiredText = (val) => {return validateRequired(val) && validateEmptyString(val) || {error:`Field ${field.name} is required.`}};
+        //             validatorJSON.references.service_instance_properties.value = validateRequiredText;
+        //         }
+        //     }
+        // });
+        //
 
-        myFields.forEach(field => {
-            if (field.required) {
-                //define validator based on each input type
-                if (field.prop_input_type == 'text') {
-                    let validateRequiredText = (val) => {return validateRequired(val) && validateEmptyString(val) || {error:`Field ${field.name} is required.`}};
-                    validatorJSON.references.service_instance_properties.value = validateRequiredText;
-                }
-            }
-        });
-
-        console.log("validatorJSON", validatorJSON);
 
         return validatorJSON;
     }
@@ -114,17 +113,16 @@ class ServiceInstanceFormEdit extends React.Component {
         }else{
             const instance = this.state.instance;
             const instance_props = this.state.instance.references.service_instance_properties;
-            const references = this.state.template.references.service_template_properties.length > 0 ? this.state.template.references.service_template_properties : false;
+            // const references = this.state.template.references.service_template_properties.length > 0 ? this.state.template.references.service_template_properties : false;
 
-            console.log("my instance", instance);
 
             //TODO: Add validation functions and pass into DataForm as props
             //** Stripe limits the trial days to 2 years
-            const myValidators = this.getValidators(references);
+            const myValidators = this.getValidators();
 
             return (
                 <div>
-                    <DataForm validators={this.getValidators(references)} handleResponse={this.handleResponse} url={`/api/v1/service-instances/${instance.id}`} method={'PUT'}>
+                    <DataForm validators={myValidators} handleResponse={this.handleResponse} url={`/api/v1/service-instances/${instance.id}`} method={'PUT'}>
 
                         <div className="p-20">
                             <div className="row">
@@ -138,29 +136,29 @@ class ServiceInstanceFormEdit extends React.Component {
                                             onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
                                 </div>
                             </div>
-                            {references ?
-                                <div className="row">
-                                    <div className="col-md-12">
-                                        <h3 className="p-b-20">Service Fields</h3>
-                                        {references.map( reference => (
-                                            <div key={`custom-fields-${reference.prop_label}`}>
-                                                <DataChild modelName="service_instance_properties" objectName={reference.name}>
-                                                    <Inputs type="hidden" name="id" value={_.filter(instance_props, {name: reference.name}).length > 0 ? _.filter(instance_props, {name: reference.name})[0].id : ()=>{console.log("im so weird", _.filter(instance_props, {name: reference.name}))}}
-                                                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                                    <Inputs type="hidden" name="name" value={_.filter(instance_props, {name: reference.name}).length > 0 ? _.filter(instance_props, {name: reference.name})[0].name : ''}
-                                                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                                    <Inputs type={reference.prop_input_type}
-                                                            label={reference.prop_label || 'No label'}
-                                                            name="value"
-                                                            defaultValue={_.filter(instance_props, {name: reference.name}).length > 0 ? _.filter(instance_props, {name: reference.name})[0].value : ''}
-                                                            options={reference.prop_values}
-                                                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                                </DataChild>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div> : <div/>
-                            }
+                            {/*{references ?*/}
+                                {/*<div className="row">*/}
+                                    {/*<div className="col-md-12">*/}
+                                        {/*<h3 className="p-b-20">Service Fields</h3>*/}
+                                        {/*{references.map( reference => (*/}
+                                            {/*<div key={`custom-fields-${reference.prop_label}`}>*/}
+                                                {/*<DataChild modelName="service_instance_properties" objectName={reference.name}>*/}
+                                                    {/*<Inputs type="hidden" name="id" value={_.filter(instance_props, {name: reference.name}).length > 0 ? _.filter(instance_props, {name: reference.name})[0].id : ()=>{console.log("im so weird", _.filter(instance_props, {name: reference.name}))}}*/}
+                                                            {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
+                                                    {/*<Inputs type="hidden" name="name" value={_.filter(instance_props, {name: reference.name}).length > 0 ? _.filter(instance_props, {name: reference.name})[0].name : ''}*/}
+                                                            {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
+                                                    {/*<Inputs type={reference.type}*/}
+                                                            {/*label={reference.prop_label || 'No label'}*/}
+                                                            {/*name="value"*/}
+                                                            {/*defaultValue={_.filter(instance_props, {name: reference.name}).length > 0 ? _.filter(instance_props, {name: reference.name})[0].value : ''}*/}
+                                                            {/*options={reference.prop_values}*/}
+                                                            {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
+                                                {/*</DataChild>*/}
+                                            {/*</div>*/}
+                                        {/*))}*/}
+                                    {/*</div>*/}
+                                {/*</div> : <div/>*/}
+                            {/*}*/}
                         </div>
 
                         <div id="request-submission-box" className="modal-footer text-right">

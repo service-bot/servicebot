@@ -5,34 +5,28 @@ let ServiceInstance = require('../models/service-instance');
 let EventLogs = require('../models/event-log');
 let validate = require('../middleware/validate');
 let auth = require('../middleware/auth');
-let dispatchEvent = require("../config/redux/store").dispatchEvent;
 module.exports = function(router) {
+    let store = require("../config/redux/store");
 
     //TODO add updated time stamp thingy
-    router.post('/service-instance-cancellations/:id/approve', validate(ServiceInstanceCancellations), auth(), function(req, res, next) {
+    router.post('/service-instance-cancellations/:id/approve', validate(ServiceInstanceCancellations), auth(), async function(req, res, next) {
         let entity = res.locals.valid_object;
-        //Only approve is the request is waiting
-        if(entity.data.status == 'waiting') {
-            ServiceInstance.findOne('id', entity.get('service_instance_id'), function (service_instance) {
+        try {
+            //Only approve is the request is waiting
+            if(entity.data.status == 'waiting') {
+                let service_instance = (await ServiceInstance.find({ id : entity.get('service_instance_id')}))[0];
                 entity.set("status", "approved");
                 entity.set("fulfilled_by", req.user.get('id'));
-                entity.update(function (err, result) {
-                    service_instance.unsubscribe(function (err, unsub_obj) {
-                        if(!err) {
-                            EventLogs.logEvent(req.user.get('id'), `service-instance-cancellations ${req.params.id} was approved by user ${req.user.get('email')}`);
-                            res.status(200).json(unsub_obj);
-
-                            // mailer('instance_cancellation_approved')(req, res, next);
-                            dispatchEvent("service_instance_cancellation_approved", unsub_obj);
-                            next();
-                        } else {
-                            res.status(400).json(err);
-                        }
-                    });
-                });
-            });
-        } else {
-            res.status(400).json({'error':'Cancellation has already been processed.'});
+                await entity.update();
+                let unsub_obj = await service_instance.unsubscribe();
+                res.status(200).json(unsub_obj);
+                store.dispatchEvent("service_instance_cancellation_approved", unsub_obj);
+                next();
+            } else {
+                res.status(400).json({'error':'Cancellation has already been processed.'});
+            }
+        } catch (err) {
+            res.status(400).json({'error': 'Error cancelling the service!'});
         }
     });
 
@@ -48,7 +42,7 @@ module.exports = function(router) {
                     service_instance.update(function (err, instance_obj) {
                         EventLogs.logEvent(req.user.get('id'), `service-instance-cancellations ${req.params.id} was rejected by user ${req.user.get('email')}`);
                         res.status(200).json(instance_obj);
-                        dispatchEvent("service_instance_cancellation_rejected", result);
+                        store.dispatchEvent("service_instance_cancellation_rejected", result);
                         next();
 
                     });

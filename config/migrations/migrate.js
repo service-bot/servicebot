@@ -1,4 +1,3 @@
-let knex = require("../db");
 let semver = require("semver")
 let semver_sort = require("semver-sort")
 let glob = require("glob");
@@ -9,6 +8,8 @@ let SystemOptions = require("../../models/system-options");
 
 
 async function migrate(){
+    let knex = require("../db");
+    console.log(process.env.npm_package_version);
     let migrations = await getMigrations()
     let appVersion = (await SystemOptions.getOptions()).app_version;
     console.log(migrations);

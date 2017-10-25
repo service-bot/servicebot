@@ -1,0 +1,38 @@
+.servicebot-table-base {
+    margin-bottom: 25px;
+}
+.react-bs-container-body{
+    overflow: visible !important;
+}
+.table {
+    overflow: visible;
+}
+
+/* table column styles */
+.customer-column{
+
+}
+.customer-column .customer-image{
+
+}
+.customer-column .customer-name{
+    margin-left: 5px;
+}
+
+/* no data display styles */
+.no-data-message {
+    width: 100%;
+    text-align: center;
+}
+
+span.no-data-message-text-title {
+    display: block;
+    font-weight: 900;
+    font-size: 21px;
+    margin-bottom: 10px;
+}
+
+span.no-data-message-text-body {
+    display: block;
+    margin-bottom: 30px;
+}

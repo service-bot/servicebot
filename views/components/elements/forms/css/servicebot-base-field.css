@@ -1,0 +1,88 @@
+/* form-control */
+.form-control.has-error{
+    border-color: #ff6565;
+}
+.form-control.has-warning{
+    border-color: #ffc165;
+}
+.form-control.has-error:hover{
+    background-color: #ffefef;
+}
+.form-control.has-warning:hover{
+    background-color: #fff1e8;
+}
+
+/* form error and warning */
+.form-error, .form-warning {
+    display: block;
+    color: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 0px 10px;
+    font-size: 12px;
+    margin-top: -4px;
+}
+.form-level-errors, .form-level-warnings{
+    margin-bottom: 15px;
+}
+.form-level-errors .form-error, .form-level-warnings .form-warning{
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+.form-error{
+    background: #ff6565;
+}
+.form-warning{
+    background: #ffc165;
+}
+
+/* icon toggle field */
+.iconToggleField {
+    position: relative;
+    width: 35px !important;
+    height: 35px;
+    border: 1px solid #dedede;
+    padding: 2px 6px;
+    font-size: 22px;
+    border-radius: 70px;
+    margin: 0px 3px;
+    cursor: pointer;
+    transition: border-width 0.1s ease-in-out;
+}
+.iconToggleField.active{
+    border: none;
+}
+.iconToggleField.hover{
+    border: 3px solid;
+    transition: border-width 0.1s ease-in-out;
+}
+.iconToggleField .itf-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* slider toggle */
+.iconToggleField.slideToggle {
+    height: 20px;
+    width: 61px !important;
+    border: 1px solid #eee;
+    background: #eee;
+    margin: 5px 0px;
+}
+.iconToggleField.slideToggle .itf-icon {
+    border-radius: 50px;
+    width: 30px;
+    text-align: center;
+}
+.iconToggleField.slideToggle.active .itf-icon {
+    left: 42px;
+    transition: left 0.1s ease-in-out;
+}
+.iconToggleField.slideToggle .itf-icon {
+    left: 18px;
+    transition: left 0.1s ease-in-out;
+    background: #c5c5c5;
+}

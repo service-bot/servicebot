@@ -4,7 +4,7 @@ import NavBootstrap from "./layouts/nav-bootstrap.jsx"
 import Footer from "./layouts/footer.jsx"
 import {browserHistory} from 'react-router';
 import {connect} from "react-redux";
-import {setUid, setUser, dismissAlert} from "./utilities/actions"
+import {setUid, setUser, dismissAlert, setPermissions} from "./utilities/actions"
 import { store } from "../store"
 
 class App extends React.Component {
@@ -16,44 +16,49 @@ class App extends React.Component {
     }
 
     componentDidMount(){
-        let self = this;
-        let options = null;
-        store.subscribe(function(){
-            let storeState = store.getState();
-            if (storeState.options) {
-                self.setState({backgroundColor: storeState.options.background_color ? storeState.options.background_color.value : '#ffffff'});
-            }
-            if(!options && storeState.options){
-                options = store.getState().options;
-                document.getElementById('servicebot-loader').classList.add('move-out');
-            }
-        })
     }
 
     handleLogout() {
         let that = this;
 
         Fetcher("/api/v1/auth/session/clear").then(function(result){
-            that.setState({uid: null});
             localStorage.removeItem("permissions");
-            store.dispatch(setUid(null));
-            store.dispatch(dismissAlert([]));
+            that.props.logout();
             browserHistory.push('/');
-        }).then(function () {
-            store.dispatch(setUser(null));
         })
     }
 
     render () {
         let self = this;
+        let background = (this.props.options && this.props.options.background_color)  ? this.props.options.background_color.value : '#ff0400';
+        if(this.props.options && this.props.options.background_color){
+            document.getElementById('servicebot-loader').classList.add('move-out');
+        }
+
+
         return(
-                <div className="app-container" style={{backgroundColor: this.state.backgroundColor}}>
-                    <NavBootstrap handleLogout={this.handleLogout} uid={this.state.uid}/>
+                <div className="app-container" style={{backgroundColor: background}}>
+                    <NavBootstrap handleLogout={this.handleLogout}/>
                     {self.props.children}
                     <Footer/>
                 </div>
         );
     }
 }
+let mapStateToProps = function(state){
+    return {
+        options : state.options,
+    }
+}
+let mapDispatchToProps = function(dispatch){
+    return {
+        logout : function(){
+            dispatch(setUid(null));
+            dispatch(dismissAlert([]));
+            dispatch(setUser(null));
+            dispatch(setPermissions([]));
 
-export default App;
+        }}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+

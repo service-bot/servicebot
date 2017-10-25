@@ -1,0 +1,12 @@
+{
+  "name": "google-analytics",
+  "version": "0.0.1",
+  "dependencies": {
+    
+  },
+  "pluginbot" : {
+    "client": {
+      "main" : "index.js"
+    }
+  }
+}

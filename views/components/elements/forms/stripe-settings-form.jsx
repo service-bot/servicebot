@@ -37,10 +37,8 @@ class SystemSettingsForm extends React.Component {
         let self = this;
         Fetcher(self.state.stripe_get_keys).then(function (response) {
             if(!response.error){
-                console.log("stripe-settings", response);
                 self.setState({loading: false, stripe_settings: response});
             }else{
-                console.log("Stripe setting error", response);
                 self.setState({loading: false});
             }
         });
@@ -72,10 +70,8 @@ class SystemSettingsForm extends React.Component {
         });
         let fData = self.state.formData;
         Fetcher(self.state.stripe_configure, 'POST', JSON.parse(fData).form).then(function (response) {
-            console.log(response)
             if(!response.error){
 
-                console.log("stripe-settings", response);
                 self.setState({
                     loading: false,
                     confirm_modal: false,
@@ -86,7 +82,7 @@ class SystemSettingsForm extends React.Component {
                     }
                 });
             }else{
-                console.log("Stripe setting error", response);
+                console.error("Stripe setting error", response);
                 self.setState({
                     loading: false,
                     confirm_modal: false,
