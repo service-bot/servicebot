@@ -6,6 +6,8 @@ import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import {inputField} from "./servicebot-base-field.jsx";
 import {required} from 'redux-form-validators'
 import {Field,} from 'redux-form'
+import Collapsible from 'react-collapsible';
+import Buttons from "../buttons.jsx";
 
 class CardSection extends React.Component {
     render() {
@@ -44,14 +46,17 @@ class BillingForm extends React.Component {
 
 function BillingInfo(props) {
     return (
-        <form onSubmit={props.handleSubmit}>
+        <form>
             <CardSection/>
             <Field name="name" type="text" component={inputField} label="Name"/>
             <Field name="address_line1" type="text" component={inputField} label="Address Line 1"/>
             <Field name="address_line2" type="text" component={inputField} label="Address Line 2"/>
             <Field name="address_city" type="text" component={inputField} label="City"/>
             <Field name="address_state" type="text" component={inputField} label="State"/>
-            <button type="submit">Submit</button>
+            {/*<button type="submit">Submit</button>*/}
+            <div className="text-right">
+                <Buttons btnType="primary" text="Save Card" onClick={props.handleSubmit} type="submit" value="submit"/>
+            </div>
         </form>
     )
 }
@@ -123,29 +128,56 @@ class CreditCardForm extends React.Component {
         };
 
         let {hasCard, displayName, card: {brand, last4, exp_month, exp_year}} = this.state;
+
+        let getBrandIcon = ()=>{
+            if(brand === 'American Express'){
+                return 'fa fa-cc-amex';
+            }else{
+                return `fa fa-cc-${brand.replace(/\s+/g, '-').toLowerCase()}`;
+            }
+        };
+
+        let getCard = ()=>{
+            if(hasCard) {
+                return (
+                    <div className="card-accordion">
+                        <p>
+                            <i className={getBrandIcon()}/>
+                            {brand} ending in <span className="last4">{last4}</span>
+                            <span className="exp_month">{exp_month}</span> /
+                            <span className="exp_year">{exp_year}</span>
+                        </p>
+                    </div>
+                )
+            }else{
+                return (
+                    <div className="card-accordion">
+                        <p>
+                            <i className="fa fa-plus"/>
+                            <span>Add your card</span>
+                        </p>
+                    </div>
+                )
+            }
+        };
+
         return (
             <div id="payment-form">
-                {hasCard &&
-                (<div>
-                    <h3>{hasCard ? `${displayName} have` : 'Added'} a {brand} card in your account
-                        ending in <span className="last4">{last4}</span></h3>
-
-                    <p>Expiration: <span className="exp_month">{exp_month}</span> / <span
-                        className="exp_year">{exp_year}</span></p>
-
-                    <hr/>
-                    <p>Update current payment method</p>
-                </div>)}
-
+                <h3><i className="fa fa-credit-card"/>Your credit and debit card</h3>
+                <hr/>
                 <div className="form-row">
-                    <ServiceBotBaseForm
-                        form={BillingInfo}
-                        initialValues={{...this.state.personalInformation}}
-                        submissionPrep={this.submissionPrep}
-                        submissionRequest={submissionRequest}
-                        successMessage={"Fund added successfully"}
-                        handleResponse={this.props.handleResponse}
-                    />
+                    <Collapsible trigger={getCard()}>
+                        <div className="service-instance-box-content">
+                        <ServiceBotBaseForm
+                            form={BillingInfo}
+                            initialValues={{...this.state.personalInformation}}
+                            submissionPrep={this.submissionPrep}
+                            submissionRequest={submissionRequest}
+                            successMessage={"Fund added successfully"}
+                            handleResponse={this.props.handleResponse}
+                        />
+                        </div>
+                    </Collapsible>
                 </div>
             </div>
         );

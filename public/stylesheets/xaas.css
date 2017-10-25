@@ -231,7 +231,21 @@ ul.templateList {
     font-weight: bold;
 }
 
-/* service details table */
+/* billing settings*/
+#payment-form h3 i{
+    margin-right: 15px;
+}
+.card-accordion p{
+    margin-bottom: 0;
+}
+.card-accordion i{
+    margin-right: 15px;
+}
+.card-accordion .last4{
+    margin-right: 30px;
+}
+
+    /* service details table */
 table td.service-description{
     min-width: 300px;
 }
