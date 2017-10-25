@@ -5,7 +5,8 @@ import consume from "pluginbot-react/src/consume";
 
     let ServiceInstanceField = function (props) {
         // let widgets = this.props.services.widget.reduce((acc, widget) =>  ({...acc, [widget.type] : widget}), {});
-        let widget = props.services.widget.find(widget => widget.type === props.field.type);
+        let type = props.field.type || "text";
+        let widget = props.services.widget.find(widget => widget.type === type);
         let config = props.field.config;
         // if(config && config.pricing){
         //     delete config.pricing;
