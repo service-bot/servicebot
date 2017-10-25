@@ -146,7 +146,8 @@ class NavBootstrap extends React.Component {
     }
 
     getLivemode(){
-        let livemode = cookie.load("spk").substring(3, 7);
+        let pk = cookie.load("spk")
+        let livemode =  pk ? pk.substring(3, 7) : "";
         if(livemode.toUpperCase() == "TEST") {
             return ( <span className="notification-badge"><strong>Test Mode Payments</strong></span> );
         } else {
