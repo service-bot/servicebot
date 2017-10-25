@@ -497,6 +497,22 @@ module.exports = function (router) {
 
     router.put(`/service-templates/:id(\\d+)`, validate(ServiceTemplate), auth(), function(req, res, next) {
         req.body.trial_period_days = req.body.trial_period_days || 0;
+        let properties = req.body.references && req.body.references.service_template_properties;
+        if(properties){
+            req.body.references.service_template_properties = properties.map(prop => {
+                return {
+                    ...prop,
+                    name : slug(prop.prop_label)
+                };
+            });
+        }
+        ServiceTemplate.findAll("name", req.body.name, (templates) => {
+            if (templates && templates.length > 0) {
+                res.status(400).json({error: "Service template name already in use"})
+            } else {
+                next();
+            }
+        })
         next();
     });
 

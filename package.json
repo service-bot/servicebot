@@ -68,7 +68,7 @@
     "prop-types": "^15.6.0",
     "react": "^15.6.2",
     "react-addons-css-transition-group": "^15.6.2",
-    "react-bootstrap-table": "^4.0.6",
+    "react-bootstrap-table": "^4.1.1",
     "react-breadcrumbs": "^1.6.6",
     "react-chartjs2": "^1.1.2",
     "react-collapsible": "^2.0.3",
