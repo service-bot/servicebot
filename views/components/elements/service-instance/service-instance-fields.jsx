@@ -10,7 +10,8 @@ class ServiceInstanceFields extends React.Component {
                     <span>Request Details</span>
                 </div>
                 <div className="service-instance-box-content">
-                    <span className="m-b-20 block label color-grey-600">Information collected from customer.</span>
+                    <span className="m-b-20 block label color-grey-600">These fields were selected during the request process of this item. They are
+                    shown exactly as entered initially.</span>
                     <div className="row">
                         {this.props.instanceProperties.map( field => {
                             if(field.data) {
