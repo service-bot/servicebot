@@ -506,13 +506,7 @@ module.exports = function (router) {
                 };
             });
         }
-        ServiceTemplate.findAll("name", req.body.name, (templates) => {
-            if (templates && templates.length > 0) {
-                res.status(400).json({error: "Service template name already in use"})
-            } else {
-                next();
-            }
-        })
+        //todo: add validation for name.
         next();
     });
 
