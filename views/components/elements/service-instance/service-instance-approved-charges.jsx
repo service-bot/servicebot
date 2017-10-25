@@ -36,31 +36,68 @@ class ServiceInstanceApprovedCharges extends React.Component {
     }
 
     getChargeHistory() {
-        return (
-            <Collapsible trigger="Start here">
-                <p>This is the collapsible content. It can be any element or React component you like.</p>
-                <p>It can even be another Collapsible component. Check out the next section!</p>
-            </Collapsible>
-        );
+        let currentTime = Math.round(new Date().getTime()/1000);
+        //Only get charges for previous billing cycles
+        let approveItems = this.props.instanceApprovedItems.filter((item) => {
+            return item.period_end < currentTime;
+        });
+
+        if(approveItems.length > 0) {
+            return (
+                <Collapsible trigger="Approved Charges - Previous Billing Cycles" openedClassName="opened">
+                    <div className="service-instance-box-content">
+                        <p>The following charges are approved during previous billing cycles.
+                            The base subscription price is not included. This list only includes the approved additional charges.</p>
+                        <Datatable dataObj={approveItems}
+                                   col={['description', 'amount', 'updated_at', 'approved']}
+                                   mod_amount={this.modAmount}
+                                   mod_updated_at={this.modUpdatedAt}
+                                   mod_approved={this.modApproved}
+                                   colNames={['Line Item Description', 'Amount', 'Paid On', 'Status']}
+                        />
+                    </div>
+                </Collapsible>
+            );
+        } else {
+            return null;
+        }
+    }
+
+    getChargeCurrent() {
+        let currentTime = Math.round(new Date().getTime()/1000);
+        //Only get charges for current billing cycles
+        let approveItems = this.props.instanceApprovedItems.filter((item) => {
+            return item.period_end > currentTime;
+        });
+
+        if(approveItems.length > 0) {
+            return (
+                <div className="service-instance-box">
+                    <div className="service-instance-box-title">
+                        <span>Approved Charges - Current Billing Cycle</span>
+                    </div>
+                    <div className="service-instance-box-content">
+                        <p>Following charges are one time charges that have been approved for the current billing cycle.</p>
+                        <Datatable dataObj={approveItems}
+                                   col={['description', 'amount', 'updated_at', 'approved']}
+                                   mod_amount={this.modAmount}
+                                   mod_updated_at={this.modUpdatedAt}
+                                   mod_approved={this.modApproved}
+                                   colNames={['Line Item Description', 'Amount', 'Paid On', 'Status']}
+                        />
+                    </div>
+                </div>
+            );
+        } else {
+            return null;
+        }
     }
 
     render () {
         return (
-            <div className="service-instance-box">
-                <div className="service-instance-box-title">
-                    <span>Approved Charges</span>
-                </div>
-                <div className="service-instance-box-content">
-                    {this.getChargeHistory()}
-                    <p>Service line items are one time charges for standalone services performed related to this service within current pay period.</p>
-                    <Datatable dataObj={this.props.instanceApprovedItems}
-                               col={['description', 'amount', 'updated_at', 'approved']}
-                               mod_amount={this.modAmount}
-                               mod_updated_at={this.modUpdatedAt}
-                               mod_approved={this.modApproved}
-                               colNames={['Line Item Description', 'Amount', 'Paid On', 'Status']}
-                    />
-                </div>
+            <div>
+                {this.getChargeCurrent()}
+                {this.getChargeHistory()}
             </div>
         );
     }

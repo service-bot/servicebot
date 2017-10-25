@@ -822,19 +822,26 @@ body.login .footer{
     padding-right: 20px;
     padding-bottom: 10px;
     padding-top: 10px;
-    box-shadow: inset 0 -1px #c9d5e0;
+    /*box-shadow: inset 0 -1px #c9d5e0;*/
     color: black;
     background: #d9e1ea;
     display: flex;
     align-items: stretch;
     justify-content: space-between;
 }
+
+.Collapsible__trigger:hover {
+    background: #304789;
+    color: #ffffff;
+}
+
+.Collapsible__trigger {
+    cursor: pointer;
+}
+
 .service-instance-box-content{
     height: auto;
     padding: 10px 20px;
-}
-.Collapsible__contentOuter {
-    padding: 0 20px;
 }
 
 .service-instance-box.red .service-instance-box-title {
@@ -865,6 +872,14 @@ body.login .footer{
 }
 .service-instance-box-content .row .form-group-flex{
     display: block;
+}
+
+.Collapsible.opened {
+    border: solid 1px #314888;
+}
+.Collapsible__trigger.is-open {
+    background: #304789;
+    color: #ffffff;
 }
 
 @keyframes displayMessage {
