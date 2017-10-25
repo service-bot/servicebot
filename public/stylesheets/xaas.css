@@ -837,6 +837,18 @@ body.login .footer{
 .service-instance-box.black {
     border: solid 1px #000000;
 }
+.service-instance-box-content .row {
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    padding: 15px;
+}
+
+.service-instance-box-content .row .form-group {
+    flex-basis: 25%;
+}
+.service-instance-box-content .row .form-group-flex{
+    display: block;
+}
 
 @keyframes displayMessage {
     0%{

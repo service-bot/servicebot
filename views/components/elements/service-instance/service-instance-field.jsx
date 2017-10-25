@@ -15,15 +15,15 @@ import consume from "pluginbot-react/src/consume";
 
                 <div>
                     <label className="control-label form-label-flex-md">{props.field.prop_label}</label>
-                <widget.widget
-                    configValue={props.field.config}
-                    input={{value : props.field.data.value, disabled : true}}
-                />
+                    <widget.widget
+                        configValue={props.field.config}
+                        input={{value : props.field.data.value, disabled : true}}
+                    />
                 </div>
 
             );
         }else{
-            return <div></div>
+            return <div/>
         }
     }
 
