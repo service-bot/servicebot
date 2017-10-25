@@ -106,7 +106,7 @@ let basePlugins = function() {
         {"path" : `${PLUGIN_DIRECTORY}/core-input-types`},
         {"path" : `${PLUGIN_DIRECTORY}/service-lifecycle`},
         {"path" : `${PLUGIN_DIRECTORY}/client-plugins/google-analytics`},
-        {"path" : `${PLUGIN_DIRECTORY}/updates`, "interval" : 86400000, "master" : "https://hub.servicebot.io/api/v1/announcements"}
+        {"path" : `${PLUGIN_DIRECTORY}/updates`, "interval" : 86400000, "master" : "https://hub.servicebot.cloud/api/v1/announcements"}
     ];
 };
 
@@ -114,6 +114,7 @@ let getInitialConfig = function(){
     return {
         admin_user : process.env.ADMIN_USER,
         admin_password : process.env.ADMIN_PASSWORD,
+        admin_name : process.env.ADMIN_NAME,
         company_name : process.env.VIRTUAL_HOST && process.env.VIRTUAL_HOST.split(".")[0],
         company_email : process.env.ADMIN_USER,
         hostname : process.env.VIRTUAL_HOST,
