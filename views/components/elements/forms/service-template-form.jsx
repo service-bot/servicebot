@@ -363,7 +363,7 @@ class TemplateForm extends React.Component {
                                        component={priceField}
                                        isCents={true}
                                        label="Amount"
-                                       validate={numericality({ '>': 0.00 })}
+                                       validate={numericality({ '>=': 0.00 })}
                                 />
                                 }
 
