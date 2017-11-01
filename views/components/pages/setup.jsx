@@ -121,11 +121,11 @@ class SetupStripe extends React.Component{
                 </p>
                 <div className="row">
                     <label className="control-label">Stripe Secret API Key</label>
-                    <input className="form-control" value={this.props.state.stripe_secret} onChange={this.props.inputChange} name="stripe_secret"/>
+                    <input required className="form-control" value={this.props.state.stripe_secret} onChange={this.props.inputChange} name="stripe_secret"/>
                 </div>
                 <div className="row">
                     <label className="control-label">Stripe Publishable API Key</label>
-                    <input className="form-control" value={this.props.state.stripe_public} onChange={this.props.inputChange} name="stripe_public"/>
+                    <input required className="form-control" value={this.props.state.stripe_public} onChange={this.props.inputChange} name="stripe_public"/>
                 </div>
                 <p>
                     In order to have ServiceBot and Stripe communicate with each other we need to create webhooks in stripe. Follow these steps to enable this:<br/>
