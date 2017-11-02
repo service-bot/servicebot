@@ -142,8 +142,8 @@ class ServiceRequestForm extends React.Component {
                         <Field name="amount" type="number"
                                component={priceField}
                                isCents={true}
-                               label="OverRide Amount"
-                               validate={numericality({ '>': 0.00 })}
+                               label="Override Amount"
+                               validate={numericality({ '>=': 0.00 })}
                         />
                     </Authorizer>
 
