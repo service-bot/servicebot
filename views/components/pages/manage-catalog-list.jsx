@@ -11,6 +11,7 @@ import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import ModalPublishingTemplate from "../elements/modals/modal-publishing-template.jsx";
 import ModalDeleteTemplate from "../elements/modals/modal-delete-template.jsx";
+import {connect} from "react-redux";
 
 class ManageCatalogList extends React.Component {
 
@@ -135,7 +136,12 @@ class ManageCatalogList extends React.Component {
                         label: "Delete Item",
                         action: () => {self.onOpenDeleteModal(row)},
                     },
-                ]}
+                ].filter(option => {
+                    if(!self.props.provider && (option.label === "Request for User" || option.label === "Publish Item")){
+                        return false;
+                    }
+                    return true;
+                })}
             />
         );
     }
@@ -233,4 +239,4 @@ class ManageCatalogList extends React.Component {
     }
 }
 
-export default ManageCatalogList;
+export default connect(state => ({provider : !!state.options.stripe_publishable_key}))(ManageCatalogList);

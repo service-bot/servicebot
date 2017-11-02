@@ -43,14 +43,24 @@ module.exports = function (database, initConfig) {
                         role_id: adminRole.get("id"),
                         name: initConfig.admin_name || "admin"
                     });
-
-                    admin.createWithStripe(stripeOptions, function (err, result) {
-                        if (err) {
-                            console.error(err);
-                            reject(err);
-                        }
-                        resolve(result)
-                    })
+                    if(initConfig.stripe_public && initConfig.stripe_secret) {
+                        admin.createWithStripe(stripeOptions, function (err, result) {
+                            if (err) {
+                                console.error(err);
+                                reject(err);
+                            }
+                            resolve(result)
+                        })
+                    }else{
+                        console.log("NO KEYS PROVIDED");
+                        admin.create((err, result) => {
+                            if (err) {
+                                console.error(err);
+                                reject(err);
+                            }
+                            resolve(result)
+                        })
+                    }
 
                 })
 

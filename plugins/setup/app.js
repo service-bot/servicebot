@@ -4,13 +4,22 @@ let {eventChannel, END} = require("redux-saga");
 let {take} = require("redux-saga/effects")
 
 
-module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
+module.exports = function* (appConfig, initialConfig, dbConfig, app) {
 
 
     const channel = eventChannel(emitter => {
 
         //todo move setup disabled into a .use instead of duplicate code everywhere..
         let setupDisabled = false;
+        if(dbConfig && initialConfig.admin_user && initialConfig.admin_password && initialConfig.company_name && initialConfig.company_email){
+            console.log("Configuration pre-set, initialization starting")
+            require("../../bin/setup")({...initialConfig, ...dbConfig}, function (env) {
+
+                emitter({initialConfig});
+                setupDisabled = true;
+                emitter(END);
+            });
+        }
         let api = express.Router();
         app.get('/', function (req, res, next) {
             if (setupDisabled) {
@@ -29,7 +38,7 @@ module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
                 return next();
             }
             let steps = [];
-            if (!dbConfigExists) {
+            if (!dbConfig) {
                 steps.push("database");
             }
             if (!initialConfig.stripe_public || !initialConfig.stripe_secret) {

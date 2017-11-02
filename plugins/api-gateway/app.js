@@ -29,6 +29,8 @@ module.exports = {
         app.use(bodyParser.urlencoded({
             extended: false
         }));
+
+        //todo: possibly unsafe? -- look to make this configurable, rather have opt-in than opt-out so default is secure
         app.use(function(req, res, next) {
             res.header("Access-Control-Allow-Credentials", true);
             res.header("Access-Control-Allow-Origin", "*");

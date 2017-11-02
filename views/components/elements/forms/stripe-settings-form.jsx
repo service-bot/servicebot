@@ -7,6 +7,9 @@ import Inputs from "../../utilities/inputs.jsx";
 import Buttons from "../buttons.jsx";
 import ModalConfirm from '../modals/modal-stripe-reconfigure.jsx';
 import Alerts from '../alerts.jsx';
+import {connect} from "react-redux";
+import {setOption} from "../../utilities/actions";
+
 
 class SystemSettingsForm extends React.Component {
 
@@ -71,7 +74,7 @@ class SystemSettingsForm extends React.Component {
         let fData = self.state.formData;
         Fetcher(self.state.stripe_configure, 'POST', JSON.parse(fData).form).then(function (response) {
             if(!response.error){
-
+                self.props.setKey(self.state.stripe_settings.publishable_key);
                 self.setState({
                     loading: false,
                     confirm_modal: false,
@@ -189,4 +192,8 @@ class SystemSettingsForm extends React.Component {
     }
 }
 
-export default SystemSettingsForm;
+export default connect(null, dispatch => ({
+    setKey: (publishableKey) => {
+        return dispatch(setOption({option : "stripe_publishable_key", value : publishableKey, data_type : "hidden"}))
+    }
+}))(SystemSettingsForm);

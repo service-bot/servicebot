@@ -6,6 +6,7 @@ import ModalInvoice from '../elements/modals/modal-invoice.jsx';
 import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
 import {NavNotification} from "../pages/notifications.jsx";
 import {AppMessage} from '../elements/app-message.jsx';
+import ReactTooltip from 'react-tooltip';
 import { connect } from "react-redux";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import $ from "jquery";
@@ -150,7 +151,16 @@ class NavBootstrap extends React.Component {
     getLivemode(){
         let pk = cookie.load("spk")
         let livemode =  pk ? pk.substring(3, 7) : "";
-        if(livemode.toUpperCase() == "TEST") {
+        if(pk === undefined){
+            return ( <span data-tip="You need to complete your setup to unlock certain features: <br/>User Invites <br/> Publishing Service Templates <br/> Adding funds <br/> Receiving Payments <br/> ---------- <br/> Click to complete" className="notification-badge">
+                <Link to="/stripe-settings">
+                    <ReactTooltip multiline place="bottom" type="dark" effect="solid"/>
+                    <strong>Setup not complete</strong>
+                </Link>
+
+            </span> );
+        }
+        if(livemode.toUpperCase() === "TEST") {
             return ( <span className="notification-badge"><strong>Test Mode Payments</strong></span> );
         } else {
             return <span/>;

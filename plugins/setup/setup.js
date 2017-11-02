@@ -11,7 +11,7 @@ module.exports = {
 
             //wait for api to send initial configuration
             let expressApp = yield consume(services.expressApp);
-            let {initialConfig, response, emitter} = yield call(app, config.appConfig, config.initialConfig || {}, setup.dbConfig, expressApp);
+            let {initialConfig, response} = yield call(app, config.appConfig, config.initialConfig || {}, setup.dbConfig, expressApp);
 
             //db config already exists so don't provide one.
             if(!setup.dbConfig) {
@@ -26,7 +26,9 @@ module.exports = {
             }
             yield provide({initialConfig});
             let finish = yield take(cancelChannel);
-            response.json({message: "Setup complete", options : finish.options});
+            if(response){
+                response.json({message: "Setup complete", options : finish.options});
+            }
         }
         finally {
             console.log("CLOSIN DOWN THE SETUP!");

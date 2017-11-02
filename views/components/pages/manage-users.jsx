@@ -19,6 +19,8 @@ import ModalAddFund from "../elements/modals/modal-add-fund.jsx";
 import ModalEditUserRole from "../elements/modals/modal-edit-user-role.jsx";
 import Modal from '../utilities/modal.jsx';
 import { connect } from 'react-redux';
+import ReactTooltip from 'react-tooltip';
+
 let _ = require("lodash");
 
 class ManageUsers extends React.Component {
@@ -229,6 +231,7 @@ class ManageUsers extends React.Component {
         );
     }
     rowActionsFormatter(cell, row){
+        let self=this;
         let dropdownOptions = [
             {   type: "button",
                 label: row.references.funds.length ? 'Edit Credit Card' : 'Add Credit Card',
@@ -250,10 +253,19 @@ class ManageUsers extends React.Component {
             {   type: "button",
                 label: 'Delete User',
                 action: () => { return (this.openDeleteUser(row)) }},
-        ];
-        if(row.status === 'invited') {
-            dropdownOptions = dropdownOptions.filter(op => op.label !== 'Suspend User');
-        }
+        ].filter((option, index) => {
+            if(!self.props.stripe_publishable_key && index === 0){
+                return false;
+            }
+            if(self.props.user && self.props.user.id === row.id && (option.label === "Delete User" || option.label === "Edit Role" || option.label === "Suspend User")){
+                return false
+            }
+            if(row.status === 'invited' && option.label === "Suspend User") {
+                return false
+            }
+            return true;
+        });
+
         return (
             <Dropdown
                 direction="right"
@@ -340,8 +352,12 @@ class ManageUsers extends React.Component {
                                 <div className="col-xs-12">
                                     <ContentTitle icon="cog" title="Manage all your users here"/>
                                     <ServiceBotTableBase
-                                        createItemAction={this.openInviteUserModal}
-                                        createItemLabel="Invite user"
+                                        createItemProps={!this.props.stripe_publishable_key && {disabled : true}}
+                                        createItemAction={this.props.stripe_publishable_key ? this.openInviteUserModal : () => {}}
+                                        createItemLabel={this.props.stripe_publishable_key ? "Invite user" : (<Link to="/stripe-settings" data-tip="Setup Incomplete - Click to finish">
+                                            Invite User
+                                            <ReactTooltip place="bottom" type="dark" effect="solid"/>
+                                        </Link>)}
                                         rows={this.state.rows}
                                         fetchRows={this.fetchData}
                                         sortColumn="created_at"
@@ -414,5 +430,6 @@ class ManageUsers extends React.Component {
 
 export default connect(
     (state) => {
-        return ( {user: state.user} );
+        return ( {user: state.user,
+        stripe_publishable_key : state.options && state.options.stripe_publishable_key} );
     })(ManageUsers);

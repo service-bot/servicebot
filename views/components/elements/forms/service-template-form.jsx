@@ -121,7 +121,8 @@ CustomField = connect((state, ownProps) => {
         "promptValue": selector(state, "references.service_template_properties")[ownProps.index].prompt_user,
         "typeValue": selector(state, "references.service_template_properties")[ownProps.index].type,
         "configValue": selector(state, `references.service_template_properties`)[ownProps.index].config,
-        "myValues": selector(state, `references.${ownProps.member}`)
+        "myValues": selector(state, `references.${ownProps.member}`),
+
 
     }
 }, (dispatch, ownProps) => {
@@ -284,6 +285,7 @@ class TemplateForm extends React.Component {
                 <div className="row">
                     <div className="col-md-8">
                         <div className="form-level-errors">
+                            { !options.stripe_publishable_key && <Link to="/stripe-settings"><br/><h4 className="form-error">Publishing Disabled Until Setup Complete - Click here to complete</h4></Link>}
                             {error && <div className="form-error">{error}</div>}
                         </div>
                         <div className="form-level-warnings"/>
@@ -300,10 +302,11 @@ class TemplateForm extends React.Component {
                                component={WysiwygRedux} label="Details"
                                validate={[required()]}
                         />
-                        <Field name="published" type="checkbox"
+
+                        {options.stripe_publishable_key && <Field name="published" type="checkbox"
                                defaultValue={true} color="#0091EA" faIcon="check"
                                component={OnOffToggleField} label="Published?"
-                        />
+                        /> }
                         <Field name="category_id" type="select"
                                component={selectField} label="Category" options={formJSON ? formJSON._categories : []}
                                validate={[required()]}
@@ -598,6 +601,7 @@ class ServiceTemplateForm extends React.Component {
                     statement_descriptor: this.props.company_name.value,
                     interval: 'month',
                     interval_count: 1,
+                    published : !!this.props.fieldState.options.stripe_publishable_key,
                     amount: 0
                 };
                 initialRequests.push(
@@ -665,7 +669,7 @@ function mapStateToProps(state) {
             "options": state.options,
             "serviceTypeValue": selector(state, `type`),
             formJSON: getFormValues(TEMPLATE_FORM_NAME)(state),
-        }
+        },
     }
 }
 
