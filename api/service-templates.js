@@ -435,8 +435,9 @@ module.exports = function (router) {
                 ...res.locals.overrides,
 
             });
+            let postData = {};
             if(lifecycleManager) {
-                await lifecycleManager.postProvision({
+                postData = await lifecycleManager.postProvision({
                     request: req_body,
                     instance: newInstance,
                     template: serviceTemplate
@@ -444,7 +445,8 @@ module.exports = function (router) {
             }
             res.json({
                 ...responseJSON,
-                ...newInstance.data
+                ...newInstance.data,
+                ...postData
             });
 
             try {
