@@ -1,5 +1,5 @@
 {
-  "name": "google-analytics",
+  "name": "ga",
   "version": "0.0.1",
   "dependencies": {
     
