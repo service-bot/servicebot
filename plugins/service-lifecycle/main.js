@@ -24,9 +24,12 @@ function* run(config, provide, channels) {
             }
         },
         postProvision : async function({request, template, instance}){
+            let result = {}
             for(let hook of lifecycles.post){
-                await hook.run({request, template,instance});
+                let hookresult = await hook.run({request, template,instance});
+                result = {...result, ...hookresult};
             }
+            return result;
 
         }
     };
