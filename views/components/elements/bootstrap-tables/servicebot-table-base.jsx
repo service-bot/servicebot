@@ -48,7 +48,7 @@ class ServiceBotTableBase extends React.Component {
         return (
             <ButtonGroup className='servicebot-table-btn-group' sizeClass='btn-group-md'>
                 {self.props.createItemAction &&
-                <button type='button' className={ `btn btn-default` } onClick={() => {
+                <button {...self.props.createItemProps} type='button' className={ `btn btn-default` } onClick={() => {
                     self.props.createItemAction ? self.props.createItemAction() :
                         console.error('You must pass a prop "createItem" to ServiceBotTableBase component.');
                 }}><i className="fa fa-plus"/> {self.props.createItemLabel}

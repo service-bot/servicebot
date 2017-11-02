@@ -43,6 +43,10 @@ module.exports = function(router, knex, stripe) {
             //Check if the environment has changed from the previous Stripe keys:
             //If yes, initiate migration of the data. if no, change the keys without migration.
             return new Promise(function (resolve, reject) {
+                if(!Stripe().stripe_secret_key){
+                    console.log("No stripe key exists in current environment, proceed");
+                    return resolve(true);
+                }
                 if(stripe_secret.slice(3,7) == Stripe().stripe_secret_key.slice(3,7)) {
                     //Check the Stripe account ID of the old and the new keys
                     let NewStripe = require("stripe")(stripe_secret);
@@ -77,6 +81,7 @@ module.exports = function(router, knex, stripe) {
         }).catch(function (err) {
             //Instantly fail the process
             return new Promise(function (resolve, reject) {
+                console.error(err);
                 return reject(err);
             });
         });
@@ -85,6 +90,9 @@ module.exports = function(router, knex, stripe) {
    let getStripeKeys = function (req, res) {
         SystemOptions.findOne('option', 'stripe_secret_key', function (option_secret_key) {
             SystemOptions.findOne('option', 'stripe_publishable_key', function (option_publishable_key) {
+                if(!option_publishable_key.data){
+                    return res.status(200).json({secret_key:"", publishable_key:""});
+                }
                 let secret_key = option_secret_key.data.value.substring(0,7) + '******' + option_secret_key.data.value.substring(option_secret_key.data.value.length-5,option_secret_key.data.value.length);
                 let publishable_key = option_publishable_key.data.value;
                 return res.status(200).json({secret_key: secret_key, publishable_key: publishable_key});
@@ -120,6 +128,7 @@ module.exports = function(router, knex, stripe) {
         console.log('NEW Stripe API Keys to configure: ', stripe_config);
 
         promiseStripeReconfigure(stripe_secret, stripe_publishable).then(function (do_migration) {
+            console.log("yeah!", do_migration);
             //Purge all user data
             return new Promise(function (resolve_purge, reject_purge) {
                 console.log(`Run Stripe migration: ${do_migration}`);
@@ -139,51 +148,37 @@ module.exports = function(router, knex, stripe) {
                     return resolve_purge (do_migration);
                 }
             });
-        }).then(function (do_migration) {
-            //Update the Stripe secret key in the database
-            return new Promise(function (resolve, reject) {
-                SystemOptions.findOne('option', 'stripe_secret_key', function (option_secret_key) {
-                    option_secret_key.data.value = stripe_secret;
-                    option_secret_key.update(function (err, updated_option) {
-                        if(!err) {
-                            console.log(`Stripe Secret key updated in database: ${stripe_secret}`);
-                            return resolve(do_migration);
-                        } else {
-                            console.log(`ERROR during Stripe secret key update in database ${err}`);
-                            return reject(false);
-                        }
-                    });
-                });
-            }).then(function () {
-                return new Promise(function (resolve, reject) {
-                    //Update the Stripe publishable key in the database
-                    SystemOptions.findOne('option', 'stripe_publishable_key', function (option_publishable_key) {
-                        option_publishable_key.data.value = stripe_publishable;
-                        option_publishable_key.update(function (err, updated_option) {
-                            if (!err) {
-                                console.log(`Stripe Publishable key updated in database: ${stripe_publishable}`);
-                                return resolve(do_migration);
-                            } else {
-                                console.log(`ERROR during Stripe publishable key update in database ${err}`);
-                                return reject(false);
-                            }
-                        });
-                    });
-                });
-            }).then(function () {
-                //Set the Stripe keys in the Stripe config
-                return new Promise(function (resolve, reject) {
-                    let new_stripe_keys = {
-                        stripe_secret_key: stripe_secret,
-                        stripe_publishable_key: stripe_publishable
-                    };
+        }).then(async function (do_migration) {
+            let keys = [{
+                "option" : "stripe_secret_key",
+                "value" : stripe_secret,
+                "type": "payment",
+                public: false
+            },
+                {
+                    "option" : "stripe_publishable_key",
+                    "value" : stripe_publishable,
+                    "type": "payment",
+                    public: false
+                }]
+            if(!Stripe().stripe_secret_key){
+                await SystemOptions.batchCreate(keys);
 
-                    console.log('Updating the Stripe config keys to: ', new_stripe_keys);
-                    store.dispatchEvent("system_options_updated", new_stripe_keys)
-                    Stripe.setKeys(new_stripe_keys);
-                    return resolve(do_migration);
-                });
-            });
+            }else{
+                await SystemOptions.batchUpdate(keys);
+
+            }
+            console.log("updated database")
+            let new_stripe_keys = {
+                stripe_secret_key: stripe_secret,
+                stripe_publishable_key: stripe_publishable
+            };
+
+            console.log('Updating the Stripe config keys to: ', new_stripe_keys);
+            store.dispatchEvent("system_options_updated", new_stripe_keys)
+            Stripe.setKeys(new_stripe_keys);
+
+            return do_migration;
         }).then(function (do_migration) {
             return new Promise(function (resolve, reject) {
                 if (do_migration) {
@@ -194,7 +189,7 @@ module.exports = function(router, knex, stripe) {
                         })).then(function () {
                             return resolve(do_migration);
                         }).catch(function (err) {
-                            console.log('ERROR: ', err);
+                            console.error(err);
                             return reject(false);
                         });
                     });
@@ -226,7 +221,7 @@ module.exports = function(router, knex, stripe) {
             endpoint : "/stripe/reconfigure",
             method : "post",
             middleware : [reconfigure],
-            permissions : ["post_stripe_reconfigure"],
+            // permissions : ["post_stripe_reconfigure"],
             description : "Reconfigure Stripe account"
 
         },
@@ -234,7 +229,7 @@ module.exports = function(router, knex, stripe) {
             endpoint : "/stripe/preconfigure",
             method : "post",
             middleware : [preconfigure],
-            permissions : ["post_stripe_preconfigure"],
+            // permissions : ["post_stripe_preconfigure"],
             description : "Preconfigure Stripe account"
 
         },

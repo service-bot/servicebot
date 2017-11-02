@@ -72,7 +72,7 @@ let systemOptions =
         {"option": "page_link_color", "value": "#30468a", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "header_text_color", "value": "#30468a", public: true, "type": "theme", "data_type": "color_picker"},
         {"option": "text_size", "value": "12", public: true, "type": "theme", "data_type": "number"},
-        {"option": "allow_registration", "value": "true", public: true, "type": "system", "data_type": "bool"},
+        {"option": "allow_registration", "value": "false", public: true, "type": "system", "data_type": "bool"},
         {"option": "company_name", public: true, "type": "system", "data_type": "text"},
         {"option": "company_address", public: true, "type": "system", "data_type": "text"},
         {"option": "company_phone_number", public: true, "type": "system", "data_type": "text"},

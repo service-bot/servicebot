@@ -5,6 +5,7 @@ import Fetcher from '../utilities/fetcher.jsx';
  */
 
 export const SET_OPTIONS = 'SET_OPTIONS';
+export const SET_OPTION = 'SET_OPTION';
 export const SET_VERSION = 'SET_VERSION';
 export const SET_UID = 'SET_UID';
 export const SET_PERMISSIONS = "SET_PERMISSIONS";
@@ -50,6 +51,10 @@ export function fetchUsers(uid = null, callback){
 export function setOptions(options){
     return { type: SET_OPTIONS, options }
 }
+export function setOption(option){
+    return { type: SET_OPTION, option }
+}
+
 
 export function setVersion(version){
     return { type: SET_VERSION, version }

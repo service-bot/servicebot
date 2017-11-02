@@ -4,13 +4,22 @@ let {eventChannel, END} = require("redux-saga");
 let {take} = require("redux-saga/effects")
 
 
-module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
+module.exports = function* (appConfig, initialConfig, dbConfig, app) {
 
 
     const channel = eventChannel(emitter => {
 
         //todo move setup disabled into a .use instead of duplicate code everywhere..
         let setupDisabled = false;
+        if(dbConfig && initialConfig.admin_user && initialConfig.admin_password && initialConfig.company_name && initialConfig.company_email){
+            console.log("Configuration pre-set, initialization starting")
+            require("../../bin/setup")({...initialConfig, ...dbConfig}, function (env) {
+
+                emitter({initialConfig});
+                setupDisabled = true;
+                emitter(END);
+            });
+        }
         let api = express.Router();
         app.get('/', function (req, res, next) {
             if (setupDisabled) {
@@ -24,15 +33,15 @@ module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
             }
         });
 
-        api.get("/api/v1/setup/steps", function(req,res,next){
+        api.get("/api/v1/setup/steps", function (req, res, next) {
             if (setupDisabled) {
                 return next();
             }
             let steps = [];
-            if(!dbConfigExists){
+            if (!dbConfig) {
                 steps.push("database");
             }
-            if(!initialConfig.stripe_public || !initialConfig.stripe_secret){
+            if (!initialConfig.stripe_public || !initialConfig.stripe_secret) {
                 steps.push("stripe");
             }
             if (!initialConfig.admin_user || !initialConfig.admin_password || !initialConfig.company_name || !initialConfig.company_email) {
@@ -111,23 +120,37 @@ module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
                 return next();
             }
 
-            let config = {
-                ...initialConfig,
-                ...req.body,
+
+            let stripe_config = req.body;
+            let publishable = stripe_config.stripe_public;
+            let secret = stripe_config.stripe_secret;
+            if (!publishable || !secret) {
+                return res.json({"error": "Stripe keys not inputted"});
             }
 
-            if (!config.admin_user || !config.admin_password || !config.company_name || !config.company_email) {
-                return res.status(400).json({error: 'All fields are required'});
-            }
+            require("../../lib/stripeValidator")(publishable, secret, function (err, result) {
+                if (err) {
+                    return res.status(400).json({error: err});
+                }
 
-            try {
-                require("../../bin/setup")(config, function (env) {
-                    emitter({initialConfig: config, response: res});
-                    emitter(END);
-                });
-            } catch (e) {
-                res.json({"error": "Error - " + e});
-            }
+                let config = {
+                    ...initialConfig,
+                    ...req.body,
+                }
+
+                if (!config.admin_user || !config.admin_password || !config.company_name || !config.company_email) {
+                    return res.status(400).json({error: 'All fields are required'});
+                }
+
+                try {
+                    require("../../bin/setup")(config, function (env) {
+                        emitter({initialConfig: config, response: res});
+                        emitter(END);
+                    });
+                } catch (e) {
+                    res.json({"error": "Error - " + e});
+                }
+            })
         });
 
         //todo - figure out how to have this be served by the api gateway
@@ -141,7 +164,7 @@ module.exports = function* (appConfig, initialConfig, dbConfigExists, app) {
             let configBuilder = require("pluginbot/config");
             let clientPlugins = Object.keys((await configBuilder.buildClientConfig(CONFIG_PATH)).plugins);
 
-            response.render("main", {bundle : appConfig.bundle_path, plugins : clientPlugins});
+            response.render("main", {bundle: appConfig.bundle_path, plugins: clientPlugins});
         });
 
         return () => {
