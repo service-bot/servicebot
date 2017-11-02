@@ -49,6 +49,7 @@ module.exports = {
         let Settings = require('../../models/system-options');
         let injectProperties = require("../../middleware/property-injector");
         require('../../config/passport.js')(passport);
+        yield provide({passport});
 
 
 
