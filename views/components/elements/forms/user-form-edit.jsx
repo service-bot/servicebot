@@ -121,7 +121,7 @@ class UserFormEdit extends React.Component {
                                 <div id="add-category-form" className="col-md-12">
                                     <div className="row">
                                         <ServiceBotBaseForm
-                                            form={userFormElements}
+                                            form={userFormElements.bind(this)}
                                             initialRequests = {initialRequests}
                                             validations={validations}
                                             submissionRequest={submissionRequest}
