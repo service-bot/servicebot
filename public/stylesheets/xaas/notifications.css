@@ -23,9 +23,11 @@ li.nav-notification i{
     bottom: 17px;
     border-radius: 50px;
 }
+span.notification-badge, span.notification-badge a{
+    color: white;
+}
 span.notification-badge {
     background: #ff0000;
-    color: white;
     border-radius: 50px;
     padding: 3px 10px 3px 8px;
     text-align: center;
@@ -34,7 +36,23 @@ span.notification-badge {
     font-size: 0.9em;
     line-height: 14px;
 }
-
+.notification-stripe-keys{
+    color: #ffffff !important;
+    background-color: #191919 !important;
+    text-align: left !important;
+    width: 280px !important;
+    padding-top: 20px !important;
+}
+.notification-stripe-keys.place-bottom:after{
+    border-bottom-color: #191919 !important;
+}
+.notification-stripe-keys p{
+    font-size: 1.2em;
+    line-height: 1.2rem;
+}
+.notification-stripe-keys li{
+    margin-bottom: 5px;
+}
 /* mini dropdown */
 .mini-notification-list {
     position: absolute;

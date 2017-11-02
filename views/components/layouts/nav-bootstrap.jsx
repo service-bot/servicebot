@@ -152,13 +152,25 @@ class NavBootstrap extends React.Component {
         let pk = cookie.load("spk")
         let livemode =  pk ? pk.substring(3, 7) : "";
         if(pk === undefined){
-            return ( <span data-tip="You need to complete your setup to unlock certain features: <br/>User Invites <br/> Publishing Service Templates <br/> Adding funds <br/> Receiving Payments <br/> ---------- <br/> Click to complete" className="notification-badge">
-                <Link to="/stripe-settings">
-                    <ReactTooltip multiline place="bottom" type="dark" effect="solid"/>
-                    <strong>Setup not complete</strong>
-                </Link>
+            return (
+                <span data-tip data-for="notification-stripe-keys" className="notification-badge">
+                    <Link to="/stripe-settings">
+                        <ReactTooltip id="notification-stripe-keys" class="notification-stripe-keys"
+                                      aria-haspopup='true' role='example'
+                                      place="bottom" type="error" effect="solid" offset={{top: -28, left: -20}}>
+                            <p><strong>You need to complete your setup to unlock certain features:</strong></p>
+                                <ul>
+                                    <li>User Invites</li>
+                                    <li>Publishing Service Templates</li>
+                                    <li>Adding funds</li>
+                                    <li>Receiving Payments</li>
+                                </ul>
+                            <p>Click to complete</p>
+                        </ReactTooltip>
+                        <strong>Setup not complete</strong>
+                    </Link>
 
-            </span> );
+                </span> );
         }
         if(livemode.toUpperCase() === "TEST") {
             return ( <span className="notification-badge"><strong>Test Mode Payments</strong></span> );
