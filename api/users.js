@@ -265,7 +265,7 @@ module.exports = function (router, passport) {
                 res.json(out);
                 store.dispatchEvent("user_updated", result);
             } else {
-                res.json({message: `Error updating the user ${err}`});
+                res.status(400).json({error: `Error updating the user ${err}`});
             }
         });
     });
