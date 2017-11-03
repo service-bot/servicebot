@@ -2,18 +2,11 @@
     color: #6f6f6f;
 }
 .xaas-row {
-    margin-bottom: 20px;
-    border: 1px solid rgba(128, 128, 128, 0.28);
+    margin-bottom: 10px;
+    border: 1px solid #bec6d0;
     border-radius: 3px;
     overflow: hidden;
-    background: #FFFFFF;
-}
-.xaas-row.requested {
-    border: none;
-}
-.xaas-row.waiting {
-    margin-bottom:35px;
-    border: none;
+    background: #d9e1ea;
 }
 .xaas-row .btn{
     margin-bottom:0px;
@@ -32,7 +25,7 @@
     display: flex;
     align-items: stretch;
     justify-content: space-between;
-    padding: 12px 15px;
+    padding: 8px 15px;
 }
 
 /* flex sizes*/
@@ -64,9 +57,6 @@
     font-size: 0.95rem;
     padding: 6px 0px;
 }
-.xaas-row.waiting .xaas-status, .xaas-row.requested .xaas-status {
-    display: none;
-}
 .xaas-title .xaas-category {
     display: none;
 }
@@ -94,28 +84,30 @@
 }
 
 /* colors */
-.xaas-title .xaas-data.xaas-price {
+.xaas-title .xaas-price {
+    float: left;
     background-color: #f3f3f3;
     border-radius: 5px;
+    height: 25px;
+    margin-top: 6px;
+    vertical-align: middle;
+    line-height: 25px;
+    color: black;
+    font-size: 14px;
+    font-weight: bold;
+    border: 1px solid #bdc6d0;
+    padding: 0 8px;
 }
-.waiting .xaas-title .xaas-data.xaas-price {
-    background-color: #ef421c;
+
+.xaas-title .xaas-price.red {
+    background: #d90303;
+    color: white;
+    border: 0;
 }
-.requested .xaas-title .xaas-data.xaas-price {
-    background-color: #1955b5;
-}
+
 .xaas-row.cancelled .xaas-title, .xaas-row.cancelled .xaas-title .btn {
     background-color: #f3f3f3;
     color: #d4d4d4;
-}
-.xaas-row.running .xaas-title .xaas-status .status{
-    color: #38e478;
-}
-.xaas-row.stopped .xaas-title .xaas-status .status {
-    color: #fd4921;
-}
-.xaas-row.in_progress .xaas-title .xaas-status .status{
-    color: #1976d2;
 }
 
 .xaas-row .waiting{
@@ -124,20 +116,6 @@
 .xaas-title:hover {
     color: #212121;
     background-color: #f2f9ff;
-}
-.waiting .xaas-title {
-    background-color: #d83b18;
-    color: #ffffff;
-}
-.waiting .xaas-title:hover{
-    background-color: #c32b09;
-}
-.requested .xaas-title {
-    background-color: #0d47a1;
-    color: #ffffff;
-}
-.requested .xaas-title:hover {
-    background-color: #003490;
 }
 .waiting .xaas-body-row {
     background-color: #fff1f1;
@@ -150,13 +128,16 @@
 }
 
 
+
+
 /* buttons */
 .xaas-dashboard .btn .fa{
     margin-left:2px;
     font-size: 0.75rem;
-    border: 1px solid #0091ea;
+    /*border: 1px solid #0091ea;*/
     padding: 1px 2px;
     border-radius: 3px;
+    margin-right: 5px;
 }
 .xaas-row.cancelled .btn .fa{
     border: 1px solid #d4d4d4;
@@ -170,12 +151,12 @@
 }
 .xaas-row.waiting .xaas-title .btn .fa,
 .xaas-row.requested .xaas-title .btn .fa{
-    border-color: #ffffff;
+    /*border-color: #ffffff;*/
 }
 /* button hovers */
-.xaas-dashboard .xaas-title:hover .btn .fa {
-    background-color: #0091ea;
-    color: #ffffff;
+.xaas-dashboard .xaas-title .btn:hover .fa {
+    /*background-color: #0091ea;*/
+    color: #000000;
     border-color: #0091ea;
 }
 .btn.btn-outline.btn-white:hover {
@@ -192,13 +173,6 @@
     /*background: #eeeeee !important;*/
     /*box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12);*/
 /*}*/
-
-/* status dot */
-.xaas-row.requested .status,
-.xaas-row.waiting .status{
-    display: none;
-    padding: 0px;
-}
 
 
 /* Responsive */
@@ -225,7 +199,7 @@
     .xaas-title .xaas-data.xaas-interval{
         padding-left: 10px;
     }
-    .xaas-body .xaas-data.xaas-price{
+    .xaas-body .xaas-price{
         text-align: left;
     }
 
