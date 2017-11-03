@@ -6,7 +6,7 @@ import DashboardPageHeading from './dashboard-page-heading.jsx';
 import DashboardServiceListItem from './dashboard-service-list-item.jsx';
 import DashboardServiceListItemCharge from './dashboard-service-list-item-charge.jsx';
 import _ from "lodash";
-
+import Collapsible from 'react-collapsible';
 
 class DashboardServiceList extends React.Component {
 
@@ -26,6 +26,107 @@ class DashboardServiceList extends React.Component {
     handleComponentUpdating(){
         // this.fetchServiceInstances()
         this.props.handleComponentUpdating();
+    }
+
+    getActionItems() {
+        let services = this.state.services;
+        let purchasedItems = {};
+        purchasedItems.actionItems = [], purchasedItems.quoteItems = [], purchasedItems.pendingItems = [],
+            purchasedItems.activeItems = [], purchasedItems.archivedItems = [];
+
+        services.forEach(service => {
+            //Get service outstanding charges
+            if(service.references.charge_items.length > 0) {
+                let charges = service.references.charge_items.filter(charge => {
+                    return !charge.approved;
+                });
+                if(charges.length > 0) {
+                    service.outstanding_charges = charges;
+                }
+            }
+            //If a service has a charge item, its an action item
+            if(((service.status !== "waiting_cancellation" && service.status !== "cancelled") && service.outstanding_charges) || (service.status === "requested" && service.payment_plan.amount > 0)) {
+                purchasedItems.actionItems.push(service);
+            } else if (service.status === "requested" && service.payment_plan.amount === 0) {
+                purchasedItems.quoteItems.push(service);
+            } else if (service.status === "waiting_cancellation") {
+                purchasedItems.pendingItems.push(service);
+            } else if (service.status === "cancelled") {
+                purchasedItems.archivedItems.push(service);
+            } else {
+                purchasedItems.activeItems.push(service);
+            }
+        });
+        console.log("OUOUY")
+        console.log(purchasedItems)
+
+        return (
+            <div>
+                {purchasedItems.actionItems.length > 0 &&
+                    <Collapsible trigger="Items Waiting for Payment Approval" open={true}>
+                        <div className="service-instance-box-content">
+                            <p>These services need your attention, please approve the item or pay the charges as soon as possible.</p>
+                            {purchasedItems.actionItems.map(service => (
+                                <DashboardServiceListItem key={"service-" + service.id} service={service} viewPath={`/service-instance/${service.id}`} handleComponentUpdating={this.handleComponentUpdating}/>
+                            ))}
+                        </div>
+                    </Collapsible>
+                }
+
+                {purchasedItems.quoteItems.length > 0 &&
+                <Collapsible trigger="Pending Quote" open={true}>
+                    <div className="service-instance-box-content">
+                        <p>These services are waiting to be scoped out. Make sure to add the necessary details so we can provide you with the most accurate quote.</p>
+                        {purchasedItems.quoteItems.map(service => (
+                            <DashboardServiceListItem key={"service-" + service.id} service={service} viewPath={`/service-instance/${service.id}`} handleComponentUpdating={this.handleComponentUpdating}/>
+                        ))}
+                    </div>
+                </Collapsible>
+                }
+
+                {purchasedItems.pendingItems.length > 0 &&
+                <Collapsible trigger="Pending Cancellation" open={true}>
+                    <div className="service-instance-box-content">
+                        <p>Following items are pending cancellation by the store staff.</p>
+                        {purchasedItems.pendingItems.map(service => (
+                            <DashboardServiceListItem key={"service-" + service.id} service={service} viewPath={`/service-instance/${service.id}`} handleComponentUpdating={this.handleComponentUpdating}/>
+                        ))}
+                    </div>
+                </Collapsible>
+                }
+
+                {purchasedItems.activeItems.length > 0 &&
+                <Collapsible trigger="Items waiting for payment or approval" open={true}>
+                    <div className="service-instance-box-content">
+                        <p>These services need your attention, please approve the item or pay the charges as soon as possible.</p>
+                        {purchasedItems.activeItems.map(service => (
+                            <DashboardServiceListItem key={"service-" + service.id} service={service} viewPath={`/service-instance/${service.id}`} handleComponentUpdating={this.handleComponentUpdating}/>
+                        ))}
+                    </div>
+                </Collapsible>
+                }
+
+                {purchasedItems.archivedItems.length > 0 &&
+                <Collapsible trigger="Items waiting for payment or approval">
+                    <div className="service-instance-box-content">
+                        <p>These are your completed and cancelled services.</p>
+                        {purchasedItems.archivedItems.map(service => (
+                            <DashboardServiceListItem key={"service-" + service.id} service={service} viewPath={`/service-instance/${service.id}`} />
+                        ))}
+                    </div>
+                </Collapsible>
+                }
+            </div>
+        );
+    }
+
+    getActiveItems() {
+        let services = this.state.services;
+
+    }
+
+    getArchiveItems() {
+
     }
 
     render () {
@@ -48,68 +149,7 @@ class DashboardServiceList extends React.Component {
             const grouped = _.groupBy(this.state.services, 'status');
             return (
                 <div className="col-xs-12 xaas-dashboard">
-
-                    {/* Services that are in progress status */}
-                    {grouped.in_progress !== undefined &&
-                    <div className="row m-b-10">
-                        <DashboardPageHeading pageTitle="Services In progress"
-                                              pageDescription="These services are in progress."/>
-                    </div>
-                    }
-                    {grouped.in_progress !== undefined && grouped.in_progress.map(service => (
-                        <DashboardServiceListItem key={"service-" + service.id} service={service} viewPath={`/service-instance/${service.id}`} handleComponentUpdating={this.handleComponentUpdating}/>
-                    ))}
-
-                    {/* Services that have pending charges need to be approved / paid */}
-                    {grouped.waiting !== undefined &&
-                        <div className="row m-b-10">
-                            <DashboardPageHeading pageTitle="Services Need Attention"
-                                                  pageDescription="These services need your attention, please approve the service charge items as soon as possible."/>
-                        </div>
-                    }
-                    {grouped.waiting !== undefined && grouped.waiting.map(service => (
-                        <DashboardServiceListItem key={"service-" + service.id} service={service} viewPath={`/service-instance/${service.id}`} handleComponentUpdating={this.handleComponentUpdating}>
-                            <DashboardServiceListItemCharge serviceInstanceId={service.id} />
-                        </DashboardServiceListItem>
-                    ))}
-
-                    {/* Services that were requested and waiting to be approved by user */}
-                    {grouped.requested !== undefined &&
-                    <div className="row m-b-10">
-                        <DashboardPageHeading pageTitle="Services Need Approval"
-                                              pageDescription="These services need your approval, please approve the services as soon as possible."/>
-                    </div>
-                    }
-                    {grouped.requested !== undefined && grouped.requested.map(service => (
-                        <DashboardServiceListItem key={"service-" + service.id} service={service} viewPath={`/service-instance/${service.id}`} handleComponentUpdating={this.handleComponentUpdating}/>
-                    ))}
-
-                    {/* Services that are running */}
-                    {grouped.running !== undefined &&
-                    <div className="purchases-header row m-b-10">
-                        <DashboardPageHeading pageTitle="Purchased Subscriptions / One Time Services / Custom Orders"
-                                              pageDescription="All services including active, unpaid and stopped services."/>
-                    </div>
-                    }
-                    {grouped.running !== undefined && grouped.running.map(service => (
-                        <DashboardServiceListItem key={"service-" + service.id} service={service} viewPath={`/service-instance/${service.id}`} handleComponentUpdating={this.handleComponentUpdating}/>
-                    ))}
-
-                    {/* Services that are waiting for cancellation approval by admins */}
-                    {grouped.waiting_cancellation !== undefined &&
-                    <div className="row m-b-10">
-                        <DashboardPageHeading pageTitle="Services in cancellation queue"
-                                              pageDescription="These services are waiting for admin to finish cancellation process."/>
-                    </div>
-                    }
-                    {grouped.waiting_cancellation !== undefined && grouped.waiting_cancellation.map(service => (
-                        <DashboardServiceListItem key={"service-" + service.id} service={service} viewPath={`/service-instance/${service.id}`} handleComponentUpdating={this.handleComponentUpdating}/>
-                    ))}
-
-                    {/* Services that are cancelled */}
-                    {grouped.cancelled !== undefined && grouped.cancelled.map(service => (
-                        <DashboardServiceListItem key={"service-" + service.id} service={service} viewPath={`/service-instance/${service.id}`}/>
-                    ))}
+                    {this.getActionItems()}
                 </div>
 
             );

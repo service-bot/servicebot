@@ -882,6 +882,11 @@ body.login .footer{
     color: #ffffff;
 }
 
+.account-status-row {
+    margin-top: -70px;
+    margin-bottom: 50px;
+}
+
 @keyframes displayMessage {
     0%{
         margin-top: -10px;
