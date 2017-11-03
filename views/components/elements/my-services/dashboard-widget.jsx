@@ -31,13 +31,23 @@ class DashboardWidget extends React.Component {
             style.widgetDark.color = _.get(options, 'primary_theme_text_color.value', '#ffffff');
         }
 
+        if(this.props.borderRadius) {
+            style.widgetDark.borderRadius = this.props.borderRadius;
+        }
+
+        if(this.props.iconPadding) {
+            style.widget.paddingTop = this.props.iconPadding;
+            style.widget.paddingBottom = this.props.iconPadding;
+        }
+
+
         const widgetContent = (
 
             <div className="text-widget-1 color-white" style={style.widgetDark}>
                 {!self.props.plain &&
                 <div className={`text-widget-wrapper ${self.props.widgetHoverClass}`} style={style.widgetDark}>
                     <div className={`text-widget-item col-xs-4`} style={style.widget}>
-                        <i className={`fa fa-${self.props.widgetIcon} fa-2x`}/>
+                        <i className={`fa fa-${self.props.widgetIcon} fa-2x`} />
                     </div>
                     <div className="text-widget-item col-xs-8">
                         <div className="title">{self.props.widgetName}</div>

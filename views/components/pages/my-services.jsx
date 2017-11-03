@@ -77,7 +77,7 @@ class MyServices extends React.Component {
     render () {
         let self = this;
         let pageName = self.props.route.name;
-        let breadcrumbs = [{name:'Home', link:'home'},{name:'My Purchases', link:null}];
+        let breadcrumbs = [{name:'Home', link:'home'},{name:'My Account', link:null}];
 
         if(self.state.loading){
             return (
@@ -142,19 +142,12 @@ class MyServices extends React.Component {
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'}
                                                      transitionAppear={true} transitionAppearTimeout={1000}
                                                      transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
-                                <div className="row">
-                                    <DashboardWidget widgetIcon="connectdevelop" widgetName="Active Services" widgetData={runningServiceCount || '0'} />
-                                    <DashboardWidget widgetIcon="warning" widgetName="Needs Action" widgetData={requestedServiceCount || '0'} />
-                                    <DashboardWidget widgetIcon="credit-card" widgetName="Upcoming Invoice" widgetData={null} clickAction={self.onOpenInvoiceModal}>
-                                        <Price value={nextInvoiceAmountDue}/>
-                                    </DashboardWidget>
-                                    <DashboardWidget widgetIcon={widgetIcon()} widgetName="Account Status" widgetData={userStatus} widgetColor={widgetColor()}/>
+                                <div className="row account-status-row">
+                                    <DashboardWidget widgetClass="col-xs-12 col-sm-6 col-md-3 col-xl-3 col-md-offset-3 col-xl-offset-3" widgetIcon="credit-card" widgetName="Upcoming Invoice" clickAction={self.onOpenInvoiceModal} iconPadding={10} borderRadius={50} />
+                                    <DashboardWidget widgetIcon={widgetIcon()} widgetName={`Status: ${userStatus}`} widgetColor={widgetColor()} iconPadding={10} borderRadius={50}/>
                                 </div>
                                 <div className="row">
                                     <DashboardServiceList handleComponentUpdating={self.handleComponentUpdating} services={self.state.services}/>
-                                </div>
-                                <div className="row">
-                                    {self.props.children}
                                 </div>
                             </ReactCSSTransitionGroup>
                         </Content>

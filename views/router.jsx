@@ -82,8 +82,8 @@ class AppRouter extends React.Component {
                 <Route name="Reset Password" path="reset-password/:uid/:token" component={ResetPassword}/>
                 <Route name="User Sign Up" path="signup" component={SignUp}/>
                 <Route name="Finish Your Registration" path="invitation/:token" component={InviteComplete}/>
-                <Route name="My Purchases" path="my-services" component={MyServices}/>
-                <Route name="My Purchases" path="my-services/service-instance/" component={MyServices}/>
+                <Route name="My Account" path="my-services" component={MyServices}/>
+                <Route name="My Account" path="my-services/service-instance/" component={MyServices}/>
                 <Route name="Service Instance" path="my-services/service-instance/:instanceId"
                        component={ServiceInstance}/>
                 <Route name="Service Instance" path="service-instance/:instanceId"
