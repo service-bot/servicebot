@@ -882,6 +882,66 @@ body.login .footer{
     color: #ffffff;
 }
 
+.Collapsible.red {
+    border: 1px solid #da0304;
+}
+.Collapsible.red .Collapsible__trigger {
+    background: #da0304;
+    color: white;
+}
+.Collapsible.red .Collapsible__trigger:hover {
+    background: #c10001;
+    color: white;
+}
+
+.Collapsible.yellow {
+    border: 1px solid #ffa000;
+}
+.Collapsible.yellow .Collapsible__trigger {
+    background: #ffa000;
+    color: black;
+}
+.Collapsible.yellow .Collapsible__trigger:hover {
+    background: #e09312;
+    color: black;
+}
+
+.Collapsible.blue {
+    border: 1px solid #2979ff;
+}
+.Collapsible.blue .Collapsible__trigger {
+    background: #2979ff;
+    color: white;
+}
+.Collapsible.blue .Collapsible__trigger:hover {
+    background: #1051bd;
+    color: white;
+}
+
+.Collapsible.green {
+    border: 1px solid #27ae60;
+}
+.Collapsible.green .Collapsible__trigger {
+    background: #27ae60;
+    color: white;
+}
+.Collapsible.green .Collapsible__trigger:hover {
+    background: #04883b;
+    color: white;
+}
+
+.Collapsible.black {
+    border: 1px solid #000000;
+}
+.Collapsible.black .Collapsible__trigger {
+    background: #000000;
+    color: white;
+}
+.Collapsible.black .Collapsible__trigger:hover {
+    background: #636363;
+    color: white;
+}
+
 .account-status-row {
     margin-top: -70px;
     margin-bottom: 50px;
