@@ -3,15 +3,19 @@ import {Link} from 'react-router';
 import ModalApprove from '../modals/modal-approve.jsx';
 import ModalRequestCancellation from '../modals/modal-request-cancellation.jsx';
 import ModalManageCancellation from '../modals/modal-manage-cancellation.jsx';
+import ModalPayAllCharges from '../modals/modal-pay-all-charges.jsx';
 import {Price} from '../../utilities/price.jsx';
 
 class DashboardServiceListItem extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {  approveModal : false,
+        this.state = {
+            approveModal : false,
             cancelModal: false,
-            undoCancelModal: false};
+            undoCancelModal: false,
+            payChargeModal: false
+        };
 
         this.mapIntervalString = this.mapIntervalString.bind(this);
         this.handleApprove = this.handleApprove.bind(this);
@@ -20,6 +24,8 @@ class DashboardServiceListItem extends React.Component {
         this.onCancelClose = this.onCancelClose.bind(this);
         this.handleUndoCancel = this.handleUndoCancel.bind(this);
         this.onUndoCancelClose = this.onUndoCancelClose.bind(this);
+        this.handlePayCharges = this.handlePayCharges.bind(this);
+        this.onPayChargesClose = this.onPayChargesClose.bind(this);
     }
 
     mapIntervalString(string){
@@ -59,6 +65,15 @@ class DashboardServiceListItem extends React.Component {
         this.props.handleComponentUpdating();
     }
 
+    handlePayCharges(event){
+        event.preventDefault();
+        this.setState({ payChargeModal : true});
+    }
+    onPayChargesClose(){
+        this.setState({ payChargeModal : false});
+        this.props.handleComponentUpdating();
+    }
+
 
     render () {
         let self = this;
@@ -93,6 +108,10 @@ class DashboardServiceListItem extends React.Component {
                 return(
                     <ModalManageCancellation myInstance={service} show={self.state.undoCancelModal} hide={self.onUndoCancelClose}/>
                 );
+            } else if(self.state.payChargeModal) {
+                return(
+                    <ModalPayAllCharges myInstance={service} ownerId={service.user_id} show={self.state.payChargeModal} hide={self.onPayChargesClose}/>
+                )
             }
         };
 
@@ -139,27 +158,22 @@ class DashboardServiceListItem extends React.Component {
                         </div>
                     )
                 }
-                // if(getSubscriptionPrice()) {
-                //     return (
-                //         <div className="xaas-data xaas-price">
-                //             {getSubscriptionPrice()} DUE:
-                //         </div>
-                //     )
-                // }
-                // if (serType == "subscription"){
-                //     return (
-                //         <span>
-                //         <Price value={myService.payment_plan.amount}/>
-                //             {myService.payment_plan.interval_count == 1 ? ' /' : ' / ' + myService.payment_plan.interval_count} {' '+myService.payment_plan.interval}
-                //     </span>
-                //     );
-                // }else if (serType == "one_time"){
-                //     return (<span><Price value={myService.payment_plan.amount}/></span>);
-                // }else if (serType == "custom"){
-                //     return (<span/>);
-                // }else{
-                //     return (<span><Price value={myService.payment_plan.amount}/></span>)
-                // }
+            };
+
+            let getActionButton = ()=>{
+                if(status === "requested" && (myService.payment_plan.amount > 0 || myService.outstanding_charges_total)) {
+                    return (<button className="btn btn-default btn-rounded btn-sm" onClick={self.handleApprove}><i className="fa fa-credit-card" /> Pay Now</button>);
+                } else if(myService.outstanding_charges_total) {
+                    return (<button className="btn btn-default btn-rounded btn-sm" onClick={self.handlePayCharges}><i className="fa fa-credit-card" /> Pay Now</button>);
+                } else if(status === "requested" && myService.payment_plan.amount === 0 && !myService.outstanding_charges_total) {
+                    return (null);
+                } else if(status === "waiting_cancellation") {
+                    return (<button to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleUndoCancel}>Undo Cancellation</button>);
+                } else if(status === "cancelled") {
+                    return (null);
+                } else {
+                    return (<button to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleCancel}>Request Cancellation</button>);
+                }
             };
 
             console.log("SHAR: 1")
@@ -175,22 +189,7 @@ class DashboardServiceListItem extends React.Component {
                             {getPrice()}
                             {/*<div className="xaas-data xaas-interval"><h5>{interval}</h5></div>*/}
                             <div className="xaas-data xaas-action">
-                                {/*<buttom to="" className="btn btn-flat btn-info btn-rounded btn-sm">View <i className="fa fa-expand"/></buttom>*/}
-                                {status == "requested" &&
-                                <button className="btn btn-outline btn-white btn-rounded btn-sm" onClick={self.handleApprove}>
-                                    <i className="fa fa-credit-card" />
-                                     Pay Now
-                                </button>
-                                }
-                                {status == "waiting" &&
-                                <button to="" className="btn btn-outline btn-white btn-rounded btn-sm">Pay All</button>
-                                }
-                                {status == "running" &&
-                                <button to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleCancel}>Request Cancellation</button>
-                                }
-                                {status == "waiting_cancellation" &&
-                                <button to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleUndoCancel}>Undo Cancellation</button>
-                                }
+                                {getActionButton()}
                             </div>
                         </div>
                         {self.props.children}
