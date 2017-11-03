@@ -119,7 +119,7 @@ class ModalApprove extends React.Component {
 
     render () {
         let self = this;
-        let pageName = "Service Approval";
+        let pageName = "Payment Approval";
         let icon = "fa-thumbs-up";
         let currentModal = this.state.current_modal;
         let instance = this.state.serviceInstance;
