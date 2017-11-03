@@ -51,20 +51,30 @@ class DashboardServiceList extends React.Component {
                     return !charge.approved;
                 });
                 if(charges.length > 0) {
+                    let allCharges = 0;
+                    charges.map(charge => {
+                        allCharges += charge.amount;
+                    });
+                    service.outstanding_charges_total = allCharges;
                     service.outstanding_charges = charges;
                 }
             }
             //If a service has a charge item, its an action item
             if(((service.status !== "waiting_cancellation" && service.status !== "cancelled") && service.outstanding_charges) || (service.status === "requested" && service.payment_plan.amount > 0)) {
                 purchasedItems.actionItems.push(service);
+                service.icon = "fa fa-flag";
             } else if (service.status === "requested" && service.payment_plan.amount === 0) {
                 purchasedItems.quoteItems.push(service);
+                service.icon = "fa fa-refresh";
             } else if (service.status === "waiting_cancellation") {
                 purchasedItems.pendingItems.push(service);
+                service.icon = "fa fa-hourglass-end";
             } else if (service.status === "cancelled") {
                 purchasedItems.archivedItems.push(service);
+                service.icon = "fa fa-times";
             } else {
                 purchasedItems.activeItems.push(service);
+                service.icon = "fa fa-check";
             }
         });
 

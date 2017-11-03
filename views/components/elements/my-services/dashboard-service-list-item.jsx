@@ -98,47 +98,98 @@ class DashboardServiceListItem extends React.Component {
 
         if(self.props.service && self.props.service != null){
             let myService = self.props.service;
+            let serType = myService.type;
 
-            let getPrice = ()=>{
-                let serType = myService.type;
+            let getTotalCharges = ()=>{
+                if(myService.outstanding_charges_total) {
+                    return (<Price value={myService.outstanding_charges_total}/>);
+                }
+            };
+
+            let getSubscriptionPrice = ()=>{
                 if (serType == "subscription"){
                     return (
                         <span>
-                        <Price value={myService.payment_plan.amount}/>
+                            <Price value={myService.payment_plan.amount}/>
                             {myService.payment_plan.interval_count == 1 ? ' /' : ' / ' + myService.payment_plan.interval_count} {' '+myService.payment_plan.interval}
-                    </span>
+                        </span>
                     );
-                }else if (serType == "one_time"){
-                    return (<span><Price value={myService.payment_plan.amount}/></span>);
-                }else if (serType == "custom"){
-                    return (<span/>);
-                }else{
-                    return (<span><Price value={myService.payment_plan.amount}/></span>)
                 }
             };
+
+            let getPrice = ()=>{
+                if(myService.status === "requested" && myService.payment_plan.amount > 0 && !myService.outstanding_charges_total) {
+                    return (
+                        <div className="xaas-price red">
+                            Due: &nbsp;
+                            {serType == "subscription" &&
+                                <span>
+                                    {getSubscriptionPrice()}
+                                    {getTotalCharges() && <span> + </span>}
+                                </span>
+                            }
+                            {getTotalCharges() && <span>{getTotalCharges()}</span>}
+                        </div>
+                    )
+                } else {
+                    return (
+                        <div>
+                            {serType == "subscription" && <div className="xaas-price">{getSubscriptionPrice()}</div>}
+                            {getTotalCharges() && <div className="xaas-price red m-l-5"><span>Due: {getTotalCharges()}</span></div>}
+                        </div>
+                    )
+                }
+                // if(getSubscriptionPrice()) {
+                //     return (
+                //         <div className="xaas-data xaas-price">
+                //             {getSubscriptionPrice()} DUE:
+                //         </div>
+                //     )
+                // }
+                // if (serType == "subscription"){
+                //     return (
+                //         <span>
+                //         <Price value={myService.payment_plan.amount}/>
+                //             {myService.payment_plan.interval_count == 1 ? ' /' : ' / ' + myService.payment_plan.interval_count} {' '+myService.payment_plan.interval}
+                //     </span>
+                //     );
+                // }else if (serType == "one_time"){
+                //     return (<span><Price value={myService.payment_plan.amount}/></span>);
+                // }else if (serType == "custom"){
+                //     return (<span/>);
+                // }else{
+                //     return (<span><Price value={myService.payment_plan.amount}/></span>)
+                // }
+            };
+
+            console.log("SHAR: 1")
+            console.log(myService)
 
             return (
                 <div className={`xaas-row ${self.props.service.status}`}>
                     <Link to={self.props.viewPath}>
                         <div className="xaas-title">
-                            <div className="xaas-data xaas-status"><span className="status"><i className="fa fa-circle"/></span></div>
+                            <div className="xaas-data xaas-status"><span className="status"><i className={myService.icon}/></span></div>
                             <div className="xaas-data xaas-category"><img className="xaas-service-icon" src="assets/service-icons/dark/aws.png"/></div>
                             <div className="xaas-data xaas-service"><h5>{name}</h5></div>
-                            <div className="xaas-data xaas-price"><h5>{getPrice()}</h5></div>
+                            {getPrice()}
                             {/*<div className="xaas-data xaas-interval"><h5>{interval}</h5></div>*/}
                             <div className="xaas-data xaas-action">
                                 {/*<buttom to="" className="btn btn-flat btn-info btn-rounded btn-sm">View <i className="fa fa-expand"/></buttom>*/}
                                 {status == "requested" &&
-                                <buttom className="btn btn-outline btn-white btn-rounded btn-sm" onClick={self.handleApprove}>Approve</buttom>
+                                <button className="btn btn-outline btn-white btn-rounded btn-sm" onClick={self.handleApprove}>
+                                    <i className="fa fa-credit-card" />
+                                     Pay Now
+                                </button>
                                 }
                                 {status == "waiting" &&
-                                <buttom to="" className="btn btn-outline btn-white btn-rounded btn-sm">Pay All</buttom>
+                                <button to="" className="btn btn-outline btn-white btn-rounded btn-sm">Pay All</button>
                                 }
                                 {status == "running" &&
-                                <buttom to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleCancel}>Cancel Request</buttom>
+                                <button to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleCancel}>Request Cancellation</button>
                                 }
                                 {status == "waiting_cancellation" &&
-                                <buttom to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleUndoCancel}>Undo Cancel Request</buttom>
+                                <button to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleUndoCancel}>Undo Cancellation</button>
                                 }
                             </div>
                         </div>
