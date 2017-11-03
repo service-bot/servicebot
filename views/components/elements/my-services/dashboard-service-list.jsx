@@ -57,13 +57,11 @@ class DashboardServiceList extends React.Component {
                 purchasedItems.activeItems.push(service);
             }
         });
-        console.log("OUOUY")
-        console.log(purchasedItems)
 
         return (
             <div>
                 {purchasedItems.actionItems.length > 0 &&
-                    <Collapsible trigger="Items Waiting for Payment Approval" open={true}>
+                    <Collapsible trigger="Items Waiting for Payment Approval" open={true} openedClassName="red" className="red">
                         <div className="service-instance-box-content">
                             <p>These services need your attention, please approve the item or pay the charges as soon as possible.</p>
                             {purchasedItems.actionItems.map(service => (
@@ -74,7 +72,7 @@ class DashboardServiceList extends React.Component {
                 }
 
                 {purchasedItems.quoteItems.length > 0 &&
-                <Collapsible trigger="Pending Quote" open={true}>
+                <Collapsible trigger="Pending Quote" open={true} openedClassName="blue" className="blue">
                     <div className="service-instance-box-content">
                         <p>These services are waiting to be scoped out. Make sure to add the necessary details so we can provide you with the most accurate quote.</p>
                         {purchasedItems.quoteItems.map(service => (
@@ -85,7 +83,7 @@ class DashboardServiceList extends React.Component {
                 }
 
                 {purchasedItems.pendingItems.length > 0 &&
-                <Collapsible trigger="Pending Cancellation" open={true}>
+                <Collapsible trigger="Pending Cancellation" open={true} openedClassName="yellow" className="yellow">
                     <div className="service-instance-box-content">
                         <p>Following items are pending cancellation by the store staff.</p>
                         {purchasedItems.pendingItems.map(service => (
@@ -96,7 +94,7 @@ class DashboardServiceList extends React.Component {
                 }
 
                 {purchasedItems.activeItems.length > 0 &&
-                <Collapsible trigger="Items waiting for payment or approval" open={true}>
+                <Collapsible trigger="Items waiting for payment or approval" open={true} openedClassName="green" className="green">
                     <div className="service-instance-box-content">
                         <p>These services need your attention, please approve the item or pay the charges as soon as possible.</p>
                         {purchasedItems.activeItems.map(service => (
@@ -107,7 +105,7 @@ class DashboardServiceList extends React.Component {
                 }
 
                 {purchasedItems.archivedItems.length > 0 &&
-                <Collapsible trigger="Items waiting for payment or approval">
+                <Collapsible trigger="Items waiting for payment or approval" openedClassName="black" className="black">
                     <div className="service-instance-box-content">
                         <p>These are your completed and cancelled services.</p>
                         {purchasedItems.archivedItems.map(service => (
