@@ -166,7 +166,8 @@ class CreditCardForm extends React.Component {
                 <h3><i className="fa fa-credit-card"/>Your credit and debit card</h3>
                 <hr/>
                 <div className="form-row">
-                    <Collapsible trigger={getCard()}>
+                    {hasCard && <p>You can update your payment method by clicking on your existing credit card.</p>}
+                    <Collapsible trigger={getCard()} open={!hasCard}>
                         <div className="service-instance-box-content">
                         <ServiceBotBaseForm
                             form={BillingInfo}

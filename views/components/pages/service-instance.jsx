@@ -24,6 +24,7 @@ import ModalPayChargeItem from '../elements/modals/modal-pay-charge-item.jsx';
 import ModalCancelChargeItem from '../elements/modals/modal-cancel-charge-item.jsx';
 import ModalPayAllCharges from '../elements/modals/modal-pay-all-charges.jsx';
 import ServiceInstanceFiles from '../elements/service-instance/service-instance-files.jsx';
+import DateFormat from "../utilities/date-format.jsx";
 import $ from "jquery";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import _ from "lodash";
@@ -233,8 +234,8 @@ class ServiceInstance extends React.Component {
                         <ul className="dropdown-menu dropdown-menu-right">
                             <li><Link to="#" onClick={self.handleEditInstanceModal}>Edit Instance</Link></li>
                             <li><Link to="#" onClick={self.handleEditPaymentModal}>Edit Payment Plan</Link></li>
-                            {instance.status == 'running' &&
-                            <li><Link to="#" onClick={self.handleAddChargeItemModal}>Add Line Item</Link></li>
+                            {instance.status !== 'cancelled' &&
+                            <li><Link to="#" onClick={self.handleAddChargeItemModal}>Add Charge</Link></li>
                             }
                             <li role="separator" className="divider"/>
                             {/*<li><Link to="#" onClick={self.handleViewPaymentModal}>View Payment History</Link></li>*/}
@@ -272,6 +273,7 @@ class ServiceInstance extends React.Component {
     render () {
         let self = this;
         let pageName = `Purchased Item`;
+        let subtitle = `Purchased `;
 
         if(this.state.loading){
             return (
@@ -290,15 +292,13 @@ class ServiceInstance extends React.Component {
             );
         }else{
             const myInstance = this.state.instance;
-            console.log(myInstance.references.charge_items)
             const myInstanceChargeItems = _.groupBy(myInstance.references.charge_items, 'approved');
             let id, name, amount, interval, owner, ownerId = null;
             if(myInstance.status == "requested") {
                 pageName = `Requested Item`;
+                subtitle = `Requested `;
             }
 
-            console.log("Dsdf")
-            console.log(myInstanceChargeItems)
             //Gather data first
             if( self.state.instance){
                 let service = self.state.instance;
@@ -341,7 +341,7 @@ class ServiceInstance extends React.Component {
 
             return(
                 <Authorizer>
-                    <Jumbotron pageName={pageName} subtitle={`${myInstance.description}`} />
+                    <Jumbotron pageName={pageName} subtitle={<span>{subtitle}<strong><DateFormat date={myInstance.created_at} time /></strong> - {myInstance.description}</span>} />
                     {/*<Jumbotron pageName={pageName} subtitle={`${myInstance.description} . ${myInstance.subscription_id || ""}`} />*/}
                     <div className="page-service-instance">
                         <Content>

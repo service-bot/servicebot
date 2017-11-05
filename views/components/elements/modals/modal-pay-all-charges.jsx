@@ -106,50 +106,43 @@ class ModalPayAllCharges extends React.Component {
 
     render () {
         let self = this;
-        let pageName = "Pay All Line Items";
+        let pageName = "Pay Charges";
         let currentModal = this.state.current_modal;
         let serviceName = this.state.service.name;
         let charges = this.state.service.references.charge_items;
         let unpaidCharges = _.filter(charges, (item)=> {return (!item.approved)});
+        let totalCharges = 0;
+        unpaidCharges.map((charge)=>{ totalCharges+= charge.amount; });
 
         if(currentModal == 'model_pay_charge' && !self.state.paid){
             return(
-                <Modal modalTitle={pageName} show={self.props.show} hide={self.props.hide} hideFooter={true} top="40%" width="490px">
+                <Modal modalTitle={pageName} icon="fa-credit-card-alt" show={self.props.show} hide={self.props.hide} hideFooter={true} top="40%" width="550px">
                     <div className="table-responsive">
                         <div className="p-20">
                             <div className="row">
                                 <div className="col-xs-12">
-                                    <p><strong>You are about to pay for all of the following line items.</strong></p>
-                                    <p>Service: {serviceName}</p>
-                                    <ul>
-                                        {unpaidCharges.map((item)=>
-                                            <li key={item.id}>{item.description}, <Price value={item.amount}/></li>
-                                        )}
-                                    </ul>
+                                    <p><strong>You are about to pay the outstanding charges for your item:</strong></p>
+                                    <p>Item Name: {serviceName}</p>
+                                    <p><strong>Total Charges: <Price value={totalCharges}/></strong></p>
                                 </div>
                             </div>
                         </div>
                         <div className={`modal-footer text-right p-b-20`}>
-                            <button className="btn btn-primary btn-rounded" onClick={self.onPay}>Pay Now</button>
                             <button className="btn btn-default btn-rounded" onClick={self.props.hide}>Later</button>
+                            <button className="btn btn-primary btn-rounded" onClick={self.onPay}><i className="fa fa-credit-card" /> Confirm Payment</button>
                         </div>
                     </div>
                 </Modal>
             );
         }else if(currentModal == 'model_pay_charge' && self.state.paid) {
             return(
-                <Modal modalTitle={pageName} show={self.props.show} hide={self.props.hide} hideFooter={true} top="40%" width="490px">
+                <Modal modalTitle={pageName} icon="fa-credit-card-alt" show={self.props.show} hide={self.props.hide} hideFooter={true} top="40%" width="550px">
                     <div className="table-responsive">
                         <div className="p-20">
                             <div className="row">
                                 <div className="col-xs-12">
-                                    <p><strong>Thank you, you have paid these line items!</strong></p>
-                                    <p>Service: {serviceName}</p>
-                                    <ul>
-                                        {unpaidCharges.map((item)=>
-                                            <li key={item.id}>{item.description}, <Price value={item.amount}/></li>
-                                        )}
-                                    </ul>
+                                    <p><strong>Thank you! You have paid <Price value={totalCharges}/>.</strong></p>
+                                    <p>This charge will appear in your billing history shortly.</p>
                                 </div>
                             </div>
                         </div>

@@ -130,32 +130,23 @@ class DashboardServiceListItem extends React.Component {
                     return (
                         <span>
                             <Price value={myService.payment_plan.amount}/>
-                            {myService.payment_plan.interval_count == 1 ? ' /' : ' / ' + myService.payment_plan.interval_count} {' '+myService.payment_plan.interval}
+                            {myService.payment_plan.interval_count == 1 ? '/' : '/' + myService.payment_plan.interval_count}{myService.payment_plan.interval}
                         </span>
                     );
                 }
             };
 
             let getPrice = ()=>{
-                if(myService.status === "requested" && myService.payment_plan.amount > 0 && !myService.outstanding_charges_total) {
+                if(myService.status === "requested" && myService.payment_plan.amount > 0 && myService.outstanding_charges_total) {
                     return (
-                        <div className="xaas-price red">
-                            Due: &nbsp;
-                            {serType == "subscription" &&
-                                <span>
-                                    {getSubscriptionPrice()}
-                                    {getTotalCharges() && <span> + </span>}
-                                </span>
-                            }
-                            {getTotalCharges() && <span>{getTotalCharges()}</span>}
+                        <div>
+                            {serType == "subscription" && <div className="xaas-price red">{getSubscriptionPrice()}</div>}
+                            {getTotalCharges() && <div className="xaas-price red m-l-5">{getTotalCharges()}</div>}
                         </div>
                     )
                 } else {
                     return (
-                        <div>
-                            {serType == "subscription" && <div className="xaas-price">{getSubscriptionPrice()}</div>}
-                            {getTotalCharges() && <div className="xaas-price red m-l-5"><span>Due: {getTotalCharges()}</span></div>}
-                        </div>
+                        <div>{getTotalCharges() && <div className="xaas-price red m-l-5"><span> {getTotalCharges()}</span></div>}</div>
                     )
                 }
             };

@@ -41,6 +41,9 @@ class ServiceInstanceApprovedCharges extends React.Component {
         let approveItems = this.props.instanceApprovedItems.filter((item) => {
             return item.period_end < currentTime;
         });
+        //Get total amount
+        let totalCharges = 0;
+        approveItems.map((charge)=>{ totalCharges+= charge.amount; });
 
         if(approveItems.length > 0) {
             return (
@@ -55,6 +58,9 @@ class ServiceInstanceApprovedCharges extends React.Component {
                                    mod_approved={this.modApproved}
                                    colNames={['Line Item Description', 'Amount', 'Paid On', 'Status']}
                         />
+                        <div className="xaas-body-row additional-charges-total dark">
+                            <div className="xaas-data xaas-charge"><span><strong>Total Approved: <Price value={totalCharges}/></strong></span></div>
+                        </div>
                     </div>
                 </Collapsible>
             );
@@ -69,6 +75,9 @@ class ServiceInstanceApprovedCharges extends React.Component {
         let approveItems = this.props.instanceApprovedItems.filter((item) => {
             return item.period_end > currentTime;
         });
+        //Get total amount
+        let totalCharges = 0;
+        approveItems.map((charge)=>{ totalCharges+= charge.amount; });
 
         if(approveItems.length > 0) {
             return (
@@ -85,6 +94,9 @@ class ServiceInstanceApprovedCharges extends React.Component {
                                    mod_approved={this.modApproved}
                                    colNames={['Line Item Description', 'Amount', 'Paid On', 'Status']}
                         />
+                        <div className="xaas-body-row additional-charges-total dark">
+                            <div className="xaas-data xaas-charge"><span><strong>Total Approved: <Price value={totalCharges}/></strong></span></div>
+                        </div>
                     </div>
                 </div>
             );
