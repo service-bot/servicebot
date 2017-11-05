@@ -143,8 +143,8 @@ class MyServices extends React.Component {
                                                      transitionAppear={true} transitionAppearTimeout={1000}
                                                      transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                                 <div className="row account-status-row">
-                                    <DashboardWidget widgetClass="col-xs-12 col-sm-6 col-md-3 col-xl-3 col-md-offset-3 col-xl-offset-3" widgetIcon="credit-card" widgetName="Upcoming Invoice" clickAction={self.onOpenInvoiceModal} iconPadding={10} borderRadius={50} />
-                                    <DashboardWidget widgetIcon={widgetIcon()} widgetName={`Status: ${userStatus}`} widgetColor={widgetColor()} iconPadding={10} borderRadius={50}/>
+                                    <DashboardWidget widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-md-offset-2 col-lg-offset-3" widgetIcon="credit-card" widgetName="Upcoming Invoice" clickAction={self.onOpenInvoiceModal} iconPadding={10} borderRadius={50} />
+                                    <DashboardWidget widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-3" widgetIcon={widgetIcon()} widgetName={`Status: ${userStatus}`} widgetColor={widgetColor()} iconPadding={10} borderRadius={50}/>
                                 </div>
                                 <div className="row">
                                     <DashboardServiceList handleComponentUpdating={self.handleComponentUpdating} services={self.state.services}/>

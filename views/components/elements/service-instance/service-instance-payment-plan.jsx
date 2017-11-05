@@ -11,17 +11,25 @@ class ServiceInstancePaymentPlan extends React.Component {
     getServiceStatus(){
         let self = this;
         let owner = this.props.owner;
-        if(owner.status != "suspended") {
-            if(self.props.status == "requested") {
-                return (
-                    <DashboardWidget widgetColor="#0d9e6a" clickAction={this.props.approval} widgetIcon="usd" widgetData="Pay Now" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="widget-hover" />);
-            } else if(self.props.status == "waiting_cancellation") {
+        if(owner.status !== "suspended") {
+            let charges = self.props.service.references.charge_items;
+            let unpaidCharges = _.filter(charges, (item)=> {return (!item.approved)});
+            let totalCharges = 0;
+            unpaidCharges.map((charge)=>{ totalCharges+= charge.amount; });
+            console.log("SHAR 3")
+            console.log(self.props.service)
+            console.log(totalCharges)
+            if(self.props.status === "requested" && totalCharges === 0 && self.props.service.payment_plan.amount === 0) {
+                return (<DashboardWidget widgetColor="#7f04bb" widgetIcon="undo" widgetData="Pending Quote" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="pending-quote" />);
+            } else if(self.props.status === "requested") {
+                return (<DashboardWidget widgetColor="#0d9e6a" clickAction={this.props.approval} widgetIcon="usd" widgetData="Pay Now" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="widget-hover" />);
+            } else if(self.props.status === "waiting_cancellation") {
                 return (<DashboardWidget widgetColor="#ffa000" clickAction={this.props.cancelUndo} widgetIcon="hourglass-end" widgetData="Cancel Pending" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="cancel-pending" />);
-            } else if(self.props.status == "cancelled") {
+            } else if(self.props.status === "cancelled") {
                 return (<DashboardWidget widgetColor="#000000" clickAction={this.props.approval} widgetIcon="times" widgetData="Cancelled" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="restart" />);
             } else if(this.props.allCharges.false && this.props.allCharges.false.length > 0) {
                 return(<DashboardWidget widgetColor="#0d9e6a" clickAction={this.props.handleAllCharges} widgetIcon="usd" widgetData="Pay Now" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="widget-hover" />)
-            } else if(self.props.status == "running") {
+            } else if(self.props.status === "running") {
                 return (<DashboardWidget widgetColor="#0069ff" clickAction={this.props.cancel} widgetIcon="check" widgetData="Active Item" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="cancel" />);
             } else {
                 return (null);
@@ -32,7 +40,7 @@ class ServiceInstancePaymentPlan extends React.Component {
     }
 
     getServiceType(){
-        if(this.props.service.type == "subscription") {
+        if(this.props.service.type === "subscription") {
             return (
                 <div>
                     <DashboardWidget plain={true} widgetIcon="circle" widgetData={this.props.service.name} widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-l-5 p-r-5" />

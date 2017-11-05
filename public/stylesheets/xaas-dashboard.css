@@ -145,14 +145,7 @@
 .xaas-row.approval .btn .fa{
     padding: 1px 1px;
 }
-.xaas-row.waiting .xaas-title .btn,
-.xaas-row.requested .xaas-title .btn{
-    color: #ffffff;
-}
-.xaas-row.waiting .xaas-title .btn .fa,
-.xaas-row.requested .xaas-title .btn .fa{
-    /*border-color: #ffffff;*/
-}
+
 /* button hovers */
 .xaas-dashboard .xaas-title .btn:hover .fa {
     /*background-color: #0091ea;*/
@@ -174,6 +167,13 @@
     /*box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12);*/
 /*}*/
 
+.additional-charges-total {
+    border-top: 2px solid #d90303;
+}
+.additional-charges-total.dark {
+    border-top: 0;
+    background: #f1f1f1;
+}
 
 /* Responsive */
 @media (max-width: 414px){

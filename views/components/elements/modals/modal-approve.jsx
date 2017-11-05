@@ -120,12 +120,16 @@ class ModalApprove extends React.Component {
     render () {
         let self = this;
         let pageName = "Payment Approval";
-        let icon = "fa-thumbs-up";
+        let icon = "fa-credit-card-alt";
         let currentModal = this.state.current_modal;
         let instance = this.state.serviceInstance;
         let name = instance.name;
         let price = instance.payment_plan.amount;
         let interval = instance.payment_plan.interval;
+        let charges = instance.references.charge_items;
+        let unpaidCharges = _.filter(charges, (item)=> {return (!item.approved)});
+        let totalCharges = 0;
+        unpaidCharges.map((charge)=>{ totalCharges+= charge.amount; });
 
         let getAlerts = ()=>{
             if(self.state.alerts){
@@ -139,38 +143,49 @@ class ModalApprove extends React.Component {
             }
         };
 
-        if(currentModal == 'model_approve' && !self.state.approved){
+        let getSubscriptionPrice = ()=>{
+            if(instance.payment_plan.amount > 0) {
+                return (<Price value={price}/> / {interval});
+            }
+        }
+
+        if(currentModal === 'model_approve' && !self.state.approved){
             return(
-                <Modal modalTitle={pageName} icon={icon} show={self.props.show} hide={self.props.hide} hideFooter={true} top="40%" width="490px">
+                <Modal modalTitle={pageName} icon={icon} show={self.props.show} hide={self.props.hide} hideFooter={true} top="40%" width="550px">
                     <div className="table-responsive">
                         <div className="p-20">
                             <div className="row">
                                 <div className="col-xs-12">
                                     {getAlerts()}
-                                    <p><strong>You are about to approve the following service:</strong></p>
-                                    <p>Service Name: {name}</p>
-                                    <p>Service Type: {instance.type} - <Price value={price}/>/{interval}</p>
+                                    <p><strong>You are about to pay for the following item:</strong></p>
+                                    <p>Item Name: {name}</p>
+                                    <p><strong>Total Charges: &nbsp;
+                                        <ul>
+                                            <li>{instance.payment_plan.amount > 0 && <span><Price value={price}/> / {interval}</span>}</li>
+                                            <li>{totalCharges > 0 && <span><Price value={totalCharges}/></span>}</li>
+                                        </ul>
+
+                                    </strong></p>
                                 </div>
                             </div>
                         </div>
                         <div className={`modal-footer text-right p-b-20`}>
-                            <Buttons containerClass="inline" btnType="primary" text="Approve"
+                            <Buttons containerClass="inline" btnType="primary" text="Confirm Payment"
                                      onClick={self.onApprove} loading={self.state.ajaxLoad}/>
                             <Buttons containerClass="inline" btnType="default" text="Later" onClick={self.props.hide} />
                         </div>
                     </div>
                 </Modal>
             );
-        }else if(currentModal == 'model_approve' && self.state.approved) {
+        }else if(currentModal === 'model_approve' && self.state.approved) {
             return(
-                <Modal modalTitle={pageName} icon={icon} show={self.props.show} hide={self.props.hide}>
+                <Modal modalTitle={pageName} icon={icon} show={self.props.show} hide={self.props.hide} top="40%" width="550px">
                     <div className="table-responsive">
                         <div className="p-20">
                             <div className="row">
                                 <div className="col-xs-12">
-                                    <p><strong>You have successfully approved this service!</strong></p>
+                                    <p><strong>You have successfully approved and paid for this item!</strong></p>
                                     <p>Service Name: {name}</p>
-                                    <p>Service Type: {instance.type} - <Price value={price}/>/{interval}</p>
                                 </div>
                             </div>
                         </div>

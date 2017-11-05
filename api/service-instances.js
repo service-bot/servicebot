@@ -92,22 +92,18 @@ module.exports = function(router) {
 
     router.post('/service-instances/:id/add-charge', validate(ServiceInstance), auth(), function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        if(instance_object.get('subscription_id')) {
-            let default_charge = {
-                'user_id': instance_object.get('user_id'),
-                'service_instance_id': instance_object.get('id'),
-                'subscription_id': instance_object.get('subscription_id'),
-                'currency': instance_object.data.payment_plan.currency
-            };
-            let charge_obj = _.assign(default_charge, req.body);
-            let charge = new Charge(charge_obj);
-            charge.create(function (err, charge_item) {
-                res.json(charge_item);
-                store.dispatchEvent("service_instance_charge_added", instance_object);
-            });
-        } else {
-            res.json({'error':'Payment plan is required prior to adding charges.'});
-        }
+        let default_charge = {
+            'user_id': instance_object.get('user_id'),
+            'service_instance_id': instance_object.get('id'),
+            'subscription_id': instance_object.get('subscription_id'),
+            'currency': instance_object.data.payment_plan.currency
+        };
+        let charge_obj = _.assign(default_charge, req.body);
+        let charge = new Charge(charge_obj);
+        charge.create(function (err, charge_item) {
+            res.json(charge_item);
+            store.dispatchEvent("service_instance_charge_added", instance_object);
+        });
     });
 
     router.get('/service-instances/:id/awaiting-charges', validate(ServiceInstance), auth(null, ServiceInstance), function(req, res, next) {
@@ -119,10 +115,14 @@ module.exports = function(router) {
 
     router.post('/service-instances/:id/approve-charges', validate(ServiceInstance), auth(null, ServiceInstance), function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        instance_object.approveAllCharges(function(charges){
-            EventLogs.logEvent(req.user.get('id'), `service-instances ${req.params.id} had charges approved by user ${req.user.get('email')}`);
-            res.json(charges);
-        });
+        if(instance_object.get('subscription_id')) {
+            instance_object.approveAllCharges(function(charges){
+                EventLogs.logEvent(req.user.get('id'), `service-instances ${req.params.id} had charges approved by user ${req.user.get('email')}`);
+                res.json(charges);
+            });
+        } else {
+            res.json({'error':'Service approval is required prior to paying charges!'});
+        }
     });
 
     router.post('/service-instances/:id/files', validate(ServiceInstance), auth(null, ServiceInstance), multer({ storage:serviceStorage, limits : {fileSize : uploadLimit()} }).array('files'), function(req, res, next) {

@@ -27,7 +27,7 @@ class BillingSettings extends React.Component {
                 <div className="page-service-instance">
                     <Content>
                         <div className="row m-b-20">
-                            <div className="col-md-6 col-md-offset-3">
+                            <div className="col-md-10 col-lg-8 col-sm-12 col-md-offset-1 col-lg-offset-2">
                                 <BillingForm uid={this.props.uid}/>
                             </div>
                         </div>

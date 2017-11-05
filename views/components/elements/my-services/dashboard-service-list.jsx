@@ -38,7 +38,7 @@ class DashboardServiceList extends React.Component {
         );
     };
 
-    getActionItems() {
+    getUserServices() {
         let services = this.state.services;
         let purchasedItems = {};
         purchasedItems.actionItems = [], purchasedItems.quoteItems = [], purchasedItems.pendingItems = [],
@@ -150,14 +150,14 @@ class DashboardServiceList extends React.Component {
     render () {
         if(this.state.loading){
             return (
-                <div className="col-xs-12 xaas-dashboard">
+                <div className="col-md-10 col-lg-8 col-sm-12 col-md-offset-1 col-lg-offset-2">
                     <Load/>
                 </div>
             );
         }
         if(this.state.services.length<1) {
             return (
-                <div className="col-xs-12 xaas-dashboard">
+                <div className="col-md-10 col-lg-8 col-sm-12 col-md-offset-1 col-lg-offset-2">
                     <p className="help-block center-align">You don't have any services.</p>
                 </div>
             );
@@ -166,8 +166,8 @@ class DashboardServiceList extends React.Component {
             //grouping services by their status for displaying in groups
             const grouped = _.groupBy(this.state.services, 'status');
             return (
-                <div className="col-xs-12 xaas-dashboard">
-                    {this.getActionItems()}
+                <div className="col-md-10 col-lg-8 col-sm-12 col-md-offset-1 col-lg-offset-2">
+                    {this.getUserServices()}
                 </div>
 
             );
