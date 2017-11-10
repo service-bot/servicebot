@@ -147,7 +147,7 @@ class RequestPageFeatured extends React.Component{
     }
 
     render(){
-        let { templateData, templateData: {id, name, amount, description}, options } = this.props;
+        let { templateData, templateData: {id, name, amount, trial_period_days, description}, options } = this.props;
 
         const featuredStyle = {
             height: _.get(options, 'purchase_page_featured_area_height.value', 'auto'),
@@ -178,6 +178,9 @@ class RequestPageFeatured extends React.Component{
                         <h1 className="featured-title" style={featuredTextStyle}>{name}</h1>
                         <p className="featured-body" style={featuredTextStyle}>{description}</p>
                         <h1 className="featured-price" style={featuredTextStyle}>{getPrice(templateData)}</h1>
+                        {(trial_period_days>0) &&
+                            <h1 className="featured-price" style={featuredTextStyle}>{trial_period_days} Day Free Trial</h1>
+                        }
                     </div>
                     {this.state.editingGear &&
                     <AdminEditingGear toggle={this.toggleEditingMode} name="Heading Settings"/>
