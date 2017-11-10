@@ -391,7 +391,7 @@ class ServiceInstanceForm extends React.Component {
         //Gets a token to populate token_id for instance request
         if (!isAuthorized({permissions: "can_administrate"}) &&
             this.state.servicePrice > 0 &&
-            !this.state.hasCard) {
+            !this.state.hasCard && initialValues.trial_period_days <= 0) {
             submissionPrep = this.submissionPrep;
         }
 
@@ -400,7 +400,7 @@ class ServiceInstanceForm extends React.Component {
                 {/*Price: {this.state.servicePrice}*/}
 
                 {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
-                this.state.servicePrice > 0 && <CardSection/>}
+                this.state.servicePrice > 0 && initialValues.trial_period_days <= 0 && <CardSection/>}
 
 
                 <ServiceBotBaseForm
