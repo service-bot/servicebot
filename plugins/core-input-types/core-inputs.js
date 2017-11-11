@@ -1,1 +1,1 @@
-module.exports = ["checkbox", "select", "text"];
+module.exports = ["checkbox", "select", "text", "secure-string"];
