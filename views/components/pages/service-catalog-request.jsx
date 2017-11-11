@@ -179,7 +179,7 @@ class RequestPageFeatured extends React.Component{
                         <p className="featured-body" style={featuredTextStyle}>{description}</p>
                         <h1 className="featured-price" style={featuredTextStyle}>{getPrice(templateData)}
                             {(trial_period_days>0) &&
-                            <span className="free-trial" style={featuredTextStyle}>{trial_period_days} Days Free Trial</span>
+                            <span className="free-trial" style={featuredTextStyle}>{trial_period_days} Day Free Trial</span>
                             }
                         </h1>
                     </div>
