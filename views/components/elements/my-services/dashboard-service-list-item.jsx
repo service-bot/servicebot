@@ -178,7 +178,7 @@ class DashboardServiceListItem extends React.Component {
             let getLinkActionButton = ()=>{
                 let websiteLink = (myService.references.service_instance_properties.filter(link => link.name == "url"))[0];
                 if(status!== "cancelled" && websiteLink) {
-                    return (<button className="btn btn-default btn-rounded btn-sm m-r-5" onClick={self.urlLink(websiteLink.data.value)} >Launch Application</button>);
+                    return (<button className="btn btn-default btn-rounded btn-sm m-r-5" onClick={self.urlLink(websiteLink.data.value)} > Launch Application <i className="fa fa-external-link-square" /></button>);
                 }
             }
 

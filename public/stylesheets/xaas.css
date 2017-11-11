@@ -947,6 +947,14 @@ body.login .footer{
     margin-bottom: 50px;
 }
 
+.free-trial{
+    font-size: 18px;
+    background: black;
+    padding: 5px 15px;
+    margin-left: 10px;
+    border-radius: 5px;
+}
+
 @keyframes displayMessage {
     0%{
         margin-top: -10px;

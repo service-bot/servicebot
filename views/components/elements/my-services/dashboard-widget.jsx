@@ -43,17 +43,24 @@ class DashboardWidget extends React.Component {
 
         const widgetContent = (
 
-            <div className="text-widget-1 color-white" style={style.widgetDark}>
+            <div className={`text-widget-1 color-white ${self.props.reversed && "reversed"} ${self.props.margins}`} style={style.widgetDark}>
                 {!self.props.plain &&
                 <div className={`text-widget-wrapper ${self.props.widgetHoverClass}`} style={style.widgetDark}>
-                    <div className={`text-widget-item col-xs-4`} style={style.widget}>
+                    {!self.props.reversed &&
+                    <div className={`text-widget-item col-xs-4 ${self.props.small && "small"}`} style={style.widget}>
                         <i className={`fa fa-${self.props.widgetIcon} fa-2x`} />
                     </div>
+                    }
                     <div className="text-widget-item col-xs-8">
                         <div className="title">{self.props.widgetName}</div>
-                        <div className="subtitle"><span
+                        <div className={self.props.small ? "subtitle small" : "subtitle"}><span
                             className="">{self.props.widgetData || this.props.children}</span></div>
                     </div>
+                    {self.props.reversed &&
+                    <div className={`text-widget-item col-xs-4 ${self.props.small && "small"}`} style={style.widget}>
+                        <i className={`fa fa-${self.props.widgetIcon} fa-2x`} />
+                    </div>
+                    }
                 </div>
                 ||
                 <div className={`text-widget-wrapper plain ${self.props.widgetHoverClass}`} style={style.widget}>
@@ -71,7 +78,7 @@ class DashboardWidget extends React.Component {
         if(this.props.link){
             return (
                 <div className={self.props.widgetClass || "col-xs-12 col-sm-6 col-md-3 col-xl-3"}>
-                    <Link to={self.props.linkTo} >
+                    <Link to={self.props.link} target="_Blank" >
                         {widgetContent}
                     </Link>
                 </div>

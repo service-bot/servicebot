@@ -30,12 +30,24 @@
   padding: 30px 0;
 }
 
+.text-widget-1 .col-xs-4.small {
+  padding: 10px 0 5px;
+}
+
 .text-widget-1 .title {
   font-size: 1rem;
 }
 
+.text-widget-1.reversed .subtitle {
+  text-align: right;
+}
+
 .text-widget-1 .subtitle {
   font-size: 1.2rem;
+}
+
+.text-widget-1 .subtitle.small {
+  font-size: 14px;
 }
 
 .widget-hover:hover{
@@ -49,4 +61,7 @@
 }
 .restart:hover{
   background: #055d3d !important;
+}
+.open-application:hover{
+  background: #7f04bb !important;
 }
