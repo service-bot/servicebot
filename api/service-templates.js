@@ -337,10 +337,15 @@ module.exports = function (router) {
             let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;
             if(lifecycleManager) {
                 lifecycleManager = lifecycleManager[0];
-                await lifecycleManager.preProvision({
-                    request: req_body,
-                    template: serviceTemplate
-                });
+                try {
+                    await lifecycleManager.preProvision({
+                        request: req_body,
+                        template: serviceTemplate
+                    });
+                } catch (e) {
+                    return res.status(400).json({error: e});
+                }
+
             }
             //if it's a new user request we need to create an account, invitation
             if (isNew && serviceTemplate.get('published')) {
