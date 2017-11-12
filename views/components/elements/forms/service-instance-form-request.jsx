@@ -56,19 +56,32 @@ let renderCustomProperty = (props) => {
         <div>
             {fields.map((customProperty, index) => {
                     let property = widgets[formJSON[index].type];
-                    return (
-                        <Field
-                            key={index}
-                            name={`${customProperty}.data.value`}
-                            type={formJSON[index].type}
-                            widget={property.widget}
-                            component={widgetField}
-                            label={formJSON[index].prop_label}
-                            // value={formJSON[index].data.value}
-                            formJSON={formJSON[index]}
-                            configValue={formJSON[index].config}
-                            validate={required()}
-                        />)
+                    console.log("custom prop", customProperty);
+                    if(formJSON[index].prompt_user){
+
+                        return (
+                            <Field
+                                key={index}
+                                name={`${customProperty}.data.value`}
+                                type={formJSON[index].type}
+                                widget={property.widget}
+                                component={widgetField}
+                                label={formJSON[index].prop_label}
+                                // value={formJSON[index].data.value}
+                                formJSON={formJSON[index]}
+                                configValue={formJSON[index].config}
+                                validate={required()}
+                            />)
+                    }else{
+                            if(formJSON[index].data && formJSON[index].data.value){
+                                return (<p>{formJSON[index].data.value}</p>);
+                            }else{
+                                return (<span/>)
+                            }
+
+
+                    }
+
                 }
             )}
         </div>
