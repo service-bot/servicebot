@@ -74,7 +74,7 @@ let renderCustomProperty = (props) => {
                             />)
                     }else{
                             if(formJSON[index].data && formJSON[index].data.value){
-                                return (<p>{formJSON[index].data.value}</p>);
+                                return (<span><label className="control-label form-label-flex-md">{formJSON[index].name}</label> <p>{formJSON[index].data.value}</p></span>);
                             }else{
                                 return (<span/>)
                             }
