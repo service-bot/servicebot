@@ -40,33 +40,6 @@ class ServiceInstancePaymentPlan extends React.Component {
         }
     }
 
-    viewApplicationButton(url) {
-        return (<DashboardWidget reversed={true} small={true} margins="m-b-0 m-t-0" link={url} widgetColor="#4404bb" widgetIcon="external-link-square" widgetData="Open Application" widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" widgetHoverClass="open-application" />);
-    }
-
-    waitForApplication(url) {
-        fetch(url, {mode: 'no-cors'}).then((response) => {
-            console.log("Getting response")
-            console.log(url)
-            console.log(response);
-            if (response.status !== 200) {
-                setTimeout(this.waitForApplication, 5000, url);
-            }
-            else {
-                console.log("I HAVE THE APP")
-                this.viewApplicationButton();
-            }
-        }).catch((error) => {
-            if (error.code === "ENOTFOUND") {
-                setTimeout(this.waitForApplication, 5000, url)
-            }
-            console.log(error);
-        })
-
-    }
-
-
-
     //TODO: change this to property widget type
     //Get application launch action based on URL custom variable.
     getLinkActionButton(){
