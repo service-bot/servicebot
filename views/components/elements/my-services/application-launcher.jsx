@@ -57,7 +57,7 @@ class ServiceApplicationLauncher extends React.Component {
         } else {
             let websiteLink = this.props.instanceLink;
             if(self.props.large) {
-                return (<DashboardWidget reversed={true} small={true} margins="m-b-0 m-t-0" link={websiteLink} widgetColor="#4404bb" widgetIcon="external-link-square" widgetData="Open Application" widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" widgetHoverClass="open-application" />);
+                return (<DashboardWidget reversed={true} small={true} margins="m-b-0 m-t-0" link={websiteLink.data.value} widgetColor="#4404bb" widgetIcon="external-link-square" widgetData="Open Application" widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" widgetHoverClass="open-application" />);
             } else {
                 return (<button className="btn btn-default btn-rounded btn-sm m-r-5" onClick={self.urlLink(websiteLink.data.value)} > Launch Application <i className="fa fa-external-link-square" /></button>);
             }
