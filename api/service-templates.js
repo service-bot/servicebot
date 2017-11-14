@@ -481,7 +481,7 @@ module.exports = function (router) {
             req.body.references.service_template_properties = properties.map(prop => {
                 return {
                     ...prop,
-                    name : slug(prop.prop_label)
+                    name : slug(prop.prop_label, {lower : true})
                 };
             });
         }
@@ -501,7 +501,7 @@ module.exports = function (router) {
             req.body.references.service_template_properties = properties.map(prop => {
                 return {
                     ...prop,
-                    name : slug(prop.prop_label)
+                    name : slug(prop.prop_label, {lower : true})
                 };
             });
         }
