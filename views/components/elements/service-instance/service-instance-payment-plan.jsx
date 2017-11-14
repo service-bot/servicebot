@@ -5,6 +5,7 @@ import Avatar from '../../elements/avatar.jsx';
 import {Authorizer} from '../../utilities/authorizer.jsx';
 import InfoToolTip from "../../elements/tooltips/info-tooltip.jsx";
 import DashboardWidget from "../../elements/my-services/dashboard-widget.jsx";
+import ApplicationLauncher from '../../elements/my-services/application-launcher.jsx';
 import {Link, browserHistory} from 'react-router';
 import ReactTooltip from 'react-tooltip';
 
@@ -29,7 +30,7 @@ class ServiceInstancePaymentPlan extends React.Component {
                 return (<DashboardWidget widgetColor="#000000" clickAction={this.props.approval} widgetIcon="times" widgetData="Cancelled" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="restart" />);
             } else if(this.props.allCharges.false && this.props.allCharges.false.length > 0) {
                 return(<DashboardWidget widgetColor="#0d9e6a" clickAction={this.props.handleAllCharges} widgetIcon="usd" widgetData="Pay Now" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="widget-hover" />)
-            } else if(self.props.status === "running") {
+            } else if(self.props.status === "running" || self.props.status === "in_progress") {
                 return (<DashboardWidget widgetColor="#0069ff" clickAction={this.props.cancel} widgetIcon="check" widgetData="Active Item" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="cancel" />);
             } else {
                 return (null);
@@ -38,6 +39,33 @@ class ServiceInstancePaymentPlan extends React.Component {
             return (<DashboardWidget widgetColor="#da0304" widgetIcon="ban" widgetData="Suspended" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5"/>);
         }
     }
+
+    viewApplicationButton(url) {
+        return (<DashboardWidget reversed={true} small={true} margins="m-b-0 m-t-0" link={url} widgetColor="#4404bb" widgetIcon="external-link-square" widgetData="Open Application" widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" widgetHoverClass="open-application" />);
+    }
+
+    waitForApplication(url) {
+        fetch(url, {mode: 'no-cors'}).then((response) => {
+            console.log("Getting response")
+            console.log(url)
+            console.log(response);
+            if (response.status !== 200) {
+                setTimeout(this.waitForApplication, 5000, url);
+            }
+            else {
+                console.log("I HAVE THE APP")
+                this.viewApplicationButton();
+            }
+        }).catch((error) => {
+            if (error.code === "ENOTFOUND") {
+                setTimeout(this.waitForApplication, 5000, url)
+            }
+            console.log(error);
+        })
+
+    }
+
+
 
     //TODO: change this to property widget type
     //Get application launch action based on URL custom variable.
@@ -49,7 +77,7 @@ class ServiceInstancePaymentPlan extends React.Component {
             return (
                 <div>
                     <div className="col-xs-12 col-sm-6 col-md-8 col-lg-8 col-xl-4 p-r-10" />
-                    <DashboardWidget reversed={true} small={true} margins="m-b-0 m-t-0" link={websiteLink.data.value} widgetColor="#4404bb" widgetIcon="external-link-square" widgetData="Launch Application" widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" widgetHoverClass="open-application" />
+                    <ApplicationLauncher serviceInstance={instance} instanceLink={websiteLink} large={true} />
                 </div>
             );
         }
