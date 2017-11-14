@@ -1,10 +1,11 @@
 import React from 'react';
-import {Link} from 'react-router';
+import {Link, browserHistory} from 'react-router';
 import ModalApprove from '../modals/modal-approve.jsx';
 import ModalRequestCancellation from '../modals/modal-request-cancellation.jsx';
 import ModalManageCancellation from '../modals/modal-manage-cancellation.jsx';
 import ModalPayAllCharges from '../modals/modal-pay-all-charges.jsx';
 import {Price} from '../../utilities/price.jsx';
+import ApplicationLauncher from '../../elements/my-services/application-launcher.jsx';
 
 class DashboardServiceListItem extends React.Component {
 
@@ -73,6 +74,14 @@ class DashboardServiceListItem extends React.Component {
         this.setState({ payChargeModal : false});
         this.props.handleComponentUpdating();
     }
+    urlLink(url){
+        return function(event) {
+            event.preventDefault();
+            console.log(url);
+            window.open(url, '_blank');
+        }
+    }
+
 
 
     render () {
@@ -167,19 +176,24 @@ class DashboardServiceListItem extends React.Component {
                 }
             };
 
-            console.log("SHAR: 1")
-            console.log(myService)
+            let getLinkActionButton = ()=>{
+                let websiteLink = (myService.references.service_instance_properties.filter(link => link.name === "url"))[0];
+                if(status!== "cancelled" && websiteLink) {
+                    return (<ApplicationLauncher serviceInstance={myService} instanceLink={websiteLink} />);
+                }
+            }
+
 
             return (
                 <div className={`xaas-row ${self.props.service.status}`}>
                     <Link to={self.props.viewPath}>
                         <div className="xaas-title">
                             <div className="xaas-data xaas-status"><span className="status"><i className={myService.icon}/></span></div>
-                            <div className="xaas-data xaas-category"><img className="xaas-service-icon" src="assets/service-icons/dark/aws.png"/></div>
                             <div className="xaas-data xaas-service"><h5>{name}</h5></div>
                             {getPrice()}
                             {/*<div className="xaas-data xaas-interval"><h5>{interval}</h5></div>*/}
                             <div className="xaas-data xaas-action">
+                                {getLinkActionButton()}
                                 {getActionButton()}
                             </div>
                         </div>

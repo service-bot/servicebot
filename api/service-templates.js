@@ -247,6 +247,8 @@ module.exports = function (router) {
             let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
             let templatePrice = serviceTemplate.get("amount");
             let price = hasPermission ? (req_body.amount || templatePrice) : templatePrice;
+            let trialPeriod = serviceTemplate.get("trial_period_days");
+            console.log("TRIAL PERIOD DAYSS " + trialPeriod)
 
             //todo: this doesn't do anthing yet, needs to check the "passed" props not the ones on the original...
             // let validationResult = props ? validateProperties(props, handlers) : [];
@@ -280,7 +282,7 @@ module.exports = function (router) {
                     return res.status(400).json({error: 'Must have property: email'});
                 }
 
-                if ((!req_body.hasOwnProperty("token_id") || req_body.token_id === '') && price !== 0) {
+                if ((!req_body.hasOwnProperty("token_id") || req_body.token_id === '') && price !== 0 && trialPeriod <= 0) {
                     return res.status(400).json({error: 'Must have property: token_id'});
                 }
 
@@ -335,10 +337,15 @@ module.exports = function (router) {
             let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;
             if(lifecycleManager) {
                 lifecycleManager = lifecycleManager[0];
-                await lifecycleManager.preProvision({
-                    request: req_body,
-                    template: serviceTemplate
-                });
+                try {
+                    await lifecycleManager.preProvision({
+                        request: req_body,
+                        template: serviceTemplate
+                    });
+                } catch (e) {
+                    return res.status(400).json({error: e});
+                }
+
             }
             //if it's a new user request we need to create an account, invitation
             if (isNew && serviceTemplate.get('published')) {

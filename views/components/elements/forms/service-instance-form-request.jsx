@@ -56,19 +56,38 @@ let renderCustomProperty = (props) => {
         <div>
             {fields.map((customProperty, index) => {
                     let property = widgets[formJSON[index].type];
-                    return (
-                        <Field
-                            key={index}
-                            name={`${customProperty}.data.value`}
-                            type={formJSON[index].type}
-                            widget={property.widget}
-                            component={widgetField}
-                            label={formJSON[index].prop_label}
-                            // value={formJSON[index].data.value}
-                            formJSON={formJSON[index]}
-                            configValue={formJSON[index].config}
-                            validate={required()}
-                        />)
+                    console.log("custom prop", customProperty);
+                    if(formJSON[index].prompt_user){
+
+                        return (
+                            <Field
+                                key={index}
+                                name={`${customProperty}.data.value`}
+                                type={formJSON[index].type}
+                                widget={property.widget}
+                                component={widgetField}
+                                label={formJSON[index].prop_label}
+                                // value={formJSON[index].data.value}
+                                formJSON={formJSON[index]}
+                                configValue={formJSON[index].config}
+                                validate={required()}
+                            />)
+                    }else{
+                            if(formJSON[index].data && formJSON[index].data.value){
+                                return (
+                                    <div className={`form-group form-group-flex`}>
+                                        {(formJSON[index].prop_label && formJSON[index].type !== 'hidden') && <label className="control-label form-label-flex-md">{formJSON[index].prop_label}</label>}
+                                        <div className="form-input-flex">
+                                            <p>{formJSON[index].data.value}</p>
+                                        </div>
+                                    </div>)
+                            }else{
+                                return (<span/>)
+                            }
+
+
+                    }
+
                 }
             )}
         </div>
@@ -391,7 +410,7 @@ class ServiceInstanceForm extends React.Component {
         //Gets a token to populate token_id for instance request
         if (!isAuthorized({permissions: "can_administrate"}) &&
             this.state.servicePrice > 0 &&
-            !this.state.hasCard) {
+            !this.state.hasCard && initialValues.trial_period_days <= 0) {
             submissionPrep = this.submissionPrep;
         }
 
@@ -400,7 +419,7 @@ class ServiceInstanceForm extends React.Component {
                 {/*Price: {this.state.servicePrice}*/}
 
                 {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
-                this.state.servicePrice > 0 && <CardSection/>}
+                this.state.servicePrice > 0 && initialValues.trial_period_days <= 0 && <CardSection/>}
 
 
                 <ServiceBotBaseForm
@@ -415,7 +434,7 @@ class ServiceInstanceForm extends React.Component {
                     formName="serviceInstanceRequestForm"
                     helpers={helpers}
                     validations={this.formValidation}
-
+                    loaderTimeout={false}
                 />
             </div>
         )

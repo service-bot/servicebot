@@ -728,6 +728,16 @@ ul.custom-fields-list {
     font-size: 0.7rem;
     background-color: #000;
 }
+.footer img{
+    height: 30px;
+    margin-right: 8px;
+    margin-left: -8px;
+}
+.footer p{
+    margin: 0px;
+    font-weight: bold;
+}
+
 body.login .footer{
     /*position: absolute;*/
     /*bottom: 0px;*/
@@ -945,6 +955,14 @@ body.login .footer{
 .account-status-row {
     margin-top: -70px;
     margin-bottom: 50px;
+}
+
+.free-trial{
+    font-size: 18px;
+    background: black;
+    padding: 5px 15px;
+    margin-left: 10px;
+    border-radius: 5px;
 }
 
 @keyframes displayMessage {

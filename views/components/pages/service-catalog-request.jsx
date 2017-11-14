@@ -10,7 +10,7 @@ import {Price, getPrice} from "../utilities/price.jsx";
 import { connect } from 'react-redux';
 let _ = require("lodash");
 import IconHeading from "../layouts/icon-heading.jsx";
-
+import InfoToolTip from "../elements/tooltips/info-tooltip.jsx";
 
 
 class ServiceRequest extends React.Component {
@@ -147,7 +147,7 @@ class RequestPageFeatured extends React.Component{
     }
 
     render(){
-        let { templateData, templateData: {id, name, amount, description}, options } = this.props;
+        let { templateData, templateData: {id, name, amount, trial_period_days, description}, options } = this.props;
 
         const featuredStyle = {
             height: _.get(options, 'purchase_page_featured_area_height.value', 'auto'),
@@ -177,7 +177,11 @@ class RequestPageFeatured extends React.Component{
                     <div className="request-featured-section" style={featuredTextStyle}>
                         <h1 className="featured-title" style={featuredTextStyle}>{name}</h1>
                         <p className="featured-body" style={featuredTextStyle}>{description}</p>
-                        <h1 className="featured-price" style={featuredTextStyle}>{getPrice(templateData)}</h1>
+                        <h1 className="featured-price" style={featuredTextStyle}>{getPrice(templateData)}
+                            {(trial_period_days>0) &&
+                            <span className="free-trial" style={featuredTextStyle}>{trial_period_days} Day Free Trial</span>
+                            }
+                        </h1>
                     </div>
                     {this.state.editingGear &&
                     <AdminEditingGear toggle={this.toggleEditingMode} name="Heading Settings"/>

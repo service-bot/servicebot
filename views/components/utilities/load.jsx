@@ -12,10 +12,12 @@ class Load extends React.Component {
     }
 
     componentDidMount() {
-        var that = this;
-        this.timeout = setTimeout(function(){
-            that.setState({message: "There seems to be a problem in processing your request. Please try again.", loadState: "done" });
-        }, 10000);
+        let self = this;
+        if(this.props.timeout !== false ){
+            this.timeout = setTimeout(function(){
+                self.setState({message: "There seems to be a problem in processing your request. Please try again.", loadState: "done" });
+            }, this.props.timeout || 10000);
+        }
     }
 
     componentWillUnmount() {
