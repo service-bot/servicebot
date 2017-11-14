@@ -5,6 +5,7 @@ import ModalRequestCancellation from '../modals/modal-request-cancellation.jsx';
 import ModalManageCancellation from '../modals/modal-manage-cancellation.jsx';
 import ModalPayAllCharges from '../modals/modal-pay-all-charges.jsx';
 import {Price} from '../../utilities/price.jsx';
+import ApplicationLauncher from '../../elements/my-services/application-launcher.jsx';
 
 class DashboardServiceListItem extends React.Component {
 
@@ -176,9 +177,9 @@ class DashboardServiceListItem extends React.Component {
             };
 
             let getLinkActionButton = ()=>{
-                let websiteLink = (myService.references.service_instance_properties.filter(link => link.name == "url"))[0];
+                let websiteLink = (myService.references.service_instance_properties.filter(link => link.name === "url"))[0];
                 if(status!== "cancelled" && websiteLink) {
-                    return (<button className="btn btn-default btn-rounded btn-sm m-r-5" onClick={self.urlLink(websiteLink.data.value)} > Launch Application <i className="fa fa-external-link-square" /></button>);
+                    return (<ApplicationLauncher serviceInstance={myService} instanceLink={websiteLink} />);
                 }
             }
 
