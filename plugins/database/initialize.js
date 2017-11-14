@@ -222,7 +222,7 @@ let buildTables = async function(knex) {
         await create('user_invoices', function (table) {
             table.increments();
             table.integer('user_id').references('users.id');
-            table.integer('service_instance_id').references('service_instances.id');
+            table.integer('service_instance_id').references('service_instances.id').onDelete('cascade');
             table.string('invoice_id').unique();
             table.string('subscription');
             table.string('charge');

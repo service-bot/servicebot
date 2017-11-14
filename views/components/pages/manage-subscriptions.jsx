@@ -13,7 +13,7 @@ import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import ModalRequestCancellation from "../elements/modals/modal-request-cancellation.jsx";
 import ModalManageCancellation from "../elements/modals/modal-manage-cancellation.jsx";
-import ModalDeleteRequest from "../elements/modals/modal-delete-request.jsx";
+import ModalDeleteInstance from "../elements/modals/modal-delete-instance.jsx";
 let _ = require("lodash");
 
 class ManageSubscriptions extends React.Component {
@@ -187,14 +187,11 @@ class ManageSubscriptions extends React.Component {
     rowActionsFormatter(cell, row){
         let self = this;
         let status = row.status;
-        let customAction = {};
-        if(status !== "cancelled") {
-            customAction = {
-                type: "button",
-                label: this.dropdownStatusFormatter(row),
-                action: () => {self.onOpenActionModal(row)}
-            };
-        }
+        let customAction = {
+            type: "button",
+            label: this.dropdownStatusFormatter(row),
+            action: () => {self.onOpenActionModal(row)}
+        };
 
         return (
             <Dropdown
@@ -216,14 +213,13 @@ class ManageSubscriptions extends React.Component {
     dropdownStatusFormatter(dataObject){
         let status = dataObject.status;
         const statusString = _.toLower(status);
-        if(statusString == "waiting_cancellation"){
+        if(statusString === "waiting_cancellation"){
             return "Manage Cancellation";
-        }else if(statusString == "cancelled"){
-            return null;
+        }else if(statusString === "cancelled"){
+            return "Delete Service";
         }else {
             return "Cancel Service";
         }
-        return "Error";
     }
 
     render () {
@@ -260,7 +256,7 @@ class ManageSubscriptions extends React.Component {
                         );
                     case 'cancelled':
                         return(
-                            <ModalRequestCancellation myInstance={self.state.currentDataObject}
+                            <ModalDeleteInstance myInstance={self.state.currentDataObject}
                                                       show={self.state.actionModal}
                                                       hide={self.onCloseActionModal}/>
                         );

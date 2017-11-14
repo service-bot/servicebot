@@ -44,7 +44,13 @@ module.exports = function(router) {
     });
 
     router.delete(`/service-instances/:id(\\d+)`, validate(ServiceInstance), auth(), function(req,res,next){
-        res.json({error: 'Deleting services is not permitted for security reasons!'});
+        let instance_object = res.locals.valid_object;
+        //Only allow removal if the instance is cancelled.
+        if(instance_object.data.status === 'cancelled') {
+            next();
+        } else {
+            res.json({error: 'Deleting services is not permitted for security reasons!'});
+        }
     });
 
     router.post('/service-instances/:id/approve', validate(ServiceInstance), auth(), function(req, res, next) {
