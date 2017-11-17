@@ -6,7 +6,9 @@ function* run(config, provide, channels) {
 
     let lifecycles = {
         pre : [],
-        post : []
+        post : [],
+        pre_decom : [],
+        post_decom : []
     }
 
     //collect lifecycle hooks
@@ -27,6 +29,24 @@ function* run(config, provide, channels) {
             let result = {}
             for(let hook of lifecycles.post){
                 let hookresult = await hook.run({request, template,instance});
+                result = {...result, ...hookresult};
+            }
+            return result;
+
+        },
+        preDecommission : async function({request, instance}){
+            let result = {}
+            for(let hook of lifecycles.pre_decom){
+                let hookresult = await hook.run({request, instance});
+                result = {...result, ...hookresult};
+            }
+            return result;
+
+        },
+        postDecommission : async function({request, instance}){
+            let result = {}
+            for(let hook of lifecycles.post_decom){
+                let hookresult = await hook.run({request,instance});
                 result = {...result, ...hookresult};
             }
             return result;

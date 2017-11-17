@@ -77,12 +77,41 @@ module.exports = function(router) {
 
     router.post('/service-instances/:id/cancel', validate(ServiceInstance), auth(), async function(req, res, next) {
         let instance_object = res.locals.valid_object;
+        let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;
+        if(lifecycleManager) {
+            lifecycleManager = lifecycleManager[0];
+            try {
+                await lifecycleManager.preDecommission({
+                    request: req.body,
+                    instance: instance_object
+                });
+            } catch (e) {
+                return res.status(400).json({error: e});
+            }
+
+        }
+
+
         try {
             let result = await instance_object.unsubscribe();
             res.json(result);
+
+
+
+
         } catch (err) {
+            console.error(err);
             res.json(err);
         }
+
+        if(lifecycleManager) {
+            lifecycleManager.postDecommission({
+                request: req.body,
+                instance: instance_object
+            });
+        }
+
+
     });
 
 
