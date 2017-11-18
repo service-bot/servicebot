@@ -2,13 +2,17 @@ let {call, put, all, select, fork, spawn, take, takeEvery} = require("redux-saga
 let consume = require("pluginbot/effects/consume");
 
 //this plugin will change in future.. for now handles basic hooks into stages of a service lifecycle
+//todo: somehow merge lifecycle management into the event system... too much similar functionality in different systems
 function* run(config, provide, channels) {
 
     let lifecycles = {
         pre : [],
         post : [],
         pre_decom : [],
-        post_decom : []
+        post_decom : [],
+        pre_reactivate : [],
+        post_reactivate : []
+
     }
 
     //collect lifecycle hooks
@@ -17,7 +21,7 @@ function* run(config, provide, channels) {
             let hook = yield consume(channels.lifecycleHook);
             lifecycles[hook.stage].push(hook);
         }
-    })
+    });
 
     let lifecycleManager = {
         preProvision : async function({request, template}){
@@ -34,19 +38,37 @@ function* run(config, provide, channels) {
             return result;
 
         },
-        preDecommission : async function({request, instance}){
+        preDecommission : async function({instance}){
             let result = {}
             for(let hook of lifecycles.pre_decom){
-                let hookresult = await hook.run({request, instance});
+                let hookresult = await hook.run({instance});
                 result = {...result, ...hookresult};
             }
             return result;
 
         },
-        postDecommission : async function({request, instance}){
+        postDecommission : async function({instance}){
             let result = {}
             for(let hook of lifecycles.post_decom){
-                let hookresult = await hook.run({request,instance});
+                let hookresult = await hook.run({instance});
+                result = {...result, ...hookresult};
+            }
+            return result;
+
+        },
+        preReactivate : async function({instance}){
+            let result = {}
+            for(let hook of lifecycles.pre_reactivate){
+                let hookresult = await hook.run({instance});
+                result = {...result, ...hookresult};
+            }
+            return result;
+
+        },
+        postReactivate : async function({instance}){
+            let result = {}
+            for(let hook of lifecycles.post_reactivate){
+                let hookresult = await hook.run({instance});
                 result = {...result, ...hookresult};
             }
             return result;

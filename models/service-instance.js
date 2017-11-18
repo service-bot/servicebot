@@ -325,13 +325,28 @@ ServiceInstance.prototype.changePrice = async function (newPlan) {
 
 ServiceInstance.prototype.unsubscribe = async function () {
     try {
+        let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;
+        if(lifecycleManager) {
+            lifecycleManager = lifecycleManager[0];
+                await lifecycleManager.preDecommission({
+                    instance: this
+                });
+            }
         if(this.data.subscription_id) {
             //Remove the subscription from Stripe
             await Stripe().connection.subscriptions.del(this.data.subscription_id);
         }
         this.data.subscription_id = null;
         this.data.status = "cancelled";
-        return this.update();
+        let results = await this.update()
+        if(lifecycleManager) {
+            lifecycleManager.postDecommission({
+                instance: results
+            }).catch(e => {
+                console.error(e);
+            });
+        }
+        return results;
     } catch (error) {
         console.error(error);
         throw error;
