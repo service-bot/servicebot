@@ -64,6 +64,35 @@ module.exports = function(router) {
         });
     });
 
+
+    router.post('/service-instances/:id/reactivate', validate(ServiceInstance), auth(), async function(req, res, next) {
+        let instance_object = res.locals.valid_object;
+        if(instance_object.get("status") === "cancelled") {
+            let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;
+            if(lifecycleManager) {
+                lifecycleManager = lifecycleManager[0];
+                await lifecycleManager.preReactivate({
+                    instance: this
+                });
+            }
+
+            instance_object.subscribe(function (err, callback) {
+                if (!err) {
+                    res.json(callback);
+                    if(lifecycleManager) {
+                        lifecycleManager.postReactivate({
+                            instance: this
+                        });
+                    }
+
+                } else {
+                    res.json(err);
+                }
+            });
+        }
+    });
+
+
     router.post('/service-instances/:id/change-price', validate(ServiceInstance), auth(), function(req, res, next) {
         let instance_object = res.locals.valid_object;
         instance_object.changePrice(req.body).then(function (updated_subscription) {
@@ -77,40 +106,14 @@ module.exports = function(router) {
 
     router.post('/service-instances/:id/cancel', validate(ServiceInstance), auth(), async function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;
-        if(lifecycleManager) {
-            lifecycleManager = lifecycleManager[0];
-            try {
-                await lifecycleManager.preDecommission({
-                    request: req.body,
-                    instance: instance_object
-                });
-            } catch (e) {
-                return res.status(400).json({error: e});
-            }
-
-        }
-
-
         try {
             let result = await instance_object.unsubscribe();
             res.json(result);
-
-
-
 
         } catch (err) {
             console.error(err);
             res.json(err);
         }
-
-        if(lifecycleManager) {
-            lifecycleManager.postDecommission({
-                request: req.body,
-                instance: instance_object
-            });
-        }
-
 
     });
 
