@@ -148,8 +148,9 @@ module.exports = function (router, model, resourceName, userCorrelator) {
     });
 
 
-    router.delete(`/${resourceName}/:id(\\d+)`, validate(model), auth(null, model, userCorrelator), function (req, res, next) {
+    router.delete(`/${resourceName}/:id(\\d+)`, validate(model), auth(null, model, userCorrelator), async function (req, res, next) {
         let entity = res.locals.valid_object;
+        entity = await entity.attachReferences();
         entity.delete(function (err, result) {
             if(err){
                 console.error("Server error deleting entity: " + err);
