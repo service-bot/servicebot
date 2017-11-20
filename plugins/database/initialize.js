@@ -43,6 +43,7 @@ let buildTables = async function(knex) {
             table.string('name');
             table.string('email').notNullable().unique();
             table.string('password');
+            table.string('provider').defaultTo("local");
             table.enu('status', ['active', 'suspended', 'invited', 'flagged', 'disconnected']).defaultTo('active');
             table.string('customer_id');
             table.string('phone');

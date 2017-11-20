@@ -77,16 +77,19 @@ module.exports = function(app, passport) {
 
     //todo -- token expiration
     app.post("/api/v1/auth/reset-password/:uid/:token", function(req, res, next){
+        let userManager = store.getState(true).pluginbot.services.userManager[0]
+
         ResetRequest.findOne("user_id", req.params.uid , function(result){
             if(result.data && bcrypt.compareSync(req.params.token, result.get("hash"))){
-                User.findOne("id", result.get("user_id"), function(user){
-                    let password = bcrypt.hashSync(req.body.password, 10);
-                    user.set("password", password);
-                    user.update(function(err, updated){
-                        res.json({"message" : "Password successfully reset"});
-                        result.delete(function(r){
-                           console.log("reset request deleted");
-                        });
+                User.findOne("id", result.get("user_id"), async function(user){
+                    // let password = bcrypt.hashSync(req.body.password, 10);
+                    let newUserData = {password : req.body.password};
+                    let updated = await userManager.update(user, newUserData);
+                    // user.set("password", password);
+                    res.json({"message" : "Password successfully reset"});
+                    result.delete(function(r){
+                        console.log("reset request deleted");
+
                     })
                 })
             }else{
@@ -98,8 +101,8 @@ module.exports = function(app, passport) {
 
     app.post('/api/v1/auth/session', function(req,res,next){
         passport.authenticate('local-login', function(err, user, info) {
-            if (err) { return res.json({"error" : "Invalid username or password"}); }
-            if (!user) { return res.json({"error" : "Invalid username or password"}) }
+            if (err) { console.error(err); return res.json({"error" : "Invalid username or password"}); }
+            if (!user) { console.error("no user"); return res.json({"error" : "Invalid username or password"}) }
             req.logIn(user, {session:true}, function(err) {
                 if (err) { return next(err); }
                 user.set("last_login", new Date());
