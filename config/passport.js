@@ -112,17 +112,33 @@ module.exports = function (passport) {
             passReqToCallback: true // allows us to pass back the entire request to the callback
         },
         function (req, name, password, done) { // callback with email and password from our form
-            User.findOne('email', name.toLowerCase(), function (result) {
+            User.findOne('email', name.toLowerCase(), async function (result) {
                 if (!result.data) {
                     return done(null, false, {message: "bad user"}); // req.flash is the way to set flashdata using connect-flash
                 }
                 if (result.get('status') == 'invited'){
                     return done(null, false, {message: "invited user has no password"});
                 }
-                // if the user is found but the password is wrong
-                if (!bcrypt.compareSync(password, result.get("password"))) {
-                    return done(null, false, {message: "bad password"}); // create the loginMessage and save it to session as flashdata
+
+                let store = require("../config/redux/store");
+
+                //todo : this needs to be moved in plugin
+                let userManager = store.getState(true).pluginbot.services.userManager[0]
+                if(userManager){
+                    try {
+
+                        let authResult = await userManager.authenticate(result, password);
+                    } catch (e) {
+                        console.error(e)
+                        return done(null, false, {message: e}); // create the loginMessage and save it to session as flashdata
+
+                    }
+
+                }else{
+                    console.error("no user manager available...");
                 }
+
+                // if the user is found but the password is wrong
 
                 if (result.get("status") == "suspended") {
                     return done(null, false, {message: "Account Suspended"});

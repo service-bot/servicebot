@@ -3,6 +3,7 @@ let _ = require('lodash');
 let Stripe = require('../config/stripe');
 let Role = require('./role');
 let Fund = require('./fund');
+let promisifyProxy = require("../lib/promiseProxy");
 let references = [
     { "model": Role, "referenceField": "role_id", "direction":"to", "readOnly": true },
     { "model": Fund, "referenceField": "user_id", "direction":"from", "readOnly": true}
@@ -153,8 +154,9 @@ User.prototype.createWithStripe = new Proxy(createWithStripe, {
     }
 });
 
-User.prototype.updateWithStripe = function (callback) {
+let updateWithStripe = function (callback) {
     let self = this;
+    let store = require("../config/redux/store");
     self.data.email = self.data.email.toLowerCase();
     self.promiseValid()
         .then(function (customer_id) {
@@ -170,6 +172,10 @@ User.prototype.updateWithStripe = function (callback) {
         .then(function (customer_id) {
             self.update(function (err, result) {
                 callback(err, result);
+                if(!err){
+                    store.dispatchEvent("user_updated", result);
+                }
+
             });
         })
         .catch(function (err) {
@@ -367,5 +373,6 @@ User.findOnRelative = function(key, value, callback){
 };
 
 
+User.prototype.updateWithStripe = promisifyProxy(updateWithStripe, false);
 
 module.exports = User;

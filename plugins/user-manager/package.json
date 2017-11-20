@@ -1,0 +1,14 @@
+{
+  "name": "user-manager",
+  "version": "0.0.1",
+  "dependencies": {
+    
+  },
+  "pluginbot" : {
+    "server" : {
+      "main" : "main.js",
+      "consumes" : ["database", "userProvider"]
+    }
+  }
+
+}

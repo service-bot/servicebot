@@ -244,30 +244,22 @@ module.exports = function (router, passport) {
     });
 
 
-    router.put("/users/:id(\\d+)", validate(User), auth(null, User, "id"), function (req, res, next) {
-        let user = res.locals.valid_object;
-        if (user.get("id") == req.user.get("id")) {
-            delete user.data.role_id;
+    router.put("/users/:id(\\d+)", validate(User), auth(null, User, "id"), async function (req, res, next) {
+        //todo: this is dirty dirty way of getting plugin services... i want this code to be in plugin eventually
+        let userManager = store.getState(true).pluginbot.services.userManager[0]
+        if(!userManager){
+            console.error("User manager not defined...")
         }
-        req.body.id = req.params.id;
-        if (req.body.password) {
-            req.body.password = bcrypt.hashSync(req.body.password, 10);
+        let oldUser = res.locals.valid_object;
+        let newUserData = req.body;
+        if (oldUser.get("id") === req.user.get("id")) {
+            delete oldUser.data.role_id;
+            delete newUserData.role_id
         }
-        Object.assign(user.data, req.body);
-        console.log("updating the user");
-        user.updateWithStripe(function (err, result) {
-            if (!err) {
-                delete result.password;
-                let out = {
-                    message: 'User is successfully updated',
-                    results: result
-                }
-                res.json(out);
-                store.dispatchEvent("user_updated", result);
-            } else {
-                res.status(400).json({error: `Error updating the user ${err}`});
-            }
-        });
+
+        let updatedUser = await userManager.update(oldUser, newUserData);
+        res.json(updatedUser);
+
     });
 
     router.post("/users/:id(\\d+)/suspend", validate(User), auth(null, User, "id"), async function (req, res) {
