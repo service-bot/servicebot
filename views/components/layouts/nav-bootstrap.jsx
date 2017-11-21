@@ -7,6 +7,8 @@ import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
 import {NavNotification} from "../pages/notifications.jsx";
 import {AppMessage} from '../elements/app-message.jsx';
 import ReactTooltip from 'react-tooltip';
+import consume from "pluginbot-react/src/consume"
+
 import { connect } from "react-redux";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import $ from "jquery";
@@ -52,6 +54,9 @@ class NavBootstrap extends React.Component {
         this.toggleOnEditingGear = this.toggleOnEditingGear.bind(this);
         this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
         this.getLivemode = this.getLivemode.bind(this);
+        this.getPluginItems = this.getPluginItems.bind(this);
+
+
     }
 
     componentDidMount(){
@@ -98,6 +103,16 @@ class NavBootstrap extends React.Component {
             }
         });
     }
+    getPluginItems(){
+        let user = this.props.user;
+        return this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
+            if(route.isVisible(user)) {
+                acc.push(<li><Link key={index} to={route.path}>{route.name}</Link></li>)
+            }
+            return acc;
+        }, [])
+
+    }
 
     getMenuItems(style){
         if(isAuthorized({permissions: ["can_administrate", "can_manage"]})){
@@ -125,6 +140,7 @@ class NavBootstrap extends React.Component {
                             <li><Link to="/system-settings">System Settings</Link></li>
                         </ul>
                     </li>
+                    {this.getPluginItems()}
                 </ul>
             )
         }else{
@@ -143,6 +159,8 @@ class NavBootstrap extends React.Component {
                             {/*<li><Link to={`/billing-settings/${this.props.uid}`}>Billing Settings</Link></li>*/}
                         {/*</ul>*/}
                     {/*</li>*/}
+                    {this.getPluginItems()}
+
                 </ul>
             )
         }
@@ -269,4 +287,4 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-export default connect(mapStateToProps)(NavBootstrap);
+export default consume("routeDefinition")(connect(mapStateToProps)(NavBootstrap));

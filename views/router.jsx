@@ -9,6 +9,8 @@ import {Provider} from 'react-redux'
 import {StripeProvider} from 'react-stripe-elements';
 import PluginbotProvider from "pluginbot-react/src/provider"
 import cookie from 'react-cookie';
+import consume from "pluginbot-react/src/consume"
+
 // App
 import App from "./components/app.jsx";
 import Home from "./components/pages/home.jsx";
@@ -69,7 +71,7 @@ class AppRouter extends React.Component {
     }
     render(){
         const history = syncHistoryWithStore(browserHistory, this.props.store)
-
+        let user = this.props.user;
         return (
             <Router history={history}>
             <Route name="Home" path="/" component={App}>
@@ -132,6 +134,10 @@ class AppRouter extends React.Component {
                 <Route name="Manage Subscriptions" path="/service-instance"
                        component={ManageSubscriptions}/>
                 <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
+                {this.props.routeDefinition && this.props.routeDefinition.reduce((acc, route, index) => {
+                        acc.push(<Route key={index} name={route.name} path={route.path} component={route.component}/>)
+                    return acc
+                },[])}
             </Route>
             <Route name="Embed" path={"/service/:serviceId/embed"} component={Embed}/>
             <Route name="Automated Installation" path="setup" component={Setup}/>
@@ -143,8 +149,7 @@ class AppRouter extends React.Component {
 let mapDispatch = function(dispatch){
     return { initialize : () => dispatch(require("./store").initializedState()) }
 }
-
-AppRouter = connect(null, mapDispatch)(AppRouter);
+AppRouter = connect((state) => ({"user": state.user, "routeDefinition" : state.pluginbot.services.routeDefinition}), mapDispatch)(AppRouter);
 
 
 class AppWrapper extends React.Component {
