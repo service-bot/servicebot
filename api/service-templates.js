@@ -210,7 +210,15 @@ module.exports = function (router) {
         let permission_array = res.locals.permissions;
         let hasPermission = (permission_array.some(p => p.get("permission_name") == "can_administrate" || p.get("permission_name") == "can_manage"));
         if (serviceTemplate.get('published') == true || hasPermission) {
-            res.json(serviceTemplate.data);
+            if(hasPermission){
+                res.json(serviceTemplate.data);
+            }
+            else{
+                let publicProps = _.filter(serviceTemplate.data.references[ServiceTemplateProperty.table], (prop => !prop.private));
+                serviceTemplate.data.references[ServiceTemplateProperty.table] = publicProps;
+                delete serviceTemplate.data.overhead;
+                res.json(serviceTemplate.data);
+            }
         }
         else {
             next();
