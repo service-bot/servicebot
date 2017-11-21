@@ -87,7 +87,7 @@ class ModalPaymentSetup extends React.Component {
 
         if(self.props.justPayment) {
             return(
-                <Modal modalTitle={pageName} icon={icon} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
+                <Modal modalTitle={pageName} icon={icon} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true} width="700px">
                     <div className="table-responsive">
                         <div className="p-20">
                             <div className="row">
@@ -103,13 +103,11 @@ class ModalPaymentSetup extends React.Component {
             );
         } else {
             return(
-                <Modal modalTitle={pageName} icon={icon} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
+                <Modal modalTitle={pageName} icon={icon} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true} width="700px">
                     <div className="table-responsive">
                         <div className="p-20">
                             <div className="row">
                                 <div className="col-xs-12">
-                                    <p><strong>{self.getModalMessageTitle()}</strong></p>
-                                    <p className="small">{self.getModalMessageBody()}</p>
                                     {self.state.form === 'credit_card' &&
                                     <div><BillingForm uid={self.state.ownerId} handleResponse={self.handleResponse}/></div>
                                     }
