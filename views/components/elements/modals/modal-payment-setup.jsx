@@ -18,11 +18,16 @@ class ModalPaymentSetup extends React.Component {
         let currentUserId = cookie.load("uid");
         let uid = currentUserId
 
-
         if(this.props.ownerId){
             uid = this.props.ownerId;
         }
-        this.state = {form: 'credit_card', ownerId: uid, currentUserId: currentUserId};
+
+        this.state = {
+            form: 'credit_card',
+            ownerId: uid,
+            currentUserId: currentUserId
+        };
+
         this.handleCreditCard = this.handleCreditCard.bind(this);
         this.handleBankAccount = this.handleBankAccount.bind(this);
         this.handleBackBtn = this.handleBackBtn.bind(this);
@@ -80,34 +85,52 @@ class ModalPaymentSetup extends React.Component {
         let pageName = "Payment Setup";
         let icon = "fa-credit-card-alt";
 
-        return(
-            <Modal modalTitle={pageName} icon={icon} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
-                <div className="table-responsive">
-                    <div className="p-20">
-                        <div className="row">
-                            <div className="col-xs-12">
-                                <p><strong>{self.getModalMessageTitle()}</strong></p>
-                                <p className="small">{self.getModalMessageBody()}</p>
-                                {self.state.form === 'credit_card' &&
+        if(self.props.justPayment) {
+            return(
+                <Modal modalTitle={pageName} icon={icon} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
+                    <div className="table-responsive">
+                        <div className="p-20">
+                            <div className="row">
+                                <div className="col-xs-12">
+                                    {self.state.form === 'credit_card' &&
                                     <div><BillingForm uid={self.state.ownerId} handleResponse={self.handleResponse}/></div>
-                                }
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className={`modal-footer text-right p-b-20`}>
-                        {self.state.form === 'credit_card' ?
-                            <Buttons text="Back" btnType="default" onClick={self.handleBackBtn}/>
-                            :
-                            <div>
-                                <Buttons containerClass="inline" btnType="primary" text="Add Credit Card" onClick={self.handleCreditCard}/>
-                                <Buttons containerClass="inline" btnType="default" text="Cancel" onClick={self.props.hide}/>
+                </Modal>
+            );
+        } else {
+            return(
+                <Modal modalTitle={pageName} icon={icon} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
+                    <div className="table-responsive">
+                        <div className="p-20">
+                            <div className="row">
+                                <div className="col-xs-12">
+                                    <p><strong>{self.getModalMessageTitle()}</strong></p>
+                                    <p className="small">{self.getModalMessageBody()}</p>
+                                    {self.state.form === 'credit_card' &&
+                                    <div><BillingForm uid={self.state.ownerId} handleResponse={self.handleResponse}/></div>
+                                    }
+                                </div>
                             </div>
-                        }
+                        </div>
+                        <div className={`modal-footer text-right p-b-20`}>
+                            {self.state.form === 'credit_card' ?
+                                <Buttons text="Back" btnType="default" onClick={self.handleBackBtn}/>
+                                :
+                                <div>
+                                    <Buttons containerClass="inline" btnType="primary" text="Add Credit Card" onClick={self.handleCreditCard}/>
+                                    <Buttons containerClass="inline" btnType="default" text="Cancel" onClick={self.props.hide}/>
+                                </div>
+                            }
 
+                        </div>
                     </div>
-                </div>
-            </Modal>
-        );
+                </Modal>
+            );
+        }
     }
 }
 

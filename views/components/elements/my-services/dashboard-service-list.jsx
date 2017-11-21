@@ -13,12 +13,24 @@ class DashboardServiceList extends React.Component {
     constructor(props){
         super(props);
         let uid = cookie.load("uid");
-        this.state = { services: this.props.services, url: `/api/v1/service-instances/own`, loading:false};
+        this.state = {
+            services: this.props.services,
+            url: `/api/v1/service-instances/own`,
+            fundUrl: `/api/v1/users/${uid}`,
+            userFunds: [],
+            loading:false
+        };
         this.handleComponentUpdating = this.handleComponentUpdating.bind(this);
+        this.fetchUserFund = this.fetchUserFund.bind(this);
+    }
+
+    componentDidMount() {
+        let self = this;
+        self.fetchUserFund();
     }
 
     componentWillReceiveProps(nextProps){
-        if(this.props.services == nextProps.services){
+        if(this.props.services === nextProps.services){
             this.setState({services: nextProps.services});
         }
     }
@@ -26,6 +38,17 @@ class DashboardServiceList extends React.Component {
     handleComponentUpdating(){
         // this.fetchServiceInstances()
         this.props.handleComponentUpdating();
+    }
+
+    fetchUserFund(){
+        let self = this;
+        Fetcher(self.state.fundUrl).then(function (response) {
+            if (!response.error) {
+                if (response.references.funds.length > 0) {
+                    self.setState({userFunds : response.references.funds});
+                }
+            }
+        });
     }
 
     getTrigger(icon, title) {
@@ -41,8 +64,12 @@ class DashboardServiceList extends React.Component {
     getUserServices() {
         let services = this.state.services;
         let purchasedItems = {};
-        purchasedItems.actionItems = [], purchasedItems.quoteItems = [], purchasedItems.pendingItems = [],
-            purchasedItems.activeItems = [], purchasedItems.archivedItems = [];
+            purchasedItems.actionItems = [],
+            purchasedItems.quoteItems = [],
+            purchasedItems.pendingItems = [],
+            purchasedItems.activeItems = [],
+            purchasedItems.archivedItems = [];
+            purchasedItems.trialItems = [];
 
         services.forEach(service => {
             //Get service outstanding charges
@@ -59,6 +86,19 @@ class DashboardServiceList extends React.Component {
                     service.outstanding_charges = charges;
                 }
             }
+            //Get service trial status
+            let trial = service.payment_plan.trial_period_days;
+            if(service.status === "running" && trial > 0) {
+                let currentDate = new Date(service.subscribed_at * 1000);
+                let trialEnd = new Date(service.subscribed_at * 1000);
+                trialEnd.setDate(trialEnd.getDate() + trial);
+                //Service is trialing if the expiration is after current date
+                if(currentDate < trialEnd) {
+                    service.intrial = true;
+                }
+            } else {
+                service.intrial = false;
+            }
             //If a service has a charge item, its an action item
             if(((service.status !== "waiting_cancellation" && service.status !== "cancelled") && service.outstanding_charges) || (service.status === "requested" && service.payment_plan.amount > 0)) {
                 purchasedItems.actionItems.push(service);
@@ -72,6 +112,9 @@ class DashboardServiceList extends React.Component {
             } else if (service.status === "cancelled") {
                 purchasedItems.archivedItems.push(service);
                 service.icon = "fa fa-times";
+            } else if (service.intrial) {
+                purchasedItems.trialItems.push(service);
+                service.icon = "fa fa-clock-o";
             } else {
                 purchasedItems.activeItems.push(service);
                 service.icon = "fa fa-check";
@@ -89,6 +132,17 @@ class DashboardServiceList extends React.Component {
                             ))}
                         </div>
                     </Collapsible>
+                }
+
+                {purchasedItems.trialItems.length > 0 &&
+                <Collapsible triggerWhenOpen={this.getTrigger("fa-chevron-down", "Items in Trial")} trigger={this.getTrigger("fa-chevron-right", "View Items in Trial")} open={true} openedClassName="purple" className="purple">
+                    <div className="service-instance-box-content">
+                        <p>These services are currently in trial. If the fund is not added prior to the trial expiration, the service will be automatically cancelled.</p>
+                        {purchasedItems.trialItems.map(service => (
+                            <DashboardServiceListItem userFunds={this.state.userFunds} fetchFunds={this.fetchUserFund} key={"service-" + service.id} service={service} viewPath={`/service-instance/${service.id}`} handleComponentUpdating={this.handleComponentUpdating}/>
+                        ))}
+                    </div>
+                </Collapsible>
                 }
 
                 {purchasedItems.quoteItems.length > 0 &&

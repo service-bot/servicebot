@@ -49,18 +49,24 @@ class ServiceApplicationLauncher extends React.Component {
         let self = this;
         if(this.state.application === 'in_progress') {
             if(self.props.large) {
-                return (<DashboardWidget reversed={true} small={true} margins="m-b-0 m-t-0" widgetColor="#4404bb" widgetIcon="refresh fa-spin fa-fw" widgetData="Creating Sandbox" widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" />);
+                return (<DashboardWidget reversed={true} small={true} margins="m-b-0 m-t-0" widgetColor="#4404bb" widgetIcon="refresh fa-spin fa-fw" widgetData="Creating App" widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" />);
             } else {
-                return (<div className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher">Creating Sandbox <i className="fa fa-refresh fa-spin fa-fw"/></div>);
+                return (<div className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher">Creating App <i className="fa fa-refresh fa-spin fa-fw"/></div>);
             }
 
         } else {
             let websiteLink = this.props.instanceLink;
-            if(self.props.large) {
-                return (<DashboardWidget reversed={true} small={true} margins="m-b-0 m-t-0" link={websiteLink.data.value} widgetColor="#4404bb" widgetIcon="external-link-square" widgetData="Open Application" widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" widgetHoverClass="open-application" />);
+            //Make sure the URL is set.
+            if(websiteLink.data) {
+                if(self.props.large) {
+                    return (<DashboardWidget reversed={true} small={true} margins="m-b-0 m-t-0" link={websiteLink.data.value} widgetColor="#4404bb" widgetIcon="external-link-square" widgetData="Open Application" widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4" widgetHoverClass="open-application" />);
+                } else {
+                    return (<button className="btn btn-default btn-rounded btn-sm m-r-5" onClick={self.urlLink(websiteLink.data.value)} > Open Application <i className="fa fa-external-link-square" /></button>);
+                }
             } else {
-                return (<button className="btn btn-default btn-rounded btn-sm m-r-5" onClick={self.urlLink(websiteLink.data.value)} > Launch Application <i className="fa fa-external-link-square" /></button>);
+                return (null);
             }
+
 
         }
     }

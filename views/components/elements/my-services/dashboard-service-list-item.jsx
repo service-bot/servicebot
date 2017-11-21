@@ -6,6 +6,9 @@ import ModalManageCancellation from '../modals/modal-manage-cancellation.jsx';
 import ModalPayAllCharges from '../modals/modal-pay-all-charges.jsx';
 import {Price} from '../../utilities/price.jsx';
 import ApplicationLauncher from '../../elements/my-services/application-launcher.jsx';
+import TrialActionButton from '../../elements/my-services/trial-action-button.jsx';
+import ModalPaymentSetup from '../modals/modal-payment-setup.jsx';
+import Fetcher from '../../utilities/fetcher.jsx';
 
 class DashboardServiceListItem extends React.Component {
 
@@ -15,7 +18,8 @@ class DashboardServiceListItem extends React.Component {
             approveModal : false,
             cancelModal: false,
             undoCancelModal: false,
-            payChargeModal: false
+            payChargeModal: false,
+            fundModal : false
         };
 
         this.mapIntervalString = this.mapIntervalString.bind(this);
@@ -27,6 +31,8 @@ class DashboardServiceListItem extends React.Component {
         this.onUndoCancelClose = this.onUndoCancelClose.bind(this);
         this.handlePayCharges = this.handlePayCharges.bind(this);
         this.onPayChargesClose = this.onPayChargesClose.bind(this);
+        this.handleAddFund = this.handleAddFund.bind(this);
+        this.onAddFundClose = this.onAddFundClose.bind(this);
     }
 
     mapIntervalString(string){
@@ -35,7 +41,7 @@ class DashboardServiceListItem extends React.Component {
             case 'week'     : return 'Weekly';  break;
             case 'month'    : return 'Monthly'; break;
             case 'year'     : return 'Yearly';  break;
-            default         : return 'N/A';     break;
+            default         : return string;    break;
         }
     }
 
@@ -74,14 +80,15 @@ class DashboardServiceListItem extends React.Component {
         this.setState({ payChargeModal : false});
         this.props.handleComponentUpdating();
     }
-    urlLink(url){
-        return function(event) {
-            event.preventDefault();
-            console.log(url);
-            window.open(url, '_blank');
-        }
+    handleAddFund(event){
+        event.preventDefault();
+        this.setState({ fundModal : true});
     }
-
+    onAddFundClose(){
+        this.setState({ fundModal : false});
+        this.props.fetchFunds();
+        this.props.handleComponentUpdating();
+    }
 
 
     render () {
@@ -121,6 +128,8 @@ class DashboardServiceListItem extends React.Component {
                 return(
                     <ModalPayAllCharges myInstance={service} ownerId={service.user_id} show={self.state.payChargeModal} hide={self.onPayChargesClose}/>
                 )
+            } else if(self.state.fundModal){
+                return( <ModalPaymentSetup justPayment={true} modalCallback={self.onAddFundClose} ownerId={service.user_id} show={self.state.handleAddFund} hide={self.onAddFundClose}/> );
             }
         };
 
@@ -172,7 +181,9 @@ class DashboardServiceListItem extends React.Component {
                 } else if(status === "cancelled") {
                     return (null);
                 } else {
-                    return (<button to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleCancel}>Request Cancellation</button>);
+                    //Taking out the cancellation request for now.
+                    //return (<button to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleCancel}>Request Cancellation</button>);
+                    return (null);
                 }
             };
 
@@ -181,7 +192,11 @@ class DashboardServiceListItem extends React.Component {
                 if(status!== "cancelled" && websiteLink) {
                     return (<ApplicationLauncher serviceInstance={myService} instanceLink={websiteLink} />);
                 }
-            }
+            };
+
+            let getTrialActionButton = ()=>{
+                return (<TrialActionButton userFunds={self.props.userFunds} serviceInstance={myService} modalCallback={this.handleAddFund} />);
+            };
 
 
             return (
@@ -195,6 +210,7 @@ class DashboardServiceListItem extends React.Component {
                             <div className="xaas-data xaas-action">
                                 {getLinkActionButton()}
                                 {getActionButton()}
+                                {getTrialActionButton()}
                             </div>
                         </div>
                         {self.props.children}
