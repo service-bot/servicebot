@@ -122,21 +122,27 @@ class ServiceRequestForm extends React.Component {
 
         let getRequestText = () => {
             let serType = formJSON.type;
-            if (serType === "subscription") {
-                return (
-                    <span>{"Subscribe"}
-                        <Price value={newPrice}/>
-                        {formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' ' + formJSON.interval}
+            let trial = formJSON.trial_period_days !== 0;
+            if(trial){
+                return ("Get your Trial");
+            }
+            else {
+                if (serType === "subscription") {
+                    return (
+                        <span>{"Subscribe"}
+                            <Price value={newPrice}/>
+                            {formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' ' + formJSON.interval}
                     </span>
-                );
-            } else if (serType === "one_time") {
-                return (
-                    <span>{"Buy"} <Price value={newPrice}/></span>
-                );
-            } else if (serType === "custom") {
-                return ("Request");
-            } else {
-                return (<span><Price value={newPrice}/></span>)
+                    );
+                } else if (serType === "one_time") {
+                    return (
+                        <span>{"Buy"} <Price value={newPrice}/></span>
+                    );
+                } else if (serType === "custom") {
+                    return ("Request");
+                } else {
+                    return (<span><Price value={newPrice}/></span>)
+                }
             }
         };
         //Sort users and if user does not have name set, set it to the email value which will always be there
