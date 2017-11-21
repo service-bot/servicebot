@@ -2,7 +2,6 @@ let consume = require("pluginbot/effects/consume");
 
     let run = function*(config, provide, services) {
     let database = yield consume(services.database);
-    console.log("bad");
     let request = require("request");
     let semver = require("semver");
         let analytics = require("../../lib/analytics");

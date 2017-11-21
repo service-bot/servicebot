@@ -48,11 +48,10 @@ function BillingInfo(props) {
     return (
         <form>
             <CardSection/>
-            <Field name="name" type="text" component={inputField} label="Name"/>
-            <Field name="address_line1" type="text" component={inputField} label="Address Line 1"/>
-            <Field name="address_line2" type="text" component={inputField} label="Address Line 2"/>
-            <Field name="address_city" type="text" component={inputField} label="City"/>
-            <Field name="address_state" type="text" component={inputField} label="State"/>
+            <Field name="name" type="text" component={inputField} placeholder="Name on the card"/>
+            <Field name="address_line1" type="text" component={inputField} placeholder="Address"/>
+            <Field name="address_city" type="text" component={inputField} placeholder="City"/>
+            <Field name="address_state" type="text" component={inputField} placeholder="State"/>
             {/*<button type="submit">Submit</button>*/}
             <div className="text-right">
                 <Buttons btnType="primary" text="Save Card" onClick={props.handleSubmit} type="submit" value="submit"/>
@@ -108,7 +107,6 @@ class CreditCardForm extends React.Component {
                         personalInformation: {
                             name: card.name,
                             address_line1: card.address_line1,
-                            address_line2: card.address_line2,
                             address_city: card.address_city,
                             address_state: card.address_state,
                         }

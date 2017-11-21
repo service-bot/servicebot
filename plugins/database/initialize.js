@@ -166,6 +166,7 @@ let buildTables = async function(knex) {
             table.string('name');
             table.text('description', 'longtext');
             table.string('subscription_id');
+            table.bigInteger('subscribed_at');
             table.enu('status', ['running', 'requested', 'in_progress', 'waiting_cancellation', 'missing_payment', 'cancelled', 'completed']).defaultTo('missing_payment');
             table.enu('type', ['subscription', 'one_time', 'custom']).defaultTo('subscription');
             table.timestamps(true, true);

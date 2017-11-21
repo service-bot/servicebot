@@ -904,6 +904,18 @@ body.login .footer{
     color: white;
 }
 
+.Collapsible.purple {
+    border: 1px solid #6e03da;
+}
+.Collapsible.purple .Collapsible__trigger {
+    background: #6e03da;
+    color: white;
+}
+.Collapsible.purple .Collapsible__trigger:hover {
+    background: #5204a0;
+    color: white;
+}
+
 .Collapsible.yellow {
     border: 1px solid #ffa000;
 }
