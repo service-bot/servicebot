@@ -14,18 +14,27 @@ class ToolTip extends React.Component {
 
     render(){
         let self = this;
-        let text = ()=> {return ({__html: self.props.text || '?'})};
-        let style = this.props.style || {};
-        let placement = this.props.placement || 'left';
-        let title = this.props.title || 'tooltip';
-        let cssClass = this.props.cssClass || 'btn-default';
-        // let delay = this.props.delay || 0;
+        let text =  self.props.text || '-';
+        let style = self.props.style || {};
+        let placement = self.props.placement || 'left';
+        let title = self.props.title || 'tooltip';
+        let cssClass = self.props.cssClass || 'btn-default';
+        let clickAction = self.props.onClick || null;
 
+        let getText = ()=> {
+            if (self.props.icon) {
+                return (<div><i className={`fa ${self.props.icon}`} /> {text}</div>);
+            } else {
+                return (null);
+            }
+        };
+
+        // let delay = this.props.delay || 0;
         return(
             <button type="button" ref="tooltip" style={style}
                     className={`btn ${cssClass}`} data-placement={placement}
-                    title={title}>
-                <div dangerouslySetInnerHTML={text()}/>
+                    title={title} onClick={clickAction}>
+                {getText()}
             </button>
         );
     }
