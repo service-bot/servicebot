@@ -177,11 +177,13 @@ class RequestPageFeatured extends React.Component{
                     <div className="request-featured-section" style={featuredTextStyle}>
                         <h1 className="featured-title" style={featuredTextStyle}>{name}</h1>
                         <p className="featured-body" style={featuredTextStyle}>{description}</p>
-                        <h1 className="featured-price" style={featuredTextStyle}>{getPrice(templateData)}
-                            {(trial_period_days>0) &&
-                            <span className="free-trial" style={featuredTextStyle}>{trial_period_days} Day Free Trial</span>
-                            }
-                        </h1>
+                        {(trial_period_days>0) ? (
+                            <h1 className="featured-price" style={featuredTextStyle}>{trial_period_days} Day Free Trial
+                                <span className="free-trial" style={featuredTextStyle}>{getPrice(templateData)}</span>
+                            </h1>
+                        ) : (
+                            <h1 className="featured-price" style={featuredTextStyle}>{getPrice(templateData)}</h1>
+                        )}
                     </div>
                     {this.state.editingGear &&
                     <AdminEditingGear toggle={this.toggleEditingMode} name="Heading Settings"/>
