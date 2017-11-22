@@ -128,6 +128,12 @@ class CreditCardForm extends React.Component {
             'url': `/api/v1/funds`
         };
 
+        if(this.props.submitAPI) {
+            submissionRequest.url = this.props.submitAPI;
+        }
+
+
+
         let {hasCard, displayName, card: {brand, last4, exp_month, exp_year}} = this.state;
 
         let getBrandIcon = ()=>{
