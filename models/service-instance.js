@@ -147,6 +147,7 @@ let subscribe = function (callback) {
             return new Promise(function (resolve, reject) {
                 self.data.subscription_id = subscription.id;
                 self.data.status = "running";
+                self.data.subscribed_at = subscription.created;
                 self.update(function (err, updated_instance) {
                     if(!err) {
                         return resolve(updated_instance);

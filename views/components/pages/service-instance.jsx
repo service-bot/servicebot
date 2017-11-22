@@ -1,4 +1,5 @@
 import React from 'react';
+import cookie from 'react-cookie';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {Link, browserHistory} from 'react-router';
 import Load from '../utilities/load.jsx';
@@ -23,6 +24,7 @@ import ModalAddChargeItem from '../elements/modals/modal-add-charge-item.jsx';
 import ModalPayChargeItem from '../elements/modals/modal-pay-charge-item.jsx';
 import ModalCancelChargeItem from '../elements/modals/modal-cancel-charge-item.jsx';
 import ModalPayAllCharges from '../elements/modals/modal-pay-all-charges.jsx';
+import ModalPaymentSetup from '../elements/modals/modal-payment-setup.jsx';
 import ServiceInstanceFiles from '../elements/service-instance/service-instance-files.jsx';
 import DateFormat from "../utilities/date-format.jsx";
 import $ from "jquery";
@@ -33,10 +35,13 @@ class ServiceInstance extends React.Component {
 
     constructor(props){
         super(props);
+        let uid = cookie.load("uid");
         let id = this.props.params.instanceId;
         this.state = {  instanceId: id,
                         instance: false,
                         url: `/api/v1/service-instances/${id}`,
+                        fundUrl: `/api/v1/users/${uid}`,
+                        userFunds: [],
                         loading:true,
                         approveModal : false,
                         cancelModal: false,
@@ -50,7 +55,9 @@ class ServiceInstance extends React.Component {
                         payChargeItemId: false,
                         cancelChargeItemId: false,
                         cancelChargeItem: false,
-                        payAllChargesModal: false};
+                        payAllChargesModal: false,
+                        fundModal: false
+        };
         this.fetchInstance = this.fetchInstance.bind(this);
         this.handleApprove = this.handleApprove.bind(this);
         this.onApproveClose = this.onApproveClose.bind(this);
@@ -75,6 +82,8 @@ class ServiceInstance extends React.Component {
         this.handlePayAllChargesModal = this.handlePayAllChargesModal.bind(this);
         this.onPayAllChargesModalClose = this.onPayAllChargesModalClose.bind(this);
         this.getAdditionalCharges = this.getAdditionalCharges.bind(this);
+        this.handleAddFund = this.handleAddFund.bind(this);
+        this.onAddFundClose = this.onAddFundClose.bind(this);
     }
 
     componentDidMount() {
@@ -86,6 +95,7 @@ class ServiceInstance extends React.Component {
 
         let self = this;
         self.fetchInstance();
+        self.fetchUserFund();
     }
 
 
@@ -105,6 +115,17 @@ class ServiceInstance extends React.Component {
         }).catch(function(err){
             browserHistory.push("/");
         })
+    }
+
+    fetchUserFund(){
+        let self = this;
+        Fetcher(self.state.fundUrl).then(function (response) {
+            if (!response.error) {
+                if (response.references.funds.length > 0) {
+                    self.setState({userFunds : response.references.funds});
+                }
+            }
+        });
     }
 
 
@@ -203,6 +224,15 @@ class ServiceInstance extends React.Component {
         this.setState({payAllChargesModal: false});
         this.handleComponentUpdating();
     }
+    handleAddFund(event){
+        event.preventDefault();
+        this.setState({ fundModal : true});
+    }
+    onAddFundClose(){
+        this.setState({ fundModal : false});
+        this.fetchUserFund();
+        this.props.handleComponentUpdating();
+    }
 
     getStatusButtons(){
         let self = this;
@@ -272,8 +302,8 @@ class ServiceInstance extends React.Component {
 
     render () {
         let self = this;
-        let pageName = `Purchased Item`;
-        let subtitle = `Purchased `;
+        let pageName = `My Account > Purchased Item`;
+        let subtitle = `Updated: `;
 
         if(this.state.loading){
             return (
@@ -294,10 +324,6 @@ class ServiceInstance extends React.Component {
             const myInstance = this.state.instance;
             const myInstanceChargeItems = _.groupBy(myInstance.references.charge_items, 'approved');
             let id, name, amount, interval, owner, ownerId = null;
-            if(myInstance.status == "requested") {
-                pageName = `Requested Item`;
-                subtitle = `Requested `;
-            }
 
             //Gather data first
             if( self.state.instance){
@@ -336,12 +362,14 @@ class ServiceInstance extends React.Component {
                     return( <ModalCancelChargeItem myInstance={self.state.instance} ownerId={ownerId} chargeId={self.state.cancelChargeItemId} show={self.state.cancelChargeItemModal} hide={self.onCancelChargeItemModalClose}/> );
                 } else if(self.state.payAllChargesModal){
                     return( <ModalPayAllCharges myInstance={self.state.instance} ownerId={ownerId} show={self.state.payAllChargesModal} hide={self.onPayAllChargesModalClose}/> );
+                } else if(self.state.fundModal){
+                    return( <ModalPaymentSetup justPayment={true} modalCallback={self.onAddFundClose} ownerId={self.state.instance.user_id} show={self.state.handleAddFund} hide={self.onAddFundClose}/> );
                 }
             };
 
             return(
                 <Authorizer>
-                    <Jumbotron pageName={pageName} subtitle={<span>{subtitle}<strong><DateFormat date={myInstance.created_at} time /></strong> - {myInstance.description}</span>} />
+                    <Jumbotron pageName={pageName} subtitle={<span>{subtitle}<strong><DateFormat date={myInstance.updated_at} time /></strong></span>} />
                     {/*<Jumbotron pageName={pageName} subtitle={`${myInstance.description} . ${myInstance.subscription_id || ""}`} />*/}
                     <div className="page-service-instance">
                         <Content>
@@ -365,6 +393,8 @@ class ServiceInstance extends React.Component {
                                                                     cancelUndo={self.handleUndoCancel}
                                                                     allCharges={myInstanceChargeItems}
                                                                     handleAllCharges={self.handlePayAllChargesModal}
+                                                                    userFunds={self.state.userFunds}
+                                                                    fundModal={self.handleAddFund}
                                         />
                                     </div>
                                 </div>
