@@ -329,6 +329,7 @@ module.exports = function (router) {
             let references = serviceTemplate.references;
             let props = references ? references.service_template_properties : null;
             let req_body = req.body;
+            req_body.references.service_template_properties = req.locals.merged_props;
             let Promise = require("bluebird");
             let permission_array = res.locals.permissions || [];
             let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
@@ -431,7 +432,8 @@ module.exports = function (router) {
                     user_id : req_body.client_id || req.user.get("id"),
                     requested_by : req.user.get("id"),
                     description : req_body.description || serviceTemplate.get("description"),
-                    name : req_body.name || serviceTemplate.get("name")
+                    name : req_body.name || serviceTemplate.get("name"),
+                    trial_period_days : req_body.trial_period_days || serviceTemplate.get("trial_period_days")
                 };
 
 
@@ -439,7 +441,7 @@ module.exports = function (router) {
                 res.locals.overrides = {
                     user_id : req.user.get("id"),
                     requested_by : req.user.get("id"),
-
+                    trial_period_days : serviceTemplate.get("trial_period_days") || 0
                 }
             }
 

@@ -34,7 +34,7 @@ let buildPayStructure = function (payment_object, callback){
         'currency' : 'usd',
         'interval' : 'month',
         'interval_count' : 1,
-        'statement_descriptor' : 'ServiceBot Subscription',
+        'statement_descriptor' : 'Subscription',
         'trial_period_days' : 0
     };
     let new_plan = _.pick(payment_object ,plan_arr);
