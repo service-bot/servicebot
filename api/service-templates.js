@@ -483,6 +483,7 @@ module.exports = function (router) {
             }
 
         } catch (error) {
+            console.error(error);
             return res.status(500).json({error});
         }
 
