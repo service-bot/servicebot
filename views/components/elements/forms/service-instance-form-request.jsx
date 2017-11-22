@@ -124,7 +124,7 @@ class ServiceRequestForm extends React.Component {
             let serType = formJSON.type;
             let trial = formJSON.trial_period_days !== 0;
             if(trial){
-                return ("Get your Trial");
+                return (<span>{"Get your Trial <"} <Price value={newPrice}/> {" afterwords>"}</span>)
             }
             else {
                 if (serType === "subscription") {
