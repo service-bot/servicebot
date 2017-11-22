@@ -361,19 +361,29 @@ module.exports = function (router) {
 
                 let globalProps = store.getState().options;
                 let roleId = globalProps['default_user_role'];
-                let newUser = new User({"email": req_body.email, "role_id": roleId, "status": "invited"});
 
+                let newUser = new User({"email": req_body.email, "role_id": roleId, "status": "invited"});
+                if(req_body.password){
+                    let password = require("bcryptjs").hashSync(req_body.password, 10);
+
+                    newUser.set("password", password)
+                    newUser.set("status", "active");
+                }
                 //promisify the createWithStripe function
                 let createUser = Promise.promisify(newUser.createWithStripe, {context: newUser});
 
                 //create the new user
                 let createdUser = await createUser();
-                let invite = new Invitation({"user_id": createdUser.get("id")});
-                let createInvite = Promise.promisify(invite.create, {context: invite});
+                if(!req_body.password) {
+                    let invite = new Invitation({"user_id": createdUser.get("id")});
+                    let createInvite = Promise.promisify(invite.create, {context: invite});
 
-                //create the invitation for the user.
-                let createdInvite = await createInvite();
+                    //create the invitation for the user.
+                    let createdInvite = await createInvite();
+                    responseJSON.api = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + createdInvite.get("token");
+                    responseJSON.url = req.protocol + '://' + req.get('host') + "/invitation/" + createdInvite.get("token");
 
+                }
                 let user_role = new Role({id : createdUser.get("role_id")}) ;
 
                 // todo : remove this once it supports promises
@@ -400,8 +410,6 @@ module.exports = function (router) {
                 await loginPromise;
 
                 //set some data for the response
-                responseJSON.api = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + createdInvite.get("token");
-                responseJSON.url = req.protocol + '://' + req.get('host') + "/invitation/" + createdInvite.get("token");
 
                 //currently the permissions that the client app sets get passed here.
                 responseJSON.permissions = await permissionPromise;
@@ -466,7 +474,8 @@ module.exports = function (router) {
             });
 
             try {
-                if (isNew) {
+                if (isNew && req_body.password === undefined) {
+
                     newInstance.set("api", responseJSON.api);
                     newInstance.set("url", responseJSON.url);
                     store.dispatchEvent("service_instance_requested_new_user", newInstance);
