@@ -107,44 +107,53 @@ class ServiceListItem extends React.Component {
         let serviceDescription = myService.description;
         let category = _.get(myService, 'references.service_categories[0].name', '');
 
+        let getPriceOrTrial = ()=>{
+            if(_.get(this.props.options, 'show_trial.value') == 'false' || myService.trial_period_days <= 0) {
+                return getPrice();
+            }
+            else{
+                return <span>{myService.trial_period_days} {"Day Free Trial"}</span>;
+            }
+        };
 
         let getPrice = ()=>{
             let serType = myService.type;
-            if(_.get(this.props.options, 'show_pricing.value') == 'true') {
-                if (serType === "subscription") {
-                    return (
-                        <span>
-                        <Price value={myService.amount}/>
-                            {myService.interval_count === 1 ? ' /' : ' / ' + myService.interval_count} {' ' + myService.interval}
-                    </span>
-                    );
-                } else if (serType === "one_time") {
-                    return (<span><Price value={myService.amount}/></span>);
-                } else if (serType === "custom") {
-                    return false;
-                } else {
-                    return (<span><Price value={myService.amount}/></span>)
-                }
-            }
-            else{
+            if (serType === "subscription") {
+                return (
+                    <span>
+                    <Price value={myService.amount}/>
+                        {myService.interval_count === 1 ? ' /' : ' / ' + myService.interval_count} {' ' + myService.interval}
+                </span>
+                );
+            } else if (serType === "one_time") {
+                return (<span><Price value={myService.amount}/></span>);
+            } else if (serType === "custom") {
                 return false;
+            } else {
+                return (<span><Price value={myService.amount}/></span>)
             }
+
         };
 
         let getRequestText = ()=>{
             let serType = myService.type;
-            if(_.get(this.props.options, 'service_box_request_button_text.value') === "default"){
-                if (serType === "subscription"){
-                    return ("Subscribe");
-                }else if (serType === "one_time"){
-                    return ("Buy");
-                }else if (serType === "custom"){
-                    return ("Request");
-                }else{
-                    return ("")
+            if(_.get(this.props.options, 'show_trial.value') == 'false' || myService.trial_period_days <= 0) {
+                if (_.get(this.props.options, 'service_box_request_button_text.value') === "default") {
+                    if (serType === "subscription") {
+                        return ("Subscribe");
+                    } else if (serType === "one_time") {
+                        return ("Buy");
+                    } else if (serType === "custom") {
+                        return ("Request");
+                    } else {
+                        return ("")
+                    }
+                } else {
+                    return (_.get(this.props.options, 'service_box_request_button_text.value'));
                 }
-            }else{
-                return(_.get(this.props.options, 'service_box_request_button_text.value'));
+            }
+            else{
+                return ("Afterwards")
             }
         };
 
@@ -175,7 +184,7 @@ class ServiceListItem extends React.Component {
                                 </div>
                             </div>
                             <div className="card-footer" style={style.body}>
-                                <span className="price">{getPrice()}</span>
+                                <span className="price">{getPriceOrTrial()}</span>
                             </div>
                         </div>
                     </div>
