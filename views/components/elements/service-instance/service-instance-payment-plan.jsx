@@ -8,6 +8,8 @@ import DashboardWidget from "../../elements/my-services/dashboard-widget.jsx";
 import ApplicationLauncher from '../../elements/my-services/application-launcher.jsx';
 import {Link, browserHistory} from 'react-router';
 import ReactTooltip from 'react-tooltip';
+import DateFormat from "../../utilities/date-format.jsx";
+import TrialActionButton from '../../elements/my-services/trial-action-button.jsx';
 
 class ServiceInstancePaymentPlan extends React.Component {
 
@@ -20,18 +22,33 @@ class ServiceInstancePaymentPlan extends React.Component {
             let totalCharges = 0;
             unpaidCharges.map((charge)=>{ totalCharges+= charge.amount; });
 
+            //Get service trial status
+            let inTrial = false;
+            let trial = self.props.service.payment_plan.trial_period_days;
+            if(self.props.service.status === "running" && trial > 0) {
+                let currentDate = new Date(self.props.service.subscribed_at * 1000);
+                let trialEnd = new Date(self.props.service.subscribed_at * 1000);
+                trialEnd.setDate(trialEnd.getDate() + trial);
+                //Service is trialing if the expiration is after current date
+                if(currentDate < trialEnd) {
+                    inTrial = true;
+                }
+            }
+
             if(self.props.status === "requested" && totalCharges === 0 && self.props.service.payment_plan.amount === 0) {
-                return (<DashboardWidget widgetColor="#7f04bb" widgetIcon="undo" widgetData="Pending Quote" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="pending-quote" />);
+                return (<DashboardWidget small={true} widgetColor="#7f04bb" widgetIcon="undo" widgetData="Pending Quote" widgetClass="col-12" widgetHoverClass="pending-quote" />);
             } else if(self.props.status === "requested") {
-                return (<DashboardWidget widgetColor="#0d9e6a" clickAction={this.props.approval} widgetIcon="usd" widgetData="Pay Now" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="widget-hover" />);
+                return (<DashboardWidget small={true} widgetColor="#0d9e6a" clickAction={this.props.approval} widgetIcon="usd" widgetData="Pay Now" widgetClass="col-12" widgetHoverClass="widget-hover" />);
             } else if(self.props.status === "waiting_cancellation") {
-                return (<DashboardWidget widgetColor="#ffa000" clickAction={this.props.cancelUndo} widgetIcon="hourglass-end" widgetData="Cancel Pending" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="cancel-pending" />);
+                return (<DashboardWidget small={true} widgetColor="#ffa000" clickAction={this.props.cancelUndo} widgetIcon="hourglass-end" widgetData="Cancel Pending" widgetClass="col-12" widgetHoverClass="cancel-pending" />);
             } else if(self.props.status === "cancelled") {
-                return (<DashboardWidget widgetColor="#000000" clickAction={this.props.approval} widgetIcon="times" widgetData="Cancelled" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="restart" />);
+                return (<DashboardWidget small={true} widgetColor="#000000" clickAction={this.props.approval} widgetIcon="times" widgetData="Cancelled" widgetClass="col-12" widgetHoverClass="restart" />);
             } else if(this.props.allCharges.false && this.props.allCharges.false.length > 0) {
-                return(<DashboardWidget widgetColor="#0d9e6a" clickAction={this.props.handleAllCharges} widgetIcon="usd" widgetData="Pay Now" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="widget-hover" />)
+                return(<DashboardWidget small={true} widgetColor="#0d9e6a" clickAction={this.props.handleAllCharges} widgetIcon="usd" widgetData="Pay Now" widgetClass="col-12" widgetHoverClass="widget-hover" />)
+            } else if((self.props.status === "running" || self.props.status === "in_progress") && inTrial) {
+                return (<DashboardWidget small={true} widgetColor="#0069ff" clickAction={this.props.cancel} widgetIcon="clock-o" widgetData="Trialing" widgetClass="col-12" widgetHoverClass="cancel" />);
             } else if(self.props.status === "running" || self.props.status === "in_progress") {
-                return (<DashboardWidget widgetColor="#0069ff" clickAction={this.props.cancel} widgetIcon="check" widgetData="Active Item" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5" widgetHoverClass="cancel" />);
+                return (<DashboardWidget small={true} widgetColor="#0069ff" clickAction={this.props.cancel} widgetIcon="check" widgetData="Active Item" widgetClass="col-12" widgetHoverClass="cancel" />);
             } else {
                 return (null);
             }
@@ -47,31 +64,39 @@ class ServiceInstancePaymentPlan extends React.Component {
         let instance = self.props.service;
         let websiteLink = (instance.references.service_instance_properties.filter(link => link.name === "url"))[0];
         if(status!== "cancelled" && websiteLink) {
-            return (
-                <div>
-                    <div className="col-xs-12 col-sm-6 col-md-8 col-lg-8 col-xl-4 p-r-10" />
-                    <ApplicationLauncher serviceInstance={instance} instanceLink={websiteLink} large={true} />
-                </div>
-            );
+            return (<ApplicationLauncher serviceInstance={instance} instanceLink={websiteLink} large={true} />);
         }
     }
 
     getServiceType(){
         if(this.props.service.type === "subscription") {
-            return (
-                <div>
-                    <DashboardWidget plain={true} widgetIcon="circle" widgetData={this.props.service.name} widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-l-5 p-r-5" />
-                    <DashboardWidget plain={true} widgetIcon="circle" widgetData={getPrice(this.props.service.payment_plan, this.props.service.type)} widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-l-5 p-l-5" />
-                </div>
-            );
+            return (<DashboardWidget plain={true} widgetIcon="circle" widgetData={getPrice(this.props.service.payment_plan, this.props.service.type)} widgetClass="col-12 instance-price" />);
         } else {
-            return (<DashboardWidget plain={true} widgetIcon="circle" widgetData={this.props.service.name} widgetClass="col-xs-12 col-sm-6 col-md-8 col-xl-8 p-l-5" />)
+            return (null);
         }
+    }
+
+    getTrialButton(){
+        if(this.props.userFunds) {
+            return (<TrialActionButton large={true} userFunds={this.props.userFunds} serviceInstance={this.props.service} modalCallback={this.props.fundModal} />);
+        } else {
+            return (null);
+        }
+    }
+
+    getServiceDetail(){
+        return (
+            <div>
+                {this.getServiceStatus()}
+                {this.getTrialButton()}
+                {this.getServiceType()}
+            </div>
+        );
     }
 
     getCustomerInfo(){
         let owner = this.props.owner;
-        if(owner.status != "suspended") {
+        if(owner.status !== "suspended") {
             return (
                 <Authorizer permissions={['can_administrate']}>
                     <div className="service-instance-box black">
@@ -119,17 +144,18 @@ class ServiceInstancePaymentPlan extends React.Component {
     render () {
         let paymentPlan = this.props.instancePaymentPlan;
 
-        if(paymentPlan != null){
-
+        if(paymentPlan !== null){
             return (
                 <div className="">
-                    <div className="row">
-
-                        {this.getLinkActionButton()}
-                    </div>
-                    <div className="row">
-                        {this.getServiceStatus()}
-                        {this.getServiceType()}
+                    <div className="row m-b-10">
+                        <div className="col-xs-12 col-sm-6 col-md-8 col-lg-8 col-xl-8 p-r-5">
+                            <h1>{this.props.service.name}</h1>
+                            <p>{this.props.service.description} <br/> Purchased <strong><DateFormat date={this.props.service.created_at} time /></strong></p>
+                            {this.getLinkActionButton()}
+                        </div>
+                        <div className="col-xs-12 col-sm-6 col-md-4 col-lg-4 col-xl-4 p-l-5">
+                            {this.getServiceDetail()}
+                        </div>
 
                     </div>
                     {this.getCustomerInfo()}

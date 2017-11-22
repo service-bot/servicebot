@@ -135,7 +135,7 @@ class DashboardServiceList extends React.Component {
                 }
 
                 {purchasedItems.trialItems.length > 0 &&
-                <Collapsible triggerWhenOpen={this.getTrigger("fa-chevron-down", "Items in Trial")} trigger={this.getTrigger("fa-chevron-right", "View Items in Trial")} open={true} openedClassName="purple" className="purple">
+                <Collapsible triggerWhenOpen={this.getTrigger("fa-chevron-down", "Items in Trial")} trigger={this.getTrigger("fa-chevron-right", "View Items in Trial")} open={true} openedClassName="navy" className="navy">
                     <div className="service-instance-box-content">
                         <p>These services are currently in trial. If the fund is not added prior to the trial expiration, the service will be automatically cancelled.</p>
                         {purchasedItems.trialItems.map(service => (

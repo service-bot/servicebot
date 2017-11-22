@@ -916,6 +916,18 @@ body.login .footer{
     color: white;
 }
 
+.Collapsible.navy {
+    border: 1px solid #034bda;
+}
+.Collapsible.navy .Collapsible__trigger {
+    background: #034bda;
+    color: white;
+}
+.Collapsible.navy .Collapsible__trigger:hover {
+    background: #0741b3;
+    color: white;
+}
+
 .Collapsible.yellow {
     border: 1px solid #ffa000;
 }
