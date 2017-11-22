@@ -1,8 +1,6 @@
 import React from 'react';
-import Fetcher from '../../utilities/fetcher.jsx';
-import ModalPaymentSetup from '../modals/modal-payment-setup.jsx';
-import InfoToolTip from "../../elements/tooltips/info-tooltip.jsx";
 import ToolTip from '../../elements/tooltips/tooltip.jsx';
+import DashboardWidget from "./dashboard-widget.jsx";
 
 class TrialFundAddition extends React.Component {
 
@@ -38,12 +36,16 @@ class TrialFundAddition extends React.Component {
         }
 
         if(inTrial) {
-            return (
-                <span>
-                    <ToolTip text="Add Fund" title={trialExpires} icon="fa-credit-card-alt" cssClass="btn-default btn-rounded btn-sm" onClick={self.props.modalCallback} />
-                </span>
-
-            );
+            if(self.props.large) {
+                return (
+                    <div>
+                        <DashboardWidget small={true} clickAction={self.props.modalCallback} margins="m-t-0" widgetColor="#04bb8a" widgetIcon="credit-card" widgetData="Add Fund" widgetClass="col-12" widgetHoverClass="widget-hover" />
+                        <div className="text-center"><strong>{trialExpires}</strong></div>
+                    </div>
+                );
+            } else {
+                return (<ToolTip text="Add Fund" title={trialExpires} icon="fa-credit-card-alt" cssClass="btn-default btn-rounded btn-sm" onClick={self.props.modalCallback} />);
+            }
         } else {
             return (null);
         }

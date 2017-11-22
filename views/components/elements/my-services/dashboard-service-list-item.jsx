@@ -195,7 +195,11 @@ class DashboardServiceListItem extends React.Component {
             };
 
             let getTrialActionButton = ()=>{
-                return (<TrialActionButton userFunds={self.props.userFunds} serviceInstance={myService} modalCallback={this.handleAddFund} />);
+                if(self.props.userFunds) {
+                    return (<TrialActionButton userFunds={self.props.userFunds} serviceInstance={myService} modalCallback={this.handleAddFund} />);
+                } else {
+                    return (null);
+                }
             };
 
 
