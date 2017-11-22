@@ -1,4 +1,5 @@
 import React from 'react';
+import cookie from 'react-cookie';
 import {browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Jumbotron from "../layouts/jumbotron.jsx";
@@ -21,6 +22,7 @@ class BillingSettings extends React.Component {
     }
     render () {
         let pageName = this.props.route.name;
+        let spk = cookie.load("spk");
         return(
             <Authorizer>
                 <Jumbotron pageName={pageName} location={this.props.location}/>
@@ -28,7 +30,7 @@ class BillingSettings extends React.Component {
                     <Content>
                         <div className="row m-b-20">
                             <div className="col-md-10 col-lg-8 col-sm-12 col-md-offset-1 col-lg-offset-2">
-                                <BillingForm uid={this.props.uid}/>
+                                <BillingForm uid={this.props.uid} spk={spk}/>
                             </div>
                         </div>
                     </Content>

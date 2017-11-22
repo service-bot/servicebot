@@ -1,5 +1,4 @@
 import React from 'react';
-import {Elements, injectStripe, CardElement} from 'react-stripe-elements';
 import Fetcher from "../../utilities/fetcher.jsx"
 import {get, has} from "lodash";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
