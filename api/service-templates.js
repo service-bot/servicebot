@@ -329,7 +329,7 @@ module.exports = function (router) {
             let references = serviceTemplate.references;
             let props = references ? references.service_template_properties : null;
             let req_body = req.body;
-            req_body.references.service_template_properties = req.locals.merged_props;
+            req_body.references.service_template_properties = res.locals.merged_props;
             let Promise = require("bluebird");
             let permission_array = res.locals.permissions || [];
             let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
@@ -425,7 +425,6 @@ module.exports = function (router) {
 
             //adjusted price...
             req_body.amount = res.locals.adjusted_price;
-            req_body.references.service_template_properties = res.locals.merged_props;
             //elevated accounts can override things
             if (hasPermission) {
                 res.locals.overrides = {
