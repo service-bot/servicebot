@@ -28,7 +28,7 @@ import ModalUserLogin from "../modals/modal-user-login.jsx";
 import {addAlert} from "../../utilities/actions";
 import {setUid, fetchUsers, setUser} from "../../utilities/actions";
 import {required, email, numericality, length} from 'redux-form-validators'
-import {injectStripe, Elements} from 'react-stripe-elements';
+import {injectStripe, Elements, StripeProvider} from 'react-stripe-elements';
 import cookie from 'react-cookie';
 
 
@@ -458,10 +458,14 @@ ServiceInstanceForm = injectStripe(ServiceInstanceForm);
 class FormWrapper extends React.Component {
 
     render() {
+        let spk = cookie.load("spk");
         return (
-            <Elements>
-                <ServiceInstanceForm {...this.props}/>
-            </Elements>
+            <StripeProvider apiKey={spk || "no_public_token"}>
+                <Elements>
+                    <ServiceInstanceForm {...this.props}/>
+                </Elements>
+            </StripeProvider>
+
         )
     }
 }

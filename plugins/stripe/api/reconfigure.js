@@ -100,6 +100,16 @@ module.exports = function(router, knex, stripe) {
         });
     };
 
+    let getSPK = function (req, res) {
+        SystemOptions.findOne('option', 'stripe_publishable_key', function (option_publishable_key) {
+            if(!option_publishable_key.data){
+                return res.status(200).json({spk:"NO KEY"});
+            }
+            let publishable_key = option_publishable_key.data.value;
+            return res.status(200).json({spk: publishable_key});
+        });
+    };
+
     let preconfigure =  function (req, res) {
         let stripe_config = req.body;
         let stripe_publishable = stripe_config.stripe_public;
@@ -239,7 +249,13 @@ module.exports = function(router, knex, stripe) {
             middleware : [getStripeKeys],
             permissions : ["get_stripe_keys"],
             description : "Get stripe keys"
-
+        },
+        {
+            endpoint : "/stripe/spk",
+            method : "get",
+            middleware : [getSPK],
+            permissions : [],
+            description : "Get stripe publishable key"
         }
     ];
 }

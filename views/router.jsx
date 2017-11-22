@@ -167,11 +167,9 @@ class AppWrapper extends React.Component {
         let props = this.props;
         if (this.state.pluginbot) {
             return (
-            <StripeProvider apiKey={cookie.load("spk") || "no_public_token"}>
-                <PluginbotProvider pluginbot={this.state.pluginbot}>
-                    <AppRouter store={this.state.pluginbot.store}/>
-                </PluginbotProvider>
-            </StripeProvider>
+            <PluginbotProvider pluginbot={this.state.pluginbot}>
+                <AppRouter store={this.state.pluginbot.store}/>
+            </PluginbotProvider>
             );
         }else{
             return <div>Initializing...</div>
