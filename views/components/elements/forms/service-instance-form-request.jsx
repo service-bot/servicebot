@@ -124,12 +124,12 @@ class ServiceRequestForm extends React.Component {
             let serType = formJSON.type;
             let trial = formJSON.trial_period_days !== 0;
             if(trial){
-                return (<span>{"Get your Trial -"} <Price value={newPrice}/> {" afterwards"}</span>)
+                return ("Get your Free Trial")
             }
             else {
                 if (serType === "subscription") {
                     return (
-                        <span>{"Subscribe"}
+                        <span>{"Subscribe "}
                             <Price value={newPrice}/>
                             {formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' ' + formJSON.interval}
                     </span>
@@ -207,6 +207,10 @@ class ServiceRequestForm extends React.Component {
                         }
                     </div>
                     }
+                    {formJSON.trial_period_days !== 0 && <div>
+                        <Price value={newPrice}/>
+                    </div>}
+
                     <button className="btn btn-rounded btn-primary btn-bar" type="submit" value="submit">
                         {getRequestText()}
                     </button>
