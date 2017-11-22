@@ -1,5 +1,5 @@
 import React from 'react';
-import {Elements, injectStripe, CardElement} from 'react-stripe-elements';
+import {Elements, injectStripe, CardElement, StripeProvider} from 'react-stripe-elements';
 import Fetcher from "../../utilities/fetcher.jsx"
 import {get, has} from "lodash";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
@@ -37,9 +37,12 @@ class CardSection extends React.Component {
 class BillingForm extends React.Component {
     render() {
         return (
-            <Elements id="payment-form">
-                <CreditCardForm {...this.props}/>
-            </Elements>
+            <StripeProvider apiKey={this.props.spk || "no_public_token"}>
+                <Elements id="payment-form">
+                    <CreditCardForm {...this.props}/>
+                </Elements>
+            </StripeProvider>
+
         )
     }
 }
