@@ -79,6 +79,7 @@ class CreditCardForm extends React.Component {
         this.handleSuccessResponse = this.handleSuccessResponse.bind(this);
         this.handleFailureResponse = this.handleFailureResponse.bind(this);
         this.showPaymentForm = this.showPaymentForm.bind(this);
+        this.hidePaymentForm = this.hidePaymentForm.bind(this);
     }
 
     componentDidMount() {
@@ -173,6 +174,10 @@ class CreditCardForm extends React.Component {
         this.setState({ showForm: true });
     }
 
+    hidePaymentForm(){
+        this.setState({ showForm: false });
+    }
+
     render() {
         let submissionRequest = {
             'method': 'POST',
@@ -237,7 +242,12 @@ class CreditCardForm extends React.Component {
                         <div className="service-instance-box-title">
                             {getCard()}
                             <div className="pull-right">
-                                <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.showPaymentForm}>Update Payment</button>
+                                {!this.state.showForm ?
+                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.showPaymentForm}>Update Payment</button>
+                                    :
+                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.hidePaymentForm}>Cancel</button>
+                                }
+
                             </div>
                         </div>
                         {this.state.showForm &&
