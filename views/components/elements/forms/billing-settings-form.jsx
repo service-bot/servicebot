@@ -104,30 +104,48 @@ class CreditCardForm extends React.Component {
 
     checkIfUserHasCard() {
         let self = this;
-        Fetcher(`/api/v1/users/${self.props.uid}`).then(function (response) {
-            if (!response.error) {
-                if (has(response, 'references.funds[0]') && has(response, 'references.funds[0].source.card')) {
-                    let fund = get(response, 'references.funds[0]');
-                    let card = get(response, 'references.funds[0].source.card');
-                    self.setState({
-                        loading: false,
-                        displayName: response.name || response.email || "You",
-                        hasCard: true,
-                        fund: fund,
-                        card: card,
-                        personalInformation: {
-                            name: card.name,
-                            address_line1: card.address_line1,
-                            address_city: card.address_city,
-                            address_state: card.address_state,
-                        }
-                    }, function () {
-                    });
+        if(self.props.userFund) {
+            let fund = self.props.userFund;
+            let card = fund.source.card;
+            self.setState({
+                loading: false,
+                hasCard: true,
+                fund: fund,
+                card: card,
+                personalInformation: {
+                    name: card.name,
+                    address_line1: card.address_line1,
+                    address_city: card.address_city,
+                    address_state: card.address_state,
                 }
-            } else {
-                self.setState({loading: false, hasCard: false});
-            }
-        });
+            }, function () {
+            });
+        } else {
+            Fetcher(`/api/v1/users/${self.props.uid}`).then(function (response) {
+                if (!response.error) {
+                    if (has(response, 'references.funds[0]') && has(response, 'references.funds[0].source.card')) {
+                        let fund = get(response, 'references.funds[0]');
+                        let card = get(response, 'references.funds[0].source.card');
+                        self.setState({
+                            loading: false,
+                            displayName: response.name || response.email || "You",
+                            hasCard: true,
+                            fund: fund,
+                            card: card,
+                            personalInformation: {
+                                name: card.name,
+                                address_line1: card.address_line1,
+                                address_city: card.address_city,
+                                address_state: card.address_state,
+                            }
+                        }, function () {
+                        });
+                    }
+                } else {
+                    self.setState({loading: false, hasCard: false});
+                }
+            });
+        }
     }
 
     handleSuccessResponse(response) {
