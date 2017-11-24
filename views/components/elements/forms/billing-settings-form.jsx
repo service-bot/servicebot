@@ -80,8 +80,9 @@ class CreditCardForm extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.uid) {
-            this.checkIfUserHasCard();
+        let self = this;
+        if (self.props.uid) {
+            self.checkIfUserHasCard();
         } else if(self.props.userFund) {
             let fund = self.props.userFund;
             let card = fund.source.card;
@@ -99,7 +100,7 @@ class CreditCardForm extends React.Component {
             }, function () {
             });
         } else {
-            this.setState({loading: false, hasCard: false});
+            self.setState({loading: false, hasCard: false});
         }
 
     }
