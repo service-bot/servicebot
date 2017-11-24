@@ -71,12 +71,14 @@ class CreditCardForm extends React.Component {
             hasCard: false,
             loading: true,
             card: {},
-            alerts: null
+            alerts: null,
+            showForm: false
         };
         this.submissionPrep = this.submissionPrep.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
         this.handleSuccessResponse = this.handleSuccessResponse.bind(this);
         this.handleFailureResponse = this.handleFailureResponse.bind(this);
+        this.showPaymentForm = this.showPaymentForm.bind(this);
     }
 
     componentDidMount() {
@@ -167,6 +169,10 @@ class CreditCardForm extends React.Component {
         }
     }
 
+    showPaymentForm(){
+        this.setState({ showForm: true });
+    }
+
     render() {
         let submissionRequest = {
             'method': 'POST',
@@ -230,19 +236,24 @@ class CreditCardForm extends React.Component {
                     <div className="service-instance-box navy">
                         <div className="service-instance-box-title">
                             {getCard()}
+                            <div className="pull-right">
+                                <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.showPaymentForm}>Update Payment</button>
+                            </div>
                         </div>
-                        <div className="service-instance-box-content">
-                            <ServiceBotBaseForm
-                                form={BillingInfo}
-                                initialValues={{...this.state.personalInformation}}
-                                submissionPrep={this.submissionPrep}
-                                submissionRequest={submissionRequest}
-                                successMessage={"Fund added successfully"}
-                                handleResponse={this.handleSuccessResponse}
-                                handleFailure={this.handleFailureResponse}
-                                reShowForm={true}
-                            />
-                        </div>
+                        {this.state.showForm &&
+                            <div className="service-instance-box-content">
+                                <ServiceBotBaseForm
+                                    form={BillingInfo}
+                                    initialValues={{...this.state.personalInformation}}
+                                    submissionPrep={this.submissionPrep}
+                                    submissionRequest={submissionRequest}
+                                    successMessage={"Fund added successfully"}
+                                    handleResponse={this.handleSuccessResponse}
+                                    handleFailure={this.handleFailureResponse}
+                                    reShowForm={true}
+                                />
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
