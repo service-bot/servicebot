@@ -233,10 +233,10 @@ class CreditCardForm extends React.Component {
 
         return (
             <div id="payment-form">
-                <h3><i className="fa fa-credit-card"/>Your credit and debit card</h3>
+                <h3><i className="fa fa-credit-card"/>Your credit/debit card</h3>
                 <hr/>
                 <div className="form-row">
-                    {hasCard && <p>You can update your payment method by clicking on your existing credit card.</p>}
+                    {hasCard && <p>You can update your payment method by clicking on Update Payment.</p>}
                     {getAlerts()}
                     <div className="service-instance-box navy">
                         <div className="service-instance-box-title">
