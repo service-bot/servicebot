@@ -106,6 +106,9 @@ class ServiceBotBaseForm extends React.Component {
         else {
             console.error("submission error", result.error);
             self.setState({loading: false});
+            if(this.props.handleFailure) {
+                self.props.handleFailure(result);
+            }
             // self.props.endSubmit({_error: result.error})
             throw result.error;
             if (this.props.failureRoute) {
@@ -173,11 +176,10 @@ class ServiceBotBaseForm extends React.Component {
             return (<Load/>);
 
         }
-        if (this.state.success) {
+        if (this.state.success && !this.props.reShowForm) {
             return (
                 <div className="p-20">
-                    <p><strong>{this.state.successMessage}</strong></p>
-                    <p><i className="fa fa-check" aria-hidden="true"/></p>
+                    <p><i className="fa fa-check" aria-hidden="true"/><strong>{this.state.successMessage}</strong></p>
                 </div>
             );
         } else {
