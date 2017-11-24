@@ -4,6 +4,7 @@ import Fetcher from "../../utilities/fetcher.jsx"
 import {get, has} from "lodash";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import {inputField} from "./servicebot-base-field.jsx";
+import Alerts from '../alerts.jsx';
 import {required} from 'redux-form-validators'
 import {Field,} from 'redux-form'
 import Collapsible from 'react-collapsible';
@@ -69,11 +70,13 @@ class CreditCardForm extends React.Component {
         this.state = {
             hasCard: false,
             loading: true,
-            card: {}
+            card: {},
+            alerts: null
         };
         this.submissionPrep = this.submissionPrep.bind(this);
-
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
+        this.handleSuccessResponse = this.handleSuccessResponse.bind(this);
+        this.handleFailureResponse = this.handleFailureResponse.bind(this);
     }
 
     componentDidMount() {
@@ -89,7 +92,12 @@ class CreditCardForm extends React.Component {
         let token = await this.props.stripe.createToken({...values});
         console.log(token);
         if (token.error) {
-            throw token.error.message
+            this.setState({ alerts: {
+                type: 'danger',
+                icon: 'times',
+                message: token.error
+            }});
+            throw token.error
         }
         return {user_id: this.props.uid, token_id: token.token.id};
     }
@@ -120,6 +128,26 @@ class CreditCardForm extends React.Component {
                 self.setState({loading: false, hasCard: false});
             }
         });
+    }
+
+    handleSuccessResponse(response) {
+        this.setState({ alerts: {
+            type: 'success',
+            icon: 'check',
+            message: 'Your card has been updated.'
+        }});
+        //re-render
+        this.checkIfUserHasCard();
+    }
+
+    handleFailureResponse(response) {
+        if (response.error) {
+            this.setState({ alerts: {
+                type: 'danger',
+                icon: 'times',
+                message: response.error
+            }});
+        }
     }
 
     render() {
@@ -168,21 +196,32 @@ class CreditCardForm extends React.Component {
             }
         };
 
+        let getAlerts = ()=>{
+            if(this.state.alerts){
+                return ( <Alerts type={this.state.alerts.type} message={this.state.alerts.message}
+                                 position={{position: 'fixed', bottom: true}} icon={this.state.alerts.icon} /> );
+            }
+        };
+
         return (
             <div id="payment-form">
                 <h3><i className="fa fa-credit-card"/>Your credit and debit card</h3>
                 <hr/>
                 <div className="form-row">
                     {hasCard && <p>You can update your payment method by clicking on your existing credit card.</p>}
+                    {getAlerts()}
                     <Collapsible trigger={getCard()} open={!hasCard}>
                         <div className="service-instance-box-content">
+
                         <ServiceBotBaseForm
                             form={BillingInfo}
                             initialValues={{...this.state.personalInformation}}
                             submissionPrep={this.submissionPrep}
                             submissionRequest={submissionRequest}
                             successMessage={"Fund added successfully"}
-                            handleResponse={this.props.handleResponse}
+                            handleResponse={this.handleSuccessResponse}
+                            handleFailure={this.handleFailureResponse}
+                            reShowForm={true}
                         />
                         </div>
                     </Collapsible>
