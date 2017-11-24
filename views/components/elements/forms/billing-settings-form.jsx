@@ -82,6 +82,22 @@ class CreditCardForm extends React.Component {
     componentDidMount() {
         if (this.props.uid) {
             this.checkIfUserHasCard();
+        } else if(self.props.userFund) {
+            let fund = self.props.userFund;
+            let card = fund.source.card;
+            self.setState({
+                loading: false,
+                hasCard: true,
+                fund: fund,
+                card: card,
+                personalInformation: {
+                    name: card.name,
+                    address_line1: card.address_line1,
+                    address_city: card.address_city,
+                    address_state: card.address_state,
+                }
+            }, function () {
+            });
         } else {
             this.setState({loading: false, hasCard: false});
         }
@@ -104,23 +120,6 @@ class CreditCardForm extends React.Component {
 
     checkIfUserHasCard() {
         let self = this;
-        if(self.props.userFund) {
-            let fund = self.props.userFund;
-            let card = fund.source.card;
-            self.setState({
-                loading: false,
-                hasCard: true,
-                fund: fund,
-                card: card,
-                personalInformation: {
-                    name: card.name,
-                    address_line1: card.address_line1,
-                    address_city: card.address_city,
-                    address_state: card.address_state,
-                }
-            }, function () {
-            });
-        } else {
             Fetcher(`/api/v1/users/${self.props.uid}`).then(function (response) {
                 if (!response.error) {
                     if (has(response, 'references.funds[0]') && has(response, 'references.funds[0].source.card')) {
@@ -145,7 +144,6 @@ class CreditCardForm extends React.Component {
                     self.setState({loading: false, hasCard: false});
                 }
             });
-        }
     }
 
     handleSuccessResponse(response) {
