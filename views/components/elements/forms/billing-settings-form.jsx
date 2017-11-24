@@ -227,21 +227,23 @@ class CreditCardForm extends React.Component {
                 <div className="form-row">
                     {hasCard && <p>You can update your payment method by clicking on your existing credit card.</p>}
                     {getAlerts()}
-                    <Collapsible trigger={getCard()} open={!hasCard}>
-                        <div className="service-instance-box-content">
-
-                        <ServiceBotBaseForm
-                            form={BillingInfo}
-                            initialValues={{...this.state.personalInformation}}
-                            submissionPrep={this.submissionPrep}
-                            submissionRequest={submissionRequest}
-                            successMessage={"Fund added successfully"}
-                            handleResponse={this.handleSuccessResponse}
-                            handleFailure={this.handleFailureResponse}
-                            reShowForm={true}
-                        />
+                    <div className="service-instance-box navy">
+                        <div className="service-instance-box-title">
+                            {getCard()}
                         </div>
-                    </Collapsible>
+                        <div className="service-instance-box-content">
+                            <ServiceBotBaseForm
+                                form={BillingInfo}
+                                initialValues={{...this.state.personalInformation}}
+                                submissionPrep={this.submissionPrep}
+                                submissionRequest={submissionRequest}
+                                successMessage={"Fund added successfully"}
+                                handleResponse={this.handleSuccessResponse}
+                                handleFailure={this.handleFailureResponse}
+                                reShowForm={true}
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
         );
