@@ -1,0 +1,14 @@
+{
+  "name": "extra-css",
+  "version": "0.0.1",
+  "dependencies": {
+    
+  },
+  "pluginbot" : {
+    "server" : {
+      "main" : "main-server.js",
+      "consumes" : ["database", "configurationManager"]
+    }
+  }
+
+}

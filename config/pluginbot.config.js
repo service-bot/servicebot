@@ -107,8 +107,9 @@ let basePlugins = function() {
         {"path" : `${PLUGIN_DIRECTORY}/service-lifecycle`},
         {"path" : `${PLUGIN_DIRECTORY}/payment-manager`},
         {"path" : `${PLUGIN_DIRECTORY}/user-manager`},
+        {"path" : `${PLUGIN_DIRECTORY}/extra-css`},
         {"path" : `${PLUGIN_DIRECTORY}/client-plugins/ga`},
-        {"path" : `${PLUGIN_DIRECTORY}/updates`, "interval" : 86400000, "master" : "https://hub.servicebot.cloud/api/v1/announcements"}
+        {"path" : `${PLUGIN_DIRECTORY}/updates`, "interval" : 86400000, "master" : "https://hub.serviceshop.io/api/v1/announcements"}
     ];
 };
 
