@@ -71,12 +71,15 @@ class CreditCardForm extends React.Component {
             hasCard: false,
             loading: true,
             card: {},
-            alerts: null
+            alerts: null,
+            showForm: false
         };
         this.submissionPrep = this.submissionPrep.bind(this);
         this.checkIfUserHasCard = this.checkIfUserHasCard.bind(this);
         this.handleSuccessResponse = this.handleSuccessResponse.bind(this);
         this.handleFailureResponse = this.handleFailureResponse.bind(this);
+        this.showPaymentForm = this.showPaymentForm.bind(this);
+        this.hidePaymentForm = this.hidePaymentForm.bind(this);
     }
 
     componentDidMount() {
@@ -167,6 +170,14 @@ class CreditCardForm extends React.Component {
         }
     }
 
+    showPaymentForm(){
+        this.setState({ showForm: true });
+    }
+
+    hidePaymentForm(){
+        this.setState({ showForm: false });
+    }
+
     render() {
         let submissionRequest = {
             'method': 'POST',
@@ -222,27 +233,37 @@ class CreditCardForm extends React.Component {
 
         return (
             <div id="payment-form">
-                <h3><i className="fa fa-credit-card"/>Your credit and debit card</h3>
+                <h3><i className="fa fa-credit-card"/>Your credit/debit card</h3>
                 <hr/>
                 <div className="form-row">
-                    {hasCard && <p>You can update your payment method by clicking on your existing credit card.</p>}
+                    {hasCard && <p>You can update your payment method by clicking on Update Payment.</p>}
                     {getAlerts()}
                     <div className="service-instance-box navy">
                         <div className="service-instance-box-title">
                             {getCard()}
+                            <div className="pull-right">
+                                {!this.state.showForm ?
+                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.showPaymentForm}>Update Payment</button>
+                                    :
+                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.hidePaymentForm}>Cancel</button>
+                                }
+
+                            </div>
                         </div>
-                        <div className="service-instance-box-content">
-                            <ServiceBotBaseForm
-                                form={BillingInfo}
-                                initialValues={{...this.state.personalInformation}}
-                                submissionPrep={this.submissionPrep}
-                                submissionRequest={submissionRequest}
-                                successMessage={"Fund added successfully"}
-                                handleResponse={this.handleSuccessResponse}
-                                handleFailure={this.handleFailureResponse}
-                                reShowForm={true}
-                            />
-                        </div>
+                        {this.state.showForm &&
+                            <div className="service-instance-box-content">
+                                <ServiceBotBaseForm
+                                    form={BillingInfo}
+                                    initialValues={{...this.state.personalInformation}}
+                                    submissionPrep={this.submissionPrep}
+                                    submissionRequest={submissionRequest}
+                                    successMessage={"Fund added successfully"}
+                                    handleResponse={this.handleSuccessResponse}
+                                    handleFailure={this.handleFailureResponse}
+                                    reShowForm={true}
+                                />
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
