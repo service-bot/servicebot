@@ -109,6 +109,7 @@ let systemOptions =
         {"option": "service_request_title_form", "value": "Get your service", public: true, "type": "theme", "data_type": "text"},
         {"option": "google_analytics", public: true, "type": "system", "data_type": "text"},
         {"option": "show_trial", "value": false, public: true, "type": "service box", "data_type": "bool"},
+        {"option": "extra_css", "value": false, public: true, "type": "theme", "data_type": "text"}
 
     ],
         populateOptions: function(options=systemOptions.options, model=SystemOption){
