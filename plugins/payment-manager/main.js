@@ -8,7 +8,7 @@ function* startTimerWhenSubscribed(action) {
     let plan = instance.get("payment_plan");
     let trial = plan.trial_period_days;
     if (trial) {
-        let trialEnd = new Date(instance.subscribed_at * 1000);
+        let trialEnd = new Date(instance.get("subscribed_at") * 1000);
         trialEnd.setDate(trialEnd.getDate() + trial);
 
         let job = schedule.scheduleJob(trialEnd, trialExpiration(instance));
@@ -39,7 +39,7 @@ function* run(config, provide, channels) {
         let plan = instance.get("payment_plan");
         let trial = plan.trial_period_days;
         if (trial) {
-            let trialEnd = new Date(instance.subscribed_at * 1000);
+            let trialEnd = new Date(instance.get("subscribed_at") * 1000);
             console.log(trialEnd, "TRIAL DATE START");
             trialEnd.setDate(trialEnd.getDate() + trial);
             let fund = (yield call(Fund.find, {"user_id": instance.get("user_id")}))[0];
