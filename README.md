@@ -10,7 +10,7 @@ ___
 
 ## Installation
 
-For free cloud hosting during our open-beta, see [servicebot.io](https://servicebot.io).
+For cloud hosting, see [servicebot.io](https://servicebot.io)
 
 For self-hosting we recommend using our [docker install guide](https://docs.servicebot.io/install/)
 
