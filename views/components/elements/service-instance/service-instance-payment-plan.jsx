@@ -77,11 +77,7 @@ class ServiceInstancePaymentPlan extends React.Component {
     }
 
     getTrialButton(){
-        if(this.props.userFunds) {
-            return (<TrialActionButton large={true} userFunds={this.props.userFunds} serviceInstance={this.props.service} modalCallback={this.props.fundModal} />);
-        } else {
-            return (null);
-        }
+        return (<TrialActionButton large={true} userFunds={this.props.userFunds} serviceInstance={this.props.service} modalCallback={this.props.fundModal} />);
     }
 
     getServiceDetail(){

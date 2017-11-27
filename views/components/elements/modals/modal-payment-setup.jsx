@@ -84,6 +84,7 @@ class ModalPaymentSetup extends React.Component {
         let self = this;
         let pageName = "Payment Setup";
         let icon = "fa-credit-card-alt";
+        let spk = cookie.load("spk");
 
         if(self.props.justPayment) {
             return(
@@ -93,7 +94,7 @@ class ModalPaymentSetup extends React.Component {
                             <div className="row">
                                 <div className="col-xs-12">
                                     {self.state.form === 'credit_card' &&
-                                    <div><BillingForm uid={self.state.ownerId} handleResponse={self.handleResponse}/></div>
+                                    <div><BillingForm spk={spk} uid={self.state.ownerId} handleResponse={self.handleResponse}/></div>
                                     }
                                 </div>
                             </div>
@@ -109,7 +110,7 @@ class ModalPaymentSetup extends React.Component {
                             <div className="row">
                                 <div className="col-xs-12">
                                     {self.state.form === 'credit_card' &&
-                                    <div><BillingForm uid={self.state.ownerId} handleResponse={self.handleResponse}/></div>
+                                    <div><BillingForm spk={spk} uid={self.state.ownerId} handleResponse={self.handleResponse}/></div>
                                     }
                                 </div>
                             </div>

@@ -14,6 +14,7 @@ class TrialFundAddition extends React.Component {
     render () {
         let self = this;
         let inTrial = false;
+        let hasFund = false;
         let trialExpires = '';
 
         let date_diff_indays = (date1, date2) => {
@@ -24,7 +25,10 @@ class TrialFundAddition extends React.Component {
 
         //Get service trial status
         let trial = self.state.instance.payment_plan.trial_period_days;
-        if(self.state.instance.status === "running" && trial > 0 && self.props.userFunds.length === 0) {
+        if(self.props.userFunds.length > 0) {
+            hasFund = true;
+        }
+        if(self.state.instance.status === "running" && trial > 0) {
             let currentDate = new Date();
             let trialEnd = new Date(self.state.instance.subscribed_at * 1000);
             trialEnd.setDate(trialEnd.getDate() + trial);
@@ -36,16 +40,25 @@ class TrialFundAddition extends React.Component {
         }
 
         if(inTrial) {
-            if(self.props.large) {
-                return (
-                    <div>
-                        <DashboardWidget small={true} clickAction={self.props.modalCallback} margins="m-t-0" widgetColor="#04bb8a" widgetIcon="credit-card" widgetData="Add Fund" widgetClass="col-12" widgetHoverClass="widget-hover" />
-                        <div className="text-center"><strong>{trialExpires}</strong></div>
-                    </div>
-                );
+            if(!hasFund) {
+                if(self.props.large) {
+                    return (
+                        <div>
+                            <DashboardWidget small={true} clickAction={self.props.modalCallback} margins="m-t-0" widgetColor="#04bb8a" widgetIcon="credit-card" widgetData="Add Fund" widgetClass="col-12" widgetHoverClass="widget-hover" />
+                            <div className="text-center"><strong>{trialExpires}</strong></div>
+                        </div>
+                    );
+                } else {
+                    return (<ToolTip text="Add Fund" title={trialExpires} icon="fa-credit-card-alt" cssClass="btn-default btn-rounded btn-sm" onClick={self.props.modalCallback} />);
+                }
             } else {
-                return (<ToolTip text="Add Fund" title={trialExpires} icon="fa-credit-card-alt" cssClass="btn-default btn-rounded btn-sm" onClick={self.props.modalCallback} />);
+                if(self.props.large) {
+                    return (<div className="text-center"><strong>{trialExpires}</strong></div>);
+                } else {
+                    return (null);
+                }
             }
+
         } else {
             return (null);
         }
