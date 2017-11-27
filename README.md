@@ -6,7 +6,7 @@
 </p>
 
 ___
-<p align="center">ServiceBot is a platform for a business to sell their services and automate the administrative tasks such as billing and invoicing.</p>
+<p align="center">ServiceBot is your startup's launchpad. It is a platform for a business to sell their services and automate the administrative tasks such as billing and invoicing. </p>
 
 ## Installation
 
