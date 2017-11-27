@@ -102,6 +102,11 @@ class CreditCardForm extends React.Component {
                 }
             }, function () {
             });
+            if(card) {
+                self.setState({
+                    showForm: true
+                });
+            }
         } else {
             self.setState({loading: false, hasCard: false});
         }
@@ -142,6 +147,11 @@ class CreditCardForm extends React.Component {
                                 address_state: card.address_state,
                             }
                         }, function () {
+                        });
+                    } else {
+                        self.setState({
+                            loading: false,
+                            showForm: true
                         });
                     }
                 } else {
