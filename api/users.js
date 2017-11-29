@@ -255,6 +255,9 @@ module.exports = function (router, passport) {
         if (oldUser.get("id") === req.user.get("id")) {
             delete oldUser.data.role_id;
             delete newUserData.role_id
+            delete newUserData.status;
+        }else if(newUserData.password && oldUser.get("status") === "invited"){
+            newUserData.status = "active";
         }
 
         let updatedUser = await userManager.update(oldUser, newUserData);
