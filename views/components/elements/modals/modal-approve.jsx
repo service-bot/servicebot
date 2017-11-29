@@ -80,8 +80,9 @@ class ModalApprove extends React.Component {
     onApprove(event){
         event.preventDefault();
         let self = this;
+        let instance = self.state.serviceInstance;
         self.setState({loading:false});
-        if(!self.state.hasCard){
+        if(!self.state.hasCard && (instance.payment_plan.trial_period_days === 0 || instance.payment_plan.trial_period_days === null)){
             self.handlePaymentSetup();
         }else {
             self.setState({ajaxLoad: true});

@@ -6,19 +6,11 @@
 </p>
 
 ___
-<p align="center">ServiceBot is a platform for a business to sell their services and automate the administrative tasks such as billing and invoicing.</p>
-
-## Open-Beta
-We have released our limited free open-beta instances for 30 days (August 2017). There will be no open-beta instances available after this period. The process is instant through our website https://servicebot.io . If you need help with configuring your instance, please contact us through team@servicebot.io or our gitter channel. 
-<p align="center">
-<a href="https://servicebot.io">
-<img width="500" heigth="80" src="https://servicebot.io/images/open-beta.jpg">
-</a>
-</p>
+<p align="center">ServiceBot is your startup's launchpad. It is a platform for a business to sell their services and automate the administrative tasks such as billing and invoicing. </p>
 
 ## Installation
 
-For free cloud hosting during our open-beta, see [servicebot.io](https://servicebot.io).
+For cloud hosting, see [servicebot.io](https://servicebot.io)
 
 For self-hosting we recommend using our [docker install guide](https://docs.servicebot.io/install/)
 

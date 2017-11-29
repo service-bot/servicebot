@@ -103,19 +103,26 @@ class CreditCardForm extends React.Component {
             }, function () {
             });
         } else {
-            self.setState({loading: false, hasCard: false});
+            self.setState({
+                loading: false,
+                hasCard: false,
+                showForm: true
+            });
         }
-
     }
 
     async submissionPrep(values) {
         let token = await this.props.stripe.createToken({...values});
         console.log(token);
         if (token.error) {
+            let message = token.error;
+            if(token.error.message) {
+                message = token.error.message;
+            }
             this.setState({ alerts: {
                 type: 'danger',
                 icon: 'times',
-                message: token.error
+                message: message
             }});
             throw token.error
         }
@@ -136,12 +143,17 @@ class CreditCardForm extends React.Component {
                             fund: fund,
                             card: card,
                             personalInformation: {
-                                name: card.name,
-                                address_line1: card.address_line1,
-                                address_city: card.address_city,
-                                address_state: card.address_state,
+                                name: card.name || "",
+                                address_line1: card.address_line1 || "",
+                                address_city: card.address_city || "",
+                                address_state: card.address_state || "",
                             }
                         }, function () {
+                        });
+                    } else {
+                        self.setState({
+                            loading: false,
+                            showForm: true
                         });
                     }
                 } else {
