@@ -57,7 +57,7 @@ function* run(config, provide, channels) {
             }
         }
     };
-    yield provide({userManager})
+    yield provide({userManager});
 
     while (true) {
         let userProvider = yield consume(channels.userProvider);

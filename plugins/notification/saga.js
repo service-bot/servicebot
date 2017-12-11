@@ -37,6 +37,5 @@ module.exports = {
         let notificationSagas = yield call(getNotificationSagas);
         let notificationTask = yield fork(all, notificationSagas);
         let optionTask = yield takeEvery(sagaEventPattern("system_options_updated"), setOptionSaga);
-
     }
 };
