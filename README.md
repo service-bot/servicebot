@@ -1,12 +1,15 @@
 
 <p align="center">
 <a href="https://servicebot.io">
-<img width="250" heigth="250" src="https://servicebot.io/images/servicebot-beta-logo.png">
+<img width="250" heigth="250" src="https://servicebot.io/images/servicebot-logo-light.png">
 </a>
 </p>
 
 ___
-<p align="center">ServiceBot is your startup's launchpad. It is a platform for a business to sell their services and automate the administrative tasks such as billing and invoicing. </p>
+<p align="center">
+<h3>The Best Way to Deliver and Scale Your SaaS.</h3>
+Automate deployments, billing, and customer relations. 
+</p>
 
 ## Installation
 
