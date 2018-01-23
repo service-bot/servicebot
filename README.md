@@ -7,8 +7,9 @@
 
 ___
 <p align="center">
-<b>The Best Way to Deliver and Scale Your SaaS.</b> 
-Automate deployments, automate billing, and manage your SaaS customers.
+<b>The Best Way to Deliver and Scale Your SaaS.</b>
+<p>Automate deployments, automate billing, and manage your SaaS customers.</p>
+<img width="750" src="https://servicebot.io/images/adminportal.png">
 </p>
 
 ## Features
@@ -38,8 +39,6 @@ View some of the example deployments that are using ServiceBot. You can view mor
 **Self Hosting Solution** - Manual installation guide could be found here: [Installation Guide](https://hackernoon.com/install-and-configure-an-open-source-crm-for-your-xaas-business-f976451221f0)
 
 **Cloud Hosting Solution** - You can order a Servicebot instance online from [serviceshop.io](https://serviceshop.io/service-catalog/3/request)
-
-For self-hosting we recommend using our [docker install guide](https://docs.servicebot.io/install/)
 
 
 ## Usage Guide
