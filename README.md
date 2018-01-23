@@ -8,8 +8,8 @@
 ___
 <p align="center">
 <b>The Best Way to Deliver and Scale Your SaaS.</b>
-<p>Automate deployments, automate billing, and manage your SaaS customers.</p>
-<img width="750" src="https://servicebot.io/images/adminportal.png">
+<p align="center">Automate deployments, automate billing, and manage your SaaS customers.</p>
+<p align="center"><img width="750" src="https://servicebot.io/images/adminportal.png"></p>
 </p>
 
 ## Features
