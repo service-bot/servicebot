@@ -7,9 +7,9 @@
 
 ___
 <p align="center">
-<b>The Best Way to Deliver and Scale Your SaaS.</b>
+<b>Open Source SaaS Management System</b>
 <p align="center">Automate deployments, automate billing, and manage your SaaS customers.</p>
-<p align="center"><img width="750" src="https://servicebot.io/images/adminportal.png"></p>
+<p align="center"><a href="https://servicebot.io"><img width="750" src="https://servicebot.io/images/adminportal.png"></a></p>
 </p>
 
 ## Features
@@ -69,7 +69,8 @@ Not sure what to work on? Check the open issue or pop into [gitter] and ask!
 We look forward to working with you!
 
 ## Credit
-Supported by [Vampeo](http://vampeo.com)
+- Supported by [Vampeo](http://vampeo.com)
+- Supported by [BrowserStack](https://www.browserstack.com/)
 
 ## License
 Copyright (C) 2018 ServiceBot
