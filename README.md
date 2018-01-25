@@ -8,16 +8,11 @@
 ___
 <p align="center">
 <b>Open Source SaaS Management System</b>
-<p align="center">Automate deployments, automate billing, and manage your SaaS customers.</p>
+<p align="center">Automate billing and manage your SaaS customers.</p>
 <p align="center"><a href="https://servicebot.io"><img width="750" src="https://servicebot.io/images/adminportal.png"></a></p>
 </p>
 
 ## Features
-- **Automate Deployments**
-    - **Multi-cloud platform support:** Works closely with Amazon Web Services and Google Cloud Platform.
-    - **Kubernetes-as-a-Service:** Tightly integrated with Kubernetes.
-    - **CICD-as-a-Service:** Achieve a CI/CD pipeline with ServiceBot.
-    
 - **Automate Billing:** Create and sell your SaaS offerings in minutes.
     - **SaaS designer:** Design and launch your SaaS offerings with ease.
     - **Subscription management:** Supports automatic recurring charges.
