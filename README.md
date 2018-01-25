@@ -17,6 +17,7 @@ ___
     - **Multi-cloud platform support:** Works closely with Amazon Web Services and Google Cloud Platform.
     - **Kubernetes-as-a-Service:** Tightly integrated with Kubernetes.
     - **CICD-as-a-Service:** Achieve a CI/CD pipeline with ServiceBot.
+    
 - **Automate Billing:** Create and sell your SaaS offerings in minutes.
     - **SaaS designer:** Design and launch your SaaS offerings with ease.
     - **Subscription management:** Supports automatic recurring charges.
@@ -25,6 +26,7 @@ ___
     - **Add-ons and Upsell:** Add custom fields to your SaaS request form.
     - **Adding charges:** Add one-time charges to a running service to up-sell your SaaS product.
     - **Refunds:** You can issue partial or full refunds on your SaaS customer invoices.
+    
 - **Manage Customers:** Create and sell your SaaS offerings in minutes.
     - **SaaS store-front:** Let your customers order from your SaaS catalog.
     - **Automatic invoicing:** Invoices are generated and sent to customers automatically.
@@ -33,6 +35,7 @@ ___
 ## Examples
 You can use ServiceBot to automatically deploy your SaaS application, manage your SaaS billing and customer relations. 
 View some of the example deployments that are using ServiceBot. You can view more examples on [ServiceShop](https://serviceshop.io).
+<p align="center"><img heigth="140" src="https://servicebot.io/images/showcase/gex0.png"></p>
 
 ## Installation
 
