@@ -36,6 +36,8 @@ ___
 You can use ServiceBot to automatically deploy your SaaS application, manage your SaaS billing and customer relations. 
 Here is some of the example deployments that are using ServiceBot. You can view more examples on [ServiceShop](https://serviceshop.io).
 <p align="center"><a href="https://serviceshop.io/"><img heigth="130" src="https://servicebot.io/images/showcase/gex0.png"></a></p>
+<p align="center"><a href="https://serviceshop.io/service-catalog/1/request"><img heigth="130" src="https://servicebot.io/images/showcase/gex1.png"></a></p>
+<p align="center"><a href="https://serviceshop.io/service-catalog/2/request"><img heigth="130" src="https://servicebot.io/images/showcase/gex2.png"></a></p>
 
 
 ## Installation
