@@ -480,7 +480,9 @@ module.exports = function (router) {
                     newInstance.set("url", responseJSON.url);
                     store.dispatchEvent("service_instance_requested_new_user", newInstance);
 
-                } else if (req.uid !== newInstance.get("user_id")) {
+                }else if(isNew){
+
+                }else if (req.uid !== newInstance.get("user_id")) {
                     store.dispatchEvent("service_instance_requested_for_user", newInstance);
 
                 } else {
