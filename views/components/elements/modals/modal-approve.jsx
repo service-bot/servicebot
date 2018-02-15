@@ -26,7 +26,7 @@ class ModalApprove extends React.Component {
                         uid: uid,
                         email: username,
                         serviceInstance: serviceInstance,
-                        approve_instance_url: `/api/v1/service-instances/${serviceInstance.id}/approve`,
+                        approve_instance_url: serviceInstance.status === "cancelled" ? `/api/v1/service-instances/${serviceInstance.id}/reactivate` : `/api/v1/service-instances/${serviceInstance.id}/approve`,
                         approved: false,
                         current_modal: 'model_approve',
                         ajaxLoad: false,
