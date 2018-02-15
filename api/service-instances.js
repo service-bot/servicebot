@@ -72,7 +72,7 @@ module.exports = function(router) {
             if(lifecycleManager) {
                 lifecycleManager = lifecycleManager[0];
                 await lifecycleManager.preReactivate({
-                    instance: this
+                    instance: instance_object
                 });
             }
 
@@ -81,7 +81,7 @@ module.exports = function(router) {
                     res.json(callback);
                     if(lifecycleManager) {
                         lifecycleManager.postReactivate({
-                            instance: this
+                            instance: instance_object
                         });
                     }
 
