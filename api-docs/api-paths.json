@@ -2762,6 +2762,52 @@
       }
     }
   },
+    "/service-instances/{id}/reactivate": {
+      "post": {
+        "summary": "Reactivates a cancelled service-instance",
+        "tags": [
+          "service-instances"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "x-roles": [
+          "admin",
+          "staff",
+          "user"
+        ],
+        "operationId": "post_service_instances_id_reactivate",
+        "security": [
+          {
+            "internalApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "service-instance id",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A service-instance",
+            "schema": {
+              "$ref": "#/definitions/service_instances"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
   "/service-instances/{id}/change-price": {
     "post": {
       "summary": "Approves a service-instance",
