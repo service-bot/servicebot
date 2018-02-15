@@ -7,39 +7,50 @@
 
 ___
 <p align="center">
-<b>Open Source SaaS Management System</b>
-<p align="center">Automate billing and manage your SaaS customers.</p>
+<b>Open-source Subscription Management System</b>
+<p align="center">Manage subscriptions and automate aspects of your business.</p>
 <p align="center"><a href="https://servicebot.io"><img width="750" src="https://servicebot.io/images/adminportal.png"></a></p>
 </p>
 
+## Overview
+Servicebot is an XaaS (Anything-as-a-service) platform. You can define requestable service templates with an advanced service designer that supports many input types, pricing models, and even develop plugins which can run code when these services are requested. The goal being Servicebot manages the lifecycle of any type of service a business can offer.
+
 ## Features
-- **Automate Billing:** Create and sell your SaaS offerings in minutes.
-    - **SaaS designer:** Design and launch your SaaS offerings with ease.
+- **Automate Billing:** Create and sell anything as a service in minutes.
+    - **Service designer:** Design service offerings that link directly to Stripe.
     - **Subscription management:** Supports automatic recurring charges.
-    - **Quote system:** You can allow your customers to request quotes for your SaaS before charging them.
-    - **Free trials:** Give out free trials per SaaS offering to your customers.
-    - **Add-ons and Upsell:** Add custom fields to your SaaS request form.
-    - **Adding charges:** Add one-time charges to a running service to up-sell your SaaS product.
-    - **Refunds:** You can issue partial or full refunds on your SaaS customer invoices.
+    - **Quote system:** You can allow your customers to request quotes for your services before charging them.
+    - **Free trials:** Give out free trials of your subscription offerings to your customers.
+    - **Add-ons and Upsell:** Add custom fields to your service request form which influence the final price.
+    - **Adding charges:** Add one-time charges to a running service for custom work your clients want.
+    - **Refunds:** You can issue partial or full refunds on your customer invoices.
     
-- **Manage Customers:** Create and sell your SaaS offerings in minutes.
-    - **SaaS store-front:** Let your customers order from your SaaS catalog.
+- **Manage Customers:**.
+    - **Store-front:** Let your customers order from your catalog without needing another website.
     - **Automatic invoicing:** Invoices are generated and sent to customers automatically.
     - **Service cancellations:** Customers can request cancellations.
+    - **RBAC:** Customize roles for staff 
+    - **Communication:** Customers can send your business messages when they have questions
 
+- **Extensibility:**
+    - **Full REST API:** Integrate Servicebot with your existing website or application
+    - **Plugin framework:** Develop plugins to extend the functionality of servicebot (documentation coming soon)
+
+
+    
 ## Examples
-You can use ServiceBot to automatically deploy your SaaS application, manage your SaaS billing and customer relations. 
-Here is some of the example deployments that are using ServiceBot. You can view more examples on [ServiceShop](https://serviceshop.io).
-<p align="center"><a href="https://serviceshop.io/"><img heigth="130" src="https://servicebot.io/images/showcase/gex0.png"></a></p>
-<p align="center"><a href="https://serviceshop.io/service-catalog/1/request"><img heigth="130" src="https://servicebot.io/images/showcase/gex1.png"></a></p>
-<p align="center"><a href="https://serviceshop.io/service-catalog/2/request"><img heigth="130" src="https://servicebot.io/images/showcase/gex2.png"></a></p>
 
+[ServiceShop](https://serviceshop.io) - Request different open-source systems
+
+[Growth Writer](https://growth-writer.serviceshop.io) - Blog Writing as a service
+
+[Vampeo](https://vampeo.serviceshop.io) - Software Development as a service
 
 ## Installation
 
 **Self Hosting Solution** - Manual installation guide could be found here: [Installation Guide](https://hackernoon.com/install-and-configure-an-open-source-crm-for-your-xaas-business-f976451221f0)
 
-**Cloud Hosting Solution** - You can order a Servicebot instance online from [serviceshop.io](https://serviceshop.io/service-catalog/3/request)
+**Managed Solution** - You can order a Servicebot instance online from [servicebot.io](https://servicebot.io)
 
 
 ## Usage Guide
@@ -59,12 +70,10 @@ API reference: <https://api-docs.servicebot.io/>
 
 ServiceBot is **open source** and accepts contributions from the public
 
-Not sure what to work on? Check the open issue or pop into [gitter] and ask!
-
 We look forward to working with you!
 
 ## Credit
-- Supported by [Vampeo](http://vampeo.com)
+- Maintained by [Vampeo](http://vampeo.com)
 - Supported by [BrowserStack](https://www.browserstack.com/)
 
 ## License
