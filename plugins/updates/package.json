@@ -6,7 +6,7 @@
   "pluginbot" : {
     "server" : {
       "main" : "updates.js",
-      "consumes" : ["database"]
+      "consumes" : ["database", "analytics"]
     }
   }
 }
