@@ -106,6 +106,7 @@ let basePlugins = function() {
         {"path" : `${PLUGIN_DIRECTORY}/core-input-types`},
         {"path" : `${PLUGIN_DIRECTORY}/service-lifecycle`},
         {"path" : `${PLUGIN_DIRECTORY}/payment-manager`},
+        {"path" : `${PLUGIN_DIRECTORY}/analytics`},
         {"path" : `${PLUGIN_DIRECTORY}/message-manager`},
         {"path" : `${PLUGIN_DIRECTORY}/user-manager`},
         {"path" : `${PLUGIN_DIRECTORY}/extra-css`},

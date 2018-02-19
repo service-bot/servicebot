@@ -156,7 +156,6 @@ module.exports = {
         require('../../api/notifications')(api);
         require('../../api/permissions')(api);
         require('../../api/roles')(api);
-        require('../../api/analytics')(api);
         let routeConsumer = require("./router");
         let authService = yield consume(services.authService);
         yield spawn(routeConsumer, api, services.routeDefinition, authService);
