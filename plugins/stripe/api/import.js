@@ -9,9 +9,10 @@ let ServiceTemplate = require('../../../models/service-template');
 let ServiceCategory = require('../../../models/service-category');
 let Invoice = require('../../../models/invoice');
 let dispatchEvent = require("../../../config/redux/store").dispatchEvent;
+let stripe = require('../../../config/stripe');
 
 
-module.exports = function(knex, stripe) {
+module.exports = function(knex) {
 
     /**
      * This function will import all Stripe users to ServiceBot by looping through every customer object from Stripe.
@@ -23,6 +24,7 @@ module.exports = function(knex, stripe) {
         if (last_id !== null) { req_params['starting_after'] = last_id; }
 
         return new Promise(function (resolve, reject) {
+            console.log(stripe)
             stripe().connection.customers.list(req_params, function (err, customers) {
                 if(!err) {
                     Promise.all(customers.data.map(function (customer) {
@@ -217,8 +219,8 @@ module.exports = function(knex, stripe) {
                     delete newPlan.id;
                     newPlan.category_id = category.data.id;
                     newPlan.created_by = 1;
-                    newPlan.description = plan.name;
-                    newPlan.name = plan.id;
+                    newPlan.description = plan.name || plan.nickname || "Imported from Stripe";
+                    newPlan.name = plan.name || plan.nickname || plan.id;
                     let template = new ServiceTemplate(newPlan);
                     template.create((err, template) => {
                         if(err){
@@ -232,9 +234,9 @@ module.exports = function(knex, stripe) {
         });
     };
 
-    let promiseServiceCategory = function (category_name = 'uncategorized') {
+    let promiseServiceCategory = function (category_name = 'Uncategorized') {
         return new Promise(function (resolve, reject) {
-            ServiceCategory.findOne('name', 'uncategorized', function (category) {
+            ServiceCategory.findOne('name', 'Uncategorized', function (category) {
                 if(!category.data) {
                     let category_obj = new ServiceCategory({
                         'name': category_name,
@@ -262,9 +264,11 @@ module.exports = function(knex, stripe) {
             return new Promise(function (resolve, reject) {
                 if(!subscription.plan) {
                     let plan = subscription.items.data[0].plan;
+                    let amount = 0;
                     subscription.items.data.map(function (item_plan) {
-                        plan.amount = parseInt(plan.amount) + parseInt(item_plan.plan.amount);
+                        amount += parseInt(item_plan.plan.amount);
                     });
+                    plan.amount = amount;
                     return resolve(plan);
                 } else {
                     return resolve(subscription.plan);
