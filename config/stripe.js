@@ -8,6 +8,9 @@ let Stripe = function (options=require("./redux/store").getState().options) {
     //Require the correct secret key
     let stripe_obj = require('stripe')(options.stripe_secret_key);
 
+    //using old version until integration with products
+    stripe_obj.setApiVersion('2018-01-23');
+
     //todo : why is this not declared?
     stripe_connection = {
         stripe_secret_key: options.stripe_secret_key,
