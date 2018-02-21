@@ -76,7 +76,7 @@ var config = async function () {
             contentBase: path.resolve(__dirname, 'public'),
             inline: true,
             host: 'localhost', // Defaults to `localhost`
-            port: 3002, // Defaults to 8080
+            port: 3002,
             proxy: {
                 '/' : {
                     target: 'http://localhost:3000',
