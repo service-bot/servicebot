@@ -60,7 +60,7 @@ let createPayPlan = function (plan=null, callback){
                     });
                 });
             } else {
-                callback(null, plan);
+                callback(null, plan)
             }
         },
         function(plan, callback){

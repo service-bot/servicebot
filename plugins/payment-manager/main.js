@@ -1,7 +1,7 @@
 let {call, put, all, select, fork, spawn, take, takeEvery} = require("redux-saga/effects");
 let consume = require("pluginbot/effects/consume");
 let schedule = require('node-schedule');
-
+let split = require("./types/split");
 
 function* startTimerWhenSubscribed(action) {
     let instance = action.event_object
@@ -29,8 +29,7 @@ function trialExpiration(instance) {
     }
 }
 
-function* run(config, provide, channels) {
-    let database = yield consume(channels.database);
+function* scheduleTrials(){
     let ServiceInstance = require("../../models/service-instance");
     let Fund = require('../../models/fund');
     let instances = yield call(ServiceInstance.find, {"not": {"subscription_id": null}});
@@ -57,7 +56,13 @@ function* run(config, provide, channels) {
         }
 
     }
+}
 
+function* run(config, provide, channels) {
+    let database = yield consume(channels.database);
+    yield call(scheduleTrials)
+
+    yield call(split)
 
     //todo: reduce duplicate code - this chunk is in a bunch of places :(
     let sagaEventPattern = function (event_name) {
@@ -65,6 +70,9 @@ function* run(config, provide, channels) {
             return action.type === "EVENT" && action.event_name === event_name
         }
     };
+
+
     yield takeEvery(sagaEventPattern("service_instance_subscribed"), startTimerWhenSubscribed);
+    yield provide({lifecycleHook : })
 }
 module.exports = {run};

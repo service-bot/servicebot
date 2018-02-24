@@ -51,7 +51,7 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
             };
             let charge = await  Charges.createPromise(charge_obj);
         }
-        let plan = (self.data.type === 'one_time' || self.data.type === 'custom') ? {...self.data, amount : 0, interval : "day"} : instanceRequest;
+        let plan = (self.data.type === 'one_time' || self.data.type === 'custom' || self.data.type === "split") ? {...self.data, amount : 0, interval : "day"} : instanceRequest;
         let payStructure = (instanceRequest.amount === 0 || instanceRequest.amount === undefined) ? null : (await service.buildPayStructure(plan));
         let payPlan = await service.createPayPlan(payStructure);
 

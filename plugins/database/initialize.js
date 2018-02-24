@@ -154,6 +154,7 @@ let buildTables = async function(knex) {
             table.integer('interval_count').defaultTo(1);
             table.enu('type', ['subscription', 'one_time', 'custom']).defaultTo('subscription');
             table.boolean('subscription_prorate').defaultTo(true);
+            table.jsonb('split_configuration');
             table.timestamps(true, true);
 
         });
@@ -169,6 +170,7 @@ let buildTables = async function(knex) {
             table.bigInteger('subscribed_at');
             table.enu('status', ['running', 'requested', 'in_progress', 'waiting_cancellation', 'missing_payment', 'cancelled', 'completed']).defaultTo('missing_payment');
             table.enu('type', ['subscription', 'one_time', 'custom']).defaultTo('subscription');
+            table.jsonb('split_configuration');
             table.timestamps(true, true);
 
         });
