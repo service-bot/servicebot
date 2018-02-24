@@ -103,7 +103,7 @@ class CustomField extends React.Component {
 
                 <div id="custom-prop-widget" className="custom-property-field-group">
                     {typeValue && <RenderWidget
-                        showPrice={templateType !== "custom"}
+                        showPrice={(templateType !== "custom" && templateType !== "split")}
                         member={member}
                         configValue={configValue}
                         widgetType={typeValue}/>
@@ -259,7 +259,7 @@ class TemplateForm extends React.Component {
                 props.setIntervalCount();
                 props.setInterval();
             }
-            else if (newValue === 'custom') {
+            else if (newValue === 'custom' || newValue === 'split') {
                 props.setIntervalCount();
                 props.setInterval();
                 props.clearAmount();
@@ -289,7 +289,7 @@ class TemplateForm extends React.Component {
                             {error && <div className="form-error">{error}</div>}
                         </div>
                         <div className="form-level-warnings"/>
-                        <h3>Basic Info</h3>
+                        <h3>Service Info</h3>
                         <Field name="name" type="text"
                                component={inputField} label="Product / Service Name"
                                validate={[required()]}
@@ -337,10 +337,8 @@ class TemplateForm extends React.Component {
                                 <rect x="176" y="120" width="16" height="16"/>
                             </SVGIcons>
                         </div>
-                        <p className="help-block">Enter the basic information about your service. Summary will
-                            be
-                            shown to users in the product / service listing pages, such as the home page
-                            featured
+                        <p className="help-block">Enter the basic information about your service. Summary will be
+                            shown to users in the product / service listing pages, such as the home page featured
                             items. Details will be shown on each individual products / services page.</p>
                     </div>
                 </div>
@@ -359,6 +357,7 @@ class TemplateForm extends React.Component {
                                            {id: "subscription", name: "Subscription"},
                                            {id: "one_time", name: "One Time"},
                                            {id: "custom", name: "Custom"},
+                                           {id: "split", name: "Scheduled Payments"}
                                        ]}
                                 />
                                 {(serviceTypeValue === 'subscription' || serviceTypeValue === 'one_time') &&
@@ -402,6 +401,13 @@ class TemplateForm extends React.Component {
                                     </p>
                                 </div>
                                 }
+
+                                {(serviceTypeValue === 'split') &&
+                                <div>
+                                    PUT FIELDS HERE
+                                </div>
+                                }
+
                             </div>
                             <div className="col-md-4">
                                 <div style={sectionDescriptionStyle}>
@@ -425,8 +431,7 @@ class TemplateForm extends React.Component {
                                     {/*<img id="custom-fields-svg" src="/assets/custom_icons/custom_fields.svg"/>*/}
                                 </div>
                                 <p className="help-block">Setup payment details. This will be how your customers
-                                    will be charged. For example, you can setup a recurring charge for your
-                                    product
+                                    will be charged. For example, you can setup a recurring charge for your product
                                     / service by setting Billing Type to Subscription and define how often your
                                     customer will get charged automatically.</p>
                             </div>
