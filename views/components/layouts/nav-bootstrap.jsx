@@ -283,7 +283,8 @@ const mapStateToProps = (state, ownProps) => {
     return {
         uid: state.uid,
         user: state.user || null,
-        options: state.options
+        options: state.options,
+        user_view: state.user_view
     }
 };
 

@@ -107,7 +107,6 @@ class ServiceRequest extends React.Component {
             try {
                 newPrice = getTotalPrice(formJSON.references.service_template_properties, handlers, formJSON.amount);
                 adjustments = getPriceAdjustments(formJSON.references.service_template_properties, handlers)
-                console.log("PRICE PRICE PRICE", newPrice, adjustments);
             } catch (e) {
                 console.error(e);
             }
