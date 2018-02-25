@@ -42,7 +42,7 @@ module.exports = {
         }else{
 
             //todo: move this to a plugin
-            let migrate = require("../../config/migrations/migrate");
+            let migrate = require("./migrations/migrate");
             yield call(migrate);
             //todo : implement new system options?
             //check migrate

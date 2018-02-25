@@ -4,11 +4,12 @@ let _ = require('lodash');
 let Charge = require("./base/entity")("charge_items");
 let Stripe = require('../config/stripe');
 let User = require('./user');
+let promiseProxy = require("../lib/promiseProxy");
 
 /**
  * Function to approve an individual charge item on the database and Stripe
  */
-Charge.prototype.approve = function (callback) {
+let approve = function (callback) {
     let self = this;
 
     User.findById(self.data.user_id, function (user_object) {
@@ -39,12 +40,12 @@ Charge.prototype.approve = function (callback) {
                                 callback(null, invoiceItem);
                             });
                         } else {
-                            console.log(`Error retrieving subscription detail from Stripe ${err}`);
-                            callback(null, subscription_err);
+                            console.error(`Error retrieving subscription detail from Stripe ${err}`);
+                            callback(subscription_err);
                         }
                     });
                 } else {
-                    console.log(`Error adding charge item to Stripe ${err}`);
+                    console.error(`Error adding charge item to Stripe ${err}`);
                     callback(err);
                 }
             });
@@ -114,4 +115,6 @@ Charge.findOnRelative = function(key, value, callback){
     });
 };*/
 
+
+Charge.prototype.approve = promiseProxy(approve, false);
 module.exports = Charge;
