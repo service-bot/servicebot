@@ -110,7 +110,7 @@ let createEmailNotifications = function(recipients, message, subject, notificati
 
 
 NotificationTemplate.prototype.createNotification =  function* (object) {
-    let self = this;
+    let self = (yield call(NotificationTemplate.find, {id : this.get("id")}))[0];
     let notificationContent = yield call(getNotificationContents, self, object);
     let usersToNotify = yield call(getRoleUsers, self);
 

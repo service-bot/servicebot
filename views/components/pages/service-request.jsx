@@ -155,9 +155,6 @@ class ServiceRequest extends React.Component {
             let service_request_title_description = _.get(options, 'service_request_title_description.value', 'What you are getting');
             let service_request_title_form = _.get(options, 'service_request_title_form.value', 'Get Your Service');
             let formAmount = _.get(formJSON, 'amount','N/A')
-            console.log('dffsdfd')
-            console.log(formJSON)
-            console.log(this.state.service)
 
             return (
 
@@ -235,7 +232,6 @@ class ServiceRequest extends React.Component {
 }
 
 function mapStateToProps(state) {
-    console.log("POOP", state);
     return {
         options:state.options,
         formJSON: getFormValues(REQUEST_FORM_NAME)(state)
