@@ -141,9 +141,9 @@ class ServiceRequest extends React.Component {
                                     <img className="request-icon" src={this.state.icon} alt="Service Icon"/> :
                                     <div className="request-icon"/>
                                 }
+                                {this.state.service.name}
                             </div>
                             <div className="request-form-content">
-                                {formAmount}
                                 <div className="basic-info">
                                     <div className="service-request-details">
                                         <div dangerouslySetInnerHTML={{__html: this.state.service.details}}/>
@@ -154,9 +154,31 @@ class ServiceRequest extends React.Component {
                             </div>
                         </div>
                         <div className="request-summary col-md-4">
-                            <div className="request-summary-heading">{service_request_title_form}</div>
+                            <div className="request-summary-heading">Plan Summary</div>
                             <div className="request-summary-content">
-
+                                {(this.state.service.trial_period_days > 0) ? (
+                                    <div className="free-trial-content">{this.state.service.trial_period_days} Day Free Trial</div>
+                                ) : null}
+                                {(this.state.service.type === "subscription" || this.state.service.type === "one_time") ? (
+                                    <div className="pricing-wrapper">
+                                        <div className="subscription-pricing row m-r-0 m-l-0">
+                                            {(this.state.service.type === "subscription") ? (<div className="col-md-6 p-r-0 p-l-0">Recurring Fee</div>): null}
+                                            {(this.state.service.type === "one_time") ? (<div className="col-md-6 p-r-0 p-l-0">Base Cost</div>) : null}
+                                            <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{getPrice(this.state.service)}</b></div>
+                                        </div>
+                                    </div>
+                                ) : null }
+                                {(this.state.service.type === "custom") ? (
+                                    <div className="free-trial-content">{this.state.service.trial_period_days} Day Free Trial</div>
+                                ) : null }
+                                <div className="total-price">
+                                    {(this.state.service.type === "subscription" || this.state.service.type === "one_time") ? (
+                                        <div className="row m-r-0 m-l-0">
+                                            <div className="col-md-6 p-r-0 p-l-0">Total:</div>
+                                            <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{getPrice(this.state.service)}</b></div>
+                                        </div>
+                                    ) : null }
+                                </div>
                             </div>
                         </div>
                     </div>

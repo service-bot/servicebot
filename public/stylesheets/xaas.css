@@ -737,6 +737,17 @@ ul.custom-fields-list {
     margin: 0px;
     font-weight: bold;
 }
+.footer .powerby{
+    margin-bottom: 20px;
+}
+
+.footer a.powerby-servicebot{
+    color: rgb(160, 160, 160);
+    letter-spacing: 1px;
+    background: whitesmoke;
+    padding: 10px 25px;
+    border-radius: 5px;
+}
 
 body.login .footer{
     /*position: absolute;*/

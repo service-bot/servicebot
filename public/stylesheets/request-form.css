@@ -1,5 +1,5 @@
 .request-wrap{
-    padding: 0 40px 40px 40px;
+    padding: 0 40px 0 40px;
 }
 .request-content{
     background: #FFFFFF;
@@ -39,11 +39,25 @@
     padding: 0 60px;
 }
 .devider hr {
-    border-bottom: 4px dotted #d2d2d2;
+    border-bottom: 2px dotted #e8e8e8;
     display: block;
     border-top: 0;
 }
 img.request-icon {
     max-height: 29px;
     margin-right: 15px;
+}
+.free-trial-content {
+    padding: 10px 20px;
+    background: #24e66d;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.pricing-wrapper {
+    padding: 15px 5px;
+    border-bottom: 2px dotted #d8d8d8;
+}
+.total-price {
+    padding: 15px 5px;
 }
