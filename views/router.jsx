@@ -19,7 +19,7 @@ import AllServices from "./components/pages/all-services.jsx";
 import MyServices from './components/pages/my-services.jsx';
 import ModalInvoice from './components/elements/modals/modal-invoice.jsx';
 import ServiceInstance from './components/pages/service-instance.jsx';
-import ServiceRequest from './components/pages/service-catalog-request.jsx';
+import ServiceRequest from './components/pages/service-request.jsx';
 import ServiceCatalog from './components/pages/service-catalog.jsx';
 // User
 import {Notifications} from "./components/pages/notifications.jsx"
@@ -56,9 +56,7 @@ import ServiceInstanceForm from "./components/elements/forms/service-instance-fo
 import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
-//Tests
-import ServiceTemplateFormV4 from "./components/elements/forms/service-template-form.jsx";
-import ServiceRequestV2 from "./components/pages/service-catalog-request.jsx"
+
 
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
@@ -92,7 +90,7 @@ class AppRouter extends React.Component {
                        component={ServiceInstance}/>
                 <Route name="Service Catalog" path="service-catalog" component={ServiceCatalog}/>
                 <Route name="Service Request" path="service-catalog/:templateId/request"
-                       component={ServiceRequestV2}/>
+                       component={ServiceRequest}/>
                 <Route name="Account Settings" path="account-settings/:userId" component={UserForm}/>
                 <Route name="My Profile" path="profile" component={Profile}/>
                 {/* Billing */}
