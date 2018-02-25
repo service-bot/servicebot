@@ -7,11 +7,14 @@ import Featured from "../layouts/featured.jsx";
 import {AdminEditingGear, AdminEditingSidebar} from "../layouts/admin-sidebar.jsx";
 import Fetcher from "../utilities/fetcher.jsx"
 import {Price, getPrice} from "../utilities/price.jsx";
+import {getPrice as getTotalPrice, getPriceAdjustments} from "../../../lib/handleInputs";
+
 import { connect } from 'react-redux';
 let _ = require("lodash");
 import IconHeading from "../layouts/icon-heading.jsx";
 import InfoToolTip from "../elements/tooltips/info-tooltip.jsx";
 import {formValueSelector, getFormValues} from 'redux-form'
+import consume from "pluginbot-react/src/consume";
 const REQUEST_FORM_NAME = "serviceInstanceRequestForm";
 const selector = formValueSelector(REQUEST_FORM_NAME); // <-- same as form name
 
@@ -35,7 +38,7 @@ class ServiceRequest extends React.Component {
         this.toggleEditingMode = this.toggleEditingMode.bind(this);
         this.toggleOnEditingGear = this.toggleOnEditingGear.bind(this);
         this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
-
+        this.getPriceData = this.getPriceData.bind(this);
         this.getService = this.getService.bind(this);
     }
 
@@ -90,6 +93,31 @@ class ServiceRequest extends React.Component {
         this.setState({editingGear: false})
     }
 
+    getPriceData(){
+        let {formJSON, services: {widget}} = this.props;
+        if(formJSON) {
+            console.error(formJSON);
+            let handlers = widget.reduce((acc, widget) => {
+                acc[widget.type] = widget.handler;
+                return acc;
+
+            }, {});
+            let newPrice = formJSON.amount;
+            let adjustments = []
+            try {
+                newPrice = getTotalPrice(formJSON.references.service_template_properties, handlers, formJSON.amount);
+                adjustments = getPriceAdjustments(formJSON.references.service_template_properties, handlers)
+                console.log("PRICE PRICE PRICE", newPrice, adjustments);
+            } catch (e) {
+                console.error(e);
+            }
+            return {total : newPrice, adjustments};
+        }else{
+            return {total : 0, adjustments : []};
+        }
+
+    }
+
     getService(){
         let self = this;
         Fetcher(`/api/v1/service-templates/${this.state.id}/request`).then(function(response){
@@ -133,7 +161,9 @@ class ServiceRequest extends React.Component {
             console.log(this.state.service)
 
             return (
+
                 <div className="request-wrap">
+                    {JSON.stringify(this.getPriceData())}
                     <div className="request-content cf">
                         <div className="request-user-form col-md-8">
                             <div className="request-form-heading">
@@ -206,11 +236,13 @@ class ServiceRequest extends React.Component {
 }
 
 function mapStateToProps(state) {
+    console.log("POOP", state);
     return {
         options:state.options,
         formJSON: getFormValues(REQUEST_FORM_NAME)(state)
     }
 }
 
-ServiceRequest = connect(mapStateToProps)(ServiceRequest);
+
+ServiceRequest = consume("widget")(connect(mapStateToProps)(ServiceRequest));
 export default ServiceRequest;

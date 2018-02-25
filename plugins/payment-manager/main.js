@@ -15,7 +15,7 @@ function* startTimerWhenSubscribed(action) {
         console.log("TRIAL STARTED!");
     }
     if(instance.get("type") === "split"){
-        scheduleSplitsForInstance(instance);
+        return scheduleSplitsForInstance(instance);
     }
 }
 
@@ -29,14 +29,20 @@ async function addSplitCharge(split, instance, description){
         'currency': instance.get('currency'),
         'amount': split.amount || 0,
         description,
-        "subscription_id" : instance.get("subscription_id")
+        "subscription_id" : instance.get("subscription_id"),
+        "approved" : true
 
     };
 
     //create new charge and approve it
     let newCharge = new Charge(await Charge.createPromise(chargeObject));
-    await newCharge.approve()
-
+    try {
+        await newCharge.approve()
+    }catch(e){
+        console.error("Error adding split charge", e);
+        newCharge.data.approved = false;
+        await newCharge.update();
+    }
     //todo: error case?
 }
 
@@ -45,12 +51,13 @@ async function scheduleSplitsForInstance(instance){
     let splits = instance.get("split_configuration") && instance.get("split_configuration").splits;
     if(instance.get("type") === "split" && splits){
         let splitCharges = await Charge.find({service_instance_id : instance.get("id"), description : {"like" : "SPLIT_%"}});
-
         //sort by charge_day and slice it by the number of already existing charges
         let splitsToSchedule = splits.sort(function (a, b) {
             return a.charge_day - b.charge_day;
         }).slice(splitCharges.length); //todo: rework this, there are edge cases that can give problems here
+
         for(let i in splitsToSchedule){
+
             let split = splitsToSchedule[i];
             let scheduledDate = new Date(instance.get("subscribed_at") * 1000);
             //set date to be the subscribed at date + the charge_day
@@ -59,7 +66,7 @@ async function scheduleSplitsForInstance(instance){
             let description = `SPLIT_${splitNumber}`
             console.log(scheduledDate, new Date());
             //if scheduled date has already passed, add a new charge
-            if(scheduledDate <= (new Date())){
+            if(scheduledDate <= (new Date()) || split.charge_day === 0){
                 console.log("Charge needed", split);
                 await addSplitCharge(split, instance, description);
             }else{

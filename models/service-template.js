@@ -34,7 +34,8 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
             requested_by: instanceRequest.requested_by,
             user_id: instanceRequest.user_id,
             service_id: self.get("id"),
-            type: self.get("type")
+            type: self.get("type"),
+            split_configuration : self.get("split_configuration")
         };
 
         let submittedProperties = instanceRequest.references.service_template_properties;
