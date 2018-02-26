@@ -36,6 +36,17 @@ span.notification-badge {
     font-size: 0.9em;
     line-height: 14px;
 }
+.nav span.notification-badge {
+    background: #ff0000;
+    border-radius: 0;
+    padding: 8px 10px 8px 8px;
+    text-align: center;
+    margin-left: 5px;
+    font-weight: 100;
+    font-size: 0.9em;
+    line-height: 14px;
+}
+
 .notification-stripe-keys{
     color: #ffffff !important;
     background-color: #191919 !important;

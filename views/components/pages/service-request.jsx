@@ -17,7 +17,7 @@ import {formValueSelector, getFormValues} from 'redux-form'
 import consume from "pluginbot-react/src/consume";
 const REQUEST_FORM_NAME = "serviceInstanceRequestForm";
 const selector = formValueSelector(REQUEST_FORM_NAME); // <-- same as form name
-
+import {setNavClass, resetNavClass} from "../utilities/actions";
 
 class ServiceRequest extends React.Component {
 
@@ -43,9 +43,14 @@ class ServiceRequest extends React.Component {
     }
 
     componentDidMount(){
+        this.props.setNavClass("frontEnd");
         this.getService();
         //this.getCoverImage();
         this.getIcon();
+    }
+
+    componentWillUnmount(){
+        this.props.resetNavClass();
     }
 
     getCoverImage(){
@@ -154,14 +159,39 @@ class ServiceRequest extends React.Component {
             //const {formJSON, options} = this.props;
             let service_request_title_description = _.get(options, 'service_request_title_description.value', 'What you are getting');
             let service_request_title_form = _.get(options, 'service_request_title_form.value', 'Get Your Service');
-            let formAmount = _.get(formJSON, 'amount','N/A')
+            let formAmount = _.get(formJSON, 'amount','N/A');
+            let {total, adjustments} = this.getPriceData();
+            let filteredAdjustments = adjustments.filter(adjustment => adjustment.value > 0);
+            let splitPricing = this.state.service.split_configuration;
+            let splitTotal = 0;
+
+            let rightHeading = "Plan Summary";
+            switch (this.state.service.type) {
+                case 'one_time':
+                    rightHeading = "Payment Summary";
+                    break;
+                case 'custom':
+                    rightHeading = "Custom Service";
+                    break;
+                case 'split':
+                    rightHeading = "Scheduled Payments";
+                    if(splitPricing) {
+                        splitPricing.splits.map((split) => {
+                            splitTotal += split.amount;
+                        });
+                    }
+                    break;
+                default:
+                    rightHeading = "Plan Summary";
+            }
+
 
             return (
 
                 <div className="request-wrap">
-                    {JSON.stringify(this.getPriceData())}
-                    <div className="request-content cf">
-                        <div className="request-user-form col-md-8">
+                    {/*{JSON.stringify(this.getPriceData())}*/}
+                    <div className="request-content col-lg-offset-1 col-xl-offset-2 col-xs-12 col-sm-12 col-md-12 col-lg-10 col-xl-8">
+                        <div className="request-user-form col-xs-12 col-sm-12 col-md-8 col-lg-8">
                             <div className="request-form-heading">
                                 {this.state.icon ?
                                     <img className="request-icon" src={this.state.icon} alt="Service Icon"/> :
@@ -179,32 +209,61 @@ class ServiceRequest extends React.Component {
                                 <ServiceRequestForm templateId={this.state.id} service={this.state.service}/>
                             </div>
                         </div>
-                        <div className="request-summary col-md-4">
-                            <div className="request-summary-heading">Plan Summary</div>
+                        <div className="request-summary col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                            <div className="request-summary-heading">{rightHeading}</div>
                             <div className="request-summary-content">
                                 {(this.state.service.trial_period_days > 0) ? (
                                     <div className="free-trial-content">{this.state.service.trial_period_days} Day Free Trial</div>
                                 ) : null}
                                 {(this.state.service.type === "subscription" || this.state.service.type === "one_time") ? (
-                                    <div className="pricing-wrapper">
-                                        <div className="subscription-pricing row m-r-0 m-l-0">
-                                            {(this.state.service.type === "subscription") ? (<div className="col-md-6 p-r-0 p-l-0">Recurring Fee</div>): null}
-                                            {(this.state.service.type === "one_time") ? (<div className="col-md-6 p-r-0 p-l-0">Base Cost</div>) : null}
-                                            <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{getPrice(this.state.service)}</b></div>
+                                    <div>
+                                        <div className="pricing-wrapper">
+                                            <div className="subscription-pricing row m-r-0 m-l-0">
+                                                {(this.state.service.type === "subscription") ? (<div className="col-md-6 p-r-0 p-l-0">Recurring Fee</div>): null}
+                                                {(this.state.service.type === "one_time") ? (<div className="col-md-6 p-r-0 p-l-0">Base Cost</div>) : null}
+                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{getPrice(this.state.service)}</b></div>
+                                            </div>
+                                        </div>
+                                        {filteredAdjustments.map((lineItem) => (
+                                            <div className="pricing-wrapper">
+                                                <div className="subscription-pricing row m-r-0 m-l-0">
+                                                    <div className="col-md-6 p-r-0 p-l-0">{lineItem.name}</div>
+                                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={lineItem.value}/></b></div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        <div className="total-price">
+                                            <div className="row m-r-0 m-l-0">
+                                                <div className="col-md-6 p-r-0 p-l-0">Total:</div>
+                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={total}/></b></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                ) : null }
+
+                                {(this.state.service.type === "custom") ? (
+                                    <div className="quote-content">Custom Quote</div>
+                                ) : null }
+
+                                {(this.state.service.type === "split" && splitPricing) ? (
+                                    <div>
+                                        {splitPricing.splits.map((splitItem) => (
+                                            <div className="split-wrapper">
+                                                <div className="subscription-pricing row m-r-0 m-l-0">
+                                                    <div className="col-md-6 p-r-0 p-l-0">{(splitItem.charge_day === 0) ? (<span>Right Now</span>) : (<span>After {splitItem.charge_day} Days</span>)}</div>
+                                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitItem.amount}/></b></div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        <div className="total-price">
+                                            <div className="row m-r-0 m-l-0">
+                                                <div className="col-md-6 p-r-0 p-l-0">Total:</div>
+                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitTotal}/></b></div>
+                                            </div>
                                         </div>
                                     </div>
                                 ) : null }
-                                {(this.state.service.type === "custom") ? (
-                                    <div className="free-trial-content">{this.state.service.trial_period_days} Day Free Trial</div>
-                                ) : null }
-                                <div className="total-price">
-                                    {(this.state.service.type === "subscription" || this.state.service.type === "one_time") ? (
-                                        <div className="row m-r-0 m-l-0">
-                                            <div className="col-md-6 p-r-0 p-l-0">Total:</div>
-                                            <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{getPrice(this.state.service)}</b></div>
-                                        </div>
-                                    ) : null }
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -238,6 +297,16 @@ function mapStateToProps(state) {
     }
 }
 
+function mapDispatch(dispatch){
+    return {
+        setNavClass : function(className){
+            dispatch(setNavClass(className));
+        },
+        resetNavClass : function(){
+            dispatch(resetNavClass());
+        }
+    }
+}
 
-ServiceRequest = consume("widget")(connect(mapStateToProps)(ServiceRequest));
+ServiceRequest = consume("widget")(connect(mapStateToProps, mapDispatch)(ServiceRequest));
 export default ServiceRequest;

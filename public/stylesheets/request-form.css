@@ -4,8 +4,8 @@
 .request-content{
     background: #FFFFFF;
     border: 1px solid #ddd;
-    display: flex;
-    /* -webkit-box-sizing: border-box; */
+    padding: 0;
+     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
@@ -54,10 +54,31 @@ img.request-icon {
     font-weight: bold;
     margin-bottom: 10px;
 }
+.quote-content {
+    padding: 10px 20px;
+    background-color: rgb(147, 24, 207);
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
 .pricing-wrapper {
-    padding: 15px 5px;
-    border-bottom: 2px dotted #d8d8d8;
+    padding: 10px 5px;
 }
 .total-price {
-    padding: 15px 5px;
+    padding: 10px 5px;
+    margin-top: 10px;
+    border-top: 2px dotted #d8d8d8;
+}
+
+.split-heading{
+    text-align: center;
+    font-weight: bold;
+}
+
+.split-wrapper{
+    padding: 15px;
+    background: #e2e2e2;
+    border-radius: 5px;
+    margin-top: 5px;
 }

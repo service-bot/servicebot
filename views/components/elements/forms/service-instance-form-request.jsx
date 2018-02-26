@@ -172,6 +172,23 @@ class ServiceRequestForm extends React.Component {
                         />
                     </Authorizer>
 
+                    {helpers.hasCard &&
+                    <div className="service-request-form-payment">
+                        {helpers.stripToken ?
+                            <div>
+                                <p className="help-block">You {helpers.card.funding} card in your account
+                                    ending in: {helpers.card.last4} will be used.</p>
+                                <span className="help-block">If you wish to use a different card, you can
+                                                update your card under <Link
+                                        to="/billing-settings">billing settings.</Link></span>
+                            </div> :
+                            <p className="help-block">
+                                Using {helpers.card.funding} card ending in: {helpers.card.last4}
+                            </p>
+                        }
+                    </div>
+                    }
+
                     {!helpers.uid &&
                     <div>
                         <Field name="email" type="text" component={inputField}
@@ -191,25 +208,9 @@ class ServiceRequestForm extends React.Component {
                                     formJSON={formJSON.references.service_template_properties}/>
                     </FormSection>
 
-                    {helpers.hasCard &&
-                    <div className="service-request-form-payment">
-                        {helpers.stripToken ?
-                            <div>
-                                <p className="help-block">You {helpers.card.funding} card in your account
-                                    ending in: {helpers.card.last4} will be used.</p>
-                                <span className="help-block">If you wish to use a different card, you can
-                                                update your card under <Link
-                                        to="/billing-settings">billing settings.</Link></span>
-                            </div> :
-                            <p className="help-block">
-                                Using {helpers.card.funding} card ending in: {helpers.card.last4}
-                            </p>
-                        }
-                    </div>
-                    }
-                    {formJSON.trial_period_days !== 0 && <div>
-                        <Price value={newPrice}/>
-                    </div>}
+                    {/*{formJSON.trial_period_days !== 0 && <div>*/}
+                        {/*<Price value={newPrice}/>*/}
+                    {/*</div>}*/}
 
                     <button className="btn btn-rounded btn-primary btn-bar" type="submit" value="submit">
                         {getRequestText()}

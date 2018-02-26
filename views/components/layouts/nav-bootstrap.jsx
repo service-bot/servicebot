@@ -191,7 +191,7 @@ class NavBootstrap extends React.Component {
                 </span> );
         }
         if(livemode.toUpperCase() === "TEST") {
-            return ( <span className="notification-badge"><strong>Test Mode Payments</strong></span> );
+            return ( <span className="notification-badge"><strong>Test Mode</strong></span> );
         } else {
             return <span/>;
         }
@@ -216,6 +216,7 @@ class NavBootstrap extends React.Component {
         }
 
         return (
+            <div className={this.props.nav_class || "basic"}>
             <nav className="navbar navbar-default" style={navigationBarStyle} onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
                 <div className="container-fluid">
                     <div className="navbar-header">
@@ -274,7 +275,7 @@ class NavBootstrap extends React.Component {
                 }
                 <AppMessage/>
             </nav>
-
+            </div>
         );
     }
 }
@@ -284,7 +285,7 @@ const mapStateToProps = (state, ownProps) => {
         uid: state.uid,
         user: state.user || null,
         options: state.options,
-        user_view: state.user_view
+        nav_class: state.navbar.nav_class
     }
 };
 
