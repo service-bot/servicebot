@@ -57,6 +57,33 @@ class ServiceInstancePaymentPlan extends React.Component {
         }
     }
 
+    getSplitPayments(){
+        let self = this;
+        let serviceInstance = self.props.service;
+        let splitPayments = serviceInstance.split_configuration;
+        if(serviceInstance.type === 'split' && splitPayments) {
+            return(
+                <div className="service-instance-box black">
+                    <div className="service-instance-box-title black">
+                        <span>Scheduled Payment Details</span>
+                    </div>
+                    <div className="service-instance-box-content">
+                        {splitPayments.splits.map((splitItem) => (
+                            <div className="split-wrapper">
+                                <div className="subscription-pricing row m-r-0 m-l-0 p-0">
+                                    <div className="col-md-6 p-r-0 p-l-0">{(splitItem.charge_day === 0) ? (<span>Paid Instantly</span>) : (<span>After {splitItem.charge_day} Days</span>)}</div>
+                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitItem.amount}/></b></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        } else {
+            return null;
+        }
+    }
+
     //TODO: change this to property widget type
     //Get application launch action based on URL custom variable.
     getLinkActionButton(){
@@ -154,6 +181,7 @@ class ServiceInstancePaymentPlan extends React.Component {
                         </div>
 
                     </div>
+                    {this.getSplitPayments()}
                     {this.getCustomerInfo()}
                 </div>
             );
