@@ -212,7 +212,7 @@ class ServiceRequestForm extends React.Component {
                         {/*<Price value={newPrice}/>*/}
                     {/*</div>}*/}
 
-                    <button className="btn btn-rounded btn-primary btn-bar" type="submit" value="submit">
+                    <button className="btn btn-rounded btn-primary btn-bar submit-request" type="submit" value="submit">
                         {getRequestText()}
                     </button>
                     {error &&
@@ -429,8 +429,11 @@ class ServiceInstanceForm extends React.Component {
             <div>
                 {/*Price: {this.state.servicePrice}*/}
 
-                {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
-                this.state.servicePrice > 0 && initialValues.trial_period_days <= 0 && <CardSection/>}
+                {(!this.state.hasCard &&
+                    !isAuthorized({permissions: "can_administrate"})) &&
+                    ((this.state.servicePrice > 0 && initialValues.trial_period_days <= 0) ||
+                    (this.state.templateData.type === 'split')) &&
+                <CardSection/>}
 
 
                 <ServiceBotBaseForm

@@ -8,7 +8,6 @@ import {AdminEditingGear, AdminEditingSidebar} from "../layouts/admin-sidebar.js
 import Fetcher from "../utilities/fetcher.jsx"
 import {Price, getPrice} from "../utilities/price.jsx";
 import {getPrice as getTotalPrice, getPriceAdjustments} from "../../../lib/handleInputs";
-
 import { connect } from 'react-redux';
 let _ = require("lodash");
 import IconHeading from "../layouts/icon-heading.jsx";
@@ -18,6 +17,7 @@ import consume from "pluginbot-react/src/consume";
 const REQUEST_FORM_NAME = "serviceInstanceRequestForm";
 const selector = formValueSelector(REQUEST_FORM_NAME); // <-- same as form name
 import {setNavClass, resetNavClass} from "../utilities/actions";
+import { StickyContainer, Sticky } from 'react-sticky';
 
 class ServiceRequest extends React.Component {
 
@@ -136,7 +136,7 @@ class ServiceRequest extends React.Component {
 
     render () {
         if(this.state.loading){
-            return(<span>loading</span>);
+            return(<span></span>);
         }else {
             let { formJSON, options } = this.props;
 
@@ -211,60 +211,76 @@ class ServiceRequest extends React.Component {
                         </div>
                         <div className="request-summary col-xs-12 col-sm-12 col-md-4 col-lg-4">
                             <div className="request-summary-heading">{rightHeading}</div>
-                            <div className="request-summary-content">
-                                {(this.state.service.trial_period_days > 0) ? (
-                                    <div className="free-trial-content">{this.state.service.trial_period_days} Day Free Trial</div>
-                                ) : null}
-                                {(this.state.service.type === "subscription" || this.state.service.type === "one_time") ? (
-                                    <div>
-                                        <div className="pricing-wrapper">
-                                            <div className="subscription-pricing row m-r-0 m-l-0">
-                                                {(this.state.service.type === "subscription") ? (<div className="col-md-6 p-r-0 p-l-0">Recurring Fee</div>): null}
-                                                {(this.state.service.type === "one_time") ? (<div className="col-md-6 p-r-0 p-l-0">Base Cost</div>) : null}
-                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{getPrice(this.state.service)}</b></div>
-                                            </div>
-                                        </div>
-                                        {filteredAdjustments.map((lineItem) => (
-                                            <div className="pricing-wrapper">
-                                                <div className="subscription-pricing row m-r-0 m-l-0">
-                                                    <div className="col-md-6 p-r-0 p-l-0">{lineItem.name}</div>
-                                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={lineItem.value}/></b></div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                        <div className="total-price">
-                                            <div className="row m-r-0 m-l-0">
-                                                <div className="col-md-6 p-r-0 p-l-0">Total:</div>
-                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={total}/></b></div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            <StickyContainer style={{ height: "100%" }}>
+                                <Sticky>
+                                    {({
+                                          isSticky,
+                                          wasSticky,
+                                          style,
+                                          distanceFromTop,
+                                          distanceFromBottom,
+                                          calculatedHeight
+                                      }) => {
+                                        return <div style={style} >
+                                            <div  className="request-summary-content">
+                                                {(this.state.service.trial_period_days > 0) ? (
+                                                    <div className="free-trial-content">{this.state.service.trial_period_days} Day Free Trial</div>
+                                                ) : null}
+                                                {(this.state.service.type === "subscription" || this.state.service.type === "one_time") ? (
+                                                    <div>
+                                                        <div className="pricing-wrapper">
+                                                            <div className="subscription-pricing row m-r-0 m-l-0">
+                                                                {(this.state.service.type === "subscription") ? (<div className="col-md-6 p-r-0 p-l-0">Recurring Fee</div>): null}
+                                                                {(this.state.service.type === "one_time") ? (<div className="col-md-6 p-r-0 p-l-0">Base Cost</div>) : null}
+                                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{getPrice(this.state.service)}</b></div>
+                                                            </div>
+                                                        </div>
+                                                        {filteredAdjustments.map((lineItem) => (
+                                                            <div className="pricing-wrapper">
+                                                                <div className="subscription-pricing row m-r-0 m-l-0">
+                                                                    <div className="col-md-6 p-r-0 p-l-0">{lineItem.name}</div>
+                                                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={lineItem.value}/></b></div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                        <div className="total-price">
+                                                            <div className="row m-r-0 m-l-0">
+                                                                <div className="col-md-6 p-r-0 p-l-0">Total:</div>
+                                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={total}/></b></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
 
-                                ) : null }
+                                                ) : null }
 
-                                {(this.state.service.type === "custom") ? (
-                                    <div className="quote-content">Custom Quote</div>
-                                ) : null }
+                                                {(this.state.service.type === "custom") ? (
+                                                    <div className="quote-content">Custom Quote</div>
+                                                ) : null }
 
-                                {(this.state.service.type === "split" && splitPricing) ? (
-                                    <div>
-                                        {splitPricing.splits.map((splitItem) => (
-                                            <div className="split-wrapper">
-                                                <div className="subscription-pricing row m-r-0 m-l-0">
-                                                    <div className="col-md-6 p-r-0 p-l-0">{(splitItem.charge_day === 0) ? (<span>Right Now</span>) : (<span>After {splitItem.charge_day} Days</span>)}</div>
-                                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitItem.amount}/></b></div>
-                                                </div>
+                                                {(this.state.service.type === "split" && splitPricing) ? (
+                                                    <div>
+                                                        {splitPricing.splits.map((splitItem) => (
+                                                            <div className="split-wrapper">
+                                                                <div className="subscription-pricing row m-r-0 m-l-0">
+                                                                    <div className="col-md-6 p-r-0 p-l-0">{(splitItem.charge_day === 0) ? (<span>Right Now</span>) : (<span>After {splitItem.charge_day} Days</span>)}</div>
+                                                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitItem.amount}/></b></div>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                        <div className="total-price">
+                                                            <div className="row m-r-0 m-l-0">
+                                                                <div className="col-md-6 p-r-0 p-l-0">Total:</div>
+                                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitTotal}/></b></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ) : null }
                                             </div>
-                                        ))}
-                                        <div className="total-price">
-                                            <div className="row m-r-0 m-l-0">
-                                                <div className="col-md-6 p-r-0 p-l-0">Total:</div>
-                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitTotal}/></b></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : null }
-                            </div>
+
+                                        </div>;
+                                    }}
+                                </Sticky>
+                            </StickyContainer>
                         </div>
                     </div>
 

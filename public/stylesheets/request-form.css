@@ -1,9 +1,11 @@
 .request-wrap{
     padding: 0 40px 0 40px;
+    margin-top: 50px;
 }
 .request-content{
     background: #FFFFFF;
     border: 1px solid #ddd;
+    display: flex;
     padding: 0;
      -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -81,4 +83,9 @@ img.request-icon {
     background: #e2e2e2;
     border-radius: 5px;
     margin-top: 5px;
+}
+
+.submit-request{
+    padding: 10px;
+    border-radius: 5px !important;
 }
