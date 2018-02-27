@@ -215,67 +215,78 @@ class NavBootstrap extends React.Component {
             linkTextStyle.color = _.get(options, 'primary_theme_text_color.value', '#000000');
         }
 
-        return (
-            <div className={this.props.nav_class || "basic"}>
-            <nav className="navbar navbar-default" style={navigationBarStyle} onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
-                <div className="container-fluid">
-                    <div className="navbar-header">
-                        <button type="button" className="navbar-toggle collapsed" data-toggle="collapse"
-                                data-target="#bs-example-navbar-collapse-1" aria-expanded="false" onClick={this.toggleSideBar}  >
-                            <span className="sr-only">Toggle navigation</span>
-                            <span className="icon-bar"/>
-                            <span className="icon-bar"/>
-                            <span className="icon-bar"/>
-                        </button>
-                        {}
-                        <Link to="/" className="navbar-brand nav-logo"><img src="/api/v1/system-options/file/brand_logo"/></Link>
-                    </div>
+        let embed = false;
+        if(window.location.search.substring(1) === 'embed'){
+            embed = true;
+        }
 
-                    <div className="collapse navbar-collapse">
-                        <Authorizer>
-                            {this.getMenuItems(linkTextStyle)}
-                        </Authorizer>
-                        <div className="nav navbar-nav navbar-right navvbar-badge">
-                            {this.getLivemode()}
+
+        return (
+            <div>
+                {!embed &&
+                <div>
+                    <nav className="navbar navbar-default" style={navigationBarStyle} onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
+                        <div className="container-fluid">
+                            <div className="navbar-header">
+                                <button type="button" className="navbar-toggle collapsed" data-toggle="collapse"
+                                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false" onClick={this.toggleSideBar}  >
+                                    <span className="sr-only">Toggle navigation</span>
+                                    <span className="icon-bar"/>
+                                    <span className="icon-bar"/>
+                                    <span className="icon-bar"/>
+                                </button>
+                                {}
+                                <Link to="/" className="navbar-brand nav-logo"><img src="/api/v1/system-options/file/brand_logo"/></Link>
+                            </div>
+
+                            <div className="collapse navbar-collapse">
+                                <Authorizer>
+                                    {this.getMenuItems(linkTextStyle)}
+                                </Authorizer>
+                                <div className="nav navbar-nav navbar-right navvbar-badge">
+                                    {this.getLivemode()}
+                                </div>
+                                <Authorizer anonymous={true}>
+                                    <VisibleAnonymousLinks/>
+                                </Authorizer>
+                                <Authorizer>
+                                    <ul className="nav navbar-nav navbar-right">
+                                        <NavNotification/>
+                                        <li>
+                                            <div className="nav-profile badge badge-sm">
+                                                <Link to="/profile">
+                                                    <img id="avatar-img" src={`/api/v1/users/${this.props.uid}/avatar`}
+                                                         ref="avatar" className="img-circle" alt="badge"/>
+                                                    {this.state.loadingImage && <Load/> }
+                                                </Link>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <button className="btn btn-link btn-signout"
+                                                    onClick={this.props.handleLogout} style={linkTextStyle}>Log Out</button>
+                                        </li>
+                                    </ul>
+                                </Authorizer>
+                            </div>
                         </div>
-                        <Authorizer anonymous={true}>
-                            <VisibleAnonymousLinks/>
-                        </Authorizer>
-                        <Authorizer>
-                            <ul className="nav navbar-nav navbar-right">
-                                <NavNotification/>
-                                <li>
-                                    <div className="nav-profile badge badge-sm">
-                                        <Link to="/profile">
-                                            <img id="avatar-img" src={`/api/v1/users/${this.props.uid}/avatar`}
-                                                 ref="avatar" className="img-circle" alt="badge"/>
-                                            {this.state.loadingImage && <Load/> }
-                                        </Link>
-                                    </div>
-                                </li>
-                                <li>
-                                    <button className="btn btn-link btn-signout"
-                                            onClick={this.props.handleLogout} style={linkTextStyle}>Log Out</button>
-                                </li>
-                            </ul>
-                        </Authorizer>
-                    </div>
-                </div>
-                {/* app-wide modals */}
-                {currentModal()}
-                {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
-                {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
-                                                                filter = {[ "brand_logo",
+                        {/* app-wide modals */}
+                        {currentModal()}
+                        {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
+                        {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
+                                                                        filter = {[ "brand_logo",
                                                                             "primary_theme_background_color",
                                                                             "primary_theme_text_color",
                                                                             "button_primary_color",
                                                                             "button_primary_hover_color",
                                                                             "button_primary_text_color"]
-                                                                }/>
+                                                                        }/>
+                        }
+                        <AppMessage/>
+                    </nav>
+                </div>
                 }
-                <AppMessage/>
-            </nav>
             </div>
+
         );
     }
 }

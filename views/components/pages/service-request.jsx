@@ -205,7 +205,7 @@ class ServiceRequest extends React.Component {
             return (
 
                 <div className="request-wrap">
-                    {JSON.stringify(this.getPriceData())}
+                    {/*{JSON.stringify(this.getPriceData())}*/}
                     <div className="request-content col-lg-offset-1 col-xl-offset-2 col-xs-12 col-sm-12 col-md-12 col-lg-10 col-xl-8">
                         <div className="request-user-form col-xs-12 col-sm-12 col-md-8 col-lg-8">
                             <div className="request-form-heading">
