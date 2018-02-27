@@ -43,7 +43,7 @@ module.exports = {
 
             //todo: move this to a plugin
             let migrate = require("./migrations/migrate");
-            yield call(migrate);
+            yield call(migrate, database);
             //todo : implement new system options?
             //check migrate
             //check new system options?

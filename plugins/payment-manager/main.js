@@ -1,7 +1,6 @@
 let {call, put, all, select, fork, spawn, take, takeEvery} = require("redux-saga/effects");
 let consume = require("pluginbot/effects/consume");
 let schedule = require('node-schedule');
-let Charge = require("../../models/charge");
 
 function* startTimerWhenSubscribed(action) {
     let instance = action.event_object
@@ -22,6 +21,7 @@ function* startTimerWhenSubscribed(action) {
 
 //function to create a new charge on an instance
 async function addSplitCharge(split, instance, description){
+    let Charge = require("../../models/charge");
     console.log("ADDING SPLIT CHARGE ", description);
     let chargeObject = {
         'user_id': instance.get('user_id'),
@@ -48,6 +48,7 @@ async function addSplitCharge(split, instance, description){
 
 //schedules splits that haven't been charged yet on an instance
 async function scheduleSplitsForInstance(instance){
+    let Charge = require("../../models/charge");
     let splits = instance.get("split_configuration") && instance.get("split_configuration").splits;
     if(instance.get("type") === "split" && splits){
         let splitCharges = await Charge.find({service_instance_id : instance.get("id"), description : {"like" : "SPLIT_%"}});
