@@ -134,6 +134,22 @@ class ServiceRequest extends React.Component {
         });
     }
 
+    getAdjustmentSign(adjustment) {
+        switch (adjustment.operation) {
+            case "subtract":
+                return <span>- <Price value={adjustment.value}/></span>;
+                break;
+            case "multiply":
+                return <span>+ %{adjustment.value}</span>;
+                break;
+            case"divide":
+                return <span>- %{adjustment.value}</span>;
+                break;
+            default:
+                return <span>+ <Price value={adjustment.value}/></span>;
+        }
+    }
+
     render () {
         if(this.state.loading){
             return(<span></span>);
@@ -189,7 +205,7 @@ class ServiceRequest extends React.Component {
             return (
 
                 <div className="request-wrap">
-                    {/*{JSON.stringify(this.getPriceData())}*/}
+                    {JSON.stringify(this.getPriceData())}
                     <div className="request-content col-lg-offset-1 col-xl-offset-2 col-xs-12 col-sm-12 col-md-12 col-lg-10 col-xl-8">
                         <div className="request-user-form col-xs-12 col-sm-12 col-md-8 col-lg-8">
                             <div className="request-form-heading">
@@ -239,7 +255,7 @@ class ServiceRequest extends React.Component {
                                                             <div className="pricing-wrapper">
                                                                 <div className="subscription-pricing row m-r-0 m-l-0">
                                                                     <div className="col-md-6 p-r-0 p-l-0">{lineItem.name}</div>
-                                                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={lineItem.value}/></b></div>
+                                                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{this.getAdjustmentSign(lineItem)}</b></div>
                                                                 </div>
                                                             </div>
                                                         ))}
