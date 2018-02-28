@@ -382,10 +382,12 @@ class TemplateForm extends React.Component {
                                component={inputField} label="Summary"
                                validate={[required()]}
                         />
+                        <div className="form-group form-group-flex">
                         <Field name="details" type="text"
                                component={WysiwygRedux} label="Details"
                                validate={[required()]}
                         />
+                        </div>
 
                         {options.stripe_publishable_key && <Field name="published" type="checkbox"
                                                                   defaultValue={true} color="#0091EA" faIcon="check"

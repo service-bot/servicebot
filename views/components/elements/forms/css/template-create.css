@@ -91,10 +91,14 @@
 }
 .addon-options-widget-price-inputs-wrapper,
 .addon-checkbox-widget-price-inputs-wrapper{
-    width: 100% ;
+    width: 100%;
+}
+.addon-options-widget-config-input-wrapper .form-input-flex {
+    flex-grow: 0;
+    flex-basis: 70%;
 }
 .addon-options-widget-pricing-input-label {
-    flex-basis: 277px;
+    flex-basis: 30%;
 }
 .addon-widget-pricing-input-label {
     flex-basis: 282px;
