@@ -122,3 +122,12 @@
     color: #dfdfdf;
     border-bottom: 1px solid #eee;
 }
+
+/* request form */
+.addon-checkbox-widget-default-value .form-input-flex {
+    display: flex;
+    color: #7b7b7b;
+}
+.addon-checkbox-widget-default-value .form-input-flex .form-group{
+    margin-right: 10px;
+}

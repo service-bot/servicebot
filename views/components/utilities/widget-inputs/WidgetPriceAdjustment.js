@@ -10,26 +10,28 @@ function Adjustment(props){
     }
     switch(operation) {
         case "add":
-            message = `  $${price} Add-on`
+            message = `  $${price} <span className="request-form-price-adjust-addon">Add-on</span>`
             break;
         case "subtract":
-            message = `  $${price} Discount`
+            message = `  $${price} <span className="request-form-price-adjust-discount">Discount</span>`
 
             break;
         case "multiply" :
-            message = `  ${price}% Increase`
+            message = `  ${price}% <span className="request-form-price-adjust-increase">Increase</span>`
 
             break;
         case "divide" :
-            message = `  ${price}% Discount`
+            message = `  ${price}% <span className="request-form-price-adjust-decrease">Discount</span>`
             break;
         default :
             message = ` -- ${operation} : ${price}`;
             break;
     }
-    return <div>
+    return (
+        <div className="request-form-price-adjustment-wrapper">
         {message}
-    </div>
+        </div>
+    );
 }
 
 export default Adjustment;
