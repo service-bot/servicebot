@@ -58,28 +58,28 @@ function renderSplits({fields, meta: {error, submitFailed}}) {
     }
 
 
-    return <div>
-        <li>
-            <input type="number" defaultValue={fields.length } onChange={onAdd}/>
-            Number of payments
-            {submitFailed && error && <span>{error}</span>}
+    return (
+        <div>
+            <div className="form-group form-group-flex">
+                <lable className="control-label form-label-flex-md">Number of payments</lable>
+                <div className="form-input-flex">
+                    <input className="form-control" type="number" defaultValue={fields.length } onChange={onAdd}/>
+                    {submitFailed && error && <span>{error}</span>}
+                </div>
+            </div>
 
+            <ul className="split-payment-items">
             {fields.map((member, index) => (
-                <li key={index}>
-                    <button
-                        type="button"
-                        title="Remove payment"
-                        onClick={() => fields.remove(index)}
-                    >
-                        <span className="itf-icon"><i className="fa fa-close"/></span>
-                    </button>
+                <li className="split-payment-item" key={index}>
+                    <button className="btn btn-rounded custom-field-button iconToggleField" id="split-payment-delete-button" onClick={() => fields.remove(index)}
+                            type="button" title="Remove Payment"><span className="itf-icon"><i className="fa fa-close"/></span></button>
 
                     <h4>Payment #{index + 1}</h4>
+                    <label>Days to charge customer after subscribed</label>
                     <Field
                         name={`${member}.charge_day`}
                         type="number"
                         component={inputField}
-                        label="Days to charge customer after subscribed"
                         validate={numericality({'>=': 0.00})}
 
                     />
@@ -91,9 +91,9 @@ function renderSplits({fields, meta: {error, submitFailed}}) {
                     />
                 </li>
             ))}
-        </li>
-
-    </div>
+            </ul>
+        </div>
+    )
 }
 
 
