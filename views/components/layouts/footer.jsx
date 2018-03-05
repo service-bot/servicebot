@@ -34,7 +34,7 @@ class Footer extends React.Component {
         return (
             <div className="footer" style={footerBackgroundStyle}>
                 <p className="powerby" style={footerTextStyle}>
-                    <Link className="powerby-servicebot" target="_blank" to="http://www.servicebot.io" style={footerTextStyle}>
+                    <Link className="powerby-servicebot" target="_blank" to="http://servicebot.io" style={footerTextStyle}>
                         Powered by servicebot.io
                     </Link>
                 </p>
