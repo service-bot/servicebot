@@ -29,6 +29,8 @@ let uploadLimit = function(){
 
 };
 
+const mailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 module.exports = function (router, passport) {
     router.get('/invitation/:invitation_id', function (req, res, next) {
         Invitation.findOne("token", req.params.invitation_id, function (result) {
@@ -114,8 +116,7 @@ module.exports = function (router, passport) {
             });
         } else if (res.locals.sysprops.allow_registration == "true") {
             if (req.body.name && req.body.email && req.body.password) {
-                let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-                if (!req.body.email.match(mailFormat)) {
+                if (!req.body.email.match(mailRegex)) {
                     res.status(400).json({error: 'Invalid email format'});
                 }
                 else {
@@ -183,8 +184,7 @@ module.exports = function (router, passport) {
 
         }
         if (req.body.hasOwnProperty("email")) {
-            let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            if (!req.body.email.match(mailFormat)) {
+            if (!req.body.email.match(mailRegex)) {
                 res.status(400).json({error: 'Invalid email format'});
             }
             else {

@@ -46,7 +46,7 @@ class UserFormRegister extends React.Component {
         let isEmpty = (val) =>{ return val === '' || typeof(val) === 'undefined'};
         //Defining field validators
         let validateEmail = (val) => {
-            let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            let mailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             if(isEmpty(val)){
                 return {error: "Email is required!"};
             }else if(!val.match(mailFormat)){
