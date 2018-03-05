@@ -282,7 +282,7 @@ module.exports = function (router) {
             if (!req.isAuthenticated()) {
 
                 if (req_body.hasOwnProperty("email")) {
-                    let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+                    let mailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                     if (!req_body.email.match(mailFormat)) {
                         return res.status(400).json({error: 'Invalid email format'});
                     }

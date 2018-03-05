@@ -65,7 +65,7 @@ class UserFormInvite extends React.Component {
         //optional references: the service template's references.service_template_properties
         //Defining general validators
         let validateEmail = (val) => {
-            let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            let mailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;;
             return val.match(mailFormat) ? true : {error:"Invalid email format"};
 
         };
