@@ -136,10 +136,12 @@ class ServiceRequestForm extends React.Component {
                     );
                 } else if (serType === "one_time") {
                     return (
-                        <span>{"Buy"} <Price value={newPrice}/></span>
+                        <span>{"Buy Now"} <Price value={newPrice}/></span>
                     );
                 } else if (serType === "custom") {
                     return ("Request");
+                } else if (serType === "split") {
+                    return ("Buy Now");
                 } else {
                     return (<span><Price value={newPrice}/></span>)
                 }
