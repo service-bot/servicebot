@@ -192,7 +192,7 @@ let subscribe = function (callback) {
 let requestCancellation = function (callback) {
     let self = this;
     //Making sure there is only one cancellation request
-    let allowed_cancellation_status = ['running','requested', 'waiting'];
+    let allowed_cancellation_status = ['running','requested','waiting','in_progress'];
     if(allowed_cancellation_status.includes(self.data.status)){
         let cancellationData = {
             "service_instance_id": self.data.id,
