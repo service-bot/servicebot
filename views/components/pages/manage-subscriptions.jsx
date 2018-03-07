@@ -129,29 +129,43 @@ class ManageSubscriptions extends React.Component {
         );
     }
     typeFormatter(cell, row){
-        let interval = cell.interval;
-        if(interval == 'day') { interval = 'Daily'; }
-        else if (interval == 'week') { interval = 'Weekly'; }
-        else if (interval == 'month') { interval = 'Monthly'; }
-        else if (interval == 'year') { interval = 'Yearly'; }
+        //null check for the payment plan
+        if(cell) {
+            let interval = cell.interval;
+            if(interval == 'day') { interval = 'Daily'; }
+            else if (interval == 'week') { interval = 'Weekly'; }
+            else if (interval == 'month') { interval = 'Monthly'; }
+            else if (interval == 'year') { interval = 'Yearly'; }
 
-        let type = row.type.toLowerCase();
-        switch(type){
-            case 'subscription':
-                return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
-            case 'custom':
-                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
-            case 'one_time':
-                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
-            default:
-                return ( <span className="status-badge grey">{getBillingType(row)}</span> );
+            let type = row.type.toLowerCase();
+            switch(type){
+                case 'subscription':
+                    return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
+                case 'custom':
+                    return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+                case 'one_time':
+                    return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+                default:
+                    return ( <span className="status-badge grey">{getBillingType(row)}</span> );
+            }
+        } else {
+            return ( <span className="status-badge grey">Missing</span> );
         }
+
     }
     typeDataValue(cell, row){
-        return (row.type);
+        if(cell) {
+            return (row.type);
+        } else {
+            return 'N/A';
+        }
     }
     amountFormatter(cell){
-        return (<Price value={cell.amount}/>);
+        if(cell) {
+            return (<Price value={cell.amount}/>);
+        } else {
+            return ( <span className="status-badge red">No Plan</span> );
+        }
     }
     emailDataValue(cell){
         return cell.users[0].email;
@@ -215,7 +229,7 @@ class ManageSubscriptions extends React.Component {
         const statusString = _.toLower(status);
         if(statusString === "waiting_cancellation"){
             return "Manage Cancellation";
-        }else if(statusString === "cancelled"){
+        }else if(statusString === "cancelled" || !dataObject.payment_plan){
             return "Delete Service";
         }else {
             return "Cancel Service";
@@ -246,8 +260,14 @@ class ManageSubscriptions extends React.Component {
         }
 
         let renderModals = ()=> {
+            //change the status to cancelled if no payment plan is detected
+            let status = self.state.currentDataObject.status;
+            if(!self.state.currentDataObject.payment_plan){
+                status = 'cancelled';
+            }
+            //Show the proper cancellation modal
             if(self.state.actionModal){
-                switch (self.state.currentDataObject.status){
+                switch (status){
                     case 'waiting_cancellation':
                         return(
                             <ModalManageCancellation myInstance={self.state.currentDataObject}

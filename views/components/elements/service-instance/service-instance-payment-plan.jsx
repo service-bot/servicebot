@@ -187,7 +187,18 @@ class ServiceInstancePaymentPlan extends React.Component {
             );
         }else{
             return (
-                <div>Error: Payment Plan not set.</div>
+                <div>
+                    <div className="row m-b-10">
+                        <div className="col-xs-12 col-sm-6 col-md-8 col-lg-8 col-xl-8 p-r-5">
+                            <h1>{this.props.service.name}</h1>
+                            <p>{this.props.service.description} <br/> Purchased <strong><DateFormat date={this.props.service.created_at} time /></strong></p>
+                            {this.getLinkActionButton()}
+                        </div>
+
+                    </div>
+                    <div className="alert-box red"><strong>This service currently has no payment infromation attached to it. Contact the administrator.</strong></div>
+                    {this.getCustomerInfo()}
+                </div>
             );
         }
     }
