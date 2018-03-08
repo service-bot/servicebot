@@ -145,6 +145,8 @@ class ManageSubscriptions extends React.Component {
                     return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
                 case 'one_time':
                     return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+                case 'split':
+                    return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
                 default:
                     return ( <span className="status-badge grey">{getBillingType(row)}</span> );
             }
