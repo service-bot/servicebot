@@ -163,13 +163,20 @@ class CreditCardForm extends React.Component {
     }
 
     handleSuccessResponse(response) {
-        this.setState({ alerts: {
-            type: 'success',
-            icon: 'check',
-            message: 'Your card has been updated.'
-        }});
-        //re-render
-        this.checkIfUserHasCard();
+        //If the billing form is passed in a callback, call it.
+        if(this.props.handleResponse) {
+            this.props.handleResponse(response);
+        //Otherwise, set own alert.
+        } else {
+            this.setState({ alerts: {
+                type: 'success',
+                icon: 'check',
+                message: 'Your card has been updated.'
+            }});
+            //re-render
+            this.checkIfUserHasCard();
+        }
+
     }
 
     handleFailureResponse(response) {
