@@ -441,9 +441,9 @@ class TemplateForm extends React.Component {
                                        component={selectField} label="Billing Type" onChange={changeServiceType}
                                        options={[
                                            {id: "subscription", name: "Subscription"},
+                                           {id: "split", name: "Scheduled Payments"},
                                            {id: "one_time", name: "One Time"},
-                                           {id: "custom", name: "Custom"},
-                                           {id: "split", name: "Scheduled Payments"}
+                                           {id: "custom", name: "Quote"}
                                        ]}
                                 />
                                 {(serviceTypeValue === 'subscription' || serviceTypeValue === 'one_time') &&
@@ -482,8 +482,9 @@ class TemplateForm extends React.Component {
 
                                 {(serviceTypeValue === 'custom') &&
                                 <div>
-                                    <p>You will be able to add custom service charges after an instance of
-                                        this service as been created for a customer.
+                                    <p>Quotes are built for services that are customer specific. If your service is priced
+                                        based on the customer's use-case, use this option. Once the quote service has been
+                                        requested by the customer, you can add charges to the service at anytime.
                                     </p>
                                 </div>
                                 }

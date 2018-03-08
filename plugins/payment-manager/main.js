@@ -5,7 +5,10 @@ let schedule = require('node-schedule');
 function* startTimerWhenSubscribed(action) {
     let instance = action.event_object
     let plan = instance.get("payment_plan");
-    let trial = plan.trial_period_days;
+    let trial = 0;
+    if(plan){
+        trial = plan.trial_period_days;
+    }
     if (trial) {
         let trialEnd = new Date(instance.get("subscribed_at") * 1000);
         trialEnd.setDate(trialEnd.getDate() + trial);
@@ -112,7 +115,10 @@ function* scheduleTrials(){
     let instances = yield call(ServiceInstance.find, {"not": {"subscription_id": null}});
     for (let instance of instances) {
         let plan = instance.get("payment_plan");
-        let trial = plan.trial_period_days;
+        let trial = 0;
+        if(plan){
+            trial = plan.trial_period_days;
+        }
         if (trial) {
             let trialEnd = new Date(instance.get("subscribed_at") * 1000);
             console.log(trialEnd, "TRIAL DATE START");

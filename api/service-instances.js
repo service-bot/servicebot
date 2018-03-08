@@ -46,7 +46,7 @@ module.exports = function(router) {
     router.delete(`/service-instances/:id(\\d+)`, validate(ServiceInstance), auth(), function(req,res,next){
         let instance_object = res.locals.valid_object;
         //Only allow removal if the instance is cancelled.
-        if(instance_object.data.status === 'cancelled') {
+        if(instance_object.data.status === 'cancelled' || !instance_object.data.payment_plan) {
             next();
         } else {
             res.json({error: 'Deleting services is not permitted for security reasons!'});

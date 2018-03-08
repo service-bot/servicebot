@@ -237,7 +237,7 @@ class ServiceInstance extends React.Component {
     getStatusButtons(){
         let self = this;
         let status = false;
-        if(self.state.instance){
+        if(self.state.instance && self.state.instance.payment_plan){
             status = self.state.instance.status;
             if(status == 'requested'){
                 return (<li><Link to="#" onClick={self.handleApprove}>Approve Service</Link></li>);
@@ -264,11 +264,10 @@ class ServiceInstance extends React.Component {
                         <ul className="dropdown-menu dropdown-menu-right">
                             <li><Link to="#" onClick={self.handleEditInstanceModal}>Edit Instance</Link></li>
                             <li><Link to="#" onClick={self.handleEditPaymentModal}>Edit Payment Plan</Link></li>
-                            {instance.status !== 'cancelled' &&
+                            {instance.payment_plan && instance.status !== 'cancelled' &&
                             <li><Link to="#" onClick={self.handleAddChargeItemModal}>Add Charge</Link></li>
                             }
                             <li role="separator" className="divider"/>
-                            {/*<li><Link to="#" onClick={self.handleViewPaymentModal}>View Payment History</Link></li>*/}
                             {self.getStatusButtons()}
                         </ul>
                     </div>
