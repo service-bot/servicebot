@@ -6248,5 +6248,281 @@
         }
       }
     }
-  }
+  },
+    "/webhooks": {
+      "get": {
+        "summary": "Gets all webhooks",
+        "tags": [
+          "roles"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "x-roles": [
+          "admin"
+        ],
+        "operationId": "get_webhooks",
+        "security": [
+          {
+            "internalApiKey": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of webhook",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/webhooks"
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create new webhook",
+        "tags": [
+          "webhooks"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "x-roles": [
+          "admin"
+        ],
+        "operationId": "post_webhooks",
+        "security": [
+          {
+            "internalApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "role",
+            "in": "body",
+            "description": "webhooks to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/user_roles"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of webhooks",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/webhooks"
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/search": {
+      "get": {
+        "summary": "Gets all webhooks by search",
+        "tags": [
+          "roles"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "x-roles": [
+          "admin"
+        ],
+        "operationId": "get_webhooks_search",
+        "security": [
+          {
+            "internalApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "query",
+            "description": "Key to search by",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "description": "Value to search for",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An array of webhooks",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/webhooks"
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/{id}": {
+      "get": {
+        "summary": "Gets webhook by id",
+        "tags": [
+          "webhooks"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "x-roles": [
+          "admin"
+        ],
+        "operationId": "get_webhooks_id",
+        "security": [
+          {
+            "internalApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "webhook id",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A webhook",
+            "schema": {
+              "$ref": "#/definitions/webhooks"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Updates a webhook",
+        "tags": [
+          "roles"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "x-roles": [
+          "admin"
+        ],
+        "operationId": "put_webhooks_id",
+        "security": [
+          {
+            "internalApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "webhook id",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "endpoint",
+            "in": "body",
+            "description": "endpoint",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/webhooks"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A  webhook",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/webhooks"
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a webhook",
+        "tags": [
+          "webhooks"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "x-roles": [
+          "admin"
+        ],
+        "operationId": "delete_webhooks_id",
+        "security": [
+          {
+            "internalApiKey": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "webhook id",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A webhook",
+            "schema": {
+              "$ref": "#/definitions/webhooks"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
 }

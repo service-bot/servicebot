@@ -49,6 +49,16 @@ module.exports = {
             //check new system options?
         }
 
+        database.createTableIfNotExist = function(tableName, knexCreateTable, db=database){
+            return db.schema.hasTable(tableName).then(function(exists){
+                if(!exists){
+                    return db.schema.createTable(tableName, knexCreateTable);
+                }else{
+                    console.log("Table: " + tableName + " Already Exists, no need to create")
+                    return false;
+                }
+            })
+        };
 
         yield provide({database});
 
