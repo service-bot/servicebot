@@ -269,7 +269,9 @@ class ManageUsers extends React.Component {
             if(row.status === 'invited' && option.label === "Suspend User") {
                 return false
             }
-            if(row.status === 'invited' && option.label === "Suspend User")
+            if(option.label === "Re-invite User" && row.status !== 'invited') {
+                return false
+            }
             return true;
         });
 
