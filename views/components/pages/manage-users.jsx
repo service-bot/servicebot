@@ -40,6 +40,7 @@ class ManageUsers extends React.Component {
             lastFetch: Date.now(),
             loading: true,
             advancedFilter: null,
+            reinviteUser: null
         };
 
         this.openInviteUserModal = this.openInviteUserModal.bind(this);
@@ -92,12 +93,12 @@ class ManageUsers extends React.Component {
         this.setState({ openEditCreditCard: false, currentDataObject: {}, lastFetch: Date.now()});
     }
 
-    openInviteUserModal(dataObject){
-        this.setState({ openInviteUserModal: true, currentDataObject: dataObject });
+    openInviteUserModal(userObject){
+        this.setState({ openInviteUserModal: true, reinviteUser: userObject });
     }
     closeInviteUserModal(){
         this.fetchData();
-        this.setState({ openInviteUserModal: false, currentDataObject: {}, lastFetch: Date.now()});
+        this.setState({ openInviteUserModal: false, currentDataObject: {}, reinviteUser: {}, lastFetch: Date.now()});
     }
     openSuspendUser(dataObject){
         if(dataObject.id == this.props.user.id){
@@ -233,6 +234,11 @@ class ManageUsers extends React.Component {
     rowActionsFormatter(cell, row){
         let self=this;
         let dropdownOptions = [
+            {
+                type: "button",
+                label: 'Re-invite User',
+                action: () => { return (this.openInviteUserModal(row)) }
+            },
             {   type: "button",
                 label: row.references.funds.length ? 'Edit Credit Card' : 'Add Credit Card',
                 action: () => { return (this.openEditCreditCard(row)) }},
@@ -252,7 +258,7 @@ class ManageUsers extends React.Component {
                 action: () => { return (this.openSuspendUser(row)) }},
             {   type: "button",
                 label: 'Delete User',
-                action: () => { return (this.openDeleteUser(row)) }},
+                action: () => { return (this.openDeleteUser(row)) }}
         ].filter((option, index) => {
             if(!self.props.stripe_publishable_key && index === 0){
                 return false;
@@ -263,6 +269,7 @@ class ManageUsers extends React.Component {
             if(row.status === 'invited' && option.label === "Suspend User") {
                 return false
             }
+            if(row.status === 'invited' && option.label === "Suspend User")
             return true;
         });
 
@@ -279,12 +286,11 @@ class ManageUsers extends React.Component {
 
         let getModals = ()=> {
             if(this.state.openInviteUserModal){
-                return (
-                    <ModalInviteUser
-                        show={this.state.openInviteUserModal}
-                        hide={this.closeInviteUserModal}
-                    />
-                )
+                if(this.state.reinviteUser) {
+                    return (<ModalInviteUser show={this.state.openInviteUserModal} hide={this.closeInviteUserModal} reinviteUser={this.state.reinviteUser.email}/>);
+                } else {
+                    return (<ModalInviteUser show={this.state.openInviteUserModal} hide={this.closeInviteUserModal}/>);
+                }
             }
             if(this.state.openSuspendUserModal){
                 return (

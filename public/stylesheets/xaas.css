@@ -1000,6 +1000,18 @@ body.login .footer{
     border-radius: 5px;
 }
 
+.code {
+    background: #e6e6e6;
+    border-radius: 5px;
+    padding: 0px 20px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+}
+.code.green{
+    background: #67ff92;
+}
+
 @keyframes displayMessage {
     0%{
         margin-top: -10px;
