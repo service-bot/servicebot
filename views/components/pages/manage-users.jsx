@@ -181,6 +181,14 @@ class ManageUsers extends React.Component {
             </div>
         );
     }
+    fundFormatter(cell) {
+        //check if user has funds
+        if(cell.funds.length > 0){
+            return ( <span className="status-badge green" ><i className="fa fa-check" /></span> );
+        } else {
+            return ( <span className="status-badge red" ><i className="fa fa-times" /></span> );
+        }
+    }
     statusFormatter(cell, row) {
         let color = 'status-badge ';
         switch ( cell.toLowerCase() ) {
@@ -394,6 +402,12 @@ class ManageUsers extends React.Component {
                                                            dataSort={ true }
                                                            width='80'>
                                             Status
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='references'
+                                                           dataFormat={this.fundFormatter}
+                                                           dataSort={ true }
+                                                           width='80'>
+                                            Fund?
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='references'
                                                            dataFormat={this.roleFormatter}
