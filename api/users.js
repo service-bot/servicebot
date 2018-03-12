@@ -12,22 +12,18 @@ let Role = require("../models/role");
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 let avatarFilePath = "uploads/avatars";
 let store = require("../config/redux/store");
-let avatarStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        mkdirp(avatarFilePath, err => cb(err, avatarFilePath))
-    },
-    filename: function (req, file, cb) {
-        require('crypto').pseudoRandomBytes(8, function (err, raw) {
-            cb(err, err ? undefined : req.params.id + "-" + raw.toString('hex'))
-        })
-    }
-});
+let fileManager = store.getState(true).pluginbot.services.fileManager[0];
+
 
 let uploadLimit = function(){
 
     return store.getState().options.upload_limit * 1000000;
 
 };
+
+let upload = () => {
+    return multer({storage: fileManager.storage(avatarFilePath), limits : {fileSize : uploadLimit()}})
+}
 
 const mailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -43,23 +39,12 @@ module.exports = function (router, passport) {
     })
 
     router.get('/users/:id/avatar', validate(), auth(), function (req, res, next) {
+
         let id = req.params.id;
         File.findFile(avatarFilePath, id, function (avatar) {
             if (avatar.length > 0) {
                 let file = avatar[0];
-                //todo: fix problem with file name containing a comma
-                let options = {
-                    headers: {
-                        'Content-Disposition': "inline; filename=" + file.get("name")
-                    }
-                };
-                let abs = path.resolve(__dirname, "../" + file.get("path"));
-
-                res.sendFile(abs, options, (err) => {
-                    if(err) {
-                        res.status(500).json({error: err})
-                    }
-                })
+                fileManager.sendFile(file, res);
             } else {
                 //todo: default avatar logic goes here
                 let defaultAvatar = path.resolve(__dirname, "../public/assets/default/avatar-" + (id % 4) + ".png");
@@ -68,15 +53,14 @@ module.exports = function (router, passport) {
         })
 
     });
-    router.put('/users/:id/avatar', auth(), multer({storage: avatarStorage, limits : {fileSize : uploadLimit()}}).single('avatar'), function (req, res, next) {
+    router.put('/users/:id/avatar', auth(), upload().single('avatar'), function (req, res, next) {
         let file = req.file;
         file.user_id = req.params.id;
         file.name = file.originalname;
         File.findFile(avatarFilePath, req.params.id, function (avatar) {
             if (avatar.length > 0) {
                 let avatarToDelete = avatar[0];
-                avatarToDelete.delete(function () {
-                });
+                fileManager.deleteFile(avatarToDelete);
             }
             let avatarToCreate = new File(file);
             avatarToCreate.create(function (err, result) {

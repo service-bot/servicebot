@@ -14,20 +14,16 @@ let store = require("../config/redux/store");
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 
 let serviceFilePath = "uploads/services/files";
-let serviceStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        mkdirp(serviceFilePath, err => cb(err, serviceFilePath))
-    },
-    filename: function (req, file, cb) {
-        require('crypto').pseudoRandomBytes(8, function (err, raw) {
-            cb(err, err ? undefined : req.params.id + "-" + raw.toString('hex'))
-        })
-    }
-});
+let fileManager = store.getState(true).pluginbot.services.fileManager[0];
+
 let uploadLimit = function(){
 
     return store.getState().options.upload_limit * 1000000;
 
+}
+
+let upload = () => {
+    return multer({storage: fileManager.storage(serviceFilePath), limits : {fileSize : uploadLimit()}})
 }
 
 
@@ -163,7 +159,7 @@ module.exports = function(router) {
         }
     });
 
-    router.post('/service-instances/:id/files', validate(ServiceInstance), auth(null, ServiceInstance), multer({ storage:serviceStorage, limits : {fileSize : uploadLimit()} }).array('files'), function(req, res, next) {
+    router.post('/service-instances/:id/files', validate(ServiceInstance), auth(null, ServiceInstance), upload().array('files'), function(req, res, next) {
         console.log(req.files);
         let filesToInsert = req.files.map(function(file){
             if(req.user) {
@@ -190,10 +186,9 @@ module.exports = function(router) {
     });
 
     router.delete("/service-instances/:id/files/:fid", validate(File, 'fid'), auth(), function(req, res, next){
-        File.findOne("id", req.params.fid, function(file){
-            file.delete(function(){
-                EventLogs.logEvent(req.user.get('id'), `service-instances ${req.params.id} had file ${req.params.fid} deleted by user ${req.user.get('email')}`);
-                res.json({message:"File Deleted!"});
+        File.findOne("id", req.params.fid, function(file) {
+            fileManager.deleteFile(file).then(() => {
+                res.json({message: "File Deleted!"});
             })
         })
     });
@@ -201,19 +196,7 @@ module.exports = function(router) {
 
     router.get("/service-instances/:id/files/:fid", validate(File, 'fid'), auth(null, ServiceInstance), function(req, res, next){
         File.findOne("id", req.params.fid, function(file){
-            let options = {
-                headers:{
-                    'Content-Disposition': "inline; filename="+file.get("name")
-                }
-            };
-            let abs = path.resolve(__dirname, "../" + file.get("path"));
-
-            res.sendFile(abs, options, (err) => {
-                if(err) {
-                    res.status(500).json({error: err})
-                }
-            })
-
+            fileManager.sendFile(file, res);
         })
     });
 

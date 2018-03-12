@@ -45,6 +45,8 @@ module.exports = {
 
         //wait for database to become available
         let database = yield consume(services.database);
+        let fileManager = yield consume(services.fileManager);
+
         let CONFIG_PATH = appConfig.configPath;
         let Settings = require('../../models/system-options');
         let injectProperties = require("../../middleware/property-injector");

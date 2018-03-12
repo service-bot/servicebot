@@ -6,7 +6,7 @@
   },
   "pluginbot" : {
     "server" : {
-      "main" : "index.js",
+      "main" : "file-manager.js",
       "consumes" : ["database"]
     }
   }

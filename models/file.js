@@ -19,19 +19,8 @@ File.findFile = function(filePath, id, callback){
 
 File.prototype.delete = function(callback){
     let id = this.get('id');
-    let filePath = this.get("path");
-    fs.unlink(filePath, err => {
-        if(err){
-            console.log("error deleting file " + err);
-        }
-        else{
-            console.log(`deleted file ${id} with path ${filePath}`)
-        }
-	});
-    knex(File.table).where('id', id).del()
-        .then(callback())
-        .catch(function (err) {
-            console.log(err);
+    return knex(File.table).where('id', id).del().catch(function (err) {
+            console.error(err);
         });
 };
 
