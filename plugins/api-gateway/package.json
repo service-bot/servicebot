@@ -7,7 +7,7 @@
   "pluginbot" : {
     "server" : {
       "main" : "app.js",
-      "consumes" : ["database", "routeDefinition", "authService"]
+      "consumes" : ["database", "routeDefinition", "authService", "fileManager"]
     }
   }
 }

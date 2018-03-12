@@ -22,29 +22,13 @@ let iconFilePath = ServiceTemplate.iconFilePath;
 let imageFilePath = ServiceTemplate.imageFilePath;
 let slug = require("slug");
 let validateProperties = require("../lib/handleInputs").validateProperties;
+let fileManager = store.getState(true).pluginbot.services.fileManager[0];
 
 
-let iconStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        mkdirp(iconFilePath, err => cb(err, iconFilePath))
-    },
-    filename: function (req, file, cb) {
-        require('crypto').pseudoRandomBytes(8, function (err, raw) {
-            cb(err, err ? undefined : req.params.id + "-" + raw.toString('hex'))
-        })
-    }
-});
 
-let imageStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        mkdirp(imageFilePath, err => cb(err, imageFilePath))
-    },
-    filename: function (req, file, cb) {
-        require('crypto').pseudoRandomBytes(8, function (err, raw) {
-            cb(err, err ? undefined : req.params.id + "-" + raw.toString('hex'))
-        })
-    }
-});
+let upload = (path) => {
+    return multer({storage: fileManager.storage(path), limits : {fileSize : uploadLimit()}})
+}
 
 
 let uploadLimit = function () {
@@ -73,18 +57,7 @@ module.exports = function (router) {
         File.findFile(iconFilePath, id, function (icon) {
             if (icon.length > 0) {
                 let file = icon[0];
-                let options = {
-                    headers: {
-                        'Content-Disposition': "inline; filename=" + file.get("name")
-                    }
-                };
-                let abs = path.resolve(__dirname, "../" + file.get("path"));
-
-                res.sendFile(abs, options, (err) => {
-                    if (err) {
-                        res.status(500).json({error: err})
-                    }
-                })
+                fileManager.sendFile(file, res);
             } else {
                 res.status(404).json({"error": "image not found"})
 
@@ -93,18 +66,14 @@ module.exports = function (router) {
         })
 
     });
-    router.put('/service-templates/:id(\\d+)/icon', auth(null, ServiceTemplate, 'created_by'), multer({
-        storage: iconStorage,
-        limits: {fileSize: uploadLimit()}
-    }).single("template-icon"), function (req, res, next) {
+    router.put('/service-templates/:id(\\d+)/icon', auth(null, ServiceTemplate, 'created_by'), upload(iconFilePath).single("template-icon"), function (req, res, next) {
         let file = req.file;
         file.user_id = req.user.get('id');
         file.name = file.originalname;
         File.findFile(iconFilePath, req.params.id, function (templateIcon) {
             if (templateIcon.length > 0) {
                 let iconToDelete = templateIcon[0];
-                iconToDelete.delete(function () {
-                });
+                fileManager.deleteFile(iconToDelete);
             }
             let icon = new File(file);
             icon.create(function (err, result) {
@@ -116,7 +85,7 @@ module.exports = function (router) {
     });
     router.delete("/service-templates/:id(\\d+)/icon", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function (req, res, next) {
         File.findFile(iconFilePath, req.params.id, function (icon) {
-            icon[0].delete(function () {
+            fileManager.deleteFile(icon[0]).then(function () {
                 res.json({message: "File Deleted!"});
             })
         })
@@ -125,7 +94,7 @@ module.exports = function (router) {
 
     router.delete("/service-templates/:id(\\d+)/image", validate(ServiceTemplate), auth(null, ServiceTemplate, 'created_by'), function (req, res, next) {
         File.findFile(imageFilePath, req.params.id, function (image) {
-            image[0].delete(function () {
+            fileManager.deleteFile(image[0]).then(function () {
                 res.json({message: "File Deleted!"});
             })
         })
@@ -137,18 +106,7 @@ module.exports = function (router) {
         File.findFile(imageFilePath, id, function (image) {
             if (image.length > 0) {
                 let file = image[0];
-                let options = {
-                    headers: {
-                        'Content-Disposition': "inline; filename=" + file.get("name")
-                    }
-                };
-                let abs = path.resolve(__dirname, "../" + file.get("path"));
-
-                res.sendFile(abs, options, (err) => {
-                    if (err) {
-                        res.status(500).json({error: err})
-                    }
-                })
+                fileManager.sendFile(file, res);
             } else {
                 //todo: default image logic goes here
                 res.status(404).json({"error": "image not found"})
@@ -158,18 +116,14 @@ module.exports = function (router) {
 
     });
 
-    router.put('/service-templates/:id(\\d+)/image', auth(null, ServiceTemplate, 'created_by'), multer({
-        storage: imageStorage,
-        limits: {fileSize: uploadLimit()}
-    }).single('template-image'), function (req, res, next) {
+    router.put('/service-templates/:id(\\d+)/image', auth(null, ServiceTemplate, 'created_by'), upload(imageFilePath).single('template-image'), function (req, res, next) {
         let file = req.file;
         file.user_id = req.user.get('id');
         file.name = file.originalname;
         File.findFile(imageFilePath, req.params.id, function (image) {
             if (image.length > 0) {
                 let imageToDelete = image[0];
-                imageToDelete.delete(function () {
-                });
+                fileManager.deleteFile(imageToDelete);
             }
             let imageToCreate = new File(file);
             imageToCreate.create(function (err, result) {
