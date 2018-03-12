@@ -7,6 +7,8 @@ import {required, url} from 'redux-form-validators'
 import {Field,} from 'redux-form'
 import Buttons from "../../../views/components/elements/buttons.jsx";
 import Modal from '../../../views/components/utilities/modal.jsx';
+import Jumbotron from '../../../views/components/layouts/jumbotron.jsx';
+import '../stylesheets/webhooks.css';
 
 
 function WebhookForm(props) {
@@ -151,7 +153,8 @@ class Webhooks extends React.Component {
     render() {
         let self = this;
         let {openHook, hook, hooks, loading} = this.state;
-
+        let pageName = 'Webhooks Integration';
+        let subtitle = 'Integrate your SaaS with Servicebot webhooks';
 
         let getAlerts = ()=>{
             if(this.state.alerts){
@@ -171,22 +174,26 @@ class Webhooks extends React.Component {
                                   hide={this.closeHookForm}/>)
         }
         return (
-            <div id="payment-form">
-                <h3><i className="fa fa-credit-card"/>Webhooks</h3>
-                <hr/>
-                <div className="form-row">
-                    {hooks.map((hook, index) => {
-                        return (<div key={"hook-" + index}>
-                            <Webhook hook={hook}/>
-                            <Buttons btnType="primary" text="Edit Hook" onClick={()=>{ self.openHookForm(hook)}} type="submit" value="submit"/>
-                            <Buttons btnType="primary" text="Delete Hook" onClick={()=>{self.deleteHook(hook)}} type="submit" value="submit"/>
-                        </div>)
-                    })}
-                    <Buttons btnType="primary" text="New Hook" onClick={()=>{self.openHookForm({})}} type="submit" value="submit"/>
-                    <Buttons btnType="primary" text="Test Hooks" onClick={self.testHooks} type="submit" value="submit"/>
+            <div>
+                <Jumbotron pageName={pageName} subtitle={subtitle} />
+                <div className="page-servicebot-webhooks" id="payment-form">
+                    <h3><i className="fa fa-credit-card"/>Webhooks</h3>
+                    <hr/>
+                    <div className="form-row">
+                        {hooks.map((hook, index) => {
+                            return (<div key={"hook-" + index}>
+                                <Webhook hook={hook}/>
+                                <Buttons btnType="primary" text="Edit Hook" onClick={()=>{ self.openHookForm(hook)}} type="submit" value="submit"/>
+                                <Buttons btnType="primary" text="Delete Hook" onClick={()=>{self.deleteHook(hook)}} type="submit" value="submit"/>
+                            </div>)
+                        })}
+                        <Buttons btnType="primary" text="New Hook" onClick={()=>{self.openHookForm({})}} type="submit" value="submit"/>
+                        <Buttons btnType="primary" text="Test Hooks" onClick={self.testHooks} type="submit" value="submit"/>
 
+                    </div>
                 </div>
             </div>
+
         );
     }
 }
