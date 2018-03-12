@@ -5,7 +5,7 @@ let path = require("path");
 let File = require('./base/entity.js')("files");
 
 File.findFile = function(filePath, id, callback){
-    let upload_path = path.normalize(`${filePath}/${id}-%`).split("\\").join("\\\\")
+    let upload_path = path.normalize(`%${filePath}/${id}-%`).split("\\").join("\\\\")
     knex(File.table).where("path", "like", upload_path).orderBy("id", "desc")
         .then(function(result){
             console.log(result);
