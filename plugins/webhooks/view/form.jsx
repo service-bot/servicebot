@@ -14,10 +14,14 @@ import '../stylesheets/webhooks.css';
 function WebhookForm(props) {
     return (
         <form>
-            <Field name="endpoint_url" type="text" validate={[required(), url()]} component={inputField} placeholder="Name on the card"/>
-            <Field name="async_lifecycle" type="text" component={inputField} placeholder="Asynchronous"/>
-            <div className="text-right">
-                <Buttons btnType="primary" text="Save Card" onClick={props.handleSubmit} type="submit" value="submit"/>
+            <Field name="endpoint_url" type="text" validate={[required(), url()]} component={inputField} placeholder="Endpoint URL: https://"/>
+            {/*<Field name="async_lifecycle" type="select" component={inputField} placeholder="Asynchronous"/>*/}
+            <Field className="form-control" name="async_lifecycle" component="select">
+                <option value="True">Asynchronous</option>
+                <option value="False">synchronous</option>
+            </Field>
+            <div className="text-right m-t-15">
+                <Buttons btnType="primary" text="Add endpoint" onClick={props.handleSubmit} type="submit" value="submit"/>
             </div>
         </form>
     )
@@ -32,22 +36,26 @@ function WebhookModal(props){
 
 
     return (
-        <Modal modalTitle={"Webhook"} icon="fa-credit-card-alt" hideCloseBtn={true} show={show} hide={hide} hideFooter={true}>
-            <ServiceBotBaseForm
-                form={WebhookForm}
-                initialValues={{...hook}}
-                submissionRequest={submissionRequest}
-                successMessage={"Fund added successfully"}
-                handleResponse={handleSuccessResponse}
-                handleFailure={handleFailureResponse}
-                reShowForm={true}
-            />
+        <Modal modalTitle={"Add endpoint"} icon="fa-plus" hideCloseBtn={false} show={show} hide={hide} hideFooter={false}>
+            <div className="p-20">
+                <ServiceBotBaseForm
+                    form={WebhookForm}
+                    initialValues={{...hook}}
+                    submissionRequest={submissionRequest}
+                    successMessage={"Fund added successfully"}
+                    handleResponse={handleSuccessResponse}
+                    handleFailure={handleFailureResponse}
+                    reShowForm={true}
+                />
+            </div>
         </Modal>
     )
 
 }
 
 function Webhook(props){
+    console.log("ffff")
+    console.log(props.hook)
     let hook = props.hook;
     return (<div>
         Endpoint: {hook.endpoint_url}
@@ -153,7 +161,7 @@ class Webhooks extends React.Component {
     render() {
         let self = this;
         let {openHook, hook, hooks, loading} = this.state;
-        let pageName = 'Webhooks Integration';
+        let pageName = 'Integration';
         let subtitle = 'Integrate your SaaS with Servicebot webhooks';
 
         let getAlerts = ()=>{
@@ -162,35 +170,68 @@ class Webhooks extends React.Component {
                                  position={{position: 'fixed', bottom: true}} icon={this.state.alerts.icon} /> );
             }
         };
-        if(loading){
-            return <div>Loading</div>
+
+        const endpointModals = ()=>{
+            if(openHook){
+                return (<WebhookModal handleSuccessResponse={self.handleSuccessResponse}
+                                      handleFailureResponse={self.handleFailureResponse}
+                                      hook={hook}
+                                      show={self.openHookForm}
+                                      hide={this.closeHookForm}/>)
+            } else {
+                return null;
+            }
         }
 
-        if(openHook){
-            return (<WebhookModal handleSuccessResponse={self.handleSuccessResponse}
-                                  handleFailureResponse={self.handleFailureResponse}
-                                  hook={hook}
-                                  show={self.openHookForm}
-                                  hide={this.closeHookForm}/>)
-        }
         return (
             <div>
                 <Jumbotron pageName={pageName} subtitle={subtitle} />
-                <div className="page-servicebot-webhooks" id="payment-form">
-                    <h3><i className="fa fa-credit-card"/>Webhooks</h3>
+                <div className="page-servicebot-webhooks col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2" id="payment-form">
+                    <h3>Webhooks</h3>
+                    <span>Servicebot can send webhook events that notify your application any time an event happens.
+                        This is especially useful for events—like new customer subscription or trial expiration—that
+                        your SaaS product needs to know about. You can integrate your SaaS with Servicebot by listening
+                        to API calls sent from your Servicebot instance to your SaaS product.</span>
                     <hr/>
+                    <div className="hook-actions m-b-15">
+                        <button className="btn btn-default m-r-5" onClick={self.testHooks} type="submit" value="submit">{loading ? <i className="fa fa-refresh fa-spin"></i> : <i className="fa fa-refresh"></i>} Re-test endpoints</button>
+                        <button className="btn btn-primary m-r-5" onClick={()=>{self.openHookForm({})}} type="submit" value="submit"><i className="fa fa-plus"></i> Add endpoint</button>
+                    </div>
                     <div className="form-row">
                         {hooks.map((hook, index) => {
-                            return (<div key={"hook-" + index}>
-                                <Webhook hook={hook}/>
-                                <Buttons btnType="primary" text="Edit Hook" onClick={()=>{ self.openHookForm(hook)}} type="submit" value="submit"/>
-                                <Buttons btnType="primary" text="Delete Hook" onClick={()=>{self.deleteHook(hook)}} type="submit" value="submit"/>
-                            </div>)
+                            console.log(hook)
+                            //Set health check
+                            let health = <span><span className="status-badge red"><i className="fa fa-times"></i></span> {hook.health}</span>;
+                            if(!hook.health) {
+                                health = <span className="status-badge neutral">Test Endpoints</span>;
+                            } else if(hook.health === 'OK') {
+                                health = <span className="status-badge green"><i className="fa fa-check"></i></span>;
+                            }
+                            //Set Type
+                            let type = <span className="status-badge blue m-r-5">Asynchronous</span>;
+                            if(hook.async_lifecycle === false){
+                                type = <span className="status-badge purple m-r-5">Synchronous</span>;
+                            }
+                            return (
+                                <div className="hook" key={"hook-" + index}>
+                                    <div className="url">{hook.endpoint_url}</div>
+                                    <div className="row">
+                                        <div className="col-md-8">
+                                            <span>{type}</span>
+                                            <span>{health}</span>
+                                        </div>
+                                        <div className="hook-actions col-md-4">
+                                            <button className="btn-xs m-r-5" onClick={()=>{self.openHookForm(hook)}} type="submit" value="submit"><i className="fa fa-pencil"></i> Edit</button>
+                                            <button className="btn-xs" onClick={()=>{self.deleteHook(hook)}} type="submit" value="submit"><i className="fa fa-times"></i> Delete</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            )
                         })}
-                        <Buttons btnType="primary" text="New Hook" onClick={()=>{self.openHookForm({})}} type="submit" value="submit"/>
-                        <Buttons btnType="primary" text="Test Hooks" onClick={self.testHooks} type="submit" value="submit"/>
 
                     </div>
+                    {endpointModals()}
                 </div>
             </div>
 
