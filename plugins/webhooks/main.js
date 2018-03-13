@@ -21,11 +21,11 @@ function* run(config, provide, channels) {
         "Accepts": "application/json"
     };
 
-    let sendToWebhooks = async function (event, sync_all = false) {
+    let sendToWebhooks = (eventName) => async (event, sync_all = false) => {
         let webhooks = await db("webhooks").where(true, true);
         let webhook_responses = await Promise.reduce(webhooks, async (responses, webhook) => {
             console.log("before")
-            let webhookRequest = fetch(webhook.endpoint_url, {method: "POST", body: JSON.stringify(event), headers})
+            let webhookRequest = fetch(webhook.endpoint_url, {method: "POST", body: JSON.stringify({event_name : eventName, event_data : event}), headers})
                 .then(response => {
                     if (!response.ok) {
                         console.error("error making webhook request", response.statusText);
@@ -58,33 +58,33 @@ function* run(config, provide, channels) {
     let lifecycleHook = [
         {
             stage: "pre",
-            run: sendToWebhooks
+            run: sendToWebhooks("pre_provision")
         },
         {
             stage: "post",
-            run: sendToWebhooks
+            run: sendToWebhooks("post_provision")
         },
         {
             stage: "pre_decom",
-            run: sendToWebhooks
+            run: sendToWebhooks("pre_decommission")
         },
         {
             stage: "post_decom",
-            run: sendToWebhooks
+            run: sendToWebhooks("post_decommission")
         },
         {
             stage: "pre_reactivate",
-            run: sendToWebhooks
+            run: sendToWebhooks("pre_reactivate")
         },
         {
             stage: "post_reactivate",
-            run: sendToWebhooks
+            run: sendToWebhooks("post_reactivate")
         }
     ];
 
 
     let processWebhooks = async (req, res, next) => {
-        let responses = await sendToWebhooks({"test": "event"}, true);
+        let responses = await sendToWebhooks("test")({"event_name": "test", "event_data" : {"test" : "data"}}, true);
         res.json({responses : responses});
     }
 
