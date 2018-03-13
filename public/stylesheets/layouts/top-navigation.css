@@ -45,8 +45,12 @@ ul.nav.navbar-nav.navbar-right > li > .badge{
   padding-right: 30px;
 }
 
+.navbar-brand.nav-logo {
+  margin-top: 10px;
+}
+
 .nav-logo img {
-  height: 54px;
+  height: 25px;
 }
 
 

@@ -260,17 +260,23 @@ class SystemSettingsForm extends React.Component {
                             {this.state.currentTabType == "branding" ?
                                 <div>
                                     <h4 className="text-capitalize">Branding</h4>
-                                    <div className="row">
-                                        <div className="col-md-6 form-group-flex column centered">
-                                            <label className="control-label">Upload Brand Logo</label>
+                                    <div className="row m-b-30">
+                                        <div className="col-md-4 form-group-flex column centered">
+                                            <label className="control-label">Brand Logo</label>
                                             <ImageUploader name="file" elementID="brand-logo"
                                                            imageURL="/api/v1/system-options/file/brand_logo"
                                                            imageStyle="badge badge-lg" uploadButton={true}/>
                                         </div>
-                                        <div className="col-md-6 form-group-flex column centered">
-                                            <label className="control-label">Front Page Featured Image</label>
+                                        <div className="col-md-4 form-group-flex column centered">
+                                            <label className="control-label">Homepage Featured Image</label>
                                             <ImageUploader name="file" elementID="front-page-image"
                                                            imageURL="/api/v1/system-options/file/front_page_image"
+                                                           imageStyle="badge badge-lg" uploadButton={true}/>
+                                        </div>
+                                        <div className="col-md-4 form-group-flex column centered">
+                                            <label className="control-label">Loader Logo</label>
+                                            <ImageUploader name="file" elementID="loader-logo"
+                                                           imageURL="/api/v1/system-options/file/loader_logo"
                                                            imageStyle="badge badge-lg" uploadButton={true}/>
                                         </div>
                                     </div>
