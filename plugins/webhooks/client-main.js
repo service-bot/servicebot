@@ -6,7 +6,6 @@ import routeDefinition from "./view/form.jsx";
 
 
 function* run(config, provide, channels) {
-    console.log("I AM HERE!!!!");
     yield provide({routeDefinition});
 };
 export {run};

@@ -8,6 +8,7 @@ import {Field,} from 'redux-form'
 import Buttons from "../../../views/components/elements/buttons.jsx";
 import Modal from '../../../views/components/utilities/modal.jsx';
 import Jumbotron from '../../../views/components/layouts/jumbotron.jsx';
+import Collapsible from 'react-collapsible';
 import '../stylesheets/webhooks.css';
 
 
@@ -18,7 +19,7 @@ function WebhookForm(props) {
             {/*<Field name="async_lifecycle" type="select" component={inputField} placeholder="Asynchronous"/>*/}
             <Field className="form-control" name="async_lifecycle" component="select">
                 <option value="True">Asynchronous</option>
-                <option value="False">synchronous</option>
+                <option value="False">Synchronous</option>
             </Field>
             <div className="text-right m-t-15">
                 <Buttons btnType="primary" text="Add endpoint" onClick={props.handleSubmit} type="submit" value="submit"/>
@@ -54,8 +55,6 @@ function WebhookModal(props){
 }
 
 function Webhook(props){
-    console.log("ffff")
-    console.log(props.hook)
     let hook = props.hook;
     return (<div>
         Endpoint: {hook.endpoint_url}
@@ -72,8 +71,8 @@ class Webhooks extends React.Component {
             openHook : false,
             hook : null,
             hooks : [],
-            loading : true
-
+            loading : true,
+            showEventsInfo: false
         }
         this.fetchData = this.fetchData.bind(this);
         this.openHookForm = this.openHookForm.bind(this);
@@ -82,7 +81,8 @@ class Webhooks extends React.Component {
         this.handleSuccessResponse = this.handleSuccessResponse.bind(this);
         this.handleFailureResponse = this.handleFailureResponse.bind(this);
         this.testHooks = this.testHooks.bind(this);
-
+        this.showEvents = this.showEvents.bind(this);
+        this.hideEvents = this.hideEvents.bind(this);
     }
 
     async componentDidMount() {
@@ -134,9 +134,6 @@ class Webhooks extends React.Component {
         return await this.fetchData();
     }
 
-
-
-
     handleSuccessResponse(response) {
         this.setState({
             openHook: false, hook: {}, lastFetch: Date.now(),
@@ -158,10 +155,19 @@ class Webhooks extends React.Component {
                 }});
         }
     }
+
+    showEvents(){
+        this.setState({ showEventsInfo: true });
+    }
+
+    hideEvents(){
+        this.setState({ showEventsInfo: false });
+    }
+
     render() {
         let self = this;
         let {openHook, hook, hooks, loading} = this.state;
-        let pageName = 'Integration';
+        let pageName = 'Integrations';
         let subtitle = 'Integrate your SaaS with Servicebot webhooks';
 
         let getAlerts = ()=>{
@@ -192,14 +198,53 @@ class Webhooks extends React.Component {
                         This is especially useful for events—like new customer subscription or trial expiration—that
                         your SaaS product needs to know about. You can integrate your SaaS with Servicebot by listening
                         to API calls sent from your Servicebot instance to your SaaS product.</span>
-                    <hr/>
+
                     <div className="hook-actions m-b-15">
                         <button className="btn btn-default m-r-5" onClick={self.testHooks} type="submit" value="submit">{loading ? <i className="fa fa-refresh fa-spin"></i> : <i className="fa fa-refresh"></i>} Re-test endpoints</button>
                         <button className="btn btn-primary m-r-5" onClick={()=>{self.openHookForm({})}} type="submit" value="submit"><i className="fa fa-plus"></i> Add endpoint</button>
                     </div>
+
+                    <div className="service-instance-box navy webhook-info">
+                        <div className="service-instance-box-title">
+                            <div>Webhook events information</div>
+                            <div className="pull-right">
+                                {!this.state.showEventsInfo ?
+                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.showEvents}>View events</button>
+                                    :
+                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.hideEvents}>Hide events</button>
+                                }
+
+                            </div>
+                        </div>
+                        {this.state.showEventsInfo &&
+                        <div className="service-instance-box-content">
+                            <p>The webhook system can notify your SaaS application if any of the following events
+                                occour:</p>
+                            <ul>
+                                <li><b>Pre-subscription:</b> This event happens right after the customer subscribes to
+                                    your service, prior to the subscription request completion.
+                                </li>
+                                <li><b>Post-subscription:</b> This event happens after the subscription has been
+                                    successfully completed.
+                                </li>
+                                <li><b>Pre-trial expiration:</b> This event happens right after the trial expires, prior
+                                    to any expiration processes.
+                                </li>
+                                <li><b>Post-trial expiration:</b> This event happens after the trial expiration has been
+                                    completed.
+                                </li>
+                                <li><b>Pre-reactivation:</b> This event happens right after the reactivation event
+                                    happens, prior to any reactivation processes.
+                                </li>
+                                <li><b>Post-reactivation:</b> This event happens after eactivation event has been
+                                    completed.
+                                </li>
+                            </ul>
+                        </div>
+                        }
+                    </div>
                     <div className="form-row">
                         {hooks.map((hook, index) => {
-                            console.log(hook)
                             //Set health check
                             let health = <span><span className="status-badge red"><i className="fa fa-times"></i></span> {hook.health}</span>;
                             if(!hook.health) {
@@ -241,8 +286,7 @@ class Webhooks extends React.Component {
 
 
 
-let RouteDefinition =     {component : Webhooks, name : "Webhooks", path : "/webhooks", isVisible : function(user){
-    console.log(user);
+let RouteDefinition =     {component : Webhooks, name : "Integrations", path : "/webhooks", isVisible : function(user){
     //todo: this is dirty, need to do permission based...
         return user.role_id === 1
     }};
