@@ -1052,6 +1052,21 @@ body.login .footer{
     font-weight: bold;
 }
 
+.request-form-toggle-option-wrapper {
+    display: flex;
+}
+
+.request-form-price-adjustment-wrapper {
+    font-weight: bold;
+    background: #eaeaea;
+    height: 30px;
+    padding: 5px 15px;
+    line-height: 23px;
+    color: #4e4e4e;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
 @keyframes displayMessage {
     0%{
         margin-top: -10px;
