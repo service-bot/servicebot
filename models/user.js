@@ -54,22 +54,24 @@ User.prototype.promiseStripeRemoval = function () {
  * This function will remove the customer reference in Stripe AND the database.
  * Use this function if need to completely disconnect the user from the Stripe account.
  */
-User.prototype.promiseStripeDisconnect = function () {
+User.prototype.promiseStripeDisconnect = async function (stripeRemoval = false) {
     let self = this;
-    return self.promiseStripeRemoval()
-        .then(function () {
-            return new Promise(function (resolve, reject) {
-                self.data.customer_id = null;
-                self.data.status = 'disconnected';
-                self.update(function (err, result) {
-                    if(!err) {
-                        return resolve(`User ${self.data.id} was disconnected from Stripe`);
-                    } else {
-                        return reject(`ERROR while disconnecting user ${self.data.id} from Stripe`);
-                    }
-                })
-            });
-        });
+    if(stripeRemoval) {
+        await self.promiseStripeRemoval();
+    }
+    //Then run the disconnect promise
+    return new Promise(function (resolve, reject) {
+        self.data.customer_id = null;
+        //To keep the users with the same status, we will not disconnect the user.
+        //self.data.status = 'disconnected';
+        self.update(function (err, result) {
+            if(!err) {
+                return resolve(`User ${self.data.id} was disconnected from Stripe`);
+            } else {
+                return reject(`ERROR while disconnecting user ${self.data.id} from Stripe`);
+            }
+        })
+    });
 };
 
 /**
@@ -211,9 +213,9 @@ User.prototype.deleteWithStripe = function (callback) {
  * @param callback
  * @returns {Promise.<TResult>}
  */
-User.prototype.purgeData = function (callback) {
+User.prototype.purgeData = function (fullRemoval = false, callback) {
     let self = this;
-    return Promise.resolve(self.promiseStripeDisconnect()).catch(function (err) {
+    return Promise.resolve(self.promiseStripeDisconnect(fullRemoval)).catch(function (err) {
         console.log(`User ID: ${self.data.id} - ${err}`);
     }).then(function () {
         let Invoices = require('./invoice');

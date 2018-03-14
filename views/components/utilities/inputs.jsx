@@ -241,7 +241,7 @@ class Inputs extends React.Component {
                 <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}
                     <select className="form-control" disabled={disabled} defaultValue={defaultValue} name={name} onChange={this.handleChange}>
-                        {this.props.value == null && defaultValue == null ?
+                        {this.props.value == null && defaultValue == null && !this.props.hideValue ?
                             <option value={null}>{''}</option> : ''
                         }
                         {(_.isArray(this.props.options) && this.props.options) ?

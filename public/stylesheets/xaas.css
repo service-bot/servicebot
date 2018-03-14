@@ -19,6 +19,11 @@ h5{
 .h3, h3{
     line-height: 33px;
 }
+
+hr {
+    border-bottom: 2px dotted white;
+}
+
 #content-title h4 {
     font-size: 1.5rem;
 }
@@ -1010,6 +1015,41 @@ body.login .footer{
 }
 .code.green{
     background: #67ff92;
+}
+
+.stripe-settings-wrapper {
+    padding: 40px 45px;
+}
+
+.intext-link {
+    padding: 5px;
+    background: #4389ff;
+    color: white;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: bold;
+}
+.intext-link:hover {
+    background: #000000;
+    color: white;
+}
+
+.stripe-keys-form {
+    background: white;
+    padding: 20px 50px;
+    border-radius: 5px;
+    margin: 0 0 20px 0;
+}
+
+.stripe-webhook {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 0 0 20px 0;
+    text-align: center;
+    border: 1px dashed #9c9c9c;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 @keyframes displayMessage {

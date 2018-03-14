@@ -203,7 +203,13 @@ class ManageUsers extends React.Component {
             default:
                 color += 'grey';
         }
-        return ( <span className={color} >{cell}</span> );
+        //If the customer_id from Stripe doesn't exist, mark user as disconnected
+        if(!row.customer_id) {
+            return ( <span className="status-badge grey" >Disconnected</span> );
+        } else {
+            return ( <span className={color} >{cell}</span> );
+        }
+
     }
     roleFormatter(cell){
         return ( cell.user_roles[0].role_name );

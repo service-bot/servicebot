@@ -21,22 +21,16 @@ class StripeSettings extends React.Component {
 
 
     render () {
-        var self = this;
+        let self = this;
         let pageName = this.props.route.name;
         let breadcrumbs = [{name:'Home', link:'home'},{name:'My Services', link:'/my-services'},{name:pageName, link:null}];
         return(
             <Authorizer permissions="can_administrate">
                 <Jumbotron pageName={pageName} location={this.props.location}/>
-                <div className="page-service-instance">
-                    <Content>
-                        <div className="row m-b-20">
-                            <StripeSettingsForm/>
-                        </div>
-                        <hr/>
-                        <div className="row m-b-20">
-                            <StripeImportForm/>
-                        </div>
-                    </Content>
+                <div className="stripe-settings-wrapper col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2">
+                    <div className="row m-b-20">
+                        <StripeSettingsForm/>
+                    </div>
                 </div>
             </Authorizer>
         );
