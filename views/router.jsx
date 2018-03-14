@@ -116,9 +116,9 @@ class AppRouter extends React.Component {
                        components={ManageNotificationTemplates}/>
                 <Route name="Notification Template" path="notification-templates/:id"
                        component={NotificationTemplateForm}/>
-                <Route name="Manage Catalog" path="manage-catalog" component={ManageCatalog}>
+                <Route name="Manage Offerings" path="manage-catalog" component={ManageCatalog}>
                     <IndexRoute component={ManageCatalogList}/>
-                    <Route name="Manage Catalog" path="list" component={ManageCatalogList}/>
+                    <Route name="Manage Offerings" path="list" component={ManageCatalogList}/>
                     <Route name="Create Template" path="create" component={ManageCatalogCreate}/>
                     <Route name="Edit Template" path=":templateId" component={ManageCatalogEdit}/>
                     <Route name="Duplicate Template" path=":templateId/duplicate"

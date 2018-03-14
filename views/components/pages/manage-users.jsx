@@ -299,6 +299,7 @@ class ManageUsers extends React.Component {
 
     render () {
         let pageName = this.props.route.name;
+        let subtitle = 'View, invite, edit, and manage users';
 
         let getModals = ()=> {
             if(this.state.openInviteUserModal){
@@ -367,7 +368,7 @@ class ManageUsers extends React.Component {
         }else {
             return (
                 <Authorizer permissions="can_administrate">
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <Jumbotron pageName={pageName} subtitle={subtitle}/>
                     <div className="page-service-instance">
                         <Content>
                             <div className="row m-b-20">

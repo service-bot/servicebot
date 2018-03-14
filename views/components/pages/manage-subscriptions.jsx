@@ -243,6 +243,7 @@ class ManageSubscriptions extends React.Component {
         let self = this;
         let pageName = this.props.route.name;
         let pageTitle = 'Manage your services here';
+        let subtitle = 'View, edit, and manage your subscriptions';
 
         if(this.props.params.status) {
             if (this.props.params.status == 'running') {
@@ -305,7 +306,7 @@ class ManageSubscriptions extends React.Component {
             };
             return (
                 <Authorizer permissions={["can_administrate", "can_manage"]}>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <Jumbotron pageName={pageName} subtitle={subtitle}/>
                     <div className="page-service-instance">
                         <Content>
                             <div className="row m-b-20">

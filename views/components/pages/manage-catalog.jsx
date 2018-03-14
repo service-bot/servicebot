@@ -20,9 +20,10 @@ class ManageCatalog extends React.Component {
     }
     render () {
         let pageName = this.props.route.name;
+        let subtitle = 'Create and manage offerings';
         return(
             <Authorizer permissions="can_administrate">
-                <Jumbotron pageName={pageName} location={this.props.location}/>
+                <Jumbotron pageName={pageName} subtitle={subtitle}/>
                 <div className="page-service-instance">
                     <Content>
                         <div className="row m-b-20">
