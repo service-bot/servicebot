@@ -19,6 +19,11 @@ h5{
 .h3, h3{
     line-height: 33px;
 }
+
+hr {
+    border-bottom: 2px dotted white;
+}
+
 #content-title h4 {
     font-size: 1.5rem;
 }
@@ -1010,6 +1015,74 @@ body.login .footer{
 }
 .code.green{
     background: #67ff92;
+}
+
+.stripe-settings-wrapper {
+    padding: 40px 45px;
+}
+
+.intext-link {
+    padding: 5px;
+    background: #4389ff;
+    color: white;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: bold;
+}
+.intext-link:hover {
+    background: #000000;
+    color: white;
+}
+
+.stripe-keys-form {
+    background: white;
+    padding: 20px 50px;
+    border-radius: 5px;
+    margin: 0 0 20px 0;
+}
+
+.stripe-webhook {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 0 0 20px 0;
+    text-align: center;
+    border: 1px dashed #9c9c9c;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.request-form-toggle-option-wrapper {
+    display: flex;
+}
+
+.request-form-price-adjustment-wrapper {
+    font-weight: bold;
+    background: #eaeaea;
+    height: 30px;
+    padding: 5px 15px;
+    line-height: 23px;
+    color: #4e4e4e;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.form-box {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: bold;
+    border: 1px solid #e0dfdf;
+    margin-bottom: 10px;
+}
+
+.offering-title {
+    font-size: 20px;
+    border-bottom: 1px dotted #b9b9b9;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    padding-top: 5px;
 }
 
 @keyframes displayMessage {

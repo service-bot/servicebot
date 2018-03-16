@@ -140,7 +140,8 @@ class ManageSubscriptions extends React.Component {
             let type = row.type.toLowerCase();
             switch(type){
                 case 'subscription':
-                    return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
+                    //return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
+                    return ( <div><span className="status-badge black" >{interval}</span></div> );
                 case 'custom':
                     return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
                 case 'one_time':
@@ -242,6 +243,7 @@ class ManageSubscriptions extends React.Component {
         let self = this;
         let pageName = this.props.route.name;
         let pageTitle = 'Manage your services here';
+        let subtitle = 'View, edit, and manage your subscriptions';
 
         if(this.props.params.status) {
             if (this.props.params.status == 'running') {
@@ -304,7 +306,7 @@ class ManageSubscriptions extends React.Component {
             };
             return (
                 <Authorizer permissions={["can_administrate", "can_manage"]}>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <Jumbotron pageName={pageName} subtitle={subtitle}/>
                     <div className="page-service-instance">
                         <Content>
                             <div className="row m-b-20">
@@ -320,8 +322,8 @@ class ManageSubscriptions extends React.Component {
                                                            dataField='name'
                                                            dataFormat={this.nameFormatter}
                                                            dataSort={ true }
-                                                           width='150'>
-                                            Subscription / Service Name
+                                                           width='130'>
+                                            Offering
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='references'
                                                            dataFormat={this.emailFormatter}
@@ -341,7 +343,7 @@ class ManageSubscriptions extends React.Component {
                                                            dataFormat={this.typeFormatter}
                                                            dataSort={ true }
                                                            filterValue={this.typeDataValue}
-                                                           width='120'>
+                                                           width='100'>
                                             Type
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='status'

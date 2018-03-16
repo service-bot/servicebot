@@ -56,7 +56,6 @@ let renderCustomProperty = (props) => {
         <div>
             {fields.map((customProperty, index) => {
                     let property = widgets[formJSON[index].type];
-                    console.log("custom prop", customProperty);
                     if(formJSON[index].prompt_user){
 
                         return (
@@ -414,8 +413,9 @@ class ServiceInstanceForm extends React.Component {
         };
         let successMessage = "Service Requested";
         let successRoute = "/my-services";
+        //If admin requested, redirect to the manage subscription page
         if (isAuthorized({permissions: "can_administrate"})) {
-            successRoute = "/dashboard";
+            successRoute = "/manage-subscriptions";
         }
 
         let helpers = Object.assign(this.state, this.props);
