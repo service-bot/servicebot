@@ -24,7 +24,6 @@ function* run(config, provide, channels) {
     let sendToWebhooks = (eventName) => async (event, sync_all = false) => {
         let webhooks = await db("webhooks").where(true, true);
         let webhook_responses = await Promise.reduce(webhooks, async (responses, webhook) => {
-            console.log("before")
             let webhookRequest = fetch(webhook.endpoint_url, {method: "POST", body: JSON.stringify({event_name : eventName, event_data : event}), headers})
                 .then(response => {
                     if (!response.ok) {
@@ -55,6 +54,7 @@ function* run(config, provide, channels) {
         return {webhook_responses};
     };
 
+    //todo: make this not hardcoded?
     let lifecycleHook = [
         {
             stage: "pre",
@@ -79,7 +79,16 @@ function* run(config, provide, channels) {
         {
             stage: "post_reactivate",
             run: sendToWebhooks("post_reactivate")
+        },
+        {
+            stage: "pre_property_change",
+            run: sendToWebhooks("pre_property_change")
+        },
+        {
+            stage: "post_property_change",
+            run: sendToWebhooks("post_property_change")
         }
+
     ];
 
 

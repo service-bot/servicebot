@@ -11,7 +11,10 @@ function* run(config, provide, channels) {
         pre_decom : [],
         post_decom : [],
         pre_reactivate : [],
-        post_reactivate : []
+        post_reactivate : [],
+        pre_property_change : [],
+        post_property_change : []
+
 
     }
 
@@ -73,7 +76,26 @@ function* run(config, provide, channels) {
             }
             return result;
 
+        },
+        prePropertyChange : async function({instance, property_updates}){
+            let result = {}
+            for(let hook of lifecycles.pre_property_change){
+                let hookresult = await hook.run({instance});
+                result = {...result, ...hookresult};
+            }
+            return result;
+
+        },
+        postPropertyChange : async function({instance}){
+            let result = {}
+            for(let hook of lifecycles.post_property_change){
+                let hookresult = await hook.run({instance});
+                result = {...result, ...hookresult};
+            }
+            return result;
+
         }
+
     };
     yield provide({lifecycleManager})
 

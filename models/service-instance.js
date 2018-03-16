@@ -224,6 +224,14 @@ ServiceInstance.prototype.changeProperties = async function (properties) {
         throw "prop id bad or parent id does not match"
     }
     let oldProperties = updatedInstance.data.references.service_instance_properties;
+    let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;
+    if (lifecycleManager) {
+        lifecycleManager = lifecycleManager[0];
+        await lifecycleManager.prePropertyChange({
+            instance: updatedInstance,
+            property_updates : properties
+        });
+    }
 
     let mergedProps = oldProperties.map(prop => {
         let propToMerge = properties.find(reqProp => reqProp.id === prop.id);
@@ -249,6 +257,12 @@ ServiceInstance.prototype.changeProperties = async function (properties) {
         }
     }
     let updatedProps = await ServiceInstanceProperties.batchUpdate(mergedProps);
+    if (lifecycleManager) {
+        await lifecycleManager.postPropertyChange({
+            instance: updatedInstance,
+        });
+    }
+
     return updatedInstance;
 };
 
