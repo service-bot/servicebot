@@ -6,6 +6,8 @@ module.exports = {
         }).then(subscriptions => {
             return knex.schema.alterTable("service_instances", t => {
                 t.jsonb('split_configuration');
+                t.bigInteger('trial_end');
+
             });
         }).then(instance => {
             return knex.schema.raw(`
@@ -29,7 +31,7 @@ module.exports = {
             t.dropColumns("split_configuration");
         }).then(instances => {
             return knex.schema.alterTable("service_templates", t => {
-                t.dropColumns("split_configuration");
+                t.dropColumns("split_configuration", "trial_end");
             });
         }).then(result => {
             return knex("service_templates").where("type", "split").update({type: "custom"});

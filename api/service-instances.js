@@ -53,15 +53,10 @@ module.exports = function(router) {
         }
     });
 
-    router.post('/service-instances/:id/approve', validate(ServiceInstance), auth(), function(req, res, next) {
+    router.post('/service-instances/:id/approve', validate(ServiceInstance), auth(), async function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        instance_object.subscribe(function (err, callback) {
-            if(!err){
-                res.json(callback);
-            } else {
-                res.json(err);
-            }
-        });
+        let updatedInstance = await instance_object.subscribe();
+        res.json(updatedInstance);
     });
 
 
@@ -75,33 +70,47 @@ module.exports = function(router) {
                     instance: instance_object
                 });
             }
-
-            instance_object.subscribe(function (err, callback) {
-                if (!err) {
-                    res.json(callback);
-                    if(lifecycleManager) {
-                        lifecycleManager.postReactivate({
-                            instance: instance_object
-                        });
-                    }
-
-                } else {
-                    res.json(err);
+            try {
+                let paymentPlan = instance_object.get("payment_plan");
+                paymentPlan.trial_period_days = 0;
+                let updatedInstance = await instance_object.subscribe(paymentPlan);
+                res.json(updatedInstance);
+                if(lifecycleManager) {
+                    lifecycleManager.postReactivate({
+                        instance: instance_object
+                    });
                 }
-            });
+            }catch(error){
+                res.status(500).json({error});
+            }
+        }else{
+            res.status(400).json({"error" : "Instance is not cancelled, cannot be reactivated"})
         }
     });
 
 
     router.post('/service-instances/:id/change-price', validate(ServiceInstance), auth(), function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        instance_object.changePrice(req.body).then(function (updated_subscription) {
+        instance_object.changePaymentPlan(req.body).then(function (updated_subscription) {
             res.json(updated_subscription);
             store.dispatchEvent("service_instance_updated", updated_subscription);
             next();
-        }).catch(function (err) {
-            res.json(err);
+        }).catch(function (error) {
+            res.json({error});
         });
+    });
+
+    router.post('/service-instances/:id/change-properties', validate(ServiceInstance), async function(req, res, next) {
+        let instance_object = res.locals.valid_object;
+        try {
+            let updatedInstance = await instance_object.changeProperties(req.body);
+            let attached = await updatedInstance.attachReferences()
+            res.json(attached.data);
+            store.dispatchEvent("service_instance_updated", updatedInstance);
+        }catch(error){
+            console.error(error);
+            res.status(500).json(error)
+        }
     });
 
     router.post('/service-instances/:id/cancel', validate(ServiceInstance), auth(), async function(req, res, next) {
