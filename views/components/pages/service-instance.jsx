@@ -25,6 +25,7 @@ import ModalPayChargeItem from '../elements/modals/modal-pay-charge-item.jsx';
 import ModalCancelChargeItem from '../elements/modals/modal-cancel-charge-item.jsx';
 import ModalPayAllCharges from '../elements/modals/modal-pay-all-charges.jsx';
 import ModalPaymentSetup from '../elements/modals/modal-payment-setup.jsx';
+import {ModalEditProperties} from "../elements/forms/edit-instance-properties-form.jsx"
 import ServiceInstanceFiles from '../elements/service-instance/service-instance-files.jsx';
 import DateFormat from "../utilities/date-format.jsx";
 import $ from "jquery";
@@ -56,7 +57,8 @@ class ServiceInstance extends React.Component {
                         cancelChargeItemId: false,
                         cancelChargeItem: false,
                         payAllChargesModal: false,
-                        fundModal: false
+                        fundModal: false,
+                        editPropertyModal: false
         };
         this.fetchInstance = this.fetchInstance.bind(this);
         this.handleApprove = this.handleApprove.bind(this);
@@ -81,6 +83,8 @@ class ServiceInstance extends React.Component {
         this.onCancelChargeItemModalClose = this.onCancelChargeItemModalClose.bind(this);
         this.handlePayAllChargesModal = this.handlePayAllChargesModal.bind(this);
         this.onPayAllChargesModalClose = this.onPayAllChargesModalClose.bind(this);
+        this.handleEditPropertiesModal = this.handleEditPropertiesModal.bind(this);
+        this.onEditPropertiesModalClose = this.onEditPropertiesModalClose.bind(this);
         this.getAdditionalCharges = this.getAdditionalCharges.bind(this);
         this.handleAddFund = this.handleAddFund.bind(this);
         this.onAddFundClose = this.onAddFundClose.bind(this);
@@ -188,6 +192,15 @@ class ServiceInstance extends React.Component {
         this.handleComponentUpdating();
     }
 
+    handleEditPropertiesModal(event){
+        event.preventDefault();
+        this.setState({ editPropertyModal: true});
+    }
+    onEditPropertiesModalClose(){
+        this.setState({ editPropertyModal: false});
+        this.handleComponentUpdating();
+    }
+
     handleAddChargeItemModal(event){
         event.preventDefault();
         this.setState({ addChargeItemModal: true});
@@ -263,6 +276,7 @@ class ServiceInstance extends React.Component {
                         </button>
                         <ul className="dropdown-menu dropdown-menu-right">
                             <li><Link to="#" onClick={self.handleEditInstanceModal}>Edit Instance</Link></li>
+                            <li><Link to="#" onClick={self.handleEditPropertiesModal}>Edit Properties</Link></li>
                             <li><Link to="#" onClick={self.handleEditPaymentModal}>Edit Payment Plan</Link></li>
                             {instance.payment_plan && instance.status !== 'cancelled' &&
                             <li><Link to="#" onClick={self.handleAddChargeItemModal}>Add Charge</Link></li>
@@ -363,7 +377,11 @@ class ServiceInstance extends React.Component {
                     return( <ModalPayAllCharges myInstance={self.state.instance} ownerId={ownerId} show={self.state.payAllChargesModal} hide={self.onPayAllChargesModalClose}/> );
                 } else if(self.state.fundModal){
                     return( <ModalPaymentSetup justPayment={true} modalCallback={self.onAddFundClose} ownerId={self.state.instance.user_id} show={self.state.handleAddFund} hide={self.onAddFundClose}/> );
+                } else if(self.state.editPropertyModal){
+                    return( <ModalEditProperties instance={self.state.instance} modalCallback={self.onEditPropertiesModalClose} ownerId={self.state.instance.user_id} show={self.state.editPropertyModal} hide={self.onEditPropertiesModalClose}/> );
                 }
+
+
             };
 
             return(

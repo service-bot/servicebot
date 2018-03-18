@@ -2905,6 +2905,45 @@
       }
     }
   },
+    "/service-instances/{id}/change-properties": {
+      "post": {
+        "summary": "Changes a service instance properties, can affect instance pricing if subscription.",
+        "tags": [
+          "service-instances"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "x-roles": [
+          "admin",
+          "staff",
+          "user"
+        ],
+        "operationId": "post_service_instances_id_change_properties",
+        "security": [
+          {
+            "internalApiKey": []
+          }
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "A service-instance",
+            "schema": {
+              "$ref": "#/definitions/service_instances"
+            }
+          },
+          "default": {
+            "description": "Unexpected error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
   "/service-instances/{id}/cancel": {
     "post": {
       "summary": "Cancel a service-instance",
@@ -2996,6 +3035,7 @@
       }
     }
   },
+
   "/service-instances/{id}/add-charge": {
     "post": {
       "summary": "Add a charge to a service-instance",

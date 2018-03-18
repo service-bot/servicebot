@@ -100,10 +100,10 @@ module.exports = function(router) {
         });
     });
 
-    router.post('/service-instances/:id/change-properties', validate(ServiceInstance), async function(req, res, next) {
+    router.post('/service-instances/:id/change-properties', validate(ServiceInstance),auth(), async function(req, res, next) {
         let instance_object = res.locals.valid_object;
         try {
-            let updatedInstance = await instance_object.changeProperties(req.body);
+            let updatedInstance = await instance_object.changeProperties(req.body.service_instance_properties);
             let attached = await updatedInstance.attachReferences()
             res.json(attached.data);
             store.dispatchEvent("service_instance_updated", updatedInstance);

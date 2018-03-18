@@ -9,6 +9,13 @@ module.exports = {
                 t.bigInteger('trial_end');
 
             });
+
+        }).then(instances => {
+            return knex.schema.alterTable("service_instance_properties", t => {
+                t.boolean("required").default(false);
+                t.boolean("prompt_user").default(true);;
+            });
+
         }).then(instance => {
             return knex.schema.raw(`
     ALTER TABLE "service_instances"
@@ -33,11 +40,17 @@ module.exports = {
             return knex.schema.alterTable("service_templates", t => {
                 t.dropColumns("split_configuration", "trial_end");
             });
+        }).then(instances => {
+            return knex.schema.alterTable("service_instance_properties", t => {
+                t.dropColumns("required", "prompt_user");
+            });
         }).then(result => {
             return knex("service_templates").where("type", "split").update({type: "custom"});
         }).then(instances => {
             return knex("service_instances").where("type", "split").update({type: "custom"});
         }).then(instance => {
+
+            //revert enums
             return knex.schema.raw(`
     ALTER TABLE "service_instances"
     DROP CONSTRAINT "service_instances_type_check",
