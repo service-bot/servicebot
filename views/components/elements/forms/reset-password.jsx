@@ -29,9 +29,6 @@ class ResetPassword extends React.Component {
         let self = this;
         Fetcher(this.state.resetPassURL, "POST", this.state.form).then(function(result){
             if(!result.error) {
-                localStorage.setItem("permissions", result.permissions);
-                self.props.setPermissions(result.permissions);
-
                 browserHistory.push("/login");
             }
         })
