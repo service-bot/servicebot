@@ -43,7 +43,6 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 }
 
 input:-moz-focusring {
-  color: transparent;
   text-shadow: 0 0 0 transparent;
 }
 
