@@ -196,7 +196,7 @@ class ServiceInstancePaymentPlan extends React.Component {
                         </div>
 
                     </div>
-                    <div className="alert-box red"><strong>This service currently has no payment infromation attached to it. Contact the administrator.</strong></div>
+                    <div className="alert-box red"><strong>This service currently has no payment information attached to it. Contact the administrator.</strong></div>
                     {this.getCustomerInfo()}
                 </div>
             );

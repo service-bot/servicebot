@@ -13,7 +13,16 @@ module.exports = {
     getAnalyticsData: () => {
         return new Promise(async (resolve, reject) => {
             let props = (await properties.find()).reduce((acc, prop) => {acc[prop.data.option] = prop.data.value; return acc;}, {});
+            let users = (await user.find());
             async.parallel({
+                customerStats: function (callback) {
+                    let stats = {};
+                    stats.total = users.length;
+                    stats.active = users.filter(user => { return user.data.status === 'active'; });
+                    stats.activeTotal = stats.active.length;
+                    stats.customers = users;
+                    callback(null,stats);
+                },
                 hasStripeKeys:function(callback){
                     callback(null, props.stripe_publishable_key != null && props.stripe_secret_key != null)
 
@@ -105,6 +114,8 @@ module.exports = {
                 totalSales: function (callback) {
                     transaction.getSumOfColumnFiltered('amount', 'paid', 'true', function (totalSales) {
                         let total = (totalSales == null ? 0 : totalSales);
+                        console.log("TOTAL SALES:")
+                        console.log(totalSales)
                         callback(null, total);
                     });
                 },

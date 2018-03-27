@@ -7,9 +7,24 @@ import React from 'react';
 function getPriceValue(value){
     return `$${(value/100).toFixed(2)}`;
 }
+
+function formatMoney(price, c, d, t){
+    let n = price;
+    let cNew = isNaN(c = Math.abs(c)) ? 2 : c;
+    let dNew = d == undefined ? "." : d;
+    let tNew = t == undefined ? "," : t;
+    let s = n < 0 ? "-" : "";
+    let i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(cNew)));
+    let j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + tNew : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + tNew) + (cNew ? dNew + Math.abs(n - i).toFixed(cNew).slice(2) : "");
+};
+
 let Price = function(props){
+    let price = formatMoney((props.value/100).toFixed(2),',','.');
+    console.log("ddsdsdsds")
+    console.log()
     return(
-        <span>${(props.value/100).toFixed(2)}</span>
+        <span>${price}</span>
     );
 };
 

@@ -70,6 +70,8 @@ class DashboardWidgets extends React.Component {
     }
 
     render(){
+        console.log("ANALYTICS")
+        console.log(this.state.data)
         return (
             <div className="dashboard-widgets">
                 <Widget data={{label: 'Total Revenue', value: this.state.data.totalSales}} type="price"/>
