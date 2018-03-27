@@ -14,14 +14,50 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let props = (await properties.find()).reduce((acc, prop) => {acc[prop.data.option] = prop.data.value; return acc;}, {});
             let users = (await user.find());
+            let templates = (await serviceTemplate.find());
+            let instances = (await serviceInstance.find());
             async.parallel({
                 customerStats: function (callback) {
                     let stats = {};
                     stats.total = users.length;
-                    stats.active = users.filter(user => { return user.data.status === 'active'; });
-                    stats.activeTotal = stats.active.length;
-                    stats.customers = users;
+                    stats.active = (users.filter(user => { return user.data.status === 'active'; })).length;
+                    stats.invited = (users.filter(user => { return user.data.status === 'invited'; })).length;
+                    stats.flagged = (users.filter(user => { return user.data.status === 'flagged'; })).length;
+                    stats.fundsTotal = 0;
+                    users.map(user => {
+                        fund.getRowCountByKey('user_id', user.data.id, hasFund => { if(hasFund > 0) stats.fundsTotal++; });
+                    });
                     callback(null,stats);
+                },
+                offeringStats: function (callback) {
+                    let stats = {};
+                    stats.total = templates.length;
+                    stats.totalSubscription = (templates.filter(template => { return template.data.type === 'subscription' })).length;
+                    stats.totalOnetime = (templates.filter(template => { return template.data.type === 'one_time' })).length;
+                    stats.totalSplit = (templates.filter(template => { return template.data.type === 'split' })).length;
+                    stats.totalQuote = (templates.filter(template => { return template.data.type === 'custom' })).length;
+                    callback(null, stats);
+                },
+                salesStats: function (callback) {
+                    let stats = {};
+                    stats.overall = {};
+                    stats.overall.total = instances.length;
+                    let activeInstances = instances.filter(instance => { return instance.data.subscription_id !== null });
+                    stats.overall.activeSales = activeInstances.length;
+                    stats.overall.requested = (instances.filter(instance => { return instance.data.status === 'requested' })).length;
+                    stats.overall.waitingCancellation = (instances.filter(instance => { return instance.data.status === 'waiting_cancellation' })).length;
+                    stats.overall.cancelled = (instances.filter(instance => { return instance.data.status === 'cancelled' })).length;
+                    let usersWithActiveOffering = activeInstances.map(instance => { if(instance.data.subscription_id !== null) return instance.data.user_id; });
+                    stats.overall.customersWithOfferings = (Array.from(new Set(usersWithActiveOffering))).length;
+                    stats.subscriptionStats = {};
+                    stats.subscriptionStats.active = (instances.filter(instance => { return (instance.data.subscription_id !== null && instance.data.type === 'subscription') })).length;
+                    stats.subscriptionStats.annual = (instances.filter(instance => { return (instance.data.subscription_id !== null && instance.data.type === 'subscription' && instance.data.payment_plan && instance.data.payment_plan.interval === 'year') })).length;
+                    stats.subscriptionStats.annualRatio = (stats.subscriptionStats.annual/stats.subscriptionStats.active)*100;
+                    stats.subscriptionStats.month = (instances.filter(instance => { return (instance.data.subscription_id !== null && instance.data.type === 'subscription' && instance.data.payment_plan && instance.data.payment_plan.interval === 'month') })).length;
+                    stats.subscriptionStats.monthlyRatio = (stats.subscriptionStats.month/stats.subscriptionStats.active)*100;
+                    stats.subscriptionStats.customInterval = stats.subscriptionStats.active - (stats.subscriptionStats.annual + stats.subscriptionStats.month);
+                    stats.subscriptionStats.customIntervalRatio = 100 - (stats.subscriptionStats.annualRatio + stats.subscriptionStats.monthlyRatio);
+                    callback(null, stats);
                 },
                 hasStripeKeys:function(callback){
                     callback(null, props.stripe_publishable_key != null && props.stripe_secret_key != null)
