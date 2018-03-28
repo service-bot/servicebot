@@ -24,13 +24,6 @@ module.exports = {
                     stats.total = users.length;
                     stats.active = stats.invited = stats.flagged = stats.fundsTotal = 0;
                     users.map(user => {
-                        //Fetch all invoices
-                        invoice.fetchUserInvoices(user).then(function (updated_invoices) {
-                            console.log(`Invoices Updated for user: ${user.data.email}`);
-                        }).catch(function (err) {
-                            console.log(`Invoices FAILED for user: ${user.data.email}`);
-                            console.log(err);
-                        });
                         if(user.data.status === 'active') { stats.active++; }
                         else if(user.data.status === 'invited') { stats.invited++; }
                         else if(user.data.status === 'flagged') { stats.flagged++; }
@@ -128,7 +121,7 @@ module.exports = {
                     stats.overall.remainingCharges = ((subTotalCharges - subPaidCharges)+(singleWaiting)+(splitTotalAmt - splitPaidAmt)+(customTotalAmt - customTotalPaidAmt));
                     stats.subscriptionStats = {};
                     stats.subscriptionStats.active = subActive;
-                    stats.subscriptionStats.annual = subAnnual;
+                    stats.subscriptionStats.annual = Math.ceil(subAnnual);
                     stats.subscriptionStats.month = Math.ceil(subAnnual/12);
                     stats.subscriptionStats.totalCharges = subTotalCharges;
                     stats.subscriptionStats.totaPaidCharges = subPaidCharges;

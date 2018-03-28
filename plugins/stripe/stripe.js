@@ -21,6 +21,25 @@ let run = function* (config, provide, services) {
 
 
     yield provide({routeDefinition});
+
+    //Update customer invoices every hour
+    setInterval(async () => {
+        let User = require("../../models/user");
+        let Invoice = require("../../models/invoice");
+        let users = (await User.find());
+        users.map(user => {
+            //Fetch all invoices
+            Invoice.fetchUserInvoices(user).then(function (updated_invoices) {
+                console.log(`Invoices Updated for user: ${user.data.email}`);
+            }).catch(function (err) {
+                console.log(`Invoices FAILED for user: ${user.data.email}`);
+                console.log(err);
+            });
+            Invoice.fetchUpcomingInvoice(user, function (upcoming_invoice) {
+                console.log(`Upcoming Invoice Updated for user: ${user.data.email}`);
+            });
+        })
+    }, 3600000);
 };
 
 module.exports = {run};
