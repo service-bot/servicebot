@@ -141,6 +141,7 @@ module.exports = {
         //todo: move apis to plugins.
         require('../../api/users')(api, passport);
         require('../../api/funds')(api);
+        require('../../api/invitation')(api);
         require('../../api/invoices')(api);
         require('../../api/service-instances')(api);
         require('../../api/service-instance-properties')(api);

@@ -352,7 +352,7 @@ module.exports = function(knex) {
                 endpoint : "/stripe/import",
                 method : "post",
                 middleware : [importMiddleware],
-                permissions : [],
+                permissions : ["can_administrate"],
                 description : "Imports data from stripe"
     };
 };

@@ -1,37 +1,36 @@
-let auth = require('../middleware/auth');
-let validate = require('../middleware/validate');
-let User = require('../models/user');
-let Invitation = require('../models/invitation');
-let EventLogs = require('../models/event-log');
-let multer = require('multer');
-let File = require("../models/file");
-let path = require("path");
-let mkdirp = require("mkdirp");
-let bcrypt = require("bcryptjs");
-let Role = require("../models/role");
-//todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
-let avatarFilePath = "uploads/avatars";
-let store = require("../config/redux/store");
-let avatarStorage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        mkdirp(avatarFilePath, err => cb(err, avatarFilePath))
-    },
-    filename: function (req, file, cb) {
-        require('crypto').pseudoRandomBytes(8, function (err, raw) {
-            cb(err, err ? undefined : req.params.id + "-" + raw.toString('hex'))
-        })
-    }
-});
+module.exports = function (User) {
+    let validate = require('../../middleware/validate');
+    let Invitation = require('../../models/invitation');
+    let EventLogs = require('../../models/event-log');
+    let multer = require('multer');
+    let File = require("../../models/file");
+    let path = require("path");
+    let mkdirp = require("mkdirp");
+    let bcrypt = require("bcryptjs");
+    let Role = require("../../models/role");
 
-let uploadLimit = function(){
+    let avatarFilePath = "uploads/avatars";
+    let store = require("../../config/redux/store");
 
-    return store.getState().options.upload_limit * 1000000;
+    let avatarStorage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            mkdirp(avatarFilePath, err => cb(err, avatarFilePath))
+        },
+        filename: function (req, file, cb) {
+            require('crypto').pseudoRandomBytes(8, function (err, raw) {
+                cb(err, err ? undefined : req.params.id + "-" + raw.toString('hex'))
+            })
+        }
+    });
 
-};
+    let uploadLimit = function () {
 
-module.exports = function (router, passport) {
+        return store.getState().options.upload_limit * 1000000;
 
-    router.get('/users/:id/avatar', validate(), auth(), function (req, res, next) {
+    };
+
+
+    let getAvatar = function (req, res, next) {
         let id = req.params.id;
         File.findFile(avatarFilePath, id, function (avatar) {
             if (avatar.length > 0) {
@@ -42,22 +41,24 @@ module.exports = function (router, passport) {
                         'Content-Disposition': "inline; filename=" + file.get("name")
                     }
                 };
-                let abs = path.resolve(__dirname, "../" + file.get("path"));
+                let abs = path.resolve(__dirname, "../.." + file.get("path"));
 
                 res.sendFile(abs, options, (err) => {
-                    if(err) {
+                    if (err) {
                         res.status(500).json({error: err})
                     }
                 })
             } else {
                 //todo: default avatar logic goes here
-                let defaultAvatar = path.resolve(__dirname, "../public/assets/default/avatar-" + (id % 4) + ".png");
+                let defaultAvatar = path.resolve(__dirname, "../../public/assets/default/avatar-" + (id % 4) + ".png");
                 res.sendFile(defaultAvatar);
             }
         })
 
-    });
-    router.put('/users/:id/avatar', auth(), multer({storage: avatarStorage, limits : {fileSize : uploadLimit()}}).single('avatar'), function (req, res, next) {
+    }
+
+
+    let uploadAvatar = function (req, res) {
         let file = req.file;
         file.user_id = req.params.id;
         file.name = file.originalname;
@@ -74,10 +75,10 @@ module.exports = function (router, passport) {
             })
         })
 
-    });
+    };
     //TODO better error handling
     //TODO use next
-    router.post("/users/register", function (req, res, next) {
+    let registerUser = function (req, res, next) {
         let token = req.query.token;
         if (token) {
             Invitation.findOne("token", token, function (foundInvitation) {
@@ -103,7 +104,7 @@ module.exports = function (router, passport) {
                     });
                 }
             });
-        } else if (res.locals.sysprops.allow_registration == "true") {
+        } else if (res.locals.sysprops.allow_registration === "true") {
             if (req.body.name && req.body.email && req.body.password) {
                 let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
                 if (!req.body.email.match(mailFormat)) {
@@ -128,32 +129,11 @@ module.exports = function (router, passport) {
         } else {
             res.status(403).json({error: "Registration disabled"})
         }
-    }, function (req, res, next) {
-        req.logIn(res.locals.valid_object, {session: true}, function (err) {
-            if (!err) {
-                console.log("user logged in!");
-                next();
-            } else {
-                console.error("Issue logging in: ", err)
-                next();
-            }
-
-        });
-
-    }, require("../middleware/role-session")(), function (req, res, next) {
-        let user_role = new Role({"id": req.user.data.role_id});
-        user_role.getPermissions(function (perms) {
-            let permission_names = perms.map(perm => perm.data.permission_name);
-            res.locals.json = {"message" : "successful signup", "permissions" : permission_names };
-            store.dispatchEvent("user_registered", req.user);
-            next();
-        });
-    });
-
+    };
 
     //TODO add the registration url to the email
-    router.post('/users/invite', auth(), function (req, res, next) {
-        function reinviteUser(user){
+    let inviteUser = function (req, res, next) {
+        function reinviteUser(user) {
 
             let invite = new Invitation({"user_id": user.get("id")});
             invite.create(function (err, result) {
@@ -173,6 +153,7 @@ module.exports = function (router, passport) {
             });
 
         }
+
         if (req.body.hasOwnProperty("email")) {
             let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
             if (!req.body.email.match(mailFormat)) {
@@ -187,11 +168,11 @@ module.exports = function (router, passport) {
                 User.findAll("email", req.body.email, function (foundUsers) {
                     if (foundUsers.length != 0) {
                         Invitation.findOne("user_id", foundUsers[0].get("id"), invite => {
-                            if(invite && invite.data){
-                                invite.delete(()=>{
+                            if (invite && invite.data) {
+                                invite.delete(() => {
                                     reinviteUser(foundUsers[0]);
                                 })
-                            }else{
+                            } else {
                                 res.status(400).json({error: 'This email already exists in the system'});
 
                             }
@@ -227,76 +208,36 @@ module.exports = function (router, passport) {
         else {
             res.status(400).json({error: 'Must have property: email'});
         }
-    });
-
-    //Override post route to hide adding users
-    router.post(`/users`, function (req, res, next) {
-        res.sendStatus(404);
-    });
+    };
 
 
-    router.put("/users/:id(\\d+)", validate(User), auth(null, User, "id"), async function (req, res, next) {
-        //todo: this is dirty dirty way of getting plugin services... i want this code to be in plugin eventually
-        let userManager = store.getState(true).pluginbot.services.userManager[0]
-        if(!userManager){
-            console.error("User manager not defined...")
-        }
-        let oldUser = res.locals.valid_object;
-        let newUserData = req.body;
-        if (oldUser.get("id") === req.user.get("id")) {
-            delete oldUser.data.role_id;
-            delete newUserData.role_id
-            delete newUserData.status;
-        }else if(newUserData.password && oldUser.get("status") === "invited"){
-            newUserData.status = "active";
-        }
-
-        let updatedUser = await userManager.update(oldUser, newUserData);
-        res.json(updatedUser);
-
-    });
-
-    router.post("/users/:id(\\d+)/suspend", validate(User), auth(null, User, "id"), async function (req, res) {
+    let suspendUser = async function (req, res) {
         let user = res.locals.valid_object;
         try {
             let updatedUser = await user.suspend();
             store.dispatchEvent("user_suspended", updatedUser);
             res.status(200).json(updatedUser);
 
-        }catch(e) {
+        } catch (e) {
             res.status(400).json({error: "Error suspending the user"});
         }
-    });
+    };
 
-    router.post("/users/:id(\\d+)/unsuspend", validate(User), auth(null, User, "id"), function (req, res) {
+    let unsuspendUser = function (req, res) {
         let user = res.locals.valid_object;
         user.unsuspend(function (err, updated_user) {
-            if(!err) {
+            if (!err) {
                 //dispatchEvent("user_unsuspended", user);
                 res.status(200).json(updated_user);
             } else {
                 res.status(400).json({error: err});
             }
         });
-    });
-
-    router.delete(`/users/:id(\\d+)`, validate(User), auth(null, User, "id"), function (req, res, next) {
-        let user = res.locals.valid_object;
-        user.deleteWithStripe(function (err, completed_msg) {
-            if (!err) {
-                res.status(200).json({message: completed_msg});
-            } else {
-                res.status(400).json({error: err});
-            }
-        });
-    });
-
-    //Extend Entity
-    require("./entity")(router, User, "users", "id");
+    };
 
 
     //Strip passwords from all user things
-    router.all("*", function (req, res, next) {
+    let passwordStripper = function (req, res, next) {
         if (res.locals.json) {
             if (res.locals.json.password) {
                 delete res.locals.json.password;
@@ -309,7 +250,110 @@ module.exports = function (router, passport) {
             }
         }
         next();
-    });
+    };
+    return [
 
-    return router;
+        {
+            endpoint: "/:id/avatar",
+            method: "get",
+            middleware: [validate(User), getAvatar],
+            permissions: ["get_users_id_avatar"],
+            description: "Retrieve a user avatar"
+
+        },
+        {
+            endpoint: "/:id/avatar",
+            method: "put",
+            middleware: [
+                validate(User),
+                multer({
+                    storage: avatarStorage,
+                    limits: {fileSize: uploadLimit()}
+                }).single('avatar'),
+                uploadAvatar
+            ],
+            permissions: ["put_users_id_avatar", "is_owner"],
+            schema: {
+                "field_1": "string",
+                "field_2": "boolean",
+                //etc.
+            },
+            description: "Uploads a new user avatar"
+
+        },
+        {
+            endpoint: "/register",
+            method: "post",
+            middleware: [
+                registerUser,
+                function (req, res, next) {
+                    req.logIn(res.locals.valid_object, {session: true}, function (err) {
+                        if (!err) {
+                            console.log("user logged in!");
+                            next();
+                        } else {
+                            console.error("Issue logging in: ", err)
+                            next();
+                        }
+
+                    });
+
+                },
+                require("../../middleware/role-session")(),
+                function (req, res, next) {
+                    let user_role = new Role({"id": req.user.data.role_id});
+                    user_role.getPermissions(function (perms) {
+                        let permission_names = perms.map(perm => perm.data.permission_name);
+                        res.locals.json = {"message": "successful signup", "permissions": permission_names};
+                        store.dispatchEvent("user_registered", req.user);
+                        next();
+                    });
+                }
+            ],
+            permissions: ["post_users_register"],
+            description: "Register a new user",
+            schema: {
+                "field_1": "string",
+                "field_2": "boolean",
+                //etc.
+            }
+        },
+        {
+            endpoint: "/invite",
+            method: "post",
+            middleware: [inviteUser],
+            permissions: ["post_users_invite"],
+            schema: {
+                "field_1": "string",
+                "field_2": "boolean",
+                //etc.
+            },
+            description: "Sends an invite to a user"
+
+        },
+        {
+            endpoint: "/:id(\\d+)/suspend",
+            method: "post",
+            middleware: [validate(User), suspendUser],
+            permissions: ["post_users_id_suspend"],
+            description: "Suspends a User"
+
+        },
+        {
+            endpoint: "/:id(\\d+)/unsuspend",
+            method: "post",
+            middleware: [validate(User), unsuspendUser],
+            permissions: ["post_users_id_unsuspend"],
+            description: "Unsuspends a user"
+
+        },
+        {
+            endpoint: "/*",
+            method: "all",
+            middleware: [passwordStripper],
+            permissions: [],
+            description: "Strips passwords from User data"
+
+        }
+    ]
 };

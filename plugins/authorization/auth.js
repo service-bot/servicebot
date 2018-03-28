@@ -1,4 +1,5 @@
 let consume = require("pluginbot/effects/consume");
+const ADMIN_PERMISSION = "can_administrate";
 module.exports = {
 
     run : function*(config, provide, services){
@@ -17,16 +18,20 @@ module.exports = {
                     id : { "in" : roles}
                 });
 
+                //todo: write a database query instead of looping like this!
                 let permissionSet = new Set();
                 for(let roleInstance of roleInstances){
                     let rolePermissions = await roleInstance.getPermissions();
+                    if(rolePermissions.some(permission => permission.data.permission_name === ADMIN_PERMISSION)){
+                        return true;
+                    }
                     rolePermissions.forEach(perm => permissionNames.find(name => perm.data.permission_name === name) && permissionSet.add(perm.data.permission_name))
 
                 }
 
                 return (permissionSet.size === new Set(permissionNames).size);
             }
-        }
+        };
         yield provide({authService});
     }
 
