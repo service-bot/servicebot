@@ -6,6 +6,7 @@ let serviceInstanceCancellation = require("../../models/service-instance-cancell
 let serviceInstanceProperty = require("../../models/service-instance-property");
 let serviceTemplate = require("../../models/service-template");
 let transaction = require("../../models/transaction");
+let invoice = require("../../models/invoice")
 let user = require("../../models/user");
 let fund = require("../../models/fund");
 let properties = require("../../models/system-options");
@@ -23,6 +24,13 @@ module.exports = {
                     stats.total = users.length;
                     stats.active = stats.invited = stats.flagged = stats.fundsTotal = 0;
                     users.map(user => {
+                        //Fetch all invoices
+                        invoice.fetchUserInvoices(user).then(function (updated_invoices) {
+                            console.log(`Invoices Updated for user: ${user.data.email}`);
+                        }).catch(function (err) {
+                            console.log(`Invoices FAILED for user: ${user.data.email}`);
+                            console.log(err);
+                        });
                         if(user.data.status === 'active') { stats.active++; }
                         else if(user.data.status === 'invited') { stats.invited++; }
                         else if(user.data.status === 'flagged') { stats.flagged++; }
@@ -240,8 +248,6 @@ module.exports = {
                 totalSales: function (callback) {
                     transaction.getSumOfColumnFiltered('amount', 'paid', 'true', function (totalSales) {
                         let total = (totalSales == null ? 0 : totalSales);
-                        console.log("TOTAL SALES:")
-                        console.log(totalSales)
                         callback(null, total);
                     });
                 },
