@@ -221,6 +221,8 @@ let buildTables = async function(knex) {
             table.increments();
             table.integer('parent_id').references('service_instances.id').onDelete('cascade');
             table.boolean('private').defaultTo(false);
+            table.boolean('prompt_user').defaultTo(true);
+            table.boolean('required').defaultTo(false);
             table.timestamps(true, true);
 
         });
