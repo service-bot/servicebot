@@ -138,44 +138,47 @@ class SystemSettingsForm extends React.Component {
                 <div className="row">
                     <div className="basic-info col-md-6 col-md-offset-3">
                         {settings.secret_key &&
-                        <div className="title">
-                            <h3>Stripe API Key Reconfiguration</h3>
-                            <p>
-                                Be very careful with modifying your Stripe API keys. If the new Stripe API keys
-                                belong to a different Stripe account, or different environment (eg. test to live),
-                                ServiceBot will remove all subscription, invoices, and user funds, and will register
-                                every user in the new Stripe account!
-                            </p>
-                            <p>
-                                Follow these steps to change keys:<br/>
-                                1. <a href="https://dashboard.stripe.com/register" target="_blank">Create a Stripe Account</a>. Note: If you already have a stripe account you can skip this step<br/>
-                                2. Log in and go to <a href="https://dashboard.stripe.com/account/apikeys" target="_blank">the stripe api page</a>.<br/>
-                                3. Ensure that your system is in the mode you want your ServiceBot to be in (Test or Live).<br/>
-                                4. Copy and enter here the Publishable Key and Secret Key.<br/>
-                                <a href="https://docs.servicebot.io/getting_started/" target="_blank">For more detailed instructions follow this link</a>.<br/>
-                            </p>
-                            <br/>
-                        </div>
-                        {getAlerts()}
+                        <div>
+                            <div className="title">
+                                <h3>Stripe API Key Reconfiguration</h3>
+                                <p>
+                                    Be very careful with modifying your Stripe API keys. If the new Stripe API keys
+                                    belong to a different Stripe account, or different environment (eg. test to live),
+                                    ServiceBot will remove all subscription, invoices, and user funds, and will register
+                                    every user in the new Stripe account!
+                                </p>
+                                <p>
+                                    Follow these steps to change keys:<br/>
+                                    1. <a href="https://dashboard.stripe.com/register" target="_blank">Create a Stripe Account</a>. Note: If you already have a stripe account you can skip this step<br/>
+                                    2. Log in and go to <a href="https://dashboard.stripe.com/account/apikeys" target="_blank">the stripe api page</a>.<br/>
+                                    3. Ensure that your system is in the mode you want your ServiceBot to be in (Test or Live).<br/>
+                                    4. Copy and enter here the Publishable Key and Secret Key.<br/>
+                                    <a href="https://docs.servicebot.io/getting_started/" target="_blank">For more detailed instructions follow this link</a>.<br/>
+                                </p>
+                                <br/>
+                            </div>
+                            {getAlerts()}
                             <div className="row">
-                            <div className="col-md-12">
-                            <div className="row">
-                            <DataForm handleResponse={this.handleResponse} onUpdate={this.onUpdate} url={this.state.stripe_preconfigure} method={'POST'}>
-                            <div className="col-md-12">
-                            <Inputs type="text" label="Stripe Secret API Key" name="stripe_secret" defaultValue={settings.secret_key}
-                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                <div className="col-md-12">
+                                    <div className="row">
+                                        <DataForm handleResponse={this.handleResponse} onUpdate={this.onUpdate} url={this.state.stripe_preconfigure} method={'POST'}>
+                                            <div className="col-md-12">
+                                                <Inputs type="text" label="Stripe Secret API Key" name="stripe_secret" defaultValue={settings.secret_key}
+                                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
 
-                            <Inputs type="text" label="Stripe Publishable API Key" name="stripe_public" value={settings.publishable_key}
-                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                                <Inputs type="text" label="Stripe Publishable API Key" name="stripe_public" value={settings.publishable_key}
+                                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                            </div>
+                                            <div className="col-md-12 text-right">
+                                                <Buttons btnType="primary" text="Update Stripe API Keys" type="submit" value="submit"/>
+                                            </div>
+                                        </DataForm>
+                                    </div>
+                                </div>
+                                {confirm_reconfigure()}
                             </div>
-                            <div className="col-md-12 text-right">
-                            <Buttons btnType="primary" text="Update Stripe API Keys" type="submit" value="submit"/>
-                            </div>
-                            </DataForm>
-                            </div>
-                            </div>
-                            {confirm_reconfigure()}
-                            </div>
+                        </div>
+
                         }
 
 
