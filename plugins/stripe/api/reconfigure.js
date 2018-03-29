@@ -239,7 +239,7 @@ module.exports = function(router, knex, stripe) {
             endpoint : "/stripe/reconfigure",
             method : "post",
             middleware : [reconfigure],
-            // permissions : ["post_stripe_reconfigure"],
+            permissions : ["can_administrate"],
             description : "Reconfigure Stripe account"
 
         },
@@ -247,7 +247,7 @@ module.exports = function(router, knex, stripe) {
             endpoint : "/stripe/preconfigure",
             method : "post",
             middleware : [preconfigure],
-            // permissions : ["post_stripe_preconfigure"],
+            permissions : ["can_administrate"],
             description : "Preconfigure Stripe account"
 
         },
