@@ -1,4 +1,3 @@
-
 let async = require('async');
 let Logger = require('../models/logger');
 let User = require('../../../models/user');
