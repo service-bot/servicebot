@@ -14,10 +14,10 @@ class BillingHistoryList extends React.Component {
         super(props);
         let action = 'own';
         if(isAuthorized({permissions: "can_administrate"}) && this.props.uid){
-            action = `search?key=user_id&value=${this.props.uid}`
+            action = `?key=user_id&value=${this.props.uid}`
         }
         this.state = {
-            url: `/api/v1/invoices/${action}`,
+            url: `/api/v1/invoices${action}`,
             refundModal: false
         };
 
