@@ -1085,6 +1085,19 @@ body.login .footer{
     padding-top: 5px;
 }
 
+.sub{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.overalls{
+    background: white;
+    margin: 0 !important;
+    border-radius: 5px;
+    margin-top: 10px !important;
+    padding: 5px 5px 5px 25px;
+}
+
 @keyframes displayMessage {
     0%{
         margin-top: -10px;
