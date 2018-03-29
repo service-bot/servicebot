@@ -50,7 +50,7 @@ module.exports = {
         let injectProperties = require("../../middleware/property-injector");
         require('../../config/passport.js')(passport);
         yield provide({passport});
-
+        let hostname = process.env.VIRTUAL_HOST || "localhost"
 
 
 
@@ -63,7 +63,7 @@ module.exports = {
                 version: '1.0.0',
                 description: 'Rest API documentation for ServiceBot',
             },
-            host: 'localhost:3001',
+            host: `${hostname}:${appConfig.port || 3000}`,
             basePath: '/api/v1/',
         };
 
@@ -76,13 +76,14 @@ module.exports = {
         };
 
         // initialize swagger-jsdoc
-        var swaggerSpec = swaggerJSDoc(options);
-        swaggerSpec.paths = require('../../api-docs/api-paths.json');
-        swaggerSpec.definitions = require('../../api-docs/api-definitions.json');
-        swaggerSpec.securityDefinitions = require('../../api-docs/api-security-definitions.json');
         // serve swagger
         app.get('/swagger.json', function (req, res) {
             res.setHeader('Content-Type', 'application/json');
+            var swaggerSpec = swaggerJSDoc(options);
+            swaggerSpec.paths = require('../../api-docs/api-paths.json');
+            swaggerSpec.definitions = require('../../api-docs/api-definitions.json');
+            swaggerSpec.securityDefinitions = require('../../api-docs/api-security-definitions.json');
+
             res.send(swaggerSpec);
         });
 

@@ -171,7 +171,39 @@
     }
   },
 
-
+  "payment_plan":{
+    "type":"object",
+    "properties":{
+      "statement_descriptor" : {
+        "type" : "string",
+        "description" : "what shows up on statement"
+      },
+      "amount" : {
+        "type" : "integer",
+        "description" : "Amount in cents"
+      },
+      "currency" : {
+        "type" : "string",
+        "description" : "curency type"
+      },
+      "interval" : {
+        "type" : "string",
+        "description" : "Interval period (month, day, year)"
+      },
+      "interval_count" : {
+        "type" : "integer",
+        "description" : "Number of intervals in a period, for example with a monthly interval and interval_count of 1, customer charged every month"
+      },
+      "subscription_prorate" : {
+        "type" : "boolean",
+        "description" : "Prorate changes?"
+      },
+      "trial_period_days" : {
+        "type" : "integer",
+        "description" : "Days of trial"
+      }
+    }
+  },
   "service_templates": {
     "type":"object",
     "properties":{
@@ -235,7 +267,7 @@
         "description":"FILL ME OUT!!!!"
       },
       "subscription_prorate":{
-        "type":"boolean",
+        "type":"string",
         "description":"FILL ME OUT!!!!"
       },
       "created":{

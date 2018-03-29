@@ -345,7 +345,7 @@
         },
         {
           "name": "avatar",
-          "in": "body",
+          "in": "formData",
           "description": "user icon to add",
           "required": true,
           "type": "file"
@@ -1578,7 +1578,7 @@
         },
         {
           "name": "template-icon",
-          "in": "body",
+          "in": "formData",
           "description": "service-template icon to add",
           "required": true,
           "type": "file"
@@ -1713,7 +1713,7 @@
         },
         {
           "name": "template-image",
-          "in": "body",
+          "in": "formData",
           "description": "service-template image to add",
           "required": true,
           "type": "file"
@@ -2810,7 +2810,7 @@
     },
   "/service-instances/{id}/change-price": {
     "post": {
-      "summary": "Approves a service-instance",
+      "summary": "Change a service-instance payment plan",
       "tags": [
         "service-instances"
       ],
@@ -2829,64 +2829,52 @@
       ],
       "parameters": [
         {
-          "name": "id",
-          "in": "path",
-          "description": "service-instance id",
+        "name": "id",
+        "in": "path",
+        "description": "service-instance id",
+        "required": true,
+        "type": "number",
+        "format": "double"
+        },
+        {
+
+          "name": "payment_plan",
+          "in": "body",
+          "description": "service instance payment_plan to update",
           "required": true,
-          "type": "number",
-          "format": "double"
-        },
-        {
-          "name": "statement_descriptor",
-          "in": "body",
-          "description": "statement descriptor",
-          "required": false,
-          "type": "string"
-        },
-        {
-          "name": "amount",
-          "in": "body",
-          "description": "Amount",
-          "required": true,
-          "type": "number",
-          "format": "double"
-        },
-        {
-          "name": "currency",
-          "in": "body",
-          "description": "Currency Type",
-          "required": false,
-          "type": "string"
-        },
-        {
-          "name": "interval",
-          "in": "body",
-          "description": "Interval",
-          "required": false,
-          "type": "string"
-        },
-        {
-          "name": "interval_count",
-          "in": "body",
-          "description": "Interval Count",
-          "required": false,
-          "type": "number",
-          "format": "double"
-        },
-        {
-          "name": "subscription_prorate",
-          "in": "body",
-          "description": "Subscription Prorate",
-          "required": false,
-          "type": "boolean"
-        },
-        {
-          "name": "trial_period_days",
-          "in": "body",
-          "description": "Trial Period Days",
-          "required": false,
-          "type": "number",
-          "format": "double"
+          "schema": {
+            "type":"object",
+            "properties":{
+              "statement_descriptor" : {
+                "type" : "string",
+                "description" : "what shows up on statement"
+              },
+              "amount" : {
+                "type" : "integer",
+                "description" : "Amount in cents"
+              },
+              "currency" : {
+                "type" : "string",
+                "description" : "curency type"
+              },
+              "interval" : {
+                "type" : "string",
+                "description" : "Interval period (month, day, year)"
+              },
+              "interval_count" : {
+                "type" : "integer",
+                "description" : "Number of intervals in a period, for example with a monthly interval and interval_count of 1, customer charged every month"
+              },
+              "subscription_prorate" : {
+                "type" : "boolean",
+                "description" : "Prorate changes?"
+              },
+              "trial_period_days" : {
+                "type" : "integer",
+                "description" : "Days of trial"
+              }
+            }
+          }
         }
       ],
       "responses": {
@@ -5638,7 +5626,7 @@
         },
         {
           "name": "file",
-          "in": "body",
+          "in": "formData",
           "description": "System Option to create",
           "required": true,
           "type": "file"
