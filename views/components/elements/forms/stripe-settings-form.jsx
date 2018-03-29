@@ -137,7 +137,7 @@ class SystemSettingsForm extends React.Component {
             return (
                 <div className="row">
                     <div className="basic-info col-md-6 col-md-offset-3">
-                        {settings.secret_key &&
+                        {!settings.secret_key &&
                         <div>
                             <div className="title">
                                 <h3>Stripe API Key Reconfiguration</h3>
