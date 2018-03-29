@@ -137,6 +137,7 @@ class SystemSettingsForm extends React.Component {
             return (
                 <div className="row">
                     <div className="basic-info col-md-6 col-md-offset-3">
+                        {settings.secret_key &&
                         <div className="title">
                             <h3>Stripe API Key Reconfiguration</h3>
                             <p>
@@ -156,25 +157,28 @@ class SystemSettingsForm extends React.Component {
                             <br/>
                         </div>
                         {getAlerts()}
-                        <div className="row">
+                            <div className="row">
                             <div className="col-md-12">
-                                <div className="row">
-                                    <DataForm handleResponse={this.handleResponse} onUpdate={this.onUpdate} url={this.state.stripe_preconfigure} method={'POST'}>
-                                        <div className="col-md-12">
-                                            <Inputs type="text" label="Stripe Secret API Key" name="stripe_secret" defaultValue={settings.secret_key}
-                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                            <div className="row">
+                            <DataForm handleResponse={this.handleResponse} onUpdate={this.onUpdate} url={this.state.stripe_preconfigure} method={'POST'}>
+                            <div className="col-md-12">
+                            <Inputs type="text" label="Stripe Secret API Key" name="stripe_secret" defaultValue={settings.secret_key}
+                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
 
-                                            <Inputs type="text" label="Stripe Publishable API Key" name="stripe_public" value={settings.publishable_key}
-                                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                        </div>
-                                        <div className="col-md-12 text-right">
-                                            <Buttons btnType="primary" text="Update Stripe API Keys" type="submit" value="submit"/>
-                                        </div>
-                                    </DataForm>
-                                </div>
+                            <Inputs type="text" label="Stripe Publishable API Key" name="stripe_public" value={settings.publishable_key}
+                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                            </div>
+                            <div className="col-md-12 text-right">
+                            <Buttons btnType="primary" text="Update Stripe API Keys" type="submit" value="submit"/>
+                            </div>
+                            </DataForm>
+                            </div>
                             </div>
                             {confirm_reconfigure()}
-                        </div>
+                            </div>
+                        }
+
+
                         <p>
                             In order to have ServiceBot and Stripe communicate with each other we need to create webhooks in stripe. Follow these steps to enable this:<br/>
                             1. Login and navigate to <a href="https://dashboard.stripe.com/account/webhooks" target="_blank">the webhook page</a>.<br/>
