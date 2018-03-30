@@ -24,6 +24,8 @@ function* run(config, provide, channels) {
     let sendToWebhooks = (eventName) => async (event, sync_all = false) => {
         let webhooks = await db("webhooks").where(true, true);
         let webhook_responses = await Promise.reduce(webhooks, async (responses, webhook) => {
+
+            let parsedEvent = Object.values(event).map(eventValue => entry)
             let webhookRequest = fetch(webhook.endpoint_url, {method: "POST", body: JSON.stringify({event_name : eventName, event_data : event}), headers})
                 .then(response => {
                     if (!response.ok) {

@@ -298,7 +298,7 @@ module.exports = function (tableName, references = [], primaryKey = 'id', databa
             });
     };
 
-    Entity.getSchema = function (includeTo, includeFrom, callback) {
+    let getSchema = function (includeTo, includeFrom, callback) {
         //get column info for this entity
         Entity.database(Entity.table).columnInfo()
             .then(function (info) {
@@ -496,6 +496,7 @@ module.exports = function (tableName, references = [], primaryKey = 'id', databa
     Entity.prototype.attachReferences = promiseProxy(attachReferences);
     Entity.prototype.getRelated = promiseProxy(getRelated);
     Entity.batchCreate = promiseProxy(batchCreate);
+    Entity.getSchema = promiseProxy(getSchema);
 
 
     return Entity;

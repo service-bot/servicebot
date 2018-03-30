@@ -77,12 +77,14 @@ module.exports = {
 
         // initialize swagger-jsdoc
         // serve swagger
+        var swaggerSpec = swaggerJSDoc(options);
+
+        swaggerSpec.paths = {...require('../../api-docs/api-paths.json'), ...require('../../api-docs/api-entity-paths.json')};
+        swaggerSpec.definitions = {...require('../../api-docs/api-model-definitions.json'), ...require('../../api-docs/api-definitions.json')};
+        swaggerSpec.securityDefinitions = require('../../api-docs/api-security-definitions.json');
+
         app.get('/swagger.json', function (req, res) {
             res.setHeader('Content-Type', 'application/json');
-            var swaggerSpec = swaggerJSDoc(options);
-            swaggerSpec.paths = require('../../api-docs/api-paths.json');
-            swaggerSpec.definitions = require('../../api-docs/api-definitions.json');
-            swaggerSpec.securityDefinitions = require('../../api-docs/api-security-definitions.json');
 
             res.send(swaggerSpec);
         });

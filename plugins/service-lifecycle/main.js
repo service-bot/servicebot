@@ -80,7 +80,7 @@ function* run(config, provide, channels) {
         prePropertyChange : async function({instance, property_updates}){
             let result = {}
             for(let hook of lifecycles.pre_property_change){
-                let hookresult = await hook.run({instance});
+                let hookresult = await hook.run({instance, property_updates});
                 result = {...result, ...hookresult};
             }
             return result;

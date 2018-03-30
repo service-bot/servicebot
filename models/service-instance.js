@@ -218,7 +218,7 @@ let deleteFiles = function (callback) {
 
 ServiceInstance.prototype.changeProperties = async function (properties) {
     let updatedInstance = await this.attachReferences();
-
+    let oldInstance = {data : {...updatedInstance.data}}
     //todo: support creating new properties, shouldn't be bad... just need to validate the config
     if (properties.some(prop => prop.id === null || prop.parent_id !== updatedInstance.get("id"))) {
         throw "prop id bad or parent id does not match"
@@ -258,7 +258,9 @@ ServiceInstance.prototype.changeProperties = async function (properties) {
     }
     let updatedProps = await ServiceInstanceProperties.batchUpdate(mergedProps);
     if (lifecycleManager) {
+        await updatedInstance.attachReferences()
         await lifecycleManager.postPropertyChange({
+            old_instance : oldInstance,
             instance: updatedInstance,
         });
     }
@@ -302,7 +304,8 @@ ServiceInstance.prototype.unsubscribe = async function () {
         let results = await this.update()
         if (lifecycleManager) {
             lifecycleManager.postDecommission({
-                instance: results
+                instance: results,
+
             }).catch(e => {
                 console.error(e);
             });

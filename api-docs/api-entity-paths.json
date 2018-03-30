@@ -1,0 +1,3388 @@
+{
+  "/users": {
+    "get": {
+      "summary": "Get users",
+      "tags": [
+        "users"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_users",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of users",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/users/search": {
+    "get": {
+      "summary": "Get users",
+      "tags": [
+        "users"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_users_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filteredusers",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/users/{id}": {
+    "get": {
+      "summary": "Get users by id",
+      "tags": [
+        "users"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_users_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "users id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "users with id",
+          "schema": {
+            "$ref": "#/definitions/users"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update users",
+      "tags": [
+        "users"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_users_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "users id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/users"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "users with id",
+          "schema": {
+            "$ref": "#/definitions/users"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete users by id",
+      "tags": [
+        "users"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_users_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "users id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "users that was deleted",
+          "schema": {
+            "$ref": "#/definitions/users"
+          }
+        }
+      }
+    }
+  },
+  "/users/own": {
+    "get": {
+      "summary": "Get requester's users",
+      "tags": [
+        "users"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_users_own",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of users, owned by requester",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/event-logs": {
+    "get": {
+      "summary": "Get event_logs",
+      "tags": [
+        "event-logs"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_event_logs",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of event_logs",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/event_logs"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new event_logs",
+      "tags": [
+        "event-logs"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_event_logs",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "event_logs to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/event_logs"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "event_logs with id",
+          "schema": {
+            "$ref": "#/definitions/event_logs"
+          }
+        }
+      }
+    }
+  },
+  "/event-logs/search": {
+    "get": {
+      "summary": "Get event_logs",
+      "tags": [
+        "event-logs"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_event_logs_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filteredevent_logs",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/event_logs"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/event-logs/{id}": {
+    "get": {
+      "summary": "Get event_logs by id",
+      "tags": [
+        "event-logs"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_event_logs_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "event_logs id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "event_logs with id",
+          "schema": {
+            "$ref": "#/definitions/event_logs"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update event_logs",
+      "tags": [
+        "event-logs"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_event_logs_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "event_logs id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/event_logs"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "event_logs with id",
+          "schema": {
+            "$ref": "#/definitions/event_logs"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete event_logs by id",
+      "tags": [
+        "event-logs"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_event_logs_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "event_logs id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "event_logs that was deleted",
+          "schema": {
+            "$ref": "#/definitions/event_logs"
+          }
+        }
+      }
+    }
+  },
+  "/funds": {
+    "get": {
+      "summary": "Get funds",
+      "tags": [
+        "funds"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_funds",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of funds",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/funds"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new funds",
+      "tags": [
+        "funds"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_funds",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "funds to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/funds"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "funds with id",
+          "schema": {
+            "$ref": "#/definitions/funds"
+          }
+        }
+      }
+    }
+  },
+  "/funds/search": {
+    "get": {
+      "summary": "Get funds",
+      "tags": [
+        "funds"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_funds_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filteredfunds",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/funds"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/funds/{id}": {
+    "get": {
+      "summary": "Get funds by id",
+      "tags": [
+        "funds"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_funds_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "funds id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "funds with id",
+          "schema": {
+            "$ref": "#/definitions/funds"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update funds",
+      "tags": [
+        "funds"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_funds_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "funds id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/funds"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "funds with id",
+          "schema": {
+            "$ref": "#/definitions/funds"
+          }
+        }
+      }
+    }
+  },
+  "/funds/own": {
+    "get": {
+      "summary": "Get requester's funds",
+      "tags": [
+        "funds"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_funds_own",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of funds, owned by requester",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/funds"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/invoices": {
+    "get": {
+      "summary": "Get invoices",
+      "tags": [
+        "invoices"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_invoices",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of invoices",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/invoices"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/invoices/search": {
+    "get": {
+      "summary": "Get invoices",
+      "tags": [
+        "invoices"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_invoices_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filteredinvoices",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/invoices"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/invoices/{id}": {
+    "get": {
+      "summary": "Get invoices by id",
+      "tags": [
+        "invoices"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_invoices_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "invoices id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "invoices with id",
+          "schema": {
+            "$ref": "#/definitions/invoices"
+          }
+        }
+      }
+    }
+  },
+  "/invoices/own": {
+    "get": {
+      "summary": "Get requester's invoices",
+      "tags": [
+        "invoices"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_invoices_own",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of invoices, owned by requester",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/invoices"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/notification-templates": {
+    "get": {
+      "summary": "Get notification_templates",
+      "tags": [
+        "notification-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_notification_templates",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of notification_templates",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/notification_templates"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new notification_templates",
+      "tags": [
+        "notification-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_notification_templates",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "notification_templates to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/notification_templates"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "notification_templates with id",
+          "schema": {
+            "$ref": "#/definitions/notification_templates"
+          }
+        }
+      }
+    }
+  },
+  "/notification-templates/search": {
+    "get": {
+      "summary": "Get notification_templates",
+      "tags": [
+        "notification-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_notification_templates_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filterednotification_templates",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/notification_templates"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/notification-templates/{id}": {
+    "get": {
+      "summary": "Get notification_templates by id",
+      "tags": [
+        "notification-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_notification_templates_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "notification_templates id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "notification_templates with id",
+          "schema": {
+            "$ref": "#/definitions/notification_templates"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update notification_templates",
+      "tags": [
+        "notification-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_notification_templates_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "notification_templates id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/notification_templates"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "notification_templates with id",
+          "schema": {
+            "$ref": "#/definitions/notification_templates"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete notification_templates by id",
+      "tags": [
+        "notification-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_notification_templates_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "notification_templates id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "notification_templates that was deleted",
+          "schema": {
+            "$ref": "#/definitions/notification_templates"
+          }
+        }
+      }
+    }
+  },
+  "/notifications": {
+    "get": {
+      "summary": "Get notifications",
+      "tags": [
+        "notifications"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_notifications",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of notifications",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/notifications"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new notifications",
+      "tags": [
+        "notifications"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_notifications",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "notifications to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/notifications"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "notifications with id",
+          "schema": {
+            "$ref": "#/definitions/notifications"
+          }
+        }
+      }
+    }
+  },
+  "/notifications/search": {
+    "get": {
+      "summary": "Get notifications",
+      "tags": [
+        "notifications"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_notifications_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filterednotifications",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/notifications"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/notifications/{id}": {
+    "get": {
+      "summary": "Get notifications by id",
+      "tags": [
+        "notifications"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_notifications_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "notifications id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "notifications with id",
+          "schema": {
+            "$ref": "#/definitions/notifications"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update notifications",
+      "tags": [
+        "notifications"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_notifications_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "notifications id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/notifications"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "notifications with id",
+          "schema": {
+            "$ref": "#/definitions/notifications"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete notifications by id",
+      "tags": [
+        "notifications"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_notifications_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "notifications id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "notifications that was deleted",
+          "schema": {
+            "$ref": "#/definitions/notifications"
+          }
+        }
+      }
+    }
+  },
+  "/notifications/own": {
+    "get": {
+      "summary": "Get requester's notifications",
+      "tags": [
+        "notifications"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_notifications_own",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of notifications, owned by requester",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/notifications"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/permissions": {
+    "get": {
+      "summary": "Get user_permissions",
+      "tags": [
+        "permissions"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_permissions",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of user_permissions",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/user_permissions"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new user_permissions",
+      "tags": [
+        "permissions"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_permissions",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "user_permissions to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/user_permissions"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "user_permissions with id",
+          "schema": {
+            "$ref": "#/definitions/user_permissions"
+          }
+        }
+      }
+    }
+  },
+  "/permissions/search": {
+    "get": {
+      "summary": "Get user_permissions",
+      "tags": [
+        "permissions"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_permissions_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filtereduser_permissions",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/user_permissions"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/permissions/{id}": {
+    "get": {
+      "summary": "Get user_permissions by id",
+      "tags": [
+        "permissions"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_permissions_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "user_permissions id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "user_permissions with id",
+          "schema": {
+            "$ref": "#/definitions/user_permissions"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update user_permissions",
+      "tags": [
+        "permissions"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_permissions_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "user_permissions id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/user_permissions"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "user_permissions with id",
+          "schema": {
+            "$ref": "#/definitions/user_permissions"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete user_permissions by id",
+      "tags": [
+        "permissions"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_permissions_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "user_permissions id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "user_permissions that was deleted",
+          "schema": {
+            "$ref": "#/definitions/user_permissions"
+          }
+        }
+      }
+    }
+  },
+  "/roles": {
+    "get": {
+      "summary": "Get user_roles",
+      "tags": [
+        "roles"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_roles",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of user_roles",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/user_roles"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new user_roles",
+      "tags": [
+        "roles"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_roles",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "user_roles to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/user_roles"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "user_roles with id",
+          "schema": {
+            "$ref": "#/definitions/user_roles"
+          }
+        }
+      }
+    }
+  },
+  "/roles/search": {
+    "get": {
+      "summary": "Get user_roles",
+      "tags": [
+        "roles"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_roles_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filtereduser_roles",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/user_roles"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/roles/{id}": {
+    "get": {
+      "summary": "Get user_roles by id",
+      "tags": [
+        "roles"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_roles_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "user_roles id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "user_roles with id",
+          "schema": {
+            "$ref": "#/definitions/user_roles"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update user_roles",
+      "tags": [
+        "roles"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_roles_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "user_roles id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/user_roles"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "user_roles with id",
+          "schema": {
+            "$ref": "#/definitions/user_roles"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete user_roles by id",
+      "tags": [
+        "roles"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_roles_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "user_roles id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "user_roles that was deleted",
+          "schema": {
+            "$ref": "#/definitions/user_roles"
+          }
+        }
+      }
+    }
+  },
+  "/service-categories": {
+    "get": {
+      "summary": "Get service_categories",
+      "tags": [
+        "service-categories"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_categories",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of service_categories",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_categories"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new service_categories",
+      "tags": [
+        "service-categories"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_service_categories",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "service_categories to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_categories"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_categories with id",
+          "schema": {
+            "$ref": "#/definitions/service_categories"
+          }
+        }
+      }
+    }
+  },
+  "/service-categories/search": {
+    "get": {
+      "summary": "Get service_categories",
+      "tags": [
+        "service-categories"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_categories_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filteredservice_categories",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_categories"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/service-categories/{id}": {
+    "get": {
+      "summary": "Get service_categories by id",
+      "tags": [
+        "service-categories"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_categories_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_categories id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_categories with id",
+          "schema": {
+            "$ref": "#/definitions/service_categories"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update service_categories",
+      "tags": [
+        "service-categories"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_service_categories_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_categories id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_categories"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_categories with id",
+          "schema": {
+            "$ref": "#/definitions/service_categories"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete service_categories by id",
+      "tags": [
+        "service-categories"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_service_categories_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_categories id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_categories that was deleted",
+          "schema": {
+            "$ref": "#/definitions/service_categories"
+          }
+        }
+      }
+    }
+  },
+  "/service-instance-cancellations": {
+    "get": {
+      "summary": "Get service_instance_cancellations",
+      "tags": [
+        "service-instance-cancellations"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instance_cancellations",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of service_instance_cancellations",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_instance_cancellations"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new service_instance_cancellations",
+      "tags": [
+        "service-instance-cancellations"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_service_instance_cancellations",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "service_instance_cancellations to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_instance_cancellations"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instance_cancellations with id",
+          "schema": {
+            "$ref": "#/definitions/service_instance_cancellations"
+          }
+        }
+      }
+    }
+  },
+  "/service-instance-cancellations/search": {
+    "get": {
+      "summary": "Get service_instance_cancellations",
+      "tags": [
+        "service-instance-cancellations"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instance_cancellations_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filteredservice_instance_cancellations",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_instance_cancellations"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/service-instance-cancellations/{id}": {
+    "get": {
+      "summary": "Get service_instance_cancellations by id",
+      "tags": [
+        "service-instance-cancellations"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instance_cancellations_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_instance_cancellations id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instance_cancellations with id",
+          "schema": {
+            "$ref": "#/definitions/service_instance_cancellations"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update service_instance_cancellations",
+      "tags": [
+        "service-instance-cancellations"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_service_instance_cancellations_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_instance_cancellations id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_instance_cancellations"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instance_cancellations with id",
+          "schema": {
+            "$ref": "#/definitions/service_instance_cancellations"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete service_instance_cancellations by id",
+      "tags": [
+        "service-instance-cancellations"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_service_instance_cancellations_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_instance_cancellations id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instance_cancellations that was deleted",
+          "schema": {
+            "$ref": "#/definitions/service_instance_cancellations"
+          }
+        }
+      }
+    }
+  },
+  "/service-instance-messages": {
+    "get": {
+      "summary": "Get service_instance_messages",
+      "tags": [
+        "service-instance-messages"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instance_messages",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of service_instance_messages",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_instance_messages"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new service_instance_messages",
+      "tags": [
+        "service-instance-messages"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_service_instance_messages",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "service_instance_messages to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_instance_messages"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instance_messages with id",
+          "schema": {
+            "$ref": "#/definitions/service_instance_messages"
+          }
+        }
+      }
+    }
+  },
+  "/service-instance-messages/search": {
+    "get": {
+      "summary": "Get service_instance_messages",
+      "tags": [
+        "service-instance-messages"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instance_messages_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filteredservice_instance_messages",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_instance_messages"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/service-instance-messages/{id}": {
+    "get": {
+      "summary": "Get service_instance_messages by id",
+      "tags": [
+        "service-instance-messages"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instance_messages_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_instance_messages id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instance_messages with id",
+          "schema": {
+            "$ref": "#/definitions/service_instance_messages"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update service_instance_messages",
+      "tags": [
+        "service-instance-messages"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_service_instance_messages_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_instance_messages id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_instance_messages"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instance_messages with id",
+          "schema": {
+            "$ref": "#/definitions/service_instance_messages"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete service_instance_messages by id",
+      "tags": [
+        "service-instance-messages"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_service_instance_messages_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_instance_messages id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instance_messages that was deleted",
+          "schema": {
+            "$ref": "#/definitions/service_instance_messages"
+          }
+        }
+      }
+    }
+  },
+  "/service-instance-properties": {
+    "get": {
+      "summary": "Get service_instance_properties",
+      "tags": [
+        "service-instance-properties"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instance_properties",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of service_instance_properties",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_instance_properties"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new service_instance_properties",
+      "tags": [
+        "service-instance-properties"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_service_instance_properties",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "service_instance_properties to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_instance_properties"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instance_properties with id",
+          "schema": {
+            "$ref": "#/definitions/service_instance_properties"
+          }
+        }
+      }
+    }
+  },
+  "/service-instance-properties/search": {
+    "get": {
+      "summary": "Get service_instance_properties",
+      "tags": [
+        "service-instance-properties"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instance_properties_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filteredservice_instance_properties",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_instance_properties"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/service-instance-properties/{id}": {
+    "get": {
+      "summary": "Get service_instance_properties by id",
+      "tags": [
+        "service-instance-properties"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instance_properties_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_instance_properties id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instance_properties with id",
+          "schema": {
+            "$ref": "#/definitions/service_instance_properties"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update service_instance_properties",
+      "tags": [
+        "service-instance-properties"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_service_instance_properties_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_instance_properties id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_instance_properties"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instance_properties with id",
+          "schema": {
+            "$ref": "#/definitions/service_instance_properties"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete service_instance_properties by id",
+      "tags": [
+        "service-instance-properties"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_service_instance_properties_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_instance_properties id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instance_properties that was deleted",
+          "schema": {
+            "$ref": "#/definitions/service_instance_properties"
+          }
+        }
+      }
+    }
+  },
+  "/service-instances": {
+    "get": {
+      "summary": "Get service_instances",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instances",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of service_instances",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_instances"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/service-instances/search": {
+    "get": {
+      "summary": "Get service_instances",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instances_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filteredservice_instances",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_instances"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/service-instances/{id}": {
+    "get": {
+      "summary": "Get service_instances by id",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instances_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_instances id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instances with id",
+          "schema": {
+            "$ref": "#/definitions/service_instances"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update service_instances",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_service_instances_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_instances id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_instances"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instances with id",
+          "schema": {
+            "$ref": "#/definitions/service_instances"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete service_instances by id",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_service_instances_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_instances id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_instances that was deleted",
+          "schema": {
+            "$ref": "#/definitions/service_instances"
+          }
+        }
+      }
+    }
+  },
+  "/service-instances/own": {
+    "get": {
+      "summary": "Get requester's service_instances",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_instances_own",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of service_instances, owned by requester",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_instances"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/service-template-properties": {
+    "get": {
+      "summary": "Get service_template_properties",
+      "tags": [
+        "service-template-properties"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_template_properties",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of service_template_properties",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_template_properties"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new service_template_properties",
+      "tags": [
+        "service-template-properties"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_service_template_properties",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "service_template_properties to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_template_properties"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_template_properties with id",
+          "schema": {
+            "$ref": "#/definitions/service_template_properties"
+          }
+        }
+      }
+    }
+  },
+  "/service-template-properties/search": {
+    "get": {
+      "summary": "Get service_template_properties",
+      "tags": [
+        "service-template-properties"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_template_properties_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filteredservice_template_properties",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_template_properties"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/service-template-properties/{id}": {
+    "get": {
+      "summary": "Get service_template_properties by id",
+      "tags": [
+        "service-template-properties"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_template_properties_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_template_properties id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_template_properties with id",
+          "schema": {
+            "$ref": "#/definitions/service_template_properties"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update service_template_properties",
+      "tags": [
+        "service-template-properties"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_service_template_properties_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_template_properties id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_template_properties"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_template_properties with id",
+          "schema": {
+            "$ref": "#/definitions/service_template_properties"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete service_template_properties by id",
+      "tags": [
+        "service-template-properties"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_service_template_properties_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_template_properties id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_template_properties that was deleted",
+          "schema": {
+            "$ref": "#/definitions/service_template_properties"
+          }
+        }
+      }
+    }
+  },
+  "/service-templates": {
+    "get": {
+      "summary": "Get service_templates",
+      "tags": [
+        "service-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_templates",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of service_templates",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_templates"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new service_templates",
+      "tags": [
+        "service-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_service_templates",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "service_templates to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_templates"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_templates with id",
+          "schema": {
+            "$ref": "#/definitions/service_templates"
+          }
+        }
+      }
+    }
+  },
+  "/service-templates/search": {
+    "get": {
+      "summary": "Get service_templates",
+      "tags": [
+        "service-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_templates_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filteredservice_templates",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_templates"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/service-templates/{id}": {
+    "get": {
+      "summary": "Get service_templates by id",
+      "tags": [
+        "service-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_service_templates_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_templates id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_templates with id",
+          "schema": {
+            "$ref": "#/definitions/service_templates"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update service_templates",
+      "tags": [
+        "service-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_service_templates_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_templates id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/service_templates"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_templates with id",
+          "schema": {
+            "$ref": "#/definitions/service_templates"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete service_templates by id",
+      "tags": [
+        "service-templates"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_service_templates_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service_templates id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "service_templates that was deleted",
+          "schema": {
+            "$ref": "#/definitions/service_templates"
+          }
+        }
+      }
+    }
+  },
+  "/webhooks": {
+    "get": {
+      "summary": "Get webhooks",
+      "tags": [
+        "webhooks"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_webhooks",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of webhooks",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/webhooks"
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Create new webhooks",
+      "tags": [
+        "webhooks"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "post_webhooks",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "data",
+          "in": "body",
+          "description": "webhooks to create",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/webhooks"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "webhooks with id",
+          "schema": {
+            "$ref": "#/definitions/webhooks"
+          }
+        }
+      }
+    }
+  },
+  "/webhooks/search": {
+    "get": {
+      "summary": "Get webhooks",
+      "tags": [
+        "webhooks"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_webhooks_search",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "key",
+          "in": "query",
+          "description": "Attribute to search by",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "value",
+          "in": "query",
+          "description": "Value to search for",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "An array of filteredwebhooks",
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/webhooks"
+            }
+          }
+        }
+      }
+    }
+  },
+  "/webhooks/{id}": {
+    "get": {
+      "summary": "Get webhooks by id",
+      "tags": [
+        "webhooks"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "get_webhooks_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "webhooks id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "webhooks with id",
+          "schema": {
+            "$ref": "#/definitions/webhooks"
+          }
+        }
+      }
+    },
+    "put": {
+      "summary": "Update webhooks",
+      "tags": [
+        "webhooks"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "put_webhooks_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "webhooks id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "data",
+          "in": "body",
+          "description": "Data to update",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/webhooks"
+          }
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "webhooks with id",
+          "schema": {
+            "$ref": "#/definitions/webhooks"
+          }
+        }
+      }
+    },
+    "delete": {
+      "summary": "Delete webhooks by id",
+      "tags": [
+        "webhooks"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "operationId": "delete_webhooks_id",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "webhooks id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "webhooks that was deleted",
+          "schema": {
+            "$ref": "#/definitions/webhooks"
+          }
+        }
+      }
+    }
+  }
+}
