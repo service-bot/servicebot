@@ -25,8 +25,11 @@ function* run(config, provide, channels) {
         let webhooks = await db("webhooks").where(true, true);
         let webhook_responses = await Promise.reduce(webhooks, async (responses, webhook) => {
 
-            let parsedEvent = Object.values(event).map(eventValue => entry)
-            let webhookRequest = fetch(webhook.endpoint_url, {method: "POST", body: JSON.stringify({event_name : eventName, event_data : event}), headers})
+            let parsedEvent = Object.entries(event).reduce((acc, [key, eventValue]) => {
+                acc[key] = eventValue.data ? eventValue.data : eventValue;
+                return acc;
+            }, {});
+            let webhookRequest = fetch(webhook.endpoint_url, {method: "POST", body: JSON.stringify({event_name : eventName, event_data : parsedEvent}), headers})
                 .then(response => {
                     if (!response.ok) {
                         console.error("error making webhook request", response.statusText);
