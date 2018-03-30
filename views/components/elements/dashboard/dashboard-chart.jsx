@@ -160,4 +160,76 @@ class ServiceStatusChart extends React.Component {
 
 }
 
-export {ServiceOverTimeChart, ServiceStatusChart};
+
+
+class CustomerStatusChart extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            loading: true,
+            instances: {},
+            containerWidth: this.props.containerWidth,
+            chartData: {},
+            chartOption: {}
+        };
+
+        this.fetchInstances = this.fetchInstances.bind(this);
+    }
+
+    componentDidMount(){
+        this.fetchInstances();
+    }
+
+    fetchInstances(){
+        let self = this;
+        let url = '/api/v1/service-instances';
+        Fetcher(url).then(function (response) {
+
+            if(!response.error) {
+                let statuses = _.uniq(_.map(response, (instance) => instance.status));
+                let groupByStatus = _.groupBy(response, (instance) => {
+                    return instance.status ? instance.status : other
+                });
+                let serviceCountByStatus = _.map(groupByStatus, (group)=>{return(group.length)});
+
+                let data = {
+                    labels: statuses,
+                    datasets: [{
+                        data: serviceCountByStatus,
+                        backgroundColor: [ "#FF6384", "#36A2EB", "#FFCE56", "#B388FF" ],
+                        hoverBackgroundColor: [ "#FF6384", "#36A2EB", "#FFCE56", "#B388FF" ] }]
+                };
+                let options = {
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    }
+                };
+
+                self.setState({loading: false, instances: response, chartData: data, chartOptions: options});
+            }else{
+                self.setState({loading: false});
+            }
+        })
+    }
+
+    render(){
+        if(this.state.loading){
+            return(
+                <div>
+                    <Load/>
+                </div>
+            );
+        }else{
+            return(
+                <div className={`customer-status-chart ${this.props.className}`}>
+                    <h3 className="chart-title">Customer Stats</h3>
+                    <RC2 data={this.state.chartData} options={this.state.chartOptions} type='pie'/>
+                </div>
+            );
+        }
+    }
+
+}
+
+export {ServiceOverTimeChart, ServiceStatusChart, CustomerStatusChart};

@@ -72,11 +72,11 @@ class Widget extends React.Component {
                 <div className="widget-label" style={style.widgetLabel}>{this.state.data.label}</div>
                 {this.state.data.value && <div className="widget-data">{this.getFormatted(this.state.data.value)}<span className="sub">{this.props.postFix}</span></div>}
                 {this.state.data.list &&
-                    <div>
+                    <div className="p-t-10 p-b-10">
                         {this.state.data.list.map(listing =>
-                            <div>
-                                <span>{listing.label}</span>
-                                <span>{listing.value}</span>
+                            <div className="row p-l-20 p-r-20">
+                                <div className="col-md-10">{listing.label}</div>
+                                <div className="col-md-2 text-right">{listing.value}</div>
                             </div>
                         )}
                     </div>
@@ -115,12 +115,20 @@ class DashboardWidgets extends React.Component {
         saleStat.push({label:'Requested Sales', value:this.state.data.salesStats.overall.requested});
         saleStat.push({label:'Waiting Cancellations', value:this.state.data.salesStats.overall.waitingCancellation});
         saleStat.push({label:'Cancelled Sales', value:this.state.data.salesStats.overall.cancelled});
+
+        //Unpaid charge logic
+        let orange = false;
+        let green = true;
+        if(this.state.data.salesStats.overall.remainingCharges > 0) {
+            orange = true;
+            green = false;
+        }
         return (
             <div>
                 <div className="dashboard-widgets">
                     <Widget data={{label: 'ARR', value: this.state.data.salesStats.subscriptionStats.annual}} postFix="/yr" type="price"/>
                     <Widget data={{label: 'MRR', value: this.state.data.salesStats.subscriptionStats.month}} postFix="/mo" type="price"/>
-                    <Widget data={{label: 'Unpaid Charges', value: this.state.data.salesStats.overall.remainingCharges}} type="price"/>
+                    <Widget data={{label: 'Unpaid Charges', value: this.state.data.salesStats.overall.remainingCharges}} type="price" orange={orange} green={green}/>
                     <Widget data={{label: 'Total Transactions', value: this.state.data.totalSales}} type="price" purple={true}/>
                 </div>
                 <div className="dashboard-widgets overalls">
@@ -135,4 +143,4 @@ class DashboardWidgets extends React.Component {
 
 }
 
-export {DashboardWidgets};
+export {DashboardWidgets, Widget};

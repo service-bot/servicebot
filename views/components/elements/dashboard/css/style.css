@@ -27,3 +27,29 @@
     font-weight: 100;
     padding: 20px 0px;
 }
+
+.offerings-widgets{
+    background: white;
+    margin: 15px 0;
+    border-radius: 5px;
+}
+
+.offerings-widget {
+    padding: 5px 15px;
+    text-align: center;
+}
+
+.offerings-widget.master {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    background: #000000;
+    color: white;
+    text-align: left;
+}
+
+.customer-chart-widget{
+    background: #ffffff;
+    padding: 5px;
+    border-radius: 5px;
+    margin: 5px 10px;
+}
