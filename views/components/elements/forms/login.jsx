@@ -183,14 +183,16 @@ class Login extends React.Component {
                                     <button onClick={this.handleLogin} type='submit'
                                             className="btn btn-raised btn-lg btn-primary btn-block">Sign in
                                     </button>
+                                    <p className="sign-up-link">
+                                        <Link to={{pathname: "/forgot-password", state: {fromLogin: false}}}> Forgot
+                                            Password</Link>
+                                    </p>
                                     {(this.props.options && this.props.options.allow_registration.value == 'true') &&
                                     <p className="sign-up-link">Don't have an account?
                                         <span><Link to={{
                                             pathname: "/signup",
                                             state: {fromLogin: true}
-                                        }}> Sign up here</Link> or </span>
-                                        <Link to={{pathname: "/forgot-password", state: {fromLogin: false}}}> Forgot
-                                            Password</Link>
+                                        }}> Sign up here</Link></span>
                                     </p>
                                     }
                                 </form>

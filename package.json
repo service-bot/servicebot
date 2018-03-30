@@ -7,7 +7,8 @@
     "build": "./node_modules/.bin/webpack",
     "dev-client": "./node_modules/.bin/webpack-dev-server --port 3002 --content-base public/",
     "fullStart": "./node_modules/.bin/webpack && node ./bin/start",
-    "debug": "node $NODE_DEBUG_OPTION ./bin/start"
+    "debug": "node $NODE_DEBUG_OPTION ./bin/start",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -113,10 +114,12 @@
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "jest": "^22.4.2",
     "react-hot-loader": "^3.0.0-beta.7",
+    "servicebot-client": "^1.0.3",
     "supertest": "^3.0.0",
     "tape": "^4.8.0",
-    "uglifyjs-webpack-plugin": "^1.0.1",
+    "uglifyjs-webpack-plugin": "^1.2.4",
     "webpack-dev-server": "^1.14.1"
   }
 }
