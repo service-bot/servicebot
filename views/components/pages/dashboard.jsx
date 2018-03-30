@@ -14,9 +14,9 @@ import SVGIcons from "../utilities/svg-icons.jsx";
 import ServiceBotTableNoData from '../elements/bootstrap-tables/servicebot-table-no-data.jsx';
 let _ = require("lodash");
 import { connect } from "react-redux";
-import OverallStatsWidgets from '../elements/dashboard/overall-stats-widgets.jsx';
-import SubscriptionStatsWidgets from '../elements/dashboard/subscription-widgets.jsx';
-import UnSubscriptionStatsWidgets from '../elements/dashboard/un-subscription-widgets.jsx';
+//import OverallStatsWidgets from '../elements/dashboard/overall-stats-widgets.jsx';
+//import SubscriptionStatsWidgets from '../elements/dashboard/subscription-widgets.jsx';
+//import UnSubscriptionStatsWidgets from '../elements/dashboard/un-subscription-widgets.jsx';
 
 class Dashboard extends React.Component {
 
@@ -82,9 +82,9 @@ class Dashboard extends React.Component {
                             <div>
                                 <ContentTitle title="Welcome to your dashboard"/>
                                 <DashboardWidgets data={this.state.analytics}/>
-                                <OverallStatsWidgets data={this.state.analytics} />
-                                <SubscriptionStatsWidgets data={this.state.analytics} />
-                                <UnSubscriptionStatsWidgets data={this.state.analytics} />
+                                {/*<OverallStatsWidgets data={this.state.analytics} />*/}
+                                {/*<SubscriptionStatsWidgets data={this.state.analytics} />*/}
+                                {/*<UnSubscriptionStatsWidgets data={this.state.analytics} />*/}
                                 <div className="row">
                                     <div className="col-md-8 dashboard-charts">
                                         {this.state.templates.length > 0 ?
