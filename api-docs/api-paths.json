@@ -743,17 +743,16 @@
           "in": "body",
           "description": "service-template request information",
           "required": true,
-          "type": "object"
+          "schema": {
+            "$ref": "#/definitions/service_instance_request"
+          }
         }
       ],
       "responses": {
         "200": {
-          "description": "An array of service-templates",
+          "description": "The newly provisioned service instance",
           "schema": {
-            "type": "array",
-            "items": {
               "$ref": "#/definitions/service_instances"
-            }
           }
         },
         "default": {

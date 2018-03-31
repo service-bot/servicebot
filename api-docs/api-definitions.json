@@ -1,51 +1,86 @@
 {
-  "Error":
-   { "type": "object",
-     "properties":
-      { "code": { "type": "integer", "format": "int32" },
-        "message": { "type": "string" },
-        "fields": { "type": "string" } } },
-
-  "user_login":{
-    "type":"object",
-    "properties":{
-      "email":{
-        "type":"string",
-        "maxLength":255,
-        "description":"FILL ME OUT!!!!"
+  "Error": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "integer",
+        "format": "int32"
       },
-      "password":{
-        "type":"string",
-        "maxLength":255,
-        "description":"FILL ME OUT!!!!"
+      "message": {
+        "type": "string"
+      },
+      "fields": {
+        "type": "string"
       }
     }
   },
-
-  "stripe_preconfigure":{
-    "type":"object",
-    "properties":{
-      "message":{
-        "type":"string",
-        "description":"Response message"
+  "user_login": {
+    "type": "object",
+    "properties": {
+      "email": {
+        "type": "string",
+        "maxLength": 255,
+        "description": "FILL ME OUT!!!!"
       },
-      "do_migration":{
-        "type":"string",
-        "description":"If “do_migration” is false, you can just run the next api call to actually change the keys. Otherwise, you have to prompt the user that by changing theses keys, their current data will be wiped out!"
+      "password": {
+        "type": "string",
+        "maxLength": 255,
+        "description": "FILL ME OUT!!!!"
       }
     }
   },
-
-  "stripe_keys":{
-    "type":"object",
-    "properties":{
-      "stripe_secret":{
-        "type":"string",
-        "description":"Stripe secret key"
+  "stripe_preconfigure": {
+    "type": "object",
+    "properties": {
+      "message": {
+        "type": "string",
+        "description": "Response message"
       },
-      "stripe_public":{
-        "type":"string",
-        "description":"Stripe public key"
+      "do_migration": {
+        "type": "string",
+        "description": "If “do_migration” is false, you can just run the next api call to actually change the keys. Otherwise, you have to prompt the user that by changing theses keys, their current data will be wiped out!"
+      }
+    }
+  },
+  "stripe_keys": {
+    "type": "object",
+    "properties": {
+      "stripe_secret": {
+        "type": "string",
+        "description": "Stripe secret key"
+      },
+      "stripe_public": {
+        "type": "string",
+        "description": "Stripe public key"
+      }
+    }
+  },
+  "service_instance_request": {
+    "type": "object",
+    "properties": {
+      "email": {
+        "type": "string",
+        "format": "email",
+        "description": "Email of user to create"
+      },
+      "token_id": {
+        "type": "string",
+        "description": "[Stripe Token ID](https://stripe.com/docs/api#token_object-id)"
+      },
+      "client_id": {
+        "type": "integer",
+        "description": "Servicebot User ID, used for requesting a service instance for an existing User"
+      },
+      "references": {
+        "type": "object",
+        "properties": {
+          "service_instance_properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_template_properties"
+            }
+          }
+        }
       }
     }
   }
