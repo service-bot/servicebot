@@ -73,6 +73,9 @@ class SystemSettingsForm extends React.Component {
                 }
             });
         }
+        if(this.props.postResponse){
+            this.props.postResponse();
+        }
     }
 
     handleConfirm(){

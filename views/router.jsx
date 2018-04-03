@@ -52,6 +52,7 @@ import ManageNotificationTemplates from "./components/pages/manage-notification-
 // Elements
 import NotificationTemplateForm from "./components/elements/forms/notification-template-form.jsx";
 import ServiceTemplateForm from "./components/elements/forms/service-template-form-review.jsx";
+import ServiceTemplateFormLite from "./components/elements/forms/service-template-form-lite.jsx";
 import ServiceInstanceForm from "./components/elements/forms/service-instance-form-example.jsx";
 import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
@@ -128,9 +129,10 @@ class AppRouter extends React.Component {
                 {/* Query routes */}
                 <Route name="Services" path="manage-subscriptions/:status" component={ManageSubscriptions}/>
                 {/* Other */}
+                <Route path="service-templates/lite" component={ServiceTemplateFormLite}/>
+
                 <Route path="service-templates/:templateId" component={ServiceTemplateForm}/>
-                <Route name="Manage Subscriptions" path="/service-instance"
-                       component={ManageSubscriptions}/>
+                <Route name="Manage Subscriptions" path="/service-instance" component={ManageSubscriptions}/>
                 <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
                 {this.props.routeDefinition && this.props.routeDefinition.reduce((acc, route, index) => {
                         acc.push(<Route key={index} name={route.name} path={route.path} component={route.component}/>)
