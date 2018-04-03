@@ -32,7 +32,7 @@ class ServiceOverTimeChart extends React.Component {
             if(!response.error) {
                 let servicesRunning = _.filter(response, {status:'running'});
                 let servicesCancelled = _.filter(response, {status:'cancelled'});
-                console.log(servicesCancelled);
+
                 let months = _.uniq(_.map(servicesRunning, (instance) => instance.created_at.substring(0,7)));
                  months = _.uniq([...months, ..._.map(servicesCancelled, (instance) => instance.updated_at.substring(0,7))]);
 
@@ -42,25 +42,22 @@ class ServiceOverTimeChart extends React.Component {
                 let groupByMonthCancelled = _.groupBy(servicesCancelled, (instance) => {
                     return instance.updated_at.substring(0,7);
                 });
-                console.log(groupByMonthCancelled)
                 let sortMonthsRunning = months.sort(function(a, b){
                     if(a > b){ return 1; }
                     else if( a < b){ return -1; }
                     else{ return 0;}
                 });
-                console.log(sortMonthsRunning);
                 let sortedGroups = sortMonthsRunning.map((month)=>{
-                   return groupByMonthRunning[month];
-                }).filter(group => group);
+                   return groupByMonthRunning[month] || [];
+                })
                 let serviceCountByMonthRunning = _.map(sortedGroups, (group)=>{return(group.length)});
 
 
                 let sortedCancelledGroups = sortMonthsRunning.map((month)=>{
-                    return groupByMonthCancelled[month];
-                }).filter(group => group);
+                    return groupByMonthCancelled[month] || [];
+                })
 
                 let serviceCountByMonthCancelled = _.map(sortedCancelledGroups, (group)=>{return(group.length)});
-                console.error(sortedCancelledGroups, sortedGroups);
                 let data = {
                     labels: months,
                     datasets: [{
