@@ -251,8 +251,8 @@ class ServiceRequest extends React.Component {
                                                                 <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{getPrice(this.state.service)}</b></div>
                                                             </div>
                                                         </div>
-                                                        {filteredAdjustments.map((lineItem) => (
-                                                            <div className="pricing-wrapper">
+                                                        {filteredAdjustments.map((lineItem, index) => (
+                                                            <div key={"line-" + index} className="pricing-wrapper">
                                                                 <div className="subscription-pricing row m-r-0 m-l-0">
                                                                     <div className="col-md-6 p-r-0 p-l-0">{lineItem.name}</div>
                                                                     <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{this.getAdjustmentSign(lineItem)}</b></div>
@@ -275,8 +275,8 @@ class ServiceRequest extends React.Component {
 
                                                 {(this.state.service.type === "split" && splitPricing) ? (
                                                     <div>
-                                                        {splitPricing.splits.map((splitItem) => (
-                                                            <div className="split-wrapper">
+                                                        {splitPricing.splits.map((splitItem, index) => (
+                                                            <div key={"split-" + index} className="split-wrapper">
                                                                 <div className="subscription-pricing row m-r-0 m-l-0">
                                                                     <div className="col-md-6 p-r-0 p-l-0">{(splitItem.charge_day === 0) ? (<span>Right Now</span>) : (<span>After {splitItem.charge_day} Days</span>)}</div>
                                                                     <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitItem.amount}/></b></div>

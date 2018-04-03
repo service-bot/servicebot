@@ -86,8 +86,8 @@ class Widget extends React.Component {
                 {this.state.data.value && this.state.data.value !== null && <div className="widget-data">{this.getFormatted(this.state.data.value)}<span className="sub">{this.props.postFix}</span></div>}
                 {this.state.data.list && this.state.data.list.length > 0 &&
                     <div className="p-t-10 p-b-10">
-                        {this.state.data.list.map(listing =>
-                            <div className="dash-widget-list row p-l-20 p-r-20 p-t-5 p-b-5">
+                        {this.state.data.list.map(( listing, index) =>
+                            <div key={"price-" + index} className="dash-widget-list row p-l-20 p-r-20 p-t-5 p-b-5">
                                 <div className="col-md-8 col-lg-9">{listing.label}</div>
                                 <div className="col-md-4 col-lg-3 text-right">
                                     {(listing.type && listing.type === 'price') ?

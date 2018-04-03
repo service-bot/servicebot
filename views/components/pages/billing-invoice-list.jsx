@@ -121,8 +121,8 @@ class BillingInvoiceList extends React.Component {
                             <div className="xaas-data xaas-service"><span>Applied Refunds</span></div>
                         </div>
                         <div className="xaas-body">
-                            {refunds.map(refund =>
-                                <div className="xaas-body-row">
+                            {refunds.map((refund, index) =>
+                                <div key={"refund-" + index} className="xaas-body-row">
                                     <div className="xaas-data xaas-price"><b><Price value={refund.amount} /></b></div>
                                     <div className="xaas-data xaas-charge"><span>{refund.reason}</span></div>
                                     <div className="xaas-data xaas-action"><span>{refund.status}</span></div>

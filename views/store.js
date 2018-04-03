@@ -25,7 +25,6 @@ import thunk from "redux-thunk";
 import {isAuthorized} from "./components/utilities/authorizer.jsx";
 import Fetcher from "./components/utilities/fetcher.jsx";
 import {reducer as formReducer} from 'redux-form'
-import logger from 'redux-logger'
 import PluginbotClient from "pluginbot-react";
 import {syncHistoryWithStore, routerReducer} from 'react-router-redux'
 
@@ -242,7 +241,12 @@ let initializedState = function (initialOptions = null) {
 let initialize = async function () {
 
     let app = await PluginbotClient.createPluginbot();
-    await app.initialize(rootReducer, thunk, logger);
+    let middleware = [rootReducer, thunk];
+    if(process.env.NODE_ENV === "development" ){
+        const { logger } = require(`redux-logger`);
+        middleware.push(logger);
+    }
+    await app.initialize(...middleware);
     return app;
 
 };
