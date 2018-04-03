@@ -60,20 +60,22 @@ class ServiceOverTimeChart extends React.Component {
                 let serviceCountByMonthCancelled = _.map(sortedCancelledGroups, (group)=>{return(group.length)});
                 let data = {
                     labels: months,
-                    datasets: [{
-                        label: 'Running Services',
-                        data: serviceCountByMonthRunning,
-                        backgroundColor: "rgba(0, 230, 118, .5)",
-                        borderColor: 'rgba(0, 230, 118, 1)',
-                        pointBorderWidth: 0
-                    },
+                    datasets: [
                         {
                             label: 'Cancelled Services',
                             data: serviceCountByMonthCancelled,
                             backgroundColor: "rgba(230, 0, 0, .5)",
                             borderColor: 'rgba(240, 0, 118, 1)',
                             pointBorderWidth: 0
-                        }]
+                        },
+                        {
+                            label: 'Running Services',
+                            data: serviceCountByMonthRunning,
+                            backgroundColor: "rgba(0, 230, 118, .5)",
+                            borderColor: 'rgba(0, 230, 118, 1)',
+                            pointBorderWidth: 0
+                        }
+                    ]
                 };
                 let options = {
                     animation: {

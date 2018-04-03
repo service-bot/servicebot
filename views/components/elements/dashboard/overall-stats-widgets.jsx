@@ -99,7 +99,7 @@ class OverallStatsWidgets extends React.Component {
                             <Widget data={{label: 'Subscription Stat', list: subStat}} bodyClass="full-height" wcolor="purple"/>
                         </div>
                         <div className="dashboard-widget">
-                            <Widget data={{label: 'Sale vs. Churn', component: ServiceOverTimeChart}} bodyClass="full-height" wcolor="grey"/>
+                            <Widget data={{label: 'Sales vs. Churn Rate', component: ServiceOverTimeChart}} bodyClass="full-height" wcolor="grey"/>
                         </div>
                     </div>
                 </div>
