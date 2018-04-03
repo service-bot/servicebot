@@ -1,6 +1,9 @@
 import React from "react";
 import CurrencyInput from 'react-currency-input';
 import {toCents} from "../../../../lib/handleInputs";
+import {connect} from 'react-redux';
+import getSymbolFromCurrency from 'currency-symbol-map'
+
 class WidgetPricingInput extends React.Component{
 
     constructor(props){
@@ -25,13 +28,14 @@ class WidgetPricingInput extends React.Component{
         //renders a number input or a currency input based on the operation type
         let self = this;
         let props = this.props;
-        let {operation, input: {name, value, onChange}} = props;
+        let {options, operation, input: {name, value, onChange}} = props;
+        let prefix = options.currency ? getSymbolFromCurrency(options.currency.value) : '';
 
         if(operation == 'add' || operation == 'subtract'){
             let price = (value/100).toFixed( 2 );
             return(
                 <CurrencyInput className="form-control addon-checkbox-widget-price-input" name={name}
-                                prefix="$" decimalSeparator="." thousandSeparator="," precision="2"
+                                prefix={prefix} decimalSeparator="." thousandSeparator="," precision="2"
                                 onChangeEvent={this.handleChange(true)} value={price}
                 />
             );
@@ -52,4 +56,9 @@ class WidgetPricingInput extends React.Component{
     }
 }
 
-export default WidgetPricingInput;
+let mapStateToProps = state => {
+    return {
+        options: state.options,
+    }
+};
+export default connect(mapStateToProps)(WidgetPricingInput);

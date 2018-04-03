@@ -504,6 +504,7 @@ module.exports = function (router) {
     router.post("/service-templates", auth(), function (req, res, next) {
         req.body.created_by = req.user.get("id");
         req.body.trial_period_days = req.body.trial_period_days || 0;
+        req.body.currency = store.getState().options.currency;
         let properties = req.body.references && req.body.references.service_template_properties;
         if(properties){
             req.body.references.service_template_properties = properties.map(prop => {
@@ -524,6 +525,7 @@ module.exports = function (router) {
 
     router.put(`/service-templates/:id(\\d+)`, validate(ServiceTemplate), auth(), function(req, res, next) {
         req.body.trial_period_days = req.body.trial_period_days || 0;
+        req.body.currency = store.getState().options.currency;
         let properties = req.body.references && req.body.references.service_template_properties;
         if(properties){
             req.body.references.service_template_properties = properties.map(prop => {

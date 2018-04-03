@@ -385,7 +385,6 @@ class TemplateForm extends React.Component {
                         <div className="form-group form-group-flex">
                         <Field name="details" type="text"
                                component={WysiwygRedux} label="Details"
-                               validate={[required()]}
                         />
                         </div>
 
