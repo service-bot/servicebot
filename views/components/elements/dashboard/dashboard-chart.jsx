@@ -69,7 +69,7 @@ class ServiceOverTimeChart extends React.Component {
                             pointBorderWidth: 0
                         },
                         {
-                            label: 'Running Services',
+                            label: 'New Services',
                             data: serviceCountByMonthRunning,
                             backgroundColor: "rgba(0, 230, 118, .5)",
                             borderColor: 'rgba(0, 230, 118, 1)',
