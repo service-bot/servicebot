@@ -184,7 +184,6 @@ module.exports = {
             let clientPlugins = Object.keys((await configBuilder.buildClientConfig(CONFIG_PATH)).plugins);
             let {site_title, site_description} = store.getState().options;
             res.render("main", {bundle : appConfig.bundle_path, plugins : clientPlugins, site_title, site_description});
-            // res.sendFile(path.resolve(__dirname, "../..", 'public', 'index.html'))
         })
 
 
