@@ -4,7 +4,7 @@ import {browserHistory} from 'react-router';
 import {Price} from '../../utilities/price.jsx';
 import { connect } from 'react-redux';
 let _ = require("lodash");
-import {hexToRgb, rgbToHex, getDarkenedRGB} from '../../utilities/color-converter.js';
+import {hexToRgb, rgbToHex, getDarkenedRGB, getThemeHeaderRGB, getThemeContentRGB} from '../../utilities/color-converter.js';
 
 class Widget extends React.Component {
 
@@ -58,15 +58,18 @@ class Widget extends React.Component {
                 style.widgetData.backgroundColor = rgbToHex(230, 158, 26);
                 style.widgetLabel.backgroundColor = rgbToHex(230,177,26);
             } else if(this.props.wcolor === 'purple') {
-                style.widgetData.backgroundColor = rgbToHex(48,68,206);
-                style.widgetLabel.backgroundColor = rgbToHex(88,109,255);
+                let newColor = getThemeHeaderRGB(hexToRgb(_.get(options, 'primary_theme_background_color.value', '#000000')));
+                let newColorContent = getThemeContentRGB(hexToRgb(_.get(options, 'primary_theme_background_color.value', '#000000')));
+                style.widgetData.backgroundColor = rgbToHex(newColorContent.r,newColorContent.g,newColorContent.b);
+                style.widgetLabel.backgroundColor = rgbToHex(newColor.r,newColor.g,newColor.b);
             } else if(this.props.wcolor === 'clear') {
                 style.widgetData.backgroundColor = 'none';
                 style.widgetLabel.backgroundColor = 'none';
                 style.widgetLabel.color = rgbToHex(0,0,0);
             } else if(this.props.wcolor === 'grey') {
+                let newColor = getThemeContentRGB(hexToRgb(_.get(options, 'primary_theme_background_color.value', '#000000')));
                 style.widgetData.backgroundColor = rgbToHex(255,255,255);
-                style.widgetLabel.backgroundColor = rgbToHex(48,68,206);
+                style.widgetLabel.backgroundColor = rgbToHex(newColor.r,newColor.g,newColor.b);
                 style.widgetData.color = rgbToHex(0,0,0);
             } else if(this.props.wcolor === 'theme-clear') {
                 //The label is based on the theme
