@@ -7,9 +7,9 @@ import {setOptions, setUid, setUser, fetchUsers, initializeState} from "./compon
 import {pluginbot} from "./store"
 import {Provider} from 'react-redux'
 import {StripeProvider} from 'react-stripe-elements';
-import PluginbotProvider from "pluginbot-react/src/provider"
+import PluginbotProvider from "pluginbot-react/dist/provider"
 import cookie from 'react-cookie';
-import consume from "pluginbot-react/src/consume"
+import consume from "pluginbot-react/dist/consume"
 
 // App
 import App from "./components/app.jsx";

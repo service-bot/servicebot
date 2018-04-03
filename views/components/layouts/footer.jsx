@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router';
 import { connect } from 'react-redux';
 let _ = require("lodash");
-import consume from "pluginbot-react/src/consume"
+import consume from "pluginbot-react/dist/consume"
 class Footer extends React.Component {
 
     constructor(props){

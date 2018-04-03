@@ -2,7 +2,7 @@ import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import 'react-tagsinput/react-tagsinput.css';
 import './css/template-create.css';
-import consume from "pluginbot-react/src/consume";
+import consume from "pluginbot-react/dist/consume";
 import {
     Field,
     Fields,

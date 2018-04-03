@@ -8,7 +8,7 @@ import Buttons from "../buttons.jsx";
 import Modal from '../../utilities/modal.jsx';
 import Jumbotron from '../../layouts/jumbotron.jsx';
 import {widgetField} from "./servicebot-base-field.jsx";
-import consume from "pluginbot-react/src/consume";
+import consume from "pluginbot-react/dist/consume";
 
 
 let renderCustomProperty = (props) => {

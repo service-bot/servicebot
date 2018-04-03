@@ -13,7 +13,7 @@ let _ = require("lodash");
 import IconHeading from "../layouts/icon-heading.jsx";
 import InfoToolTip from "../elements/tooltips/info-tooltip.jsx";
 import {formValueSelector, getFormValues} from 'redux-form'
-import consume from "pluginbot-react/src/consume";
+import consume from "pluginbot-react/dist/consume";
 const REQUEST_FORM_NAME = "serviceInstanceRequestForm";
 const selector = formValueSelector(REQUEST_FORM_NAME); // <-- same as form name
 import {setNavClass, resetNavClass} from "../utilities/actions";

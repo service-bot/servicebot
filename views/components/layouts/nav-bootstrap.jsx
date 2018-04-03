@@ -7,7 +7,7 @@ import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
 import {NavNotification} from "../pages/notifications.jsx";
 import {AppMessage} from '../elements/app-message.jsx';
 import ReactTooltip from 'react-tooltip';
-import consume from "pluginbot-react/src/consume"
+import consume from "pluginbot-react/dist/consume"
 
 import { connect } from "react-redux";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
