@@ -12,7 +12,7 @@ class BillingHistoryList extends React.Component {
 
     constructor(props){
         super(props);
-        let action = 'own';
+        let action = '/own';
         if(isAuthorized({permissions: "can_administrate"}) && this.props.uid){
             action = `?key=user_id&value=${this.props.uid}`
         }
