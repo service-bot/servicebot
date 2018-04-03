@@ -46,10 +46,15 @@
     color: white;
     text-align: left;
 }
+.chartjs-render-monitor{
+    margin: 0 auto;
+}
 
-.customer-chart-widget{
-    background: #ffffff;
-    padding: 5px;
-    border-radius: 5px;
-    margin: 5px 10px;
+.full-height{
+    height: 100%;
+    /*max-height: 360px;*/
+}
+
+.dash-widget-list {
+    /*border-bottom: 1px solid #3100bc;*/
 }
