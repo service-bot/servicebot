@@ -220,6 +220,7 @@ class Webhooks extends React.Component {
                         <div className="service-instance-box-content">
                             <p>The webhook system can notify your SaaS application if any of the following events
                                 occour:</p>
+                            <a href="https://docs.servicebot.io/webhooks/">See documentation for payload information</a>
                             <ul>
                                 <li><b>Pre-subscription:</b> This event happens right after the customer subscribes to
                                     your service, prior to the subscription request completion.

@@ -9,7 +9,7 @@ var passport = require('passport');
 var path = require('path');
 var helmet = require('helmet')
 let consume = require("pluginbot/effects/consume");
-let {call, put, spawn, takeEvery} = require("redux-saga/effects")
+let {call, put, spawn, takeEvery, select} = require("redux-saga/effects")
 let HOME_PATH = path.resolve(__dirname, "../../", "public");
 let createServer = require("./server");
 
@@ -173,6 +173,7 @@ module.exports = {
             }
         });
 
+        let store = require("../../config/redux/store");
 
         app.get('*', async function (req, res) {
             if (req.path.split("/")[3] == "embed" && req.method === 'GET') {
@@ -181,7 +182,8 @@ module.exports = {
 
             let configBuilder = require("pluginbot/config");
             let clientPlugins = Object.keys((await configBuilder.buildClientConfig(CONFIG_PATH)).plugins);
-            res.render("main", {bundle : appConfig.bundle_path, plugins : clientPlugins});
+            let {site_title, site_description} = store.getState().options;
+            res.render("main", {bundle : appConfig.bundle_path, plugins : clientPlugins, site_title, site_description});
             // res.sendFile(path.resolve(__dirname, "../..", 'public', 'index.html'))
         })
 

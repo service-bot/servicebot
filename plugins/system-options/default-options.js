@@ -300,6 +300,8 @@ let systemOptions =
             },
             {"option": "google_analytics", public: true, "type": "system", "data_type": "text"},
             {"option": "show_trial", "value": false, public: true, "type": "service box", "data_type": "bool"},
+            {"option": "site_title", "value": "Servicebot - Subscription Management and Billing Automation System", public: true, "type": "theme", "data_type": "text"},
+            {"option": "site_description", "value": "Services served and managed in a single app", public: true, "type": "theme", "data_type": "text"},
             {"option": "extra_css", "value": false, public: true, "type": "theme", "data_type": "text"}
 
         ],
