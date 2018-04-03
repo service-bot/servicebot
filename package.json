@@ -65,7 +65,7 @@
     "passport-local": "^1.0.0",
     "pg": "^6.4.2",
     "pluginbot": "^0.2.0",
-    "pluginbot-react": "0.1.0",
+    "pluginbot-react": "0.1.1",
     "promise-polyfill": "^6.0.2",
     "prop-types": "^15.6.0",
     "react": "^15.6.2",

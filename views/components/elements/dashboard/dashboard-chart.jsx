@@ -31,19 +31,36 @@ class ServiceOverTimeChart extends React.Component {
 
             if(!response.error) {
                 let servicesRunning = _.filter(response, {status:'running'});
+                let servicesCancelled = _.filter(response, {status:'cancelled'});
+                console.log(servicesCancelled);
                 let months = _.uniq(_.map(servicesRunning, (instance) => instance.created_at.substring(0,7)));
+                 months = _.uniq([...months, ..._.map(servicesCancelled, (instance) => instance.updated_at.substring(0,7))]);
+
                 let groupByMonthRunning = _.groupBy(servicesRunning, (instance) => {
                     return instance.created_at.substring(0,7);
                 });
+                let groupByMonthCancelled = _.groupBy(servicesCancelled, (instance) => {
+                    return instance.updated_at.substring(0,7);
+                });
+                console.log(groupByMonthCancelled)
                 let sortMonthsRunning = months.sort(function(a, b){
                     if(a > b){ return 1; }
                     else if( a < b){ return -1; }
                     else{ return 0;}
                 });
+                console.log(sortMonthsRunning);
                 let sortedGroups = sortMonthsRunning.map((month)=>{
                    return groupByMonthRunning[month];
-                });
+                }).filter(group => group);
                 let serviceCountByMonthRunning = _.map(sortedGroups, (group)=>{return(group.length)});
+
+
+                let sortedCancelledGroups = sortMonthsRunning.map((month)=>{
+                    return groupByMonthCancelled[month];
+                }).filter(group => group);
+
+                let serviceCountByMonthCancelled = _.map(sortedCancelledGroups, (group)=>{return(group.length)});
+                console.error(sortedCancelledGroups, sortedGroups);
                 let data = {
                     labels: months,
                     datasets: [{
@@ -52,7 +69,14 @@ class ServiceOverTimeChart extends React.Component {
                         backgroundColor: "rgba(0, 230, 118, 1)",
                         borderColor: 'rgba(0, 230, 118, 1)',
                         pointBorderWidth: 0
-                    }]
+                    },
+                        {
+                            label: 'Cancelled Services',
+                            data: serviceCountByMonthCancelled,
+                            backgroundColor: "rgba(230, 0, 0, 1)",
+                            borderColor: 'rgba(240, 0, 118, 1)',
+                            pointBorderWidth: 0
+                        }]
                 };
                 let options = {
                     animation: {
