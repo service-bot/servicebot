@@ -17,8 +17,6 @@ let _ = require("lodash");
 import {connect} from "react-redux";
 import OfferingsStatsWidgets from '../elements/dashboard/offerings-stats-widgets.jsx';
 import OverallStatsWidgets from '../elements/dashboard/overall-stats-widgets.jsx';
-//import SubscriptionStatsWidgets from '../elements/dashboard/subscription-widgets.jsx';
-//import UnSubscriptionStatsWidgets from '../elements/dashboard/un-subscription-widgets.jsx';
 
 class Dashboard extends React.Component {
 
@@ -117,25 +115,8 @@ class Dashboard extends React.Component {
                                 <div>
                                     <ContentTitle title="Welcome to your dashboard"/>
                                     <DashboardWidgets data={this.state.analytics}/>
-                                    <OfferingsStatsWidgets data={this.state.analytics}/>
-                                    <OverallStatsWidgets data={this.state.analytics}/>
-                                    {/*<SubscriptionStatsWidgets data={this.state.analytics} />*/}
-                                    {/*<UnSubscriptionStatsWidgets data={this.state.analytics} />*/}
-                                    <div className="row">
-                                        <div className="col-md-8 dashboard-charts">
-
-
-                                        </div>
-                                        <div className="col-md-4">
-                                            <ServiceStatusChart className="dashboard-charts"/>
-                                            <ServiceOverTimeChart className="dashboard-charts"/>
-                                        </div>
-
-                                    </div>
-                                    <div>
-                                        <DashboardRequestedServices/>
-                                        <DashboardCancellationRequests/>
-                                    </div>
+                                    <OfferingsStatsWidgets data={this.state.analytics} />
+                                    <OverallStatsWidgets data={this.state.analytics} />
                                 </div>
 
                             }
