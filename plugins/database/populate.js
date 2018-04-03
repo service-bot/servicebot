@@ -2,7 +2,8 @@ module.exports = function (database, initConfig) {
 
 
     //todo: move dependencies into plugins
-    let options = require("../../config/system-options");
+    //todo: should not depend on code from another plugin directly...
+    let options = require("../system-options/default-options");
     let systemOptions = options.options;
     let SystemOption = require("../../models/system-options");
     let ServiceCategory = require("../../models/service-category");
