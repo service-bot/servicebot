@@ -290,6 +290,9 @@ class ServiceTemplateForm extends React.Component {
             autoDismiss: 4000,
         };
         this.props.addAlert(successMessage);
+        if(this.props.postResponse){
+            this.props.postResponse();
+        }
         browserHistory.push(`/dashboard`);
     }
 

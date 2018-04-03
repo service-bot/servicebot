@@ -30,6 +30,8 @@ class Dashboard extends React.Component {
         };
 
         this.fetchAnalytics = this.fetchAnalytics.bind(this);
+        this.updateOfferingStat = this.updateOfferingStat.bind(this);
+        this.updateStripeStat = this.updateStripeStat.bind(this);
     }
 
     componentDidMount() {
@@ -48,15 +50,38 @@ class Dashboard extends React.Component {
             self.setState({loading: false});
         });
     }
+    //add a function to set state of the analytics after successful submissions
+    updateOfferingStat() {
+        let self = this;
+        let {analytics} = this.state;
+        console.log("Dashboard pre state change", analytics);
+        analytics.offeringStats.total = 1;
+        self.setState({
+            analytics: analytics
+        })
+        console.log("Dashboard State changed", this.state.analytics)
+    }
+    updateStripeStat() {
+        let self = this;
+        let {analytics} = this.state;
+        analytics.hasStripeKeys = true;
+        self.setState({
+            analytics: analytics
+        })
+    }
 
     render() {
         let pageName = this.props.route.name;
-        let {options} = this.props;
         let {analytics} = this.state;
-        console.log("whoel condiftion!----:", (analytics.offeringStats &&
-            analytics.offeringStats.total === 0 ||
-            analytics.hasStripeKeys === false));
-        console.log("analytics:", analytics);
+        //For Shar!, you can add some style logic here
+        let step1Style = {'fontWeight':'bold'};
+        let step2Style = {};
+        if(analytics.offeringStats){
+            if(analytics.offeringStats.total > 0) {
+                step2Style['fontWeight'] = 'bold';
+            }
+        }
+
         if (this.state.loading) {
             return (
                 <div className="page-service-instance">
@@ -78,14 +103,14 @@ class Dashboard extends React.Component {
                                 analytics.offeringStats.total === 0 ||
                                 analytics.hasStripeKeys === false) ?
                                 <div>
-                                    <div>Step 1:</div>
-                                    <div>Step 2:</div>
+                                    <div style={step1Style}>Step 1:</div>
+                                    <div style={step2Style}>Step 2:</div>
                                     <div>Done:</div>
                                     {analytics.offeringStats.total === 0 &&
-                                        <ServiceTemplateFormLite params = {{'templateId': null}}/>
+                                        <ServiceTemplateFormLite params={{'templateId': null}} postResponse={this.updateOfferingStat}/>
                                     }
                                     {analytics.offeringStats.total > 0 &&
-                                        <StripeSettingsForm/>
+                                        <StripeSettingsForm postResponse={this.updateStripeStat}/>
                                     }
                                 </div> :
 
