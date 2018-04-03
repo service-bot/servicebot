@@ -308,7 +308,7 @@ let systemOptions =
                 return new Promise((resolve, reject) => {
                     new model(option).create((err, result) => {
                         if (err) {
-                            if (err.code === 23505) {
+                            if (err.code === '23505') {
                                 resolve(`option ${option.option} already exists`);
                             } else {
                                 reject(err);
