@@ -187,7 +187,7 @@ module.exports = function(knex) {
     };
 
     return {
-        endpoint : "stripe/webhook",
+        endpoint : "/stripe/webhook",
         method : "post",
         middleware : [webhook],
         permissions : [],
