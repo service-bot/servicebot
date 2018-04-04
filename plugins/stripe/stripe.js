@@ -32,7 +32,7 @@ let run = function* (config, provide, services) {
             Invoice.fetchUserInvoices(user).then(function (updated_invoices) {
                 console.log(`Invoices Updated for user: ${user.data.email}`);
             }).catch(function (err) {
-                console.log(`Invoices FAILED for user: ${user.data.email}`);
+                console.log(`Invoice Skipped for user: ${user.data.email}`);
                 console.log(err);
             });
             Invoice.fetchUpcomingInvoice(user, function (upcoming_invoice) {
