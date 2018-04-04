@@ -5,27 +5,21 @@ import './css/template-create.css';
 import consume from "pluginbot-react/dist/consume";
 import {
     Field,
-    Fields,
     FormSection,
     FieldArray,
-    reduxForm,
     formValueSelector,
-    change,
-    unregisterField,
     getFormValues,
-    SubmissionError
 } from 'redux-form'
 import {connect} from "react-redux";
 import {RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import {inputField, selectField, widgetField, priceField} from "./servicebot-base-field.jsx";
 import {CardSection} from "../../elements/forms/billing-settings-form.jsx";
+import getSymbolFromCurrency from 'currency-symbol-map'
 
 import {Price} from "../../utilities/price.jsx";
 import Fetcher from "../../utilities/fetcher.jsx";
-import IconHeading from "../../layouts/icon-heading.jsx";
 import ModalUserLogin from "../modals/modal-user-login.jsx";
-import {addAlert} from "../../utilities/actions";
 import {setUid, fetchUsers, setUser} from "../../utilities/actions";
 import {required, email, numericality, length} from 'redux-form-validators'
 import {injectStripe, Elements, StripeProvider} from 'react-stripe-elements';
@@ -122,6 +116,7 @@ class ServiceRequestForm extends React.Component {
         let getRequestText = () => {
             let serType = formJSON.type;
             let trial = formJSON.trial_period_days !== 0;
+            let prefix = getSymbolFromCurrency(formJSON.currency);
             if(trial){
                 return ("Get your Free Trial")
             }
@@ -129,20 +124,20 @@ class ServiceRequestForm extends React.Component {
                 if (serType === "subscription") {
                     return (
                         <span>{"Subscribe "}
-                            <Price value={newPrice}/>
+                            <Price value={newPrice} prefix={prefix}/>
                             {formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' ' + formJSON.interval}
                     </span>
                     );
                 } else if (serType === "one_time") {
                     return (
-                        <span>{"Buy Now"} <Price value={newPrice}/></span>
+                        <span>{"Buy Now"} <Price value={newPrice} prefix={prefix}/></span>
                     );
                 } else if (serType === "custom") {
                     return ("Request");
                 } else if (serType === "split") {
                     return ("Buy Now");
                 } else {
-                    return (<span><Price value={newPrice}/></span>)
+                    return (<span><Price value={newPrice} prefix={prefix}/></span>)
                 }
             }
         };
@@ -209,10 +204,6 @@ class ServiceRequestForm extends React.Component {
                                     formJSON={formJSON.references.service_template_properties}/>
                     </FormSection>
 
-                    {/*{formJSON.trial_period_days !== 0 && <div>*/}
-                        {/*<Price value={newPrice}/>*/}
-                    {/*</div>}*/}
-
                     <button className="btn btn-rounded btn-primary btn-bar submit-request" type="submit" value="submit">
                         {getRequestText()}
                     </button>
@@ -220,11 +211,6 @@ class ServiceRequestForm extends React.Component {
                     <strong>
                         {error}
                     </strong>}
-
-                    {/*<Buttons buttonClass="btn-primary btn-bar" size="lg" position="center" btnType="primary" value="submit"*/}
-                    {/*onClick={()=>{}} loading>*/}
-                    {/*<span>{getRequestText()}</span>*/}
-                    {/*</Buttons>*/}
                 </form>
             </div>
         )
@@ -429,8 +415,6 @@ class ServiceInstanceForm extends React.Component {
 
         return (
             <div>
-                {/*Price: {this.state.servicePrice}*/}
-
                 {(!this.state.hasCard &&
                     !isAuthorized({permissions: "can_administrate"})) &&
                     ((this.state.servicePrice > 0 && initialValues.trial_period_days <= 0) ||

@@ -1,23 +1,19 @@
 import React from 'react';
-import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
-import Content from "../layouts/content.jsx";
 import ServiceRequestForm from "../elements/forms/service-instance-form-request.jsx"
-import PageSection from "../layouts/page-section.jsx";
-import Featured from "../layouts/featured.jsx";
 import {AdminEditingGear, AdminEditingSidebar} from "../layouts/admin-sidebar.jsx";
 import Fetcher from "../utilities/fetcher.jsx"
 import {Price, getPrice} from "../utilities/price.jsx";
 import {getPrice as getTotalPrice, getPriceAdjustments} from "../../../lib/handleInputs";
 import { connect } from 'react-redux';
 let _ = require("lodash");
-import IconHeading from "../layouts/icon-heading.jsx";
-import InfoToolTip from "../elements/tooltips/info-tooltip.jsx";
 import {formValueSelector, getFormValues} from 'redux-form'
 import consume from "pluginbot-react/dist/consume";
 const REQUEST_FORM_NAME = "serviceInstanceRequestForm";
 const selector = formValueSelector(REQUEST_FORM_NAME); // <-- same as form name
 import {setNavClass, resetNavClass} from "../utilities/actions";
 import { StickyContainer, Sticky } from 'react-sticky';
+import getSymbolFromCurrency from 'currency-symbol-map'
+
 
 class ServiceRequest extends React.Component {
 
@@ -108,7 +104,7 @@ class ServiceRequest extends React.Component {
 
             }, {});
             let newPrice = formJSON.amount;
-            let adjustments = []
+            let adjustments = [];
             try {
                 newPrice = getTotalPrice(formJSON.references.service_template_properties, handlers, formJSON.amount);
                 adjustments = getPriceAdjustments(formJSON.references.service_template_properties, handlers)
@@ -134,10 +130,10 @@ class ServiceRequest extends React.Component {
         });
     }
 
-    getAdjustmentSign(adjustment) {
+    getAdjustmentSign(adjustment, prefix) {
         switch (adjustment.operation) {
             case "subtract":
-                return <span>- <Price value={adjustment.value}/></span>;
+                return <span>- <Price value={adjustment.value} prefix={prefix}/></span>;
                 break;
             case "multiply":
                 return <span>+ %{adjustment.value}</span>;
@@ -146,7 +142,7 @@ class ServiceRequest extends React.Component {
                 return <span>- %{adjustment.value}</span>;
                 break;
             default:
-                return <span>+ <Price value={adjustment.value}/></span>;
+                return <span>+ <Price value={adjustment.value} prefix={prefix}/></span>;
         }
     }
 
@@ -155,6 +151,9 @@ class ServiceRequest extends React.Component {
             return(<span></span>);
         }else {
             let { formJSON, options } = this.props;
+            let {service} = this.state;
+            let prefix = getSymbolFromCurrency(service.currency);
+
 
             const featuredStyle = {
                 height: _.get(options, 'purchase_page_featured_area_height.value', 'auto'),
@@ -178,11 +177,11 @@ class ServiceRequest extends React.Component {
             let formAmount = _.get(formJSON, 'amount','N/A');
             let {total, adjustments} = this.getPriceData();
             let filteredAdjustments = adjustments.filter(adjustment => adjustment.value > 0);
-            let splitPricing = this.state.service.split_configuration;
+            let splitPricing = service.split_configuration;
             let splitTotal = 0;
 
             let rightHeading = "Plan Summary";
-            switch (this.state.service.type) {
+            switch (service.type) {
                 case 'one_time':
                     rightHeading = "Payment Summary";
                     break;
@@ -213,16 +212,16 @@ class ServiceRequest extends React.Component {
                                     <img className="request-icon" src={this.state.icon} alt="Service Icon"/> :
                                     <div className="request-icon"/>
                                 }
-                                {this.state.service.name}
+                                {service.name}
                             </div>
                             <div className="request-form-content">
                                 <div className="basic-info">
                                     <div className="service-request-details">
-                                        <div dangerouslySetInnerHTML={{__html: this.state.service.details}}/>
+                                        <div dangerouslySetInnerHTML={{__html: service.details}}/>
                                     </div>
                                 </div>
                                 <div className="devider"><hr/></div>
-                                <ServiceRequestForm templateId={this.state.id} service={this.state.service}/>
+                                <ServiceRequestForm templateId={this.state.id} service={service}/>
                             </div>
                         </div>
                         <div className="request-summary col-xs-12 col-sm-12 col-md-4 col-lg-4">
@@ -239,54 +238,54 @@ class ServiceRequest extends React.Component {
                                       }) => {
                                         return <div style={style} >
                                             <div  className="request-summary-content">
-                                                {(this.state.service.trial_period_days > 0) ? (
-                                                    <div className="free-trial-content">{this.state.service.trial_period_days} Day Free Trial</div>
+                                                {(service.trial_period_days > 0) ? (
+                                                    <div className="free-trial-content">{service.trial_period_days} Day Free Trial</div>
                                                 ) : null}
-                                                {(this.state.service.type === "subscription" || this.state.service.type === "one_time") ? (
+                                                {(service.type === "subscription" || service.type === "one_time") ? (
                                                     <div>
                                                         <div className="pricing-wrapper">
                                                             <div className="subscription-pricing row m-r-0 m-l-0">
-                                                                {(this.state.service.type === "subscription") ? (<div className="col-md-6 p-r-0 p-l-0">Recurring Fee</div>): null}
-                                                                {(this.state.service.type === "one_time") ? (<div className="col-md-6 p-r-0 p-l-0">Base Cost</div>) : null}
-                                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{getPrice(this.state.service)}</b></div>
+                                                                {(service.type === "subscription") ? (<div className="col-md-6 p-r-0 p-l-0">Recurring Fee</div>): null}
+                                                                {(service.type === "one_time") ? (<div className="col-md-6 p-r-0 p-l-0">Base Cost</div>) : null}
+                                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{getPrice(service)}</b></div>
                                                             </div>
                                                         </div>
                                                         {filteredAdjustments.map((lineItem, index) => (
                                                             <div key={"line-" + index} className="pricing-wrapper">
                                                                 <div className="subscription-pricing row m-r-0 m-l-0">
                                                                     <div className="col-md-6 p-r-0 p-l-0">{lineItem.name}</div>
-                                                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{this.getAdjustmentSign(lineItem)}</b></div>
+                                                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b>{this.getAdjustmentSign(lineItem,  prefix)}</b></div>
                                                                 </div>
                                                             </div>
                                                         ))}
                                                         <div className="total-price">
                                                             <div className="row m-r-0 m-l-0">
                                                                 <div className="col-md-6 p-r-0 p-l-0">Total:</div>
-                                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={total}/></b></div>
+                                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={total} prefix={prefix}/></b></div>
                                                             </div>
                                                         </div>
                                                     </div>
 
                                                 ) : null }
 
-                                                {(this.state.service.type === "custom") ? (
+                                                {(service.type === "custom") ? (
                                                     <div className="quote-content">Custom Quote</div>
                                                 ) : null }
 
-                                                {(this.state.service.type === "split" && splitPricing) ? (
+                                                {(service.type === "split" && splitPricing) ? (
                                                     <div>
                                                         {splitPricing.splits.map((splitItem, index) => (
                                                             <div key={"split-" + index} className="split-wrapper">
                                                                 <div className="subscription-pricing row m-r-0 m-l-0">
                                                                     <div className="col-md-6 p-r-0 p-l-0">{(splitItem.charge_day === 0) ? (<span>Right Now</span>) : (<span>After {splitItem.charge_day} Days</span>)}</div>
-                                                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitItem.amount}/></b></div>
+                                                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitItem.amount} prefix={prefix}/></b></div>
                                                                 </div>
                                                             </div>
                                                         ))}
                                                         <div className="total-price">
                                                             <div className="row m-r-0 m-l-0">
                                                                 <div className="col-md-6 p-r-0 p-l-0">Total:</div>
-                                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitTotal}/></b></div>
+                                                                <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitTotal} prefix={prefix}/></b></div>
                                                             </div>
                                                         </div>
                                                     </div>

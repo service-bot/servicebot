@@ -93,36 +93,16 @@ class UserFormInvite extends React.Component {
                     <DataForm validators={this.getValidators()} handleResponse={this.handleResponse} url={this.state.url} method={'POST'}>
                         <div>
                             <h3 className="m-b-20">Finish Your Invitation</h3>
-                            <p>Please enter your information to finish the invitation</p>
+                            <p>Please enter your information to finish your registration and access your account.</p>
                         </div>
                         <div className="form-group">
-                            <label className="control-label">Name</label>
-                            <input type="text" name="name" className="form-control"/>
-                            <span className="bmd-help">Please enter your name</span>
+                            <input type="text" name="name" placeholder="Full Name" className="form-control"/>
                         </div>
                         <div className="form-group">
-                            <label className="control-label">Phone Number</label>
-                            <input type="text" name="phone" className="form-control"/>
-                            <span className="bmd-help">Please enter your phone number</span>
-                        </div>
-                        <div className="form-group">
-                            <label className="control-label">Password</label>
-                            <input type="password" name="password" className="form-control"/>
-                            <span className="bmd-help">Please enter your password</span>
-                        </div>
-                        <div className="agreement-checkbox checkbox">
-                            <label>
-                                <input name="agree" type="checkbox"/>
-                                By clicking on create account, you agree to our terms of service and that you have read
-                                our
-                                privacy policy,
-                                including our cookie use policy
-                            </label>
+                            <input type="password" name="password" placeholder="Password" className="form-control"/>
                         </div>
                         <button className="btn btn-raised btn-lg btn-primary btn-block" type="submit"
-                                    value="submit">Finish</button>
-                        <p className="copyright">&copy; Copyright 2017</p>
-
+                                    value="submit">Finish Registration</button>
                     </DataForm>
                 </div>
             );

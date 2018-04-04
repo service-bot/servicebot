@@ -3,7 +3,6 @@ import React from "react";
 function Adjustment(props){
     let {operation, price} = props;
     //todo: make this less hardcoded.
-    let prefix = "$";
     let message = "";
     if(operation === "add" || operation === "subtract") {
         price = (price / 100).toFixed(2)

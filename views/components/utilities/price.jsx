@@ -1,4 +1,6 @@
 import React from 'react';
+import getSymbolFromCurrency from 'currency-symbol-map'
+
 
 /**
  * This is used to display Stripe amount values,
@@ -21,28 +23,29 @@ function formatMoney(price, c, d, t){
 
 let Price = function(props){
     let price = formatMoney((props.value/100).toFixed(2),',','.');
-    console.log("ddsdsdsds")
-    console.log()
+    let prefix = props.prefix || '$';
     return(
-        <span>${price}</span>
+        <span>{prefix + price}</span>
     );
 };
 
 let getPrice = (myService, serviceType = null)=>{
     let serType = myService.type || serviceType;
+    let prefix = getSymbolFromCurrency(myService.currency);
+
     if (serType === "subscription"){
         return (
             <span>
-                <Price value={myService.amount}/>
+                <Price value={myService.amount} prefix={prefix}/>
                 {myService.interval_count === 1 ? ' /' : ' / ' + myService.interval_count} {' '+myService.interval}
             </span>
         );
     }else if (serType === "one_time"){
-        return (<span><Price value={myService.amount}/></span>);
+        return (<span><Price value={myService.amount} prefix={prefix}/></span>);
     }else if (serType === "custom"){
         return false;
     } else{
-        return (<span><Price value={myService.amount}/></span>)
+        return (<span><Price value={myService.amount} prefix={prefix}/></span>)
     }
 };
 /**

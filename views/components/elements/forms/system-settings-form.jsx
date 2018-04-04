@@ -18,6 +18,8 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
+const stripeCurrencies = ['usd', 'eur', 'gbp'];
+
 class SystemSettingsForm extends React.Component {
 
     constructor(props){
@@ -305,6 +307,16 @@ class SystemSettingsForm extends React.Component {
                                                                 label={group.option.replace(/_+/g, ' ')}
                                                                 value={group.value}
                                                                 options={self.state.roles}
+                                                                onChange={self.handleOnChange}/>
+                                                    </div>
+                                                )
+                                            } else if (group.data_type == 'currency') {
+                                                return ( //this is special case for currency
+                                                    <div key={`option_${group.option}`}>
+                                                        <Inputs type="select" name={group.option}
+                                                                label={group.option.replace(/_+/g, ' ')}
+                                                                value={group.value}
+                                                                options={stripeCurrencies}
                                                                 onChange={self.handleOnChange}/>
                                                     </div>
                                                 )
