@@ -14,8 +14,6 @@ let {call, put, spawn, takeEvery, select} = require("redux-saga/effects")
 let HOME_PATH = path.resolve(__dirname, "../../", "public");
 let createServer = require("./server");
 
-//todo: store sagas in store?
-
 module.exports = {
     run: function* (config, provide, services) {
         let appConfig = config.appConfig;
@@ -90,17 +88,6 @@ module.exports = {
             res.send(swaggerSpec);
         });
 
-        //this is where we set routes to go through react
-
-        //this routes all requests to serve index
-
-        // view engine setup
-        // app.set('views', path.join(__dirname, '../../views'));
-        //app.set('view engine', 'jade');
-
-
-        // uncomment after placing your favicon in /public
-        //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
         let KnexStore = new knexSession({knex: database});
         //todo: move this into a plugin

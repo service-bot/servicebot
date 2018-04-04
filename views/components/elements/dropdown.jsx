@@ -44,11 +44,9 @@ class Dropdown extends React.Component {
                     Actions
                 </button>
                 <ul className={`dropdown-menu ${this.props.direction ? (this.props.direction == 'right' ? 'dropdown-menu-right' : '') : ''}`}>
-                    {this.props.dropdown.map((item, index) => (
-                        <div key={"button-" + index}>
-                            {this.getButton(item)}
-                        </div>
-                    ))}
+                    {this.props.dropdown.map((item, index) =>
+                            this.getButton(item)
+                    )}
                 </ul>
             </div>
         );
