@@ -62,21 +62,23 @@ class UserFormInvite extends React.Component {
     }
 
     getValidators() {
-        //optional references: the service template's references.service_template_properties
-        //Defining general validators
-        let validateEmail = (val) => {
-            let mailFormat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-            return val.match(mailFormat) ? true : {error:"Invalid email format"};
+        let validateName = (val) => {
+            return val ? true : {error:"Enter Full Name"};
+
+        };
+        let validatePassword = (val) => {
+            return (val && val.length>=4) ? true : {error:"Password must be at least 4 characters"};
 
         };
         let validatorJSON = {
-            'email': validateEmail
+            'name': validateName,
+            'password': validatePassword
         };
         return validatorJSON;
     }
 
     render() {
-        var self = this;
+        let self = this;
         let getAlerts = ()=>{
             if(self.state.alerts){
                 return ( <Alerts type={self.state.alerts.type} message={self.state.alerts.message}
