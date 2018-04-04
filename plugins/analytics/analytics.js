@@ -265,7 +265,6 @@ module.exports = {
                     console.error(err);
                     return reject(err);
                 }
-                console.log(results);
                 resolve(results);
             });
             // whatever

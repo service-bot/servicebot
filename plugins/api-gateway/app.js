@@ -2,6 +2,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var express = require('express');
 var expressSession = require('express-session');
+const knexSession = require("connect-session-knex")(expressSession);
 var flash = require('connect-flash');
 var swaggerJSDoc = require('swagger-jsdoc');
 var logger = require('morgan');
@@ -101,12 +102,14 @@ module.exports = {
         // uncomment after placing your favicon in /public
         //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
-
+        let KnexStore = new knexSession({knex: database});
         //todo: move this into a plugin
         app.use(expressSession({
             secret: process.env.SECRET_KEY,
             resave: true,
-            saveUninitialized: true
+            saveUninitialized: true,
+            store: KnexStore
+
         }));
 
         app.use(passport.initialize());

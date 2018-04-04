@@ -27,6 +27,7 @@
     "body-parser": "^1.18.2",
     "chart.js": "^2.7.0",
     "connect-flash": "^0.1.1",
+    "connect-session-knex": "^1.4.0",
     "cookie-parser": "^1.4.3",
     "crypto": "0.0.3",
     "css-loader": "^0.26.4",

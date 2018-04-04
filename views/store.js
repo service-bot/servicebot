@@ -242,7 +242,7 @@ let initialize = async function () {
 
     let app = await PluginbotClient.createPluginbot();
     let middleware = [rootReducer, thunk];
-    if(process.env.NODE_ENV === "development" ){
+    if(process.env.NODE_ENV === "development"){
         const { logger } = require(`redux-logger`);
         middleware.push(logger);
     }

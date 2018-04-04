@@ -1,15 +1,7 @@
 import React from 'react';
-import {render} from 'react-dom';
 import {Router, Route, IndexRoute, IndexRedirect, browserHistory} from 'react-router';
 import {connect} from "react-redux";
-import Promise from "promise-polyfill";
-import {setOptions, setUid, setUser, fetchUsers, initializeState} from "./components/utilities/actions"
-import {pluginbot} from "./store"
-import {Provider} from 'react-redux'
-import {StripeProvider} from 'react-stripe-elements';
 import PluginbotProvider from "pluginbot-react/dist/provider"
-import cookie from 'react-cookie';
-import consume from "pluginbot-react/dist/consume"
 
 // App
 import App from "./components/app.jsx";
@@ -17,7 +9,6 @@ import Home from "./components/pages/home.jsx";
 import AllServices from "./components/pages/all-services.jsx";
 // Dashboard (My Services)
 import MyServices from './components/pages/my-services.jsx';
-import ModalInvoice from './components/elements/modals/modal-invoice.jsx';
 import ServiceInstance from './components/pages/service-instance.jsx';
 import ServiceRequest from './components/pages/service-request.jsx';
 import ServiceCatalog from './components/pages/service-catalog.jsx';

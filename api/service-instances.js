@@ -173,7 +173,6 @@ module.exports = function(router) {
     });
 
     router.post('/service-instances/:id/files', validate(ServiceInstance), auth(null, ServiceInstance), multer({ storage:serviceStorage, limits : {fileSize : uploadLimit()} }).array('files'), function(req, res, next) {
-        console.log(req.files);
         let filesToInsert = req.files.map(function(file){
             if(req.user) {
                 file.user_id = req.user.data.id;
@@ -183,9 +182,7 @@ module.exports = function(router) {
             file.name = file.originalname;
             return file
         });
-        console.log(filesToInsert);
         File.batchCreate(filesToInsert, function(files){
-            console.log(files);
             EventLogs.logEvent(req.user.get('id'), `service-instances ${req.params.id} had files added by user ${req.user.get('email')}`);
             res.json(files);
         });
@@ -193,7 +190,6 @@ module.exports = function(router) {
 
     router.get('/service-instances/:id/files',auth(null, ServiceInstance), function(req, res, next) {
         File.findFile(serviceFilePath, req.params.id, function(files){
-            console.log(files);
             res.json(files);
         })
     });

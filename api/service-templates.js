@@ -250,13 +250,11 @@ module.exports = function (router) {
                 acc[handler.name] = handler.handler;
                 return acc;
             }, {});
-            console.log(handlers, "HANDLERS!");
             //this is true when user can override things
             let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
             let templatePrice = serviceTemplate.get("amount");
             let price = hasPermission ? (req_body.amount || templatePrice) : templatePrice;
             let trialPeriod = serviceTemplate.get("trial_period_days");
-            console.log("TRIAL PERIOD DAYSS " + trialPeriod)
 
             //todo: this doesn't do anthing yet, needs to check the "passed" props not the ones on the original...
             // let validationResult = props ? validateProperties(props, handlers) : [];
@@ -545,10 +543,8 @@ module.exports = function (router) {
         new Promise((resolve, reject) => {
             //Get the list of templates and apply order from query if requested
             if (req.query.order_by) {
-                console.log(`Query sent with order by ${req.query.order_by}`);
                 let order = 'ASC';
                 if (req.query.order) {
-                    console.log(`Query sent with order ${req.query.order}`);
                     if (req.query.order.toUpperCase() === 'DESC') {
                         order = 'DESC';
                     }
@@ -577,9 +573,8 @@ module.exports = function (router) {
                 //Apply the query limit to the array of templates
                 return new Promise((resolve, reject) => {
                     if (req.query.limit) {
-                        console.log(`Query sent with limit ${req.query.limit}`);
                         if (isNaN(req.query.limit)) {
-                            console.log(`limit ${req.query.limit} is not a number`);
+                            console.error(`limit ${req.query.limit} is not a number`);
                             reject(`limit ${req.query.limit} must be a number`)
                         }
                         else {

@@ -11,14 +11,12 @@ module.exports = function(router) {
         model.getSchema(true, false, function(result){
             let template = res.locals.valid_object;
             template["schema"] = result;
-            console.log(template);
             res.json(template);
         });
     });
 
     router.get("/notification-templates/:id(\\d+)/roles", validate(NotificationTemplate), auth(), function(req, res, next){
         res.locals.valid_object.getRoles(function(roles){
-            console.log(roles);
             res.locals.json = roles;
             next();
         })
@@ -26,7 +24,6 @@ module.exports = function(router) {
 
     router.put("/notification-templates/:id(\\d+)/roles", validate(NotificationTemplate), auth(), function(req, res, next) {
         res.locals.valid_object.setRoles(req.body, function(result){
-            console.log(result);
             res.locals.json = result;
             next();
         })

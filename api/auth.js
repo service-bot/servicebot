@@ -18,8 +18,6 @@ module.exports = function(app, passport) {
     app.post('/api/v1/auth/token', passport.authenticate('local-login', {session:false}), function(req, res) {
         console.log(req.user);
         let token = jwt.sign({  uid: req.user.data.id }, process.env.SECRET_KEY, { expiresIn: '3h' });
-        console.log(token);
-        console.log(jwt.verify(token, process.env.SECRET_KEY));
         res.json({token:token});
     });
 
@@ -65,7 +63,6 @@ module.exports = function(app, passport) {
     });
 
     app.get("/api/v1/auth/reset-password/:uid/:token",  function(req, res, next){
-        console.log(bcrypt.hashSync(req.params.token, 10));
         ResetRequest.findOne("user_id", req.params.uid, function(result){
             if(result.data && bcrypt.compareSync(req.params.token, result.get("hash"))){
                 res.status(200).json({isValid: true});
@@ -88,7 +85,6 @@ module.exports = function(app, passport) {
                     // user.set("password", password);
                     res.json({"message" : "Password successfully reset"});
                     result.delete(function(r){
-                        console.log("reset request deleted");
 
                     })
                 })
