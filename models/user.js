@@ -343,7 +343,7 @@ User.prototype.suspend = async function () {
  */
 User.prototype.unsuspend = function (callback) {
     let self = this;
-    if(self.data.status === 'suspended') {
+    if(self.data.status === 'suspended' && self.data.customer_id) {
         self.data.status = 'active';
         self.update(function (err, user) {
             if (!err) {
@@ -354,7 +354,11 @@ User.prototype.unsuspend = function (callback) {
         });
     }
     else{
-        callback('User is not suspended', null);
+        if(!self.data.customer_id) {
+            callback('User is deleted in Stripe', null);
+        } else {
+            callback('User is not suspended', null);
+        }
     }
 };
 
