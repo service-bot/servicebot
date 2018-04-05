@@ -88,7 +88,7 @@ class Widget extends React.Component {
         return (
             <div className={`dashboard-widget ${bodyClass} ${this.getCSSClass()}`} onClick={this.goTo} style={style.widgetData}>
                 <div className="widget-label" style={style.widgetLabel}>{this.state.data.label}</div>
-                {this.state.data.value && this.state.data.value !== null && <div className="widget-data">{this.getFormatted(this.state.data.value)}<span className="sub">{this.props.postFix}</span></div>}
+                {this.state.data.value !== undefined && this.state.data.value !== null && <div className="widget-data">{this.getFormatted(this.state.data.value)}<span className="sub">{this.props.postFix}</span></div>}
                 {this.state.data.list && this.state.data.list.length > 0 &&
                     <div className="p-t-10 p-b-10">
                         {this.state.data.list.map(( listing, index) =>
