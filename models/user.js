@@ -54,12 +54,9 @@ User.prototype.promiseStripeRemoval = function () {
  * This function will remove the customer reference in Stripe AND the database.
  * Use this function if need to completely disconnect the user from the Stripe account.
  */
-User.prototype.promiseStripeDisconnect = async function (stripeRemoval = false) {
+User.prototype.promiseStripeDisconnect = async function () {
     let self = this;
-    if(stripeRemoval) {
-        await self.promiseStripeRemoval();
-    }
-    //Then run the disconnect promise
+    //Never remove the record from Stripe. Just internally
     return new Promise(function (resolve, reject) {
         self.data.customer_id = null;
         //To keep the users with the same status, we will not disconnect the user.
@@ -215,7 +212,7 @@ User.prototype.deleteWithStripe = function (callback) {
  */
 User.prototype.purgeData = function (fullRemoval = false, callback) {
     let self = this;
-    return Promise.resolve(self.promiseStripeDisconnect(fullRemoval)).catch(function (err) {
+    return Promise.resolve(self.promiseStripeDisconnect()).catch(function (err) {
         console.log(`User ID: ${self.data.id} - ${err}`);
     }).then(function () {
         let Invoices = require('./invoice');
@@ -293,6 +290,20 @@ User.prototype.purgeData = function (fullRemoval = false, callback) {
                     return rejectall(`FAILED => All User ${self.data.id} funds have been removed!`);
                 });
             });
+        });
+    }).then(function () {
+        return new Promise(function (resolve, reject) {
+            //Make sure to not remove any admins.
+            if(fullRemoval === 'true' && self.data.role_id === 3 && self.data.id !== 1) {
+                self.delete(function (err, deleted_user) {
+                    if(err) {
+                        return reject('User cannot be deleted, must be suspended. User has connected records!');
+                    }
+                    return resolve(`User ${self.data.id} has been deleted from the internal database!`);
+                });
+            } else {
+                return resolve(`User ${self.data.id} was not deleted internally. Record kept.`)
+            }
         });
     }).then(function () {
         callback(new Promise(function (resolve, reject) {

@@ -185,8 +185,8 @@ class SystemSettingsForm extends React.Component {
                                                 <Inputs type="text" label="Stripe Secret API Key" name="stripe_secret" value={self.state.stripe_settings.secret_key}
                                                         onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
                                                 {self.state.stripe_settings.secret_key &&
-                                                    <Inputs hideValue={true} type="select" label="Do you want to remove customers and subscriptions from the Stripe account associated with the previous API keys?" name="full_removal"
-                                                        options={[{"Keep data in previous keys":false},{"Remove data from previous keys":true}]} onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                                    <Inputs defaultValue="true" hideValue={true} type="select" label="Do you want to import existing customers to the new Stripe account? This option only applies if the new keys are related to a different Stripe account or if you are switching between Test/Live mode." name="full_removal"
+                                                        options={[{"Reset Servicebot and connect to the new Stripe account":true},{"Keep Servicebot data and import to the new Stripe account":false}]} onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
                                                 }
                                             </div>
                                             <div className="col-md-12 text-right">
