@@ -90,8 +90,7 @@ class DashboardServiceList extends React.Component {
             let trial = service.payment_plan.trial_period_days;
             if(service.status === "running" && trial > 0) {
                 let currentDate = new Date(service.subscribed_at * 1000);
-                let trialEnd = new Date(service.subscribed_at * 1000);
-                trialEnd.setDate(trialEnd.getDate() + trial);
+                let trialEnd = new Date(service.trial_end * 1000);
                 //Service is trialing if the expiration is after current date
                 if(currentDate < trialEnd) {
                     service.intrial = true;
