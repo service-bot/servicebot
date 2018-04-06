@@ -211,3 +211,65 @@
 
 
 }
+
+
+.dash-tour{
+    background: white;
+    border-radius: 5px;
+    padding: 10px 30px;
+}
+/*progressbar*/
+.progressbar {
+    margin-bottom: 30px;
+    overflow: hidden;
+    padding: 0;
+    /*CSS counters to number the steps*/
+    counter-reset: step;
+}
+.progressbar li {
+    list-style-type: none;
+    color: black;
+    font-size: 15px;
+    width: 33.33%;
+    float: left;
+    position: relative;
+    text-align: center;
+}
+.progressbar .active {
+    font-weight: bold;
+}
+.progressbar li:before {
+    content: counter(step);
+    counter-increment: step;
+    width: 30px;
+    line-height: 30px;
+    display: block;
+    font-size: 15px;
+    color: #333;
+    background: white;
+    border-radius: 3px;
+    margin: 0 auto 5px auto;
+    position: relative;
+    z-index: 1;
+}
+/*progressbar connectors*/
+.progressbar li:after {
+    content: '';
+    width: 100%;
+    height: 3px;
+    background: white;
+    position: absolute;
+    left: -50%;
+    top: 13px;
+    z-index: 0; /*put it behind the numbers*/
+}
+.progressbar li:first-child:after {
+    /*connector not needed before the first step*/
+    content: none;
+}
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+.progressbar li.active:before,  .progressbar li.active:after{
+    background: #27AE60;
+    color: white;
+}

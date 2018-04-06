@@ -197,20 +197,23 @@ class SystemSettingsForm extends React.Component {
                                 </div>
                                 {confirm_reconfigure()}
                             </div>
-                            <hr/>
-                            <div className="stripe-webhook-setup">
-                                <div className="title">
-                                    <h3>Connect to Stripe Webhooks</h3>
-                                    <p>
-                                        Copy your Servicebot webhook URL below and paste it as a new <a className="intext-link" href="https://dashboard.stripe.com/account/webhooks" target="_blank">Stripe endpoint</a> in your Stripe account.
-                                    </p>
-                                    <div className="stripe-webhook">{`https://${window.location.hostname}/api/v1/stripe/webhook`}</div>
+                            {!self.props.initialize &&
+                                <div>
+                                    <hr/>
+                                    <div className="stripe-webhook-setup">
+                                        <div className="title">
+                                            <h3>Connect to Stripe Webhooks</h3>
+                                            <p>
+                                                Copy your Servicebot webhook URL below and paste it as a new <a className="intext-link" href="https://dashboard.stripe.com/account/webhooks" target="_blank">Stripe endpoint</a> in your Stripe account.
+                                            </p>
+                                            <div className="stripe-webhook">{`https://${window.location.hostname}/api/v1/stripe/webhook`}</div>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    {settings.secret_key !== "" && <StripeImportForm/> }
                                 </div>
-                            </div>
-                            <hr/>
-                            {settings.secret_key !== "" &&
-                            <StripeImportForm/>
                             }
+
                         </div>
                     </div>
                 </div>
