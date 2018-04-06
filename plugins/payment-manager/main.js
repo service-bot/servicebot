@@ -6,8 +6,8 @@ let schedule = require('node-schedule');
 //main function
 function* run(config, provide, channels) {
     let database = yield consume(channels.database);
-    yield call(scheduleTrials)
-    yield call(scheduleSplits)
+    yield call(scheduleTrials);
+    yield call(scheduleSplits);
     //process split payments
 
     //todo: reduce duplicate code - this chunk is in a bunch of places :(
@@ -88,7 +88,7 @@ async function scheduleSplitsForInstance(instance) {
         });
         //sort by charge_day and slice it by the number of already existing charges
         let splitsToSchedule = splits.sort(function (a, b) {
-            return a.charge_day - b.charge_day;
+            return parseInt(a.charge_day) - parseInt(b.charge_day);
         }).slice(splitCharges.length); //todo: rework this, there are edge cases that can give problems here
 
         for (let i in splitsToSchedule) {
@@ -96,17 +96,16 @@ async function scheduleSplitsForInstance(instance) {
             let split = splitsToSchedule[i];
             let scheduledDate = new Date(instance.get("subscribed_at") * 1000);
             //set date to be the subscribed at date + the charge_day
-            scheduledDate.setDate(scheduledDate.getDate() + split.charge_day);
+            scheduledDate.setDate(scheduledDate.getDate() + parseInt(split.charge_day));
             let splitNumber = (splitCharges.length + parseInt(i) + 1);
             let description = `SPLIT_${splitNumber}`
             console.log(scheduledDate, new Date());
             //if scheduled date has already passed, add a new charge
-            if (scheduledDate <= (new Date()) || split.charge_day === 0) {
+            if (scheduledDate <= (new Date()) || split.charge_day == 0) {
                 console.log("Charge needed", split);
                 await addSplitCharge(split, instance, description);
             } else {
-                console.log("Scheduling split", split, instance, description);
-
+                console.log("Scheduling split", split, instance, description)
                 //uncomment this to make all things schedule 10 seconds in future
                 // scheduledDate = new Date();
                 // scheduledDate.setSeconds(scheduledDate.getSeconds() + 10);
