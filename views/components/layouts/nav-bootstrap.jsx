@@ -5,6 +5,7 @@ import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import ModalInvoice from '../elements/modals/modal-invoice.jsx';
 import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
 import {NavNotification} from "../pages/notifications.jsx";
+import SideNav from '../layouts//side-nav.jsx';
 import {AppMessage} from '../elements/app-message.jsx';
 import ReactTooltip from 'react-tooltip';
 import consume from "pluginbot-react/dist/consume"
@@ -228,15 +229,19 @@ class NavBootstrap extends React.Component {
                     <nav className="navbar navbar-default" style={navigationBarStyle} onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
                         <div className="container-fluid">
                             <div className="navbar-header">
-                                <button type="button" className="navbar-toggle collapsed" data-toggle="collapse"
-                                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false" onClick={this.toggleSideBar}  >
-                                    <span className="sr-only">Toggle navigation</span>
-                                    <span className="icon-bar"/>
-                                    <span className="icon-bar"/>
-                                    <span className="icon-bar"/>
-                                </button>
-                                {}
                                 <Link to="/" className="navbar-brand nav-logo"><img src="/api/v1/system-options/file/brand_logo"/></Link>
+                                <Authorizer anonymous={true}>
+                                    <Link className="mobile-login-button" to="/login">Login</Link>
+                                </Authorizer>
+                                <Authorizer>
+                                    <button type="button" className="navbar-toggle collapsed" data-toggle="collapse"
+                                            data-target="#bs-example-navbar-collapse-1" aria-expanded="false" onClick={this.toggleSideBar}  >
+                                        <span className="sr-only">Toggle navigation</span>
+                                        <span className="icon-bar"/>
+                                        <span className="icon-bar"/>
+                                        <span className="icon-bar"/>
+                                    </button>
+                                </Authorizer>
                             </div>
 
                             <div className="collapse navbar-collapse">
@@ -283,6 +288,7 @@ class NavBootstrap extends React.Component {
                         }
                         <AppMessage/>
                     </nav>
+                    <SideNav sidebarLogout={this.props.handleLogout} toggleSidebar={this.toggleSideBar}/>
                 </div>
                 }
             </div>
