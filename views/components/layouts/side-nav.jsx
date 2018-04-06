@@ -15,7 +15,6 @@ class SlideNavLinks extends React.Component {
                 { name: 'Sign Up', url: '/signup', permission: ['visitor'], icon: 'fingerprint', hidden: false},
                 { name: 'My Services', url: '/my-services', permission: ['authorized'], icon: 'dashboard', hidden: false},
                 { group: 'Billings', permission: ['authorized'], icon: '', hidden: false, links: [
-                    { name: 'Upcoming Invoice', url: '', permission: ['authorized'], icon: 'attach_money', hidden: false},
                     { name: 'Billing History', url: `/billing-history/${props.uid}`, permission: ['authorized'], icon: 'history', hidden: false},
                     { name: 'Billing Settings', url: `/billing-settings/${props.uid}`, permission: ['authorized'], icon: 'account_balance', hidden: false},
                 ]},
