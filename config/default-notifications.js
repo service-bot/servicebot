@@ -18,7 +18,7 @@ default_notifications.templates = [
     },
     {name:"request_service_instance_new_user",
         event_name:"service_instance_requested_new_user",
-        message:"Your service request for [[name]] has been completed. Please click the link to complete user <a href='[[url]]'>registration</a> in order to view your services. Once registered you can access your <a href='[[_hostname]]/service-instance/[[id]]'>service</a>.",
+        message:"Your service request for [[name]] has been completed. Please click the link to complete user <a href='[[url]]'>registration</a> in order to view your services. Once registered you can access your <a href='https://[[_hostname]]/service-instance/[[id]]'>service</a>.",
         subject:"ServiceBot Instance requested",
         description:"This notification it triggered when a service is requested by a new user. They are sent the link to complete registration",
         model:"service-instance",
