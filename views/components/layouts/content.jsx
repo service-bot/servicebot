@@ -1,5 +1,4 @@
 import React from 'react';
-import SideNav from './side-nav.jsx';
 import {connect} from "react-redux";
 
 class Content extends React.Component {
@@ -15,7 +14,6 @@ class Content extends React.Component {
         }
         return (
             <div id="content" style={style}>
-                <SideNav handleLogout={this.props.handleLogout}/>
                 <div className="main">
                     {this.props.children}
                 </div>
