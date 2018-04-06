@@ -25,7 +25,7 @@ let systemOptions =
             },
             {
                 "option": "button_info_color",
-                "value": "#03A9F4",
+                "value": "#30468A",
                 public: true,
                 "type": "theme",
                 "data_type": "color_picker"
@@ -46,14 +46,14 @@ let systemOptions =
             },
             {
                 "option": "button_primary_color",
-                "value": "#2979FF",
+                "value": "#30468A",
                 public: true,
                 "type": "theme",
                 "data_type": "color_picker"
             },
             {
                 "option": "button_primary_hover_color",
-                "value": "#448AFF",
+                "value": "#0CB175",
                 public: true,
                 "type": "theme",
                 "data_type": "color_picker"
@@ -75,14 +75,14 @@ let systemOptions =
             },
             {
                 "option": "background_color",
-                "value": "#ffffff",
+                "value": "#EAEFF1",
                 public: true,
                 "type": "theme",
                 "data_type": "color_picker"
             },
             {
                 "option": "page_link_color",
-                "value": "#30468a",
+                "value": "#0cb175",
                 public: true,
                 "type": "theme",
                 "data_type": "color_picker"
@@ -124,7 +124,7 @@ let systemOptions =
             },
             {
                 "option": "service_box_body_text_color",
-                "value": "#414141",
+                "value": "#000000",
                 public: true,
                 "type": "service box",
                 "data_type": "color_picker"
@@ -159,14 +159,14 @@ let systemOptions =
             },
             {
                 "option": "service_box_header_text_color",
-                "value": "#FFFFFF",
+                "value": "#000000",
                 public: true,
                 "type": "service box",
                 "data_type": "color_picker"
             },
             {
                 "option": "service_box_header_background_color",
-                "value": "#000000",
+                "value": "#A2B7BF",
                 public: true,
                 "type": "service box",
                 "data_type": "color_picker"
@@ -180,21 +180,21 @@ let systemOptions =
             },
             {
                 "option": "primary_theme_background_color",
-                "value": "#000000",
+                "value": "#03A9F4",
                 public: true,
                 "type": "theme",
                 "data_type": "color_picker"
             },
             {
                 "option": "home_featured_description",
-                "value": "Start Selling Your Services Now!",
+                "value": "You can customize these texts in the system settings.",
                 public: true,
                 "type": "content",
                 "data_type": "text"
             },
             {
                 "option": "home_featured_heading",
-                "value": "Welcome To ServiceBot!",
+                "value": "Start selling your offerings in minutes!",
                 public: true,
                 "type": "content",
                 "data_type": "text"
@@ -230,7 +230,7 @@ let systemOptions =
             {"option": "upload_limit", "value": 10, public: false, "type": "system", "data_type": "number"},
             {
                 "option": "service_template_icon_background_color",
-                "value": "#000000",
+                "value": "#03A9F4",
                 public: true,
                 "type": "theme",
                 "data_type": "color_picker"
@@ -244,7 +244,7 @@ let systemOptions =
             },
             {
                 "option": "purchase_page_featured_area_overlay_color",
-                "value": "#000000",
+                "value": "#039BE5",
                 public: true,
                 "type": "theme",
                 "data_type": "color_picker"
