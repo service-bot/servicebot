@@ -1104,6 +1104,51 @@ body.login .footer{
     padding: 5px 5px 5px 25px;
 }
 
+[data-layout="top-navigation-1"] .left-sidebar-1 .wrapper .content {
+    display: flex;
+    flex-direction: column;
+}
+.left-sidebar-1 .wrapper .content .sidebar-heading .sidebar-options,
+.left-sidebar-1 .wrapper .content .sidebar-heading .sidebar-image{
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: auto;
+    height: auto;
+}
+.left-sidebar-1 .wrapper .content .sidebar-heading .sidebar-options{
+    margin-left: 10px;
+}
+.left-sidebar-1 .wrapper .content .sidebar-heading {
+    padding: 20px !important;
+    height: auto;
+    display: flex;
+}
+[data-sidebar="primary"] .content .left-sidebar-section{
+    height: auto;
+}
+.btn.btn-link.btn-signout{
+    color: white;
+}
+.mobile-login-button{
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: white;
+    margin: 10px;
+    position: relative;
+    float: right;
+    padding: 0px 10px;
+    margin-top: 8px;
+    margin-right: 15px;
+    margin-bottom: 8px;
+    background-color: transparent;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    display: none;
+}
+
+
 @keyframes displayMessage {
     0%{
         margin-top: -10px;
@@ -1151,5 +1196,14 @@ body.login .footer{
     .system-settings-page-form .system-settings-group div {
         flex-basis: 100%;
         padding: 5px 0px 5px;
+    }
+    .admin-editing-gear{
+        display: none;
+    }
+}
+/* iPhone Plus or smaller */
+@media (max-width: 414px){
+    .mobile-login-button{
+        display: block;
     }
 }
