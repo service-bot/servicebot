@@ -7,13 +7,8 @@ import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
 import {DashboardWidgets} from "../elements/dashboard/dashboard-widgets.jsx";
-import {ServiceOverTimeChart, ServiceStatusChart} from "../elements/dashboard/dashboard-chart.jsx";
-import DashboardRequestedServices from "./dashboard-requested-services.jsx";
-import DashboardCancellationRequests from "./dashboard-cancellation-requests.jsx";
 import ServiceTemplateFormLite from "../elements/forms/service-template-form-lite.jsx";
 import StripeSettingsForm from "../elements/forms/stripe-settings-form.jsx";
-
-let _ = require("lodash");
 import {connect} from "react-redux";
 import OfferingsStatsWidgets from '../elements/dashboard/offerings-stats-widgets.jsx';
 import OverallStatsWidgets from '../elements/dashboard/overall-stats-widgets.jsx';
@@ -70,13 +65,18 @@ class Dashboard extends React.Component {
 
     render() {
         let pageName = this.props.route.name;
+        let sub = '';
         let {analytics} = this.state;
-        //For Shar!, you can add some style logic here
-        let step1Style = {'fontWeight':'bold'};
-        let step2Style = {};
-        if(analytics.offeringStats){
+        let showSteps = false;
+        let step1 = '';
+        let step2 = '';
+        if((analytics.offeringStats && analytics.offeringStats.total === 0) || analytics.hasStripeKeys === false) {
+            showSteps = true;
+            step1 = 'active';
+            pageName = 'Setup Your Servicebot';
+            sub = 'Start selling your offerings in minutes';
             if(analytics.offeringStats.total > 0) {
-                step2Style['fontWeight'] = 'bold';
+                step2 = 'active';
             }
         }
 
@@ -94,23 +94,30 @@ class Dashboard extends React.Component {
         } else {
             return (
                 <Authorizer permissions={["can_administrate", "can_manage"]}>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <Jumbotron pageName={pageName} subtitle={sub}/>
                     <div className="page-service-instance">
                         <Content>
-                            {(analytics.offeringStats &&
-                                analytics.offeringStats.total === 0 ||
-                                analytics.hasStripeKeys === false) ?
-                                <div>
-                                    <div style={step1Style}>Step 1:</div>
-                                    <div style={step2Style}>Step 2:</div>
-                                    <div>Done:</div>
-                                    {analytics.offeringStats.total === 0 &&
-                                        <ServiceTemplateFormLite params={{'templateId': null}} postResponse={this.updateOfferingStat}/>
-                                    }
-                                    {analytics.offeringStats.total > 0 &&
-                                        <StripeSettingsForm postResponse={this.updateStripeStat}/>
-                                    }
-                                </div> :
+                            {showSteps ?
+                                    <div>
+                                        <div>
+                                            <div className="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6 col-md-offset-2 col-lg-offset-3 col-xl-offset-3">
+                                                <ul className="progressbar">
+                                                    <li className={step1}>Create an Offering</li>
+                                                    <li className={step2}>Connect to Stripe</li>
+                                                    <li>Done!</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div className="dash-tour col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6 col-md-offset-2 col-lg-offset-3 col-xl-offset-3">
+                                            {analytics.offeringStats.total === 0 &&
+                                            <ServiceTemplateFormLite params={{'templateId': null}} postResponse={this.updateOfferingStat}/>
+                                            }
+                                            {analytics.offeringStats.total > 0 &&
+                                            <StripeSettingsForm postResponse={this.updateStripeStat} initialize={true}/>
+                                            }
+                                        </div>
+                                    </div>
+                                :
 
                                 <div>
                                     <ContentTitle title="Welcome to your dashboard"/>

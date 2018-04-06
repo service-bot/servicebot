@@ -18,7 +18,7 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-const stripeCurrencies = ['usd', 'eur', 'gbp'];
+const stripeCurrencies = ['usd', 'aud', 'cad', 'eur', 'gbp' ];
 
 class SystemSettingsForm extends React.Component {
 

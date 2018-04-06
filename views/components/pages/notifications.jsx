@@ -260,8 +260,8 @@ class NotificationList extends React.Component{
             <div>
                 <DataTable
                     dataObj={notifications}
-                    col={['id', 'subject', 'message', 'created_at']}
-                    colNames={['ID', 'Subject', 'Message', 'Created At']}
+                    col={['subject', 'message', 'created_at']}
+                    colNames={['Subject', 'Message', 'Created At']}
                     mod_message={this.modMessage}
                     mod_created_at={this.modCreatedAt}
                     rowClasses={this.rowClasses}

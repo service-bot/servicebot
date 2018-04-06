@@ -168,8 +168,8 @@ module.exports = function (router, passport) {
                     let frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
                     EventLogs.logEvent(req.user.get('id'), `users ${req.body.email} was reinvited by user ${req.user.get('email')}`);
                     res.locals.json = {token: result.get("token"), url: frontEndUrl, api: apiUrl};
-                    result.set('url', frontEndUrl);
-                    result.set('api', apiUrl);
+                    user.set('url', frontEndUrl);
+                    user.set('api', apiUrl);
                     res.locals.valid_object = result;
                     next();
                     store.dispatchEvent("user_invited", user);
