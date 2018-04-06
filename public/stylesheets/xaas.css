@@ -1202,8 +1202,15 @@ body.login .footer{
     }
 }
 /* iPhone Plus or smaller */
-@media (max-width: 414px){
-    .mobile-login-button{
+@media (max-width: 414px) {
+    .mobile-login-button {
         display: block;
+    }
+
+    .dashboard-widgets {
+        flex-direction: column;
+    }
+    .page-service-instance {
+        padding: 0px 15px;
     }
 }
