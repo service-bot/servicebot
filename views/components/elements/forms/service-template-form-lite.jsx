@@ -139,21 +139,21 @@ class TemplateForm extends React.Component {
 
             <form onSubmit={handleSubmit}>
                 <div className="row">
-                    <div className="col-md-8">
+                    <div className="col-md-12">
                         <div className="form-level-errors">
-                            {!options.stripe_publishable_key &&
-                            <Link to="/stripe-settings"><br/><h4 className="form-error">Publishing Disabled Until Setup
-                                Complete - Click here to complete</h4></Link>}
                             {error && <div className="form-error">{error}</div>}
                         </div>
                         <div className="form-level-warnings"/>
-                        <h3>Service Info</h3>
+                        <div className="p-b-15">
+                            <h3>Create your first offering</h3>
+                            <p>Add a name, description, and the type of the billing to start selling your offering.</p>
+                        </div>
                         <Field name="name" type="text"
-                               component={inputField} label="Product / Service Name"
+                               component={inputField} label="Offering Name"
                                validate={[required()]}
                         />
                         <Field name="description" type="text"
-                               component={inputField} label="Summary"
+                               component={inputField} label="Offering Summary"
                                validate={[required()]}
                         />
                     </div>
@@ -162,7 +162,7 @@ class TemplateForm extends React.Component {
                     <div className="col-md-12">
                         <hr/>
                         <div className="row">
-                            <div className="col-md-8">
+                            <div className="col-md-12">
                                 <h3>Payment Details</h3>
                                 <Field name="statement_descriptor" type="hidden"
                                        component={inputField} label="Statement Descriptor"
@@ -239,8 +239,8 @@ class TemplateForm extends React.Component {
                     </div>
                 </div>
                 <div id="service-submission-box" className="button-box right">
-                    <button className="btn btn-rounded btn-primary" type="submit">
-                        Submit
+                    <button className="btn btn-rounded btn-primary btn-block" type="submit">
+                        Next
                     </button>
                 </div>
             </form>
