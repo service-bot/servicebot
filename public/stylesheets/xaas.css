@@ -1145,6 +1145,7 @@ body.login .footer{
     background-image: none;
     border: 1px solid transparent;
     border-radius: 4px;
+    display: none;
 }
 
 
@@ -1202,6 +1203,7 @@ body.login .footer{
 }
 /* iPhone Plus or smaller */
 @media (max-width: 414px){
-    .navbar-header{
+    .mobile-login-button{
+        display: block;
     }
 }
