@@ -306,6 +306,7 @@
     "post_auth_reset_password",
     "get_auth_reset_password_uid_token",
     "post_auth_reset_password_uid_token",
-    "get_notifications_own"
+    "get_notifications_own",
+    "put_notifications_id"
   ]
 }
