@@ -53,19 +53,18 @@ class ManageSubscriptions extends React.Component {
      */
     fetchData() {
         let self = this;
-        let {props, params, params: {status}, location: {query: {uid} } } = this.props;
+        let { params, params: {status}, location: {query: {uid} } } = this.props;
         let url = '/api/v1/service-instances';
-
         if(this.props.params.status) {
-            if (status == 'running') {
+            if (status === 'running') {
                 url = '/api/v1/service-instances/search?key=status&value=running';
-            } else if (status == 'requested') {
+            } else if (status === 'requested') {
                 url = '/api/v1/service-instances/search?key=status&value=requested';
-            } else if (status == 'waiting_cancellation') {
+            } else if (status === 'waiting_cancellation') {
                 url = '/api/v1/service-instances/search?key=status&value=waiting_cancellation';
             }
         }
-        if(_.has(props, 'location.query.uid')) {
+        if(uid) {
             url = `/api/v1/service-instances/search?key=user_id&value=${uid}`;
         }
 
