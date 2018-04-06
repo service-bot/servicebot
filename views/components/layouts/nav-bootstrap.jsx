@@ -242,6 +242,7 @@ class NavBootstrap extends React.Component {
                                         <span className="icon-bar"/>
                                     </button>
                                 </Authorizer>
+                                <span className="moble-live-mode">{this.getLivemode()}</span>
                             </div>
 
                             <div className="collapse navbar-collapse">
