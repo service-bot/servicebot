@@ -160,12 +160,14 @@ class ServiceRequestForm extends React.Component {
                     <Authorizer permissions="can_administrate">
                         <Field name="client_id" component={selectField} label="For Client"
                                options={sortedUsers} validate={[required()]}/>
+                        {(formJSON.type !== "split") &&
                         <Field name="amount" type="number"
                                component={priceField}
                                isCents={true}
                                label="Override Amount"
                                validate={numericality({ '>=': 0.00 })}
                         />
+                        }
                     </Authorizer>
 
                     {helpers.hasCard &&

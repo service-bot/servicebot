@@ -1147,7 +1147,9 @@ body.login .footer{
     border-radius: 4px;
     display: none;
 }
-
+.moble-live-mode {
+    display: none;
+}
 
 @keyframes displayMessage {
     0%{
@@ -1192,6 +1194,20 @@ body.login .footer{
         display: block;
     }
 
+    .navbar {
+        margin: 0;
+        padding: 0 20px 5px;
+    }
+    .jumbotron {
+        padding: 0 20px 0;
+    }
+    .page-service-instance {
+        padding: 20px 15px;
+    }
+    .dashboard-widget .widget-data{
+        font-size: 1.25em;
+    }
+
     /* system settings page */
     .system-settings-page-form .system-settings-group div {
         flex-basis: 100%;
@@ -1202,8 +1218,24 @@ body.login .footer{
     }
 }
 /* iPhone Plus or smaller */
-@media (max-width: 414px){
-    .mobile-login-button{
+@media (max-width: 414px) {
+    .mobile-login-button {
         display: block;
+    }
+
+    .dashboard-widgets {
+        flex-direction: column;
+    }
+    .page-service-instance {
+        padding: 0px 15px;
+    }
+    .moble-live-mode {
+        display: block;
+        position: relative;
+        float: right;
+        padding: 1px 10px;
+        margin-top: 8px;
+        margin-right: 15px;
+        margin-bottom: 8px;
     }
 }
