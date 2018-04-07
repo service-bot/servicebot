@@ -22,7 +22,7 @@ body {
 
 a {
   color: #03a9f4;
-  text-decoration: underline;
+  /*text-decoration: underline;*/
 }
 
 a:hover, a:focus, a:active,
