@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import Alert from 'react-s-alert';
@@ -14,6 +13,7 @@ import Content from "../layouts/content.jsx";
 import "../../../public/stylesheets/xaas/installation.css";
 import { initializedState } from "../../store.js"
 import { connect } from "react-redux";
+import version from "../../../package.json";
 
 class SetupDB extends React.Component{
     constructor(props) {
@@ -112,31 +112,22 @@ class SetupStripe extends React.Component{
         return(
             <div>
                 <p>
-                    ServiceBot is tightly integrated with Stripe. Follow these steps to begin using the system:<br/>
-                    1. <a href="https://dashboard.stripe.com/register" target="_blank">Create a Stripe Account</a>. Note: If you already have a stripe account you can skip this step<br/>
-                    2. Log in and go to <a href="https://dashboard.stripe.com/account/apikeys" target="_blank">the stripe api page</a>.<br/>
-                    3. Ensure that your system is in the mode you want your ServiceBot to be in (Test or Live).<br/>
-                    4. Copy and enter here the Publishable Key and Secret Key.<br/>
-                    <a href="https://docs.servicebot.io/getting_started/" target="_blank">For more detailed instructions follow this link</a>.<br/>
+                    <div className="title">
+                        <h3>ServiceBot works with Stripe:</h3>
+                        <p>
+                            Copy your Standard API keys <a className="intext-link" href="https://dashboard.stripe.com/account/apikeys" target="_blank">from Stripe</a> and paste them
+                            in the Secret key and Publishable key below. Once you enter your keys, you can import your Stripe account to your Servicebot.
+                        </p>
+                    </div>
                 </p>
-                <div className="row">
-                    <label className="control-label">Stripe Secret API Key</label>
-                    <input required className="form-control" value={this.props.state.stripe_secret} onChange={this.props.inputChange} name="stripe_secret"/>
-                </div>
                 <div className="row">
                     <label className="control-label">Stripe Publishable API Key</label>
                     <input required className="form-control" value={this.props.state.stripe_public} onChange={this.props.inputChange} name="stripe_public"/>
                 </div>
-                <p>
-                    In order to have ServiceBot and Stripe communicate with each other we need to create webhooks in stripe. Follow these steps to enable this:<br/>
-                    1. Login and navigate to <a href="https://dashboard.stripe.com/account/webhooks" target="_blank">the webhook page</a>.<br/>
-                    2. In the section "Endpoints receiving events from your account" click "Add endpoint".<br/>
-                    3. Copy your system url below and enter it in the "URL to be called" field.<br/>
-                    <input className="form-control" value={`https://${window.location.hostname}/api/v1/stripe/webhook`} name="webhook-url" disabled/>
-                    4. Select the mode chosen during the previous steps (Test or Live) and select "Send all event types".<br/>
-                    5. Click "Add endpoint" and we have complete stripe set up.<br/>
-                    <a href="https://docs.servicebot.io/getting_started/" target="_blank">For more detailed instructions follow this link</a>.<br/>
-                </p>
+                <div className="row">
+                    <label className="control-label">Stripe Secret API Key</label>
+                    <input required className="form-control" value={this.props.state.stripe_secret} onChange={this.props.inputChange} name="stripe_secret"/>
+                </div>
             </div>
         )
     }
@@ -257,11 +248,13 @@ class Setup extends React.Component {
             <div style={{backgroundColor: '#0097f1', minHeight: 100+'vh'}}>
                 {this.state.loading && <Load/>}
                 <div className="installation row">
-                    <div className="installation-logo col-md-8">
-                        <img src="/assets/logos/logo-installation.png" />
-                        <h1>Welcome to ServiceBot Installer</h1>
+                    <div className="installation-logo col-md-12">
+                        <img src="/assets/logos/v1/servicebot-logo-full-white.png" />
+                        <h1>Welcome to ServiceBot Installer - Installing version {version.version}</h1>
                     </div>
-                    <div className="installation-form col-md-4">
+                </div>
+                <div className="installation row">
+                    <div className="installation-form col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6 col-md-offset-2 col-lg-offset-3 col-xl-offset-3">
                     <Content>
                         <Alert stack={{limit: 3}} position='bottom'/>
                         <form onSubmit={this.handleSubmit}>
