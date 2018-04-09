@@ -12,7 +12,7 @@ let appPackage = require("../package.json");
 let store = require("../config/redux/store")
 
 let fileManager = store.getState(true).pluginbot.services.fileManager[0];
-let systemFiles = ['front_page_image', 'brand_logo'];
+let systemFiles = ['front_page_image', 'brand_logo', 'loader_logo'];
 let uploadLimit = function(){
 
     return store.getState().options.upload_limit * 1000000;
