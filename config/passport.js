@@ -144,19 +144,6 @@ module.exports = function (passport) {
                     return done(null, false, {message: "Account Suspended"});
                 }
 
-                // **** all is well, return successful user ****
-                //Update user invoices
-                Invoices.fetchUpcomingInvoice(result, function (upcoming_invoice) {
-                    console.log(`Upcoming Invoice Updated for user: ${result.data.email}`);
-                });
-
-                Invoices.fetchUserInvoices(result).then(function (updated_invoices) {
-                    console.log(`Invoices Updated for user: ${result.data.email}`);
-                }).catch(function (err) {
-                    console.log(`Invoices FAILED for user: ${result.data.email}`);
-                    console.log(err);
-                });
-
                 return done(null, result);
             });
 

@@ -20,9 +20,10 @@ class SystemSettings extends React.Component {
 
     render () {
         let pageName = this.props.route.name;
+        let subtitle = 'Change system settings, theme, and content'
         return(
             <Authorizer permissions="can_administrate">
-                <Jumbotron pageName={pageName} location={this.props.location}/>
+                <Jumbotron pageName={pageName} subtitle={subtitle}/>
                 <div className="page-service-instance">
                     <Content>
                         <div className="row m-b-20">

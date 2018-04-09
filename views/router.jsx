@@ -1,15 +1,7 @@
 import React from 'react';
-import {render} from 'react-dom';
 import {Router, Route, IndexRoute, IndexRedirect, browserHistory} from 'react-router';
 import {connect} from "react-redux";
-import Promise from "promise-polyfill";
-import {setOptions, setUid, setUser, fetchUsers, initializeState} from "./components/utilities/actions"
-import {pluginbot} from "./store"
-import {Provider} from 'react-redux'
-import {StripeProvider} from 'react-stripe-elements';
-import PluginbotProvider from "pluginbot-react/src/provider"
-import cookie from 'react-cookie';
-import consume from "pluginbot-react/src/consume"
+import PluginbotProvider from "pluginbot-react/dist/provider"
 
 // App
 import App from "./components/app.jsx";
@@ -17,9 +9,8 @@ import Home from "./components/pages/home.jsx";
 import AllServices from "./components/pages/all-services.jsx";
 // Dashboard (My Services)
 import MyServices from './components/pages/my-services.jsx';
-import ModalInvoice from './components/elements/modals/modal-invoice.jsx';
 import ServiceInstance from './components/pages/service-instance.jsx';
-import ServiceRequest from './components/pages/service-catalog-request.jsx';
+import ServiceRequest from './components/pages/service-request.jsx';
 import ServiceCatalog from './components/pages/service-catalog.jsx';
 // User
 import {Notifications} from "./components/pages/notifications.jsx"
@@ -52,13 +43,12 @@ import ManageNotificationTemplates from "./components/pages/manage-notification-
 // Elements
 import NotificationTemplateForm from "./components/elements/forms/notification-template-form.jsx";
 import ServiceTemplateForm from "./components/elements/forms/service-template-form-review.jsx";
+import ServiceTemplateFormLite from "./components/elements/forms/service-template-form-lite.jsx";
 import ServiceInstanceForm from "./components/elements/forms/service-instance-form-example.jsx";
 import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
-//Tests
-import ServiceTemplateFormV4 from "./components/elements/forms/service-template-form.jsx";
-import ServiceRequestV2 from "./components/pages/service-catalog-request.jsx"
+
 
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
@@ -92,7 +82,7 @@ class AppRouter extends React.Component {
                        component={ServiceInstance}/>
                 <Route name="Service Catalog" path="service-catalog" component={ServiceCatalog}/>
                 <Route name="Service Request" path="service-catalog/:templateId/request"
-                       component={ServiceRequestV2}/>
+                       component={ServiceRequest}/>
                 <Route name="Account Settings" path="account-settings/:userId" component={UserForm}/>
                 <Route name="My Profile" path="profile" component={Profile}/>
                 {/* Billing */}
@@ -118,9 +108,9 @@ class AppRouter extends React.Component {
                        components={ManageNotificationTemplates}/>
                 <Route name="Notification Template" path="notification-templates/:id"
                        component={NotificationTemplateForm}/>
-                <Route name="Manage Catalog" path="manage-catalog" component={ManageCatalog}>
+                <Route name="Manage Offerings" path="manage-catalog" component={ManageCatalog}>
                     <IndexRoute component={ManageCatalogList}/>
-                    <Route name="Manage Catalog" path="list" component={ManageCatalogList}/>
+                    <Route name="Manage Offerings" path="list" component={ManageCatalogList}/>
                     <Route name="Create Template" path="create" component={ManageCatalogCreate}/>
                     <Route name="Edit Template" path=":templateId" component={ManageCatalogEdit}/>
                     <Route name="Duplicate Template" path=":templateId/duplicate"
@@ -130,9 +120,10 @@ class AppRouter extends React.Component {
                 {/* Query routes */}
                 <Route name="Services" path="manage-subscriptions/:status" component={ManageSubscriptions}/>
                 {/* Other */}
+                <Route path="service-templates/lite" component={ServiceTemplateFormLite}/>
+
                 <Route path="service-templates/:templateId" component={ServiceTemplateForm}/>
-                <Route name="Manage Subscriptions" path="/service-instance"
-                       component={ManageSubscriptions}/>
+                <Route name="Manage Subscriptions" path="/service-instance" component={ManageSubscriptions}/>
                 <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
                 {this.props.routeDefinition && this.props.routeDefinition.reduce((acc, route, index) => {
                         acc.push(<Route key={index} name={route.name} path={route.path} component={route.component}/>)

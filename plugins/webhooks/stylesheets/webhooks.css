@@ -1,0 +1,25 @@
+.page-servicebot-webhooks {
+    padding: 40px 45px;
+    min-height: 705px;
+}
+
+.hook {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: bold;
+    border: 1px solid #e0dfdf;
+    margin-bottom: 10px;
+}
+
+.hook .url{
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e0dfdf;
+    margin-bottom: 5px;
+}
+
+.hook-actions {
+    text-align: right;
+    margin-bottom: 20px;
+}

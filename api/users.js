@@ -76,7 +76,6 @@ module.exports = function (router, passport) {
         let token = req.query.token;
         if (token) {
             Invitation.findOne("token", token, function (foundInvitation) {
-                console.log(foundInvitation);
                 if (!foundInvitation.data) {
                     res.status(500).send({error: "invalid token specified"})
                 } else {
@@ -87,7 +86,6 @@ module.exports = function (router, passport) {
                         newUser.set("status", "active");
                         newUser.update(function (err, updatedUser) {
                             foundInvitation.delete(function (response) {
-                                console.log("invitation deleted");
                                 EventLogs.logEvent(updatedUser.get('id'), `user ${updatedUser.get('id')} ${updatedUser.get('email')} registered`);
                                 res.locals.json = updatedUser.data;
                                 res.locals.valid_object = updatedUser;
@@ -125,7 +123,6 @@ module.exports = function (router, passport) {
     }, function (req, res, next) {
         req.logIn(res.locals.valid_object, {session: true}, function (err) {
             if (!err) {
-                console.log("user logged in!");
                 next();
             } else {
                 console.error("Issue logging in: ", err)
@@ -156,8 +153,8 @@ module.exports = function (router, passport) {
                     let frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
                     EventLogs.logEvent(req.user.get('id'), `users ${req.body.email} was reinvited by user ${req.user.get('email')}`);
                     res.locals.json = {token: result.get("token"), url: frontEndUrl, api: apiUrl};
-                    result.set('url', frontEndUrl);
-                    result.set('api', apiUrl);
+                    user.set('url', frontEndUrl);
+                    user.set('api', apiUrl);
                     res.locals.valid_object = result;
                     next();
                     store.dispatchEvent("user_invited", user);

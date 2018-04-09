@@ -16,6 +16,8 @@ import {
     ADD_NOTIFICATION,
     INITIALIZE,
     SET_PERMISSIONS,
+    RESET_NAV_CLASS,
+    SET_NAV_CLASS,
     initializeState
 } from "./components/utilities/actions"
 import cookie from 'react-cookie';
@@ -23,7 +25,6 @@ import thunk from "redux-thunk";
 import {isAuthorized} from "./components/utilities/authorizer.jsx";
 import Fetcher from "./components/utilities/fetcher.jsx";
 import {reducer as formReducer} from 'redux-form'
-import logger from 'redux-logger'
 import PluginbotClient from "pluginbot-react";
 import {syncHistoryWithStore, routerReducer} from 'react-router-redux'
 
@@ -128,6 +129,17 @@ function alertsReducer(state = [], action) {
     }
 }
 
+function interfaceReducer(state = {nav_class: "default"}, action) {
+    switch (action.type) {
+        case RESET_NAV_CLASS:
+            return {...state, ...action.navbar};
+        case SET_NAV_CLASS :
+            return {...state, ...action.navbar};
+        default:
+            return state;
+    }
+}
+
 function uidReducer(state = cookie.load("uid") || null, action) {
     switch (action.type) {
         case INITIALIZE :
@@ -144,6 +156,7 @@ function uidReducer(state = cookie.load("uid") || null, action) {
             return state;
     }
 }
+
 
 function userReducer(state = {}, action) {
     switch (action.type) {
@@ -167,6 +180,7 @@ function userReducer(state = {}, action) {
 const rootReducer = {
     allForms: oldFormReducer,
     options: optionsReducer,
+    navbar: interfaceReducer,
     notifications: notificationsReducer,
     system_notifications: systemNotificationReducer,
     alerts: alertsReducer,
@@ -175,7 +189,6 @@ const rootReducer = {
     user: userReducer,
     form: formReducer,
     routing: routerReducer
-
 };
 
 
@@ -228,7 +241,12 @@ let initializedState = function (initialOptions = null) {
 let initialize = async function () {
 
     let app = await PluginbotClient.createPluginbot();
-    await app.initialize(rootReducer, thunk, logger);
+    let middleware = [rootReducer, thunk];
+    if(process.env.NODE_ENV === "development"){
+        const { logger } = require(`redux-logger`);
+        middleware.push(logger);
+    }
+    await app.initialize(...middleware);
     return app;
 
 };

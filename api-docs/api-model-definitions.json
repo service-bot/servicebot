@@ -1,0 +1,957 @@
+{
+  "charge_items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "service_instance_id": {
+        "type": "integer"
+      },
+      "approved": {
+        "type": "boolean"
+      },
+      "subscription_id": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "item_id": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "amount": {
+        "format": "float",
+        "type": "number"
+      },
+      "currency": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "description": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "period_start": {
+        "format": "int64",
+        "type": "integer"
+      },
+      "period_end": {
+        "format": "int64",
+        "type": "integer"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "event_logs": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "log_level": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "log_type": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "log": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "files": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "path": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "size": {
+        "type": "integer"
+      },
+      "name": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "mimetype": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "funds": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "flagged": {
+        "type": "boolean"
+      },
+      "source": {
+        "type": "object"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "invitations": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "token": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "user_invoice_lines": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "invoice_id": {
+        "type": "integer"
+      },
+      "line_item_id": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "amount": {
+        "format": "float",
+        "type": "number"
+      },
+      "currency": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "description": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "proration": {
+        "type": "boolean"
+      },
+      "quantity": {
+        "type": "integer"
+      },
+      "type": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "livemode": {
+        "type": "boolean"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "notification_templates": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "name": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "event_name": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "message": {
+        "type": "string"
+      },
+      "subject": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "description": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "model": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "additional_recipients": {
+        "items": {
+          "type": "string",
+          "format": "email"
+        },
+        "type": "array"
+      },
+      "send_email": {
+        "type": "boolean"
+      },
+      "send_to_owner": {
+        "type": "boolean"
+      },
+      "create_notification": {
+        "type": "boolean"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "notifications": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "source_id": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "message": {
+        "type": "string"
+      },
+      "type": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "subject": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "affected_versions": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "read": {
+        "type": "boolean"
+      },
+      "email_delivered": {
+        "type": "boolean"
+      },
+      "email_read": {
+        "type": "boolean"
+      },
+      "created_at": {
+        "type": "string"
+      }
+    }
+  },
+  "password_reset_request": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "hash": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "user_permissions": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "permission_name": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "user_roles": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "role_name": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "service_categories": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "name": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "description": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "service_instances": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "service_id": {
+        "type": "integer"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "requested_by": {
+        "type": "integer"
+      },
+      "payment_plan": {
+        "type": "object"
+      },
+      "name": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "subscription_id": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "subscribed_at": {
+        "format": "int64",
+        "type": "integer"
+      },
+      "trial_end": {
+        "format": "int64",
+        "type": "integer"
+      },
+      "status": {
+        "type": "string"
+      },
+      "type": {
+        "type": "string"
+      },
+      "split_configuration": {
+        "type": "object"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      },
+      "references": {
+        "type": "object",
+        "properties": {
+          "service_instance_properties": {
+            "type": "array",
+            "items": [
+              {
+                "$ref": "#/definitions/service_instance_properties"
+              }
+            ]
+          },
+          "service_instance_messages": {
+            "type": "array",
+            "items": [
+              {
+                "$ref": "#/definitions/service_instance_messages"
+              }
+            ]
+          },
+          "charge_items": {
+            "type": "array",
+            "items": [
+              {
+                "$ref": "#/definitions/charge_items"
+              }
+            ]
+          },
+          "service_instance_cancellations": {
+            "type": "array",
+            "items": [
+              {
+                "$ref": "#/definitions/service_instance_cancellations"
+              }
+            ]
+          },
+          "users": {
+            "type": "array",
+            "items": [
+              {
+                "$ref": "#/definitions/users"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "service_instance_cancellations": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "service_instance_id": {
+        "type": "integer"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "status": {
+        "type": "string"
+      },
+      "fulfilled_by": {
+        "type": "integer"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "service_instance_messages": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "service_instance_id": {
+        "type": "integer"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "message": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      },
+      "references": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": [
+              {
+                "$ref": "#/definitions/users"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "service_instance_properties": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "name": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "type": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "data": {
+        "type": "object"
+      },
+      "config": {
+        "type": "object"
+      },
+      "prop_class": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "prop_label": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "prop_description": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      },
+      "parent_id": {
+        "type": "integer"
+      },
+      "private": {
+        "type": "boolean"
+      },
+      "prompt_user": {
+        "type": "boolean"
+      },
+      "required": {
+        "type": "boolean"
+      }
+    }
+  },
+  "service_template_properties": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "name": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "type": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "data": {
+        "type": "object"
+      },
+      "config": {
+        "type": "object"
+      },
+      "prop_class": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "prop_label": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "prop_description": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      },
+      "parent_id": {
+        "type": "integer"
+      },
+      "private": {
+        "type": "boolean"
+      },
+      "prompt_user": {
+        "type": "boolean"
+      },
+      "required": {
+        "type": "boolean"
+      }
+    }
+  },
+  "service_templates": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "category_id": {
+        "type": "integer"
+      },
+      "created_by": {
+        "type": "integer"
+      },
+      "name": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "description": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "details": {
+        "type": "string"
+      },
+      "published": {
+        "type": "boolean"
+      },
+      "statement_descriptor": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "trial_period_days": {
+        "type": "integer"
+      },
+      "amount": {
+        "format": "float",
+        "type": "number"
+      },
+      "overhead": {
+        "format": "float",
+        "type": "number"
+      },
+      "currency": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "interval": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "interval_count": {
+        "type": "integer"
+      },
+      "type": {
+        "type": "string"
+      },
+      "subscription_prorate": {
+        "type": "boolean"
+      },
+      "split_configuration": {
+        "type": "object"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      },
+      "references": {
+        "type": "object",
+        "properties": {
+          "service_template_properties": {
+            "type": "array",
+            "items": [
+              {
+                "$ref": "#/definitions/service_template_properties"
+              }
+            ]
+          },
+          "service_categories": {
+            "type": "array",
+            "items": [
+              {
+                "$ref": "#/definitions/service_categories"
+              }
+            ]
+          },
+          "users": {
+            "type": "array",
+            "items": [
+              {
+                "$ref": "#/definitions/users"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "required": [
+      "name"
+    ]
+  },
+  "system_options": {
+    "type": "object",
+    "properties": {
+      "option": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "value": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "public": {
+        "type": "boolean"
+      },
+      "type": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "data_type": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "option"
+    ]
+  },
+  "transactions": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "invoice_id": {
+        "type": "integer"
+      },
+      "user_id": {
+        "type": "integer"
+      },
+      "charge_id": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "invoice": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "amount": {
+        "format": "float",
+        "type": "number"
+      },
+      "refunded": {
+        "type": "boolean"
+      },
+      "amount_refunded": {
+        "format": "float",
+        "type": "number"
+      },
+      "refunds": {
+        "type": "object"
+      },
+      "captured": {
+        "type": "boolean"
+      },
+      "currency": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "dispute": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "paid": {
+        "type": "boolean"
+      },
+      "description": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "failure_code": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "failure_message": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "statement_descriptor": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "status": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "livemode": {
+        "type": "boolean"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    }
+  },
+  "users": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "role_id": {
+        "type": "integer"
+      },
+      "name": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "email": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "password": {
+        "format": "password",
+        "maxLength": 255,
+        "type": "string"
+      },
+      "provider": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "status": {
+        "type": "string"
+      },
+      "customer_id": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "phone": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "last_login": {
+        "type": "string"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      },
+      "references": {
+        "type": "object",
+        "properties": {
+          "user_roles": {
+            "type": "array",
+            "items": [
+              {
+                "$ref": "#/definitions/user_roles"
+              }
+            ]
+          },
+          "funds": {
+            "type": "array",
+            "items": [
+              {
+                "$ref": "#/definitions/funds"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "required": [
+      "email"
+    ]
+  },
+  "webhooks": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "endpoint_url": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "health": {
+        "maxLength": 255,
+        "type": "string"
+      },
+      "async_lifecycle": {
+        "type": "boolean"
+      },
+      "created_at": {
+        "type": "string"
+      },
+      "updated_at": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "endpoint_url"
+    ]
+  }
+}

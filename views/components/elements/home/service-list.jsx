@@ -195,7 +195,7 @@ class ServiceList extends React.Component {
         }
         else {
             return(
-                <div className="all-services" ref="allServices">
+                <div className="call-services" ref="allServices">
                     <div className="row" ref="hello">
                         {this.state.services.map(service => (
                             <ServiceListItem key={`service-${service.id}`}

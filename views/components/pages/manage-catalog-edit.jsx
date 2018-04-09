@@ -9,8 +9,8 @@ class ManageCatalogEdit extends React.Component {
 
     render () {
         return(
-            <div className="col-xs-12">
-                <p>Service Template Edit Form</p>
+            <div className="form-box col-xs-12">
+                <div className="offering-title">Edit your existing offering</div>
                 <ServiceTemplateForm params = {{'templateId': this.props.params.templateId}}/>
             </div>
         );

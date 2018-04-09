@@ -3,33 +3,34 @@ import React from "react";
 function Adjustment(props){
     let {operation, price} = props;
     //todo: make this less hardcoded.
-    let prefix = "$";
     let message = "";
     if(operation === "add" || operation === "subtract") {
         price = (price / 100).toFixed(2)
     }
     switch(operation) {
         case "add":
-            message = `  $${price} Add-on`
+            message = <div>${price} <span class="request-form-price-adjust-discount">Add-on</span></div>;
             break;
         case "subtract":
-            message = `  $${price} Discount`
+            message = <div>${price} <span class="request-form-price-adjust-discount">Discount</span></div>;
 
             break;
         case "multiply" :
-            message = `  ${price}% Increase`
+            message = <div>${price}% <span className="request-form-price-adjust-increase">Increase</span></div>;
 
             break;
         case "divide" :
-            message = `  ${price}% Discount`
+            message = <div>${price}% <span class="request-form-price-adjust-decrease">Discount</span></div>;
             break;
         default :
             message = ` -- ${operation} : ${price}`;
             break;
     }
-    return <div>
-        {message}
-    </div>
+    return (
+        <div className="request-form-price-adjustment-wrapper">
+            {message}
+        </div>
+    );
 }
 
 export default Adjustment;

@@ -1,29 +1,29 @@
 .installation-logo img{
-    max-width: 120px;
+    max-width: 350px;
+}
+.installation-logo {
+    padding: 40px 25px 25px 25px;
+    text-align: center;
 }
 .installation-logo, .installation-form {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    padding: 5%;
-    height: 100vh;
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*flex-direction: column;*/
+    /*padding: 5%;*/
+    /*height: 100vh;*/
 }
 .installation-form{
     background-color: #fff;
     overflow: scroll;
+    padding: 20px 25px;
+    border-radius: 5px;
 }
-
-.installation {
-    height: 100vh;
-}
-
 
 .installation h1{
     text-align: center;
-    color: white;
-    font-size: 35px;
+    color: #7fcaf7;
+    font-size: 20px;
     padding: 30px 20px 10px 20px;
-    margin-bottom: 60px;
 }
 
 .installation h4{
@@ -101,12 +101,15 @@
     background: #000000;
     border-radius: 3px;
     padding: 5px 15px;
-    /*font-family: 'Roboto Slab', "Helvetica", sans-serif;*/
     font-size: 16px;
     font-weight: normal;
     color: white;
     margin-bottom: 5px;
     width: 100%;
+}
+
+.installation .main {
+    min-height: 200px;
 }
 
 /* desktops only */

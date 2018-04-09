@@ -16,11 +16,12 @@ export const SET_NOTIFICATION = "SET_NOTIFICATION";
 export const ADD_SYSTEM_NOTIFICATION = "ADD_SYSTEM_NOTIFICATION";
 export const SET_SYSTEM_NOTIFICATIONS = "SET_SYSTEM_NOTIFICATIONS";
 export const SET_SYSTEM_NOTIFICATION = "SET_SYSTEM_NOTIFICATION";
-
 export const SET_FORM_DATA = "SET_FORM_DATA";
 export const INITIALIZE = "INITIALIZE";
 export const DISMISS_ALERT = "DISMISS_ALERT";
 export const ADD_ALERT = "ADD_ALERT";
+export const RESET_NAV_CLASS = "RESET_NAV_CLASS";
+export const SET_NAV_CLASS = "SET_NAV_CLASS";
 
 /*
  * other constants
@@ -112,4 +113,12 @@ export function dismissAlert(alerts){
 }
 export function addAlert(alert){
     return { type: ADD_ALERT, alert }
+}
+
+export function resetNavClass(){
+    return {type: RESET_NAV_CLASS, navbar: {nav_class : "default"}}
+}
+
+export function setNavClass(className){
+    return {type: SET_NAV_CLASS, navbar: {nav_class : className}}
 }

@@ -34,9 +34,9 @@ class UserFormRegister extends React.Component {
             this.setState({success: true});
 
             if (this.props.location.state && this.props.location.state.fromLogin) {
-                return browserHistory.go(-2);
+                return browserHistory.push('/my-services');
             }
-            browserHistory.goBack();
+            return browserHistory.push('/my-services');
         }
     }
 
@@ -92,7 +92,7 @@ class UserFormRegister extends React.Component {
         if (this.state.loading) {
             return ( <Load/> );
         } else if (this.state.success) {
-            browserHistory.goBack();
+            return browserHistory.push('/my-services');
         } else {
             //TODO: Add validation functions and pass into DataForm as props
             return (
@@ -107,28 +107,17 @@ class UserFormRegister extends React.Component {
                             </div> :
                             <div>
                                 <h3 className="m-b-20">Sign up</h3>
-                                <p>Please enter your email address and password to create your account</p>
+                                <p>Enter your information to sign up. You can manage your purchases once you finish signing up.</p>
                             </div>
                         }
 
-                        <Inputs type="text" name="name" label="Name" onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
-                        <Inputs type="text" name="phone" label="Phone Number" onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
+                        <Inputs type="text" name="name" placeholder="Name" hideLabel={true} onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
 
                         {!this.state.token &&
-                            <Inputs type="email" name="email" label="Email Address" onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
+                            <Inputs type="email" name="email" hideLabel={true} placeholder="Email Address" onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
                         }
 
-                        <Inputs type="password" name="password" label="Password" onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
-
-                        <div className="agreement-checkbox checkbox">
-                            <label>
-                                <input name="agree" type="checkbox"/>
-                                By clicking on create account, you agree to our terms of service and that you have read
-                                our
-                                privacy policy,
-                                including our cookie use policy
-                            </label>
-                        </div>
+                        <Inputs type="password" name="password" placeholder="Password" hideLabel={true} onChange={function () {}} receiveOnChange={true} receiveValue={true}/>
 
                         {!this.state.token ?
                             <div>
@@ -146,7 +135,6 @@ class UserFormRegister extends React.Component {
                                     value="submit">
                                 Finish</button>
                         }
-                        <p className="copyright">&copy; Copyright 2017</p>
 
                     </DataForm>
                 </div>

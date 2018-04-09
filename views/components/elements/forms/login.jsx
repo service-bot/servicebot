@@ -116,7 +116,7 @@ class Login extends React.Component {
         }else{
             if (this.props.modal && this.props.email) {
                 return (
-                    <Content>
+                    <Content primary={true}>
                         <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
                             <form className="sign-in">
                                 {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
@@ -138,8 +138,7 @@ class Login extends React.Component {
                                     <p>Please login to continue</p>
                                     <div className={`form-group ${this.state.errors && 'has-error   '}`}>
                                         <input onChange={this.handleInputChange} id="password" type="password"
-                                               name="password" className="form-control"/>
-                                        <span className="bmd-help">Password</span>
+                                               name="password" className="form-control" placeholder="Password"/>
                                         {this.state.errors && <span className="help-block">{this.state.errors}</span>}
                                     </div>
                                     <button onClick={this.handleLogin} type='submit'
@@ -157,40 +156,35 @@ class Login extends React.Component {
             } else {
                 return (
                     <Authorizer anonymous={true}>
-                        <Content>
+                        <Content primary={true}>
                             {/*<div className="left-panel col-md-6">adsf</div>*/}
                             <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
                                 <form className="sign-in">
                                     {/*<Alert stack={{limit: 3}} position='bottom'/>*/}
                                     {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
-                                    <h3>User Login</h3>
-                                    <p>Please enter your email address and password to login</p>
+                                    <h3>Login</h3>
 
                                     <div className="form-group">
-                                        <label htmlFor="sign-in-2-email" className="bmd-label-floating">Email
-                                            address</label>
                                         <input onChange={this.handleInputChange} id="email" type="text" name="email"
-                                               defaultValue={this.props.email || ''} className="form-control"/>
-                                        {!this.props.modal && <span className="bmd-help">Please enter your email</span>}
+                                               defaultValue={this.props.email || ''} className="form-control" placeholder="Email Address"/>
                                     </div>
                                     <div className="form-group">
-                                        <label htmlFor="sign-in-1-password"
-                                               className="bmd-label-floating">Password</label>
                                         <input onChange={this.handleInputChange} id="password" type="password"
-                                               name="password" className="form-control"/>
-                                        <span className="bmd-help">Please enter your password</span>
+                                               name="password" className="form-control" placeholder="Password"/>
                                     </div>
                                     <button onClick={this.handleLogin} type='submit'
                                             className="btn btn-raised btn-lg btn-primary btn-block">Sign in
                                     </button>
+                                    <p className="sign-up-link">
+                                        <Link to={{pathname: "/forgot-password", state: {fromLogin: false}}}> Forgot
+                                            Password</Link>
+                                    </p>
                                     {(this.props.options && this.props.options.allow_registration.value == 'true') &&
                                     <p className="sign-up-link">Don't have an account?
                                         <span><Link to={{
                                             pathname: "/signup",
                                             state: {fromLogin: true}
-                                        }}> Sign up here</Link> or </span>
-                                        <Link to={{pathname: "/forgot-password", state: {fromLogin: false}}}> Forgot
-                                            Password</Link>
+                                        }}> Sign up here</Link></span>
                                     </p>
                                     }
                                 </form>

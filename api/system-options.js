@@ -12,7 +12,7 @@ let appPackage = require("../package.json");
 let store = require("../config/redux/store")
 
 let fileManager = store.getState(true).pluginbot.services.fileManager[0];
-let systemFiles = ['front_page_image', 'brand_logo'];
+let systemFiles = ['front_page_image', 'brand_logo', 'loader_logo'];
 let uploadLimit = function(){
 
     return store.getState().options.upload_limit * 1000000;
@@ -35,9 +35,10 @@ module.exports = function (router) {
                 } else {
                     //todo: make less hardcoded.. maybe seperate api calls again
                     if(req.params.id == "brand_logo"){
-                        return res.sendFile(path.resolve(__dirname, "../public/assets/logos/servicebot-logo.png"));
-                    }
-                    else {
+                        return res.sendFile(path.resolve(__dirname, "../public/assets/logos/v1/servicebot-logo-full-white.png"));
+                    } else if(req.params.id == "loader_logo") {
+                        return res.sendFile(path.resolve(__dirname, "../public/assets/logos/v1/servicebot-logo-full-blue.png"));
+                    } else {
                         res.status(400).send("no image");
                     }
                 }

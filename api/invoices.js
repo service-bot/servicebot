@@ -15,7 +15,7 @@ module.exports = function(router) {
         Invoice.fetchUserInvoices(user).then(function (result) {
             next();
         }).catch(function (err) {
-            console.log(err);
+            console.error(err);
             next();
             //res.status(400).json({error: err});
         });
@@ -34,7 +34,7 @@ module.exports = function(router) {
                 Invoice.fetchUserInvoices(user).then(function (result) {
                     next();
                 }).catch(function (err) {
-                    console.log(err);
+                    console.error(err);
                     next();
                     //res.status(400).json({error: err});
                 });

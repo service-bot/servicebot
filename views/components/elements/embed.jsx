@@ -3,7 +3,7 @@ import Fetcher from '../utilities/fetcher.jsx'
 import {Link} from 'react-router';
 import _ from "lodash";
 import Load from '../utilities/load.jsx';
-import {Price} from '../utilities/price.jsx';
+import {Price, getPrice} from '../utilities/price.jsx';
 import DateFormat from '../utilities/date-format.jsx';
 
 // Accepts the following URL query
@@ -125,25 +125,6 @@ class Embed extends React.Component {
             headerStyle = {"backgroundColor" : urlQuery.headerColor || this.getRandomColor(), "color": "#fff", "height": "150px"};
         }
 
-        let getPrice = ()=>{
-            let serType = service.type;
-            if (serType == "subscription"){
-                return (
-                    <span>
-                        <Price value={service.amount}/>
-                        {service.interval_count == 1 ? ' /' : ' / ' + service.interval_count} {' '+service.interval}
-                    </span>
-                );
-            }else if (serType == "one_time"){
-                return (<span><Price value={service.amount}/></span>);
-            }else if (serType == "custom"){
-                return (<span/>);
-            }else{
-                return (<span><Price value={service.amount}/></span>)
-            }
-        };
-
-
         if(this.state.loading){
             return( <Load/> );
         }else{
@@ -184,7 +165,7 @@ class Embed extends React.Component {
 
                             {typeof(urlQuery.noCost) === 'undefined' &&
                             <span className="seller pull-left" style={textColor}>
-                                <span className="price">{getPrice()}</span>
+                                <span className="price">{getPrice(service)}</span>
                             </span>
                             }
 

@@ -45,8 +45,12 @@ ul.nav.navbar-nav.navbar-right > li > .badge{
   padding-right: 30px;
 }
 
+.navbar-brand.nav-logo {
+  margin-top: 7px;
+}
+
 .nav-logo img {
-  height: 54px;
+  height: 30px;
 }
 
 
@@ -190,7 +194,7 @@ button.navbar-toggle.collapsed:hover .icon-bar {
 }
 
 .navvbar-badge {
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 

@@ -185,6 +185,7 @@ class Inputs extends React.Component {
         let maxLength       = this.props.maxLength ? this.props.maxLength : false;
         let name            = this.props.name ? this.props.name : false;
         let label           = this.props.label ? this.props.label : false;
+        let hideLabel       = this.props.hideLabel ? this.props.hideLabel : false;
         let defaultValue    = this.props.value || this.props.defaultValue;
         let placeholder     = this.props.placeholder;
         let disabled        = this.props.disabled ? true : false;
@@ -196,7 +197,7 @@ class Inputs extends React.Component {
         //error checking props
         if(!name){
             error = "Component requires a name passed in props.";
-        }else if(!label && type != 'hidden'){
+        }else if(!label && type != 'hidden' && !hideLabel){
             error = "Component requires a label passed in props.";
         }
 
@@ -241,7 +242,7 @@ class Inputs extends React.Component {
                 <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}
                     <select className="form-control" disabled={disabled} defaultValue={defaultValue} name={name} onChange={this.handleChange}>
-                        {this.props.value == null && defaultValue == null ?
+                        {this.props.value == null && defaultValue == null && !this.props.hideValue ?
                             <option value={null}>{''}</option> : ''
                         }
                         {(_.isArray(this.props.options) && this.props.options) ?

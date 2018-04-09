@@ -98,8 +98,8 @@ span.react-tagsinput-tag {
     border: none;
     border-radius: 5px;
     color: white;
-    padding: 0px 6px;
-    margin: 0px 5px 0px 0px;
+    padding: 0 6px;
+    margin: 2px 5px 2px 0;
     font-size: 16px;
     font-weight: 100;
 }
@@ -173,16 +173,22 @@ input[type=checkbox], input[type=radio]{
     margin: 3px 0px 10px;
     position: relative;
 }
-form#imgformtemplate-image img {
-    width: 100%;
+#imgformtemplate-image img {
+    width: auto;
+    padding: 5px;
+}
+.template-image-upload img {
+    max-height: 100%;
+    padding: 20px;
+    margin-top: 30px;
 }
 .template-image-upload:after {
     content: "Upload";
     z-index: 1;
 }
-form#imgformtemplate-image .no-image-yet {
+#imgformtemplate-image .no-image-yet {
     display: none;
 }
-form#imgformtemplate-icon .no-image-yet {
+#imgformtemplate-icon .no-image-yet {
     display: none;
 }

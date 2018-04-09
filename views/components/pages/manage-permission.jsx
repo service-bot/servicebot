@@ -20,11 +20,12 @@ class ManagePermission extends React.Component {
 
     render () {
         let pageName = this.props.route.name;
+        let subtitle = 'Manage user permissions based on their roles';
 
         if(isAuthorized({permissions: ["can_administrate"]})){
             return(
                 <div>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <Jumbotron pageName={pageName} subtitle={subtitle}/>
                     <div className="page-service-instance">
                         <Content>
                             <div className="row m-b-20">
