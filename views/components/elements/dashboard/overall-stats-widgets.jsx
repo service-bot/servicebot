@@ -55,8 +55,8 @@ class OverallStatsWidgets extends React.Component {
         let hadSales = 'No';
         if(analytics.hasStripeKeys) stripeConnection = 'Yes';
         if(analytics.hasChangedHeader) themeChanged = 'Yes';
-        if(analytics.totalUnpublishedTemplates !== 0 && analytics.totalPublishedTemplates !== 0) hadOfferings = 'Yes';
-        if(analytics.totalServiceInstances !== 0) hadSales = 'Yes';
+        if(parseInt(analytics.totalUnpublishedTemplates) !== 0 && parseInt(analytics.totalPublishedTemplates) !== 0) hadOfferings = 'Yes';
+        if(parseInt(analytics.totalServiceInstances) !== 0) hadSales = 'Yes';
         systemStat.push({label:'Connected to Stripe', value: stripeConnection});
         systemStat.push({label:'Customized Theme', value: themeChanged});
         systemStat.push({label:'Created Offering', value: hadOfferings});

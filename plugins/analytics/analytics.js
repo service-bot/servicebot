@@ -155,7 +155,7 @@ module.exports = {
 
                 },
                 hasChangedHeader:function(callback){
-                    callback(null, props.home_featured_heading !== "Welcome To ServiceBot!");
+                    callback(null, props.home_featured_heading !== "Start selling your offerings in minutes!");
                 },
                 totalCustomers: function (callback) {
                     user.getRowCountByKey(null, null, function (totalCustomers) {
