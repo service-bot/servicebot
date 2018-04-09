@@ -50,7 +50,6 @@ module.exports = function(app, passport) {
                                 user.set("token", token);
                                 user.set("url", frontEndUrl);
                                 store.dispatchEvent("password_reset_request_created", user);
-                                next();
                                 // mailer('password_reset', 'user_id', newReset)(req, res, next);
                             })
                         });
