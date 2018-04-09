@@ -74,6 +74,7 @@ span.btn-link:hover{
 
 /* layouts */
 .app-container{
+    min-height: 100vh;
     height: auto;
     display: flex;
     flex-direction: column;
