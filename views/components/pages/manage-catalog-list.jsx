@@ -11,6 +11,7 @@ import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import ModalPublishingTemplate from "../elements/modals/modal-publishing-template.jsx";
 import ModalDeleteTemplate from "../elements/modals/modal-delete-template.jsx";
+import getSymbolFromCurrency from 'currency-symbol-map'
 import {connect} from "react-redux";
 
 class ManageCatalogList extends React.Component {
@@ -84,8 +85,9 @@ class ManageCatalogList extends React.Component {
     nameFormatter(cell, row){
         return ( <Link to={`/manage-catalog/${row.id}`}>{cell}</Link> );
     }
-    priceFormatter(cell){
-        return ( <Price value={cell}/> );
+    priceFormatter(cell, row){
+        let prefix = getSymbolFromCurrency(row.currency);
+        return ( <Price value={cell} prefix={prefix}/> );
     }
     paymentTypeFormatter(cell, row){
         return ( serviceTypeFormatter(row) );

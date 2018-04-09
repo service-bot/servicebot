@@ -2,17 +2,16 @@ module.exports = function (database, initConfig) {
 
 
     //todo: move dependencies into plugins
-    let options = require("../../config/system-options");
+    //todo: should not depend on code from another plugin directly...
+    let options = require("../system-options/default-options");
     let systemOptions = options.options;
     let SystemOption = require("../../models/system-options");
     let ServiceCategory = require("../../models/service-category");
     let Permission = require("../../models/permission");
     let NotificationTemplate = require("../../models/notification-template");
     let User = require("../../models/user");
-    let swaggerJSON = require("../../api-docs/api-paths.json");
     let Role = require("../../models/role");
     let DefaultTemplates = require("../../config/default-notifications");
-    let additionalPermissions = ["can_administrate", "can_manage"];
 
 
     let assignPermissionPromise = function (initConfig, permission_objects, initialRoleMap) {
@@ -72,38 +71,11 @@ module.exports = function (database, initConfig) {
 
 
     return new Promise(function (resolve, reject) {
-            let initialRoleMap = {
-                "admin": [],
-                "staff": [],
-                "user": []
-            };
-            let permissions = [];
-            for (let route in swaggerJSON) {
-                for (let method in swaggerJSON[route]) {
-                    if (swaggerJSON[route][method]['x-roles'].includes("admin")) {
-                        initialRoleMap.admin.push(swaggerJSON[route][method].operationId);
-                    }
-                    if (swaggerJSON[route][method]['x-roles'].includes("staff")) {
-                        initialRoleMap.staff.push(swaggerJSON[route][method].operationId);
-                    }
-                    if (swaggerJSON[route][method]['x-roles'].includes("user")) {
-                        initialRoleMap.user.push(swaggerJSON[route][method].operationId);
-                    }
-                    permissions.push(swaggerJSON[route][method].operationId);
-                }
-            }
+            let initialRoleMap = require("./initial-role-map.json");
 
+            //todo: can we just take admin since it probably has all the permissions?
+            let permissions = [...(new Set([...initialRoleMap.admin, ...initialRoleMap.user, ...initialRoleMap.staff]))];
             let roles = Object.keys(initialRoleMap);
-
-            //add additional permissions
-            additionalPermissions.forEach(function (element) {
-                permissions.push(element);
-                initialRoleMap.admin.push(element);
-                if (element === 'can_manage') {
-                    initialRoleMap.staff.push(element);
-                }
-            });
-
             let permission_data = permissions.map(permission => ({"permission_name": permission}));
             let role_data = roles.map(role => ({"role_name": role}));
 

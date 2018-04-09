@@ -90,9 +90,7 @@ class Dropdown extends React.Component {
                     {this.props.name} <span className="caret"/>
                 </button>
                 <ul className={`dropdown-menu ${this.props.direction ? (this.props.direction == 'right' ? 'dropdown-menu-right' : '') : ''}`}>
-                    {this.props.dropdown.map(button => (
-                        this.getButton(button)
-                    ))}
+                    {this.props.dropdown.map((button, index) => this.getButton(button))}
                 </ul>
             </div>
         );

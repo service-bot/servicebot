@@ -27,3 +27,34 @@
     font-weight: 100;
     padding: 20px 0px;
 }
+
+.offerings-widgets{
+    background: white;
+    margin: 15px 0;
+    border-radius: 5px;
+}
+
+.offerings-widget {
+    padding: 5px 15px;
+    text-align: center;
+}
+
+.offerings-widget.master {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    background: #000000;
+    color: white;
+    text-align: left;
+}
+.chartjs-render-monitor{
+    margin: 0 auto;
+}
+
+.full-height{
+    height: 100%;
+    /*max-height: 360px;*/
+}
+
+.dash-widget-list {
+    /*border-bottom: 1px solid #3100bc;*/
+}

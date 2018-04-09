@@ -27,11 +27,12 @@ class DeleteCategoryForm extends React.Component {
             if(!response.error){
                 self.setState({success: true, response: response});
             }else{
+                let msg = 'Cannot delete a category that has service templates attached to it.'
                 self.setState({
                     alerts: {
                         type: 'danger',
                         icon: 'times',
-                        message: response.error
+                        message: `${response.error} : ${msg}`
                     }
                 });
             }

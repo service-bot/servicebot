@@ -22,11 +22,23 @@
     margin-right: 5px;
 }
 
+/* split payment */
+.split-payment-items {
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.split-payment-item {
+    flex-basis: 49%;
+}
+
 /* custom properties */
-.custom-field-item {
+.custom-field-item, .split-payment-item {
     border: 1px solid #eee;
     padding: 10px;
     margin: 10px 0px;
+    list-style: none;
 }
 .custom-property-field-group {
     margin-right: 8px;
@@ -55,10 +67,10 @@
     width: 100%;
     margin-top: 5px;
 }
-#custom-field-delete-button{
+#custom-field-delete-button, #split-payment-delete-button{
     background-color: #ffffff;
     color: #dedede;
-    border-radius: 20px;
+    border-radius: 25px;
 }
 .custom-field-item .form-group{
     margin-bottom: 0px;
@@ -79,10 +91,14 @@
 }
 .addon-options-widget-price-inputs-wrapper,
 .addon-checkbox-widget-price-inputs-wrapper{
-    width: 100% ;
+    width: 100%;
+}
+.addon-options-widget-config-input-wrapper .form-input-flex {
+    flex-grow: 0;
+    flex-basis: 70%;
 }
 .addon-options-widget-pricing-input-label {
-    flex-basis: 277px;
+    flex-basis: 30%;
 }
 .addon-widget-pricing-input-label {
     flex-basis: 282px;
@@ -105,4 +121,13 @@
     width: 100%;
     color: #dfdfdf;
     border-bottom: 1px solid #eee;
+}
+
+/* request form */
+.addon-checkbox-widget-default-value .form-input-flex {
+    display: flex;
+    color: #7b7b7b;
+}
+.addon-checkbox-widget-default-value .form-input-flex .form-group{
+    margin-right: 10px;
 }

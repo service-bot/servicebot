@@ -40,6 +40,7 @@ class ManageUsers extends React.Component {
             lastFetch: Date.now(),
             loading: true,
             advancedFilter: null,
+            reinviteUser: null
         };
 
         this.openInviteUserModal = this.openInviteUserModal.bind(this);
@@ -92,12 +93,12 @@ class ManageUsers extends React.Component {
         this.setState({ openEditCreditCard: false, currentDataObject: {}, lastFetch: Date.now()});
     }
 
-    openInviteUserModal(dataObject){
-        this.setState({ openInviteUserModal: true, currentDataObject: dataObject });
+    openInviteUserModal(userObject){
+        this.setState({ openInviteUserModal: true, reinviteUser: userObject });
     }
     closeInviteUserModal(){
         this.fetchData();
-        this.setState({ openInviteUserModal: false, currentDataObject: {}, lastFetch: Date.now()});
+        this.setState({ openInviteUserModal: false, currentDataObject: {}, reinviteUser: {}, lastFetch: Date.now()});
     }
     openSuspendUser(dataObject){
         if(dataObject.id == this.props.user.id){
@@ -180,6 +181,14 @@ class ManageUsers extends React.Component {
             </div>
         );
     }
+    fundFormatter(cell) {
+        //check if user has funds
+        if(cell.funds.length > 0){
+            return ( <span className="status-badge green" ><i className="fa fa-check" /></span> );
+        } else {
+            return ( <span className="status-badge red" ><i className="fa fa-times" /></span> );
+        }
+    }
     statusFormatter(cell, row) {
         let color = 'status-badge ';
         switch ( cell.toLowerCase() ) {
@@ -194,7 +203,13 @@ class ManageUsers extends React.Component {
             default:
                 color += 'grey';
         }
-        return ( <span className={color} >{cell}</span> );
+        //If the customer_id from Stripe doesn't exist, mark user as disconnected
+        if(!row.customer_id) {
+            return ( <span className="status-badge grey" >Disconnected</span> );
+        } else {
+            return ( <span className={color} >{cell}</span> );
+        }
+
     }
     roleFormatter(cell){
         return ( cell.user_roles[0].role_name );
@@ -233,6 +248,11 @@ class ManageUsers extends React.Component {
     rowActionsFormatter(cell, row){
         let self=this;
         let dropdownOptions = [
+            {
+                type: "button",
+                label: 'Re-invite User',
+                action: () => { return (this.openInviteUserModal(row)) }
+            },
             {   type: "button",
                 label: row.references.funds.length ? 'Edit Credit Card' : 'Add Credit Card',
                 action: () => { return (this.openEditCreditCard(row)) }},
@@ -252,7 +272,7 @@ class ManageUsers extends React.Component {
                 action: () => { return (this.openSuspendUser(row)) }},
             {   type: "button",
                 label: 'Delete User',
-                action: () => { return (this.openDeleteUser(row)) }},
+                action: () => { return (this.openDeleteUser(row)) }}
         ].filter((option, index) => {
             if(!self.props.stripe_publishable_key && index === 0){
                 return false;
@@ -261,6 +281,9 @@ class ManageUsers extends React.Component {
                 return false
             }
             if(row.status === 'invited' && option.label === "Suspend User") {
+                return false
+            }
+            if(option.label === "Re-invite User" && row.status !== 'invited') {
                 return false
             }
             return true;
@@ -276,15 +299,15 @@ class ManageUsers extends React.Component {
 
     render () {
         let pageName = this.props.route.name;
+        let subtitle = 'View, invite, edit, and manage users';
 
         let getModals = ()=> {
             if(this.state.openInviteUserModal){
-                return (
-                    <ModalInviteUser
-                        show={this.state.openInviteUserModal}
-                        hide={this.closeInviteUserModal}
-                    />
-                )
+                if(this.state.reinviteUser) {
+                    return (<ModalInviteUser show={this.state.openInviteUserModal} hide={this.closeInviteUserModal} reinviteUser={this.state.reinviteUser.email}/>);
+                } else {
+                    return (<ModalInviteUser show={this.state.openInviteUserModal} hide={this.closeInviteUserModal}/>);
+                }
             }
             if(this.state.openSuspendUserModal){
                 return (
@@ -345,7 +368,7 @@ class ManageUsers extends React.Component {
         }else {
             return (
                 <Authorizer permissions="can_administrate">
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <Jumbotron pageName={pageName} subtitle={subtitle}/>
                     <div className="page-service-instance">
                         <Content>
                             <div className="row m-b-20">
@@ -386,6 +409,12 @@ class ManageUsers extends React.Component {
                                                            dataSort={ true }
                                                            width='80'>
                                             Status
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='references'
+                                                           dataFormat={this.fundFormatter}
+                                                           dataSort={ true }
+                                                           width='80'>
+                                            Fund?
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='references'
                                                            dataFormat={this.roleFormatter}

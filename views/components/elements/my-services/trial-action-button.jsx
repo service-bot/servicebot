@@ -30,8 +30,7 @@ class TrialFundAddition extends React.Component {
         }
         if(self.state.instance.status === "running" && trial > 0) {
             let currentDate = new Date();
-            let trialEnd = new Date(self.state.instance.subscribed_at * 1000);
-            trialEnd.setDate(trialEnd.getDate() + trial);
+            let trialEnd = new Date(self.state.instance.trial_end * 1000);
             //Service is trialing if the expiration is after current date
             if(currentDate < trialEnd) {
                 inTrial = true;

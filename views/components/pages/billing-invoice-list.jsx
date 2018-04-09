@@ -11,6 +11,7 @@ import DateFormat from "../utilities/date-format.jsx";
 import _ from "lodash";
 import { connect } from "react-redux";
 import ModalRefund from "../elements/modals/modal-refund.jsx";
+import getSymbolFromCurrency from 'currency-symbol-map';
 
 const mapStateToProps = (state, ownProps) => {
     return {
@@ -102,8 +103,9 @@ class BillingInvoiceList extends React.Component {
     getRefundDetail(transactions){
         if(transactions.length > 0 && transactions[0].amount_refunded > 0) {
             let refunded = transactions[0].amount_refunded;
+            let prefix = getSymbolFromCurrency(transactions[0].currency);
             return (
-                <li><span className="status-label">Refunded:</span> <span><Price value={refunded} /></span></li>
+                <li><span className="status-label">Refunded:</span> <span><Price value={refunded} prefix={prefix}/></span></li>
             );
         } else {
             return (<span/>);
@@ -114,6 +116,7 @@ class BillingInvoiceList extends React.Component {
         //If there is a transaction for this invoice
         if(transactions.length > 0 && transactions[0].refunds.data.length > 0) {
             let refunds = transactions[0].refunds.data;
+            let prefix = getSymbolFromCurrency(transactions[0].currency);
             return (
                 <div className="xaas-dashboard">
                     <div className="xaas-row waiting">
@@ -121,9 +124,9 @@ class BillingInvoiceList extends React.Component {
                             <div className="xaas-data xaas-service"><span>Applied Refunds</span></div>
                         </div>
                         <div className="xaas-body">
-                            {refunds.map(refund =>
-                                <div className="xaas-body-row">
-                                    <div className="xaas-data xaas-price"><b><Price value={refund.amount} /></b></div>
+                            {refunds.map((refund, index) =>
+                                <div key={"refund-" + index} className="xaas-body-row">
+                                    <div className="xaas-data xaas-price"><b><Price value={refund.amount} prefix={prefix}/></b></div>
                                     <div className="xaas-data xaas-charge"><span>{refund.reason}</span></div>
                                     <div className="xaas-data xaas-action"><span>{refund.status}</span></div>
                                 </div>
@@ -153,6 +156,7 @@ class BillingInvoiceList extends React.Component {
             return(<Load type="content"/>);
         }else{
             let invoice = this.state.invoice;
+            let prefix = getSymbolFromCurrency(invoice.currency);
             let invoiceOwner = this.state.invoiceOwner;
 
             let currentModal = ()=> {
@@ -216,7 +220,7 @@ class BillingInvoiceList extends React.Component {
                                     <div className="invoice-status-body">
                                         <ul>
                                             <li><span className="status-label">Invoice Total:</span> {_.has(invoice, 'references.transactions[0].amount') ?
-                                                <Price value={invoice.references.transactions[0].amount}/> : <Price value={invoice.amount_due}/>}</li>
+                                                <Price value={invoice.references.transactions[0].amount} prefix={prefix}/> : <Price value={invoice.amount_due} prefix={prefix}/>}</li>
 
                                             {this.getRefundDetail(invoice.references.transactions)}
 
@@ -251,7 +255,7 @@ class BillingInvoiceList extends React.Component {
                                         <td>{line.description}</td>
                                         <td>{line.type}</td>
                                         <td>{line.quantity}</td>
-                                        <td><Price value={line.amount}/></td>
+                                        <td><Price value={line.amount} prefix={prefix}/></td>
                                     </tr>
                                 )}
                                 </tbody>
@@ -260,7 +264,7 @@ class BillingInvoiceList extends React.Component {
                                         <td/><td/><td/>
                                         <td><strong>Transaction Total</strong></td>
                                         {_.has(invoice, 'references.transactions[0].amount') ?
-                                            <td><strong><Price value={invoice.references.transactions[0].amount}/></strong></td>:
+                                            <td><strong><Price value={invoice.references.transactions[0].amount} prefix={prefix}/></strong></td>:
                                             <td><strong>No Charge</strong></td>
                                         }
                                     </tr>

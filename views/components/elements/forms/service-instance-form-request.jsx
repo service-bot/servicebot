@@ -2,30 +2,24 @@ import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import 'react-tagsinput/react-tagsinput.css';
 import './css/template-create.css';
-import consume from "pluginbot-react/src/consume";
+import consume from "pluginbot-react/dist/consume";
 import {
     Field,
-    Fields,
     FormSection,
     FieldArray,
-    reduxForm,
     formValueSelector,
-    change,
-    unregisterField,
     getFormValues,
-    SubmissionError
 } from 'redux-form'
 import {connect} from "react-redux";
 import {RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/widgets";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import {inputField, selectField, widgetField, priceField} from "./servicebot-base-field.jsx";
 import {CardSection} from "../../elements/forms/billing-settings-form.jsx";
+import getSymbolFromCurrency from 'currency-symbol-map'
 
 import {Price} from "../../utilities/price.jsx";
 import Fetcher from "../../utilities/fetcher.jsx";
-import IconHeading from "../../layouts/icon-heading.jsx";
 import ModalUserLogin from "../modals/modal-user-login.jsx";
-import {addAlert} from "../../utilities/actions";
 import {setUid, fetchUsers, setUser} from "../../utilities/actions";
 import {required, email, numericality, length} from 'redux-form-validators'
 import {injectStripe, Elements, StripeProvider} from 'react-stripe-elements';
@@ -56,7 +50,6 @@ let renderCustomProperty = (props) => {
         <div>
             {fields.map((customProperty, index) => {
                     let property = widgets[formJSON[index].type];
-                    console.log("custom prop", customProperty);
                     if(formJSON[index].prompt_user){
 
                         return (
@@ -123,6 +116,7 @@ class ServiceRequestForm extends React.Component {
         let getRequestText = () => {
             let serType = formJSON.type;
             let trial = formJSON.trial_period_days !== 0;
+            let prefix = getSymbolFromCurrency(formJSON.currency);
             if(trial){
                 return ("Get your Free Trial")
             }
@@ -130,18 +124,20 @@ class ServiceRequestForm extends React.Component {
                 if (serType === "subscription") {
                     return (
                         <span>{"Subscribe "}
-                            <Price value={newPrice}/>
+                            <Price value={newPrice} prefix={prefix}/>
                             {formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' ' + formJSON.interval}
                     </span>
                     );
                 } else if (serType === "one_time") {
                     return (
-                        <span>{"Buy"} <Price value={newPrice}/></span>
+                        <span>{"Buy Now"} <Price value={newPrice} prefix={prefix}/></span>
                     );
                 } else if (serType === "custom") {
                     return ("Request");
+                } else if (serType === "split") {
+                    return ("Buy Now");
                 } else {
-                    return (<span><Price value={newPrice}/></span>)
+                    return (<span><Price value={newPrice} prefix={prefix}/></span>)
                 }
             }
         };
@@ -164,13 +160,32 @@ class ServiceRequestForm extends React.Component {
                     <Authorizer permissions="can_administrate">
                         <Field name="client_id" component={selectField} label="For Client"
                                options={sortedUsers} validate={[required()]}/>
+                        {(formJSON.type !== "split") &&
                         <Field name="amount" type="number"
                                component={priceField}
                                isCents={true}
                                label="Override Amount"
                                validate={numericality({ '>=': 0.00 })}
                         />
+                        }
                     </Authorizer>
+
+                    {helpers.hasCard &&
+                    <div className="service-request-form-payment">
+                        {helpers.stripToken ?
+                            <div>
+                                <p className="help-block">You {helpers.card.funding} card in your account
+                                    ending in: {helpers.card.last4} will be used.</p>
+                                <span className="help-block">If you wish to use a different card, you can
+                                                update your card under <Link
+                                        to="/billing-settings">billing settings.</Link></span>
+                            </div> :
+                            <p className="help-block">
+                                Using {helpers.card.funding} card ending in: {helpers.card.last4}
+                            </p>
+                        }
+                    </div>
+                    }
 
                     {!helpers.uid &&
                     <div>
@@ -191,38 +206,13 @@ class ServiceRequestForm extends React.Component {
                                     formJSON={formJSON.references.service_template_properties}/>
                     </FormSection>
 
-                    {helpers.hasCard &&
-                    <div className="service-request-form-payment">
-                        {helpers.stripToken ?
-                            <div>
-                                <p className="help-block">You {helpers.card.funding} card in your account
-                                    ending in: {helpers.card.last4} will be used.</p>
-                                <span className="help-block">If you wish to use a different card, you can
-                                                update your card under <Link
-                                        to="/billing-settings">billing settings.</Link></span>
-                            </div> :
-                            <p className="help-block">
-                                Using {helpers.card.funding} card ending in: {helpers.card.last4}
-                            </p>
-                        }
-                    </div>
-                    }
-                    {formJSON.trial_period_days !== 0 && <div>
-                        <Price value={newPrice}/>
-                    </div>}
-
-                    <button className="btn btn-rounded btn-primary btn-bar" type="submit" value="submit">
+                    <button className="btn btn-rounded btn-primary btn-bar submit-request" type="submit" value="submit">
                         {getRequestText()}
                     </button>
                     {error &&
                     <strong>
                         {error}
                     </strong>}
-
-                    {/*<Buttons buttonClass="btn-primary btn-bar" size="lg" position="center" btnType="primary" value="submit"*/}
-                    {/*onClick={()=>{}} loading>*/}
-                    {/*<span>{getRequestText()}</span>*/}
-                    {/*</Buttons>*/}
                 </form>
             </div>
         )
@@ -411,8 +401,9 @@ class ServiceInstanceForm extends React.Component {
         };
         let successMessage = "Service Requested";
         let successRoute = "/my-services";
+        //If admin requested, redirect to the manage subscription page
         if (isAuthorized({permissions: "can_administrate"})) {
-            successRoute = "/dashboard";
+            successRoute = "/manage-subscriptions";
         }
 
         let helpers = Object.assign(this.state, this.props);
@@ -426,10 +417,11 @@ class ServiceInstanceForm extends React.Component {
 
         return (
             <div>
-                {/*Price: {this.state.servicePrice}*/}
-
-                {(!this.state.hasCard && !isAuthorized({permissions: "can_administrate"})) &&
-                this.state.servicePrice > 0 && initialValues.trial_period_days <= 0 && <CardSection/>}
+                {(!this.state.hasCard &&
+                    !isAuthorized({permissions: "can_administrate"})) &&
+                    ((this.state.servicePrice > 0 && initialValues.trial_period_days <= 0) ||
+                    (this.state.templateData.type === 'split')) &&
+                <CardSection/>}
 
 
                 <ServiceBotBaseForm

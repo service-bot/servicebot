@@ -2,8 +2,8 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>ServiceBot - Service Automation System</title>
-        <meta name="description" content="Services served and managed in a single app">
+        <title>{{#if site_title}}{{site_title}}{{else}}ServiceBot - Subscription Management and Billing Automation System{{/if}}</title>
+        <meta name="description" content="{{#if site_description}}{{site_description}}{{else}}Services served and managed in a single app{{/if}}">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/load.css">
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -49,13 +49,14 @@
         <link rel="stylesheet" type="text/css" href="/stylesheets/xaas/notifications.css">
         <link rel="stylesheet" type="text/css" href="/stylesheets/stripe.css">
         <link rel="stylesheet" type="text/css" href="/api/v1/extra-css.css">
+        <link rel="stylesheet" type="text/css" href="/stylesheets/request-form.css">
 
         <script src="https://js.stripe.com/v3/"></script>
 
     </head>
     <body id="servicebotio" data-layout="top-navigation-1" data-sidebar="primary" data-navbar="primary">
         <div id="servicebot-loader" class="no-print">
-            <img src="/api/v1/system-options/file/brand_logo" alt="ServiceBot">
+            {{#if hostname}}<img src="/api/v1/system-options/file/loader_logo" alt="ServiceBot">{{else}}<img src="/assets/logos/v1/servicebot-logo-full-blue.png" alt="ServiceBot">{{/if}}
             <div class="loading"></div>
         </div>
         <div id="app"/>

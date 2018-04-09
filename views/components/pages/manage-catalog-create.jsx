@@ -9,9 +9,10 @@ class ManageCatalogCreate extends React.Component {
     }
 
     render () {
-        var self = this;
+        let self = this;
         return(
-            <div className="col-xs-12">
+            <div className="form-box col-xs-12">
+                <div className="offering-title">Create a new offering</div>
                 <ServiceTemplateForm params = {{'templateId': null}}/>
             </div>
         );

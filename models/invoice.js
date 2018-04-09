@@ -114,6 +114,7 @@ Invoice.fetchUserInvoices = function (user_object) {
             if(all_invoices.length > 0){
                 invoice_obj.ending_before = all_invoices[0].get('invoice_id');
             }
+            //TODO: loop through the stripe response pages
             Stripe().connection.invoices.list(invoice_obj, function(err, invoices) {
                 if(!err) {
                     return resolve(invoices);

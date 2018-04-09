@@ -152,8 +152,9 @@ let buildTables = async function(knex) {
             table.string('currency').defaultTo('usd');
             table.string('interval');
             table.integer('interval_count').defaultTo(1);
-            table.enu('type', ['subscription', 'one_time', 'custom']).defaultTo('subscription');
+            table.enu('type', ['subscription', 'one_time', 'custom', "split"]).defaultTo('subscription');
             table.boolean('subscription_prorate').defaultTo(true);
+            table.jsonb('split_configuration');
             table.timestamps(true, true);
 
         });
@@ -167,8 +168,10 @@ let buildTables = async function(knex) {
             table.text('description', 'longtext');
             table.string('subscription_id');
             table.bigInteger('subscribed_at');
+            table.bigInteger('trial_end');
             table.enu('status', ['running', 'requested', 'in_progress', 'waiting_cancellation', 'missing_payment', 'cancelled', 'completed']).defaultTo('missing_payment');
-            table.enu('type', ['subscription', 'one_time', 'custom']).defaultTo('subscription');
+            table.enu('type', ['subscription', 'one_time', 'custom', "split"]).defaultTo('subscription');
+            table.jsonb('split_configuration');
             table.timestamps(true, true);
 
         });
@@ -218,6 +221,8 @@ let buildTables = async function(knex) {
             table.increments();
             table.integer('parent_id').references('service_instances.id').onDelete('cascade');
             table.boolean('private').defaultTo(false);
+            table.boolean('prompt_user').defaultTo(true);
+            table.boolean('required').defaultTo(false);
             table.timestamps(true, true);
 
         });

@@ -16,9 +16,13 @@ body {
   position: relative;
 }
 
-a,
 .btn {
   color: #212121;
+}
+
+a {
+  color: #03a9f4;
+  /*text-decoration: underline;*/
 }
 
 a:hover, a:focus, a:active,
@@ -43,7 +47,6 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 }
 
 input:-moz-focusring {
-  color: transparent;
   text-shadow: 0 0 0 transparent;
 }
 

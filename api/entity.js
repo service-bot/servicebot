@@ -55,26 +55,15 @@ module.exports = function (router, model, resourceName, userCorrelator) {
             key = undefined;
             value = undefined;
         }
-        model.findAll(key, value, function (parents) {
-            if (references === undefined || references.length == 0 || parents.length == 0) {
+        model.findAll(key, value, async function (parents) {
+            if (references === undefined || references.length === 0 || parents.length === 0) {
                 res.locals.json = parents.map(entity => entity.data);
                 next();
             }
             else {
-                async.mapSeries(parents, function(parent, callback){
-                    parent.attachReferences(function(updatedParent){
-                        callback(null, updatedParent);
-                    })
-                },function(err, result){
-                    if(err){
-                        console.error("error attaching references: ", err);
-                    }
-                    else{
-                        res.locals.json = result.map(entity => entity.data);
-                        next();
-                    }
-
-                });
+                let results = await model.batchAttatchReference(parents)
+                res.locals.json = results.map(entity => entity.data);
+                next();
             }
         });
     });

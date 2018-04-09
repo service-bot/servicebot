@@ -52,10 +52,15 @@
 
 .badge img {
     width: 100%;
-    height:100%;
+    height: 100%;
     border-radius: 50%;
 }
 
+.system-settings-page-form .badge img{
+    width: 100%;
+    height: 40%;
+    border-radius: 0;
+}
 .badge-avatar{
     background-color: #ffffff;
 }

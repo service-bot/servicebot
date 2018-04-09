@@ -44,17 +44,17 @@ module.exports = function(router, knex, stripe) {
             //If yes, initiate migration of the data. if no, change the keys without migration.
             return new Promise(function (resolve, reject) {
                 if(!Stripe().stripe_secret_key){
-                    console.log("No stripe key exists in current environment, proceed");
+                    console.log("No stripe key exists in current environment, proceed with migration");
                     return resolve(true);
                 }
-                if(stripe_secret.slice(3,7) == Stripe().stripe_secret_key.slice(3,7)) {
+                if(stripe_secret.slice(3,7) === Stripe().stripe_secret_key.slice(3,7)) {
                     //Check the Stripe account ID of the old and the new keys
                     let NewStripe = require("stripe")(stripe_secret);
                     NewStripe.account.retrieve(function (err, new_stripe) {
                         if(!err) {
                             Stripe().connection.account.retrieve(function (err, old_stripe) {
                                 if(!err) {
-                                    if(new_stripe.id == old_stripe.id) {
+                                    if(new_stripe.id === old_stripe.id) {
                                         //They are both on the same account. Continue without migration
                                         console.log(`Both Stripe keys are on the same account: ${new_stripe.id}. Continue without migration...`);
                                         return resolve(false);
@@ -64,8 +64,10 @@ module.exports = function(router, knex, stripe) {
                                         return resolve(true);
                                     }
                                 } else {
-                                    console.log('Cannot retrieve old Stripe account info! Aborting the reconfiguration.');
-                                    return reject('Cannot retrieve old Stripe account info! Aborting the reconfiguration.');
+                                    //TODO: need to save Stripe account info in the database to ensure rolled keys or diactivated account
+                                    //If the old account is not found, forget about migration and update
+                                    console.log('Potential rolled keys. No old Stripe account found. Continue without migration...');
+                                    return resolve(false);
                                 }
                             });
                         } else {
@@ -135,23 +137,28 @@ module.exports = function(router, knex, stripe) {
         let stripe_config = req.body;
         let stripe_publishable = stripe_config.stripe_public;
         let stripe_secret = stripe_config.stripe_secret;
+        let fullRemoval = stripe_config.full_removal;
+        if(!fullRemoval) {
+            fullRemoval = false;
+        }
         console.log('NEW Stripe API Keys to configure: ', stripe_config);
 
         promiseStripeReconfigure(stripe_secret, stripe_publishable).then(function (do_migration) {
-            console.log("yeah!", do_migration);
+            console.log("Migration: ", do_migration);
             //Purge all user data
             return new Promise(function (resolve_purge, reject_purge) {
                 console.log(`Run Stripe migration: ${do_migration}`);
                 if(do_migration) {
                     User.findAll(true, true, function (users) {
                         Promise.all(users.map(function (user) {
-                            return user.purgeData(function (promisePurge) {
+                            return user.purgeData(fullRemoval, function (promisePurge) {
                                 return promisePurge;
                             });
                         })).then(function () {
                             return resolve_purge(do_migration);
                         }).catch(function (err) {
-                            return reject_purge(`FATAL ERROR: Stripe migration failed during merge process - ${err}`);
+                            console.log(`Purge process on old Stripe account failed. Continue without full removal... - Error: ${err}`)
+                            return resolve_purge(do_migration);
                         });
                     });
                 } else {
@@ -165,12 +172,12 @@ module.exports = function(router, knex, stripe) {
                 "type": "payment",
                 public: false
             },
-                {
-                    "option" : "stripe_publishable_key",
-                    "value" : stripe_publishable,
-                    "type": "payment",
-                    public: false
-                }]
+            {
+                "option" : "stripe_publishable_key",
+                "value" : stripe_publishable,
+                "type": "payment",
+                public: false
+            }]
             if(!Stripe().stripe_secret_key){
                 await SystemOptions.batchCreate(keys);
 
@@ -178,7 +185,7 @@ module.exports = function(router, knex, stripe) {
                 await SystemOptions.batchUpdate(keys);
 
             }
-            console.log("updated database")
+            console.log("Stripe keys added to the database")
             let new_stripe_keys = {
                 stripe_secret_key: stripe_secret,
                 stripe_publishable_key: stripe_publishable
@@ -214,7 +221,8 @@ module.exports = function(router, knex, stripe) {
                     //Get upcoming invoices for every user
                     return resolve(do_migration);
                 } else {
-                    console.log('Bypassing upcoming invoice creation...');
+                    //TODO: importing the customer invoices.
+                    //console.log('Bypassing upcoming invoice creation...');
                     return resolve(do_migration);
                 }
             });
@@ -231,7 +239,7 @@ module.exports = function(router, knex, stripe) {
             endpoint : "/stripe/reconfigure",
             method : "post",
             middleware : [reconfigure],
-            // permissions : ["post_stripe_reconfigure"],
+            permissions : ["can_administrate"],
             description : "Reconfigure Stripe account"
 
         },
@@ -239,7 +247,7 @@ module.exports = function(router, knex, stripe) {
             endpoint : "/stripe/preconfigure",
             method : "post",
             middleware : [preconfigure],
-            // permissions : ["post_stripe_preconfigure"],
+            permissions : ["can_administrate"],
             description : "Preconfigure Stripe account"
 
         },

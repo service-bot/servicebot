@@ -15,21 +15,20 @@ class SlideNavLinks extends React.Component {
                 { name: 'Sign Up', url: '/signup', permission: ['visitor'], icon: 'fingerprint', hidden: false},
                 { name: 'My Services', url: '/my-services', permission: ['authorized'], icon: 'dashboard', hidden: false},
                 { group: 'Billings', permission: ['authorized'], icon: '', hidden: false, links: [
-                    { name: 'Upcoming Invoice', url: '', permission: ['authorized'], icon: 'attach_money', hidden: false},
                     { name: 'Billing History', url: `/billing-history/${props.uid}`, permission: ['authorized'], icon: 'history', hidden: false},
                     { name: 'Billing Settings', url: `/billing-settings/${props.uid}`, permission: ['authorized'], icon: 'account_balance', hidden: false},
                 ]},
                 { name: 'Dashboard', url: '/dashboard', permission: ['can_administrate, can_manage'], icon: 'dashboard', hidden: false},
-                { group: 'Manage Store', permission: ['can_administrate, can_manage'], icon: '', hidden: false, links: [
-                    { name: 'Manage Catalog', url: '/manage-catalog/list', permission: ['can_administrate, can_manage'], icon: 'view_list', hidden: false},
+                { group: 'Manage', permission: ['can_administrate, can_manage'], icon: '', hidden: false, links: [
+                    { name: 'Manage Offerings', url: '/manage-catalog/list', permission: ['can_administrate, can_manage'], icon: 'view_list', hidden: false},
                     { name: 'Manage Categories', url: '/manage-categories', permission: ['can_administrate, can_manage'], icon: 'playlist_add', hidden: false},
+                    { name: 'Manage Users', url: '/manage-users', permission: ['can_administrate, can_manage'], icon: 'people', hidden: false},
                     { name: 'Manage Subscriptions', url: '/manage-subscriptions', permission: ['can_administrate, can_manage'], icon: 'card_membership', hidden: false},
                 ]},
                 { group: 'Manage System', permission: ['can_administrate, can_manage'], icon: '', hidden: false, links: [
-                    { name: 'Manage Users', url: '/manage-users', permission: ['can_administrate, can_manage'], icon: 'people', hidden: false},
-                    { name: 'Notification Templates', url: '/notification-templates', permission: ['can_administrate, can_manage'], icon: 'settings', hidden: false},
-                    { name: 'Manage Permission', url: '/manage-permission', permission: ['can_administrate, can_manage'], icon: 'fingerprint', hidden: false},
                     { name: 'Stripe Settings', url: '/stripe-settings', permission: ['can_administrate, can_manage'], icon: 'settings', hidden: false},
+                    { name: 'Email Settings', url: '/notification-templates', permission: ['can_administrate, can_manage'], icon: 'settings', hidden: false},
+                    { name: 'Manage Permission', url: '/manage-permission', permission: ['can_administrate, can_manage'], icon: 'fingerprint', hidden: false},
                     { name: 'System Settings', url: '/system-settings', permission: ['can_administrate, can_manage'], icon: 'settings', hidden: false},
                 ]},
             ]
@@ -111,9 +110,11 @@ class SideNav extends React.Component {
 
     render () {
         let style = {};
+        let bgColor = '';
         if(this.props.options){
             if(this.props.options.primary_theme_background_color){
                 style = { ...style, backgroundColor: this.props.options.primary_theme_background_color.value}
+                bgColor = this.props.options.primary_theme_background_color;
             }
         }
 
@@ -121,8 +122,13 @@ class SideNav extends React.Component {
         let uid = cookie.load("uid");
         let email = cookie.load("username");
 
+        let logout = ()=> {
+            this.props.toggleSidebar();
+            this.props.sidebarLogout();
+        };
+
         return (
-            <div className="left-sidebar-1" style={style}>
+            <div className="left-sidebar-1">
                 <div className="wrapper">
                     <div className="content">
                         {/*<div className="logo">*/}
@@ -139,23 +145,14 @@ class SideNav extends React.Component {
                         {/*</div>*/}
                         {/* User Information: Name, Role, Thumbnail*/}
                         <Authorizer>
-                            <div className="sidebar-heading">
+                            <div className="sidebar-heading" style={style}>
                                 <div className="sidebar-image">
                                     <img src={`/api/v1/users/${uid}/avatar`} className="img-circle img-fluid" alt="sidebar-image" />
                                 </div>
                                 <div className="sidebar-options">
                                     <div className="dropdown">
                                         <Link className="btn btn-primary btn-raised dropdown-toggle" data-toggle="dropdown">{email} </Link>
-                                        <div className="dropdown-menu dropdown-menu-center from-top">
-                                            <Link onClick={this.handleLinkClick} className="dropdown-item" to={`/account-settings/${uid}`}>
-                                                <i className="material-icons icon">account_circle</i>
-                                                <span className="title">Account</span>
-                                            </Link>
-                                            <Link onClick={this.handleLinkClick} className="dropdown-item" to={this.props.handleLogout}>
-                                                <i className="material-icons icon">power_settings_new</i>
-                                                <span className="title">Logout</span>
-                                            </Link>
-                                        </div>
+                                        <button className="btn btn-link btn-signout" onClick={logout}>Log Out</button>
                                     </div>
                                 </div>
                             </div>

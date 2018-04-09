@@ -72,23 +72,22 @@ class SystemSettingsForm extends React.Component {
         }else{
             return (
                 <div className="row">
-                    <div className="basic-info col-md-6 col-md-offset-3">
+                    <div className="basic-info col-md-12">
                         <div className="title">
-                            <h3>Import Stripe Content</h3>
+                            <h3>Import Stripe Data</h3>
                             <p>
-                                This action allows you to import all customers, funds, payment plans, and subscriptions
+                                You can import all customers, funds, payment plans, subscriptions, and invoices
                                 to ServiceBot with one click. Note that reversing this action can only be done manually.
                             </p>
-                            <br/>
                         </div>
                         {getAlerts()}
-                        <div className="row">
+                        <div className="stripe-keys-form row">
                             <div className="col-md-12">
                                 <div className="row">
                                     <div className="stripe-import-form">
                                         <div className="p-20">
                                             {/* Define Inputs */}
-                                            <Inputs type="boolean" label="Notify Users" name="notifyUsers" defaultValue={false}/>
+                                            <Inputs type="boolean" label="Notify customers by email?" name="notifyUsers" defaultValue={false}/>
                                         </div>
                                         <Buttons containerClass="inline" size="md" btnType="danger" text="Import Stripe Data" value="submit" onClick={this.handleSubmission} loading={this.state.ajaxLoad}/>
                                     </div>

@@ -14,6 +14,7 @@ import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-a
 import ModalRequestCancellation from "../elements/modals/modal-request-cancellation.jsx";
 import ModalManageCancellation from "../elements/modals/modal-manage-cancellation.jsx";
 import ModalDeleteInstance from "../elements/modals/modal-delete-instance.jsx";
+import getSymbolFromCurrency from 'currency-symbol-map';
 let _ = require("lodash");
 
 class ManageSubscriptions extends React.Component {
@@ -52,19 +53,18 @@ class ManageSubscriptions extends React.Component {
      */
     fetchData() {
         let self = this;
-        let {props, params, params: {status}, location: {query: {uid} } } = this.props;
+        let { params, params: {status}, location: {query: {uid} } } = this.props;
         let url = '/api/v1/service-instances';
-
         if(this.props.params.status) {
-            if (status == 'running') {
+            if (status === 'running') {
                 url = '/api/v1/service-instances/search?key=status&value=running';
-            } else if (status == 'requested') {
+            } else if (status === 'requested') {
                 url = '/api/v1/service-instances/search?key=status&value=requested';
-            } else if (status == 'waiting_cancellation') {
+            } else if (status === 'waiting_cancellation') {
                 url = '/api/v1/service-instances/search?key=status&value=waiting_cancellation';
             }
         }
-        if(_.has(props, 'location.query.uid')) {
+        if(uid) {
             url = `/api/v1/service-instances/search?key=user_id&value=${uid}`;
         }
 
@@ -129,29 +129,47 @@ class ManageSubscriptions extends React.Component {
         );
     }
     typeFormatter(cell, row){
-        let interval = cell.interval;
-        if(interval == 'day') { interval = 'Daily'; }
-        else if (interval == 'week') { interval = 'Weekly'; }
-        else if (interval == 'month') { interval = 'Monthly'; }
-        else if (interval == 'year') { interval = 'Yearly'; }
+        //null check for the payment plan
+        if(cell) {
+            let interval = cell.interval;
+            if(interval == 'day') { interval = 'Daily'; }
+            else if (interval == 'week') { interval = 'Weekly'; }
+            else if (interval == 'month') { interval = 'Monthly'; }
+            else if (interval == 'year') { interval = 'Yearly'; }
 
-        let type = row.type.toLowerCase();
-        switch(type){
-            case 'subscription':
-                return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
-            case 'custom':
-                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
-            case 'one_time':
-                return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
-            default:
-                return ( <span className="status-badge grey">{getBillingType(row)}</span> );
+            let type = row.type.toLowerCase();
+            switch(type){
+                case 'subscription':
+                    //return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
+                    return ( <div><span className="status-badge black" >{interval}</span></div> );
+                case 'custom':
+                    return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+                case 'one_time':
+                    return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+                case 'split':
+                    return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+                default:
+                    return ( <span className="status-badge grey">{getBillingType(row)}</span> );
+            }
+        } else {
+            return ( <span className="status-badge grey">Missing</span> );
         }
+
     }
     typeDataValue(cell, row){
-        return (row.type);
+        if(cell) {
+            return (row.type);
+        } else {
+            return 'N/A';
+        }
     }
-    amountFormatter(cell){
-        return (<Price value={cell.amount}/>);
+    amountFormatter(cell, row){
+        if(cell) {
+            let prefix = getSymbolFromCurrency(cell.currency);
+            return (<Price value={cell.amount} prefix={prefix}/>);
+        } else {
+            return ( <span className="status-badge red">No Plan</span> );
+        }
     }
     emailDataValue(cell){
         return cell.users[0].email;
@@ -215,7 +233,7 @@ class ManageSubscriptions extends React.Component {
         const statusString = _.toLower(status);
         if(statusString === "waiting_cancellation"){
             return "Manage Cancellation";
-        }else if(statusString === "cancelled"){
+        }else if(statusString === "cancelled" || !dataObject.payment_plan){
             return "Delete Service";
         }else {
             return "Cancel Service";
@@ -226,6 +244,7 @@ class ManageSubscriptions extends React.Component {
         let self = this;
         let pageName = this.props.route.name;
         let pageTitle = 'Manage your services here';
+        let subtitle = 'View, edit, and manage your subscriptions';
 
         if(this.props.params.status) {
             if (this.props.params.status == 'running') {
@@ -246,8 +265,14 @@ class ManageSubscriptions extends React.Component {
         }
 
         let renderModals = ()=> {
+            //change the status to cancelled if no payment plan is detected
+            let status = self.state.currentDataObject.status;
+            if(!self.state.currentDataObject.payment_plan){
+                status = 'cancelled';
+            }
+            //Show the proper cancellation modal
             if(self.state.actionModal){
-                switch (self.state.currentDataObject.status){
+                switch (status){
                     case 'waiting_cancellation':
                         return(
                             <ModalManageCancellation myInstance={self.state.currentDataObject}
@@ -282,7 +307,7 @@ class ManageSubscriptions extends React.Component {
             };
             return (
                 <Authorizer permissions={["can_administrate", "can_manage"]}>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <Jumbotron pageName={pageName} subtitle={subtitle}/>
                     <div className="page-service-instance">
                         <Content>
                             <div className="row m-b-20">
@@ -298,8 +323,8 @@ class ManageSubscriptions extends React.Component {
                                                            dataField='name'
                                                            dataFormat={this.nameFormatter}
                                                            dataSort={ true }
-                                                           width='150'>
-                                            Subscription / Service Name
+                                                           width='130'>
+                                            Offering
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='references'
                                                            dataFormat={this.emailFormatter}
@@ -319,7 +344,7 @@ class ManageSubscriptions extends React.Component {
                                                            dataFormat={this.typeFormatter}
                                                            dataSort={ true }
                                                            filterValue={this.typeDataValue}
-                                                           width='120'>
+                                                           width='100'>
                                             Type
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='status'

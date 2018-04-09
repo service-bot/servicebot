@@ -5,6 +5,10 @@ import ReactTooltip from 'react-tooltip'
 import dollarsToCents from 'dollars-to-cents';
 import {toCents} from "../../../../lib/handleInputs"
 // import CurrencyInput from 'react-currency-masked-input'
+import {connect} from 'react-redux';
+import getSymbolFromCurrency from 'currency-symbol-map'
+
+
 
 
 let widgetField = props => {
@@ -255,15 +259,15 @@ class priceField extends React.Component {
     }
 
     render() {
-        let {isCents, input:{name, value, onChange}, label, type, meta: {touched, error, warning}} = this.props;
-
+        let {options, isCents, input:{name, value, onChange}, label, type, meta: {touched, error, warning}} = this.props;
+        let prefix = options.currency ? getSymbolFromCurrency(options.currency.value) : '';
         let price = isCents ?  (value/100).toFixed( 2 ) : value;
         return (
             <div className={`form-group form-group-flex`}>
                 {label && <label className="control-label form-label-flex-md">{label}</label>}
                 <div className="form-input-flex">
                     <CurrencyInput className="form-control" name={name}
-                        prefix="$" decimalSeparator="." thousandSeparator="," precision="2"
+                        prefix={prefix} decimalSeparator="." thousandSeparator="," precision="2"
                         onChangeEvent={this.handleChange} value={price}
                     />
                     {touched && ((error && <span className="form-error">{error}</span>) || (warning &&
@@ -273,6 +277,10 @@ class priceField extends React.Component {
         );
     };
 }
-
+priceField = connect(state => {
+    return {
+        options: state.options,
+    }
+})(priceField);
 
 export {inputField, widgetField, selectField, OnOffToggleField, iconToggleField, priceField};
