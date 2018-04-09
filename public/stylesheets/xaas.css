@@ -808,10 +808,10 @@ body.login .footer{
     margin: 0px;
 }
 .app-message{
-    background: rgb(181, 47, 47);
+    background: #000000;
     padding: 13px 45px;
     color: #ffffff;
-    border: 3px solid #6f0b0b;
+    border: 3px solid #ffffff;
     animation: displayMessage 1s;
     margin: 0 auto;
     width: 55%;
