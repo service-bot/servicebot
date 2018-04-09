@@ -15,13 +15,13 @@ module.exports = function(app, passport) {
 
     //TODO: buff up security so each user has their own secret key
     //TODO: security key..... no hardcoded strings plzzzz (along with the comment above)
-    app.post('/api/v1/auth/token', passport.authenticate('local-login', {session:false}), function(req, res) {
+    app.post('/auth/token', passport.authenticate('local-login', {session:false}), function(req, res) {
         console.log(req.user);
         let token = jwt.sign({  uid: req.user.data.id }, process.env.SECRET_KEY, { expiresIn: '3h' });
         res.json({token:token});
     });
 
-    app.get('/api/v1/auth/session/clear', function(req, res) {
+    app.get('/auth/session/clear', function(req, res) {
         res.clearCookie("permissions", {path: "/"});
         res.clearCookie("username", {path: "/"});
         res.clearCookie("uid", {path: "/"});
@@ -29,7 +29,7 @@ module.exports = function(app, passport) {
         res.json({"message" : "successful logout"});
     });
 
-    app.post("/api/v1/auth/reset-password", function(req, res, next){
+    app.post("/auth/reset-password", function(req, res, next){
         User.findOne("email", req.body.email, function(user){
             if(user.data){
                 ResetRequest.findAll("user_id", user.get("id"), function(requests){
@@ -61,7 +61,7 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.get("/api/v1/auth/reset-password/:uid/:token",  function(req, res, next){
+    app.get("/auth/reset-password/:uid/:token",  function(req, res, next){
         ResetRequest.findOne("user_id", req.params.uid, function(result){
             if(result.data && bcrypt.compareSync(req.params.token, result.get("hash"))){
                 res.status(200).json({isValid: true});
@@ -72,7 +72,7 @@ module.exports = function(app, passport) {
     });
 
     //todo -- token expiration
-    app.post("/api/v1/auth/reset-password/:uid/:token", function(req, res, next){
+    app.post("/auth/reset-password/:uid/:token", function(req, res, next){
         let userManager = store.getState(true).pluginbot.services.userManager[0]
 
         ResetRequest.findOne("user_id", req.params.uid , function(result){
@@ -94,7 +94,7 @@ module.exports = function(app, passport) {
 
     });
 
-    app.post('/api/v1/auth/session', function(req,res,next){
+    app.post('/auth/session', function(req,res,next){
         passport.authenticate('local-login', function(err, user, info) {
             if (err) { console.error(err); return res.json({"error" : "Invalid username or password"}); }
             if (!user) { console.error("no user"); return res.json({"error" : "Invalid username or password"}) }

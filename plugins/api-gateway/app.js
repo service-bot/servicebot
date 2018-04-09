@@ -108,11 +108,12 @@ module.exports = {
         app.use(injectProperties());
 
         //auth route doesn't go in express route so it doesn't need auth
-        require("../../api/auth")(app, passport);
 
         //initialize api route
         var api = express.Router();
         app.use("/api/v1", api);
+        require("../../api/auth")(api, passport);
+
         //force all requests to api route to look for token, if token is present in header the user will be logged in with taht token
         api.use(function (req, res, next) {
             passport.authenticate('jwt', function (err, user, info) {
