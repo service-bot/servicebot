@@ -45,7 +45,7 @@ class SetupDB extends React.Component{
                 </div>
                 <div className="row">
                     <label className="control-label">Database Port:</label>
-                    <input className="form-control" value={this.props.state.db_port} onChange={this.props.inputChange} name="db_port"/>
+                    <input className="form-control" value={this.props.state.db_port} onChange={this.props.inputChange} name="db_port" placeholder="5432"/>
                 </div>
             </div>
         )
@@ -256,7 +256,7 @@ class Setup extends React.Component {
                 <div className="installation row">
                     <div className="installation-form col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6 col-md-offset-2 col-lg-offset-3 col-xl-offset-3">
                     <Content>
-                        <Alert stack={{limit: 3}} position='bottom'/>
+                        <Alert stack={{limit: 3}} />
                         <form onSubmit={this.handleSubmit}>
                             {/*{JSON.stringify(this.state.form)}*/}
                             <Multistep  steps={steps}/>

@@ -101,12 +101,15 @@
     background: #000000;
     border-radius: 3px;
     padding: 5px 15px;
-    /*font-family: 'Roboto Slab', "Helvetica", sans-serif;*/
     font-size: 16px;
     font-weight: normal;
     color: white;
     margin-bottom: 5px;
     width: 100%;
+}
+
+.installation .main {
+    min-height: 200px;
 }
 
 /* desktops only */
