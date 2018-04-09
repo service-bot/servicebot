@@ -8,4 +8,3 @@ RUN npm install
 COPY . /usr/src/app
 RUN npm run-script build
 CMD [ "npm", "run-script", "start" ]
-
