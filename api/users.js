@@ -275,6 +275,8 @@ module.exports = function (router, passport) {
         user.deleteWithStripe(function (err, completed_msg) {
             if (!err) {
                 res.status(200).json({message: completed_msg});
+                store.dispatchEvent(`users_deleted`, user);
+
             } else {
                 res.status(400).json({error: err});
             }
