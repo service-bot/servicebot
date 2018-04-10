@@ -1,15 +1,15 @@
 
 <p align="center">
 <a href="https://servicebot.io">
-<img width="250" heigth="250" src="https://servicebot.io/images/servicebot-logo-light.png">
+<img width="250" heigth="250" src="https://servicebot.io/images/logo/servicebot-logo-full-blue.png">
 </a>
 </p>
 
 ___
 <p align="center">
 <b>Open-source Subscription Management System</b>
-<p align="center">Manage subscriptions and automate aspects of your business.</p>
-<p align="center"><a href="https://servicebot.io"><img width="750" src="https://servicebot.io/images/adminportal.png"></a></p>
+<p align="center">Automate what happens when customers subscribe, cancel, and upgrade</p>
+<p align="center"><a href="https://servicebot.io"><img width="750" src="https://servicebot.io/newadmin.gif"></a></p>
 </p>
 
 ## Overview
