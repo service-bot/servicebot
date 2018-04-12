@@ -4,7 +4,7 @@ var nodemailer = require('nodemailer');
 
 //todo: handle certs n stufff
 let smtpConfig = {
-    name: process.env.SMTP_NAME,
+    name: process.env.VIRTUAL_HOST,
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
     secure: false,
