@@ -21,7 +21,7 @@ class ModalEmbedTemplate extends React.Component {
 <script  type="text/javascript">
 Servicebot.init({
     templateId : ${this.props.templateObject.id},
-    url : "${window.location}",
+    url : "${window.location.origin}",
     selector : document.getElementById('servicebot-request-form'),
     handleResponse : (response) => {
         //Response function, you can put redirect logic or app integration logic here
