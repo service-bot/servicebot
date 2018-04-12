@@ -11,6 +11,8 @@ import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import ModalPublishingTemplate from "../elements/modals/modal-publishing-template.jsx";
 import ModalDeleteTemplate from "../elements/modals/modal-delete-template.jsx";
+import ModalEmbedTemplate from "../elements/modals/modal-embed-template.jsx";
+
 import getSymbolFromCurrency from 'currency-symbol-map'
 import {connect} from "react-redux";
 
@@ -22,6 +24,7 @@ class ManageCatalogList extends React.Component {
         this.state = {
             publishingModal: false,
             deleteModal: false,
+            embedModal : false,
             rows: {},
             currentDataObject: {},
             lastFetch: Date.now(),
@@ -34,6 +37,9 @@ class ManageCatalogList extends React.Component {
         this.onClosePublishingModal = this.onClosePublishingModal.bind(this);
         this.onOpenDeleteModal = this.onOpenDeleteModal.bind(this);
         this.onCloseDeleteModal = this.onCloseDeleteModal.bind(this);
+        this.onOpenEmbedModal = this.onOpenEmbedModal.bind(this);
+        this.onCloseEmbedModal = this.onCloseEmbedModal.bind(this);
+
         this.rowActionsFormatter = this.rowActionsFormatter.bind(this);
     }
 
@@ -66,6 +72,7 @@ class ManageCatalogList extends React.Component {
     onOpenPublishingModal(row){
         this.setState({publishingModal: true, currentDataObject: row});
     }
+
     onClosePublishingModal(){
         this.fetchData();
         this.setState({publishingModal: false, currentDataObject: {}, lastFetch: Date.now()});
@@ -77,6 +84,14 @@ class ManageCatalogList extends React.Component {
         this.fetchData();
         this.setState({deleteModal: false, currentDataObject: {}, lastFetch: Date.now()});
     }
+    onCloseEmbedModal(){
+        this.setState({embedModal: false, currentDataObject: {}, lastFetch: Date.now()});
+    }
+
+    onOpenEmbedModal(row){
+        this.setState({embedModal: true, currentDataObject: row});
+    }
+
 
     /**
      * Cell formatters
@@ -126,6 +141,11 @@ class ManageCatalogList extends React.Component {
                         action: () => {browserHistory.push(`/service-catalog/${row.id}/request`)},
                     },
                     {
+                        type: "button",
+                        label: 'Embed Request Form',
+                        action: () => {self.onOpenEmbedModal(row)},
+                    },
+                    {
                         type: "divider"
                     },
                     {
@@ -151,6 +171,14 @@ class ManageCatalogList extends React.Component {
     render () {
         let pageName = this.props.route.name;
         let renderModals = ()=> {
+            if (this.state.embedModal) {
+                return(
+                    <ModalEmbedTemplate templateObject={this.state.currentDataObject}
+                                             show={this.state.embedModel}
+                                             hide={this.onCloseEmbedModal}/>
+                );
+            }
+
             if (this.state.publishingModal) {
                 return(
                     <ModalPublishingTemplate templateObject={this.state.currentDataObject}
