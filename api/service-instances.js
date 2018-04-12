@@ -90,7 +90,6 @@ module.exports = function(router) {
         instance_object.changePaymentPlan(req.body).then(function (updated_subscription) {
             res.json(updated_subscription);
             store.dispatchEvent("service_instance_updated", updated_subscription);
-            next();
         }).catch(function (error) {
             res.json({error});
         });
