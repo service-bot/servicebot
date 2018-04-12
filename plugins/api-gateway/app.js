@@ -18,7 +18,9 @@ module.exports = {
     run: function* (config, provide, services) {
         let appConfig = config.appConfig;
         var app = express();
-        app.use(helmet());
+        app.use(helmet({
+            frameguard: false
+        }));
         var exphbs = require('express-handlebars');
         app.engine('handlebars', exphbs({defaultLayout: 'main', layoutsDir: HOME_PATH}));
         app.set('view engine', 'handlebars');
