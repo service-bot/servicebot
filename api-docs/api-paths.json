@@ -274,6 +274,35 @@
       }
     }
   },
+  "/users/{id}/token": {
+    "post": {
+      "summary": "Get a token for a user",
+      "tags": [
+        "users"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin"
+      ],
+      "operationId": "post_users_id_token",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+
+      ],
+      "responses": {
+        "200": {
+          "description": "API JSON Web token for specified user",
+          "type": "string"
+        }
+      }
+    }
+  },
   "/roles/manage-permissions": {
     "get": {
       "summary": "Gets all roles with permissions",

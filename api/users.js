@@ -8,6 +8,7 @@ let File = require("../models/file");
 let path = require("path");
 let mkdirp = require("mkdirp");
 let bcrypt = require("bcryptjs");
+let jwt = require('jsonwebtoken');
 let Role = require("../models/role");
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 let avatarFilePath = "uploads/avatars";
@@ -260,6 +261,7 @@ module.exports = function (router, passport) {
 
     router.post("/users/:id(\\d+)/unsuspend", validate(User), auth(null, User, "id"), function (req, res) {
         let user = res.locals.valid_object;
+
         user.unsuspend(function (err, updated_user) {
             if(!err) {
                 //dispatchEvent("user_unsuspended", user);
@@ -269,6 +271,13 @@ module.exports = function (router, passport) {
             }
         });
     });
+
+    router.post("/users/:id(\\d+)/token", validate(User), auth(null, User, "id"), function (req, res) {
+        let user = res.locals.valid_object;
+        let token = jwt.sign({  uid: user.data.id }, process.env.SECRET_KEY, { expiresIn: '3h' });
+        res.json({token:token})
+    });
+
 
     router.delete(`/users/:id(\\d+)`, validate(User), auth(null, User, "id"), function (req, res, next) {
         let user = res.locals.valid_object;

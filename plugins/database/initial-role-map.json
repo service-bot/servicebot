@@ -13,6 +13,7 @@
     "post_users_register",
     "post_users_id_suspend",
     "post_users_id_unsuspend",
+    "post_users_id_token",
     "post_users_invite",
     "get_funds",
     "post_funds",
