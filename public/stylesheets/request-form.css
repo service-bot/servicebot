@@ -89,3 +89,35 @@ img.request-icon {
     padding: 10px;
     border-radius: 5px !important;
 }
+
+/* iPhone Plus or smaller */
+@media (max-width: 414px) {
+    /* request form */
+    .request-wrap {
+        padding: 0;
+        margin: 0;
+    }
+    .request-wrap .request-summary.col-xs-12.col-sm-12.col-md-4.col-lg-4 {
+        float: none;
+    }
+    .request-wrap .request-user-form.col-xs-12.col-sm-12.col-md-8.col-lg-8 {
+        float: none;
+    }
+    .request-wrap .request-content.col-lg-offset-1.col-xl-offset-2.col-xs-12.col-sm-12.col-md-12.col-lg-10.col-xl-8 {
+        display: flex;
+        flex-direction: column;
+    }
+    .request-wrap .service-request-details {
+        padding: 0;
+    }
+    .request-wrap .form-group-flex {
+        flex-direction: column;
+    }
+    .request-wrap .form-label-flex-md {
+        flex-basis: auto;
+    }
+    .request-wrap .request-form-heading, .request-wrap .request-summary-heading{
+        font-weight: bold;
+        font-size: 1.25rem;
+    }
+}
