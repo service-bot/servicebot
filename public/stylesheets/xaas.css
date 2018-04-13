@@ -1220,15 +1220,16 @@ body.login .footer{
 }
 /* iPhone Plus or smaller */
 @media (max-width: 414px) {
-    .mobile-login-button {
-        display: block;
-    }
-
     .dashboard-widgets {
         flex-direction: column;
     }
     .page-service-instance {
         padding: 0px 15px;
+    }
+
+    /* nav */
+    .navbar-brand.nav-logo{
+        padding-right: 0;
     }
     .moble-live-mode {
         display: block;
@@ -1236,7 +1237,26 @@ body.login .footer{
         float: right;
         padding: 1px 10px;
         margin-top: 8px;
-        margin-right: 15px;
+        margin-right: 8px;
         margin-bottom: 8px;
+    }
+    .mobile-login-button {
+        display: block;
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    /* home page */
+    h1 {
+        font-size: 46px !important;
+    }
+
+    /* message */
+    .app-message{
+        padding: 3px 15px;
+        width: 95%;
+        border: 1px solid #ffffff;
+        display: flex;
+        align-items: center;
     }
 }
