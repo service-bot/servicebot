@@ -1260,3 +1260,21 @@ body.login .footer{
         align-items: center;
     }
 }
+
+/* iPhone 5 */
+@media (max-width: 320px) {
+    .nav-logo img {
+        height: 24px;
+        margin: 2px 0;
+    }
+    .mobile-login-button{
+        font-size: 0.9rem;
+    }
+    body.home .featured{
+        height: calc(100vh - 130px);
+        min-height: 0 !important;
+    }
+    h1 {
+        font-size: 36px !important;
+    }
+}
