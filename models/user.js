@@ -153,7 +153,7 @@ User.prototype.createWithStripe = new Proxy(createWithStripe, {
     }
 });
 
-let updateWithStripe = async function (callback) {
+User.prototype.updateWithStripe = async function () {
     let self = this;
     let store = require("../config/redux/store");
     self.data.email = self.data.email.toLowerCase();
@@ -378,6 +378,5 @@ User.findOnRelative = function (key, value, callback) {
 };
 
 
-User.prototype.updateWithStripe = promisifyProxy(updateWithStripe, false);
 
 module.exports = User;
