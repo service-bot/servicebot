@@ -124,6 +124,7 @@ ServiceInstance.prototype.subscribe = async function (paymentPlan=null) {
 
 let requestCancellation = function (callback) {
     let self = this;
+    let approve_cancellation = store.getState().options.auto_approve_cancellations
     //Making sure there is only one cancellation request
     let allowed_cancellation_status = ['running', 'requested', 'waiting', 'in_progress'];
     if (allowed_cancellation_status.includes(self.data.status)) {
@@ -131,13 +132,21 @@ let requestCancellation = function (callback) {
             "service_instance_id": self.data.id,
             "user_id": self.data.user_id
         };
+        if(approve_cancellation){
+            cancellationData.status = "approved"
+        }
         let newServiceCancellation = new ServiceInstanceCancellations(cancellationData);
-        newServiceCancellation.create(function (err, result) {
+        newServiceCancellation.create(async function (err, result) {
             //Update the service instance status
-            self.data.status = "waiting_cancellation";
-            self.update(function (err, updated_instance) {
+            if(approve_cancellation){
+                let unsub = await self.unsubscribe()
                 callback(result);
-            });
+            }else {
+                self.data.status = "waiting_cancellation";
+                self.update(function (err, updated_instance) {
+                    callback(result);
+                });
+            }
         });
     } else {
         callback('Cancellation is not allowed!');

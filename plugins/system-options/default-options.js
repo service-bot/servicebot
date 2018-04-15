@@ -310,6 +310,7 @@ let systemOptions =
             },
             {"option": "site_title", "value": "Servicebot - Subscription Management and Billing Automation System", public: true, "type": "theme", "data_type": "text"},
             {"option": "site_description", "value": "Services served and managed in a single app", public: true, "type": "theme", "data_type": "text"},
+            {"option": "auto_approve_cancellations", "value": true, public: true, "type": "system", "data_type": "bool"}
 
         ],
         populateOptions: function (options = systemOptions.options, model = require("../models/system-options")) {
