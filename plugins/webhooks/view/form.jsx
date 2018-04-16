@@ -13,9 +13,9 @@ import '../stylesheets/webhooks.css';
 import cookie from "react-cookie";
 
 
-function ManagementEmbed(props){
+function ManagementEmbed(props) {
     let server;
-    switch(props.value){
+    switch (props.value) {
         case "node":
             server = `function generateJWT(email, key) {
     var crypto = require('crypto');
@@ -44,7 +44,7 @@ var SECRET_KEY = "${props.secretKey}"; //keep this key safe!
 var userToken = generateJWT(user.email, SECRET_KEY);`;
             break;
         case "php":
-            server=`function generateJWT($email, $secret) {
+            server = `function generateJWT($email, $secret) {
     function cleanBase64($string) {
         return str_replace("/", "_", str_replace("+", "-", str_replace("=", "", $string)));
     };
@@ -66,8 +66,34 @@ $SECRET_KEY = "${props.secretKey}";
 $userToken = generateJWT($user->email, $SECRET_KEY);
 `;
             break;
+        case "ruby":
+            server = `require "openssl"
+require "base64"
+require "json"
+
+def generateJWT(email, secret)
+  def clearPadding(string)
+    string.gsub! "=", ""
+    return string
+  end
+
+  def encodeClear(obj)
+    return clearPadding(Base64.urlsafe_encode64(JSON.generate(obj)))
+  end
+
+  header = {:alg => "HS256", :typ => "JWT"}
+  payload = {:email => email}
+  data = encodeClear(header) + "." + encodeClear(payload)
+  return data + "." + clearPadding(Base64.urlsafe_encode64(OpenSSL::HMAC.digest('sha256', secret, data)))
+end
+
+SECRET_KEY = "${props.secretKey}" #Keep this key safe!
+userToken = generateJWT(user[:email], SECRET_KEY)
+`;
+            break;
         case "other":
-            server="Generate a JSON Web Token using this secret: " + props.secretKey;
+            server = "Generate a JSON Web Token using  HS256 as the algorithm and with this secret as the key: " + props.secretKey;
+            break;
         default:
             break;
     }
@@ -94,6 +120,7 @@ $userToken = generateJWT($user->email, $SECRET_KEY);
         <select onChange={props.onChange} value={props.value}>
             <option value="node">NodeJS</option>
             <option value="php">PHP</option>
+            <option value="ruby">Rails/Ruby</option>
         </select>
         <pre>{server}</pre>
         <span>
@@ -105,23 +132,26 @@ $userToken = generateJWT($user->email, $SECRET_KEY);
         <pre>{clientCode}</pre>
     </div>)
 }
+
 function WebhookForm(props) {
     return (
         <form>
-            <Field name="endpoint_url" type="text" validate={[required(), url()]} component={inputField} placeholder="Endpoint URL: https://"/>
+            <Field name="endpoint_url" type="text" validate={[required(), url()]} component={inputField}
+                   placeholder="Endpoint URL: https://"/>
             {/*<Field name="async_lifecycle" type="select" component={inputField} placeholder="Asynchronous"/>*/}
             <Field className="form-control" name="async_lifecycle" component="select">
                 <option value="True">Asynchronous</option>
                 <option value="False">Synchronous</option>
             </Field>
             <div className="text-right m-t-15">
-                <Buttons btnType="primary" text="Add endpoint" onClick={props.handleSubmit} type="submit" value="submit"/>
+                <Buttons btnType="primary" text="Add endpoint" onClick={props.handleSubmit} type="submit"
+                         value="submit"/>
             </div>
         </form>
     )
 }
 
-function WebhookModal(props){
+function WebhookModal(props) {
     let {show, hide, hook, handleSuccessResponse, handleFailureResponse} = props;
     let submissionRequest = {
         'method': hook.id ? "PUT" : 'POST',
@@ -130,7 +160,8 @@ function WebhookModal(props){
 
 
     return (
-        <Modal modalTitle={"Add endpoint"} icon="fa-plus" hideCloseBtn={false} show={show} hide={hide} hideFooter={false}>
+        <Modal modalTitle={"Add endpoint"} icon="fa-plus" hideCloseBtn={false} show={show} hide={hide}
+               hideFooter={false}>
             <div className="p-20">
                 <ServiceBotBaseForm
                     form={WebhookForm}
@@ -147,7 +178,7 @@ function WebhookModal(props){
 
 }
 
-function Webhook(props){
+function Webhook(props) {
     let hook = props.hook;
     return (<div>
         Endpoint: {hook.endpoint_url}
@@ -161,14 +192,14 @@ class Webhooks extends React.Component {
 
         super(props);
         this.state = {
-            openHook : false,
-            hook : null,
-            hooks : [],
-            loading : true,
+            openHook: false,
+            hook: null,
+            hooks: [],
+            loading: true,
             showEventsInfo: false,
             templates: [],
             secretKey: null,
-            selectedTemplate : 0,
+            selectedTemplate: 0,
             selectedServer: "node"
         }
         this.fetchData = this.fetchData.bind(this);
@@ -218,7 +249,7 @@ class Webhooks extends React.Component {
      * Open and close modals by setting the state for rendering the modals,
      */
 
-    deleteHook(hook){
+    deleteHook(hook) {
         let self = this;
         Fetcher('/api/v1/webhooks/' + hook.id, "DELETE").then(function (response) {
             if (!response.error) {
@@ -227,24 +258,28 @@ class Webhooks extends React.Component {
         });
 
     }
-    openHookForm(hook){
-        this.setState({ openHook: true, hook });
+
+    openHookForm(hook) {
+        this.setState({openHook: true, hook});
     }
 
-    closeHookForm(){
+    closeHookForm() {
         this.fetchData();
-        this.setState({ openHook: false, hook: {}, lastFetch: Date.now()});
+        this.setState({openHook: false, hook: {}, lastFetch: Date.now()});
     }
-    async testHooks(){
+
+    async testHooks() {
         this.setState({loading: true});
         let result = await Fetcher("/api/v1/webhooks/test", "POST");
         return await this.fetchData();
     }
-    changeServer(e){
+
+    changeServer(e) {
         const selectedServer = e.currentTarget.value;
         this.setState({selectedServer});
     }
-    changeTemplate(e){
+
+    changeTemplate(e) {
         const selectedTemplate = e.currentTarget.value;
         this.setState({selectedTemplate});
 
@@ -257,41 +292,46 @@ class Webhooks extends React.Component {
                 type: 'success',
                 icon: 'check',
                 message: 'Your card has been updated.'
-            }});
+            }
+        });
         //re-render
         this.fetchData();
     }
 
     handleFailureResponse(response) {
         if (response.error) {
-            this.setState({ alerts: {
+            this.setState({
+                alerts: {
                     type: 'danger',
                     icon: 'times',
                     message: response.error
-                }});
+                }
+            });
         }
     }
 
-    showEvents(){
-        this.setState({ showEventsInfo: true });
+    showEvents() {
+        this.setState({showEventsInfo: true});
     }
 
-    hideEvents(){
-        this.setState({ showEventsInfo: false });
-    }
-    showForm(){
-        this.setState({ showFormEmbed: true });
+    hideEvents() {
+        this.setState({showEventsInfo: false});
     }
 
-    hideForm(){
-        this.setState({ showFormEmbed: false });
-    }
-    showManagement(){
-        this.setState({ showManagementEmbed: true });
+    showForm() {
+        this.setState({showFormEmbed: true});
     }
 
-    hideManagement(){
-        this.setState({ showManagementEmbed: false });
+    hideForm() {
+        this.setState({showFormEmbed: false});
+    }
+
+    showManagement() {
+        this.setState({showManagementEmbed: true});
+    }
+
+    hideManagement() {
+        this.setState({showManagementEmbed: false});
     }
 
 
@@ -301,15 +341,15 @@ class Webhooks extends React.Component {
         let pageName = 'Integrations';
         let subtitle = 'Integrate apps with Servicebot';
 
-        let getAlerts = ()=>{
-            if(this.state.alerts){
-                return ( <Alerts type={this.state.alerts.type} message={this.state.alerts.message}
-                                 position={{position: 'fixed', bottom: true}} icon={this.state.alerts.icon} /> );
+        let getAlerts = () => {
+            if (this.state.alerts) {
+                return (<Alerts type={this.state.alerts.type} message={this.state.alerts.message}
+                                position={{position: 'fixed', bottom: true}} icon={this.state.alerts.icon}/>);
             }
         };
 
-        const endpointModals = ()=>{
-            if(openHook){
+        const endpointModals = () => {
+            if (openHook) {
                 return (<WebhookModal handleSuccessResponse={self.handleSuccessResponse}
                                       handleFailureResponse={self.handleFailureResponse}
                                       hook={hook}
@@ -320,9 +360,9 @@ class Webhooks extends React.Component {
             }
         }
         let formHTML;
-        if(this.state.selectedTemplate === null || this.state.selectedTemplate == 0){
+        if (this.state.selectedTemplate === null || this.state.selectedTemplate == 0) {
             formHTML = "Select a template from the list to embed"
-        }else{
+        } else {
             formHTML = `<div id="servicebot-request-form"></div>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://servicebot.io/js/servicebot-embed.js" type="text/javascript"></script>
@@ -351,19 +391,30 @@ Servicebot.init({
         </div>)
         return (
             <div>
-                <Jumbotron pageName={pageName} subtitle={subtitle} />
-                <div className="page-servicebot-webhooks col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2" id="payment-form">
+                <Jumbotron pageName={pageName} subtitle={subtitle}/>
+                <div
+                    className="page-servicebot-webhooks col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2"
+                    id="payment-form">
                     <h3>Embed</h3>
                     <span>Servicebot has embeddable forms which can facilitate actions such as subscribing, adding a credit card, cancelling, and resubscribing</span>
                     {this.state.showManagementEmbed ? <div>
-                        <ManagementEmbed
-                            value={this.state.selectedServer}
-                            onChange={this.changeServer}
-                            secretKey={this.state.secretKey} />
-                            <button onClick={this.hideManagement}>Hide</button></div> :
-                        <div><button onClick={this.showManagement}>Embed to allow customers to manage thier account and billing settings</button></div>}
-                    {this.state.showFormEmbed ? <div>{formEmbed}<button onClick={this.hideForm}>Hide</button></div> :
-                        <div onClick={this.showForm}><button>Embed to allow customers to request new subscriptions</button></div>}
+                            <ManagementEmbed
+                                value={this.state.selectedServer}
+                                onChange={this.changeServer}
+                                secretKey={this.state.secretKey}/>
+                            <button onClick={this.hideManagement}>Hide</button>
+                        </div> :
+                        <div>
+                            <button onClick={this.showManagement}>Embed to allow customers to manage thier account and
+                                billing settings
+                            </button>
+                        </div>}
+                    {this.state.showFormEmbed ? <div>{formEmbed}
+                            <button onClick={this.hideForm}>Hide</button>
+                        </div> :
+                        <div onClick={this.showForm}>
+                            <button>Embed to allow customers to request new subscriptions</button>
+                        </div>}
 
                     <h3>Webhooks</h3>
                     <span>Servicebot can send webhook events that notify your application any time an event happens.
@@ -372,8 +423,14 @@ Servicebot.init({
                         to API calls sent from your Servicebot instance to your SaaS product.</span>
 
                     <div className="hook-actions m-b-15">
-                        <button className="btn btn-default m-r-5" onClick={self.testHooks} type="submit" value="submit">{loading ? <i className="fa fa-refresh fa-spin"></i> : <i className="fa fa-refresh"></i>} Re-test endpoints</button>
-                        <button className="btn btn-primary m-r-5" onClick={()=>{self.openHookForm({})}} type="submit" value="submit"><i className="fa fa-plus"></i> Add endpoint</button>
+                        <button className="btn btn-default m-r-5" onClick={self.testHooks} type="submit"
+                                value="submit">{loading ? <i className="fa fa-refresh fa-spin"></i> :
+                            <i className="fa fa-refresh"></i>} Re-test endpoints
+                        </button>
+                        <button className="btn btn-primary m-r-5" onClick={() => {
+                            self.openHookForm({})
+                        }} type="submit" value="submit"><i className="fa fa-plus"></i> Add endpoint
+                        </button>
                     </div>
 
                     <div className="service-instance-box navy webhook-info">
@@ -381,9 +438,11 @@ Servicebot.init({
                             <div>Webhook events information</div>
                             <div className="pull-right">
                                 {!this.state.showEventsInfo ?
-                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.showEvents}>View events</button>
+                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher"
+                                            onClick={this.showEvents}>View events</button>
                                     :
-                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.hideEvents}>Hide events</button>
+                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher"
+                                            onClick={this.hideEvents}>Hide events</button>
                                 }
 
                             </div>
@@ -392,7 +451,8 @@ Servicebot.init({
                         <div className="service-instance-box-content">
                             <p>The webhook system can notify your SaaS application if any of the following events
                                 occour:</p>
-                            <a href="https://docs.servicebot.io/webhooks/" target="_BLANK">See documentation for payload information</a>
+                            <a href="https://docs.servicebot.io/webhooks/" target="_BLANK">See documentation for payload
+                                information</a>
                             <ul>
                                 <li><b>Pre-subscription:</b> This event happens right after the customer subscribes to
                                     your service, prior to the subscription request completion.
@@ -419,15 +479,16 @@ Servicebot.init({
                     <div className="form-row">
                         {hooks.map((hook, index) => {
                             //Set health check
-                            let health = <span><span className="status-badge red"><i className="fa fa-times"></i></span> {hook.health}</span>;
-                            if(!hook.health) {
+                            let health = <span><span className="status-badge red"><i
+                                className="fa fa-times"></i></span> {hook.health}</span>;
+                            if (!hook.health) {
                                 health = <span className="status-badge neutral">Test Endpoints</span>;
-                            } else if(hook.health === 'OK') {
+                            } else if (hook.health === 'OK') {
                                 health = <span className="status-badge green"><i className="fa fa-check"></i></span>;
                             }
                             //Set Type
                             let type = <span className="status-badge blue m-r-5">Asynchronous</span>;
-                            if(hook.async_lifecycle === false){
+                            if (hook.async_lifecycle === false) {
                                 type = <span className="status-badge purple m-r-5">Synchronous</span>;
                             }
                             return (
@@ -439,8 +500,14 @@ Servicebot.init({
                                             <span>{health}</span>
                                         </div>
                                         <div className="hook-actions col-md-4">
-                                            <button className="btn-xs m-r-5" onClick={()=>{self.openHookForm(hook)}} type="submit" value="submit"><i className="fa fa-pencil"></i> Edit</button>
-                                            <button className="btn-xs" onClick={()=>{self.deleteHook(hook)}} type="submit" value="submit"><i className="fa fa-times"></i> Delete</button>
+                                            <button className="btn-xs m-r-5" onClick={() => {
+                                                self.openHookForm(hook)
+                                            }} type="submit" value="submit"><i className="fa fa-pencil"></i> Edit
+                                            </button>
+                                            <button className="btn-xs" onClick={() => {
+                                                self.deleteHook(hook)
+                                            }} type="submit" value="submit"><i className="fa fa-times"></i> Delete
+                                            </button>
                                         </div>
 
                                     </div>
@@ -458,10 +525,11 @@ Servicebot.init({
 }
 
 
-
-let RouteDefinition =     {component : Webhooks, name : "Integrations", path : "/webhooks", isVisible : function(user){
-    //todo: this is dirty, need to do permission based...
+let RouteDefinition = {
+    component: Webhooks, name: "Integrations", path: "/webhooks", isVisible: function (user) {
+        //todo: this is dirty, need to do permission based...
         return user.role_id === 1
-    }};
+    }
+};
 
 export default RouteDefinition
