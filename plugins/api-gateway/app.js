@@ -25,6 +25,10 @@ module.exports = {
         app.engine('handlebars', exphbs({defaultLayout: 'main', layoutsDir: HOME_PATH}));
         app.set('view engine', 'handlebars');
         app.set('views', HOME_PATH);
+
+        if(appConfig.trustProxy){
+            app.enable("trust proxy");
+        }
         app.use(logger('dev'));
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({
