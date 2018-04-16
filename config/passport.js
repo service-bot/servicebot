@@ -116,7 +116,7 @@ module.exports = function (passport) {
                 if (!result.data) {
                     return done(null, false, {message: "bad user"}); // req.flash is the way to set flashdata using connect-flash
                 }
-                if (result.get('status') == 'invited'){
+                if (result.get('status') == 'invited') {
                     return done(null, false, {message: "invited user has no password"});
                 }
 
@@ -124,7 +124,7 @@ module.exports = function (passport) {
 
                 //todo : this needs to be moved in plugin
                 let userManager = store.getState(true).pluginbot.services.userManager[0]
-                if(userManager){
+                if (userManager) {
                     try {
 
                         let authResult = await userManager.authenticate(result, password);
@@ -134,7 +134,7 @@ module.exports = function (passport) {
 
                     }
 
-                }else{
+                } else {
                     console.error("no user manager available...");
                 }
 
@@ -154,22 +154,17 @@ module.exports = function (passport) {
     opts.secretOrKey = process.env.SECRET_KEY;
     opts.jwtFromRequest = ExtractJwt.fromAuthHeader();
 
-    passport.use(new JwtStrategy(opts, function (jwt_payload, done) {
-        User.findOne("id", jwt_payload.uid, function (user) {
-            console.log("im here");
-            console.log(user);
-            // if (err) {
-            //     return done(err, false);
-            // }
-            if (user.data) {
-                if (user.data.status == "suspended") {
-                    return done(null, false, {"message": "account suspended"});
-                }
-                done(null, user);
-            } else {
-                done(null, false);
+    passport.use(new JwtStrategy(opts, async function (jwt_payload, done) {
+        let query = jwt_payload.email ? {email: jwt_payload.email} : {id: jwt_payload.uid};
+        let user = (await User.find(query))[0];
+        if (user.data) {
+            if (user.data.status === "suspended") {
+                return done(null, false, {"message": "account suspended"});
             }
-        });
+            done(null, user);
+        } else {
+            done(null, false);
+        }
     }));
 
 };
