@@ -293,7 +293,13 @@
         }
       ],
       "parameters": [
-
+        {
+          "name": "id",
+          "in": "path",
+          "description": "user to get a token for",
+          "required": true,
+          "type": "number"
+        }
       ],
       "responses": {
         "200": {
