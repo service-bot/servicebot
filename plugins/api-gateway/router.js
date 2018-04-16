@@ -25,7 +25,7 @@ module.exports = function* (router, routeDefinition, authService) {
 
                     }, []);
                 }
-                if (authService.hasPermissions(roles, permissions)) {
+                if (await authService.hasPermissions(roles, permissions)) {
                     return next();
                 }
             }

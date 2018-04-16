@@ -10,8 +10,81 @@ import Modal from '../../../views/components/utilities/modal.jsx';
 import Jumbotron from '../../../views/components/layouts/jumbotron.jsx';
 import Collapsible from 'react-collapsible';
 import '../stylesheets/webhooks.css';
+import cookie from "react-cookie";
 
 
+function ManagementEmbed(props){
+    let server;
+    switch(props.value){
+        case "node":
+            server = `function generateJWT(email, key) {
+    var crypto = require('crypto');
+    var hmac = crypto.createHmac('sha256', key); 
+
+    var payload = {
+        "email": email
+    };
+    var header = {
+        "alg": "HS256",
+        "typ": "JWT"
+    };
+    function cleanBase64(string) {
+        return string.replace(/=/g, "").replace(/\\+/g, "-").replace(/\\//g, "_")
+    }
+
+    function base64encode(object) {
+        return cleanBase64(Buffer.from(JSON.stringify(object).toString("base64")));
+    }
+
+    var data = base64encode(header) + "." + base64encode(payload);
+    hmac.update(data);
+    return data + "." + cleanBase64(hmac.digest('base64'));
+}
+var SECRET_KEY = "${props.secretKey}"; //keep this key safe!
+var userToken = generateJWT(user.email, SECRET_KEY);`;
+            break;
+        case "php":
+            server="php lol"
+            break;
+        case "other":
+            server="Generate a JSON Web Token using this secret:";
+        default:
+            break;
+    }
+    let clientCode = `<div id="servicebot-management-form"></div>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://servicebot.io/js/servicebot-embed.js" type="text/javascript"></script>
+<script  type="text/javascript">
+    Servicebot.init({
+        url : "${window.location.origin}",
+        selector : document.getElementById('servicebot-management-form'),
+        type : "manage",
+        token: "INSERT_TOKEN_HERE",
+        handleResponse: (response) => {
+            //determine what to do on certain events...
+        }
+    })
+</script>`;
+    return (<div>
+        <h3>Server-side</h3>
+        <span>In order to embed the management so users can add cards, cancel, and resubscribe, you need to generate a token which
+        will authenticate your users and be used by the client-side javascript.</span>
+        <br/>
+        <span>Server-side language or framework</span>
+        <select onChange={props.onChange} value={props.value}>
+            <option value="node">NodeJS</option>
+            <option value="php">PHP</option>
+        </select>
+        <pre>{server}</pre>
+        <span>
+            <strong>DO NOT EXPOSE THE SECRET KEY TO THE PUBLIC</strong>,
+            make sure not to commit it into version control or send under insecure channels or expose to client</span>
+        <br/>
+        <h3>Client-side</h3>
+        <span>With the token generated on the server, use this HTML on the client...(with the proper token)</span>
+        <pre>{clientCode}</pre>
+    </div>)
+}
 function WebhookForm(props) {
     return (
         <form>
@@ -72,7 +145,11 @@ class Webhooks extends React.Component {
             hook : null,
             hooks : [],
             loading : true,
-            showEventsInfo: false
+            showEventsInfo: false,
+            templates: [],
+            secretKey: null,
+            selectedTemplate : 0,
+            selectedServer: "node"
         }
         this.fetchData = this.fetchData.bind(this);
         this.openHookForm = this.openHookForm.bind(this);
@@ -83,12 +160,22 @@ class Webhooks extends React.Component {
         this.testHooks = this.testHooks.bind(this);
         this.showEvents = this.showEvents.bind(this);
         this.hideEvents = this.hideEvents.bind(this);
+        this.showManagement = this.showManagement.bind(this);
+        this.hideManagement = this.hideManagement.bind(this);
+        this.showForm = this.showForm.bind(this);
+        this.hideForm = this.hideForm.bind(this);
+        this.changeServer = this.changeServer.bind(this);
+        this.changeTemplate = this.changeTemplate.bind(this);
+
     }
 
     async componentDidMount() {
         let self = this;
         let hooks = await Fetcher(`/api/v1/webhooks/`);
-        self.setState({hooks, loading: false});
+        let templates = await Fetcher(`/api/v1/service-templates/`);
+        let secretKey = (await Fetcher(`/api/v1/system-options/secret`)).secret;
+
+        self.setState({hooks, templates, secretKey, loading: false});
     }
 
 
@@ -110,9 +197,6 @@ class Webhooks extends React.Component {
      * Modal Controls
      * Open and close modals by setting the state for rendering the modals,
      */
-    openHookForm(hook){
-        this.setState({ openHook: true, hook });
-    }
 
     deleteHook(hook){
         let self = this;
@@ -123,6 +207,9 @@ class Webhooks extends React.Component {
         });
 
     }
+    openHookForm(hook){
+        this.setState({ openHook: true, hook });
+    }
 
     closeHookForm(){
         this.fetchData();
@@ -132,6 +219,15 @@ class Webhooks extends React.Component {
         this.setState({loading: true});
         let result = await Fetcher("/api/v1/webhooks/test", "POST");
         return await this.fetchData();
+    }
+    changeServer(e){
+        const selectedServer = e.currentTarget.value;
+        this.setState({selectedServer});
+    }
+    changeTemplate(e){
+        const selectedTemplate = e.currentTarget.value;
+        this.setState({selectedTemplate});
+
     }
 
     handleSuccessResponse(response) {
@@ -163,12 +259,27 @@ class Webhooks extends React.Component {
     hideEvents(){
         this.setState({ showEventsInfo: false });
     }
+    showForm(){
+        this.setState({ showFormEmbed: true });
+    }
+
+    hideForm(){
+        this.setState({ showFormEmbed: false });
+    }
+    showManagement(){
+        this.setState({ showManagementEmbed: true });
+    }
+
+    hideManagement(){
+        this.setState({ showManagementEmbed: false });
+    }
+
 
     render() {
         let self = this;
         let {openHook, hook, hooks, loading} = this.state;
         let pageName = 'Integrations';
-        let subtitle = 'Integrate your SaaS with Servicebot webhooks';
+        let subtitle = 'Integrate apps with Servicebot';
 
         let getAlerts = ()=>{
             if(this.state.alerts){
@@ -188,11 +299,52 @@ class Webhooks extends React.Component {
                 return null;
             }
         }
-
+        let formHTML;
+        if(this.state.selectedTemplate === null || this.state.selectedTemplate == 0){
+            formHTML = "Select a template from the list to embed"
+        }else{
+            formHTML = `<div id="servicebot-request-form"></div>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://servicebot.io/js/servicebot-embed.js" type="text/javascript"></script>
+<script  type="text/javascript">
+Servicebot.init({
+    templateId : ${this.state.selectedTemplate},
+    url : "${window.location.origin}",
+    selector : document.getElementById('servicebot-request-form'),
+    handleResponse : (response) => {
+        //Response function, you can put redirect logic or app integration logic here
+    },
+    type: "request",
+    spk: "${cookie.load("spk")}",
+    forceCard : false //set to true if you want credit card to be a required field for the customer
+})
+</script>`
+        }
+        let formEmbed = (<div>
+            <select onChange={this.changeTemplate}>
+                <option key={"default-0"} value="0">Select a template</option>
+                {this.state.templates.map(template => {
+                    return (<option key={template.id} value={template.id}>{template.name}</option>)
+                })}
+            </select>
+            <pre>{formHTML}</pre>
+        </div>)
         return (
             <div>
                 <Jumbotron pageName={pageName} subtitle={subtitle} />
                 <div className="page-servicebot-webhooks col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2" id="payment-form">
+                    <h3>Embed</h3>
+                    <span>Servicebot has embeddable forms which can facilitate actions such as subscribing, adding a credit card, cancelling, and resubscribing</span>
+                    {this.state.showManagementEmbed ? <div>
+                        <ManagementEmbed
+                            value={this.state.selectedServer}
+                            onChange={this.changeServer}
+                            secretKey={this.state.secretKey} />
+                            <button onClick={this.hideManagement}>Hide</button></div> :
+                        <div><button onClick={this.showManagement}>Embed to allow customers to manage thier account and billing settings</button></div>}
+                    {this.state.showFormEmbed ? <div>{formEmbed}<button onClick={this.hideForm}>Hide</button></div> :
+                        <div onClick={this.showForm}><button>Embed to allow customers to request new subscriptions</button></div>}
+
                     <h3>Webhooks</h3>
                     <span>Servicebot can send webhook events that notify your application any time an event happens.
                         This is especially useful for events—like new customer subscription or trial expiration—that
