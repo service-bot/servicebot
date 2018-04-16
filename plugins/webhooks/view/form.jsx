@@ -92,7 +92,10 @@ userToken = generateJWT(user[:email], SECRET_KEY)
 `;
             break;
         case "other":
-            server = "Generate a JSON Web Token using  HS256 as the algorithm and with this secret as the key: " + props.secretKey;
+            server = `Generate a JSON Web Token using the following specifications:
+    - Algorithm: HS256
+    - HMAC Secret: ${props.secretKey}
+    - Payload should contain a customer email address, for example: {"email" : "customer-email@example.com"}`;
             break;
         default:
             break;
@@ -121,6 +124,8 @@ userToken = generateJWT(user[:email], SECRET_KEY)
             <option value="node">NodeJS</option>
             <option value="php">PHP</option>
             <option value="ruby">Rails/Ruby</option>
+            <option value="other">Other</option>
+
         </select>
         <pre>{server}</pre>
         <span>
