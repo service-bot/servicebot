@@ -44,10 +44,30 @@ var SECRET_KEY = "${props.secretKey}"; //keep this key safe!
 var userToken = generateJWT(user.email, SECRET_KEY);`;
             break;
         case "php":
-            server="php lol"
+            server=`function generateJWT($email, $secret) {
+    function cleanBase64($string) {
+        return str_replace("/", "_", str_replace("+", "-", str_replace("=", "", $string)));
+    };
+    function base64encode($object) {
+        return cleanBase64(base64_encode(json_encode($object)));
+    };
+    $header = new stdClass();
+    $header->alg = "HS256";
+    $header->typ = "JWT";
+    $payload = new stdClass();
+    $payload->email = $email;
+    $data = base64encode($header) . "." . base64encode($payload);
+    return $data . "." . cleanBase64(base64_encode(pack('H*', hash_hmac('sha256', // hash function
+    $data,
+    $secret
+    ))));
+}
+$SECRET_KEY = "${props.secretKey}";
+$userToken = generateJWT($user->email, $SECRET_KEY);
+`;
             break;
         case "other":
-            server="Generate a JSON Web Token using this secret:";
+            server="Generate a JSON Web Token using this secret: " + props.secretKey;
         default:
             break;
     }
