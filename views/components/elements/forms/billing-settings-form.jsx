@@ -37,8 +37,13 @@ class CardSection extends React.Component {
 
 class BillingForm extends React.Component {
     render() {
+        if(!this.props.spk) {
+            return (
+                <div>Loading</div>
+            )
+        }
         return (
-            <StripeProvider apiKey={this.props.spk || "no_public_token"}>
+            <StripeProvider apiKey={this.props.spk}>
                 <Elements id="payment-form">
                     <CreditCardForm {...this.props}/>
                 </Elements>
