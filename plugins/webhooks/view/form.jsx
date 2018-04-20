@@ -387,8 +387,7 @@ Servicebot.init({
 </script>`
         }
         let formEmbed = (<div>
-            Paste the following snippit on the page you want to embed a request form. You can find more detailed documentation
-            <a href="https://docs.servicebot.io/embed">here</a>
+            <span>Paste the generated HTML on the page you want to embed a request form. You can find more detailed documentation <a href="https://docs.servicebot.io/embed">here</a></span>
             <select onChange={this.changeTemplate}>
                 <option key={"default-0"} value="0">Select a template</option>
                 {this.state.templates.map(template => {
