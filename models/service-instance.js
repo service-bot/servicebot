@@ -311,10 +311,10 @@ ServiceInstance.prototype.unsubscribe = async function () {
         this.data.subscription_id = null;
         this.data.status = "cancelled";
         let results = await this.update()
+        results = await results.attachReferences();
         if (lifecycleManager) {
             lifecycleManager.postDecommission({
                 instance: results,
-
             }).catch(e => {
                 console.error(e);
             });

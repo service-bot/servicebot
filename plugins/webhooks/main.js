@@ -3,7 +3,7 @@ let consume = require("pluginbot/effects/consume");
 let bcrypt = require('bcryptjs');
 let fetch = require("node-fetch");
 let Promise = require("bluebird");
-
+const crypto = require('crypto');
 function* run(config, provide, channels) {
     let db = yield consume(channels.database);
     yield call(db.createTableIfNotExist, "webhooks", function (table) {
@@ -29,7 +29,9 @@ function* run(config, provide, channels) {
                 acc[key] = eventValue.data ? eventValue.data : eventValue;
                 return acc;
             }, {});
-            let webhookRequest = fetch(webhook.endpoint_url, {method: "POST", body: JSON.stringify({event_name : eventName, event_data : parsedEvent}), headers})
+            let eventPayload = JSON.stringify({event_name : eventName, event_data : parsedEvent});
+            let hmac = generateHmac(eventPayload, process.env.SECRET_KEY);
+            let webhookRequest = fetch(webhook.endpoint_url, {method: "POST", body: eventPayload, headers: {...headers, "X-Servicebot-Signature" : hmac}})
                 .then(response => {
                     if (!response.ok) {
                         console.error("error making webhook request", response.statusText);
@@ -101,6 +103,12 @@ function* run(config, provide, channels) {
         let responses = await sendToWebhooks("test")({"event_name": "test", "event_data" : {"test" : "data"}}, true);
         res.json({responses : responses});
     }
+
+    let generateHmac = function(body, secret){
+        const hmac = crypto.createHmac('sha256', secret);
+        hmac.update(body);
+        return hmac.digest('hex');
+    };
 
 
     let routeDefinition = [

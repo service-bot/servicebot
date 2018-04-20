@@ -23,6 +23,7 @@ let imageFilePath = ServiceTemplate.imageFilePath;
 let slug = require("slug");
 let validateProperties = require("../lib/handleInputs").validateProperties;
 let fileManager = store.getState(true).pluginbot.services.fileManager[0];
+let jwt = require('jsonwebtoken');
 
 
 
@@ -329,13 +330,13 @@ module.exports = function (router) {
                 if(!req_body.password) {
                     let invite = new Invitation({"user_id": createdUser.get("id")});
                     let createInvite = Promise.promisify(invite.create, {context: invite});
-
                     //create the invitation for the user.
                     let createdInvite = await createInvite();
                     responseJSON.api = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + createdInvite.get("token");
                     responseJSON.url = req.protocol + '://' + req.get('host') + "/invitation/" + createdInvite.get("token");
 
                 }
+                responseJSON.token = jwt.sign({  uid: createdUser.get("id") }, process.env.SECRET_KEY, { expiresIn: '1h' });
                 let user_role = new Role({id : createdUser.get("role_id")}) ;
 
                 // todo : remove this once it supports promises
@@ -411,6 +412,7 @@ module.exports = function (router) {
                 ...res.locals.overrides,
 
             });
+            newInstance = await newInstance.attachReferences();
             let postData = {};
             if(lifecycleManager) {
                 postData = await lifecycleManager.postProvision({
@@ -422,7 +424,8 @@ module.exports = function (router) {
             res.json({
                 ...responseJSON,
                 ...newInstance.data,
-                ...postData
+                ...postData,
+                request: req_body
             });
 
             try {

@@ -60,6 +60,7 @@ module.exports = function(router) {
         let instance_object = res.locals.valid_object;
         if(instance_object.get("status") === "cancelled") {
             let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;
+            instance_object = await instance_object.attachReferences();
             if(lifecycleManager) {
                 lifecycleManager = lifecycleManager[0];
                 await lifecycleManager.preReactivate({

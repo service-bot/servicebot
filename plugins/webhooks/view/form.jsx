@@ -33,7 +33,7 @@ function ManagementEmbed(props) {
     }
 
     function base64encode(object) {
-        return cleanBase64(Buffer.from(JSON.stringify(object).toString("base64")));
+        return cleanBase64(Buffer.from(JSON.stringify(object)).toString("base64"));
     }
 
     var data = base64encode(header) + "." + base64encode(payload);
@@ -381,11 +381,14 @@ Servicebot.init({
     },
     type: "request",
     spk: "${cookie.load("spk")}",
-    forceCard : false //set to true if you want credit card to be a required field for the customer
+    forceCard : false, //set to true if you want credit card to be a required field for the customer
+    setPassword : false //set to true if you want customer to fill out a password
 })
 </script>`
         }
         let formEmbed = (<div>
+            Paste the following snippit on the page you want to embed a request form. You can find more detailed documentation
+            <a href="https://docs.servicebot.io/embed">here</a>
             <select onChange={this.changeTemplate}>
                 <option key={"default-0"} value="0">Select a template</option>
                 {this.state.templates.map(template => {
