@@ -9,6 +9,8 @@ let transaction = require("../../models/transaction");
 let invoice = require("../../models/invoice")
 let user = require("../../models/user");
 let fund = require("../../models/fund");
+let webhook = require("../../models/base/entity")("webhooks");
+
 let properties = require("../../models/system-options");
 module.exports = {
     getAnalyticsData: () => {
@@ -154,6 +156,9 @@ module.exports = {
                     callback(null, props.stripe_publishable_key != null && props.stripe_secret_key != null)
 
                 },
+                isLive: function(callback){
+                    callback(null, props.stripe_publishable_key && props.stripe_publishable_key.substring(3, 7).toUpperCase() === "LIVE");
+                },
                 hasChangedHeader:function(callback){
                     callback(null, props.home_featured_heading !== "Start selling your offerings in minutes!");
                 },
@@ -237,6 +242,11 @@ module.exports = {
                         let total = (totalRefundAmount == null ? 0 : totalRefundAmount);
                         callback(null, total);
                     });
+                },
+                totalWebhooks: function(callback){
+                    webhook.getRowCountByKey(null, null, (total) => {
+                        callback(null, total);
+                    })
                 },
                 totalSales: function (callback) {
                     transaction.getSumOfColumnFiltered('amount', 'paid', 'true', function (totalSales) {
