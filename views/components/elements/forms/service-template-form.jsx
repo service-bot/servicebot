@@ -33,7 +33,7 @@ import Load from "../../utilities/load.jsx";
 
 let _ = require("lodash");
 import {required, email, numericality, length} from 'redux-form-validators'
-
+import slug from "slug"
 const TEMPLATE_FORM_NAME = "serviceTemplateForm"
 const selector = formValueSelector(TEMPLATE_FORM_NAME); // <-- same as form name
 
@@ -122,8 +122,12 @@ class CustomField extends React.Component {
             willAutoFocus, index, typeValue, member, myValues, privateValue, requiredValue, promptValue, configValue,
             setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt, templateType
         } = props;
+        let machineName;
+
         if (myValues.prop_label) {
             willAutoFocus = false;
+            machineName = slug(myValues.prop_label, {lower : true});
+
         }
         return (
             <div className="custom-property-fields">
@@ -181,8 +185,11 @@ class CustomField extends React.Component {
                     />
                     }
                 </div>
-
                 <div id="custom-prop-widget" className="custom-property-field-group">
+                    {machineName && <div className="form-group form-group-flex addon-options-widget-config-input-wrapper">
+                        <label className="control-label form-label-flex-md addon-options-widget-config-input-label">Machine Name</label>
+                        <pre>{machineName}</pre>
+                    </div>}
                     {typeValue && <RenderWidget
                         showPrice={(templateType !== "custom" && templateType !== "split")}
                         member={member}

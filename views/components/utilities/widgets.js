@@ -49,8 +49,10 @@ let RenderWidget = (props) => {
                     </FormSection>
                 </div>}
             </FormSection>
-            {widget.widget &&
-            <Field name={`${member}.data.value`} configValue={configValue} component={widget.widget}/>}
+            {widget.widget &&<div>
+                <label className="control-label form-label-flex-md addon-widget-pricing-input-label">Default Value</label>
+                <Field name={`${member}.data.value`} configValue={configValue} component={widget.widget}/>
+            </div>}
         </div>
     );
 };
@@ -64,7 +66,6 @@ let PriceBreakdown = (props) => {
     }, {});
 
     let breakdown = inputs.reduce((acc, input) => {
-        console.log(input, "INPUT!");
         if (input.config && input.config.pricing && widgets[input.type].handler.priceHandler) {
             acc.push(<div>{input.prop_label} - {input.config.pricing.operation}
                 - {widgets[input.type].handler.priceHandler(input.data, input.config)}</div>);
