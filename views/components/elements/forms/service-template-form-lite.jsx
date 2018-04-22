@@ -352,7 +352,7 @@ class ServiceTemplateForm extends React.Component {
                     type: 'subscription',
                     category_id: 1,
                     trial_period_days: 0,
-                    statement_descriptor: this.props.company_name.value,
+                    statement_descriptor: this.props.company_name.value.substring(0, 22),
                     interval: 'month',
                     interval_count: 1,
                     published: !!this.props.fieldState.options.stripe_publishable_key,
