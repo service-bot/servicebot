@@ -261,10 +261,7 @@ ServiceInstance.prototype.changeProperties = async function (properties) {
             let basePrice = require("../lib/handleInputs").getBasePrice(oldProperties, handlers, paymentPlan.amount);
             let newPrice = require("../lib/handleInputs").getPrice(mergedProps, handlers, basePrice);
             paymentPlan.amount = newPrice;
-            if(updatedInstance.data.status !== "requested") {
-                paymentPlan.trial_period_days = 0;
-            }
-            updatedInstance = await this.changePaymentPlan(paymentPlan);
+            updatedInstance = await this.changePaymentPlan(paymentPlan, true);
         }
     }
     let updatedProps = await ServiceInstanceProperties.batchUpdate(mergedProps);
@@ -279,12 +276,16 @@ ServiceInstance.prototype.changeProperties = async function (properties) {
     return updatedInstance;
 };
 
-ServiceInstance.prototype.changePaymentPlan = async function (newPlan) {
+ServiceInstance.prototype.changePaymentPlan = async function (newPlan, ignorePlanTrial) {
     await this.deletePayPlan();
     let planStructure = await this.buildPayStructure(newPlan);
     let updatedInstance = await this.createPayPlan(planStructure);
     if(this.data.subscription_id !== null) {
-        let stripeSubscription = await Stripe().connection.subscriptions.update(this.data.subscription_id, {plan: updatedInstance.data.payment_plan.id});
+        let payload = {plan: updatedInstance.data.payment_plan.id}
+        if(ignorePlanTrial){
+            payload.trial_from_plan = false;
+        }
+        let stripeSubscription = await Stripe().connection.subscriptions.update(this.data.subscription_id, payload);
         let oldTrial = updatedInstance.data.trial_end;
         updatedInstance.data.trial_end = stripeSubscription.trial_end
         if(oldTrial !== stripeSubscription.trial_end){
