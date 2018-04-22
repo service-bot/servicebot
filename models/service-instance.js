@@ -47,6 +47,7 @@ let buildPayStructure = function (payment_object, callback) {
     if (plan.amount === null) {
         plan.amount = 0;
     }
+    plan.statement_descriptor = plan.statement_descriptor.substring(0, 22);
     console.log(plan);
 
     callback(plan);
@@ -61,6 +62,7 @@ ServiceInstance.prototype.createPayPlan = async function (plan = null) {
     if (plan.trial_period_days === null) {
         plan.trial_period_days = 0;
     }
+    plan.statement_descriptor = plan.statement_descriptor.substring(0, 22);
     try {
         //TODO: Maybe just always create the new plan. This may be troublesome in the future - try catch bad too...
         this.data.payment_plan = await Stripe().connection.plans.retrieve(plan.id);
