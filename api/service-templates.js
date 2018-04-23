@@ -195,6 +195,9 @@ module.exports = function (router) {
     //middleware to validate and adjust price.. todo: move price adjjustment somewhere else
     let validateServiceRequest = async function (req, res, next) {
         try {
+            if(!store.getState().options.stripe_publishable_key){
+                throw "Cannot request, no Stripe Key";
+            }
             let serviceTemplate = res.locals.valid_object;
             let props = (await serviceTemplate.getRelated(ServiceTemplateProperty)) || null;
             let req_body = req.body;
