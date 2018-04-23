@@ -60,7 +60,7 @@ class AppRouter extends React.Component {
         this.props.initialize()
     }
     render(){
-        const history = syncHistoryWithStore(browserHistory, this.props.store)
+        const history = this.props.history
         let user = this.props.user;
         return (
             <Router history={history}>
@@ -157,9 +157,10 @@ class AppWrapper extends React.Component {
     render() {
         let props = this.props;
         if (this.state.pluginbot) {
+            const history = syncHistoryWithStore(this.state.pluginbot.store.getState().history, this.state.pluginbot.store);
             return (
             <PluginbotProvider pluginbot={this.state.pluginbot}>
-                <AppRouter store={this.state.pluginbot.store}/>
+                <AppRouter history={history} store={this.state.pluginbot.store}/>
             </PluginbotProvider>
             );
         }else{
