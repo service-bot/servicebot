@@ -22,7 +22,7 @@ export const DISMISS_ALERT = "DISMISS_ALERT";
 export const ADD_ALERT = "ADD_ALERT";
 export const RESET_NAV_CLASS = "RESET_NAV_CLASS";
 export const SET_NAV_CLASS = "SET_NAV_CLASS";
-
+export const SETUP_COMPLETE = "SETUP_COMPLETE";
 /*
  * other constants
  */
@@ -90,7 +90,9 @@ export function setSystemNotification(notification, isSystem){
     return { type: SET_NOTIFICATION, notification, isSystem }
 }
 
-
+export function setupComplete(isComplete){
+    return { type: SETUP_COMPLETE, isComplete }
+}
 
 export function setUid(uid) {
     return { type: SET_UID, uid }
