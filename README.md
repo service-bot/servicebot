@@ -15,6 +15,8 @@ ___
 ## Overview
 Servicebot is an XaaS (Anything-as-a-service) platform. You can define requestable service templates with an advanced service designer that supports many input types, pricing models, and even develop plugins which can run code when these services are requested. The goal being Servicebot manages the lifecycle of any type of service a business can offer.
 
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=/servicebot/latest)
+
 ## Features
 - **Automate Billing:** Create and sell anything as a service in minutes.
     - **Service designer:** Design service offerings that link directly to Stripe.
