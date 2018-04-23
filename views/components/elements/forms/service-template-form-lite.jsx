@@ -355,7 +355,7 @@ class ServiceTemplateForm extends React.Component {
                     statement_descriptor: this.props.company_name.value.substring(0, 22),
                     interval: 'month',
                     interval_count: 1,
-                    published: !!this.props.fieldState.options.stripe_publishable_key,
+                    published: true,
                     amount: 0
                 };
                 initialRequests.push(

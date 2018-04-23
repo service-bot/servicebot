@@ -12,6 +12,7 @@ import StripeSettingsForm from "../elements/forms/stripe-settings-form.jsx";
 import {connect} from "react-redux";
 import OfferingsStatsWidgets from '../elements/dashboard/offerings-stats-widgets.jsx';
 import OverallStatsWidgets from '../elements/dashboard/overall-stats-widgets.jsx';
+import { setupComplete } from '../utilities/actions';
 
 class Dashboard extends React.Component {
 
@@ -43,24 +44,25 @@ class Dashboard extends React.Component {
             self.setState({loading: false});
         });
     }
-    //add a function to set state of the analytics after successful submissions
+
     updateOfferingStat() {
         let self = this;
         let {analytics} = this.state;
-        console.log("Dashboard pre state change", analytics);
         analytics.offeringStats.total = 1;
         self.setState({
             analytics: analytics
-        })
-        console.log("Dashboard State changed", this.state.analytics)
+        });
     }
+
     updateStripeStat() {
         let self = this;
         let {analytics} = this.state;
         analytics.hasStripeKeys = true;
         self.setState({
             analytics: analytics
-        })
+        });
+        //After Stripe keys have been entered, set-up is complete so dispatching action
+        this.props.setupComplete(true);
     }
 
     render() {
@@ -139,4 +141,8 @@ const mapStateToProps = (state, ownProps) => {
     return {options: state.options}
 };
 
-export default connect(mapStateToProps)(Dashboard);
+const mapDispatchToProps = {
+    setupComplete,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
