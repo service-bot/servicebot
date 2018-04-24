@@ -23,6 +23,8 @@ export const ADD_ALERT = "ADD_ALERT";
 export const RESET_NAV_CLASS = "RESET_NAV_CLASS";
 export const SET_NAV_CLASS = "SET_NAV_CLASS";
 export const SETUP_COMPLETE = "SETUP_COMPLETE";
+export const SHOW_MODAL = "SHOW_MODAL";
+export const HIDE_MODAL = "HIDE_MODAL";
 /*
  * other constants
  */
@@ -56,7 +58,6 @@ export function setOption(option){
     return { type: SET_OPTION, option }
 }
 
-
 export function setVersion(version){
     return { type: SET_VERSION, version }
 }
@@ -65,15 +66,14 @@ export function initializeState(initialState){
     return { type: INITIALIZE, initialState }
 }
 
-
 export function addNotification(notification, isSystem){
     return { type: ADD_NOTIFICATION, notification, isSystem }
 }
 
-
 export function setNotifications(notifications, isSystem){
     return { type: SET_NOTIFICATIONS, notifications, isSystem }
 }
+
 export function setNotification(notification, isSystem){
     return { type: SET_NOTIFICATION, notification, isSystem }
 }
@@ -81,7 +81,6 @@ export function setNotification(notification, isSystem){
 export function addSystemNotification(notification, isSystem){
     return { type: ADD_NOTIFICATION, notification, isSystem }
 }
-
 
 export function setSystemNotifications(notifications, isSystem){
     return { type: SET_SYSTEM_NOTIFICATIONS, notifications, isSystem }
@@ -123,4 +122,12 @@ export function resetNavClass(){
 
 export function setNavClass(className){
     return {type: SET_NAV_CLASS, navbar: {nav_class : className}}
+}
+
+export function showModal(component, hide, titleText, buttonText, titleColor, hideButton){
+    return {type: SHOW_MODAL, modalProps: {closeBtnText: buttonText, component, titleColor, hideCloseBtn: hideButton, hide }}
+}
+
+export function hideModal(){
+    return {type: HIDE_MODAL}
 }

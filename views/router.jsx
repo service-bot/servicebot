@@ -60,80 +60,79 @@ class AppRouter extends React.Component {
         this.props.initialize()
     }
     render(){
-        const history = this.props.history
         let user = this.props.user;
         return (
-            <Router history={history}>
-            <Route name="Home" path="/" component={App}>
-                <IndexRoute component={Home}/>
+            <Router history={browserHistory}>
+                <Route name="Home" path="/" component={App}>
+                    <IndexRoute component={Home}/>
 
-                <Route name="Home" path="home" component={Home}/>
-                <Route name="All Services" path="all-services" component={AllServices}/>
-                <Route name="User Login" path="login" component={Login}/>
-                <Route name="Forgot Password" path="forgot-password" component={ForgotPassword}/>
-                <Route name="Reset Password" path="reset-password/:uid/:token" component={ResetPassword}/>
-                <Route name="User Sign Up" path="signup" component={SignUp}/>
-                <Route name="Finish Your Registration" path="invitation/:token" component={InviteComplete}/>
-                <Route name="My Account" path="my-services" component={MyServices}/>
-                <Route name="My Account" path="my-services/service-instance/" component={MyServices}/>
-                <Route name="Service Instance" path="my-services/service-instance/:instanceId"
-                       component={ServiceInstance}/>
-                <Route name="Service Instance" path="service-instance/:instanceId"
-                       component={ServiceInstance}/>
-                <Route name="Service Catalog" path="service-catalog" component={ServiceCatalog}/>
-                <Route name="Service Request" path="service-catalog/:templateId/request"
-                       component={ServiceRequest}/>
-                <Route name="Account Settings" path="account-settings/:userId" component={UserForm}/>
-                <Route name="My Profile" path="profile" component={Profile}/>
-                {/* Billing */}
-                <Route name="Billing History" path="billing-history" component={BillingHistory}/>
-                <Route name="Billing History" path="billing-history/:uid" component={BillingHistory}/>
-                <Route name="Billing History" path="billing-history/invoice/:invoiceId"
-                       component={BillingInvoice}/>
-                <Route name="Invoice" path="invoice/:invoiceId" component={BillingInvoice}/>
-                <Route name="Billing Settings" path="billing-settings" component={BillingSettings}/>
-                <Route name="Billing Settings" path="billing-settings/:userId" component={BillingSettings}/>
-                {/* Admin */}
-                <Route name="Dashboard" path="dashboard" component={Dashboard}/>
-                <Route name="Notifications" path="notifications" component={Notifications}/>
-                <Route name="System Settings" path="system-settings" component={SystemSettings}/>
-                <Route name="Stripe Settings" path="stripe-settings" component={StripeSettings}/>
-                <Route name="Manage Users" path="manage-users" component={ManageUsers}/>
-                <Route name="Edit User" path="manage-users/:userId" components={UserEdit}/>
-                <Route name="Manage Subscriptions" path="manage-subscriptions"
-                       component={ManageSubscriptions}/>
-                <Route name="Manage Categories" path="manage-categories" component={ManageCategories}/>
-                <Route name="Manage Permission" path="manage-permission" component={ManagePermission}/>
-                <Route name="Manage Notification Templates" path="notification-templates"
-                       components={ManageNotificationTemplates}/>
-                <Route name="Notification Template" path="notification-templates/:id"
-                       component={NotificationTemplateForm}/>
-                <Route name="Manage Offerings" path="manage-catalog" component={ManageCatalog}>
-                    <IndexRoute component={ManageCatalogList}/>
-                    <Route name="Manage Offerings" path="list" component={ManageCatalogList}/>
-                    <Route name="Create Template" path="create" component={ManageCatalogCreate}/>
-                    <Route name="Edit Template" path=":templateId" component={ManageCatalogEdit}/>
-                    <Route name="Duplicate Template" path=":templateId/duplicate"
-                           component={ManageCatalogDuplicate}/>
-                    {/*<Route name="Edit Template" path=":templateId/edit" component={ManageCatalogEdit}/>*/}
-                </Route>
-                {/* Query routes */}
-                <Route name="Services" path="manage-subscriptions/:status" component={ManageSubscriptions}/>
-                {/* Other */}
-                <Route path="service-templates/lite" component={ServiceTemplateFormLite}/>
+                    <Route name="Home" path="home" component={Home}/>
+                    <Route name="All Services" path="all-services" component={AllServices}/>
+                    <Route name="User Login" path="login" component={Login}/>
+                    <Route name="Forgot Password" path="forgot-password" component={ForgotPassword}/>
+                    <Route name="Reset Password" path="reset-password/:uid/:token" component={ResetPassword}/>
+                    <Route name="User Sign Up" path="signup" component={SignUp}/>
+                    <Route name="Finish Your Registration" path="invitation/:token" component={InviteComplete}/>
+                    <Route name="My Account" path="my-services" component={MyServices}/>
+                    <Route name="My Account" path="my-services/service-instance/" component={MyServices}/>
+                    <Route name="Service Instance" path="my-services/service-instance/:instanceId"
+                           component={ServiceInstance}/>
+                    <Route name="Service Instance" path="service-instance/:instanceId"
+                           component={ServiceInstance}/>
+                    <Route name="Service Catalog" path="service-catalog" component={ServiceCatalog}/>
+                    <Route name="Service Request" path="service-catalog/:templateId/request"
+                           component={ServiceRequest}/>
+                    <Route name="Account Settings" path="account-settings/:userId" component={UserForm}/>
+                    <Route name="My Profile" path="profile" component={Profile}/>
+                    {/* Billing */}
+                    <Route name="Billing History" path="billing-history" component={BillingHistory}/>
+                    <Route name="Billing History" path="billing-history/:uid" component={BillingHistory}/>
+                    <Route name="Billing History" path="billing-history/invoice/:invoiceId"
+                           component={BillingInvoice}/>
+                    <Route name="Invoice" path="invoice/:invoiceId" component={BillingInvoice}/>
+                    <Route name="Billing Settings" path="billing-settings" component={BillingSettings}/>
+                    <Route name="Billing Settings" path="billing-settings/:userId" component={BillingSettings}/>
+                    {/* Admin */}
+                    <Route name="Dashboard" path="dashboard" component={Dashboard}/>
+                    <Route name="Notifications" path="notifications" component={Notifications}/>
+                    <Route name="System Settings" path="system-settings" component={SystemSettings}/>
+                    <Route name="Stripe Settings" path="stripe-settings" component={StripeSettings}/>
+                    <Route name="Manage Users" path="manage-users" component={ManageUsers}/>
+                    <Route name="Edit User" path="manage-users/:userId" components={UserEdit}/>
+                    <Route name="Manage Subscriptions" path="manage-subscriptions"
+                           component={ManageSubscriptions}/>
+                    <Route name="Manage Categories" path="manage-categories" component={ManageCategories}/>
+                    <Route name="Manage Permission" path="manage-permission" component={ManagePermission}/>
+                    <Route name="Manage Notification Templates" path="notification-templates"
+                           components={ManageNotificationTemplates}/>
+                    <Route name="Notification Template" path="notification-templates/:id"
+                           component={NotificationTemplateForm}/>
+                    <Route name="Manage Offerings" path="manage-catalog" component={ManageCatalog}>
+                        <IndexRoute component={ManageCatalogList}/>
+                        <Route name="Manage Offerings" path="list" component={ManageCatalogList}/>
+                        <Route name="Create Template" path="create" component={ManageCatalogCreate}/>
+                        <Route name="Edit Template" path=":templateId" component={ManageCatalogEdit}/>
+                        <Route name="Duplicate Template" path=":templateId/duplicate"
+                               component={ManageCatalogDuplicate}/>
+                        {/*<Route name="Edit Template" path=":templateId/edit" component={ManageCatalogEdit}/>*/}
+                    </Route>
+                    {/* Query routes */}
+                    <Route name="Services" path="manage-subscriptions/:status" component={ManageSubscriptions}/>
+                    {/* Other */}
+                    <Route path="service-templates/lite" component={ServiceTemplateFormLite}/>
 
-                <Route path="service-templates/:templateId" component={ServiceTemplateForm}/>
-                <Route name="Manage Subscriptions" path="/service-instance" component={ManageSubscriptions}/>
-                <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
-                {this.props.routeDefinition && this.props.routeDefinition.reduce((acc, route, index) => {
+                    <Route path="service-templates/:templateId" component={ServiceTemplateForm}/>
+                    <Route name="Manage Subscriptions" path="/service-instance" component={ManageSubscriptions}/>
+                    <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
+                    {this.props.routeDefinition && this.props.routeDefinition.reduce((acc, route, index) => {
                         acc.push(<Route key={index} name={route.name} path={route.path} component={route.component}/>)
-                    return acc
-                },[])}
-            </Route>
-            <Route name="Embed" path={"/service/:serviceId/embed"} component={Embed}/>
-            <Route name="Automated Installation" path="setup" component={Setup}/>
-            <Route path='*' component={GenericNotFound}/>
-        </Router>
+                        return acc
+                    },[])}
+                </Route>
+                <Route name="Embed" path={"/service/:serviceId/embed"} component={Embed}/>
+                <Route name="Automated Installation" path="setup" component={Setup}/>
+                <Route path='*' component={GenericNotFound}/>
+            </Router>
         )
     }
 }
@@ -155,13 +154,14 @@ class AppWrapper extends React.Component {
     }
 
     render() {
+
         let props = this.props;
         if (this.state.pluginbot) {
             const history = syncHistoryWithStore(this.state.pluginbot.store.getState().history, this.state.pluginbot.store);
             return (
-            <PluginbotProvider pluginbot={this.state.pluginbot}>
-                <AppRouter history={history} store={this.state.pluginbot.store}/>
-            </PluginbotProvider>
+                <PluginbotProvider pluginbot={this.state.pluginbot}>
+                    <AppRouter history={history} store={this.state.pluginbot.store}/>
+                </PluginbotProvider>
             );
         }else{
             return <div>Initializing...</div>

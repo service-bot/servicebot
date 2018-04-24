@@ -1,3 +1,4 @@
+import React from "react"
 import {createStore, applyMiddleware, combineReducers} from 'redux'
 import {
     SET_FORM_DATA,
@@ -18,6 +19,8 @@ import {
     SET_PERMISSIONS,
     RESET_NAV_CLASS,
     SET_NAV_CLASS,
+    SHOW_MODAL,
+    HIDE_MODAL,
     initializeState
 } from "./components/utilities/actions"
 import cookie from 'react-cookie';
@@ -28,7 +31,7 @@ import {reducer as formReducer} from 'redux-form'
 import PluginbotClient from "pluginbot-react";
 import {syncHistoryWithStore, routerReducer} from 'react-router-redux'
 import {browserHistory} from 'react-router';
-
+import Modal from "./components/utilities/modal.jsx"
 let DELETETHISCODELATERUID = cookie.load("uid");
 
 function oldFormReducer(state = {}, action) {
@@ -178,11 +181,20 @@ function userReducer(state = {}, action) {
     }
 }
 
-function historyReducer(state = null, action) {
+function modalReducer(state =(<div></div>), action) {
     switch (action.type) {
-        case INITIALIZE :
-            return browserHistory;
+        case SHOW_MODAL :
+            return (<Modal {...action.modalProps}/>);
+        case HIDE_MODAL :
+            return (<div></div>);
+        default:
+            return state;
+    }
+}
 
+
+function historyReducer(state = browserHistory, action) {
+    switch (action.type) {
         default:
             return state;
     }
@@ -199,6 +211,7 @@ const rootReducer = {
     permissions : permissionReducer,
     user: userReducer,
     history: historyReducer,
+    modal: modalReducer,
     form: formReducer,
     routing: routerReducer
 };
@@ -211,6 +224,7 @@ const rootReducer = {
 
 let initializedState = function (initialOptions = null) {
     return async function (dispatch) {
+        console.log(cookie.load("uid"));
         let initialState = {
             allForms: {},
             options: {},
@@ -254,10 +268,10 @@ let initialize = async function () {
 
     let app = await PluginbotClient.createPluginbot();
     let middleware = [rootReducer, thunk];
-    if(process.env.NODE_ENV === "development"){
-        const { logger } = require(`redux-logger`);
-        middleware.push(logger);
-    }
+    // if(process.env.NODE_ENV === "development"){
+    const { logger } = require(`redux-logger`);
+    middleware.push(logger);
+    // }
     await app.initialize(...middleware);
     return app;
 
