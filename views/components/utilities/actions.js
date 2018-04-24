@@ -124,8 +124,8 @@ export function setNavClass(className){
     return {type: SET_NAV_CLASS, navbar: {nav_class : className}}
 }
 
-export function showModal(component, hide, titleText, buttonText, titleColor, hideButton){
-    return {type: SHOW_MODAL, modalProps: {closeBtnText: buttonText, component, titleColor, hideCloseBtn: hideButton, hide }}
+export function showModal(component, hide, titleText, buttonText, icon, titleColor, hideButton){
+    return {type: SHOW_MODAL, modalProps: {closeBtnText: buttonText, component, titleColor, modalTitle: titleText, hideCloseBtn: hideButton, hide, icon}}
 }
 
 export function hideModal(){
