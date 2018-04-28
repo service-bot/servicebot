@@ -50,7 +50,11 @@ let renderCustomProperty = (props) => {
         <div>
             {fields.map((customProperty, index) => {
                     let property = widgets[formJSON[index].type];
-                    if(formJSON[index].prompt_user){
+                    let validate = [];
+                    if (formJSON[index].required) {
+                        validate.push(required());
+                    }
+                    if (formJSON[index].prompt_user) {
 
                         return (
                             <Field
@@ -63,20 +67,21 @@ let renderCustomProperty = (props) => {
                                 // value={formJSON[index].data.value}
                                 formJSON={formJSON[index]}
                                 configValue={formJSON[index].config}
-                                validate={required()}
+                                validate={validate}
                             />)
-                    }else{
-                            if(formJSON[index].data && formJSON[index].data.value){
-                                return (
-                                    <div className={`form-group form-group-flex`}>
-                                        {(formJSON[index].prop_label && formJSON[index].type !== 'hidden') && <label className="control-label form-label-flex-md">{formJSON[index].prop_label}</label>}
-                                        <div className="form-input-flex">
-                                            <p>{formJSON[index].data.value}</p>
-                                        </div>
-                                    </div>)
-                            }else{
-                                return (<span/>)
-                            }
+                    } else {
+                        if (formJSON[index].data && formJSON[index].data.value) {
+                            return (
+                                <div className={`form-group form-group-flex`}>
+                                    {(formJSON[index].prop_label && formJSON[index].type !== 'hidden') && <label
+                                        className="control-label form-label-flex-md">{formJSON[index].prop_label}</label>}
+                                    <div className="form-input-flex">
+                                        <p>{formJSON[index].data.value}</p>
+                                    </div>
+                                </div>)
+                        } else {
+                            return (<span/>)
+                        }
 
 
                     }
@@ -117,7 +122,7 @@ class ServiceRequestForm extends React.Component {
             let serType = formJSON.type;
             let trial = formJSON.trial_period_days !== 0;
             let prefix = getSymbolFromCurrency(formJSON.currency);
-            if(trial){
+            if (trial) {
                 return ("Get your Free Trial")
             }
             else {
@@ -165,7 +170,7 @@ class ServiceRequestForm extends React.Component {
                                component={priceField}
                                isCents={true}
                                label="Override Amount"
-                               validate={numericality({ '>=': 0.00 })}
+                               validate={numericality({'>=': 0.00})}
                         />
                         }
                     </Authorizer>
@@ -419,7 +424,7 @@ class ServiceInstanceForm extends React.Component {
             <div>
                 {(!this.state.hasCard &&
                     !isAuthorized({permissions: "can_administrate"})) &&
-                    ((this.state.servicePrice > 0 && initialValues.trial_period_days <= 0) ||
+                ((this.state.servicePrice > 0 && initialValues.trial_period_days <= 0) ||
                     (this.state.templateData.type === 'split')) &&
                 <CardSection/>}
 
