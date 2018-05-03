@@ -415,7 +415,18 @@ Servicebot.init({
                     id="payment-form">
                     <h3>Embed</h3>
                     <span>Servicebot has embeddable forms which can facilitate actions such as subscribing, adding a credit card, cancelling, and resubscribing</span>
-                    {this.state.showManagementEmbed ? <div className="sbi--modal">
+                    {this.state.showFormEmbed ?
+                        <div className="sbi--modal">
+                            {formEmbed}
+                            <button className="sbi--embed-code-button sbi--ecb--hide" onClick={this.hideForm}>Hide</button>
+                        </div> :
+                        <div className="sbi--embed-button-wrapper">
+                            <span className="sbi--embed-label">Embed to allow customers to request new subscriptions</span>
+                            <button className="sbi--embed-code-button" onClick={this.showForm}>Get Embed Code</button>
+                        </div>
+                    }
+                    {this.state.showManagementEmbed ?
+                        <div className="sbi--modal">
                             <ManagementEmbed
                                 value={this.state.selectedServer}
                                 onChange={this.changeServer}
@@ -426,16 +437,9 @@ Servicebot.init({
                             <span className="sbi--embed-label">Embed to allow customers to manage thier account and billing settings</span>
                             <button className="sbi--embed-code-button" onClick={this.showManagement}>Get Embed Code
                             </button>
-                        </div>}
-                    {this.state.showFormEmbed ?
-                        <div className="sbi--modal">
-                            {formEmbed}
-                            <button className="sbi--embed-code-button sbi--ecb--hide" onClick={this.hideForm}>Hide</button>
-                        </div> :
-                        <div className="sbi--embed-button-wrapper">
-                            <span className="sbi--embed-label">Embed to allow customers to request new subscriptions</span>
-                            <button className="sbi--embed-code-button" onClick={this.showForm}>Get Embed Code</button>
-                        </div>}
+                        </div>
+                    }
+
 
                     <h3>Webhooks</h3>
                     <span>Servicebot can send webhook events that notify your application any time an event happens.
