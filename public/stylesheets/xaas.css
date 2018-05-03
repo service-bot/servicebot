@@ -1177,6 +1177,8 @@ body.login .footer{
     border: 1px dashed;
     padding: 20px;
     margin: 20px 0;
+    max-height: 250px;
+    overflow: scroll;
 }
 .sbi--embed-code-button, .sbi--webhook-button {
     color: white;
