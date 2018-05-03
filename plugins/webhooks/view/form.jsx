@@ -121,7 +121,7 @@ userToken = generateJWT(user[:email], SECRET_KEY)
                 <h3 className="sbi--title">Server-side</h3>
                 <span className="sbi--subtitle">In order to embed the management so users can add cards, cancel, and resubscribe, you need to generate a token which
                 will authenticate your users and be used by the client-side javascript.</span><br/>
-                <span>Select a Server-side language or framework</span>
+                <strong><span>Select a Server-side language or framework: </span></strong>
                 <select onChange={props.onChange} value={props.value}>
                     <option value="node">NodeJS</option>
                     <option value="php">PHP</option>
