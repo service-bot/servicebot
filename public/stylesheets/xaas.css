@@ -1152,6 +1152,66 @@ body.login .footer{
     display: none;
 }
 
+/* Integration Page */
+.sbi--modal {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    z-index: 9999999;
+    max-width: 80%;
+    width: 860px;
+    transform: translate(-50%);
+}
+.sbi--wrapper {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    height: calc(100vh - 100px);
+    overflow: scroll;
+}
+.sbi--serverside, .sbi--clientside {
+    padding: 10px 0 40px;
+}
+
+.sbi--wrapper pre {
+    border: 1px dashed;
+    padding: 20px;
+    margin: 20px 0;
+}
+.sbi--embed-code-button, .sbi--webhook-button {
+    color: white;
+    background: #04a9f4;
+    border: none;
+    border-radius: 40px;
+    margin: 10px 0;
+    padding: 1px 14px;
+}
+.sbi--embed-code-button.sbi--ecb--hide {
+    background: red;
+    margin: 10px 20px;
+}
+.sbi--webhook-button.sbi--wb--retest {
+    background: white;
+    color: black;
+    margin-left: 10px;
+    border: 1px solid #cacaca;
+}
+span.sbi--embed-label, span.sbi--webhook-label {
+    display: block;
+    font-weight: bold;
+}
+.sbi--embed-button-wrapper, .sbi--webhook-button-wrapper {
+    border: 1px dashed #c1c1c1;
+    margin: 20px 0;
+    padding: 20px;
+    background: white;
+}
+.sbi--wrapper h2 {
+    border-bottom: 3px solid #04a9f4;
+    padding-bottom: 14px;
+    margin-bottom: 30px;
+}
+
 @keyframes displayMessage {
     0%{
         margin-top: -10px;
