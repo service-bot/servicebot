@@ -22,6 +22,8 @@ let iconFilePath = ServiceTemplate.iconFilePath;
 let imageFilePath = ServiceTemplate.imageFilePath;
 let slug = require("slug");
 let validateProperties = require("../lib/handleInputs").validateProperties;
+let Tier = require("../models/tier");
+let PaymentStructureTemplate = require("../models/payment-structure-template");
 let fileManager = store.getState(true).pluginbot.services.fileManager[0];
 let jwt = require('jsonwebtoken');
 
@@ -202,6 +204,18 @@ module.exports = function (router) {
             let props = (await serviceTemplate.getRelated(ServiceTemplateProperty)) || null;
             let req_body = req.body;
             let reqProps = req_body.references && req_body.references.service_template_properties || [];
+            let paymentStructureTemplate = (await PaymentStructureTemplate.find({id: req_body.payment_structure_template_id}))[0];
+
+            //check if the payment structure exists
+            if(!paymentStructureTemplate){
+                return res.status(400).json({error: 'Payment structure template not found'});
+            }
+            let tier = (await Tier.find({id: paymentStructureTemplate.data.tier_id, service_template_id: serviceTemplate.data.id}))[0];
+
+            //check if the structure's tier belongs to the template
+            if(!tier){
+                return res.status(400).json({error: 'Payment Structure does not belong to this service template'});
+            }
             await authPromise(req, res);
             let permission_array = res.locals.permissions || [];
             let handlers = (store.getState(true).pluginbot.services.inputHandler || []).reduce((acc, handler) => {
@@ -210,9 +224,9 @@ module.exports = function (router) {
             }, {});
             //this is true when user can override things
             let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
-            let templatePrice = serviceTemplate.get("amount");
+            let templatePrice = paymentStructureTemplate.get("amount");
             let price = hasPermission ? (req_body.amount || templatePrice) : templatePrice;
-            let trialPeriod = serviceTemplate.get("trial_period_days");
+            let trialPeriod = paymentStructureTemplate.get("trial_period_days");
 
             //todo: this doesn't do anthing yet, needs to check the "passed" props not the ones on the original...
             // let validationResult = props ? validateProperties(props, handlers) : [];
@@ -235,6 +249,7 @@ module.exports = function (router) {
 
             res.locals.adjusted_price = price;
             res.locals.merged_props = mergedProps;
+            res.locals.payment_structure_template = paymentStructureTemplate;
             if (!req.isAuthenticated()) {
 
                 if (req_body.hasOwnProperty("email")) {
@@ -283,6 +298,7 @@ module.exports = function (router) {
         try {
             let serviceTemplate = res.locals.valid_object;
             let references = serviceTemplate.references;
+            let paymentStructureTemplate = res.locals.payment_structure_template;
             let props = references ? references.service_template_properties : null;
             let req_body = req.body;
             req_body.references.service_template_properties = res.locals.merged_props;
@@ -313,6 +329,7 @@ module.exports = function (router) {
 
             }
             //if it's a new user request we need to create an account, invitation
+            //todo: move this part into a function
             if (isNew && serviceTemplate.get('published')) {
 
                 let globalProps = store.getState().options;
@@ -396,7 +413,7 @@ module.exports = function (router) {
                     requested_by : req.user.get("id"),
                     description : req_body.description || serviceTemplate.get("description"),
                     name : req_body.name || serviceTemplate.get("name"),
-                    trial_period_days : req_body.trial_period_days || serviceTemplate.get("trial_period_days")
+                    trial_period_days : req_body.trial_period_days || paymentStructureTemplate.get("trial_period_days")
                 };
 
 
@@ -404,7 +421,7 @@ module.exports = function (router) {
                 res.locals.overrides = {
                     user_id : req.user.get("id"),
                     requested_by : req.user.get("id"),
-                    trial_period_days : serviceTemplate.get("trial_period_days") || 0
+                    trial_period_days : paymentStructureTemplate.get("trial_period_days") || 0
                 }
             }
 

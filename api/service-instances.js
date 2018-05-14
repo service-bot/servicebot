@@ -9,6 +9,7 @@ let mkdirp = require("mkdirp");
 let path = require("path");
 let multer= require("multer");
 let _ = require('lodash');
+let PaymentStructureTemplate = require("../models/payment-structure-template");
 let dispatchEvent = require("../config/redux/store").dispatchEvent;
 let store = require("../config/redux/store");
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
@@ -36,6 +37,7 @@ module.exports = function(router) {
         delete req.body.user_id;
         delete req.body.payment_plan;
         delete req.body.subscription_id;
+        delete req.body.payment_structure_template_id;
         next();
     });
 
@@ -95,6 +97,23 @@ module.exports = function(router) {
             res.json({error});
         });
     });
+    router.post('/service-instances/:id/apply-payment-structure/:payment_structure_id(\\d+)', validate(ServiceInstance), auth(), async function(req, res, next) {
+        let instance_object = await res.locals.valid_object.attachReferences();
+        let newPaymentStructure = (await PaymentStructureTemplate.find({id: req.params.payment_structure_id}))[0];
+        let permission_array = res.locals.permissions;
+        let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
+        if((instance_object.data.references.payment_structure_templates[0].type === "custom" || newPaymentStructure.data.type === "custom" ) && !hasPermission){
+            return res.status(403).json({error: "Unauthorized"});
+        }
+        instance_object.applyPaymentStructure(req.params.payment_structure_id, true).then(function (updatedInstance) {
+            res.json(updatedInstance);
+            store.dispatchEvent("service_instance_updated", updatedInstance);
+        }).catch(function (error) {
+            console.error(error);
+            res.json({error});
+        });
+    });
+
 
     router.post('/service-instances/:id/change-properties', validate(ServiceInstance),auth(), async function(req, res, next) {
         let instance_object = res.locals.valid_object;

@@ -3,6 +3,8 @@ let ServiceCategory = require('./service-category');
 let ServiceInstance = require('./service-instance');
 let User = require('./user');
 let File = require("./file");
+let Tier = require("./tier");
+let PaymentStructureTemplate = require("./payment-structure-template");
 let Charges = require("./charge");
 
 
@@ -10,7 +12,8 @@ let Charges = require("./charge");
 let references = [
     {"model":ServiceTemplateProperty, "referenceField": "parent_id", "direction":"from", "readOnly":false},
     {"model":ServiceCategory, "referenceField": "category_id", "direction":"to", "readOnly":true},
-    {"model":User, "referenceField": "created_by", "direction":"to", "readOnly": true}
+    {"model":User, "referenceField": "created_by", "direction":"to", "readOnly": true},
+    {"model" :Tier, "referenceField": "service_template_id", "direction" : "from", "readOnly" : false}
 ];
 var ServiceTemplate = require("./base/entity")("service_templates", references);
 ServiceTemplate.iconFilePath = "uploads/templates/icons";
@@ -22,6 +25,8 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
         let service_user_id = "";
         let service_description = self.data.description;
         let service_name = self.data.name;
+        let paymentStructure = (await PaymentStructureTemplate.find({tier_id: instanceRequest.tier_id, interval: instanceRequest.interval}))[0];
+
         if (self.data.detail) {
 
             //todo : strip out XSS
@@ -34,8 +39,8 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
             requested_by: instanceRequest.requested_by,
             user_id: instanceRequest.user_id,
             service_id: self.get("id"),
-            type: self.get("type"),
-            split_configuration : self.get("split_configuration"),
+            type: paymentStructure.get("type"),
+            split_configuration : paymentStructure.get("split_configuration"),
             status : "requested"
         };
 
@@ -43,17 +48,17 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
         let ServiceInstance = require('../models/service-instance');
         let service = new ServiceInstance(await ServiceInstance.createPromise(instanceAttributes));
         let props = await service.generateProps(submittedProperties);
-        if (self.data.type === 'one_time') {
+        if (paymentStructure.data.type === 'one_time') {
             let charge_obj = {
                 'user_id': service.get('user_id'),
                 'service_instance_id': service.get('id'),
-                'currency': self.get('currency'),
-                'amount': instanceRequest.amount || self.get('amount') || 0,
+                'currency': paymentStructure.get('currency'),
+                'amount': instanceRequest.amount || paymentStructure.get('amount') || 0,
                 'description': service.get('name')
             };
             let charge = await  Charges.createPromise(charge_obj);
         }
-        let plan = (self.data.type === 'one_time' || self.data.type === 'custom' || self.data.type === "split") ? {...self.data, amount : 0, interval : "day"} : instanceRequest;
+        let plan = (paymentStructure.data.type === 'one_time' || paymentStructure.data.type === 'custom' || paymentStructure.data.type === "split") ? {...paymentStructure.data, amount : 0, interval : "day"} : {...paymentStructure.data, ...instanceRequest};
         let payStructure = (instanceRequest.amount === 0 || instanceRequest.amount === undefined) ? null : (await service.buildPayStructure(plan));
         let payPlan = await service.createPayPlan(payStructure);
 

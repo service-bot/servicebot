@@ -144,9 +144,7 @@ module.exports = function (database, initConfig) {
                                             {"option": "company_email", "value": initConfig.company_email},
                                             {"option": "hostname", "value": initConfig.hostname}
                                         ];
-                                        SystemOption.batchUpdate(options, function (result) {
-                                            return resolve(result);
-                                        })
+                                        return resolve(SystemOption.batchUpdate(options));
                                     });
                                 }).then(options => {
                                     return createAdmin(initConfig)

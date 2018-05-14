@@ -13,7 +13,6 @@ let run = function* (config, provide, services) {
     let salt = process.env.INSTANCE_SALT
     // let hash = require("bcryptjs").hashSync(salt, 10).toString("hex");
     let checkMaster = async function () {
-        console.log("CHECKIN WITH BIG PAPA FOR BIG ANNOUNCEMENTS")
         let version = process.env.npm_package_version;
 
         let data = await analytics.getAnalyticsData();

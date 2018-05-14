@@ -13,9 +13,9 @@ function* run(config, provide, channels) {
         pre_reactivate : [],
         post_reactivate : [],
         pre_property_change : [],
-        post_property_change : []
-
-
+        post_property_change : [],
+        pre_payment_structure_change: [],
+        post_payment_structure_change: []
     }
 
     //collect lifecycle hooks
@@ -94,7 +94,26 @@ function* run(config, provide, channels) {
             }
             return result;
 
+        },
+        prePaymentStructureChange : async function({instance, payment_structure_template}){
+            let result = {}
+            for(let hook of lifecycles.pre_payment_structure_change){
+                let hookresult = await hook.run({instance, payment_structure_template});
+                result = {...result, ...hookresult};
+            }
+            return result;
+
+        },
+        postPaymentStructureChange : async function({instance}){
+            let result = {}
+            for(let hook of lifecycles.post_payment_structure_change){
+                let hookresult = await hook.run({instance});
+                result = {...result, ...hookresult};
+            }
+            return result;
+
         }
+
 
     };
     yield provide({lifecycleManager})

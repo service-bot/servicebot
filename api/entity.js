@@ -115,23 +115,38 @@ module.exports = function (router, model, resourceName, userCorrelator) {
     router.put(`/${resourceName}/:id(\\d+)`, validate(model), auth(null, model, userCorrelator),async function (req, res, next) {
         try {
             let entity = res.locals.valid_object;
-            req.body.id = entity.get("id");
-            Object.assign(entity.data, req.body);
-            let updatedEntity = await entity.update();
-            let requestReferences = req.body.references || {};
+            await model.database.transaction(async function (trx) {
+                let CreateEntity = require("../models/base/entity");
+                let trxEntity = CreateEntity(model.table, model.references, model.primaryKey, trx);
 
-            //todo: combine updateReferences into a single transaction
-            for (let reference of references) {
-                let referenceData = requestReferences[reference.model.table]
-                if (referenceData) {
-                    let upsertedReferences = await updatedEntity.updateReferences(referenceData, reference);
+                entity = new trxEntity(entity.data);
+
+
+                req.body.id = entity.get("id");
+                Object.assign(entity.data, req.body);
+                let updatedEntity = await entity.update();
+                let requestReferences = req.body.references || {};
+
+                //todo: combine updateReferences into a single transaction
+                updatedEntity.data.references = {};
+                for (let reference of references) {
+
+                    let referenceData = requestReferences[reference.model.table]
+                    if (referenceData) {
+                        updatedEntity.data.references[reference.model.table] = await updatedEntity.updateReferences(referenceData, reference, true);
+                    }
                 }
-            }
-            res.locals.json = updatedEntity.data;
-            store.dispatchEvent(`${model.table}_updated`, updatedEntity);
+                res.locals.json = updatedEntity.data;
+                store.dispatchEvent(`${model.table}_updated`, updatedEntity);
+            });
             next();
+
         }catch(error){
             console.error("Server error updating entity: ", error);
+            if(error.code == 23503){
+                res.status(400).send({error : error.constraint});
+
+            }
             res.status(500).send({error : "error updating"});
         }
     });
@@ -157,13 +172,13 @@ module.exports = function (router, model, resourceName, userCorrelator) {
 
     router.post(`/${resourceName}`, auth(), function (req, res, next) {
         let entity = new model(req.body);
-        entity.create(function (err, newEntity) {
+        entity.create(async function (err, newEntity) {
             if(err){
                 console.error("Server error creating entity: " + err);
                 res.status(500).send({ error: "Error creating new " + resourceName })
             }
             else {
-                if (references.length === 0 || req.body.references === undefined || req.body.references.length == 0) {
+                if (references.length === 0 || req.body.references === undefined || req.body.references.length === 0) {
                     res.locals.json = newEntity.data;
                     store.dispatchEvent(`${model.table}_created`, newEntity)
                     EventLogs.logEvent(req.user.get('id'), `${resourceName} ${newEntity.get(model.primaryKey)} was created by user ${req.user.get('email')}`);
@@ -172,30 +187,15 @@ module.exports = function (router, model, resourceName, userCorrelator) {
                 else {
                     let requestReferenceData = req.body.references;
                     newEntity.data.references = {};
-                    let counter = 0;
                     for (let reference of references) {
-                        if (!requestReferenceData[reference.model.table] || requestReferenceData[reference.model.table].length == 0) {
-                            counter++;
-                            if (counter == references.length) {
-                                res.locals.json = newEntity.data;
-                                store.dispatchEvent(`${model.table}_created`, newEntity)
-
-                                EventLogs.logEvent(req.user.get('id'), `${resourceName} ${newEntity.get(model.primaryKey)} was created by user ${req.user.get('email')}`);
-                                next();
-                            }
+                        let referenceData = requestReferenceData[reference.model.table];
+                        if(referenceData) {
+                            newEntity.data.references[reference.model.table] = await newEntity.updateReferences(referenceData, reference);
                         }
-                        else {
-                            let referenceData = requestReferenceData[reference.model.table];
-                            newEntity.createReferences(referenceData, reference, function (modifiedEntity) {
-                                counter++;
-                                if (counter == references.length) {
-                                    res.locals.json = modifiedEntity.data;
-                                    store.dispatchEvent(`${model.table}_created`, modifiedEntity)
-                                    EventLogs.logEvent(req.user.get('id'), `${resourceName} ${newEntity.get(model.primaryKey)} was created by user ${req.user.get('email')}`);
-                                    next();
-                                }
-                            });
-                        }
+                        res.locals.json= newEntity.data;
+                        store.dispatchEvent(`${model.table}_created`, newEntity)
+                        EventLogs.logEvent(req.user.get('id'), `${resourceName} ${newEntity.get(model.primaryKey)} was created by user ${req.user.get('email')}`);
+                        next();
                     }
                 }
             }
