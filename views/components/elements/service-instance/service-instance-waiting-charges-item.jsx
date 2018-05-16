@@ -31,7 +31,7 @@ class ServiceInstanceWaitingChargesItem extends React.Component {
         return (
             <div className="xaas-body-row">
                 <div className="xaas-data xaas-charge"><span>{self.state.chargeItem.description}</span></div>
-                <div className="xaas-data xaas-price"><span><Price value={self.state.chargeItem.amount}/></span></div>
+                <div className="xaas-data xaas-price"><span><Price value={self.state.chargeItem.amount}  prefix={this.props.prefix}/></span></div>
                 {isAuthorized({permissions: 'can_administrate'}) &&
                     <div className="xaas-data xaas-action">
 
