@@ -1,5 +1,5 @@
 import React from 'react';
-import ServiceTemplateForm from '../elements/forms/service-template-form.jsx';
+import ServiceTemplateForm from '../elements/forms/service-template-form-refactored.jsx';
 
 class ManageCatalogDuplicate extends React.Component {
 

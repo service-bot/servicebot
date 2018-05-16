@@ -102,7 +102,7 @@ module.exports = function(router) {
         let newPaymentStructure = (await PaymentStructureTemplate.find({id: req.params.payment_structure_id}))[0];
         let permission_array = res.locals.permissions;
         let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
-        if((instance_object.data.references.payment_structure_templates[0].type === "custom" || newPaymentStructure.data.type === "custom" ) && !hasPermission){
+        if((instance_object.data.type === "custom" || newPaymentStructure.data.type === "custom" ) && !hasPermission){
             return res.status(403).json({error: "Unauthorized"});
         }
         instance_object.applyPaymentStructure(req.params.payment_structure_id, true).then(function (updatedInstance) {
