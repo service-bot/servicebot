@@ -216,20 +216,20 @@ class ManageCatalogList extends React.Component {
                                                width={200}>
                                 Product / Service Name
                             </TableHeaderColumn>
-                            <TableHeaderColumn dataField='amount'
-                                               dataSort={ true }
-                                               dataFormat={ this.priceFormatter }
-                                               searchable={false}
-                                               width={100}>
-                                Pricing
-                            </TableHeaderColumn>
-                            <TableHeaderColumn dataField='type'
-                                               dataSort={ true }
-                                               dataFormat={ this.paymentTypeFormatter }
-                                               searchable={false}
-                                               width={100}>
-                                Type
-                            </TableHeaderColumn>
+                            {/*<TableHeaderColumn dataField='amount'*/}
+                                               {/*dataSort={ true }*/}
+                                               {/*dataFormat={ this.priceFormatter }*/}
+                                               {/*searchable={false}*/}
+                                               {/*width={100}>*/}
+                                {/*Pricing*/}
+                            {/*</TableHeaderColumn>*/}
+                            {/*<TableHeaderColumn dataField='type'*/}
+                                               {/*dataSort={ true }*/}
+                                               {/*dataFormat={ this.paymentTypeFormatter }*/}
+                                               {/*searchable={false}*/}
+                                               {/*width={100}>*/}
+                                {/*Type*/}
+                            {/*</TableHeaderColumn>*/}
                             <TableHeaderColumn dataField='references'
                                                dataSort={ true }
                                                dataFormat={ this.categoryFormatter }

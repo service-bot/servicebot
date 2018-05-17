@@ -162,12 +162,12 @@ let buildTables = async function (knex) {
         table.increments();
         table.string("name");
         table.specificType('features', 'text[]');
-        table.integer('service_template_id').references('service_templates.id');
+        table.integer('service_template_id').references('service_templates.id').onDelete('cascade');
         table.timestamps(true, true);
     });
     await create("payment_structure_templates", table => {
         table.increments();
-        table.integer('tier_id').references('tiers.id').onDelete('cascade');;
+        table.integer('tier_id').references('tiers.id').onDelete('cascade');
         table.integer('trial_period_days');
         table.float('amount');
         table.string('currency').defaultTo('usd');

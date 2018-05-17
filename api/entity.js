@@ -178,14 +178,16 @@ module.exports = function (router, model, resourceName, userCorrelator) {
                 res.status(500).send({ error: "Error creating new " + resourceName })
             }
             else {
-                if (references.length === 0 || req.body.references === undefined || req.body.references.length === 0) {
+                if (references.length === 0 || req.body.references === undefined || Object.keys(req.body.references).length === 0) {
                     res.locals.json = newEntity.data;
+                    console.log("NO REFS")
                     store.dispatchEvent(`${model.table}_created`, newEntity)
                     EventLogs.logEvent(req.user.get('id'), `${resourceName} ${newEntity.get(model.primaryKey)} was created by user ${req.user.get('email')}`);
                     next();
                 }
                 else {
                     let requestReferenceData = req.body.references;
+                    console.log(requestReferenceData);
                     newEntity.data.references = {};
                     for (let reference of references) {
                         let referenceData = requestReferenceData[reference.model.table];
@@ -193,10 +195,10 @@ module.exports = function (router, model, resourceName, userCorrelator) {
                             newEntity.data.references[reference.model.table] = await newEntity.updateReferences(referenceData, reference);
                         }
                         res.locals.json= newEntity.data;
-                        store.dispatchEvent(`${model.table}_created`, newEntity)
-                        EventLogs.logEvent(req.user.get('id'), `${resourceName} ${newEntity.get(model.primaryKey)} was created by user ${req.user.get('email')}`);
-                        next();
                     }
+                    store.dispatchEvent(`${model.table}_created`, newEntity)
+                    EventLogs.logEvent(req.user.get('id'), `${resourceName} ${newEntity.get(model.primaryKey)} was created by user ${req.user.get('email')}`);
+                    next();
                 }
             }
         });

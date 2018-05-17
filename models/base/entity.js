@@ -206,6 +206,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
             this;
         }
         else {
+            console.error(referenceData, reference);
             let ids = referenceData.reduce((acc, refInstance) => acc.concat(refInstance.id || []), []);
             referenceData.forEach(newChild => (newChild[reference.referenceField] = this.get(primaryKey)));
 

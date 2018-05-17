@@ -8,7 +8,7 @@ module.exports = {
             table.increments();
             table.string("name");
             table.specificType('features', 'text[]').defaultTo("{}");
-            table.integer('service_template_id').references('service_templates.id');
+            table.integer('service_template_id').references('service_templates.id').onDelete("cascade");
             table.timestamps(true, true);
         });
         await knex.schema.createTable("payment_structure_templates", table => {

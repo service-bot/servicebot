@@ -344,7 +344,7 @@ let PaymentStructureTemplates = function (props) {
         e.preventDefault();
         fields.push({
             interval_count: 1,
-            trial_period_days: tier.trial_period_days,
+            trial_period_days: tier.trial_period_days || 0,
             type: tier.type,
             // statement_descriptor: this.props.company_name.value.substring(0, 22),
             amount: 0
@@ -419,31 +419,31 @@ let PaymentStructureTemplates = function (props) {
 let TierBillingForm = function (props) {
     let {tier, member, setPricingTemplates, serviceTypeValue} = props;
     const changeServiceType = (event, newValue) => {
-        let pricingStructures = (tier.references && tier.references.pricing_structure_templates) || [];
-        setPricingTemplates(pricingStructures.map(p => {
+        let pricingStructures = (tier.references && tier.references.payment_structure_templates) || [];
+        setPricingTemplates(member, pricingStructures.map(p => {
             return {
                 ...p,
                 type: newValue
             }
         }));
-        if (newValue === 'one_time') {
-            // props.setIntervalCount();
-            // props.setInterval();
-        }
-        else if (newValue === 'custom' || newValue === 'split') {
-            // props.setIntervalCount();
-            // props.setInterval();
-            // props.clearAmount();
-        }
     };
     const changeTrial = (event, newValue) => {
-        let pricingStructures = (tier.references && tier.references.pricing_structure_templates) || [];
-        setPricingTemplates(pricingStructures.map(p => {
+        let pricingStructures = (tier.references && tier.references.payment_structure_templates) || [];
+        setPricingTemplates(member, pricingStructures.map(p => {
             return {
                 ...p,
                 trial_period_days: newValue
             }
         }));
+    };
+
+    const formatFromPricing = (value, name) => {
+        console.log("VAL", value);
+        let pricingStructures = (tier.references && tier.references.payment_structure_templates) || [];
+        if((value === null || value === undefined) && pricingStructures.length > 0){
+            return pricingStructures[0][name];
+        }
+        return value;
     };
 
 
@@ -463,9 +463,10 @@ let TierBillingForm = function (props) {
                ]}
         />
 
-        {tier.type === "subscription" && <Field onChange={changeTrial} name={member + ".trial_period_days"} type="number"
-                                                component={inputField} label="Trial Period (Days)"
-                                                validate={required()}
+        {tier.type === "subscription" &&
+        <Field onChange={changeTrial} format={formatFromPricing} name={member + ".trial_period_days"} type="number"
+               component={inputField} label="Trial Period (Days)"
+               validate={required()}
         />}
 
 
@@ -494,7 +495,21 @@ let Tiers = function (props) {
     function onAdd(e) {
         e.preventDefault();
         selectTier(fields.length)()
-        return fields.push({references: {payment_structure_templates: [{}]}, name: fields.length + 1});
+        return fields.push({
+            references: {
+                payment_structure_templates: [{
+                    trial_period_days: 0,
+                    amount: 0,
+                    type:"subscription",
+                    interval: "month",
+                    interval_count: 1
+                }]
+            },
+            name: "Tier " + (fields.length + 1),
+            trial_period_days: 0,
+            amount: 0,
+            type:"subscription"
+        });
     }
 
     return (<div>
@@ -537,8 +552,8 @@ Tiers = connect((state, ownProps) => {
     }
 }, (dispatch, ownProps) => {
     return {
-        "setPricingTemplates": (val) => {
-            dispatch(change(TEMPLATE_FORM_NAME, `references.pricing_structure_templates`, val));
+        "setPricingTemplates": (member, val) => {
+            dispatch(change(TEMPLATE_FORM_NAME, `references.${member}.references.payment_structure_templates`, val));
         },
         // "setRequired": (val) => {
         //     if (val == true) {
@@ -783,6 +798,21 @@ class ServiceTemplateForm extends React.Component {
                 }
                 return prop;
             })
+            values.references.tiers = values.references.tiers.map(tier => {
+                if (tier.id) {
+                    delete tier.id;
+                }
+                if(tier.references && tier.references.payment_structure_templates){
+                    tier.references.payment_structure_templates = tier.references.payment_structure_templates.map(pay => {
+                        if(pay.id){
+                            delete pay.id;
+                        }
+                        return pay;
+                    })
+                }
+                return tier;
+            })
+
         }
         return values;
     }
@@ -792,18 +822,36 @@ class ServiceTemplateForm extends React.Component {
         if (!this.props.company_name) {
             return (<Load/>);
         } else {
+            let templateId = this.props.params.templateId;
             let initialValues = {};
             let initialRequests = [];
             let submissionRequest = {};
             let successMessage = "Template Updated";
             let imageUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/image`;
             let iconUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/icon`;
-
-            if (this.props.params.templateId) {
+            function initializer(values){
+                if(templateId){
+                    values.references.tiers = (values._tiers || []).map(tier => {
+                        let paymentPlans = tier.references.payment_structure_templates;
+                        if(paymentPlans && paymentPlans.length > 0){
+                            return {
+                                ...tier,
+                                trial_period_days: paymentPlans[0].trial_period_days,
+                                type: paymentPlans[0].type
+                            }
+                        }else{
+                            return tier;
+                        }
+                    });
+                }
+                return values;
+            }
+            if (templateId) {
                 initialRequests.push({
                         'method': 'GET',
-                        'url': `/api/v1/service-templates/${this.props.params.templateId}`
+                        'url': `/api/v1/service-templates/${templateId}`
                     },
+                    {'method': 'GET', 'url': `/api/v1/tiers/search?key=service_template_id&value=${templateId}`, 'name': '_tiers'},
                     {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
                 );
                 if (this.props.params.duplicate) {
@@ -816,11 +864,11 @@ class ServiceTemplateForm extends React.Component {
                 else {
                     submissionRequest = {
                         'method': 'PUT',
-                        'url': `/api/v1/service-templates/${this.props.params.templateId}`
+                        'url': `/api/v1/service-templates/${templateId}`
                     };
                     successMessage = "Template Updated";
-                    imageUploadURL = `/api/v1/service-templates/${this.props.params.templateId}/image`;
-                    iconUploadURL = `/api/v1/service-templates/${this.props.params.templateId}/icon`;
+                    imageUploadURL = `/api/v1/service-templates/${templateId}/image`;
+                    iconUploadURL = `/api/v1/service-templates/${templateId}/icon`;
                 }
             }
             else {
@@ -831,13 +879,13 @@ class ServiceTemplateForm extends React.Component {
                     references: {
                         tiers: [
                             {
+                                trial_period_days: 0,
                                 references: {
                                     payment_structure_templates: [{
                                         interval: 'month',
                                         interval_count: 1,
                                         trial_period_days: 0,
                                         type: 'subscription',
-                                        statement_descriptor: this.props.company_name.value.substring(0, 22),
                                         amount: 0
                                     }
                                     ]
@@ -890,6 +938,7 @@ class ServiceTemplateForm extends React.Component {
                                 submissionRequest={submissionRequest}
                                 successMessage={successMessage}
                                 handleResponse={this.handleResponse}
+                                initializer={initializer}
                                 formProps={{
                                     ...this.props.fieldDispatches,
                                     ...this.props.fieldState

@@ -478,9 +478,21 @@ module.exports = function (router) {
 
     router.post("/service-templates", auth(), function (req, res, next) {
         req.body.created_by = req.user.get("id");
-        req.body.trial_period_days = req.body.trial_period_days || 0;
-        req.body.currency = store.getState().options.currency;
+        // req.body.trial_period_days = req.body.trial_period_days || 0;
+        // req.body.currency = store.getState().options.currency;
         let properties = req.body.references && req.body.references.service_template_properties;
+        let tiers = req.body.references && req.body.references.tiers;
+
+        if(tiers) {
+            req.body.references.tiers = tiers.map(tier => {
+                let paymentTemplates = tier.references && tier.references.payment_structure_templates || [];
+                tier.references.payment_structure_templates = paymentTemplates.map(payment => {
+                    payment.currency = store.getState().options.currency;
+                    return payment;
+                })
+                return tier;
+            })
+        }
         if(properties){
             req.body.references.service_template_properties = properties.map(prop => {
                 return {
@@ -489,6 +501,7 @@ module.exports = function (router) {
                 };
             });
         }
+
         ServiceTemplate.findAll("name", req.body.name, (templates) => {
             if (templates && templates.length > 0) {
                 res.status(400).json({error: "Service template name already in use"})
