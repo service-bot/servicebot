@@ -291,7 +291,12 @@ ServiceInstance.prototype.changeProperties = async function (properties) {
 
 ServiceInstance.prototype.applyPaymentStructure = async function (paymentStructureId, ignoreTrial) {
     let instance_object = await this.attachReferences();
-    let currentStructure = instance_object.data.references.payment_structure_templates[0];
+    let {payment_plan, references : {service_instance_properties, payment_structure_templates}} = instance_object.data;
+    let currentStructure = payment_structure_templates[0];
+    let handlers = (store.getState(true).pluginbot.services.inputHandler || []).reduce((acc, handler) => {
+        acc[handler.name] = handler.handler;
+        return acc;
+    }, {});
 
     if (!currentStructure) {
         throw "Instance has no payment structure";
@@ -319,10 +324,22 @@ ServiceInstance.prototype.applyPaymentStructure = async function (paymentStructu
             payment_structure_template: paymentStructureTemplate,
         });
     }
+    let applicableProperties = service_instance_properties.filter(property => {
+        if(property.config && property.config.pricing && property.config.pricing.tiers){
+            return property.config.pricing.tiers.includes(tier.data.name);
+        }else{
+            return true;
+        }
+    });
+    let newPrice = require("../lib/handleInputs").getPrice(applicableProperties, handlers, paymentStructureTemplate.data.amount);
+
     let paymentPlan = {
         ...paymentStructureTemplate.data,
-        name : tier.data.name + "-" + paymentStructureTemplate.data.id
-    }
+        name : tier.data.name + "-" + paymentStructureTemplate.data.id,
+        amount : newPrice
+    };
+
+
     let newInstance = await (await instance_object.changePaymentPlan(paymentPlan, ignoreTrial)).attachReferences();
     console.log("before", newInstance);
 
@@ -364,6 +381,7 @@ ServiceInstance.prototype.changePaymentPlan = async function (newPlan, ignorePla
             //todo: handle this better,  don't like dispatching here.
             store.dispatchEvent("service_instance_trial_change", updatedInstance);
         }
+
     }
     updatedInstance.data.type = updatedInstance.data.payment_plan.amount > 0 ? "subscription" : "custom";
     return await updatedInstance.update();

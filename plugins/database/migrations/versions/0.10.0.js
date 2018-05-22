@@ -6,9 +6,10 @@ module.exports = {
 
         await knex.schema.createTable("tiers", table => {
             table.increments();
-            table.string("name");
+            table.string("name").notNullable();
             table.specificType('features', 'text[]').defaultTo("{}");
-            table.integer('service_template_id').references('service_templates.id').onDelete("cascade");
+            table.integer('service_template_id').notNullable().references('service_templates.id').onDelete("cascade");
+            table.unique(['service_template_id', "name"]);
             table.timestamps(true, true);
         });
         await knex.schema.createTable("payment_structure_templates", table => {

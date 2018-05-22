@@ -160,9 +160,10 @@ let buildTables = async function (knex) {
     });
     await create("tiers", table => {
         table.increments();
-        table.string("name");
+        table.string("name").notNullable();
         table.specificType('features', 'text[]');
-        table.integer('service_template_id').references('service_templates.id').onDelete('cascade');
+        table.integer('service_template_id').notNullable().references('service_templates.id').onDelete('cascade');
+        table.unique(['service_template_id', "name"]);
         table.timestamps(true, true);
     });
     await create("payment_structure_templates", table => {
