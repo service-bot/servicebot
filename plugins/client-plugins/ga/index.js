@@ -1,8 +1,6 @@
 import  {call, put, all, select, fork, spawn, take, takeEvery} from "redux-saga/effects";
 import consume from "pluginbot/effects/consume"
 import ReactGA  from 'react-ga';
-
-
 let actionHandler = function(action, state){
     switch(action.type){
         case "@@redux-form/SET_SUBMIT_SUCCEEDED":
@@ -34,6 +32,7 @@ let actionHandler = function(action, state){
 
 function* run(config, provide, channels) {
     //todo pull initialize from channel?
+    console.log("HELLO!!!!!!");
     let  { initialState } = yield take("INITIALIZE");
     if(initialState.options.google_analytics && initialState.options.google_analytics.value ){
         ReactGA.initialize(initialState.options.google_analytics.value);
@@ -48,6 +47,7 @@ function* run(config, provide, channels) {
             ReactGA.set({ page: action.payload.pathname});
             ReactGA.pageview(action.payload.pathname);
         })
+
     }
 }
 export {run};
