@@ -110,7 +110,7 @@ class NavNotification extends React.Component{
             }
 
             return (
-                <div className="mini-notification-list">
+                <div className="app-notification-list">
                     {totalUnread ? <li className="text-center"><strong>{`You have ${totalUnread} unread notifications`}</strong></li> : <span/>}
                     <ul>
                         {unread.length ? unread.map(message => (
@@ -132,18 +132,16 @@ class NavNotification extends React.Component{
         let unread = this.props.notifications.filter(notification => !notification.read);
 
         return (
-            <li className="nav-notification">
-                <div>
-                    <span onClick={this.openNotificationDropdown}>
-                        <i className="fa fa-bell nav-notification-icon" aria-hidden="true"/>
-                        {unread.length ? <span className="nav-notification-indicator"/> : <span/>}
-                        {/*<span className="notification-badge">{unread.length ? unread.length : '0'}</span>*/}
-                    </span>
-                    {this.miniList(unread)}
-                </div>
-                {this.state.openNotificationDropdown && <div className="mini-notification-backdrop" onClick={this.closeNotificationDropdown}/>}
-                {this.state.viewMessage != null && <ModalNotification key="notification-modal" hide={this.closeMessageModel} notification={this.state.viewMessage}/>}
-            </li>
+            <div className="app-notification">
+                <span onClick={this.openNotificationDropdown}>
+                    <i className="fa fa-bell nav-notification-icon" aria-hidden="true"/>
+                    {unread.length ? <span className="nav-notification-indicator"/> : <span/>}
+                    {/*<span className="notification-badge">{unread.length ? unread.length : '0'}</span>*/}
+                </span>
+                {this.miniList(unread)}
+                {this.state.openNotificationDropdown && <div className="app-notification-backdrop" onClick={this.closeNotificationDropdown}/>}
+                {this.state.viewMessage !== null && <ModalNotification key="notification-modal" hide={this.closeMessageModel} notification={this.state.viewMessage}/>}
+            </div>
         )
     }
 }
