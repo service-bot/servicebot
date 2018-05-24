@@ -57,9 +57,7 @@ let buildPayStructure = function (payment_object, callback) {
     if (plan.amount === null) {
         plan.amount = 0;
     }
-    plan.statement_descriptor = plan.statement_descriptor.substring(0, 22);
-    console.log(plan);
-
+    plan.statement_descriptor = (plan.statement_descriptor || "Subscription").substring(0, 22);
     callback(plan);
 };
 
