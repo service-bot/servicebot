@@ -156,6 +156,17 @@
   color: #fff;
   position: relative;
 }
+.app-navigation .app-links li a.nav-link-parent .caret {
+  margin-left: 50px;
+  transform: scale(1.5) translateY(-1px);
+}
+.app-navigation .app-links li a.active {
+  background-color: #081C49;
+  color: #fff;
+}
+.app-navigation .app-links li a.active .caret {
+  transform: rotate(180deg) scale(1.6) translateY(1px);
+}
 .app-navigation .app-links li a .nav-icons {
   position: absolute;
 }
@@ -183,6 +194,9 @@
 .app-navigation .app-links li .app-dropdown {
   padding: 0;
 }
+.app-navigation .app-links li .app-dropdown li:last-child a {
+  padding-bottom: 17px;
+}
 .app-navigation .app-links li .app-dropdown li a {
   font-size: 14px;
   font-weight: 500;
@@ -190,6 +204,10 @@
   text-transform: capitalize;
   padding-top: 8px;
   padding-bottom: 8px;
+}
+.app-navigation .app-links li .app-dropdown li a.active {
+  background-color: #4f6185;
+  color: #fff;
 }
 
 .app-dashboard .app-body {

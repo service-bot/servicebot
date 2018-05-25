@@ -57,7 +57,7 @@ class App extends React.Component {
                 {this.props.modal && this.props.modal}
                 {this.isDashboardView() ?
                     <div className="app-dashboard">
-                        <NavServiceBot handleLogout={this.handleLogout}/>
+                        <NavServiceBot currentPath={this.props.location.pathname} handleLogout={this.handleLogout}/>
                         <div className="app-body">
                             {self.props.children}
                         </div>

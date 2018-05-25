@@ -152,6 +152,23 @@
         color: $color-white;
         position: relative;
 
+        &.nav-link-parent{
+
+          .caret{
+            margin-left: 50px;
+            transform: scale(1.5) translateY(-1px);
+          }
+        }
+
+        &.active{
+          background-color: $color-nav-parent-active;
+          color: $color-white;
+
+          .caret{
+            transform: rotate(180deg) scale(1.6) translateY(1px);
+          }
+        }
+
         .nav-icons {
           position: absolute;
 
@@ -193,6 +210,10 @@
 
         li{
 
+          &:last-child a{
+            padding-bottom: 17px;
+          }
+
           a{
             font-size: 14px;
             font-weight: 500;
@@ -200,6 +221,11 @@
             text-transform: capitalize;
             padding-top: $gutter / 2;
             padding-bottom: $gutter / 2;
+
+            &.active{
+              background-color: $color-nav-child-active;
+              color: $color-white;
+            }
           }
         }
       }
@@ -224,3 +250,6 @@
   width: 100%;
   text-align: center;
 }
+//.nav-link li a.app-link-parent .caret{
+//  display: none;
+//}

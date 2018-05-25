@@ -56,7 +56,7 @@ class NavServiceBot extends React.Component {
         this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
         this.getLivemode = this.getLivemode.bind(this);
         this.getPluginItems = this.getPluginItems.bind(this);
-
+        this.getLinkClass = this.getLinkClass.bind(this);
 
     }
 
@@ -105,37 +105,58 @@ class NavServiceBot extends React.Component {
         });
     }
     getPluginItems(icon = null){
+        let self = this;
         let user = this.props.user;
         return this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
+            console.log("expected route path", route.path);
             if(route.isVisible(user)) {
-                acc.push(<li><Link key={index} to={route.path}>{icon && <span className={`nav-icons icon-${icon}`}/>}{route.name}</Link></li>)
+                acc.push(<li><Link key={index} to={route.path} className={self.getLinkClass(route.path.split('/')[1], 'parent')}>{icon && <span className={`nav-icons icon-${icon}`}/>}{route.name}</Link></li>)
             }
             return acc;
         }, [])
 
     }
 
+    getLinkClass(expectedPath, linkType) {
+        let path = this.props.currentPath;
+        if(_.isArray(expectedPath)){
+            return _.includes(expectedPath, path.split('/')[1]) ? `nav-link-${linkType} active` : `nav-link-${linkType}`;
+        }
+        return path.split('/')[1] === expectedPath ? `nav-link-${linkType} active` : `nav-link-${linkType}`;
+    }
+
     getMenuItems(style){
+
+        //todo: do this dynamically somehow
+        let linkGroupManage = ['manage-catalog', 'manage-categories', 'manage-users', 'manage-subscriptions'];
+        let linkGroupSettings = ['stripe-settings', 'notification-templates', 'manage-permission', 'system-settings'];
+
+        let getLinkClass = this.getLinkClass;
+
         if(isAuthorized({permissions: ["can_administrate", "can_manage"]})){
             return(
                 <ul className="app-links">
-                    <li><Link to="/dashboard" style={style}><span className="nav-icons icon-home"/>Dashboard</Link></li>
+                    <li>
+                        <Link to="/dashboard" style={style} className={getLinkClass('dashboard', 'parent')}>
+                            <span className="nav-icons icon-home"/>Dashboard
+                        </Link>
+                    </li>
                     <li className="app-dropdown">
-                        <a href="#"><span className="nav-icons icon-manage"/>Manage<span className="caret"/></a>
+                        <a className={getLinkClass(linkGroupManage, 'parent')} href="#"><span className="nav-icons icon-manage"/>Manage<span className="caret"/></a>
                         <ul className="app-dropdown">
-                            <li><Link to="/manage-catalog/list">Manage Offerings</Link></li>
-                            <li><Link to="/manage-categories">Manage Categories</Link></li>
-                            <li><Link to="/manage-users">Manage Users</Link></li>
-                            <li><Link to="/manage-subscriptions">Manage Subscriptions</Link></li>
+                            <li><Link to="/manage-catalog/list" className={getLinkClass('manage-catalog', 'child')}>Manage Offerings</Link></li>
+                            <li><Link to="/manage-categories" className={getLinkClass('manage-categories', 'child')}>Manage Categories</Link></li>
+                            <li><Link to="/manage-users" className={getLinkClass('manage-users', 'child')}>Manage Users</Link></li>
+                            <li><Link to="/manage-subscriptions" className={getLinkClass('manage-subscriptions', 'child')}>Manage Subscriptions</Link></li>
                         </ul>
                     </li>
                     <li className="app-dropdown">
-                        <a href="#"><span className="nav-icons icon-settings"/>Settings<span className="caret"/></a>
+                        <a className={getLinkClass(linkGroupSettings, 'parent')} href="#"><span className="nav-icons icon-settings"/>Settings<span className="caret"/></a>
                         <ul className="app-dropdown">
-                            <li><Link to="/stripe-settings">Stripe Settings</Link></li>
-                            <li><Link to="/notification-templates">Email Settings</Link></li>
-                            <li><Link to="/manage-permission">Permission Settings</Link></li>
-                            <li><Link to="/system-settings">System Settings</Link></li>
+                            <li><Link to="/stripe-settings" className={getLinkClass('stripe-settings', 'child')}>Stripe Settings</Link></li>
+                            <li><Link to="/notification-templates" className={getLinkClass('notification-templates', 'child')}>Email Settings</Link></li>
+                            <li><Link to="/manage-permission" className={getLinkClass('manage-permission', 'child')}>Permission Settings</Link></li>
+                            <li><Link to="/system-settings" className={getLinkClass('system-settings', 'child')}>System Settings</Link></li>
                         </ul>
                     </li>
                     {this.getPluginItems('integrations')}
