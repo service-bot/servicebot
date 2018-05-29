@@ -378,13 +378,13 @@ let Tiers = function (props) {
             </li>
 
         </ul>
-        {(OverrideBilling && <OverrideBilling {...props} member={"tiers[" + selected + "]"} tier={current}/>) || <TierBillingForm {...props} member={"tiers[" + selected + "]"} tier={current}/>}
+        {(OverrideBilling && <OverrideBilling {...props} selected={selected} member={"tiers[" + selected + "]"} tier={current}/>) || <TierBillingForm {...props} member={"tiers[" + selected + "]"} tier={current}/>}
     </div>)
 
 };
 Tiers = connect((state, ownProps) => {
     return {
-
+        formJSON: getFormValues(TEMPLATE_FORM_NAME)(state)
         // "privateValue": selector(state, "references.service_template_properties")[ownProps.index].private,
         // "requiredValue": selector(state, "references.service_template_properties")[ownProps.index].required,
         // "promptValue": selector(state, "references.service_template_properties")[ownProps.index].prompt_user,
@@ -399,6 +399,9 @@ Tiers = connect((state, ownProps) => {
         "setPricingTemplates": (member, val) => {
             dispatch(change(TEMPLATE_FORM_NAME, `references.${member}.references.payment_structure_templates`, val));
         },
+        "changeMember" : (member, val) => {
+            dispatch(change(TEMPLATE_FORM_NAME, member, val));
+        }
         // "setRequired": (val) => {
         //     if (val == true) {
         //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, true));
@@ -530,7 +533,9 @@ class TemplateForm extends React.Component {
                                                     props={{
                                                         selected: self.state.selectedTier,
                                                         selectTier: self.selectTier,
-                                                        templateType: serviceTypeValue
+                                                        templateType: serviceTypeValue,
+                                                        formJSON: self.props.formJSON
+
                                                     }}
                                                     component={Tiers}/>
                                     </FormSection>
