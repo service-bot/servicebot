@@ -1,0 +1,232 @@
+/* variables */
+/* font */
+/* gutters */
+/* layout */
+/* z-indexes */
+/* components */
+.buttons {
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.buttons.rounded {
+  border-radius: 50px;
+}
+
+.app-header {
+  position: fixed;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  height: 60px;
+  padding: 8px 26px;
+  background-color: #F7F8FA;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.23);
+  z-index: 9920;
+  /* end app-notification */
+}
+.app-header .app-header-left, .app-header .app-header-right {
+  display: flex;
+  align-content: flex-end;
+}
+.app-header .app-header-right > * {
+  margin-left: 8px;
+}
+.app-header .app-logo {
+  height: 100%;
+  max-height: calc(60px - 20px);
+}
+.app-header .app-profile {
+  height: 100%;
+  max-width: 50px;
+}
+.app-header .app-profile img {
+  height: 100%;
+}
+.app-header .app-notification {
+  height: 100%;
+  width: 50px;
+  background: #475981;
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.app-header .app-notification i {
+  color: #fff;
+}
+.app-header .app-notification .app-notification-list {
+  position: absolute;
+  width: 300px;
+  background: white;
+  right: 0;
+  top: 55px;
+  border-radius: 3px;
+  z-index: 999999;
+  font-size: 14px;
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.06);
+}
+.app-header .app-notification .app-notification-list :before {
+  content: "";
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #ffffff;
+  margin: 0 0 15px 0;
+  position: absolute;
+  top: -5px;
+  right: 17px;
+}
+.app-header .app-notification .app-notification-list ul {
+  padding: 0;
+  margin: 0;
+}
+.app-header .app-notification .app-notification-list ul li {
+  list-style: none;
+  padding: 10px 20px 10px 32px;
+  line-height: 1.5em;
+  position: relative;
+}
+.app-header .app-notification .app-notification-list ul li :hover {
+  background: #f3f3f3;
+}
+.app-header .app-notification .app-notification-list ul li :first-child, .app-header .app-notification .app-notification-list ul li :last-child {
+  padding-top: 16px;
+}
+.app-header .app-notification .app-notification-list ul li.unread-message:before {
+  height: 8px;
+  width: 8px;
+  background: #dc3535;
+  position: absolute;
+  left: 12px;
+  margin-top: 1px;
+  top: 44%;
+  transform: translateY(-50%);
+  border-radius: 50px;
+  content: "";
+}
+.app-header .app-notification .app-notification-list .app-notification-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.app-navigation {
+  position: fixed;
+  width: 280px;
+  padding-top: 60px;
+  background-color: #475981;
+  height: 100%;
+  z-index: 9910;
+}
+.app-navigation .app-links {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.app-navigation .app-links > li {
+  border: 1px solid #5C6A8B;
+}
+.app-navigation .app-links li {
+  padding: 0;
+}
+.app-navigation .app-links li a {
+  display: block;
+  width: 100%;
+  padding: 17px;
+  padding-left: 80px;
+  font-family: "Avenir", "Helvetica", sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #fff;
+  position: relative;
+}
+.app-navigation .app-links li a.nav-link-parent .caret {
+  margin-left: 50px;
+  transform: scale(1.5) translateY(-1px);
+}
+.app-navigation .app-links li a.active {
+  background-color: #081C49;
+  color: #fff;
+}
+.app-navigation .app-links li a.active .caret {
+  transform: rotate(180deg) scale(1.6) translateY(1px);
+}
+.app-navigation .app-links li a .nav-icons {
+  position: absolute;
+}
+.app-navigation .app-links li a .nav-icons:before {
+  content: "";
+  width: 28px;
+  height: 28px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: -46px;
+}
+.app-navigation .app-links li a .nav-icons.icon-home:before {
+  background-image: url("/assets/SB_Icon_Menu/Home.png");
+}
+.app-navigation .app-links li a .nav-icons.icon-integrations:before {
+  background-image: url("/assets/SB_Icon_Menu/Integrations.png");
+}
+.app-navigation .app-links li a .nav-icons.icon-manage:before {
+  background-image: url("/assets/SB_Icon_Menu/Manage.png");
+}
+.app-navigation .app-links li a .nav-icons.icon-settings:before {
+  background-image: url("/assets/SB_Icon_Menu/Settings.png");
+}
+.app-navigation .app-links li .app-dropdown {
+  padding: 0;
+}
+.app-navigation .app-links li .app-dropdown li:last-child a {
+  padding-bottom: 17px;
+}
+.app-navigation .app-links li .app-dropdown li a {
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  text-transform: capitalize;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.app-navigation .app-links li .app-dropdown li a.active {
+  background-color: #4f6185;
+  color: #fff;
+}
+
+.app-dashboard .app-body {
+  padding-top: 60px;
+  padding-left: 280px;
+}
+
+/* todo: To be cleaned up */
+.app-dashboard .servicetron {
+  display: none !important;
+}
+
+.app-dashboard .navvbar-badge {
+  margin-top: 24px;
+  display: block;
+  float: none !important;
+  padding-right: 30px;
+  width: 100%;
+  text-align: center;
+}
+
+/*# sourceMappingURL=css/main.css.map */

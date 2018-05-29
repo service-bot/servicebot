@@ -1,0 +1,21 @@
+.buttons{
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: $font-size - 2;
+  font-weight: 600;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+
+  &.rounded{
+    border-radius: 50px;
+  }
+
+}
