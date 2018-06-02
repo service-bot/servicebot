@@ -1,5 +1,4 @@
 import React from 'react';
-import {Link, browserHistory} from 'react-router';
 import ServiceTemplateForm from '../elements/forms/service-template-form-refactored.jsx';
 
 class ManageCatalogCreate extends React.Component {
@@ -9,10 +8,11 @@ class ManageCatalogCreate extends React.Component {
     }
 
     render () {
-        let self = this;
         return(
-            <div className="form-box col-xs-12">
-                <div className="offering-title">Create a new offering</div>
+            <div className="app-content">
+                <div className="_title-container">
+                    <h1 className="_heading">Create a new offering</h1>
+                </div>
                 <ServiceTemplateForm params = {{'templateId': null}}/>
             </div>
         );
