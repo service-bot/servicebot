@@ -23,14 +23,9 @@ class ManageCatalog extends React.Component {
         let subtitle = 'Create and manage offerings';
         return(
             <Authorizer permissions="can_administrate">
-                <Jumbotron pageName={pageName} subtitle={subtitle}/>
-                <div className="page-service-instance">
-                    <Content>
-                        <div className="row m-b-20">
-                            {this.props.children}
-                        </div>
-                    </Content>
-                </div>
+                <Content>
+                    {this.props.children}
+                </Content>
             </Authorizer>
         );
     }
