@@ -9,6 +9,8 @@ $gutter: 16px;
 /* layout */
 $nav-header-height: 60px;
 $nav-panel-width: 280px;
+$content-sidebar-max-width: 300px;
+$content-content-width: calc( 100vw - $nav-panel-width - $content-sidebar-max-width - $gutter);
 
 $nav-header-height-mobile: 60px;
 $nav-panel-width-mobile: 280px;
@@ -18,3 +20,7 @@ $nav-panel-width-mobile-closed: 0px;
 $z-nav-header: 9920;
 $z-nav-panel: 9910;
 $z-mini-notification: 999999;
+
+/* forms */
+$_max-fields-width: 50%;
+$_min-fields-width: 300px;
