@@ -1,0 +1,23 @@
+@import "variables";
+
+.form-offering{
+
+  ._form-field-group{
+    max-width: $_max-fields-width;
+    min-width: $_min-fields-width;
+
+    &._form-field-name_software_name{
+      label{
+        display: none;
+      }
+    }
+
+  }
+
+  ._save{
+    float: right;
+    margin: $gutter;
+    margin-right: 35px;
+  }
+
+}
