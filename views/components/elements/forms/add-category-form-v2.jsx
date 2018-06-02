@@ -1,8 +1,7 @@
 import React from 'react';
-import ServiceBotBaseForm from './servicebot-base-form.jsx'
+import {ServicebotBaseForm, inputField} from "servicebot-base-form";
 import { required} from 'redux-form-validators'
 import {Field,} from 'redux-form'
-import {inputField} from "./servicebot-base-field.jsx";
 
 function Category(props){
     return (
@@ -43,7 +42,7 @@ let AddCategoryForm = function(props) {
 
     return (
             <div className="p-20">
-                <ServiceBotBaseForm
+                <ServicebotBaseForm
                     form = {Category}
                     submissionRequest = {submissionRequest}
                     successMessage = {successMessage}

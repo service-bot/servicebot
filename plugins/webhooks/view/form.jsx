@@ -1,7 +1,5 @@
 import React from 'react';
-import Fetcher from "../../../views/components/utilities/fetcher.jsx"
-import ServiceBotBaseForm from "../../../views/components/elements/forms/servicebot-base-form.jsx";
-import {inputField} from "../../../views/components/elements/forms/servicebot-base-field.jsx";
+import {Fetcher, ServicebotBaseForm, inputField} from "servicebot-base-form";
 import Alerts from '../../../views/components/elements/alerts.jsx';
 import {required, url} from 'redux-form-validators'
 import {Field,} from 'redux-form'
@@ -168,7 +166,7 @@ function WebhookModal(props) {
         <Modal modalTitle={"Add endpoint"} icon="fa-plus" hideCloseBtn={false} show={show} hide={hide}
                hideFooter={false}>
             <div className="p-20">
-                <ServiceBotBaseForm
+                <ServicebotBaseForm
                     form={WebhookForm}
                     initialValues={{...hook}}
                     submissionRequest={submissionRequest}

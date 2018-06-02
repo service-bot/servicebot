@@ -6,9 +6,9 @@ import consume from "pluginbot-react/dist/consume"
 import {change, Field, FieldArray, FormSection, formValueSelector, getFormValues} from 'redux-form'
 import {connect} from "react-redux";
 import {RenderWidget, WidgetList, widgets} from "../../utilities/widgets";
-import {iconToggleField, inputField, priceField, priceToCents} from "./servicebot-base-field.jsx";
+import {iconToggleField, inputField, priceField, ServicebotBaseForm} from "servicebot-base-form";
 import {addAlert, dismissAlert} from "../../utilities/actions";
-import ServiceBotBaseForm from "./servicebot-base-form.jsx";
+// import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import Load from "../../utilities/load.jsx";
 import {numericality, required} from 'redux-form-validators'
 import slug from "slug"
@@ -386,7 +386,7 @@ let Tiers = function (props) {
 };
 Tiers = connect((state, ownProps) => {
     return {
-
+        formJSON: getFormValues(TEMPLATE_FORM_NAME)(state)
         // "privateValue": selector(state, "references.service_template_properties")[ownProps.index].private,
         // "requiredValue": selector(state, "references.service_template_properties")[ownProps.index].required,
         // "promptValue": selector(state, "references.service_template_properties")[ownProps.index].prompt_user,
@@ -401,6 +401,9 @@ Tiers = connect((state, ownProps) => {
         "setPricingTemplates": (member, val) => {
             dispatch(change(TEMPLATE_FORM_NAME, `references.${member}.references.payment_structure_templates`, val));
         },
+        "changeMember" : (member, val) => {
+            dispatch(change(TEMPLATE_FORM_NAME, member, val));
+        }
         // "setRequired": (val) => {
         //     if (val == true) {
         //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, true));

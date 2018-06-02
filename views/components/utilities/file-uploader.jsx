@@ -1,6 +1,6 @@
 import React from 'react';
 import Load from './load.jsx';
-import Fetcher from "./fetcher.jsx";
+import {Fetcher} from "servicebot-base-form";
 import Buttons from "../elements/buttons.jsx";
 
 class FileUploader extends React.Component {

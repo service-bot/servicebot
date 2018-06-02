@@ -1,6 +1,6 @@
 import React from 'react';
 import Load from '../../utilities/load.jsx';
-import Fetcher from "../../utilities/fetcher.jsx";
+import {Fetcher} from "servicebot-base-form";
 import ContentTitle from "../../layouts/content-title.jsx"
 import Buttons from "../buttons.jsx";
 import Alerts from "../alerts.jsx";

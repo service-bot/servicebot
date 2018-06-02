@@ -133,6 +133,7 @@ let getAppConf = function(){
         "configPath" : __dirname + "/pluginbot.config.js",
         "port" : process.env.PORT || 3000,
         "bundle_path" : process.env.BUNDLE_PATH || "/build/bundle.js",
+        "vendor_path" : process.env.vendor_path || "/build/vendor.js",
         "ssl_port" : process.env.SSL_PORT || 3001,
         "certificate_path" : process.env.CERTIFICATES || null, //ssl not mandatory
     };

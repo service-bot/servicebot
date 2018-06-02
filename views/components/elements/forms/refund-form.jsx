@@ -6,7 +6,7 @@ import Buttons from "../buttons.jsx";
 import Alerts from "../alerts.jsx";
 import {Price} from "../../utilities/price.jsx";
 import DateFormat from "../../utilities/date-format.jsx";
-import Fetcher from "../../utilities/fetcher.jsx";
+import {Fetcher} from "servicebot-base-form";
 let _ = require("lodash");
 
 class RefundForm extends React.Component {

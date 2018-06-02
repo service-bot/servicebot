@@ -18,22 +18,21 @@ import {connect} from "react-redux";
 import {RenderWidget, WidgetList, PriceBreakdown, widgets} from "../../utilities/widgets";
 import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
 import FileUploadForm from "./file-upload-form.jsx";
+import {addAlert, dismissAlert} from "../../utilities/actions";
 import {
-    inputField,
+    ServicebotBaseForm, inputField,
     selectField,
     OnOffToggleField,
     iconToggleField,
-    priceField,
-    priceToCents
-} from "./servicebot-base-field.jsx";
-import {addAlert, dismissAlert} from "../../utilities/actions";
-import ServiceBotBaseForm from "./servicebot-base-form.jsx";
+    priceField
+} from "servicebot-base-form";
 import SVGIcons from "../../utilities/svg-icons.jsx";
 import Load from "../../utilities/load.jsx";
 
 let _ = require("lodash");
 import {required, email, numericality, length} from 'redux-form-validators'
 import slug from "slug"
+
 const TEMPLATE_FORM_NAME = "serviceTemplateForm"
 const selector = formValueSelector(TEMPLATE_FORM_NAME); // <-- same as form name
 
@@ -63,34 +62,36 @@ function renderSplits({fields, meta: {error, submitFailed}}) {
             <div className="form-group form-group-flex">
                 <lable className="control-label form-label-flex-md">Number of payments</lable>
                 <div className="form-input-flex">
-                    <input className="form-control" type="number" defaultValue={fields.length } onChange={onAdd}/>
+                    <input className="form-control" type="number" defaultValue={fields.length} onChange={onAdd}/>
                     {submitFailed && error && <span>{error}</span>}
                 </div>
             </div>
 
             <ul className="split-payment-items">
-            {fields.map((member, index) => (
-                <li className="split-payment-item" key={index}>
-                    <button className="btn btn-rounded custom-field-button iconToggleField" id="split-payment-delete-button" onClick={() => fields.remove(index)}
-                            type="button" title="Remove Payment"><span className="itf-icon"><i className="fa fa-close"/></span></button>
+                {fields.map((member, index) => (
+                    <li className="split-payment-item" key={index}>
+                        <button className="btn btn-rounded custom-field-button iconToggleField"
+                                id="split-payment-delete-button" onClick={() => fields.remove(index)}
+                                type="button" title="Remove Payment"><span className="itf-icon"><i
+                            className="fa fa-close"/></span></button>
 
-                    <h4>Payment #{index + 1}</h4>
-                    <label>Days to charge customer after subscribed</label>
-                    <Field
-                        name={`${member}.charge_day`}
-                        type="number"
-                        component={inputField}
-                        validate={numericality({'>=': 0.00})}
+                        <h4>Payment #{index + 1}</h4>
+                        <label>Days to charge customer after subscribed</label>
+                        <Field
+                            name={`${member}.charge_day`}
+                            type="number"
+                            component={inputField}
+                            validate={numericality({'>=': 0.00})}
 
-                    />
-                    <Field name={`${member}.amount`} type="number"
-                           component={priceField}
-                           isCents={true}
-                           label="Amount"
-                           validate={numericality({'>=': 0.00})}
-                    />
-                </li>
-            ))}
+                        />
+                        <Field name={`${member}.amount`} type="number"
+                               component={priceField}
+                               isCents={true}
+                               label="Amount"
+                               validate={numericality({'>=': 0.00})}
+                        />
+                    </li>
+                ))}
             </ul>
         </div>
     )
@@ -126,7 +127,7 @@ class CustomField extends React.Component {
 
         if (myValues.prop_label) {
             willAutoFocus = false;
-            machineName = slug(myValues.prop_label, {lower : true});
+            machineName = slug(myValues.prop_label, {lower: true});
 
         }
         return (
@@ -186,8 +187,10 @@ class CustomField extends React.Component {
                     }
                 </div>
                 <div id="custom-prop-widget" className="custom-property-field-group">
-                    {machineName && <div className="form-group form-group-flex addon-options-widget-config-input-wrapper">
-                        <label className="control-label form-label-flex-md addon-options-widget-config-input-label">Machine Name</label>
+                    {machineName &&
+                    <div className="form-group form-group-flex addon-options-widget-config-input-wrapper">
+                        <label className="control-label form-label-flex-md addon-options-widget-config-input-label">Machine
+                            Name</label>
                         <pre>{machineName}</pre>
                     </div>}
                     {typeValue && <RenderWidget
@@ -390,9 +393,9 @@ class TemplateForm extends React.Component {
                                validate={[required()]}
                         />
                         <div className="form-group form-group-flex">
-                        <Field name="details" type="text"
-                               component={WysiwygRedux} label="Details"
-                        />
+                            <Field name="details" type="text"
+                                   component={WysiwygRedux} label="Details"
+                            />
                         </div>
 
                         {options.stripe_publishable_key && <Field name="published" type="checkbox"
@@ -488,8 +491,10 @@ class TemplateForm extends React.Component {
 
                                 {(serviceTypeValue === 'custom') &&
                                 <div>
-                                    <p>Quotes are built for services that are customer specific. If your service is priced
-                                        based on the customer's use-case, use this option. Once the quote service has been
+                                    <p>Quotes are built for services that are customer specific. If your service is
+                                        priced
+                                        based on the customer's use-case, use this option. Once the quote service has
+                                        been
                                         requested by the customer, you can add charges to the service at anytime.
                                     </p>
                                 </div>
@@ -742,7 +747,7 @@ class ServiceTemplateForm extends React.Component {
                             }
                         </div>
                         <div className="col-md-9">
-                            <ServiceBotBaseForm
+                            <ServicebotBaseForm
                                 form={TemplateForm}
                                 formName={TEMPLATE_FORM_NAME}
                                 initialValues={initialValues}

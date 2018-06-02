@@ -1,6 +1,6 @@
 import React from 'react';
 import Load from '../../utilities/load.jsx';
-import Fetcher from "../../utilities/fetcher.jsx";
+import {Fetcher} from "servicebot-base-form";
 let _ = require("lodash");
 import Inputs from '../../utilities/inputs.jsx';
 import ContentTitle from '../../layouts/content-title.jsx';

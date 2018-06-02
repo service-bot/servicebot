@@ -1,6 +1,6 @@
 import React from 'react';
 import Load from './load.jsx';
-import Fetcher from "./fetcher.jsx";
+import {Fetcher} from "servicebot-base-form";
 import {Authorizer, isAuthorized} from "./authorizer.jsx";
 import Inputs from "./inputs.jsx";
 import update from 'immutability-helper';

@@ -1,13 +1,9 @@
 import React from 'react';
-import Fetcher from "../../utilities/fetcher.jsx"
-import ServiceBotBaseForm from "./servicebot-base-form.jsx";
-import Alerts from '../alerts.jsx';
+import {ServicebotBaseForm, widgetField} from "servicebot-base-form";
 import {required, url} from 'redux-form-validators'
 import {Field,FieldArray} from 'redux-form'
 import Buttons from "../buttons.jsx";
 import Modal from '../../utilities/modal.jsx';
-import Jumbotron from '../../layouts/jumbotron.jsx';
-import {widgetField} from "./servicebot-base-field.jsx";
 import consume from "pluginbot-react/dist/consume";
 
 
@@ -90,7 +86,7 @@ function ModalEditProperties(props){
     return (
         <Modal modalTitle={"Edit Properties"} icon="fa-plus" hideCloseBtn={false} show={show} hide={hide} hideFooter={false}>
             <div className="p-20">
-                <ServiceBotBaseForm
+                <ServicebotBaseForm
                     form={CustomFieldEditForm}
                     //todo: is there a way to not need initial values to reference a prop name? (for array of X cases)
                     initialValues={{"service_instance_properties" : instance.references.service_instance_properties}}

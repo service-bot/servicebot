@@ -1,7 +1,7 @@
 import React from 'react';
 import ServiceRequestForm from "../elements/forms/service-instance-form-request.jsx"
 import {AdminEditingGear, AdminEditingSidebar} from "../layouts/admin-sidebar.jsx";
-import Fetcher from "../utilities/fetcher.jsx"
+import {Fetcher} from "servicebot-base-form"
 import {Price, getPrice} from "../utilities/price.jsx";
 import {getPrice as getTotalPrice, getPriceAdjustments} from "../../../lib/handleInputs";
 import { connect } from 'react-redux';

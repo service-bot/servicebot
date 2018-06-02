@@ -1,6 +1,6 @@
 import React from 'react';
 import update from "immutability-helper";
-import Fetcher from "./fetcher.jsx";
+import {Fetcher} from "servicebot-base-form";
 let _ = require("lodash");
 var values = require('object.values');
 import Load from "./load.jsx";

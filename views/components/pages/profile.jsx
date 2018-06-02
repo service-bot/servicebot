@@ -6,7 +6,7 @@ import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
 import UserFormEdit from "../elements/forms/user-form-edit.jsx";
-import Fetcher from "../utilities/fetcher.jsx";
+import {Fetcher} from "servicebot-base-form";
 import { connect } from "react-redux";
 
 const mapStateToProps = (state, ownProps) => {

@@ -17,16 +17,8 @@ import {
 import {connect} from "react-redux";
 import {RenderWidget, WidgetList, PriceBreakdown, widgets} from "../../utilities/widgets";
 import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
-import {
-    inputField,
-    selectField,
-    OnOffToggleField,
-    iconToggleField,
-    priceField,
-    priceToCents
-} from "./servicebot-base-field.jsx";
 import {addAlert, dismissAlert} from "../../utilities/actions";
-import ServiceBotBaseForm from "./servicebot-base-form.jsx";
+import {ServicebotBaseForm, inputField, selectField, priceField} from "servicebot-base-form";
 import Load from "../../utilities/load.jsx";
 
 let _ = require("lodash");
@@ -290,7 +282,7 @@ class ServiceTemplateForm extends React.Component {
             autoDismiss: 4000,
         };
         this.props.addAlert(successMessage);
-        if(this.props.postResponse){
+        if (this.props.postResponse) {
             this.props.postResponse();
         }
         browserHistory.push(`/dashboard`);
@@ -370,7 +362,7 @@ class ServiceTemplateForm extends React.Component {
 
             return (
                 <div>
-                    <ServiceBotBaseForm
+                    <ServicebotBaseForm
                         form={TemplateForm}
                         formName={TEMPLATE_FORM_NAME}
                         initialValues={initialValues}

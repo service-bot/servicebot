@@ -2,7 +2,7 @@ import React from 'react';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import {Link, browserHistory} from 'react-router';
 import ContentTitle from "../layouts/content-title.jsx";
-import Fetcher from "../utilities/fetcher.jsx";
+import {Fetcher} from "servicebot-base-form";
 import cookie from 'react-cookie';
 import Load from "../utilities/load.jsx";
 import DataTable from "../elements/datatable/datatable.jsx";

@@ -46,6 +46,17 @@ var config = async function () {
                 ]
             },
 
+            // externals: {
+            //     react: "react",
+            //     redux: "redux",
+            //     "react-redux": "react-redux",
+            //     "redux-form": "redux-form",
+            //     "servicebot-base-form": "servicebot-base-form",
+            //     "redux-form-validators": "redux-form-validators",
+            //     "react-router" : "react-router",
+            // },
+
+
             plugins: [
 
                 // new UglifyJsPlugin(),
@@ -61,8 +72,7 @@ var config = async function () {
     let app = {
         entry: {
             "bundle": ['react-hot-loader/patch', APP_DIR + '/index.jsx'],
-
-
+            "vendor" : ["react-router", "redux", "react", "react-redux", "redux-form", "servicebot-base-form", "redux-form-validators"]
         },
         output: {
             path: BUILD_DIR,
@@ -118,6 +128,15 @@ var config = async function () {
         },
         plugins: [
             new webpack.HotModuleReplacementPlugin(),
+            new webpack.optimize.CommonsChunkPlugin({
+                name: "vendor",
+                // filename: "vendor.js"
+                // (Give the chunk a different name)
+
+                minChunks: Infinity,
+                // (with more entries, this ensures that no other module
+                //  goes into the vendor chunk)
+            })
 
 
             // new UglifyJsPlugin(),
