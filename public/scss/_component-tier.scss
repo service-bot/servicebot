@@ -1,0 +1,241 @@
+.tiers {
+
+  ._container {
+    overflow-y: scroll;
+
+    ._tier-list {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      max-width: 100%;
+      padding-left: 0;
+      margin-bottom: 27px;
+      overflow-y: visible;
+
+      ._tier {
+
+        @include _tier_box;
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+
+        &:hover{
+          border: 3px solid #0CFFCD;
+          background-color: #36476B;
+          box-shadow: 0 0 4px 0 #4C82FC;
+          transition: all 0.3s;
+        }
+
+        &._selected {
+          border: 3px solid #0CFFCD;
+          background-color: #36476B;
+          box-shadow: 0 0 4px 0 #4C82FC;
+
+          ._tier-heading {
+            background-color: transparent;
+            box-shadow: none;
+          }
+        }
+
+        ._tier-heading {
+          position: relative;
+          background-color: $color-heading;
+          color: $color-white;
+          box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.13);
+
+          h2 {
+            color: $color-white;
+            font-size: 16px;
+            text-transform: uppercase;
+            text-align: center;
+            padding: 16px 0;
+            margin: 0;
+          }
+
+          ._tier-delete {
+            position: absolute;
+            top: 17px;
+            right: 19px;
+            border: none;
+            background: transparent;
+
+            @include _icon_close($color-white);
+            &:before{
+              width: 17px;
+              height: 4px;
+              top: 3px;
+              transform: rotate(-45deg) translate(-50%,-50%);
+            }
+            &:after{
+              width: 17px;
+              height: 4px;
+              top: 70%;
+              transform: rotate(45deg) translate(-62%, 0%);
+            }
+          }
+        }
+
+        ._tier-preview{
+          flex-grow: 1;
+        }
+
+        @mixin tier-icons($url){
+          ._tier-preview{
+            background: url($url);
+            background-repeat: no-repeat;
+            background-size: 25%;
+            background-position: center center;
+          }
+        }
+        &:first-child{
+          @include tier-icons("/assets/tier-icons/tier-1-icon.png");
+        }
+        &:nth-child(2){
+          @include tier-icons("/assets/tier-icons/tier-2-icon.png");
+        }
+        &:nth-child(3){
+          @include tier-icons("/assets/tier-icons/tier-3-icon.png");
+        }
+        &:nth-child(4){
+          @include tier-icons("/assets/tier-icons/tier-4-icon.png");
+        }
+        &:nth-child(5){
+          @include tier-icons("/assets/tier-icons/tier-5-icon.png");
+        }
+      }
+
+      #_tier-add {
+        list-style: none;
+        width: 280px;
+        position: relative;
+
+        ._tier-add-button {
+          @include _icon_plus($color-white);
+          display: block;
+          background-color: $color-dark-blue;
+          border-radius: 50px;
+          margin-left: 43px;
+          margin-top: -20px;
+          padding: 24px;
+          transition: all 0.3s;
+
+          &:before{
+            left: 50%;
+            transform: translateX(-50%) rotate(90deg);
+          }
+          &:after{
+            left: 50%;
+            transform: translateX(-50%);
+          }
+          &:hover{
+            background-color: #0CFFCD;
+            box-shadow: 0 0 4px 0 #4C82FC;
+            transition: all 0.3s;
+          }
+        }
+      }
+    }
+  }
+
+  ._tier-details {
+    border-radius: 1px;
+    background-color: #FFFFFF;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+    padding: 26px 16px;
+
+    $_max-tier-fields-width: 50%;
+    $_min-tier-fields-width: 300px;
+    ._tier-name_name {
+      max-width: $_max-tier-fields-width;
+      min-width: $_min-tier-fields-width;
+    }
+    ._tier-name_type {
+      max-width: $_max-tier-fields-width;
+      min-width: $_min-tier-fields-width;
+    }
+    ._tier-name_billing_period {
+      max-width: $_max-tier-fields-width;
+      min-width: $_min-tier-fields-width;
+    }
+    .payment-structures{
+
+      .buttons._add{
+        float: right;
+
+        .icon{
+          color: $color-white;
+          float: left;
+          display: block;
+          position: relative;
+          margin-right: 34px;
+          transform: translateY(-2px);
+
+          &:before, &:after{
+            height: 3px;
+          }
+        }
+      }
+
+      ._billing-options{
+        padding: 10px 0 20px;
+        display: flex;
+
+        ._count{
+          background: $color-dark-blue;
+          color: $color-white;
+          padding: 5px;
+          height: 26px;
+          width: 26px;
+          display: inline-block;
+          line-height: 17px;
+          border-radius: 50px;
+          text-align: center;
+          margin-right: 12px;
+        }
+
+        ._sub-heading{
+          color: #6F7F9F;
+          line-height: 22px;
+          font-size: 16px;
+          font-family: "Avenir" "Arial";
+        }
+
+        ._hr{
+          border-bottom: 1px solid #dedede;
+          flex-grow: 1;
+          margin: 0 20px;
+          transform: translateY(-14px);
+        }
+
+        ._billing-options-delete{
+          background: transparent;
+          border: none;
+          background-image: url(/assets/icons/trash.svg);
+          background-repeat: no-repeat;
+          background-size: contain;
+          width: 20px;
+        }
+
+      }
+
+      ._billing-options-fields{
+        max-width: $_max-tier-fields-width;
+        min-width: $_min-tier-fields-width;
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+
+        ._per{
+          @include _label_text;
+          color: $color-heading;
+          display: block;
+          padding: 33px 22px 0px;
+        }
+      }
+    }
+    @include _formGroup(column);
+    @include _formLabel(dark);
+    @include _formInput;
+  }
+
+}
