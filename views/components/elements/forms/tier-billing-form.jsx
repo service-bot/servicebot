@@ -27,10 +27,10 @@ let PaymentStructureTemplates = function (props) {
 
 
     let availableOptions = [
-        {id: "month", name: "Month"},
-        {id: "year", name: "Year"},
-        {id: "day", name: "Day"},
-        {id: "week", name: "Week"}
+        {id: "month", name: "Monthly"},
+        {id: "year", name: "Yearly"},
+        {id: "day", name: "Daily"},
+        {id: "week", name: "Weekly"}
     ];
     let optionMap = plans.map(plan => {
         return availableOptions.filter(option => option.id === plan.interval || !plans.some(plan2 => plan2.interval === option.id));
@@ -59,23 +59,39 @@ let PaymentStructureTemplates = function (props) {
 
     }
     if (tier.type === "subscription") {
-        return (<div className="payment-structures">
-            {fields.map((field, index) => {
-                return (<div key={"field-" + index + "-" + member}>
-                    <label className="control-label form-label-flex-md" htmlFor="type">Bill Customer Every</label>
-                    <Field name={field + ".interval"} id="interval" component={selectField}
-                           options={optionMap[index]}/>
-                    <Field name={field + ".amount"} type="number"
-                           component={priceField}
-                           isCents={true}
-                           label="Amount"
-                           validate={numericality({'>=': 0.00})}/>
-                    {fields.length > 1 && <button onClick={deletePlan(index)}>Delete</button>}
-                </div>)
-            })}
+        return (
+            <div className="payment-structures">
+                {fields.map((field, index) => {
+                    return (
+                        <div key={"field-" + index + "-" + member}>
+                            {index > 0 &&
+                            <div className="_billing-options">
+                                <span className="_count">{index + 1}</span>
+                                <span className="_sub-heading">Billing Option {index + 1}</span>
+                                <div className="_hr"/>
+                                {fields.length > 1 && <button className="_billing-options-delete"
+                                                              aria-label={`delete billing option ${index + 1}`}
+                                                              onClick={deletePlan(index)}/>}
+                            </div>
+                            }
+                            <div className="_billing-options-fields">
+                                <Field name={field + ".amount"} type="number"
+                                       component={priceField}
+                                       isCents={true}
+                                       label="Amount"
+                                       validate={numericality({'>=': 0.00})}/>
+                                <span className="_per">per</span>
+                                <Field name={field + ".interval"} id="interval" label="Billed" component={selectField}
+                                       options={optionMap[index]}/>
+                            </div>
+                        </div>
+                    )
+                })}
 
-            {plans.length < 4 && <button onClick={addPayment}>Add</button>}
-        </div>)
+                {plans.length < 4 && <button className="buttons _add" onClick={addPayment}><span className="icon plus"/>Add Additional Pricing</button>}
+                <span className="clear"/>
+            </div>
+        )
     } else {
         return <div></div>
     }
@@ -111,34 +127,41 @@ let TierBillingForm = function (props) {
     };
 
 
-    return (<div>
-        <Field name={member + ".name"} type="text"
-               component={inputField} label="Tier Name (eg. Basic, Enterprise)"
-               validate={[required()]}
-        />
+    return (
+        <div className="_tier-details">
+            <div className="_tier-name_name">
+                <Field name={member + ".name"} type="text"
+                       component={inputField} label="Tier Name (eg. Basic, Enterprise)"
+                       validate={[required()]}
+                />
+            </div>
+            <div className="_tier-name_type">
+                <Field name={member + ".type"} id="type"
+                       component={selectField} label="Billing Type" onChange={changeServiceType}
+                       options={[
+                           {id: "subscription", name: "Subscription"},
+                           // {id: "split", name: "Scheduled Payments"},
+                           {id: "one_time", name: "One Time"},
+                           {id: "custom", name: "Quote"}
+                       ]}
+                />
+            </div>
 
-        <Field name={member + ".type"} id="type"
-               component={selectField} label="Billing Type" onChange={changeServiceType}
-               options={[
-                   {id: "subscription", name: "Subscription"},
-                   // {id: "split", name: "Scheduled Payments"},
-                   {id: "one_time", name: "One Time"},
-                   {id: "custom", name: "Quote"}
-               ]}
-        />
+            {tier.type === "subscription" &&
+                <div className="_tier-name_billing_period">
+                    <Field onChange={changeTrial} format={formatFromPricing} name={member + ".trial_period_days"} type="number"
+                           component={inputField} label="Trial Period (Days)"
+                           validate={required()}
+                    />
+                </div>
+            }
 
-        {tier.type === "subscription" &&
-        <Field onChange={changeTrial} format={formatFromPricing} name={member + ".trial_period_days"} type="number"
-               component={inputField} label="Trial Period (Days)"
-               validate={required()}
-        />}
-
-
-        <FormSection name={member + ".references"}>
-            <FieldArray name="payment_structure_templates"
-                        props={{tier: tier, member: member}}
-                        component={PaymentStructureTemplates}/>
-        </FormSection>
-    </div>)
+            <FormSection name={member + ".references"}>
+                <FieldArray name="payment_structure_templates"
+                            props={{tier: tier, member: member}}
+                            component={PaymentStructureTemplates}/>
+            </FormSection>
+        </div>
+    );
 }
 export {TierBillingForm};
