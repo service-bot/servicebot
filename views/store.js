@@ -26,7 +26,7 @@ import {
 import cookie from 'react-cookie';
 import thunk from "redux-thunk";
 import {isAuthorized} from "./components/utilities/authorizer.jsx";
-import Fetcher from "./components/utilities/fetcher.jsx";
+import {Fetcher} from "servicebot-base-form";
 import {reducer as formReducer} from 'redux-form'
 import PluginbotClient from "pluginbot-react";
 import {syncHistoryWithStore, routerReducer} from 'react-router-redux'

@@ -183,7 +183,7 @@ module.exports = {
             let configBuilder = require("pluginbot/config");
             let clientPlugins = Object.keys((await configBuilder.buildClientConfig(CONFIG_PATH)).plugins);
             let {site_title, site_description, hostname} = store.getState().options;
-            res.render("main", {bundle : appConfig.bundle_path, plugins : clientPlugins, site_title, site_description, hostname});
+            res.render("main", {vendor: appConfig.vendor_path, bundle : appConfig.bundle_path, plugins : clientPlugins, site_title, site_description, hostname});
         })
 
 

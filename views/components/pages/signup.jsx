@@ -1,7 +1,7 @@
 import React from 'react';
 import {browserHistory} from 'react-router';
 import Content from '../layouts/content.jsx';
-import Fetcher from "../utilities/fetcher.jsx";
+import {Fetcher} from "servicebot-base-form";
 import update from "immutability-helper";
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import UserFormRegister from "../elements/forms/user-form-register.jsx";

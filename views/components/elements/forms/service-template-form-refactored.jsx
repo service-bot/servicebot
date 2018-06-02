@@ -6,9 +6,9 @@ import consume from "pluginbot-react/dist/consume"
 import {change, Field, FieldArray, FormSection, formValueSelector, getFormValues} from 'redux-form'
 import {connect} from "react-redux";
 import {RenderWidget, WidgetList, widgets} from "../../utilities/widgets";
-import {iconToggleField, inputField, priceField, priceToCents} from "./servicebot-base-field.jsx";
+import {iconToggleField, inputField, priceField, ServicebotBaseForm} from "servicebot-base-form";
 import {addAlert, dismissAlert} from "../../utilities/actions";
-import ServiceBotBaseForm from "./servicebot-base-form.jsx";
+// import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import Load from "../../utilities/load.jsx";
 import {numericality, required} from 'redux-form-validators'
 import slug from "slug"
@@ -778,7 +778,7 @@ class ServiceTemplateForm extends React.Component {
                             {/*}*/}
                         </div>
                         <div className="col-md-9">
-                            <ServiceBotBaseForm
+                            <ServicebotBaseForm
                                 form={TemplateForm}
                                 formName={TEMPLATE_FORM_NAME}
                                 initialValues={initialValues}

@@ -1,9 +1,7 @@
 import React from 'react';
 import {Elements, injectStripe, CardElement, StripeProvider} from 'react-stripe-elements';
-import Fetcher from "../../utilities/fetcher.jsx"
 import {get, has} from "lodash";
-import ServiceBotBaseForm from "./servicebot-base-form.jsx";
-import {inputField} from "./servicebot-base-field.jsx";
+import {ServicebotBaseForm, Fetcher, inputField}from "servicebot-base-form"
 import Alerts from '../alerts.jsx';
 import {required} from 'redux-form-validators'
 import {Field,} from 'redux-form'
@@ -276,7 +274,7 @@ class CreditCardForm extends React.Component {
                         </div>
                         {this.state.showForm &&
                             <div className="service-instance-box-content">
-                                <ServiceBotBaseForm
+                                <ServicebotBaseForm
                                     form={BillingInfo}
                                     initialValues={{...this.state.personalInformation}}
                                     submissionPrep={this.submissionPrep}

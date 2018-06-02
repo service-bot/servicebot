@@ -5,7 +5,7 @@ import ServiceRequestForm from "../elements/forms/service-instance-form-request.
 import PageSection from "../layouts/page-section.jsx";
 import Featured from "../layouts/featured.jsx";
 import {AdminEditingGear, AdminEditingSidebar} from "../layouts/admin-sidebar.jsx";
-import Fetcher from "../utilities/fetcher.jsx"
+import {Fetcher} from "servicebot-base-form"
 import {Price, getPrice} from "../utilities/price.jsx";
 import { connect } from 'react-redux';
 let _ = require("lodash");

@@ -2,13 +2,10 @@ import React from 'react';
 import {Link} from 'react-router';
 import Load from '../../utilities/load.jsx';
 import Authorizer from "../../utilities/authorizer.jsx";
-import Inputs from "../../utilities/inputs.jsx";
 import Buttons from "../buttons.jsx";
-import {DataForm} from "../../utilities/data-form.jsx";
 import DateFormat from '../../utilities/date-format.jsx';
 import ImageUploader from '../../utilities/image-uploader.jsx';
-import ServiceBotBaseForm from "./servicebot-base-form.jsx";
-import {inputField} from "./servicebot-base-field.jsx";
+import {ServicebotBaseForm, inputField} from "servicebot-base-form";
 import {Field,} from 'redux-form';
 import { required, email, numericality, length } from 'redux-form-validators';
 
@@ -120,7 +117,7 @@ class UserFormEdit extends React.Component {
                                 </div>
                                 <div id="add-category-form" className="col-md-12">
                                     <div className="row">
-                                        <ServiceBotBaseForm
+                                        <ServicebotBaseForm
                                             form={userFormElements.bind(this)}
                                             initialRequests = {initialRequests}
                                             validations={validations}

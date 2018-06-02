@@ -1,4 +1,4 @@
-import {inputField, priceField, selectField} from "./servicebot-base-field.jsx";
+import {inputField, priceField, selectField} from "servicebot-base-form";
 import {numericality, required} from "redux-form-validators";
 import React from 'react';
 import {change, Field, FieldArray, FormSection, formValueSelector, getFormValues} from 'redux-form'

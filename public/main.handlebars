@@ -68,6 +68,8 @@
                 document.getElementById('servicebot-loader').style.visibility = "hidden";
             }
         </script>
+        <script src="{{vendor}}" type="text/javascript"></script>
+
         {{#each plugins}}
             <script src="/build/plugins/{{this}}.js" type="text/javascript"></script>
         {{/each}}

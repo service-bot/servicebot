@@ -1,6 +1,6 @@
 import React from 'react';
 import cookie from 'react-cookie';
-import Fetcher from "../../utilities/fetcher.jsx"
+import {Fetcher} from "servicebot-base-form"
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import {browserHistory} from 'react-router';
 import Modal from '../../utilities/modal.jsx';

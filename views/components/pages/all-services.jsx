@@ -5,7 +5,7 @@ import Content from "../layouts/content.jsx";
 import PageSection from "../layouts/page-section.jsx";
 import SearchServiceBar from "../elements/home/service-list-search.jsx";
 import Inputs from "../utilities/inputs.jsx";
-import Fetcher from "../utilities/fetcher.jsx";
+import {Fetcher} from "servicebot-base-form";
 import ServiceList from "../elements/home/service-list.jsx";
 import { connect } from 'react-redux';
 let _ = require("lodash");

@@ -165,7 +165,7 @@ module.exports = function* (appConfig, initialConfig, dbConfig, app) {
             let configBuilder = require("pluginbot/config");
             let clientPlugins = Object.keys((await configBuilder.buildClientConfig(CONFIG_PATH)).plugins);
 
-            response.render("main", {bundle: appConfig.bundle_path, plugins: clientPlugins});
+            response.render("main", {vendor: appConfig.vendor_path, bundle: appConfig.bundle_path, plugins: clientPlugins});
         });
 
         return () => {

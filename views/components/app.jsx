@@ -1,5 +1,5 @@
 import React from 'react';
-import Fetcher from "./utilities/fetcher.jsx"
+import {Fetcher} from "servicebot-base-form"
 import NavServiceBot from "./layouts/nav-servicebot.jsx"
 import NavBoostrap from "./layouts/nav-bootstrap.jsx"
 import Footer from "./layouts/footer.jsx"
