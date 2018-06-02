@@ -1,0 +1,60 @@
+/***
+===== APP LAYOUT =====
+***/
+
+.app-content{
+
+  ._title-container{
+    background: $color-white;
+    border-bottom: 1px solid $color-title-container-border;
+
+    ._heading{
+
+      font-size: 1.2rem;
+      font-weight: normal;
+      color: $color-blue-gray;
+      padding: 23px 27px 22px;
+      margin-bottom: 0;
+
+    }
+
+  }
+
+  ._content-container {
+    background: $color-white;
+    display: flex;
+
+    ._sidebar {
+      flex-basis: 30%;
+      flex-shrink: 0;
+      max-width: 300px;
+      padding: 35px 50px;
+      background-color: $color-light-blue-gray;
+    }
+
+    ._content {
+      flex-grow: 1;
+      width: calc(100vw - 300px - 300px - 20px);
+
+      ._section{
+
+        background-color: $color-extra-light-gray;
+        margin: 20px 15px;
+        padding: 18px 23px;
+        box-shadow: 0 2px 4px 0 rgba(0,0,0,0.06);
+
+        & > h3{
+          @include _section_heading;
+
+          & > .form-step-count{
+            @include steps;
+          }
+        }
+
+      }
+
+    }
+
+  }
+
+}
