@@ -1,7 +1,20 @@
+/* mixins */
+@import "_mixins";
+@import "css-icons";
+
 /* variables */
 @import "variables";
 @import "colors";
+@import "text";
 
-/* components */
+/* elements */
 @import "buttons";
-@import "nav-servicebot";
+
+/* component */
+@import "_component-forms";
+@import "_component-tier";
+@import "_component-forms-offering";
+
+/* layout components */
+@import "_layout-nav";
+@import "_layout-content";
