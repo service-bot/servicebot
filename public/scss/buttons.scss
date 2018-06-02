@@ -18,4 +18,27 @@
     border-radius: 50px;
   }
 
+  &._add{
+    font-size: $font-size;
+    padding: 14px 24px;
+    background-color: #4C82FC;
+    color: $color-white;
+    border-radius: 1px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.17);
+  }
+
+  &._save{
+    font-size: $font-size;
+    padding: 14px 24px;
+    background-color: #1ABE98;
+    color: $color-white;
+    border-radius: 1px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.17);
+  }
+
+}
+
+.clear{
+  display: block;
+  clear: both;
 }
