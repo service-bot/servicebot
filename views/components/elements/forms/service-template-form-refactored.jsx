@@ -355,31 +355,33 @@ let Tiers = function (props) {
         });
     }
 
-    return (<div>
-        <ul>
-            {fields.map((field, index) => {
-                let liClass = "tier"
-                let tier = fields.get(index);
-                if (index === selected) {
-                    liClass = liClass + " selected";
+    return (
+        <div className="tiers">
+            <div className="_container">
+                <ul className="_tier-list">
+                    {fields.map((field, index) => {
+                        let liClass = "_tier";
+                        let tier = fields.get(index);
+                        if (index === selected) {
+                            liClass = liClass + " _selected";
+                        }
+                        return (<li key={"tier-" + index} className={liClass} id={"tier-" + index}>
+                            <div className="_tier-heading" onClick={selectTier(index)}>
+                                <h2 className={"_tier-name"}>{tier.name}</h2>
+                                {fields.length > 1 && <button className="_tier-delete" aria-label="delete tier" onClick={deleteTier(index)}/>}
+                            </div>
+                            <div className={"_tier-preview"}/>
+                        </li>)
+                    })}
+                    <li id={"_tier-add"} onClick={onAdd}>
+                        <button className="buttons _add _tier-add-button" aria-label="add new tier"/>
+                    </li>
 
-                }
-                return (<li key={"tier-" + index} className={liClass} id={"tier-" + index}>
-                    {fields.length > 1 && <button onClick={deleteTier(index)}>Delete Tier</button>}
-                    <div onClick={selectTier(index)}>
-                        <h2 className={"tier-name"}>{tier.name}</h2>
-                        <div className={"tier-preview"}>
-                        </div>
-                    </div>
-                </li>)
-            })}
-            <li id={"add-tier"} onClick={onAdd}>
-                <span>ADD</span>
-            </li>
-
-        </ul>
-        {(OverrideBilling && <OverrideBilling {...props} member={"tiers[" + selected + "]"} tier={current}/>) || <TierBillingForm {...props} member={"tiers[" + selected + "]"} tier={current}/>}
-    </div>)
+                </ul>
+            </div>
+            {(OverrideBilling && <OverrideBilling {...props} member={"tiers[" + selected + "]"} tier={current}/>) || <TierBillingForm {...props} member={"tiers[" + selected + "]"} tier={current}/>}
+        </div>
+    )
 
 };
 Tiers = connect((state, ownProps) => {
@@ -496,91 +498,48 @@ class TemplateForm extends React.Component {
 
         return (
 
-            <form onSubmit={handleSubmit}>
-                <div className="row">
-                    <div className="col-md-8">
-                        <div className="form-level-errors">
-                            {!options.stripe_publishable_key &&
-                            <Link to="/stripe-settings"><br/><h4 className="form-error">Publishing Disabled Until Setup
-                                Complete - Click here to complete</h4></Link>}
-                            {error && <div className="form-error">{error}</div>}
-                        </div>
-                        <div className="form-level-warnings"/>
-                        <h3>Service Info</h3>
-                        <Field name="name" type="text"
-                               component={inputField} label="Product / Service Name"
-                               validate={[required()]}
-                        />
-
+            <form className="form-offering" onSubmit={handleSubmit}>
+                <div className="_section">
+                    <div className="form-level-errors">
+                        {!options.stripe_publishable_key &&
+                        <Link to="/stripe-settings"><br/><h4 className="form-error">Publishing Disabled Until Setup
+                            Complete - Click here to complete</h4></Link>}
+                        {error && <div className="form-error">{error}</div>}
                     </div>
-
-                </div>
-                <div className="row">
-                    <div className="col-md-12">
-                        <hr/>
-                        <div className="row">
-                            <div className="col-md-8">
-                                <h3>Tiers</h3>
-                                <Field name="statement_descriptor" type="hidden"
-                                       component={inputField} label="Statement Descriptor"
-                                />
-                                <div>
-                                    <FormSection name="references">
-                                        <FieldArray name="tiers"
-                                                    props={{
-                                                        selected: self.state.selectedTier,
-                                                        selectTier: self.selectTier,
-                                                        templateType: serviceTypeValue
-                                                    }}
-                                                    component={Tiers}/>
-                                    </FormSection>
-                                </div>
-
-                                {/*{(serviceTypeValue === 'split') &&*/}
-                                {/*<div>*/}
-
-                                {/*<FormSection name="split_configuration">*/}
-                                {/*<FieldArray name="splits"*/}
-                                {/*props={{templateType: serviceTypeValue}}*/}
-                                {/*component={renderSplits}/>*/}
-
-                                {/*</FormSection>*/}
-
-                                {/*</div>*/}
-                                {/*}*/}
-
-                            </div>
-
-
-                        </div>
+                    <div className="form-level-warnings"/>
+                    <h3><span className="form-step-count">1</span>Software Name</h3>
+                    <div className="_form-field-group _form-field-name_software_name">
+                        <Field name="name" type="text" component={inputField} label="Software Name" validate={[required()]}/>
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col-md-12">
-                        <hr/>
-                        <div className="row">
-                            <div className="col-md-8">
-                                {/*<h3>Custom Fields</h3>*/}
-                                {/*<FormSection name="references">*/}
-                                {/*<FieldArray name="service_template_properties"*/}
-                                {/*props={{templateType: serviceTypeValue}}*/}
-                                {/*component={renderCustomProperty}/>*/}
-                                {/*</FormSection>*/}
-                                {/*{props.formJSON.references && props.formJSON.references.service_template_properties &&*/}
-                                {/*<PriceBreakdown*/}
-                                {/*inputs={props.formJSON.references.service_template_properties}/>*/}
-                                {/*}*/}
-                                <div id="service-submission-box" className="button-box right">
-                                    <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>Go
-                                        Back</Link>
-                                    <button className="btn btn-rounded btn-primary" type="submit">
-                                        Submit
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div className="_section">
+                    <h3><span className="form-step-count">2</span>Pricing Details</h3>
+                    <Field name="statement_descriptor" type="hidden"
+                           component={inputField} label="Statement Descriptor"/>
+
+                    <FormSection name="references">
+                        <FieldArray name="tiers"
+                                    props={{
+                                        selected: self.state.selectedTier,
+                                        selectTier: self.selectTier,
+                                        templateType: serviceTypeValue
+                                    }}
+                                    component={Tiers}/>
+                    </FormSection>
                 </div>
+                <hr/>
+                {/*<h3>Custom Fields</h3>*/}
+                {/*<FormSection name="references">*/}
+                {/*<FieldArray name="service_template_properties"*/}
+                {/*props={{templateType: serviceTypeValue}}*/}
+                {/*component={renderCustomProperty}/>*/}
+                {/*</FormSection>*/}
+                {/*{props.formJSON.references && props.formJSON.references.service_template_properties &&*/}
+                {/*<PriceBreakdown*/}
+                {/*inputs={props.formJSON.references.service_template_properties}/>*/}
+                {/*}*/}
+                {/*<Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>GoBack</Link>*/}
+                <button className="buttons _save" type="submit">Save & Embed</button>
             </form>
         )
     };
@@ -749,46 +708,26 @@ class ServiceTemplateForm extends React.Component {
             }
 
             return (
-                <div>
-                    <div className="row">
-                        <div className="col-md-3">
-                            {/*{(!this.state.imageSuccess || !this.state.iconSuccess || !this.state.success) &&*/}
-                            {/*<div>*/}
-
-                            {/*<FileUploadForm*/}
-                            {/*upload={this.state.success}*/}
-                            {/*imageUploadURL={imageUploadURL}*/}
-                            {/*name="template-image"*/}
-                            {/*label="Upload Cover Image"*/}
-                            {/*handleImageUploadSuccess={this.handleImageSuccess}*/}
-                            {/*/>*/}
-                            {/*<FileUploadForm*/}
-                            {/*upload={this.state.success}*/}
-                            {/*imageUploadURL={iconUploadURL}*/}
-                            {/*name="template-icon"*/}
-                            {/*label="Upload Icon Image"*/}
-                            {/*handleImageUploadSuccess={this.handleIconSuccess}*/}
-                            {/*/>*/}
-                            {/*</div>*/}
-                            {/*}*/}
-                        </div>
-                        <div className="col-md-9">
-                            <ServiceBotBaseForm
-                                form={TemplateForm}
-                                formName={TEMPLATE_FORM_NAME}
-                                initialValues={initialValues}
-                                initialRequests={initialRequests}
-                                submissionPrep={this.submissionPrep}
-                                submissionRequest={submissionRequest}
-                                successMessage={successMessage}
-                                handleResponse={this.handleResponse}
-                                initializer={initializer}
-                                formProps={{
-                                    ...this.props.fieldDispatches,
-                                    ...this.props.fieldState
-                                }}
-                            />
-                        </div>
+                <div className="_content-container">
+                    <div className="_sidebar">
+                        <h2>Steps</h2>
+                    </div>
+                    <div className="_content">
+                        <ServiceBotBaseForm
+                            form={TemplateForm}
+                            formName={TEMPLATE_FORM_NAME}
+                            initialValues={initialValues}
+                            initialRequests={initialRequests}
+                            submissionPrep={this.submissionPrep}
+                            submissionRequest={submissionRequest}
+                            successMessage={successMessage}
+                            handleResponse={this.handleResponse}
+                            initializer={initializer}
+                            formProps={{
+                                ...this.props.fieldDispatches,
+                                ...this.props.fieldState
+                            }}
+                        />
                     </div>
                 </div>
             )
