@@ -1,0 +1,84 @@
+@mixin steps{
+
+  border: 2px solid currentColor;
+  border-radius: 50px;
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+  text-align: center;
+  display: inline-block;
+  margin-right: 20px;
+  padding-right: 1px;
+  padding-top: 1px;
+
+}
+
+@mixin _tier_box{
+
+  flex-shrink: 0;
+  height: 186px;
+  width: 312px;
+  border-radius: 3px;
+  background-color: #36476B;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.28);
+  list-style: none;
+  margin-right: 16px;
+  overflow: hidden;
+
+}
+
+/* fonts */
+@mixin _section_heading{
+  color: $color-heading;
+  font-size: $section_heading;
+  font-weight: normal;
+  text-transform: uppercase;
+  line-height: 22px;
+  font-family: "Open Sans", "Arial";
+}
+@mixin _label_text{
+  @include _section_heading;
+}
+
+/* form */
+@mixin _formGroup($direction){
+
+  .form-group.form-group-flex {
+    width: 100%;
+    flex-direction: $direction;
+
+    @if($direction == 'column') {
+      .form-label-flex-md{
+        flex-basis: auto;
+      }
+    }
+  }
+
+}
+@mixin  _formLabel($color){
+
+  label{
+    @if($color == 'dark'){
+      color: $color-heading;
+    }@else if($color == 'light'){
+      color: $color-white;
+    }@else{
+      color: $color;
+    }
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 22px;
+    text-transform: uppercase;
+    font-family: "Open Sans", "Arial";
+  }
+}
+@mixin _formInput{
+  input, .form-control{
+    color: $color-black;
+    font-size: 16px;
+    font-weight: 300;
+    border: 1px solid $color-heading;
+    border-radius: 1px;
+    height: 42px;
+  }
+}
