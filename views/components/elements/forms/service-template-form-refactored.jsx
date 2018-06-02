@@ -8,7 +8,7 @@ import {connect} from "react-redux";
 import {RenderWidget, WidgetList, widgets} from "../../utilities/widgets";
 import {iconToggleField, inputField, priceField, ServicebotBaseForm} from "servicebot-base-form";
 import {addAlert, dismissAlert} from "../../utilities/actions";
-// import ServiceBotBaseForm from "./servicebot-base-form.jsx";
+// import ServiceBotBaseForm from "./servicebot-base-form2.jsx";
 import Load from "../../utilities/load.jsx";
 import {numericality, required} from 'redux-form-validators'
 import slug from "slug"
@@ -369,8 +369,9 @@ let Tiers = function (props) {
                             <div className="_tier-heading" onClick={selectTier(index)}>
                                 <h2 className={"_tier-name"}>{tier.name}</h2>
                                 {fields.length > 1 && <button className="_tier-delete" aria-label="delete tier" onClick={deleteTier(index)}/>}
+                                </div>
+                                <div className={"_tier-preview"}>
                             </div>
-                            <div className={"_tier-preview"}/>
                         </li>)
                     })}
                     <li id={"_tier-add"} onClick={onAdd}>
@@ -716,7 +717,7 @@ class ServiceTemplateForm extends React.Component {
                         <h2>Steps</h2>
                     </div>
                     <div className="_content">
-                        <ServiceBotBaseForm
+                        <ServicebotBaseForm
                             form={TemplateForm}
                             formName={TEMPLATE_FORM_NAME}
                             initialValues={initialValues}
