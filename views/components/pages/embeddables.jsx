@@ -1,6 +1,5 @@
 import React from 'react';
 import consume from "pluginbot-react/dist/consume"
-import {Link} from "react-router";
 let EmbeddableCard = function(props){
     let {name, description, iconUrl, component} = props;
     return <div onClick={props.onClick}>
@@ -22,12 +21,10 @@ class Embeddables extends React.Component{
         let self = this;
         let select = function(name){
             return function(e){
-                console.log(e, name);
                 self.setState({selected: name});
             }
         }
         let selected = embeddables.find(embed => embed.name === self.state.selected);
-        console.log("SELECTED!",selected, embeddables);
         let SelectedComponent = (selected && selected.component) ||  EmbedIntro;
         return (<div>
             <div>
