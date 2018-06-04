@@ -48,7 +48,7 @@ import ServiceInstanceForm from "./components/elements/forms/service-instance-fo
 import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
-
+import Embeddables from "./components/pages/embeddables.jsx";
 
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
@@ -118,9 +118,10 @@ class AppRouter extends React.Component {
                     </Route>
                     {/* Query routes */}
                     <Route name="Services" path="manage-subscriptions/:status" component={ManageSubscriptions}/>
+
                     {/* Other */}
                     <Route path="service-templates/lite" component={ServiceTemplateFormLite}/>
-
+                    <Route name="Embeddables" path={"/embeddables"} component={Embeddables}/>
                     <Route path="service-templates/:templateId" component={ServiceTemplateForm}/>
                     <Route name="Manage Subscriptions" path="/service-instance" component={ManageSubscriptions}/>
                     <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>

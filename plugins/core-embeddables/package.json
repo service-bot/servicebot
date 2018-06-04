@@ -1,0 +1,12 @@
+{
+  "name": "core-embeddables",
+  "version": "0.0.1",
+  "dependencies": {
+    
+  },
+  "pluginbot": {
+    "client": {
+      "main" : "client.js"
+    }
+  }
+}
