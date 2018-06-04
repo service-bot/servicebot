@@ -511,9 +511,9 @@ class TemplateForm extends React.Component {
                         {error && <div className="form-error">{error}</div>}
                     </div>
                     <div className="form-level-warnings"/>
-                    <h3><span className="form-step-count">1</span>Software Name</h3>
+                    <h3><span className="form-step-count">1</span>Offering Name</h3>
                     <div className="_form-field-group _form-field-name_software_name">
-                        <Field name="name" type="text" component={inputField} label="Software Name" validate={[required()]}/>
+                        <Field name="name" type="text" component={inputField} label="Offering Name" validate={[required()]}/>
                     </div>
                 </div>
                 <div className="_section">
