@@ -130,8 +130,8 @@ class NavServiceBot extends React.Component {
         //todo: do this dynamically somehow
         let linkGroupManage = ['manage-catalog', 'manage-categories', 'manage-users', 'manage-subscriptions'];
         let linkGroupSettings = ['stripe-settings', 'notification-templates', 'manage-permission', 'system-settings'];
-
         let getLinkClass = this.getLinkClass;
+        let currentDropdown = '';
 
         if(isAuthorized({permissions: ["can_administrate", "can_manage"]})){
             return(
@@ -142,7 +142,9 @@ class NavServiceBot extends React.Component {
                         </Link>
                     </li>
                     <li className="app-dropdown">
-                        <a className={getLinkClass(linkGroupManage, 'parent')} href="#"><span className="nav-icons icon-manage"/>Manage<span className="caret"/></a>
+                        <Link className={getLinkClass(linkGroupManage, 'parent')} to="/manage-catalog">
+                            <span className="nav-icons icon-manage"/>Manage<span className="caret"/>
+                        </Link>
                         <ul className="app-dropdown">
                             <li><Link to="/manage-catalog/list" className={getLinkClass('manage-catalog', 'child')}>Manage Offerings</Link></li>
                             <li><Link to="/manage-categories" className={getLinkClass('manage-categories', 'child')}>Manage Categories</Link></li>
@@ -151,7 +153,9 @@ class NavServiceBot extends React.Component {
                         </ul>
                     </li>
                     <li className="app-dropdown">
-                        <a className={getLinkClass(linkGroupSettings, 'parent')} href="#"><span className="nav-icons icon-settings"/>Settings<span className="caret"/></a>
+                        <Link className={getLinkClass(linkGroupSettings, 'parent')} to="/stripe-settings">
+                            <span className="nav-icons icon-settings"/>Settings<span className="caret"/>
+                        </Link>
                         <ul className="app-dropdown">
                             <li><Link to="/stripe-settings" className={getLinkClass('stripe-settings', 'child')}>Stripe Settings</Link></li>
                             <li><Link to="/notification-templates" className={getLinkClass('notification-templates', 'child')}>Email Settings</Link></li>

@@ -199,7 +199,7 @@ class ManageCatalogList extends React.Component {
             return ( <Load/> );
         } else {
             return (
-                <div className="row m-b-20">
+                <div className="page-service-instance row m-b-20">
                     <div className="col-xs-12">
                         <ServiceBotTableBase
                             rows={this.state.rows}

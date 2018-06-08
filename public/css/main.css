@@ -573,12 +573,22 @@ input, .form-control {
   margin-left: 50px;
   transform: scale(1.5) translateY(-1px);
 }
+.app-navigation .app-links li a.nav-link-parent ~ ul {
+  height: 0;
+  overflow: hidden;
+  transition: height 1s linear;
+}
 .app-navigation .app-links li a.active {
   background-color: #081C49;
   color: #fff;
 }
 .app-navigation .app-links li a.active .caret {
   transform: rotate(180deg) scale(1.6) translateY(1px);
+}
+.app-navigation .app-links li a.active ~ ul {
+  height: auto;
+  overflow: hidden;
+  transition: height 1s linear;
 }
 .app-navigation .app-links li a .nav-icons {
   position: absolute;
