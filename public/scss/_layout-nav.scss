@@ -158,6 +158,12 @@
             margin-left: 50px;
             transform: scale(1.5) translateY(-1px);
           }
+
+          & ~ ul{
+            height: 0;
+            overflow: hidden;
+            transition: height 1s linear;
+          }
         }
 
         &.active{
@@ -166,6 +172,12 @@
 
           .caret{
             transform: rotate(180deg) scale(1.6) translateY(1px);
+          }
+
+          & ~ ul{
+            height: auto;
+            overflow: hidden;
+            transition: height 1s linear;
           }
         }
 

@@ -16,8 +16,8 @@ class ManageCatalog extends React.Component {
         if(!isAuthorized({permissions:"can_administrate"})){
             return browserHistory.push("/login");
         }
-
     }
+
     render () {
         let pageName = this.props.route.name;
         let subtitle = 'Create and manage offerings';
