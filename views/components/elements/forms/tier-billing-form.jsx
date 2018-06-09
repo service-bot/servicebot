@@ -50,12 +50,18 @@ let PaymentStructureTemplates = function (props) {
 
     }
     if (tier.type === "one_time") {
-        let field = fields[0];
-        return (<Field name={field + ".amount"} type="number"
-                       component={priceField}
-                       isCents={true}
-                       label="Amount"
-                       validate={numericality({'>=': 0.00})}/>);
+        return (<div>{fields.map((field, index) => {
+            if (index === 0) {
+                return (<Field key={"field-" + index + "-" + member} name={field + ".amount"} type="number"
+                               component={priceField}
+                               isCents={true}
+                               label="Amount"
+                               validate={numericality({'>=': 0.00})}/>);
+            } else {
+                return null
+            }
+        })
+        }</div>);
 
     }
     if (tier.type === "subscription") {
@@ -148,12 +154,12 @@ let TierBillingForm = function (props) {
             </div>
 
             {tier.type === "subscription" &&
-                <div className="_tier-name_billing_period">
-                    <Field onChange={changeTrial} format={formatFromPricing} name={member + ".trial_period_days"} type="number"
-                           component={inputField} label="Trial Period (Days)"
-                           validate={required()}
-                    />
-                </div>
+            <div className="_tier-name_billing_period">
+                <Field onChange={changeTrial} format={formatFromPricing} name={member + ".trial_period_days"} type="number"
+                       component={inputField} label="Trial Period (Days)"
+                       validate={required()}
+                />
+            </div>
             }
 
             <FormSection name={member + ".references"}>

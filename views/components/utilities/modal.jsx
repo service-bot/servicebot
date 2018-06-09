@@ -35,7 +35,7 @@ class Modal extends React.Component {
         let left = this.props.left || '50%';
         let position = this.props.position || 'fixed';
         let transform = this.props.transform || 'translate(-50%, -50%)';
-        let width = this.props.width || '';
+        let width = this.props.width || '100%';
         let height= this.props.height || '';
         let transition = this.props.transition || 'transition: all 200ms ease-out';
         let buttonAlign = this.props.buttonAlign || 'right';
@@ -53,7 +53,7 @@ class Modal extends React.Component {
         }
 
         return(
-            <div className={`modal-wrapper`}>
+            <div style={{"zIndex" : 99999}} className={`modal-wrapper`}>
                 <div className={`modal ${this.props.titleColor ? this.props.titleColor : 'modal-primary'}`} id="modal" tabIndex="-1" role="dialog">
                     <ReactCSSTransitionGroup
                         component='div'

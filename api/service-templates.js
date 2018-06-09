@@ -137,9 +137,11 @@ module.exports = function (router) {
 
     });
 
-    router.get('/service-templates/:id/request', validate(ServiceTemplate), function (req, res, next) {
+    router.get('/service-templates/:id/request', validate(ServiceTemplate), async function (req, res, next) {
         let serviceTemplate = res.locals.valid_object;
+        let tiers = await Tier.find({service_template_id: serviceTemplate.data.id}, true);
         serviceTemplate.data.references = {};
+        res.locals.valid_object.data.references.tiers = tiers.map(tier => tier.data);
         serviceTemplate.getRelated(ServiceTemplateProperty, function (props) {
             //this object for authenticated call
             res.locals.valid_object.data.references[ServiceTemplateProperty.table] = props.map(entity => entity.data);
