@@ -59,6 +59,13 @@
 /* z-indexes */
 /* forms */
 /* _section font */
+._sub-heading {
+  color: #6F7F9F;
+  line-height: 22px;
+  font-size: 16px;
+  font-family: "Avenir", "Arial";
+}
+
 /* elements */
 .buttons {
   padding: 6px 12px;
@@ -436,6 +443,87 @@ input, .form-control {
   margin-right: 35px;
 }
 
+/* Embeddable Page Styling */
+.embeddable-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-content: center;
+  align-items: center;
+  padding: 25px 25px 13px;
+  background-color: #FFFFFF;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  margin: 0 auto 10px;
+  height: 144px;
+  width: 144px;
+  transition: all "" linear;
+}
+.embeddable-card:hover, .embeddable-card.selected {
+  transition: all "" linear;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.61);
+  box-shadow: inset 0 0 3px 0 rgba(0, 0, 0, 0.14), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+.embeddable-card:hover ._label, .embeddable-card.selected ._label {
+  transition: all "" linear;
+}
+.embeddable-card:first-of-type {
+  margin-top: 20px;
+}
+.embeddable-card ._icon {
+  min-width: 50px;
+  min-height: 50px;
+}
+.embeddable-card ._label {
+  color: #475981;
+  font-size: 14px;
+  font-family: "Open Sans", "Arial";
+  color: #6F7F9F;
+  font-size: 12px;
+  transition: all "" linear;
+  display: block;
+  text-align: center;
+  letter-spacing: 0.86px;
+}
+.embeddable-card ._description {
+  color: #475981;
+  font-size: 14px;
+  font-family: "Open Sans", "Arial";
+}
+
+.embeddable-intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  text-align: center;
+  min-height: 80vh;
+  max-width: 400px;
+  margin: auto;
+}
+.embeddable-intro ._content-image {
+  background-color: #F9FCFF;
+  border-radius: 390px;
+  padding: 60px;
+  height: 410px;
+}
+.embeddable-intro ._content-image img {
+  max-width: 100%;
+}
+.embeddable-intro ._content-text {
+  color: #475981;
+  font-size: 14px;
+  font-family: "Open Sans", "Arial";
+}
+
+#app-embeddables ._sidebar {
+  flex-basis: auto;
+}
+#app-embeddables ._sidebar ._sub-heading {
+  font-weight: 500;
+}
+
 /* layout components */
 .app-header {
   position: fixed;
@@ -570,25 +658,27 @@ input, .form-control {
   position: relative;
 }
 .app-navigation .app-links li a.nav-link-parent .caret {
+  transition: all "" linear;
   margin-left: 50px;
   transform: scale(1.5) translateY(-1px);
 }
 .app-navigation .app-links li a.nav-link-parent ~ ul {
+  transition: all 130ms linear;
   height: 0;
   overflow: hidden;
-  transition: height 1s linear;
 }
 .app-navigation .app-links li a.active {
   background-color: #081C49;
   color: #fff;
 }
 .app-navigation .app-links li a.active .caret {
+  transition: all "" linear;
   transform: rotate(180deg) scale(1.6) translateY(1px);
 }
 .app-navigation .app-links li a.active ~ ul {
-  height: auto;
+  transition: all 130ms linear;
+  height: 197px;
   overflow: hidden;
-  transition: height 1s linear;
 }
 .app-navigation .app-links li a .nav-icons {
   position: absolute;
@@ -621,6 +711,7 @@ input, .form-control {
   padding-bottom: 17px;
 }
 .app-navigation .app-links li .app-dropdown li a {
+  transition: all "" linear;
   font-size: 14px;
   font-weight: 500;
   color: #fff;
@@ -628,7 +719,8 @@ input, .form-control {
   padding-top: 8px;
   padding-bottom: 8px;
 }
-.app-navigation .app-links li .app-dropdown li a.active {
+.app-navigation .app-links li .app-dropdown li a.active, .app-navigation .app-links li .app-dropdown li a:hover {
+  transition: all "" linear;
   background-color: #4f6185;
   color: #fff;
 }
@@ -674,7 +766,7 @@ input, .form-control {
   flex-basis: 30%;
   flex-shrink: 0;
   max-width: 300px;
-  padding: 35px 50px;
+  padding: 20px 27px;
   background-color: #EBF3F9;
 }
 .app-content ._content-container ._content {
@@ -706,6 +798,14 @@ input, .form-control {
   margin-right: 20px;
   padding-right: 1px;
   padding-top: 1px;
+}
+
+img {
+  color: #475981;
+  font-size: 14px;
+  font-family: "Open Sans", "Arial";
+  color: #6F7F9F;
+  font-size: 12px;
 }
 
 /*# sourceMappingURL=css/main.css.map */

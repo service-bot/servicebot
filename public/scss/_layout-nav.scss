@@ -155,14 +155,15 @@
         &.nav-link-parent{
 
           .caret{
+            @include defaultTransition;
             margin-left: 50px;
             transform: scale(1.5) translateY(-1px);
           }
 
           & ~ ul{
+            @include defaultTransition(130ms);
             height: 0;
             overflow: hidden;
-            transition: height 1s linear;
           }
         }
 
@@ -171,13 +172,14 @@
           color: $color-white;
 
           .caret{
+            @include defaultTransition;
             transform: rotate(180deg) scale(1.6) translateY(1px);
           }
 
           & ~ ul{
-            height: auto;
+            @include defaultTransition(130ms);
+            height: 197px;
             overflow: hidden;
-            transition: height 1s linear;
           }
         }
 
@@ -227,6 +229,7 @@
           }
 
           a{
+            @include defaultTransition;
             font-size: 14px;
             font-weight: 500;
             color: $color-white;
@@ -234,7 +237,8 @@
             padding-top: $gutter / 2;
             padding-bottom: $gutter / 2;
 
-            &.active{
+            &.active, &:hover{
+              @include defaultTransition;
               background-color: $color-nav-child-active;
               color: $color-white;
             }

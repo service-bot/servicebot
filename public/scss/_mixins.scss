@@ -82,3 +82,11 @@
     height: 42px;
   }
 }
+@mixin defaultTransition($speed:""){
+  @if($speed) {
+    transition: all $speed linear;
+  }
+  @else {
+    transition: all 300ms linear;
+  }
+}

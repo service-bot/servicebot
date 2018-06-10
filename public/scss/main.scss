@@ -14,7 +14,12 @@
 @import "_component-forms";
 @import "_component-tier";
 @import "_component-forms-offering";
+@import "_component-embeddables";
 
 /* layout components */
 @import "_layout-nav";
 @import "_layout-content";
+
+img{
+  @include text_muted;
+}

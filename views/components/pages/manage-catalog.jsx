@@ -23,9 +23,7 @@ class ManageCatalog extends React.Component {
         let subtitle = 'Create and manage offerings';
         return(
             <Authorizer permissions="can_administrate">
-                <Content>
-                    {this.props.children}
-                </Content>
+                {this.props.children}
             </Authorizer>
         );
     }

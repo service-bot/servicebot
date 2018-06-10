@@ -1,0 +1,92 @@
+/* Embeddable Page Styling */
+
+// Embeddable Cards
+.embeddable-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-content: center;
+  align-items: center;
+  padding: 25px 25px 13px;
+  background-color: #FFFFFF;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.1);
+  border-radius: 3px;
+  margin: 0 auto 10px;
+  height: 144px;
+  width: 144px;
+  @include defaultTransition();
+
+  &:hover, &.selected{
+    @include defaultTransition();
+    cursor: pointer;
+    background-color: rgba(255,255,255,0.61);
+    box-shadow: inset 0 0 3px 0 rgba(0,0,0,0.14), 0 2px 4px 0 rgba(0,0,0,0.1);
+
+    ._label{
+      @include defaultTransition();
+    }
+  }
+
+  &:first-of-type{
+    margin-top: 20px;
+  }
+
+  & ._icon {
+    min-width: 50px;
+    min-height: 50px;
+  }
+
+  & ._label {
+    @include text_muted;
+    @include defaultTransition;
+    display: block;
+    text-align: center;
+    letter-spacing: 0.86px;
+  }
+
+  & ._description {
+    @include text;
+  }
+
+}
+
+// Embeddable Intro
+.embeddable-intro{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  text-align: center;
+  min-height: 80vh;
+  max-width: 400px;
+  margin: auto;
+
+  ._content-image{
+    background-color: #F9FCFF;
+    border-radius: 390px;
+    padding: 60px;
+    height: 410px;
+
+    img{
+      max-width: 100%;
+    }
+  }
+
+  ._content-text{
+    @include text;
+  }
+
+}
+
+// Page Overrides
+#app-embeddables{
+
+  ._sidebar{
+    flex-basis: auto;
+
+    ._sub-heading{
+      font-weight: 500;
+    }
+  }
+
+}
