@@ -375,7 +375,6 @@ class ServiceTemplateForm extends React.Component {
             }
             else {
                 initialValues = {
-                    category_id: 1,
                     interval: 'month',
                     published: !!this.props.fieldState.options.stripe_publishable_key,
                     references: {

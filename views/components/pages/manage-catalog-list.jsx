@@ -230,13 +230,13 @@ class ManageCatalogList extends React.Component {
                                                {/*width={100}>*/}
                                 {/*Type*/}
                             {/*</TableHeaderColumn>*/}
-                            <TableHeaderColumn dataField='references'
-                                               dataSort={ true }
-                                               dataFormat={ this.categoryFormatter }
-                                               filterFormatted
-                                               width={120}>
-                                Category
-                            </TableHeaderColumn>
+                            {/*<TableHeaderColumn dataField='references'*/}
+                                               {/*dataSort={ true }*/}
+                                               {/*dataFormat={ this.categoryFormatter }*/}
+                                               {/*filterFormatted*/}
+                                               {/*width={120}>*/}
+                                {/*Category*/}
+                            {/*</TableHeaderColumn>*/}
                             <TableHeaderColumn dataField='published'
                                                dataSort={ true }
                                                dataFormat={ this.publishedFormatter }
