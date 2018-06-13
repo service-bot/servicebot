@@ -252,7 +252,7 @@ module.exports = function (router) {
             res.locals.adjusted_price = price;
             res.locals.merged_props = mergedProps;
             res.locals.payment_structure_template = paymentStructureTemplate;
-            if (!req.isAuthenticated()) {
+            if (!req.isAuthenticated() || req_body.hasOwnProperty("email")) {
 
                 if (req_body.hasOwnProperty("email")) {
                     let mailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -313,7 +313,7 @@ module.exports = function (router) {
             let user = req.user;
 
             //is the user authenticated (are they logged in)?
-            let isNew = !req.isAuthenticated();
+            let isNew = !req.isAuthenticated() || req_body.hasOwnProperty("email");
             let store = require('../config/redux/store');
 
             //todo: once in plugin this code needs big changes
@@ -362,32 +362,34 @@ module.exports = function (router) {
                 let user_role = new Role({id : createdUser.get("role_id")}) ;
 
                 // todo : remove this once it supports promises
-                let permissionPromise = new Promise(resolve => {
-                    user_role.getPermissions(function (perms) {
-                        let permission_names = perms.map(perm => perm.data.permission_name);
-                        return resolve(permission_names);
-                    });
-                });
-
-                let loginPromise = new Promise((resolve, reject) => {
-                    req.logIn(createdUser, {session: true}, (err) => {
-                        if (err) {
-                            reject(err);
-                        }
-                        else{
-                            resolve();
-                        }
+                if(!req.isAuthenticated()) {
+                    let permissionPromise = new Promise(resolve => {
+                        user_role.getPermissions(function (perms) {
+                            let permission_names = perms.map(perm => perm.data.permission_name);
+                            return resolve(permission_names);
+                        });
                     });
 
-                });
+                    let loginPromise = new Promise((resolve, reject) => {
+                        req.logIn(createdUser, {session: true}, (err) => {
+                            if (err) {
+                                reject(err);
+                            }
+                            else {
+                                resolve();
+                            }
+                        });
 
-                //log in the user (give them a cookie)
-                await loginPromise;
+                    });
 
-                //set some data for the response
+                    //log in the user (give them a cookie)
+                    await loginPromise;
 
-                //currently the permissions that the client app sets get passed here.
-                responseJSON.permissions = await permissionPromise;
+                    //set some data for the response
+
+                    //currently the permissions that the client app sets get passed here.
+                    responseJSON.permissions = await permissionPromise;
+                }
                 responseJSON.uid = createdUser.get("id");
 
                 user = createdUser;
@@ -411,7 +413,7 @@ module.exports = function (router) {
             //elevated accounts can override things
             if (hasPermission) {
                 res.locals.overrides = {
-                    user_id : req_body.client_id || req.user.get("id"),
+                    user_id : req_body.client_id || user.get("id"),
                     requested_by : req.user.get("id"),
                     description : req_body.description || serviceTemplate.get("description"),
                     name : req_body.name || serviceTemplate.get("name"),
@@ -421,7 +423,7 @@ module.exports = function (router) {
 
             }else{
                 res.locals.overrides = {
-                    user_id : req.user.get("id"),
+                    user_id : user.get("id"),
                     requested_by : req.user.get("id"),
                     trial_period_days : paymentStructureTemplate.get("trial_period_days") || 0
                 }
