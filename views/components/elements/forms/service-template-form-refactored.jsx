@@ -25,7 +25,8 @@ let Tiers = function (props) {
     function deleteTier(index) {
         return (e) => {
             e.preventDefault();
-            selectTier(0)(e);
+            let newIndex = selected ? selected - 1 : 0;
+            selectTier(newIndex)(e);
             fields.remove(index)
         }
     }
@@ -61,11 +62,11 @@ let Tiers = function (props) {
                             liClass = liClass + " _selected";
                         }
                         return (<li key={"tier-" + index} className={liClass} id={"tier-" + index}>
-                            <div className="_tier-heading" onClick={selectTier(index)}>
-                                <h2 className={"_tier-name"}>{tier.name}</h2>
+                            <div className="_tier-heading" >
+                                <h2 className={"_tier-name"} onClick={selectTier(index)} >{tier.name}</h2>
                                 {fields.length > 1 && <button className="_tier-delete" aria-label="delete tier" onClick={deleteTier(index)}/>}
                                 </div>
-                                <div className={"_tier-preview"}>
+                                <div onClick={selectTier(index)} className={"_tier-preview"}>
                             </div>
                         </li>)
                     })}
@@ -194,7 +195,6 @@ class TemplateForm extends React.Component {
             transform: "translateX(-50%)",
             borderRadius: "50%",
         };
-
         return (
 
             <form className="form-offering" onSubmit={handleSubmit}>
