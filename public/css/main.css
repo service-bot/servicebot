@@ -546,7 +546,8 @@ input, .form-control {
 }
 .app-header .app-logo {
   height: 100%;
-  max-height: calc(60px - 20px);
+  max-height: calc(57px - 20px);
+  margin-top: 1px;
 }
 .app-header .app-profile {
   height: 100%;
@@ -640,7 +641,7 @@ input, .form-control {
   list-style: none;
 }
 .app-navigation .app-links > li {
-  border: 1px solid #5C6A8B;
+  border-bottom: 1px solid #5C6A8B;
 }
 .app-navigation .app-links li {
   padding: 0;
@@ -652,10 +653,14 @@ input, .form-control {
   padding-left: 80px;
   font-family: "Avenir", "Helvetica", sans-serif;
   font-size: 16px;
-  font-weight: 900;
+  font-weight: 500;
   text-transform: uppercase;
   color: #fff;
   position: relative;
+  letter-spacing: 1px;
+}
+.app-navigation .app-links li a:hover {
+  background: #374a75;
 }
 .app-navigation .app-links li a.nav-link-parent .caret {
   transition: all "" linear;
@@ -723,6 +728,20 @@ input, .form-control {
   transition: all "" linear;
   background-color: #4f6185;
   color: #fff;
+}
+
+.app-navigation .nav-footer {
+  position: absolute;
+  bottom: 10px;
+  text-align: center;
+  width: 100%;
+}
+
+.app-navigation .nav-footer a{
+  font-size: 12px;
+  margin-bottom: 10px;
+  color: #90a3d0;
+  letter-spacing: 1px;
 }
 
 .app-dashboard .app-body {
