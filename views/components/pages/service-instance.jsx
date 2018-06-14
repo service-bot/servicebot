@@ -1,6 +1,6 @@
 import React from 'react';
 import cookie from 'react-cookie';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import ReactCSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import {Link, browserHistory} from 'react-router';
 import Load from '../utilities/load.jsx';
 import Fetcher from '../utilities/fetcher.jsx';

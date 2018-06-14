@@ -50,7 +50,6 @@ let Tiers = function (props) {
             type:"subscription"
         });
     }
-
     return (
         <div className="tiers">
             <div className="_container">
@@ -101,49 +100,6 @@ Tiers = connect((state, ownProps) => {
         "changeMember" : (member, val) => {
             dispatch(change(TEMPLATE_FORM_NAME, member, val));
         }
-        // "setRequired": (val) => {
-        //     if (val == true) {
-        //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, true));
-        //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
-        //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, true));
-        //     } else {
-        //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, false));
-        //     }
-        // },
-        // "setPrompt": (val) => {
-        //     if (val == true) {
-        //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, true));
-        //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
-        //     } else {
-        //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, false));
-        //     }
-        // },
-        // "changePrivate": (event) => {
-        //     if (!event.currentTarget.value || event.currentTarget.value == 'false') {
-        //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.required`, false));
-        //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, false));
-        //     }
-        // },
-        // "changeRequired": (event) => {
-        //     if (!event.currentTarget.value || event.currentTarget.value == 'false') {
-        //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
-        //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.prompt_user`, true));
-        //     }
-        // },
-        // "changePrompt": (event) => {
-        //     if (!event.currentTarget.value || event.currentTarget.value == 'false') {
-        //         dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.private`, false));
-        //     }
-        // },
-        // "clearConfig": () => {
-        //     dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.config`, {}));
-        // },
-        // "clearPricing": () => {
-        //     dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.config.pricing`, null));
-        // },
-        // "clearValue": () => {
-        //     dispatch(change(TEMPLATE_FORM_NAME, `references.${ownProps.member}.data`, null));
-        // }
     }
 })(Tiers);
 Tiers = consume("tierBillingOverride")(Tiers)
@@ -227,17 +183,6 @@ class TemplateForm extends React.Component {
                     </FormSection>
                 </div>
                 <hr/>
-                {/*<h3>Custom Fields</h3>*/}
-                {/*<FormSection name="references">*/}
-                {/*<FieldArray name="service_template_properties"*/}
-                {/*props={{templateType: serviceTypeValue}}*/}
-                {/*component={renderCustomProperty}/>*/}
-                {/*</FormSection>*/}
-                {/*{props.formJSON.references && props.formJSON.references.service_template_properties &&*/}
-                {/*<PriceBreakdown*/}
-                {/*inputs={props.formJSON.references.service_template_properties}/>*/}
-                {/*}*/}
-                {/*<Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>GoBack</Link>*/}
                 <button className="buttons _save" type="submit">Save & Embed</button>
             </form>
         )
