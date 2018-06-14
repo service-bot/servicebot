@@ -52,7 +52,7 @@ class ManagePermissionForm extends React.Component {
             managePermissionsUrl: `/api/v1/roles/manage-permissions`,
             permissionMap: {},
             getPermissionsUrl: '/api/v1/permissions',
-            permissions: {},
+            permissions: [],
             getRolesUrl: '/api/v1/roles',
             roles: {},
             loading: true,
@@ -69,7 +69,7 @@ class ManagePermissionForm extends React.Component {
         this.savePermissions = this.savePermissions.bind(this);
     }
 
-    componentDidMount(){
+    async componentDidMount(){
         this.fetchManagePermissions();
         this.fetchPermissions();
         this.fetchRoles();
@@ -79,8 +79,10 @@ class ManagePermissionForm extends React.Component {
         let self = this;
         Fetcher(self.state.managePermissionsUrl).then(function (response) {
             if(!response.error){
+                console.log("RESPONSE", response)
                 self.setState({permissionMap: response});
             }else{
+                console.error("ERRRR");
                 self.setState({loading: false});
             }
         });
@@ -89,7 +91,10 @@ class ManagePermissionForm extends React.Component {
     fetchPermissions(){
         let self = this;
         Fetcher(self.state.getPermissionsUrl).then(function (response) {
+
             if(!response.error){
+                console.log("RESPONSE2", response)
+
                 self.setState({permissions: response});
             }else{
                 console.error("permissions response obj error", response);
@@ -118,8 +123,8 @@ class ManagePermissionForm extends React.Component {
 
     getRolePermissions(role_id){
         let self = this;
-        let permissions = _.filter(self.state.permissionMap, function (role) {return (role.role_id == role_id)});
-        return ( permissions[0].permission_ids );
+        let role = self.state.permissionMap.find(role => role.role_id === role_id);
+        return ( role.permission_ids );
     }
 
     handleTogglePermission(data){
@@ -162,7 +167,7 @@ class ManagePermissionForm extends React.Component {
             let roles = this.state.roles;
             let permissions = this.state.permissions;
             let permissionMap = this.state.managePermissions;
-
+            console.log("PERMISSIONS", permissions, roles, permissionMap);
             let renderRoles = ()=>{
                 return (roles.map((role)=>
                         <th key={`role-${role.id}`} className={`capitalize role-${role.id}`}>{role.role_name}</th>));

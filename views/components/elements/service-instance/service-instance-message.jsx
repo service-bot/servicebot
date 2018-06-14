@@ -3,7 +3,7 @@ import {Link} from 'react-router';
 import Fetcher from '../../utilities/fetcher.jsx';
 import Load from '../../utilities/load.jsx';
 import {isAuthorized} from '../../utilities/authorizer.jsx';
-import ServiceInstanceMessageForm from '../../elements/forms/service-instance-message-form.jsx';
+// import ServiceInstanceMessageForm from '../../elements/forms/service-instance-message-form.jsx';
 import DateFormat from '../../utilities/date-format.jsx';
 import Avatar from '../../elements/avatar.jsx';
 
@@ -88,7 +88,7 @@ class ServiceInstanceMessage extends React.Component {
                                 </ul>
                             </div>
                             <div>
-                                <ServiceInstanceMessageForm instanceId={self.state.instanceId} handleComponentUpdating={self.handleComponentUpdating}/>
+                                {/*<ServiceInstanceMessageForm instanceId={self.state.instanceId} handleComponentUpdating={self.handleComponentUpdating}/>*/}
                             </div>
                         </div>
                     </div>
@@ -101,7 +101,7 @@ class ServiceInstanceMessage extends React.Component {
                         </div>
                         <div className="service-instance-box-content">
                             <div>
-                                <ServiceInstanceMessageForm instanceId={self.state.instanceId} handleComponentUpdating={self.handleComponentUpdating}/>
+                                {/*<ServiceInstanceMessageForm instanceId={self.state.instanceId} handleComponentUpdating={self.handleComponentUpdating}/>*/}
                             </div>
                         </div>
                     </div>

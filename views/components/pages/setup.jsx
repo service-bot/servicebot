@@ -5,10 +5,7 @@ import {Fetcher} from "servicebot-base-form";
 import update from "immutability-helper";
 import Authorizer from "../utilities/authorizer.jsx";
 import Load from '../utilities/load.jsx';
-import fetch from "fetch-retry";
-import {DataForm, DataChild} from "../utilities/data-form.jsx";
 import Multistep from "../elements/forms/multistep.jsx"
-import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
 import "../../../public/stylesheets/xaas/installation.css";
 import { initializedState } from "../../store.js"

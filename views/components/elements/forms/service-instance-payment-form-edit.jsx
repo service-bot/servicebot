@@ -1,7 +1,7 @@
 import React from 'react';
 import Load from '../../utilities/load.jsx';
-import Inputs from "../../utilities/inputs.jsx";
-import {DataForm} from "../../utilities/data-form.jsx";
+// import Inputs from "../../utilities/inputs.jsx";
+// import {DataForm} from "../../utilities/data-form.jsx";
 import Buttons from "../buttons.jsx";
 import Alerts from "../alerts.jsx";
 
@@ -108,44 +108,44 @@ class ServiceInstanceFormEdit extends React.Component {
                     <div>
                         {getAlerts()}
 
-                        <DataForm validators={this.getValidators(null)} handleResponse={this.handleResponse} url={`/api/v1/service-instances/${instance.id}/change-price`} method={'POST'}>
+                        {/*<DataForm validators={this.getValidators(null)} handleResponse={this.handleResponse} url={`/api/v1/service-instances/${instance.id}/change-price`} method={'POST'}>*/}
 
-                            <div className="p-20">
-                                <div className="row">
-                                    <div className="basic-info col-md-12">
-                                        <p><strong>Payment Plan For {instance.name}</strong></p>
-                                        <p>{instance.description}</p>
+                            {/*<div className="p-20">*/}
+                                {/*<div className="row">*/}
+                                    {/*<div className="basic-info col-md-12">*/}
+                                        {/*<p><strong>Payment Plan For {instance.name}</strong></p>*/}
+                                        {/*<p>{instance.description}</p>*/}
 
-                                        <Inputs type="hidden" name="name" value={paymentPlan.name}
-                                                onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                        {/*<Inputs type="hidden" name="name" value={paymentPlan.name}*/}
+                                                {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
 
-                                        <Inputs type="text" maxLength="22" name="statement_descriptor" label="Statement Descriptor" defaultValue={paymentPlan.statement_descriptor}
-                                                onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                        {/*<Inputs type="text" maxLength="22" name="statement_descriptor" label="Statement Descriptor" defaultValue={paymentPlan.statement_descriptor}*/}
+                                                {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
 
-                                        <Inputs type="number" name="trial_period_days" label="Trial Period (Days)" defaultValue={paymentPlan.trial_period_days != null ? paymentPlan.trial_period_days : 0}
-                                                onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                        {/*<Inputs type="number" name="trial_period_days" label="Trial Period (Days)" defaultValue={paymentPlan.trial_period_days != null ? paymentPlan.trial_period_days : 0}*/}
+                                                {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
 
-                                        <Inputs type="price" name="amount" label="Amount" defaultValue={paymentPlan.amount}
-                                                onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                        {/*<Inputs type="price" name="amount" label="Amount" defaultValue={paymentPlan.amount}*/}
+                                                {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
 
-                                        <Inputs type="select" name="interval" label="Interval" defaultValue={paymentPlan.interval}
-                                                options={[{'Daily':'day'},{'Weekly':'week'},{'Monthly':'month'},{'Yearly':'year'}]}
-                                                onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                        {/*<Inputs type="select" name="interval" label="Interval" defaultValue={paymentPlan.interval}*/}
+                                                {/*options={[{'Daily':'day'},{'Weekly':'week'},{'Monthly':'month'},{'Yearly':'year'}]}*/}
+                                                {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
 
-                                        {/*TODO: Stripe limits interval count to be 2 years*/}
-                                        <Inputs type="number" name="interval_count" label="Interval Count" defaultValue={paymentPlan.interval_count}
-                                                onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                        {/*/!*TODO: Stripe limits interval count to be 2 years*!/*/}
+                                        {/*<Inputs type="number" name="interval_count" label="Interval Count" defaultValue={paymentPlan.interval_count}*/}
+                                                {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
 
-                                    </div>
-                                </div>
-                            </div>
+                                    {/*</div>*/}
+                                {/*</div>*/}
+                            {/*</div>*/}
 
-                            <div id="request-submission-box" className="modal-footer text-right">
-                                <Buttons containerClass="inline" btnType="primary" text="Submit" type="submit" value="submit"/>
-                                <Buttons containerClass="inline" btnType="default" text="Close" onClick={this.props.onHide}/>
-                            </div>
+                            {/*<div id="request-submission-box" className="modal-footer text-right">*/}
+                                {/*<Buttons containerClass="inline" btnType="primary" text="Submit" type="submit" value="submit"/>*/}
+                                {/*<Buttons containerClass="inline" btnType="default" text="Close" onClick={this.props.onHide}/>*/}
+                            {/*</div>*/}
 
-                        </DataForm>
+                        {/*</DataForm>*/}
                     </div>
                 );
             }else{
