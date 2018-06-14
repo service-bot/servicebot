@@ -141,17 +141,22 @@ class NavServiceBot extends React.Component {
                             <span className="nav-icons icon-home"/>Dashboard
                         </Link>
                     </li>
-                    <li className="app-dropdown">
-                        <Link className={getLinkClass(linkGroupManage, 'parent')} to="/manage-catalog">
-                            <span className="nav-icons icon-manage"/>Manage<span className="caret"/>
+                    <li>
+                        <Link to="/manage-catalog" style={style} className={getLinkClass('manage-catalog', 'parent')}>
+                            <span className="nav-icons icon-manage"/>Products
                         </Link>
-                        <ul className="app-dropdown">
-                            <li><Link to="/manage-catalog/list" className={getLinkClass('manage-catalog', 'child')}>Manage Offerings</Link></li>
-                            <li><Link to="/manage-categories" className={getLinkClass('manage-categories', 'child')}>Manage Categories</Link></li>
-                            <li><Link to="/manage-users" className={getLinkClass('manage-users', 'child')}>Manage Users</Link></li>
-                            <li><Link to="/manage-subscriptions" className={getLinkClass('manage-subscriptions', 'child')}>Manage Subscriptions</Link></li>
-                        </ul>
                     </li>
+                    <li>
+                        <Link to="/manage-users" style={style} className={getLinkClass('manage-users', 'parent')}>
+                            <span className="nav-icons icon-manage"/>Customers
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/manage-subscriptions" style={style} className={getLinkClass('manage-subscriptions', 'parent')}>
+                            <span className="nav-icons icon-manage"/>Subscriptions
+                        </Link>
+                    </li>
+                    {this.getPluginItems('integrations')}
                     <li className="app-dropdown">
                         <Link className={getLinkClass(linkGroupSettings, 'parent')} to="/stripe-settings">
                             <span className="nav-icons icon-settings"/>Settings<span className="caret"/>
@@ -163,7 +168,6 @@ class NavServiceBot extends React.Component {
                             <li><Link to="/system-settings" className={getLinkClass('system-settings', 'child')}>System Settings</Link></li>
                         </ul>
                     </li>
-                    {this.getPluginItems('integrations')}
                 </ul>
             )
         }else{
@@ -185,27 +189,27 @@ class NavServiceBot extends React.Component {
             return (
                 <span data-tip data-for="notification-stripe-keys" className="notification-badge">
                     <Link to="/stripe-settings">
-                        <ReactTooltip id="notification-stripe-keys" class="notification-stripe-keys"
-                                      aria-haspopup='true' role='example'
-                                      place="bottom" type="error" effect="solid" offset={{top: -28, left: -20}}>
-                            <p><strong>You need to complete your setup to unlock certain features:</strong></p>
-                                <ul>
-                                    <li>User Invites</li>
-                                    <li>Publishing Service Templates</li>
-                                    <li>Adding funds</li>
-                                    <li>Receiving Payments</li>
-                                </ul>
-                            <p>Click to complete</p>
-                        </ReactTooltip>
-                        <strong>Setup not complete</strong>
+                        {/*<ReactTooltip id="notification-stripe-keys" class="notification-stripe-keys"*/}
+                                      {/*aria-haspopup='true' role='example'*/}
+                                      {/*place="bottom" type="error" effect="solid" offset={{top: -28, left: -20}}>*/}
+                            {/*<p><strong>You need to complete your setup to unlock certain features:</strong></p>*/}
+                                {/*<ul>*/}
+                                    {/*<li>User Invites</li>*/}
+                                    {/*<li>Publishing Service Templates</li>*/}
+                                    {/*<li>Adding funds</li>*/}
+                                    {/*<li>Receiving Payments</li>*/}
+                                {/*</ul>*/}
+                            {/*<p>Click to complete</p>*/}
+                        {/*</ReactTooltip>*/}
+                        <strong>No Stripe Connection</strong>
                     </Link>
 
                 </span> );
         }
         if(livemode.toUpperCase() === "TEST") {
-            return ( <span className="notification-badge"><strong>Test Mode</strong></span> );
+            return ( <span className="notification-badge stripe test m-0"><strong>Stripe Test Mode</strong></span> );
         } else {
-            return <span/>;
+            return ( <span className="notification-badge stripe live m-0"><strong>Stripe Live Mode</strong></span> );
         }
     }
 
@@ -278,9 +282,6 @@ class NavServiceBot extends React.Component {
                                 <Authorizer>
                                     {this.getMenuItems(linkTextStyle)}
                                 </Authorizer>
-                                <div className="nav navbar-nav navbar-right navvbar-badge">
-                                    {this.getLivemode()}
-                                </div>
                                 <Authorizer anonymous={true}>
                                     <VisibleAnonymousLinks/>
                                 </Authorizer>
@@ -289,6 +290,19 @@ class NavServiceBot extends React.Component {
 
                                     </ul>
                                 </Authorizer>
+                                <div className="nav-footer">
+                                    <div className="navvbar-badge p-0">
+                                        {this.getLivemode()}
+                                    </div>
+                                    <Link target="_blank" to="http://servicebot.io">
+                                        Powered by Servicebot
+                                    </Link>
+                                    {this.props.services.footerComponent && this.props.services.footerComponent.map((comp, index) => {
+                                        return (<div key={"footer-" + index}>
+                                            {comp}
+                                        </div>)
+                                    })}
+                                </div>
                             </div>
 
                             {/* app-wide modals */}
@@ -324,4 +338,4 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-export default consume("routeDefinition")(connect(mapStateToProps)(NavServiceBot));
+export default consume("routeDefinition","footerComponent")(connect(mapStateToProps)(NavServiceBot));
