@@ -113,6 +113,9 @@
   },
   "devDependencies": {
     "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "grunt": "^1.0.3",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
     "jest": "^22.4.3",
     "react-hot-loader": "^3.0.0-beta.7",
     "servicebot-client": "^1.0.3",

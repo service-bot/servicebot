@@ -26,6 +26,7 @@
   .app-logo{
     height: 100%;
     max-height: calc(#{$nav-header-height} - 20px);
+    margin-top: 1px;
   }
 
   .app-profile{
@@ -128,124 +129,157 @@
   height: 100%;
   z-index: $z-nav-panel;
 
-  .app-links{
-    padding: 0;
-    margin: 0;
-    list-style: none;
+  .app-links-container {
+    height: 100%;
 
-    & > li{
-      border: 1px solid #5C6A8B;
-    }
+    ._main {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
 
-    li{
-      padding: 0;
-
-      a{
-        display: block;
-        width: 100%;
-        padding: $gutter + 1;
-        padding-left: 80px;
-        font-family: $nav-font-family;
-        font-size: 16px;
-        font-weight: 900;
-        text-transform: uppercase;
-        color: $color-white;
-        position: relative;
-
-        &.nav-link-parent{
-
-          .caret{
-            @include defaultTransition;
-            margin-left: 50px;
-            transform: scale(1.5) translateY(-1px);
-          }
-
-          & ~ ul{
-            @include defaultTransition(130ms);
-            height: 0;
-            overflow: hidden;
-          }
-        }
-
-        &.active{
-          background-color: $color-nav-parent-active;
-          color: $color-white;
-
-          .caret{
-            @include defaultTransition;
-            transform: rotate(180deg) scale(1.6) translateY(1px);
-          }
-
-          & ~ ul{
-            @include defaultTransition(130ms);
-            height: 197px;
-            overflow: hidden;
-          }
-        }
-
-        .nav-icons {
-          position: absolute;
-
-          &:before {
-            content: '';
-            width: 28px;
-            height: 28px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            position: absolute;
-            left: -46px;
-          }
-
-          &.icon-home {
-            &:before {
-              background-image: url('/assets/SB_Icon_Menu/Home.png');
-            }
-          }
-          &.icon-integrations {
-            &:before {
-              background-image: url('/assets/SB_Icon_Menu/Integrations.png');
-            }
-          }
-          &.icon-manage {
-            &:before {
-              background-image: url('/assets/SB_Icon_Menu/Manage.png');
-            }
-          }
-          &.icon-settings {
-            &:before {
-              background-image: url('/assets/SB_Icon_Menu/Settings.png');
-            }
-          }
-        }
-      }
-
-      .app-dropdown{
+      .app-links {
         padding: 0;
+        margin: 0;
+        list-style: none;
 
-        li{
+        & > li {
+          border-bottom: 1px solid #5C6A8B;
+        }
 
-          &:last-child a{
-            padding-bottom: 17px;
+        li {
+          padding: 0;
+
+          a {
+            display: block;
+            width: 100%;
+            padding: $gutter + 1;
+            padding-left: 80px;
+            font-family: $nav-font-family;
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: $color-white;
+            position: relative;
+            letter-spacing: 1px;
+
+            &:hover {
+              background: #374a75;
+            }
+
+            &.nav-link-parent {
+
+              .caret {
+                @include defaultTransition;
+                margin-left: 50px;
+                transform: scale(1.5) translateY(-1px);
+              }
+
+              & ~ ul {
+                @include defaultTransition(130ms);
+                height: 0;
+                overflow: hidden;
+              }
+            }
+
+            &.active {
+              background-color: $color-nav-parent-active;
+              color: $color-white;
+
+              .caret {
+                @include defaultTransition;
+                transform: rotate(180deg) scale(1.6) translateY(1px);
+              }
+
+              & ~ ul {
+                @include defaultTransition(130ms);
+                height: 197px;
+                overflow: hidden;
+              }
+            }
+
+            .nav-icons {
+              position: absolute;
+
+              &:before {
+                content: '';
+                width: 28px;
+                height: 28px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                position: absolute;
+                left: -46px;
+              }
+
+              &.icon-home {
+                &:before {
+                  background-image: url('/assets/SB_Icon_Menu/Home.png');
+                }
+              }
+              &.icon-integrations {
+                &:before {
+                  background-image: url('/assets/SB_Icon_Menu/Integrations.png');
+                }
+              }
+              &.icon-manage {
+                &:before {
+                  background-image: url('/assets/SB_Icon_Menu/Manage.png');
+                }
+              }
+              &.icon-settings {
+                &:before {
+                  background-image: url('/assets/SB_Icon_Menu/Settings.png');
+                }
+              }
+            }
           }
 
-          a{
-            @include defaultTransition;
-            font-size: 14px;
-            font-weight: 500;
-            color: $color-white;
-            text-transform: capitalize;
-            padding-top: $gutter / 2;
-            padding-bottom: $gutter / 2;
+          .app-dropdown {
+            padding: 0;
 
-            &.active, &:hover{
-              @include defaultTransition;
-              background-color: $color-nav-child-active;
-              color: $color-white;
+            li {
+
+              &:last-child a {
+                padding-bottom: 17px;
+              }
+
+              a {
+                @include defaultTransition;
+                font-size: 14px;
+                font-weight: 500;
+                color: $color-white;
+                text-transform: capitalize;
+                padding-top: $gutter / 2;
+                padding-bottom: $gutter / 2;
+
+                &.active, &:hover {
+                  @include defaultTransition;
+                  background-color: $color-nav-child-active;
+                  color: $color-white;
+                }
+              }
             }
           }
         }
       }
     }
+  }
+}
+
+.nav-footer{
+  margin-bottom: 10px;
+  text-align: center;
+  width: 100%;
+
+  .navvbar-badge{
+    padding: 0;
+  }
+
+  a{
+    font-size: 12px;
+    margin-bottom: 10px;
+    color: #90a3d0;
+    letter-spacing: 1px;
   }
 }
 
@@ -262,7 +296,6 @@
   margin-top: 24px;
   display: block;
   float: none !important;
-  padding-right: 30px;
   width: 100%;
   text-align: center;
 }

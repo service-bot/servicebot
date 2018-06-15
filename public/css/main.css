@@ -8,14 +8,14 @@
   margin-top: 10px;
 }
 .icon.plus:before {
-  content: "";
+  content: '';
   position: absolute;
   width: 15px;
   height: 1px;
   background-color: currentColor;
 }
 .icon.plus:after {
-  content: "";
+  content: '';
   position: absolute;
   width: 15px;
   height: 1px;
@@ -32,7 +32,7 @@
   height: 21px;
 }
 .icon.close:before {
-  content: "";
+  content: '';
   position: absolute;
   top: 10px;
   width: 21px;
@@ -42,7 +42,7 @@
   transform: rotate(-45deg);
 }
 .icon.close:after {
-  content: "";
+  content: '';
   position: absolute;
   top: 10px;
   width: 21px;
@@ -204,7 +204,7 @@ input, .form-control {
   height: 21px;
 }
 .tiers ._container ._tier-list ._tier ._tier-heading ._tier-delete:before {
-  content: "";
+  content: '';
   position: absolute;
   top: 10px;
   width: 21px;
@@ -214,7 +214,7 @@ input, .form-control {
   transform: rotate(-45deg);
 }
 .tiers ._container ._tier-list ._tier ._tier-heading ._tier-delete:after {
-  content: "";
+  content: '';
   position: absolute;
   top: 10px;
   width: 21px;
@@ -287,14 +287,14 @@ input, .form-control {
   transition: all 0.3s;
 }
 .tiers ._container ._tier-list #_tier-add ._tier-add-button:before {
-  content: "";
+  content: '';
   position: absolute;
   width: 15px;
   height: 1px;
   background-color: currentColor;
 }
 .tiers ._container ._tier-list #_tier-add ._tier-add-button:after {
-  content: "";
+  content: '';
   position: absolute;
   width: 15px;
   height: 1px;
@@ -530,7 +530,7 @@ input, .form-control {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  height: 60px;
+  height: 57px;
   padding: 8px 26px;
   background-color: #F7F8FA;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.23);
@@ -581,7 +581,7 @@ input, .form-control {
   box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.06);
 }
 .app-header .app-notification .app-notification-list :before {
-  content: "";
+  content: '';
   height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
@@ -617,7 +617,7 @@ input, .form-control {
   top: 44%;
   transform: translateY(-50%);
   border-radius: 50px;
-  content: "";
+  content: '';
 }
 .app-header .app-notification .app-notification-list .app-notification-backdrop {
   position: fixed;
@@ -630,23 +630,32 @@ input, .form-control {
 .app-navigation {
   position: fixed;
   width: 280px;
-  padding-top: 60px;
+  padding-top: 57px;
   background-color: #475981;
   height: 100%;
   z-index: 9910;
 }
-.app-navigation .app-links {
+.app-navigation .app-links-container {
+  height: 100%;
+}
+.app-navigation .app-links-container ._main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+.app-navigation .app-links-container ._main .app-links {
   padding: 0;
   margin: 0;
   list-style: none;
 }
-.app-navigation .app-links > li {
+.app-navigation .app-links-container ._main .app-links > li {
   border-bottom: 1px solid #5C6A8B;
 }
-.app-navigation .app-links li {
+.app-navigation .app-links-container ._main .app-links li {
   padding: 0;
 }
-.app-navigation .app-links li a {
+.app-navigation .app-links-container ._main .app-links li a {
   display: block;
   width: 100%;
   padding: 17px;
@@ -659,37 +668,37 @@ input, .form-control {
   position: relative;
   letter-spacing: 1px;
 }
-.app-navigation .app-links li a:hover {
+.app-navigation .app-links-container ._main .app-links li a:hover {
   background: #374a75;
 }
-.app-navigation .app-links li a.nav-link-parent .caret {
+.app-navigation .app-links-container ._main .app-links li a.nav-link-parent .caret {
   transition: all "" linear;
   margin-left: 50px;
   transform: scale(1.5) translateY(-1px);
 }
-.app-navigation .app-links li a.nav-link-parent ~ ul {
+.app-navigation .app-links-container ._main .app-links li a.nav-link-parent ~ ul {
   transition: all 130ms linear;
   height: 0;
   overflow: hidden;
 }
-.app-navigation .app-links li a.active {
+.app-navigation .app-links-container ._main .app-links li a.active {
   background-color: #081C49;
   color: #fff;
 }
-.app-navigation .app-links li a.active .caret {
+.app-navigation .app-links-container ._main .app-links li a.active .caret {
   transition: all "" linear;
   transform: rotate(180deg) scale(1.6) translateY(1px);
 }
-.app-navigation .app-links li a.active ~ ul {
+.app-navigation .app-links-container ._main .app-links li a.active ~ ul {
   transition: all 130ms linear;
   height: 197px;
   overflow: hidden;
 }
-.app-navigation .app-links li a .nav-icons {
+.app-navigation .app-links-container ._main .app-links li a .nav-icons {
   position: absolute;
 }
-.app-navigation .app-links li a .nav-icons:before {
-  content: "";
+.app-navigation .app-links-container ._main .app-links li a .nav-icons:before {
+  content: '';
   width: 28px;
   height: 28px;
   background-size: contain;
@@ -697,25 +706,25 @@ input, .form-control {
   position: absolute;
   left: -46px;
 }
-.app-navigation .app-links li a .nav-icons.icon-home:before {
+.app-navigation .app-links-container ._main .app-links li a .nav-icons.icon-home:before {
   background-image: url("/assets/SB_Icon_Menu/Home.png");
 }
-.app-navigation .app-links li a .nav-icons.icon-integrations:before {
+.app-navigation .app-links-container ._main .app-links li a .nav-icons.icon-integrations:before {
   background-image: url("/assets/SB_Icon_Menu/Integrations.png");
 }
-.app-navigation .app-links li a .nav-icons.icon-manage:before {
+.app-navigation .app-links-container ._main .app-links li a .nav-icons.icon-manage:before {
   background-image: url("/assets/SB_Icon_Menu/Manage.png");
 }
-.app-navigation .app-links li a .nav-icons.icon-settings:before {
+.app-navigation .app-links-container ._main .app-links li a .nav-icons.icon-settings:before {
   background-image: url("/assets/SB_Icon_Menu/Settings.png");
 }
-.app-navigation .app-links li .app-dropdown {
+.app-navigation .app-links-container ._main .app-links li .app-dropdown {
   padding: 0;
 }
-.app-navigation .app-links li .app-dropdown li:last-child a {
+.app-navigation .app-links-container ._main .app-links li .app-dropdown li:last-child a {
   padding-bottom: 17px;
 }
-.app-navigation .app-links li .app-dropdown li a {
+.app-navigation .app-links-container ._main .app-links li .app-dropdown li a {
   transition: all "" linear;
   font-size: 14px;
   font-weight: 500;
@@ -724,20 +733,21 @@ input, .form-control {
   padding-top: 8px;
   padding-bottom: 8px;
 }
-.app-navigation .app-links li .app-dropdown li a.active, .app-navigation .app-links li .app-dropdown li a:hover {
+.app-navigation .app-links-container ._main .app-links li .app-dropdown li a.active, .app-navigation .app-links-container ._main .app-links li .app-dropdown li a:hover {
   transition: all "" linear;
   background-color: #4f6185;
   color: #fff;
 }
 
-.app-navigation .nav-footer {
-  position: absolute;
-  bottom: 10px;
+.nav-footer {
+  margin-bottom: 10px;
   text-align: center;
   width: 100%;
 }
-
-.app-navigation .nav-footer a{
+.nav-footer .navvbar-badge {
+  padding: 0;
+}
+.nav-footer a {
   font-size: 12px;
   margin-bottom: 10px;
   color: #90a3d0;
@@ -745,7 +755,7 @@ input, .form-control {
 }
 
 .app-dashboard .app-body {
-  padding-top: 60px;
+  padding-top: 57px;
   padding-left: 280px;
 }
 
@@ -758,7 +768,6 @@ input, .form-control {
   margin-top: 24px;
   display: block;
   float: none !important;
-  padding-right: 30px;
   width: 100%;
   text-align: center;
 }
@@ -827,4 +836,4 @@ img {
   font-size: 12px;
 }
 
-/*# sourceMappingURL=css/main.css.map */
+/*# sourceMappingURL=main.css.map */

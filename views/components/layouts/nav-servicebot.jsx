@@ -278,20 +278,20 @@ class NavServiceBot extends React.Component {
                                 {/*<span className="moble-live-mode">{this.getLivemode()}</span>*/}
                             {/*</div>*/}
 
-                            <div className="">
+                            <div className="_main">
                                 <Authorizer>
                                     {this.getMenuItems(linkTextStyle)}
                                 </Authorizer>
                                 <Authorizer anonymous={true}>
                                     <VisibleAnonymousLinks/>
                                 </Authorizer>
-                                <Authorizer>
-                                    <ul className="nav navbar-nav navbar-right">
+                                {/*<Authorizer>*/}
+                                    {/*<ul className="nav navbar-nav navbar-right">*/}
 
-                                    </ul>
-                                </Authorizer>
+                                    {/*</ul>*/}
+                                {/*</Authorizer>*/}
                                 <div className="nav-footer">
-                                    <div className="navvbar-badge p-0">
+                                    <div className="navvbar-badge">
                                         {this.getLivemode()}
                                     </div>
                                     <Link target="_blank" to="http://servicebot.io">
