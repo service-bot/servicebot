@@ -1,9 +1,10 @@
-
+let auth = require('../middleware/auth');
+let validate = require('../middleware/validate');
 let ServiceInstanceMessage = require('../models/service-instance-message');
 let ServiceInstance = require("../models/service-instance");
 module.exports = function(router) {
 
-    router.post(`/service-instance-messages`, async function(req,res,next){
+    router.post(`/service-instance-messages`, validate(ServiceInstance), auth(null, ServiceInstance), async function(req,res,next){
         let store = require("../config/redux/store");
         //todo:movethiscodeintoaplugin
         let messageManager = store.getState(true).pluginbot.services.messageManager[0];
