@@ -239,7 +239,10 @@ let initializedState = function (initialOptions = null) {
                 initialState.user = (await Fetcher("/api/v1/users/own"))[0];
                 //Set the version of the application if the user is logged in
                 let version = await Fetcher("/api/v1/system-options/version");
-                initialState.options = {...initialState.options, version: version.version};
+                let templates = await Fetcher("/api/v1/service-templates/public");
+                let hasOffering = templates.length > 0;
+
+                initialState.options = {...initialState.options, version: version.version, hasOffering};
                 if (initialState.user.status === 'invited') {
                     initialState.alerts = [...initialState.alerts, {
                         id: '1',

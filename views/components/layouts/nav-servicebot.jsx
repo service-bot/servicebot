@@ -3,16 +3,17 @@ import cookie from 'react-cookie';
 import {Link} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import ModalInvoice from '../elements/modals/modal-invoice.jsx';
-import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
+import {AdminEditingGear, AdminEditingSidebar} from "./admin-sidebar.jsx";
 import {NavNotification} from "../pages/notifications.jsx";
 import SideNav from '../layouts//side-nav.jsx';
 import {AppMessage} from '../elements/app-message.jsx';
 import ReactTooltip from 'react-tooltip';
 import consume from "pluginbot-react/dist/consume"
 
-import { connect } from "react-redux";
+import {connect} from "react-redux";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import $ from "jquery";
+
 let _ = require("lodash");
 
 const AnonymousLinks = ({signUpEnabled}) => (
@@ -25,7 +26,7 @@ const AnonymousLinks = ({signUpEnabled}) => (
 );
 
 const getSignUpStatus = (state) => {
-    if(!state.options || !state.options.allow_registration){
+    if (!state.options || !state.options.allow_registration) {
         return {signUpEnabled: true};
     }
     return {
@@ -37,7 +38,7 @@ const VisibleAnonymousLinks = connect(getSignUpStatus)(AnonymousLinks);
 
 class NavServiceBot extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             InvoiceModal: false,
@@ -57,60 +58,66 @@ class NavServiceBot extends React.Component {
         this.getLivemode = this.getLivemode.bind(this);
         this.getPluginItems = this.getPluginItems.bind(this);
         this.getLinkClass = this.getLinkClass.bind(this);
-
+        this.getSetupSteps = this.getSetupSteps.bind(this);
+        this.getSetupClass = this.getSetupClass.bind(this);
     }
 
-    componentDidMount(){
+    componentDidMount() {
         $(this.refs.dropdownToggle).dropdown();
         $(this.refs.dropdownToggle2).dropdown();
         $(this.refs.dropdownToggle3).dropdown();
     }
 
-    componentDidUpdate(){
+    componentDidUpdate() {
         $(this.refs.dropdownToggle).dropdown();
         $(this.refs.dropdownToggle2).dropdown();
         $(this.refs.dropdownToggle3).dropdown();
     }
 
-    onOpenInvoiceModal(){
+    onOpenInvoiceModal() {
         this.setState({InvoiceModal: true});
     }
 
-    onClose(){
+    onClose() {
         this.setState({InvoiceModal: false});
     }
 
-    toggleEditingMode(){
-        if(this.state.editingMode){
+    toggleEditingMode() {
+        if (this.state.editingMode) {
             this.setState({editingMode: false})
-        }else{
+        } else {
             this.setState({editingMode: true})
         }
     }
-    toggleOnEditingGear(){
+
+    toggleOnEditingGear() {
         this.setState({editingGear: true})
     }
-    toggleOffEditingGear(){
+
+    toggleOffEditingGear() {
         this.setState({editingGear: false})
     }
 
-    toggleSideBar(){
+    toggleSideBar() {
         let self = this;
         this.setState({sidebar: !this.state.sidebar}, function () {
-            if(self.state.sidebar){
+            if (self.state.sidebar) {
                 document.body.classList.add('layout-collapsed');
-            }else{
+            } else {
                 document.body.classList.remove('layout-collapsed');
             }
         });
     }
-    getPluginItems(icon = null){
+
+    getPluginItems(icon = null) {
         let self = this;
         let user = this.props.user;
         return this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
             console.log("expected route path", route.path);
-            if(route.isVisible(user)) {
-                acc.push(<li><Link key={index} to={route.path} className={self.getLinkClass(route.path.split('/')[1], 'parent')}>{icon && <span className={`nav-icons icon-${icon}`}/>}{route.name}</Link></li>)
+            if (route.isVisible(user)) {
+                acc.push(<li><Link key={index} to={route.path}
+                                   className={self.getLinkClass(route.path.split('/')[1], 'parent')}>{icon &&
+                <span className={`nav-icons icon-${icon}`}/>}{route.name}</Link></li>)
             }
             return acc;
         }, [])
@@ -119,23 +126,56 @@ class NavServiceBot extends React.Component {
 
     getLinkClass(expectedPath, linkType) {
         let path = this.props.currentPath;
-        if(_.isArray(expectedPath)){
+        if (_.isArray(expectedPath)) {
             return _.includes(expectedPath, path.split('/')[1]) ? `nav-link-${linkType} active` : `nav-link-${linkType}`;
         }
         return path.split('/')[1] === expectedPath ? `nav-link-${linkType} active` : `nav-link-${linkType}`;
     }
 
-    getMenuItems(style){
+    getSetupClass(expectedPath, linkType, setupComplete) {
+        //for LUNG, put your right class here
+        return setupComplete ? `nav-link-${linkType} active` : `nav-link-${linkType}`;
+
+    }
+
+    getSetupSteps(style) {
+        let {options} = this.props;
+        let hasOffering = options.hasOffering;
+        let hasStripeKeys = options.stripe_publishable_key.value !== "";
+        let setupComplete = hasOffering && hasStripeKeys;
+        let getSetupClass = this.getSetupClass;
+        //Style 'Your Checklist' and step numbers
+        //TODO change this to '!setupComplete' when style is done
+        if(true) {
+            return (
+                <div>
+                    <p style={style} className={getSetupClass('dashboard', 'parent')}>
+                        <span className="nav-icons icon-home"/>Your Checklist
+                    </p>
+                    <ul className="app-dropdown">
+                        <li><Link to="/manage-catalog/create" className={getSetupClass('/manage-catalog/create', 'child', hasOffering)}>1 Create SaaS Offering</Link></li>
+                        <li><Link to="/stripe-settings" className={getSetupClass('/stripe-settings', 'child', hasStripeKeys)}>2 Add Stripe keys</Link></li>
+                    </ul>
+                </div>
+            )
+        }
+    }
+
+    getMenuItems(style) {
 
         //todo: do this dynamically somehow
         let linkGroupManage = ['manage-catalog', 'manage-categories', 'manage-users', 'manage-subscriptions'];
         let linkGroupSettings = ['stripe-settings', 'notification-templates', 'manage-permission', 'system-settings'];
         let getLinkClass = this.getLinkClass;
+        let getSetupSteps = this.getSetupSteps;
         let currentDropdown = '';
 
-        if(isAuthorized({permissions: ["can_administrate", "can_manage"]})){
-            return(
+        if (isAuthorized({permissions: ["can_administrate", "can_manage"]})) {
+            return (
                 <ul className="app-links">
+                    <li>
+                        {getSetupSteps(style)}
+                    </li>
                     <li>
                         <Link to="/dashboard" style={style} className={getLinkClass('dashboard', 'parent')}>
                             <span className="nav-icons icon-home"/>Dashboard
@@ -152,7 +192,8 @@ class NavServiceBot extends React.Component {
                         </Link>
                     </li>
                     <li>
-                        <Link to="/manage-subscriptions" style={style} className={getLinkClass('manage-subscriptions', 'parent')}>
+                        <Link to="/manage-subscriptions" style={style}
+                              className={getLinkClass('manage-subscriptions', 'parent')}>
                             <span className="nav-icons icon-manage"/>Subscriptions
                         </Link>
                     </li>
@@ -162,18 +203,24 @@ class NavServiceBot extends React.Component {
                             <span className="nav-icons icon-settings"/>Settings<span className="caret"/>
                         </Link>
                         <ul className="app-dropdown">
-                            <li><Link to="/stripe-settings" className={getLinkClass('stripe-settings', 'child')}>Stripe Settings</Link></li>
-                            <li><Link to="/notification-templates" className={getLinkClass('notification-templates', 'child')}>Email Settings</Link></li>
-                            <li><Link to="/manage-permission" className={getLinkClass('manage-permission', 'child')}>Permission Settings</Link></li>
-                            <li><Link to="/system-settings" className={getLinkClass('system-settings', 'child')}>System Settings</Link></li>
+                            <li><Link to="/stripe-settings" className={getLinkClass('stripe-settings', 'child')}>Stripe
+                                Settings</Link></li>
+                            <li><Link to="/notification-templates"
+                                      className={getLinkClass('notification-templates', 'child')}>Email Settings</Link>
+                            </li>
+                            <li><Link to="/manage-permission" className={getLinkClass('manage-permission', 'child')}>Permission
+                                Settings</Link></li>
+                            <li><Link to="/system-settings" className={getLinkClass('system-settings', 'child')}>System
+                                Settings</Link></li>
                         </ul>
                     </li>
                 </ul>
             )
-        }else{
-            return(
+        } else {
+            return (
                 <ul className="app-links">
-                    <li><Link to="/my-services" style={style}>My Account<span className="sr-only">(current)</span></Link></li>
+                    <li><Link to="/my-services" style={style}>My Account<span
+                        className="sr-only">(current)</span></Link></li>
                     <li><Link to={`/billing-history/${this.props.uid}`}>Billing History</Link></li>
                     <li><Link to={`/billing-settings/${this.props.uid}`}>Payment Method</Link></li>
                     {this.getPluginItems()}
@@ -182,42 +229,42 @@ class NavServiceBot extends React.Component {
         }
     }
 
-    getLivemode(){
+    getLivemode() {
         let pk = cookie.load("spk")
-        let livemode =  pk ? pk.substring(3, 7) : "";
-        if(pk === undefined){
+        let livemode = pk ? pk.substring(3, 7) : "";
+        if (pk === undefined) {
             return (
                 <span data-tip data-for="notification-stripe-keys" className="notification-badge">
                     <Link to="/stripe-settings">
                         {/*<ReactTooltip id="notification-stripe-keys" class="notification-stripe-keys"*/}
-                                      {/*aria-haspopup='true' role='example'*/}
-                                      {/*place="bottom" type="error" effect="solid" offset={{top: -28, left: -20}}>*/}
-                            {/*<p><strong>You need to complete your setup to unlock certain features:</strong></p>*/}
-                                {/*<ul>*/}
-                                    {/*<li>User Invites</li>*/}
-                                    {/*<li>Publishing Service Templates</li>*/}
-                                    {/*<li>Adding funds</li>*/}
-                                    {/*<li>Receiving Payments</li>*/}
-                                {/*</ul>*/}
-                            {/*<p>Click to complete</p>*/}
+                        {/*aria-haspopup='true' role='example'*/}
+                        {/*place="bottom" type="error" effect="solid" offset={{top: -28, left: -20}}>*/}
+                        {/*<p><strong>You need to complete your setup to unlock certain features:</strong></p>*/}
+                        {/*<ul>*/}
+                        {/*<li>User Invites</li>*/}
+                        {/*<li>Publishing Service Templates</li>*/}
+                        {/*<li>Adding funds</li>*/}
+                        {/*<li>Receiving Payments</li>*/}
+                        {/*</ul>*/}
+                        {/*<p>Click to complete</p>*/}
                         {/*</ReactTooltip>*/}
                         <strong>No Stripe Connection</strong>
                     </Link>
 
                 </span> );
         }
-        if(livemode.toUpperCase() === "TEST") {
+        if (livemode.toUpperCase() === "TEST") {
             return ( <span className="notification-badge stripe test m-0"><strong>Stripe Test Mode</strong></span> );
         } else {
             return ( <span className="notification-badge stripe live m-0"><strong>Stripe Live Mode</strong></span> );
         }
     }
 
-    render () {
+    render() {
         let self = this;
-        const currentModal = ()=> {
-            if(self.state.InvoiceModal){
-                return(
+        const currentModal = () => {
+            if (self.state.InvoiceModal) {
+                return (
                     <ModalInvoice show={self.state.InvoiceModal} icon="fa-credit-card" hide={self.onClose}/>
                 );
             }
@@ -225,19 +272,19 @@ class NavServiceBot extends React.Component {
 
         let navigationBarStyle = {};
         let linkTextStyle = {};
-        if(this.props.options){
+        if (this.props.options) {
             let options = this.props.options;
             navigationBarStyle.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
             linkTextStyle.color = _.get(options, 'primary_theme_text_color.value', '#000000');
         }
 
         let embed = false;
-        if(window.location.search.substring(1) === 'embed'){
+        if (window.location.search.substring(1) === 'embed') {
             embed = true;
         }
 
-        if(!embed){
-            return(
+        if (!embed) {
+            return (
                 <div className="app-layout">
                     <div className="app-header">
                         <div className="app-header-left">
@@ -253,29 +300,30 @@ class NavServiceBot extends React.Component {
                                 <Link to="/profile">
                                     <img className="img-circle" src={`/api/v1/users/${this.props.uid}/avatar`}
                                          ref="avatar" alt="profile image"/>
-                                    { this.state.loadingImage && <Load/> }
+                                    {this.state.loadingImage && <Load/>}
                                 </Link>
                             </div>
                             <NavNotification/>
                         </div>
                     </div>
                     <div className="app-navigation">
-                        <nav className="app-links-container" onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
+                        <nav className="app-links-container" onMouseEnter={this.toggleOnEditingGear}
+                             onMouseLeave={this.toggleOffEditingGear}>
 
                             {/*<div className="navbar-header">*/}
-                                {/*<Authorizer anonymous={true}>*/}
-                                    {/*<Link className="mobile-login-button" to="/login">Login</Link>*/}
-                                {/*</Authorizer>*/}
-                                {/*<Authorizer>*/}
-                                    {/*<button type="button" className="navbar-toggle collapsed" data-toggle="collapse"*/}
-                                            {/*data-target="#bs-example-navbar-collapse-1" aria-expanded="false" onClick={this.toggleSideBar}  >*/}
-                                        {/*<span className="sr-only">Toggle navigation</span>*/}
-                                        {/*<span className="icon-bar"/>*/}
-                                        {/*<span className="icon-bar"/>*/}
-                                        {/*<span className="icon-bar"/>*/}
-                                    {/*</button>*/}
-                                {/*</Authorizer>*/}
-                                {/*<span className="moble-live-mode">{this.getLivemode()}</span>*/}
+                            {/*<Authorizer anonymous={true}>*/}
+                            {/*<Link className="mobile-login-button" to="/login">Login</Link>*/}
+                            {/*</Authorizer>*/}
+                            {/*<Authorizer>*/}
+                            {/*<button type="button" className="navbar-toggle collapsed" data-toggle="collapse"*/}
+                            {/*data-target="#bs-example-navbar-collapse-1" aria-expanded="false" onClick={this.toggleSideBar}  >*/}
+                            {/*<span className="sr-only">Toggle navigation</span>*/}
+                            {/*<span className="icon-bar"/>*/}
+                            {/*<span className="icon-bar"/>*/}
+                            {/*<span className="icon-bar"/>*/}
+                            {/*</button>*/}
+                            {/*</Authorizer>*/}
+                            {/*<span className="moble-live-mode">{this.getLivemode()}</span>*/}
                             {/*</div>*/}
 
                             <div className="_main">
@@ -286,9 +334,9 @@ class NavServiceBot extends React.Component {
                                     <VisibleAnonymousLinks/>
                                 </Authorizer>
                                 {/*<Authorizer>*/}
-                                    {/*<ul className="nav navbar-nav navbar-right">*/}
+                                {/*<ul className="nav navbar-nav navbar-right">*/}
 
-                                    {/*</ul>*/}
+                                {/*</ul>*/}
                                 {/*</Authorizer>*/}
                                 <div className="nav-footer">
                                     <div className="navvbar-badge">
@@ -309,7 +357,7 @@ class NavServiceBot extends React.Component {
                             {currentModal()}
                             {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
                             {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
-                                                                            filter = {[ "brand_logo",
+                                                                            filter={["brand_logo",
                                                                                 "primary_theme_background_color",
                                                                                 "primary_theme_text_color",
                                                                                 "button_primary_color",
@@ -323,7 +371,7 @@ class NavServiceBot extends React.Component {
                     </div>
                 </div>
             );
-        }else{
+        } else {
             return null;
         }
     }
@@ -338,4 +386,4 @@ const mapStateToProps = (state, ownProps) => {
     }
 };
 
-export default consume("routeDefinition","footerComponent")(connect(mapStateToProps)(NavServiceBot));
+export default consume("routeDefinition", "footerComponent")(connect(mapStateToProps)(NavServiceBot));
