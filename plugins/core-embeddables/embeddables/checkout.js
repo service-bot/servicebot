@@ -10,6 +10,7 @@ const CHECKOUT_FORM = "checkoutForm";
 const selector = formValueSelector(CHECKOUT_FORM); // <-- same as form name
 import { duotoneDark } from 'react-syntax-highlighter/styles/prism';
 import SyntaxHighlighter from 'react-syntax-highlighter/prism';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 class CustomField extends React.Component {
 
@@ -274,12 +275,14 @@ class CheckoutPage extends React.Component {
             selectedTier: null,
             selectedPlan: null,
             tier: null,
-            templates: []
+            templates: [],
+            copied: false,
         }
         this.changeTemplate = this.changeTemplate.bind(this);
         this.changeTier = this.changeTier.bind(this);
         this.changePlan = this.changePlan.bind(this);
         this.generateEmbedCode = this.generateEmbedCode.bind(this);
+        this.handleCopy = this.handleCopy.bind(this);
 
     }
     generateEmbedCode(){
@@ -322,10 +325,16 @@ class CheckoutPage extends React.Component {
         this.setState({selectedPlan});
 
     }
+    handleCopy(){
+        let self = this;
+        this.setState({'copied': true}, function () {
+            setTimeout(function(){ self.setState({'copied': false}) }, 3000);
+        });
+    }
 
     render(props) {
         let formHTML;
-        let {loading, selectedTemplate, templates, selectedPlan, selectedTier, tier} = this.state;
+        let {loading, selectedTemplate, templates, selectedPlan, selectedTier, tier, copied} = this.state;
         if(loading){
             return <div>LOADING</div>;
         }
@@ -402,7 +411,9 @@ class CheckoutPage extends React.Component {
                         {selectedPlan &&
                         <div className="_embed-code-copy">
                             <SyntaxHighlighter language='javascript' style={duotoneDark}>{this.generateEmbedCode()}</SyntaxHighlighter>
-                            <button className="buttons _success _right">Copy Code</button>
+                            <CopyToClipboard text={this.generateEmbedCode()} onCopy={this.handleCopy}>
+                                <button className="buttons _success _right __copied">{copied ? 'Copied!' : 'Copy Code'}</button>
+                            </CopyToClipboard>
                             <div className="clear"/>
                         </div>
                         }
