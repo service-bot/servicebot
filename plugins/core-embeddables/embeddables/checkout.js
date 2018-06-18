@@ -8,8 +8,8 @@ import slug from "slug"
 import {numericality, required} from 'redux-form-validators'
 const CHECKOUT_FORM = "checkoutForm";
 const selector = formValueSelector(CHECKOUT_FORM); // <-- same as form name
-
-
+import { duotoneDark } from 'react-syntax-highlighter/styles/prism';
+import SyntaxHighlighter from 'react-syntax-highlighter/prism';
 
 class CustomField extends React.Component {
 
@@ -252,7 +252,7 @@ let CheckoutForm = function(props){
             props={{templateType: props.serviceTypeValue}}
             component={renderCustomProperty}
             />
-            <button className="buttons _add" onClick={props.handleSubmit} >Save Checkout Form</button>
+            <button className="buttons _primary _right" onClick={props.handleSubmit} >Save Checkout Form</button>
             <span class="clear"/>
         </FormSection>
     </div>
@@ -285,22 +285,22 @@ class CheckoutPage extends React.Component {
     generateEmbedCode(){
         let {selectedPlan, selectedTemplate} = this.state;
         return `<div id="servicebot-request-form"></div>
-<script src="https://js.stripe.com/v3/"></script>
-<script src="https://servicebot.io/js/servicebot-embed.js" type="text/javascript"></script>
-<script  type="text/javascript">
-    Servicebot.Checkout({
-        templateId : ${selectedTemplate},
-        planId: ${selectedPlan},
-        url : "${window.location.origin}",
-        selector : document.getElementById('servicebot-request-form'),
-        handleResponse : (response) => {
-            //Response function, you can put redirect logic or app integration logic here
-        },
-        spk: "${cookie.load("spk")}",
-        forceCard : false, //set to true if you want credit card to be a required field for the customer
-        setPassword : false //set to true if you want customer to fill out a password
-    })
-</script>`
+                <script src="https://js.stripe.com/v3/"></script>
+                <script src="https://servicebot.io/js/servicebot-embed.js" type="text/javascript"></script>
+                <script  type="text/javascript">
+                    Servicebot.Checkout({
+                        templateId : ${selectedTemplate},
+                        planId: ${selectedPlan},
+                        url : "${window.location.origin}",
+                        selector : document.getElementById('servicebot-request-form'),
+                        handleResponse : (response) => {
+                            //Response function, you can put redirect logic or app integration logic here
+                        },
+                        spk: "${cookie.load("spk")}",
+                        forceCard : false, //set to true if you want credit card to be a required field for the customer
+                        setPassword : false //set to true if you want customer to fill out a password
+                    })
+                </script>`
     }
     async componentDidMount(){
         let templates = await Fetcher(`/api/v1/service-templates/`);
@@ -399,7 +399,13 @@ class CheckoutPage extends React.Component {
                             </div>
                             }
                         </div>
-                        {selectedPlan && <pre className="language-javascript">{this.generateEmbedCode()}</pre>}
+                        {selectedPlan &&
+                        <div className="_embed-code-copy">
+                            <SyntaxHighlighter language='javascript' style={duotoneDark}>{this.generateEmbedCode()}</SyntaxHighlighter>
+                            <button className="buttons _success _right">Copy Code</button>
+                            <div className="clear"/>
+                        </div>
+                        }
                     </div> :
                     <div className="_inactive"/>
                 }

@@ -18,7 +18,7 @@
     border-radius: 50px;
   }
 
-  &._add{
+  &._add, &._primary{
     font-size: $font-size;
     padding: 14px 24px;
     background-color: #4C82FC;
@@ -27,13 +27,17 @@
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.17);
   }
 
-  &._save{
+  &._save, &._success{
     font-size: $font-size;
     padding: 14px 24px;
     background-color: #1ABE98;
     color: $color-white;
     border-radius: 1px;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.17);
+  }
+
+  &._right{
+    float: right;
   }
 
 }

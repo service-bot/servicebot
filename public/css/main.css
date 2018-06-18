@@ -86,7 +86,7 @@
 .buttons.rounded {
   border-radius: 50px;
 }
-.buttons._add {
+.buttons._add, .buttons._primary {
   font-size: 14px;
   padding: 14px 24px;
   background-color: #4C82FC;
@@ -94,13 +94,16 @@
   border-radius: 1px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
 }
-.buttons._save {
+.buttons._save, .buttons._success {
   font-size: 14px;
   padding: 14px 24px;
   background-color: #1ABE98;
   color: #fff;
   border-radius: 1px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
+}
+.buttons._right {
+  float: right;
 }
 
 .clear {
