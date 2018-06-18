@@ -1,0 +1,38 @@
+/* Embeddable Page - Checkout Page Embed */
+
+#plugin_embeddable-checkout {
+
+  #_section-1 {
+
+  }
+
+  #_section-2 {
+
+  }
+
+  #_section-3 {
+
+    ._embed-code-form {
+      display: flex;
+
+      .form-group {
+        flex-basis: 30%;
+        margin-right: $gutter;
+
+        &#_select-a-tier {
+
+        }
+
+        &#_select-a-plan {
+          flex-grow: 1;
+        }
+
+        &:last-child{
+          margin-right: 0;
+        }
+      }
+    }
+
+  }
+
+}

@@ -524,6 +524,21 @@ input, .form-control {
   font-weight: 500;
 }
 
+/* Embeddable Page - Checkout Page Embed */
+#plugin_embeddable-checkout #_section-3 ._embed-code-form {
+  display: flex;
+}
+#plugin_embeddable-checkout #_section-3 ._embed-code-form .form-group {
+  flex-basis: 30%;
+  margin-right: 16px;
+}
+#plugin_embeddable-checkout #_section-3 ._embed-code-form .form-group#_select-a-plan {
+  flex-grow: 1;
+}
+#plugin_embeddable-checkout #_section-3 ._embed-code-form .form-group:last-child {
+  margin-right: 0;
+}
+
 /* layout components */
 .app-header {
   position: fixed;

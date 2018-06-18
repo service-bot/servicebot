@@ -248,14 +248,15 @@ class renderCustomProperty extends React.Component {
 let CheckoutForm = function(props){
     return <div>
         <FormSection name="references">
-        <FieldArray name="service_template_properties"
-        props={{templateType: props.serviceTypeValue}}
-        component={renderCustomProperty}
-        />
-            <button onClick=    {props.handleSubmit}>Save</button>
+            <FieldArray name="service_template_properties"
+            props={{templateType: props.serviceTypeValue}}
+            component={renderCustomProperty}
+            />
+            <button className="buttons _add" onClick={props.handleSubmit} >Save Checkout Form</button>
+            <span class="clear"/>
         </FormSection>
     </div>
-}
+};
 
 
 //The full form
@@ -337,47 +338,74 @@ class CheckoutPage extends React.Component {
             'url': `/api/v1/service-templates/${selectedTemplate}`
         };
         let currentTemplate = templates.find(template => template.id == selectedTemplate)
-        let formEmbed = (<div>
-            <span>Paste the generated HTML on the page you want to embed a request form. You can find more detailed documentation <a
-                href="https://docs.servicebot.io/embed">here</a></span>
-            <select onChange={this.changeTemplate}>
-                <option key={"default-0"} value="0">Select a template</option>
-                {this.state.templates.map(template => {
-                    return (<option key={template.id} value={template.id}>{template.name}</option>)
-                })}
-            </select>
-            {selectedTemplate && <div><ServicebotBaseForm key={"base-"+selectedTemplate}
-                                                     form={CheckoutForm}
-                                                     formName={CHECKOUT_FORM}
-                                                     initialValues={currentTemplate}
-                                                     // initialRequests={initialRequests}
-                                                     // submissionPrep={this.submissionPrep}
-                                                     submissionRequest={submissionRequest}
-                                                     // successMessage={successMessage}
-                                                     // handleResponse={this.handleResponse}
-                                                     // initializer={initializer}
-                                                     // formProps={{
-                                                     //     ...this.props.fieldDispatches,
-                                                     //     ...this.props.fieldState
-                                                     // }}
-
-            />
-
-                <select onChange={this.changeTier}>
-                    <option key={"default-0"} value="0">Select a tier</option>
-                    {currentTemplate.references.tiers.map(tier => {
-                        return (<option key={tier.id} value={tier.id}>{tier.name}</option>)
-                    })}
-                </select>
-                {selectedTier && <select onChange={this.changePlan}>
-                    <option key={"default-0"} value="0">Select a plan</option>
-                    {tier.references.payment_structure_templates.map(plan => {
-                        return (<option key={plan.id} value={plan.id}>{`${plan.amount/100} - ${plan.interval} - ${plan.type}`}</option>)
-                    })}
-                </select>}
-                {selectedPlan && <pre>{this.generateEmbedCode()}</pre>}
-            </div>}
-            </div>)
+        let formEmbed = (
+            <div id="plugin_embeddable-checkout" className="plugin_container">
+                <div id="_section-1" className="_section">
+                    <h3><span className="form-step-count">1</span>Select a template</h3>
+                    <select className="form-control" onChange={this.changeTemplate}>
+                        <option key={"default-0"} value="0">Select a template</option>
+                        {this.state.templates.map(template => {
+                            return (<option key={template.id} value={template.id}>{template.name}</option>)
+                        })}
+                    </select>
+                </div>
+                <div id="_section-2" className="_section">
+                    <h3><span className="form-step-count">2</span>Build your checkout form</h3>
+                    { selectedTemplate ?
+                        <ServicebotBaseForm key={"base-"+selectedTemplate}
+                                         form={CheckoutForm}
+                                         formName={CHECKOUT_FORM}
+                                         initialValues={currentTemplate}
+                                         // initialRequests={initialRequests}
+                                         // submissionPrep={this.submissionPrep}
+                                         submissionRequest={submissionRequest}
+                                         // successMessage={successMessage}
+                                         // handleResponse={this.handleResponse}
+                                         // initializer={initializer}
+                                         // formProps={{
+                                         //     ...this.props.fieldDispatches,
+                                         //     ...this.props.fieldState
+                                         // }}
+                        /> :
+                        <div className="_inactive"/>
+                    }
+                </div>
+                <div id="_section-3" className="_section">
+                    <h3><span className="form-step-count">3</span>Copy and Embed your code</h3>
+                { selectedTemplate ?
+                    <div>
+                        <p>Paste the generated HTML on the page you want to embed a request form. You can find more
+                            detailed documentation <a href="https://docs.servicebot.io/embed">here</a>
+                        </p>
+                        <div className="_embed-code-form">
+                            <div id="_select-a-tier" className="form-group form-group-flex">
+                                <label className="control-label form-label-flex-md">Select a tier</label>
+                                <select className="form-control" onChange={this.changeTier}>
+                                    <option key={"default-0"} value="0">Select a tier</option>
+                                    {currentTemplate.references.tiers.map(tier => {
+                                        return (<option key={tier.id} value={tier.id}>{tier.name}</option>)
+                                    })}
+                                </select>
+                            </div>
+                            {selectedTier &&
+                            <div id="_select-a-plan" className="form-group form-group-flex">
+                                <label className="control-label form-label-flex-md">Select a plan</label>
+                                <select className="form-control" onChange={this.changePlan}>
+                                    <option key={"default-0"} value="0">Select a plan</option>
+                                    {tier.references.payment_structure_templates.map(plan => {
+                                        return (<option key={plan.id} value={plan.id}>{`${plan.amount/100} - ${plan.interval} - ${plan.type}`}</option>)
+                                    })}
+                                </select>
+                            </div>
+                            }
+                        </div>
+                        {selectedPlan && <pre className="language-javascript">{this.generateEmbedCode()}</pre>}
+                    </div> :
+                    <div className="_inactive"/>
+                }
+                </div>
+            </div>
+        );
         return formEmbed
 
     }
