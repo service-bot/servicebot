@@ -412,7 +412,7 @@ class CheckoutPage extends React.Component {
                         <div className="_embed-code-copy">
                             <SyntaxHighlighter language='javascript' style={duotoneDark}>{this.generateEmbedCode()}</SyntaxHighlighter>
                             <CopyToClipboard text={this.generateEmbedCode()} onCopy={this.handleCopy}>
-                                <button className="buttons _success _right __copied">{copied ? 'Copied!' : 'Copy Code'}</button>
+                                <button className="buttons _success _right __copied">{copied ? 'Copied!' : 'Copy Embed Code'}</button>
                             </CopyToClipboard>
                             <div className="clear"/>
                         </div>
