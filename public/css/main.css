@@ -771,6 +771,49 @@ input, .form-control {
   letter-spacing: 1px;
 }
 
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist .nav-link-parent {
+  font-size: 1.25em;
+  padding-left: 40px;
+  text-transform: capitalize;
+}
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist .nav-link-parent, .app-navigation .app-links-container ._main .app-links .nav-setup-checklist .nav-link-child {
+  background-color: #6F7F9F;
+  color: #fff;
+}
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist ._list {
+  background-color: #6F7F9F;
+  padding-bottom: 16px;
+}
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist ._list .nav-link-child {
+  padding: 8px 16px 8px 34px;
+  text-transform: none;
+  font-size: 0.9em;
+}
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist ._list .nav-link-child ._step-count {
+  color: #fff;
+  border: 2px solid currentColor;
+  border-radius: 50px;
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+  text-align: center;
+  display: inline-block;
+  margin-right: 20px;
+  padding-right: 1px;
+  padding-top: 1px;
+  line-height: 23px;
+  padding-right: 0;
+  margin-right: 8px;
+}
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist ._list .nav-link-child._completed {
+  opacity: 0.5;
+}
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist ._list .nav-link-child._completed ._step-count {
+  border-color: #fff;
+  background-color: #fff;
+  color: #475981;
+}
+
 .app-dashboard .app-body {
   padding-top: 57px;
   padding-left: 280px;

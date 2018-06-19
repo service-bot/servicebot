@@ -134,7 +134,7 @@ class NavServiceBot extends React.Component {
 
     getSetupClass(expectedPath, linkType, setupComplete) {
         //for LUNG, put your right class here
-        return setupComplete ? `nav-link-${linkType} active` : `nav-link-${linkType}`;
+        return setupComplete ? `nav-link-${linkType} _completed` : `nav-link-${linkType}`;
 
     }
 
@@ -148,14 +148,16 @@ class NavServiceBot extends React.Component {
         //TODO change this to '!setupComplete' when style is done
         if(true) {
             return (
-                <div>
-                    <p style={style} className={getSetupClass('dashboard', 'parent')}>
-                        <span className="nav-icons icon-home"/>Your Checklist
-                    </p>
-                    <ul className="app-dropdown">
-                        <li><Link to="/manage-catalog/create" className={getSetupClass('/manage-catalog/create', 'child', hasOffering)}>1 Create SaaS Offering</Link></li>
-                        <li><Link to="/stripe-settings" className={getSetupClass('/stripe-settings', 'child', hasStripeKeys)}>2 Add Stripe keys</Link></li>
-                    </ul>
+                <div className="nav-setup-checklist">
+                    <Link to="/dashboard" className={`${getSetupClass('dashboard', 'parent')} active`}>
+                        Your Checklist
+                    </Link>
+                    <div className="_list">
+                        <Link to="/manage-catalog/create" className={getSetupClass('/manage-catalog/create', 'child', hasOffering)}>
+                            <span className="form-step-count _step-count">1</span> Create SaaS Offering</Link>
+                        <Link to="/stripe-settings" className={getSetupClass('/stripe-settings', 'child', hasStripeKeys)}>
+                            <span className="form-step-count _step-count">2</span> Add Stripe keys</Link>
+                    </div>
                 </div>
             )
         }

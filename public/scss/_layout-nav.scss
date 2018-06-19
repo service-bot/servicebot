@@ -280,6 +280,61 @@
   }
 }
 
+.nav-setup-checklist{
+
+  .app-navigation .app-links-container ._main .app-links &{
+
+    .nav-link-parent{
+      font-size: 1.25em;
+      padding-left: $gutter * 2.5;
+      text-transform: capitalize;
+    }
+
+    .nav-link-parent, .nav-link-child {
+      background-color: $color-nav-checklist;
+      color: $color-nav-checklist-text;
+    }
+
+    ._list{
+      background-color: $color-nav-checklist;
+      padding-bottom: $gutter;
+
+      .nav-link-child {
+        padding: $gutter/2 $gutter $gutter/2 $gutter*2+2;
+        text-transform: none;
+        font-size: 0.9em;
+
+        ._step-count {
+          color: $color-white;
+          @include steps;
+          line-height: 23px;
+          padding-right: 0;
+          margin-right: $gutter / 2;
+        }
+
+        &._completed {
+          opacity: 0.5;
+
+          ._step-count {
+            border-color: $color-white;
+            background-color: $color-white;
+            color: $color-blue-gray;
+          }
+        }
+      }
+    }
+  }
+
+  .app-navigation .app-links-container ._main .app-links & {
+    .nav-link-child {
+
+      &._completed {
+
+      }
+    }
+  }
+}
+
 .app-dashboard .app-body{
   padding-top: $nav-header-height;
   padding-left: $nav-panel-width;
