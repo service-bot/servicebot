@@ -5,5 +5,6 @@
 .form-help-text{
   font-size: 0.89rem;
   line-height: 1.2rem;
-  color: $color-medium-blue-gray;
+  color: $help-text;
+  margin-bottom: $gutter;
 }

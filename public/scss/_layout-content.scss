@@ -28,7 +28,7 @@
       flex-basis: 30%;
       flex-shrink: 0;
       max-width: 300px;
-      padding: 20px 27px;
+      padding: $gutter * 1.5;
       background-color: $color-light-blue-gray;
     }
 
@@ -39,12 +39,24 @@
       ._section{
 
         background-color: $color-extra-light-gray;
-        margin: 20px 15px;
-        padding: 18px 23px;
+        margin: $gutter;
+        padding: $gutter $gutter * 1.5;
         box-shadow: 0 2px 4px 0 rgba(0,0,0,0.06);
+
+        &:first-child{
+          padding-top: $gutter * 1.5;
+        }
+
+        .caret{
+          @include defaultTransition;
+          display: block;
+          float: right;
+          margin: 8px;
+        }
 
         & > h3{
           @include _section_heading;
+          margin-bottom: 0;
 
           & > .form-step-count{
             @include steps;
@@ -53,6 +65,19 @@
 
         & ._indented {
           padding-left: $gutter * 3;
+        }
+
+        &._active {
+
+          .caret{
+            @include defaultTransition;
+            transform: rotate(180deg);
+          }
+
+          ._indented {
+            padding-top: $gutter;
+            padding-bottom: $gutter / 2;
+          }
         }
 
       }

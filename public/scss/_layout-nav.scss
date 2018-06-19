@@ -130,13 +130,9 @@
   z-index: $z-nav-panel;
 
   .app-links-container {
-    height: 100%;
 
     ._main {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 100%;
+
 
       .app-links {
         padding: 0;
@@ -173,6 +169,7 @@
                 @include defaultTransition;
                 margin-left: 50px;
                 transform: scale(1.5) translateY(-1px);
+                border-top-color: $color-white;
               }
 
               & ~ ul {
@@ -286,6 +283,19 @@
 .app-dashboard .app-body{
   padding-top: $nav-header-height;
   padding-left: $nav-panel-width;
+}
+
+.caret{
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px dashed;
+  border-top: 4px solid\9;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  border-top-color: $color-dark-blue;
 }
 
 /* todo: To be cleaned up */

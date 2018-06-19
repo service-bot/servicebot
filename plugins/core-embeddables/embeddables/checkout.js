@@ -349,7 +349,8 @@ class CheckoutPage extends React.Component {
         let currentTemplate = templates.find(template => template.id == selectedTemplate)
         let formEmbed = (
             <div id="plugin_embeddable-checkout" className="plugin_container">
-                <div id="_section-1" className="_section">
+                <div id="_section-1" className="_section _active">
+                    <span className="caret"/>
                     <h3><span className="form-step-count">1</span>Select a template</h3>
                     <div className="_indented">
                         <select className="form-control" onChange={this.changeTemplate}>
@@ -360,7 +361,8 @@ class CheckoutPage extends React.Component {
                         </select>
                     </div>
                 </div>
-                <div id="_section-2" className="_section">
+                <div id="_section-2" className={`_section ${selectedTemplate && '_active'}`}>
+                    <span className="caret"/>
                     <h3><span className="form-step-count">2</span>Build your checkout form</h3>
                     <div className="_indented">
                         { selectedTemplate ?
@@ -383,14 +385,15 @@ class CheckoutPage extends React.Component {
                         }
                     </div>
                 </div>
-                <div id="_section-3" className="_section">
+                <div id="_section-3" className={`_section ${selectedTemplate && '_active'}`}>
+                    <span className="caret"/>
                     <h3><span className="form-step-count">3</span>Copy and Embed your code</h3>
                 { selectedTemplate ?
                     <div>
                         <div className="_indented">
                             <p className="form-help-text"> Paste the generated HTML on the page you want to embed
                                 a request form. You can find more detailed documentation
-                                <a href="https://docs.servicebot.io/embed">here</a>
+                                <a href="https://docs.servicebot.io/embed"> here</a>
                             </p>
 
                             <div className="_embed-code-form">
