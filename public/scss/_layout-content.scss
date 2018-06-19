@@ -51,6 +51,10 @@
           }
         }
 
+        & ._indented {
+          padding-left: $gutter * 3;
+        }
+
       }
 
     }

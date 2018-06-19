@@ -1,14 +1,19 @@
 import React from "react";
 import {Fetcher} from "servicebot-base-form";
+import { duotoneDark } from 'react-syntax-highlighter/styles/prism';
+import SyntaxHighlighter from 'react-syntax-highlighter/prism';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+
 class ManagementEmbed extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             loading:true,
-            selectedServer: "node"
-        }
+            selectedServer: "node",
+            copied: false,
+        };
         this.changeServer = this.changeServer.bind(this);
-
+        this.handleCopy = this.handleCopy(this);
     }
     async componentDidMount(){
         let secretKey = (await Fetcher(`/api/v1/system-options/secret`)).secret;
@@ -17,6 +22,12 @@ class ManagementEmbed extends React.Component {
     changeServer(e) {
         const selectedServer = e.currentTarget.value;
         this.setState({selectedServer});
+    }
+    handleCopy(){
+        let self = this;
+        this.setState({'copied': true}, function () {
+            setTimeout(function(){ self.setState({'copied': false}) }, 3000);
+        });
     }
     render() {
         if(this.state.loading){
@@ -122,28 +133,61 @@ userToken = generateJWT(user[:email], SECRET_KEY)
         }
     })
 </script>`;
-        return (<div>
-            <h3>Server-side</h3>
-            <span>In order to embed the management so users can add cards, cancel, and resubscribe, you need to generate a token which
-        will authenticate your users and be used by the client-side javascript.</span>
-            <br/>
-            <span>Server-side language or framework</span>
-            <select onChange={this.changeServer} value={this.state.selectedServer}>
-                <option value="node">NodeJS</option>
-                <option value="php">PHP</option>
-                <option value="ruby">Rails/Ruby</option>
-                <option value="other">Other</option>
 
-            </select>
-            <pre>{server}</pre>
-            <span>
-            <strong>DO NOT EXPOSE THE SECRET KEY TO THE PUBLIC</strong>,
-            make sure not to commit it into version control or send under insecure channels or expose to client</span>
-            <br/>
-            <h3>Client-side</h3>
-            <span>With the token generated on the server, use this HTML on the client...(with the proper token)</span>
-            <pre>{clientCode}</pre>
-        </div>)
+        let {copied} = this.state;
+
+        let selectedLang = ( selected )=> {
+            switch (selected){
+                case "node" || 'other':
+                    return 'javascript'; break;
+                default:
+                    return selected;
+            }
+        };
+
+        return (
+            <div id="plugin_embeddable-billing-settings" className="plugin_container">
+                <div id="_section-1" className="_section">
+                    <h3><span className="form-step-count">1</span>Select a Language or Framework</h3>
+                    <div className="_indented">
+                        <p className="form-help-text"> In order to embed the management so users can add cards, cancel, and resubscribe
+                            you need to generate a token which will authenticate your users and be used by
+                            the client-side javascript.
+                        </p>
+                        <select className="form-control" onChange={this.changeServer} value={this.state.selectedServer}>
+                            <option value="node">NodeJS</option>
+                            <option value="php">PHP</option>
+                            <option value="ruby">Rails/Ruby</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="_section-2" className="_section">
+                    <h3><span className="form-step-count">2</span>Server-side Embed Code</h3>
+                    <div className="_indented">
+                        <p className="form-help-text"><strong>DO NOT EXPOSE THE SECRET KEY TO THE PUBLIC</strong>, make sure not to commit
+                            it into version control or send under insecure channels or expose to client
+                        </p>
+                        <SyntaxHighlighter showLineNumbers language={selectedLang(this.state.selectedServer)} style={duotoneDark}>{server}</SyntaxHighlighter>
+                        <CopyToClipboard text={server} onCopy={this.handleCopy}>
+                            <button className="buttons _success _right __copied">{copied ? 'Copied!' : 'Copy Server Code'}</button>
+                        </CopyToClipboard>
+                        <div className="clear"/>
+                    </div>
+                </div>
+                <div id="_section-3" className="_section">
+                    <h3><span className="form-step-count">3</span>Client-side Embed Code</h3>
+                    <div className="_indented">
+                        <p className="form-help-text">With the token generated on the server, use this HTML on the client...(with the proper token)</p>
+                        <SyntaxHighlighter showLineNumbers language='javascript' style={duotoneDark}>{clientCode}</SyntaxHighlighter>
+                        <CopyToClipboard text={clientCode} onCopy={this.handleCopy}>
+                            <button className="buttons _success _right __copied">{copied ? 'Copied!' : 'Copy Client Code'}</button>
+                        </CopyToClipboard>
+                        <div className="clear"/>
+                    </div>
+                </div>
+            </div>
+        );
     }
 }
 

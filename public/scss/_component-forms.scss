@@ -1,3 +1,9 @@
 @include _formGroup(column);
 @include _formLabel(dark);
 @include _formInput;
+
+.form-help-text{
+  font-size: 0.89rem;
+  line-height: 1.2rem;
+  color: $color-medium-blue-gray;
+}

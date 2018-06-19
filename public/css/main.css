@@ -138,6 +138,12 @@ input, .form-control {
   height: 42px;
 }
 
+.form-help-text {
+  font-size: 0.89rem;
+  line-height: 1.2rem;
+  color: #4f6185;
+}
+
 .tiers ._container {
   overflow-y: scroll;
 }
@@ -844,6 +850,9 @@ input, .form-control {
   margin-right: 20px;
   padding-right: 1px;
   padding-top: 1px;
+}
+.app-content ._content-container ._content ._section ._indented {
+  padding-left: 48px;
 }
 
 img {
