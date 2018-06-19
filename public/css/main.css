@@ -660,6 +660,17 @@ input, .form-control {
   height: 100%;
   z-index: 9910;
 }
+.app-navigation .app-links-container {
+  height: 100%;
+}
+.app-navigation .app-links-container ._main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-content: space-between;
+  height: 100%;
+  overflow-y: auto;
+}
 .app-navigation .app-links-container ._main .app-links {
   padding: 0;
   margin: 0;
@@ -757,7 +768,8 @@ input, .form-control {
 }
 
 .nav-footer {
-  margin-bottom: 10px;
+  padding-top: 32px;
+  padding-bottom: 16px;
   text-align: center;
   width: 100%;
 }
@@ -766,7 +778,7 @@ input, .form-control {
 }
 .nav-footer a {
   font-size: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: #90a3d0;
   letter-spacing: 1px;
 }
@@ -838,7 +850,7 @@ input, .form-control {
 }
 
 .app-dashboard .navvbar-badge {
-  margin-top: 24px;
+  margin-top: 0;
   display: block;
   float: none !important;
   width: 100%;
