@@ -132,30 +132,28 @@ class NavServiceBot extends React.Component {
         return path.split('/')[1] === expectedPath ? `nav-link-${linkType} active` : `nav-link-${linkType}`;
     }
 
-    getSetupClass(expectedPath, linkType, setupComplete) {
-        //for LUNG, put your right class here
+    getSetupClass(linkType, setupComplete) {
         return setupComplete ? `nav-link-${linkType} _completed` : `nav-link-${linkType}`;
 
     }
 
-    getSetupSteps(style) {
+    getSetupSteps() {
         let {options} = this.props;
         let hasOffering = options.hasOffering;
         let hasStripeKeys = options.stripe_publishable_key.value !== "";
         let setupComplete = hasOffering && hasStripeKeys;
         let getSetupClass = this.getSetupClass;
-        //Style 'Your Checklist' and step numbers
-        //TODO change this to '!setupComplete' when style is done
-        if(true) {
+
+        if(!setupComplete) {
             return (
                 <div className="nav-setup-checklist">
                     <Link to="/dashboard" className={`${getSetupClass('dashboard', 'parent')} active`}>
                         Your Checklist
                     </Link>
                     <div className="_list">
-                        <Link to="/manage-catalog/create" className={getSetupClass('/manage-catalog/create', 'child', hasOffering)}>
+                        <Link to="/manage-catalog/create" className={getSetupClass('child', hasOffering)}>
                             <span className="form-step-count _step-count">1</span> Create SaaS Offering</Link>
-                        <Link to="/stripe-settings" className={getSetupClass('/stripe-settings', 'child', hasStripeKeys)}>
+                        <Link to="/stripe-settings" className={getSetupClass('child', hasStripeKeys)}>
                             <span className="form-step-count _step-count">2</span> Add Stripe keys</Link>
                     </div>
                 </div>
@@ -176,7 +174,7 @@ class NavServiceBot extends React.Component {
             return (
                 <ul className="app-links">
                     <li>
-                        {getSetupSteps(style)}
+                        {getSetupSteps()}
                     </li>
                     <li>
                         <Link to="/dashboard" style={style} className={getLinkClass('dashboard', 'parent')}>
