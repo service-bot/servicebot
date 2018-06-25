@@ -356,9 +356,6 @@ class ServiceTemplateForm extends React.Component {
 
             return (
                 <div className="_content-container">
-                    <div className="_sidebar">
-                        <h2>Steps</h2>
-                    </div>
                     <div className="_content">
                         <ServicebotBaseForm
                             form={TemplateForm}

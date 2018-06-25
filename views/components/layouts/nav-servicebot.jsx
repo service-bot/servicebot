@@ -183,7 +183,7 @@ class NavServiceBot extends React.Component {
                     </li>
                     <li>
                         <Link to="/manage-catalog" style={style} className={getLinkClass('manage-catalog', 'parent')}>
-                            <span className="nav-icons icon-manage"/>Products
+                            <span className="nav-icons icon-manage"/>Offerings
                         </Link>
                     </li>
                     <li>

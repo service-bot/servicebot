@@ -122,9 +122,9 @@ class Dashboard extends React.Component {
                                 :
 
                                 <div>
-                                    <ContentTitle title="Welcome to your dashboard"/>
+                                    <ContentTitle title="SaaS Live Dashboard"/>
                                     <DashboardWidgets data={this.state.analytics}/>
-                                    <OfferingsStatsWidgets data={this.state.analytics} />
+                                    <div className="m-t-25"><ContentTitle title="Churn Detail"/></div>
                                     <OverallStatsWidgets data={this.state.analytics} />
                                 </div>
 
