@@ -7,8 +7,6 @@ import Fetcher from '../utilities/fetcher.jsx';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
-import ContentTitle from "../layouts/content-title.jsx";
-import ServiceInstanceDescription from "../elements/service-instance/service-instance-description.jsx";
 import ServiceInstancePaymentPlan from "../elements/service-instance/service-instance-payment-plan.jsx";
 import ServiceInstanceWaitingCharges from "../elements/service-instance/service-instance-waiting-charges.jsx";
 import ServiceInstanceFields from "../elements/service-instance/service-instance-fields.jsx";
@@ -31,7 +29,7 @@ import DateFormat from "../utilities/date-format.jsx";
 import $ from "jquery";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import _ from "lodash";
-
+import {ServicebotBillingSettingsEmbed} from "servicebot-billing-settings-embed"
 class ServiceInstance extends React.Component {
 
     constructor(props){
@@ -90,7 +88,7 @@ class ServiceInstance extends React.Component {
         this.onAddFundClose = this.onAddFundClose.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         if(!isAuthorized({})){
             return browserHistory.push("/login");
         }
@@ -98,8 +96,12 @@ class ServiceInstance extends React.Component {
         $(this.refs.dropdownToggle3).dropdown();
 
         let self = this;
-        self.fetchInstance();
         self.fetchUserFund();
+        let instance = await self.fetchInstance();
+        let token = (await self.fetchToken(instance.user_id)).token
+        this.setState({instance, loading: false, token})
+
+
     }
 
 
@@ -109,16 +111,18 @@ class ServiceInstance extends React.Component {
 
     fetchInstance(){
         let self = this;
-        Fetcher(self.state.url).then(function(response){
+        return Fetcher(self.state.url).then(function(response){
             if(response != null){
                 if(!response.error){
-                    self.setState({instance : response});
+                    return response;
                 }
             }
-            self.setState({loading:false});
         }).catch(function(err){
             browserHistory.push("/");
         })
+    }
+    fetchToken(uid){
+      return Fetcher("/api/v1/users/" + uid + "/token", "POST", {});
     }
 
     fetchUserFund(){
@@ -399,6 +403,11 @@ class ServiceInstance extends React.Component {
                                 </div>
 
                                 <div id="service-instance-detail" className="row">
+                                    <ServicebotBillingSettingsEmbed
+                                        url=""
+                                        token={self.state.token}
+
+                                />
                                     <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
                                         <ServiceInstancePaymentPlan key={Object.id}
                                                                     owner={owner}
@@ -433,12 +442,6 @@ class ServiceInstance extends React.Component {
                                     </div>
                                 </div>
                                 }
-
-                                <div id="service-instance-files" className="row">
-                                    <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
-                                        <ServiceInstanceFiles instanceId={self.state.instanceId}/>
-                                    </div>
-                                </div>
 
                                 <div id="service-instance-message" className="row">
                                     <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">

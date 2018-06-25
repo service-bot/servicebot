@@ -25,8 +25,7 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
         let service_user_id = "";
         let service_description = self.data.description;
         let service_name = self.data.name;
-        let paymentStructure = (await PaymentStructureTemplate.find({tier_id: instanceRequest.tier_id, interval: instanceRequest.interval}))[0];
-
+        let paymentStructure = (await PaymentStructureTemplate.find({id: instanceRequest.payment_structure_template_id}))[0]
         if (self.data.detail) {
 
             //todo : strip out XSS
@@ -41,7 +40,8 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
             service_id: self.get("id"),
             type: paymentStructure.get("type"),
             split_configuration : paymentStructure.get("split_configuration"),
-            status : "requested"
+            status : "requested",
+            payment_structure_template_id: paymentStructure.data.id
         };
 
         let submittedProperties = instanceRequest.references.service_template_properties;
