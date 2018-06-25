@@ -48,7 +48,7 @@ import Embed from "./components/elements/embed.jsx";
 import Setup from "./components/pages/setup.jsx";
 import GenericNotFound from "./components/pages/notfound.jsx";
 import Embeddables from "./components/pages/embeddables.jsx";
-
+import "../public/scss/main.scss";
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 

@@ -106,7 +106,7 @@ module.exports = function(router) {
             return res.status(403).json({error: "Unauthorized"});
         }
         instance_object.applyPaymentStructure(req.params.payment_structure_id, true).then(function (updatedInstance) {
-            res.json(updatedInstance);
+            res.json(updatedInstance.data);
             store.dispatchEvent("service_instance_updated", updatedInstance);
         }).catch(function (error) {
             console.error(error);

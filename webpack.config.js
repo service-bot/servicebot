@@ -47,6 +47,14 @@ var config = async function () {
                     {
                         test: /js[\/\\].+\.(jsx|js)$/,
                         loader: 'imports-loader?jQuery=jquery,$=jquery,this=>window'
+                    },
+                    {
+                        test: /\.scss$/,
+                        use: [
+                            "style-loader", // creates style nodes from JS strings
+                            "css-loader", // translates CSS into CommonJS
+                            "sass-loader" // compiles Sass to CSS
+                        ]
                     }
 
                 ]

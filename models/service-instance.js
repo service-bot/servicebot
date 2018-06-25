@@ -339,7 +339,8 @@ ServiceInstance.prototype.applyPaymentStructure = async function (paymentStructu
 
 
     let newInstance = await (await instance_object.changePaymentPlan(paymentPlan, ignoreTrial)).attachReferences();
-    console.log("before", newInstance);
+    newInstance.data.payment_structure_template_id = paymentStructureId;
+    await newInstance.update();
 
     if (lifecycleManager) {
         let response = await lifecycleManager.postPaymentStructureChange({
@@ -353,7 +354,6 @@ ServiceInstance.prototype.applyPaymentStructure = async function (paymentStructu
             }
         }
     }
-    console.log("after", newInstance);
     return newInstance;
 
 
