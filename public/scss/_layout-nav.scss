@@ -136,7 +136,9 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      align-content: space-between;
       height: 100%;
+      overflow-y: auto;
 
       .app-links {
         padding: 0;
@@ -173,6 +175,7 @@
                 @include defaultTransition;
                 margin-left: 50px;
                 transform: scale(1.5) translateY(-1px);
+                border-top-color: $color-white;
               }
 
               & ~ ul {
@@ -267,7 +270,8 @@
 }
 
 .nav-footer{
-  margin-bottom: 10px;
+  padding-top: $gutter * 2;
+  padding-bottom: $gutter;
   text-align: center;
   width: 100%;
 
@@ -277,9 +281,64 @@
 
   a{
     font-size: 12px;
-    margin-bottom: 10px;
+    margin-bottom: $gutter / 2;
     color: #90a3d0;
     letter-spacing: 1px;
+  }
+}
+
+.nav-setup-checklist{
+
+  .app-navigation .app-links-container ._main .app-links &{
+
+    .nav-link-parent{
+      font-size: 1.25em;
+      padding-left: $gutter * 2.5;
+      text-transform: capitalize;
+    }
+
+    .nav-link-parent, .nav-link-child {
+      background-color: $color-nav-checklist;
+      color: $color-nav-checklist-text;
+    }
+
+    ._list{
+      background-color: $color-nav-checklist;
+      padding-bottom: $gutter;
+
+      .nav-link-child {
+        padding: $gutter/2 $gutter $gutter/2 $gutter*2+2;
+        text-transform: none;
+        font-size: 0.9em;
+
+        ._step-count {
+          color: $color-white;
+          @include steps;
+          line-height: 23px;
+          padding-right: 0;
+          margin-right: $gutter / 2;
+        }
+
+        &._completed {
+          opacity: 0.5;
+
+          ._step-count {
+            border-color: $color-white;
+            background-color: $color-white;
+            color: $color-blue-gray;
+          }
+        }
+      }
+    }
+  }
+
+  .app-navigation .app-links-container ._main .app-links & {
+    .nav-link-child {
+
+      &._completed {
+
+      }
+    }
   }
 }
 
@@ -288,12 +347,25 @@
   padding-left: $nav-panel-width;
 }
 
+.caret{
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px dashed;
+  border-top: 4px solid\9;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  border-top-color: $color-dark-blue;
+}
+
 /* todo: To be cleaned up */
 .app-dashboard .servicetron{
   display: none !important;
 }
 .app-dashboard .navvbar-badge {
-  margin-top: 24px;
+  margin-top: 0;
   display: block;
   float: none !important;
   width: 100%;

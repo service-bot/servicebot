@@ -14,6 +14,8 @@ $color-success: #1ABE98;
 $color-heading: #6F7F9F;
 
 //Nav
+$color-nav-checklist: $color-heading;
+$color-nav-checklist-text: $color-white;
 $color-nav-parent-active: $color-dark-blue;
 $color-nav-child-active: $color-medium-blue-gray;
 
@@ -21,7 +23,7 @@ $color-nav-child-active: $color-medium-blue-gray;
 $color-title-container-border: #B9BBCB;
 
 //_sections
-
+$help-text: $color-heading;
 
 //_tiers
 $color-tier-active-border: #0CFFCD;

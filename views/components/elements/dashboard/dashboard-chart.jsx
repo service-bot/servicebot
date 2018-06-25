@@ -55,23 +55,149 @@ class ServiceOverTimeChart extends React.Component {
 
                 let sortedCancelledGroups = sortMonthsRunning.map((month)=>{
                     return groupByMonthCancelled[month] || [];
-                })
+                });
 
                 let serviceCountByMonthCancelled = _.map(sortedCancelledGroups, (group)=>{return(group.length)});
                 let data = {
                     labels: months,
                     datasets: [
                         {
-                            label: 'Cancelled Services',
+                            label: 'Cancelled Subscriptions',
                             data: serviceCountByMonthCancelled,
-                            backgroundColor: "rgba(230, 0, 0, .5)",
+                            backgroundColor: "rgba(230, 0, 0, .7)",
                             borderColor: 'rgba(240, 0, 118, 1)',
                             pointBorderWidth: 0
                         },
                         {
-                            label: 'New Services',
+                            label: 'New Subscriptions',
                             data: serviceCountByMonthRunning,
-                            backgroundColor: "rgba(0, 230, 118, .5)",
+                            backgroundColor: "rgba(0, 230, 118)",
+                            borderColor: 'rgba(0, 230, 118, 1)',
+                            pointBorderWidth: 0
+                        }
+                    ]
+                };
+                let options = {
+                    animation: {
+                        animateRotate: true,
+                        animateScale: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                stepSize: 1,
+                                // fontColor: '#ffffff'
+                            }
+                        }]
+                    }
+                };
+
+                self.setState({loading: false, instances: response, chartData: data, chartOptions: options});
+            }else{
+                self.setState({loading: false});
+            }
+        })
+    }
+
+    render(){
+        if(this.state.loading){
+            return(
+                <div> <Load/> </div>
+            );
+        }else{
+            return(
+                <div className={`service-created-cancelled-overtime-chart ${this.props.className}`}>
+                    <RC2 data={this.state.chartData} options={this.state.chartOptions} type='line'/>
+                </div>
+            );
+        }
+    }
+
+}
+
+class SalesOverTimeChart extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            loading: true,
+            instances: {},
+            containerWidth: this.props.containerWidth,
+            chartData: {},
+            chartOption: {}
+        };
+
+        this.fetchInstances = this.fetchInstances.bind(this);
+    }
+
+    componentDidMount(){
+        this.fetchInstances();
+    }
+
+    fetchInstances(){
+        let self = this;
+        let url = '/api/v1/service-instances';
+        Fetcher(url).then(function (response) {
+
+            if(!response.error) {
+                let servicesRunning = _.filter(response, {status:'running'});
+                let servicesCancelled = _.filter(response, {status:'cancelled'});
+
+                let months = _.uniq(_.map(servicesRunning, (instance) => instance.created_at.substring(0,7)));
+                months = _.uniq([...months, ..._.map(servicesCancelled, (instance) => instance.updated_at.substring(0,7))]);
+
+                let groupByMonthRunning = _.groupBy(servicesRunning, (instance) => {
+                    return instance.created_at.substring(0,7);
+                });
+                let groupByMonthCancelled = _.groupBy(servicesCancelled, (instance) => {
+                    return instance.updated_at.substring(0,7);
+                });
+                let sortMonthsRunning = months.sort(function(a, b){
+                    if(a > b){ return 1; }
+                    else if( a < b){ return -1; }
+                    else{ return 0;}
+                });
+                let sortedGroups = sortMonthsRunning.map((month)=>{
+                    return groupByMonthRunning[month] || [];
+                })
+                let serviceCountByMonthRunning = _.map(sortedGroups, (group)=>{
+                    let total = 0;
+                    group.map(instance => {
+                        total += instance.payment_plan.amount;
+                    });
+                    return total/100;
+                });
+
+
+                let sortedCancelledGroups = sortMonthsRunning.map((month)=>{
+                    return groupByMonthCancelled[month] || [];
+                })
+
+                let serviceCountByMonthCancelled = _.map(sortedCancelledGroups, (group)=>{
+                    let total = 0;
+                    group.map(instance => {
+                        total += instance.payment_plan.amount;
+                    });
+                    return total/100;
+                });
+                let data = {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Cancelled Subscriptions ($)',
+                            data: serviceCountByMonthCancelled,
+                            backgroundColor: "rgba(230, 0, 0, .7)",
+                            borderColor: 'rgba(240, 0, 118, 1)',
+                            pointBorderWidth: 0,
+                            color: 'rgba(255, 255, 255, 1)'
+                        },
+                        {
+                            label: 'New Subscriptions ($)',
+                            data: serviceCountByMonthRunning,
+                            backgroundColor: "rgba(0, 230, 118)",
                             borderColor: 'rgba(0, 230, 118, 1)',
                             pointBorderWidth: 0
                         }
@@ -84,9 +210,39 @@ class ServiceOverTimeChart extends React.Component {
                     },
                     scales: {
                         yAxes: [{
-                            stacked: false
+                            ticks: {
+                                // Include a dollar sign in the ticks
+                                callback: function(value, index, values) {
+                                    return '$' + value;
+                                },
+                                fontStyle: 'bold'
+                            }
                         }]
                     }
+                    // scales: {
+                    //     yAxes: [{
+                    //         stacked: false
+                    //     }]
+                    // },
+                    // scales: {
+                    //     xAxes: [{
+                    //         ticks: {
+                    //             callback: function(label, index, labels) {
+                    //                 return label.toFixed(2) + "%";
+                    //             }
+                    //         }
+                    //     }],
+                    //     yAxes: [{
+                    //         ticks: {
+                    //             callback: function(label, index, labels) {
+                    //                 return label;
+                    //             },
+                    //             fontSize: 18,
+                    //             fontColor: 'black'
+                    //         },
+                    //         display: true
+                    //     }]
+                    // }
                 };
 
                 self.setState({loading: false, instances: response, chartData: data, chartOptions: options});
@@ -210,4 +366,4 @@ class BuildChart extends React.Component {
 
 }
 
-export {ServiceOverTimeChart, ServiceStatusChart, BuildChart};
+export {ServiceOverTimeChart, SalesOverTimeChart, ServiceStatusChart, BuildChart};

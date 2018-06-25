@@ -86,7 +86,7 @@
 .buttons.rounded {
   border-radius: 50px;
 }
-.buttons._add {
+.buttons._add, .buttons._primary {
   font-size: 14px;
   padding: 14px 24px;
   background-color: #4C82FC;
@@ -94,13 +94,16 @@
   border-radius: 1px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
 }
-.buttons._save {
+.buttons._save, .buttons._success {
   font-size: 14px;
   padding: 14px 24px;
   background-color: #1ABE98;
   color: #fff;
   border-radius: 1px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.17);
+}
+.buttons._right {
+  float: right;
 }
 
 .clear {
@@ -133,6 +136,13 @@ input, .form-control {
   border: 1px solid #6F7F9F;
   border-radius: 1px;
   height: 42px;
+}
+
+.form-help-text {
+  font-size: 0.89rem;
+  line-height: 1.2rem;
+  color: #6F7F9F;
+  margin-bottom: 16px;
 }
 
 .tiers ._container {
@@ -450,7 +460,7 @@ input, .form-control {
   justify-content: space-evenly;
   align-content: center;
   align-items: center;
-  padding: 25px 25px 13px;
+  padding: 24px 24px 16px;
   background-color: #FFFFFF;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   border-radius: 3px;
@@ -469,7 +479,7 @@ input, .form-control {
   transition: all "" linear;
 }
 .embeddable-card:first-of-type {
-  margin-top: 20px;
+  margin-top: 24px;
 }
 .embeddable-card ._icon {
   min-width: 50px;
@@ -657,7 +667,9 @@ input, .form-control {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-content: space-between;
   height: 100%;
+  overflow-y: auto;
 }
 .app-navigation .app-links-container ._main .app-links {
   padding: 0;
@@ -690,6 +702,7 @@ input, .form-control {
   transition: all "" linear;
   margin-left: 50px;
   transform: scale(1.5) translateY(-1px);
+  border-top-color: #fff;
 }
 .app-navigation .app-links-container ._main .app-links li a.nav-link-parent ~ ul {
   transition: all 130ms linear;
@@ -755,7 +768,8 @@ input, .form-control {
 }
 
 .nav-footer {
-  margin-bottom: 10px;
+  padding-top: 32px;
+  padding-bottom: 16px;
   text-align: center;
   width: 100%;
 }
@@ -764,14 +778,70 @@ input, .form-control {
 }
 .nav-footer a {
   font-size: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: #90a3d0;
   letter-spacing: 1px;
+}
+
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist .nav-link-parent {
+  font-size: 1.25em;
+  padding-left: 40px;
+  text-transform: capitalize;
+}
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist .nav-link-parent, .app-navigation .app-links-container ._main .app-links .nav-setup-checklist .nav-link-child {
+  background-color: #6F7F9F;
+  color: #fff;
+}
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist ._list {
+  background-color: #6F7F9F;
+  padding-bottom: 16px;
+}
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist ._list .nav-link-child {
+  padding: 8px 16px 8px 34px;
+  text-transform: none;
+  font-size: 0.9em;
+}
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist ._list .nav-link-child ._step-count {
+  color: #fff;
+  border: 2px solid currentColor;
+  border-radius: 50px;
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+  text-align: center;
+  display: inline-block;
+  margin-right: 20px;
+  padding-right: 1px;
+  padding-top: 1px;
+  line-height: 23px;
+  padding-right: 0;
+  margin-right: 8px;
+}
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist ._list .nav-link-child._completed {
+  opacity: 0.5;
+}
+.app-navigation .app-links-container ._main .app-links .nav-setup-checklist ._list .nav-link-child._completed ._step-count {
+  border-color: #fff;
+  background-color: #fff;
+  color: #475981;
 }
 
 .app-dashboard .app-body {
   padding-top: 57px;
   padding-left: 280px;
+}
+
+.caret {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px dashed;
+  border-top: 4px solid\9;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+  border-top-color: #081C49;
 }
 
 /* todo: To be cleaned up */
@@ -780,7 +850,7 @@ input, .form-control {
 }
 
 .app-dashboard .navvbar-badge {
-  margin-top: 24px;
+  margin-top: 0;
   display: block;
   float: none !important;
   width: 100%;
@@ -809,7 +879,7 @@ input, .form-control {
   flex-basis: 30%;
   flex-shrink: 0;
   max-width: 300px;
-  padding: 20px 27px;
+  padding: 24px;
   background-color: #EBF3F9;
 }
 .app-content ._content-container ._content {
@@ -818,9 +888,18 @@ input, .form-control {
 }
 .app-content ._content-container ._content ._section {
   background-color: #F6F8F9;
-  margin: 20px 15px;
-  padding: 18px 23px;
+  margin: 16px;
+  padding: 16px 24px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+}
+.app-content ._content-container ._content ._section:first-child {
+  padding-top: 24px;
+}
+.app-content ._content-container ._content ._section .caret {
+  transition: all "" linear;
+  display: block;
+  float: right;
+  margin: 8px;
 }
 .app-content ._content-container ._content ._section > h3 {
   color: #6F7F9F;
@@ -829,6 +908,7 @@ input, .form-control {
   text-transform: uppercase;
   line-height: 22px;
   font-family: "Open Sans", "Arial";
+  margin-bottom: 0;
 }
 .app-content ._content-container ._content ._section > h3 > .form-step-count {
   border: 2px solid currentColor;
@@ -841,6 +921,17 @@ input, .form-control {
   margin-right: 20px;
   padding-right: 1px;
   padding-top: 1px;
+}
+.app-content ._content-container ._content ._section ._indented {
+  padding-left: 48px;
+}
+.app-content ._content-container ._content ._section._active .caret {
+  transition: all "" linear;
+  transform: rotate(180deg);
+}
+.app-content ._content-container ._content ._section._active ._indented {
+  padding-top: 16px;
+  padding-bottom: 8px;
 }
 
 img {

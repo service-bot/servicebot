@@ -154,7 +154,7 @@ class TemplateForm extends React.Component {
         return (
 
             <form className="form-offering" onSubmit={handleSubmit}>
-                <div className="_section">
+                <div className="_section _active">
                     <div className="form-level-errors">
                         {!options.stripe_publishable_key &&
                         <Link to="/stripe-settings"><br/><h4 className="form-error">Publishing Disabled Until Setup
@@ -163,24 +163,28 @@ class TemplateForm extends React.Component {
                     </div>
                     <div className="form-level-warnings"/>
                     <h3><span className="form-step-count">1</span>Offering Name</h3>
-                    <div className="_form-field-group _form-field-name_software_name">
-                        <Field name="name" type="text" component={inputField} label="Offering Name" validate={[required()]}/>
+                    <div className="_indented">
+                        <div className="_form-field-group _form-field-name_software_name">
+                            <Field name="name" type="text" component={inputField} label="Offering Name" validate={[required()]}/>
+                        </div>
                     </div>
                 </div>
-                <div className="_section">
+                <div className="_section _active">
                     <h3><span className="form-step-count">2</span>Pricing Details</h3>
-                    <Field name="statement_descriptor" type="hidden"
-                           component={inputField} label="Statement Descriptor"/>
+                    <div className="_indented">
+                        <Field name="statement_descriptor" type="hidden"
+                               component={inputField} label="Statement Descriptor"/>
 
-                    <FormSection name="references">
-                        <FieldArray name="tiers"
-                                    props={{
-                                        selected: self.state.selectedTier,
-                                        selectTier: self.selectTier,
-                                        templateType: serviceTypeValue
-                                    }}
-                                    component={Tiers}/>
-                    </FormSection>
+                        <FormSection name="references">
+                            <FieldArray name="tiers"
+                                        props={{
+                                            selected: self.state.selectedTier,
+                                            selectTier: self.selectTier,
+                                            templateType: serviceTypeValue
+                                        }}
+                                        component={Tiers}/>
+                        </FormSection>
+                    </div>
                 </div>
                 <hr/>
                 <button className="buttons _save" type="submit">Save & Embed</button>
@@ -352,9 +356,6 @@ class ServiceTemplateForm extends React.Component {
 
             return (
                 <div className="_content-container">
-                    <div className="_sidebar">
-                        <h2>Steps</h2>
-                    </div>
                     <div className="_content">
                         <ServicebotBaseForm
                             form={TemplateForm}

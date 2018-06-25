@@ -8,8 +8,9 @@ import slug from "slug"
 import {numericality, required} from 'redux-form-validators'
 const CHECKOUT_FORM = "checkoutForm";
 const selector = formValueSelector(CHECKOUT_FORM); // <-- same as form name
-
-
+import { duotoneDark } from 'react-syntax-highlighter/styles/prism';
+import SyntaxHighlighter from 'react-syntax-highlighter/prism';
+import {CopyToClipboard} from 'react-copy-to-clipboard';
 
 class CustomField extends React.Component {
 
@@ -252,7 +253,7 @@ let CheckoutForm = function(props){
             props={{templateType: props.serviceTypeValue}}
             component={renderCustomProperty}
             />
-            <button className="buttons _add" onClick={props.handleSubmit} >Save Checkout Form</button>
+            <button className="buttons _primary _right" onClick={props.handleSubmit} >Save Checkout Form</button>
             <span class="clear"/>
         </FormSection>
     </div>
@@ -274,33 +275,35 @@ class CheckoutPage extends React.Component {
             selectedTier: null,
             selectedPlan: null,
             tier: null,
-            templates: []
+            templates: [],
+            copied: false,
         }
         this.changeTemplate = this.changeTemplate.bind(this);
         this.changeTier = this.changeTier.bind(this);
         this.changePlan = this.changePlan.bind(this);
         this.generateEmbedCode = this.generateEmbedCode.bind(this);
+        this.handleCopy = this.handleCopy.bind(this);
 
     }
     generateEmbedCode(){
         let {selectedPlan, selectedTemplate} = this.state;
         return `<div id="servicebot-request-form"></div>
-<script src="https://js.stripe.com/v3/"></script>
-<script src="https://servicebot.io/js/servicebot-embed.js" type="text/javascript"></script>
-<script  type="text/javascript">
-    Servicebot.Checkout({
-        templateId : ${selectedTemplate},
-        planId: ${selectedPlan},
-        url : "${window.location.origin}",
-        selector : document.getElementById('servicebot-request-form'),
-        handleResponse : (response) => {
-            //Response function, you can put redirect logic or app integration logic here
-        },
-        spk: "${cookie.load("spk")}",
-        forceCard : false, //set to true if you want credit card to be a required field for the customer
-        setPassword : false //set to true if you want customer to fill out a password
-    })
-</script>`
+                <script src="https://js.stripe.com/v3/"></script>
+                <script src="https://servicebot.io/js/servicebot-embed.js" type="text/javascript"></script>
+                <script  type="text/javascript">
+                    Servicebot.Checkout({
+                        templateId : ${selectedTemplate},
+                        planId: ${selectedPlan},
+                        url : "${window.location.origin}",
+                        selector : document.getElementById('servicebot-request-form'),
+                        handleResponse : (response) => {
+                            //Response function, you can put redirect logic or app integration logic here
+                        },
+                        spk: "${cookie.load("spk")}",
+                        forceCard : false, //set to true if you want credit card to be a required field for the customer
+                        setPassword : false //set to true if you want customer to fill out a password
+                    })
+                </script>`
     }
     async componentDidMount(){
         let templates = await Fetcher(`/api/v1/service-templates/`);
@@ -322,10 +325,16 @@ class CheckoutPage extends React.Component {
         this.setState({selectedPlan});
 
     }
+    handleCopy(){
+        let self = this;
+        this.setState({'copied': true}, function () {
+            setTimeout(function(){ self.setState({'copied': false}) }, 3000);
+        });
+    }
 
     render(props) {
         let formHTML;
-        let {loading, selectedTemplate, templates, selectedPlan, selectedTier, tier} = this.state;
+        let {loading, selectedTemplate, templates, selectedPlan, selectedTier, tier, copied} = this.state;
         if(loading){
             return <div>LOADING</div>;
         }
@@ -340,66 +349,85 @@ class CheckoutPage extends React.Component {
         let currentTemplate = templates.find(template => template.id == selectedTemplate)
         let formEmbed = (
             <div id="plugin_embeddable-checkout" className="plugin_container">
-                <div id="_section-1" className="_section">
+                <div id="_section-1" className="_section _active">
+                    <span className="caret"/>
                     <h3><span className="form-step-count">1</span>Select a template</h3>
-                    <select className="form-control" onChange={this.changeTemplate}>
-                        <option key={"default-0"} value="0">Select a template</option>
-                        {this.state.templates.map(template => {
-                            return (<option key={template.id} value={template.id}>{template.name}</option>)
-                        })}
-                    </select>
+                    <div className="_indented">
+                        <select className="form-control" onChange={this.changeTemplate}>
+                            <option key={"default-0"} value="0">Select a template</option>
+                            {this.state.templates.map(template => {
+                                return (<option key={template.id} value={template.id}>{template.name}</option>)
+                            })}
+                        </select>
+                    </div>
                 </div>
-                <div id="_section-2" className="_section">
+                <div id="_section-2" className={`_section ${selectedTemplate && '_active'}`}>
+                    <span className="caret"/>
                     <h3><span className="form-step-count">2</span>Build your checkout form</h3>
-                    { selectedTemplate ?
-                        <ServicebotBaseForm key={"base-"+selectedTemplate}
-                                         form={CheckoutForm}
-                                         formName={CHECKOUT_FORM}
-                                         initialValues={currentTemplate}
-                                         // initialRequests={initialRequests}
-                                         // submissionPrep={this.submissionPrep}
-                                         submissionRequest={submissionRequest}
-                                         // successMessage={successMessage}
-                                         // handleResponse={this.handleResponse}
-                                         // initializer={initializer}
-                                         // formProps={{
-                                         //     ...this.props.fieldDispatches,
-                                         //     ...this.props.fieldState
-                                         // }}
-                        /> :
-                        <div className="_inactive"/>
-                    }
+                    <div className="_indented">
+                        { selectedTemplate ?
+                            <ServicebotBaseForm key={"base-"+selectedTemplate}
+                                             form={CheckoutForm}
+                                             formName={CHECKOUT_FORM}
+                                             initialValues={currentTemplate}
+                                             // initialRequests={initialRequests}
+                                             // submissionPrep={this.submissionPrep}
+                                             submissionRequest={submissionRequest}
+                                             // successMessage={successMessage}
+                                             // handleResponse={this.handleResponse}
+                                             // initializer={initializer}
+                                             // formProps={{
+                                             //     ...this.props.fieldDispatches,
+                                             //     ...this.props.fieldState
+                                             // }}
+                            /> :
+                            <div className="_inactive"/>
+                        }
+                    </div>
                 </div>
-                <div id="_section-3" className="_section">
+                <div id="_section-3" className={`_section ${selectedTemplate && '_active'}`}>
+                    <span className="caret"/>
                     <h3><span className="form-step-count">3</span>Copy and Embed your code</h3>
                 { selectedTemplate ?
                     <div>
-                        <p>Paste the generated HTML on the page you want to embed a request form. You can find more
-                            detailed documentation <a href="https://docs.servicebot.io/embed">here</a>
-                        </p>
-                        <div className="_embed-code-form">
-                            <div id="_select-a-tier" className="form-group form-group-flex">
-                                <label className="control-label form-label-flex-md">Select a tier</label>
-                                <select className="form-control" onChange={this.changeTier}>
-                                    <option key={"default-0"} value="0">Select a tier</option>
-                                    {currentTemplate.references.tiers.map(tier => {
-                                        return (<option key={tier.id} value={tier.id}>{tier.name}</option>)
-                                    })}
-                                </select>
+                        <div className="_indented">
+                            <p className="form-help-text"> Paste the generated HTML on the page you want to embed
+                                a request form. You can find more detailed documentation
+                                <a href="https://docs.servicebot.io/embed"> here</a>
+                            </p>
+
+                            <div className="_embed-code-form">
+                                <div id="_select-a-tier" className="form-group form-group-flex">
+                                    <label className="control-label form-label-flex-md">Select a tier</label>
+                                    <select className="form-control" onChange={this.changeTier}>
+                                        <option key={"default-0"} value="0">Select a tier</option>
+                                        {currentTemplate.references.tiers.map(tier => {
+                                            return (<option key={tier.id} value={tier.id}>{tier.name}</option>)
+                                        })}
+                                    </select>
+                                </div>
+                                {selectedTier &&
+                                <div id="_select-a-plan" className="form-group form-group-flex">
+                                    <label className="control-label form-label-flex-md">Select a plan</label>
+                                    <select className="form-control" onChange={this.changePlan}>
+                                        <option key={"default-0"} value="0">Select a plan</option>
+                                        {tier.references.payment_structure_templates.map(plan => {
+                                            return (<option key={plan.id} value={plan.id}>{`${plan.amount/100} - ${plan.interval} - ${plan.type}`}</option>)
+                                        })}
+                                    </select>
+                                </div>
+                                }
                             </div>
-                            {selectedTier &&
-                            <div id="_select-a-plan" className="form-group form-group-flex">
-                                <label className="control-label form-label-flex-md">Select a plan</label>
-                                <select className="form-control" onChange={this.changePlan}>
-                                    <option key={"default-0"} value="0">Select a plan</option>
-                                    {tier.references.payment_structure_templates.map(plan => {
-                                        return (<option key={plan.id} value={plan.id}>{`${plan.amount/100} - ${plan.interval} - ${plan.type}`}</option>)
-                                    })}
-                                </select>
-                            </div>
-                            }
                         </div>
-                        {selectedPlan && <pre className="language-javascript">{this.generateEmbedCode()}</pre>}
+                        {selectedPlan &&
+                        <div className="_embed-code-copy">
+                            <SyntaxHighlighter showLineNumbers language='javascript' style={duotoneDark}>{this.generateEmbedCode()}</SyntaxHighlighter>
+                            <CopyToClipboard text={this.generateEmbedCode()} onCopy={this.handleCopy}>
+                                <button className="buttons _success _right __copied">{copied ? 'Copied!' : 'Copy Embed Code'}</button>
+                            </CopyToClipboard>
+                            <div className="clear"/>
+                        </div>
+                        }
                     </div> :
                     <div className="_inactive"/>
                 }
