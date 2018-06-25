@@ -170,7 +170,7 @@ let buildTables = async function (knex) {
         table.increments();
         table.integer('tier_id').references('tiers.id').onDelete('cascade');
         table.integer('trial_period_days');
-        table.float('amount');
+        table.bigInteger('amount');
         table.string('currency').defaultTo('usd');
         table.string('interval');
         table.integer('interval_count').defaultTo(1);

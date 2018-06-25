@@ -1,5 +1,5 @@
 import React from "react";
-import CurrencyInput from 'react-currency-input';
+import NumberFormat from 'react-number-format';
 import {toCents} from "../../../../lib/handleInputs";
 import {connect} from 'react-redux';
 import getSymbolFromCurrency from 'currency-symbol-map'
@@ -15,10 +15,10 @@ class WidgetPricingInput extends React.Component{
 
     handleChange(isCents) {
         let self = this;
-        return function (e, maskedValue, floatvalue) {
+        return function ({value}, e) {
             let name = e.target.name;
-            let value = isCents ? toCents(floatvalue) : floatvalue;
-            self.setState({[name]: value}, () => {
+            let parsedValue = isCents ? toCents(value) : value;
+            self.setState({[name]: parsedValue}, () => {
                 self.props.input.onChange(self.state[name]);
             });
         }
@@ -32,18 +32,20 @@ class WidgetPricingInput extends React.Component{
         let prefix = options.currency ? getSymbolFromCurrency(options.currency.value) : '';
 
         if(operation == 'add' || operation == 'subtract'){
-            let price = (value/100).toFixed( 2 );
+            let price = (value/100)
             return(
-                <CurrencyInput className="form-control addon-checkbox-widget-price-input" name={name}
-                                prefix={prefix} decimalSeparator="." thousandSeparator="," precision="2"
-                                onChangeEvent={this.handleChange(true)} value={price}
+                <NumberFormat className="form-control addon-checkbox-widget-price-input" name={name}
+                                prefix={prefix} decimalSeparator="." thousandSeparator="," decimalScale="2"
+                              allowNegative={false}
+                              fixedDecimalScale={false}
+                              onValueChange={this.handleChange(true)} value={price}
                 />
             );
         }else if(operation == 'divide' || operation == 'multiply'){
             return(
-                <CurrencyInput className="form-control addon-checkbox-widget-price-input" name={name}
-                               decimalSeparator="." precision="0" suffix="%"
-                               onChangeEvent={this.handleChange(false)} value={value}
+                <NumberFormat className="form-control addon-checkbox-widget-price-input" name={name}
+                               decimalSeparator="." decimalScale={0} suffix="%" allowNegative={false}
+                              onValueChange={this.handleChange(false)} value={value}
                 />
                 // <input {...props.input} type="number" className="form-control addon-checkbox-widget-price-input"/>
             );

@@ -16,7 +16,7 @@ module.exports = {
             table.increments();
             table.integer('tier_id').references('tiers.id').onDelete('cascade');;
             table.integer('trial_period_days');
-            table.float('amount');
+            table.bigInteger('amount');
             table.enu('type', ['subscription', 'one_time', 'custom', "split"]).defaultTo('subscription');
             table.string('currency').defaultTo('usd');
             table.string('interval');
