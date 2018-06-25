@@ -152,6 +152,13 @@ module.exports = {
                     if(inPaying > 0) {
                         averageConversion = inPaying/(subActive + subCancelled);
                     }
+                    //Calculate ARPA & Churn
+                    let arpa = 0;
+                    let churn = 0;
+                    if(inPaying > 0) {
+                        arpa = ((Math.ceil(arr/12))/inPaying).toFixed(2);
+                        churn = ((inPayingCancelled / (inPaying + inPayingCancelled))*100).toFixed(2);
+                    }
 
                     stats.overall = {};
                     stats.overall.total = instances.length;
@@ -175,8 +182,8 @@ module.exports = {
                     stats.subscriptionStats.mrrForecast = Math.ceil(arrForecast/12);
                     stats.subscriptionStats.arr = Math.ceil(arr);
                     stats.subscriptionStats.mrr = Math.ceil(arr/12);
-                    stats.subscriptionStats.arpa = (Math.ceil(arr/12))/inPaying;
-                    stats.subscriptionStats.churn = ((inPayingCancelled / (inPaying + inPayingCancelled))*100).toFixed(2);
+                    stats.subscriptionStats.arpa = arpa;
+                    stats.subscriptionStats.churn = churn;
                     stats.subscriptionStats.averageConversion = (averageConversion * 100).toFixed(2);
                     stats.subscriptionStats.totalCharges = subTotalCharges;
                     stats.subscriptionStats.totaPaidCharges = subPaidCharges;

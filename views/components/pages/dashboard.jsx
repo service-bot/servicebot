@@ -99,36 +99,12 @@ class Dashboard extends React.Component {
                     <Jumbotron pageName={pageName} subtitle={sub}/>
                     <div className="page-service-instance">
                         <Content>
-                            {showSteps ?
-                                    <div>
-                                        <div>
-                                            <div className="col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6 col-md-offset-2 col-lg-offset-3 col-xl-offset-3">
-                                                <ul className="progressbar">
-                                                    <li className={step1}>Create an Offering</li>
-                                                    <li className={step2}>Connect to Stripe</li>
-                                                    <li>Done!</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <div className="dash-tour col-xs-12 col-sm-12 col-md-8 col-lg-6 col-xl-6 col-md-offset-2 col-lg-offset-3 col-xl-offset-3">
-                                            {analytics.offeringStats.total === 0 &&
-                                            <ServiceTemplateFormLite params={{'templateId': null}} postResponse={this.updateOfferingStat}/>
-                                            }
-                                            {analytics.offeringStats.total > 0 &&
-                                            <StripeSettingsForm postResponse={this.updateStripeStat} initialize={true}/>
-                                            }
-                                        </div>
-                                    </div>
-                                :
-
-                                <div>
-                                    <ContentTitle title="SaaS Live Dashboard"/>
-                                    <DashboardWidgets data={this.state.analytics}/>
-                                    <div className="m-t-25"><ContentTitle title="Churn Detail"/></div>
-                                    <OverallStatsWidgets data={this.state.analytics} />
-                                </div>
-
-                            }
+                            <div>
+                                <ContentTitle title="SaaS Live Dashboard"/>
+                                <DashboardWidgets data={this.state.analytics}/>
+                                <div className="m-t-25"><ContentTitle title="Churn Detail"/></div>
+                                <OverallStatsWidgets data={this.state.analytics} />
+                            </div>
                         </Content>
                     </div>
                 </Authorizer>
