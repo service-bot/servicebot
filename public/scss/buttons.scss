@@ -36,11 +36,26 @@
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.17);
   }
 
+  &._default {
+    font-size: $font-size;
+    background-color: $blue;
+    color: $color-white;
+    border-radius: 2px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.17);
+    letter-spacing: 1px;
+
+    &:hover {
+      background-color: $dark-blue;
+    }
+  }
+
   &._right{
     float: right;
   }
 
 }
+
+
 
 .clear{
   display: block;

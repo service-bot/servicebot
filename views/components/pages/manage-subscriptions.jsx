@@ -121,10 +121,7 @@ class ManageSubscriptions extends React.Component {
     emailFormatter(cell, row){
         return (
             <div>
-                <div className="badge badge-xs">
-                    <img className="img-circle" src={`/api/v1/users/${row.user_id}/avatar`}/>
-                </div>
-                <span className="customer-email">&nbsp;&nbsp;{cell.users[0].email}</span>
+                <span className="customer-email"><Link to={`/service-instance/${row.id}`}>{cell.users[0].email}</Link></span>
             </div>
         );
     }
@@ -243,7 +240,7 @@ class ManageSubscriptions extends React.Component {
     render () {
         let self = this;
         let pageName = this.props.route.name;
-        let pageTitle = 'Manage your services here';
+        let pageTitle = 'Manage Subscriptions';
         let subtitle = 'View, edit, and manage your subscriptions';
 
         if(this.props.params.status) {
@@ -320,25 +317,25 @@ class ManageSubscriptions extends React.Component {
                                         sortOrder="desc"
                                     >
                                         <TableHeaderColumn isKey
-                                                           dataField='name'
-                                                           dataFormat={this.nameFormatter}
-                                                           dataSort={ true }
-                                                           width='130'>
-                                            Offering
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='references'
+                                                           dataField='references'
                                                            dataFormat={this.emailFormatter}
                                                            dataSort={ true }
                                                            filterValue={this.emailDataValue}
                                                            width='150'>
-                                            Email
+                                            Customer
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='name'
+                                                           dataFormat={this.nameFormatter}
+                                                           dataSort={ true }
+                                                           width='130'>
+                                            Subscribed to
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='payment_plan'
                                                            dataFormat={this.amountFormatter}
                                                            dataSort={ true }
                                                            searchable={false}
                                                            width='80'>
-                                            Amount
+                                            Price
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='payment_plan'
                                                            dataFormat={this.typeFormatter}
