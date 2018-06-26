@@ -22,6 +22,10 @@ module.exports = {
             console.log("got a config");
         }
 
+        //this is so bigints are parsed properly...
+        var pg = require('pg')
+        pg.types.setTypeParser(20, 'text', parseInt)
+
         let database = require('knex')({
             client: 'pg',
             connection: dbConf
