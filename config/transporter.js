@@ -23,7 +23,7 @@ var transporter = nodemailer.createTransport(smtpConfig);
 // verify connection configuration
 transporter.verify(function(error, success) {
    if (error) {
-        console.log(error);
+        console.error(error);
    } else {
         console.log("MAILER CONNECTION VERIFIED");
    }

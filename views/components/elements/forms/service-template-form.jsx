@@ -653,7 +653,7 @@ class ServiceTemplateForm extends React.Component {
     submissionPrep(values) {
         //remove id's for duplicate template operation
         if (this.props.params.duplicate) {
-            console.log("We have a duplicate and we want to remove id");
+
             delete values.id;
             values.references.service_template_properties = values.references.service_template_properties.map(prop => {
                 if (prop.id) {

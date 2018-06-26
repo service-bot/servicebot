@@ -60,8 +60,7 @@ renderCustomProperty = consume("widget")(renderCustomProperty);
 
 
 function CustomFieldEditForm(props) {
-    console.log(props.instance);
-    let properties = props.instance.references.service_instance_properties;
+        let properties = props.instance.references.service_instance_properties;
     return (
         <form>
             <FieldArray name="service_instance_properties" component={renderCustomProperty}

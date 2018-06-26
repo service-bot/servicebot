@@ -11,7 +11,7 @@ Invitation.prototype.create = function (callback) {
 		self.set("token", buffer.toString('hex'));
 		knex('invitations').columnInfo().returning('id').insert(self.data)
     	.then(function(result){
-	    	console.log(self)
+	    	
 	    	self.set("id", result[0]);
 	    	callback(null, self);
     	})

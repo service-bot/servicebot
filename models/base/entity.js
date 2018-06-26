@@ -25,7 +25,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
         //         let reference = references.find(ref => ref.model.table === name);
         //         try {
         //             if (!reference) {
-        //                 console.log(name);
+        //                 
         //                 throw `Reference is not defined on ${Entity.table}.`
         //             }
         //             return await self.getRelated(reference.model)
@@ -174,12 +174,12 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
     Entity.prototype.createReferences = function (referenceData, reference, callback) {
         let self = this;
         if (reference.readOnly) {
-            console.log("Reference is readonly");
+            
             callback(self);
         }
         else {
             referenceData.forEach(newChild => (newChild[reference.referenceField] = this.get(primaryKey)));
-            //console.log("referenceDate");
+            //
             //console.log(referenceData);
             reference.model.batchCreate(referenceData, function (response) {
                 if (reference.direction == "to") {
@@ -202,7 +202,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
     Entity.prototype.updateReferences = async function (referenceData, reference, isTransaction=false) {
         let self = this;
         if (reference.readOnly) {
-            console.log("Reference is readonly");
+            
             this;
         }
         else {
@@ -215,7 +215,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                 not: {id: {"in": ids}},
                 [reference.referenceField]: self.get(primaryKey)
             });
-            console.log(ids, removedReferences, "DELTED\n");
+            
             let upsertedReferences = await reference.model.batchUpdate(referenceData, true, isTransaction);
 
             //change "to" reference if it's different
@@ -243,7 +243,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                 callback(entities);
             })
             .catch(function (err) {
-                console.log(err);
+                console.error(err);
             });
     };
 
@@ -279,7 +279,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                 callback(entities);
             })
             .catch(function (err) {
-                console.log(err);
+                console.error(err);
             });
     };
 
@@ -292,7 +292,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                 callback(new Entity(result[0]));
             })
             .catch(function (err) {
-                console.log(err);
+                console.error(err);
             });
     };
     //Generic findById function. Finds the record by passing the id.
@@ -305,7 +305,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                 callback(new Entity(result[0]));
             })
             .catch(function (err) {
-                console.log(err);
+                console.error(err);
             });
     };
 
@@ -349,7 +349,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                 callback(entities);
             })
             .catch(function (err) {
-                console.log(err);
+                console.error(err);
             });
     };
 
@@ -364,7 +364,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
             callback(result[0].count);
         })
             .catch(function (err) {
-                console.log(err);
+                console.error(err);
             });
     };
 
@@ -378,7 +378,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                 callback(result[0].sum);
             })
             .catch(function (err) {
-                console.log(err);
+                console.error(err);
             });
     };
     //get objects created between dates
@@ -392,7 +392,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                 callback(entities);
             })
             .catch(function (err) {
-                console.log(err);
+                console.error(err);
             });
     };
 
@@ -469,8 +469,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                             callback(result)
                         })
                         .catch(function (err) {
-                            console.log("WHOAH!");
-                            console.log(err);
+                            console.error(err);
                         })
                 })
         };
@@ -519,7 +518,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                                     }
                                 }else{
                                     if(reference.direction === "from"){
-                                        console.log(record, Entity.primaryKey, record[Entity.primaryKey]);
+                                        
                                         val[reference.referenceField] = record[Entity.primaryKey];
                                         acc.push(val);
 
@@ -528,12 +527,12 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                                 return acc;
                             }, []);
                             record.references[reference.model.table] = (await trxReference.batchUpdate(refsToUpdate, true, true)) || [];
-                            console.log("LOL\n", record, "\nLOL");
+                            
 
                         }
                     }
                 }
-                console.log("END BATCH UPDATE")
+                
                 return record;
             });
         });

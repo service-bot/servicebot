@@ -33,7 +33,7 @@ class ServiceInstanceFormEdit extends React.Component {
         // Fetcher(self.state.url).then(function(response){
         //     if(response != null){
         //         if(!response.error){
-        //             console.log(response);
+        //             
         //             self.setState({loading:false, template: response});
         //         }
         //     }
@@ -143,7 +143,7 @@ class ServiceInstanceFormEdit extends React.Component {
                                         {/*{references.map( reference => (*/}
                                             {/*<div key={`custom-fields-${reference.prop_label}`}>*/}
                                                 {/*<DataChild modelName="service_instance_properties" objectName={reference.name}>*/}
-                                                    {/*<Inputs type="hidden" name="id" value={_.filter(instance_props, {name: reference.name}).length > 0 ? _.filter(instance_props, {name: reference.name})[0].id : ()=>{console.log("im so weird", _.filter(instance_props, {name: reference.name}))}}*/}
+                                                    {/*<Inputs type="hidden" name="id" value={_.filter(instance_props, {name: reference.name}).length > 0 ? _.filter(instance_props, {name: reference.name})[0].id : ()=>{}}*/}
                                                             {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
                                                     {/*<Inputs type="hidden" name="name" value={_.filter(instance_props, {name: reference.name}).length > 0 ? _.filter(instance_props, {name: reference.name})[0].name : ''}*/}
                                                             {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}

@@ -124,8 +124,7 @@ let TierBillingForm = function (props) {
     };
 
     const formatFromPricing = (value, name) => {
-        console.log("VAL", value);
-        let pricingStructures = (tier.references && tier.references.payment_structure_templates) || [];
+                let pricingStructures = (tier.references && tier.references.payment_structure_templates) || [];
         if ((value === null || value === undefined) && pricingStructures.length > 0) {
             return pricingStructures[0][name];
         }

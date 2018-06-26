@@ -17,7 +17,7 @@ module.exports = function(router) {
             });
         }
         else {
-            console.log("authorized person, go on");
+            
             next();
         }
     });

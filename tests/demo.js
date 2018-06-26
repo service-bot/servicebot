@@ -899,7 +899,7 @@ module.exports = new Promise(function (resolve_top, reject_top) {
                 });
             });
         })).then(function () {
-            console.log('User creation completed');
+            
             return resolve('User creation completed');
         }).catch(function (err) {
             return reject(err);

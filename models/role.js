@@ -49,7 +49,7 @@ Role.prototype.assignPermission = function (permissions, callback) {
             callback(self);
         })
         .catch(function(err){
-            console.log("error creating : " + err);
+            console.error("error creating : " + err);
         });
 };
 
@@ -79,7 +79,7 @@ let getPermissions = function(callback){
     }).then(function(result){
       callback(result.map(p => new Permission(p)));
     }).catch(function(err){
-        console.log(err);
+        console.error(err);
     })
 };
 
@@ -106,11 +106,11 @@ Role.prototype.hasPermission = function (permission, callback) {
 
             }
             let permissionId = permissionEntity.get('id');
-            console.log("roleid: " + roleId + "  permissionId :" + permissionId);
+
 
             knex('roles_to_permissions').where('role_id', roleId).andWhere('permission_id', permissionId)
                 .then(function (result) {
-                    //console.log(result);
+                    //
                     if (result.length > 0) {
                         callback(true);
                     }
@@ -119,7 +119,7 @@ Role.prototype.hasPermission = function (permission, callback) {
                     }
                 })
                 .catch(function (err) {
-                    console.log(err);
+                    console.error(err);
                 });
 
         });
@@ -140,7 +140,7 @@ Role.findByName = function (name, callback) {
             callback(new Role(result[0]))
         })
         .catch(function(err){
-            console.log(err);
+            console.error(err);
         });
 
 };

@@ -218,13 +218,13 @@ const rootReducer = {
 
 
 // store.subscribe(()=>{
-//     console.log("store changed", store.getState());
+//     
 // });
 
 
 let initializedState = function (initialOptions = null) {
     return async function (dispatch) {
-        console.log(cookie.load("uid"));
+        
         let initialState = {
             allForms: {},
             options: {},

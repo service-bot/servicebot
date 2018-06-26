@@ -32,8 +32,7 @@ let actionHandler = function(action, state){
 
 function* run(config, provide, channels) {
     //todo pull initialize from channel?
-    console.log("HELLO!!!!!!");
-    let  { initialState } = yield take("INITIALIZE");
+        let  { initialState } = yield take("INITIALIZE");
     if(initialState.options.google_analytics && initialState.options.google_analytics.value ){
         ReactGA.initialize(initialState.options.google_analytics.value);
         if(initialState.uid){

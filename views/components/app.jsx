@@ -32,11 +32,11 @@ class App extends React.Component {
     }
 
     isDashboardView() {
-        console.log("pros", this.props);
+
         let location = this.props.location.pathname;
         let publicViewPaths = ['^\/{1}$', '^\/?service-catalog\/+\\d\/request+$', '^\/?login+$'];
         if (matchInArray(location, publicViewPaths)) {
-            console.log("matched");
+
             return false;
         }
         return true;

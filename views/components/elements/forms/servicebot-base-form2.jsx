@@ -128,7 +128,7 @@ class ServiceBotBaseForm extends React.Component {
     componentDidMount() {
         let self = this;
         let initialRequests = self.state.initialRequests;
-        console.log("We got our initial requests", initialRequests)
+
         if (initialRequests && initialRequests.length > 0) {
             let allRequests = initialRequests.map(async requestInfo => {
                 let response = await Fetcher(requestInfo.url, requestInfo.method);

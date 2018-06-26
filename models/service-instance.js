@@ -43,7 +43,7 @@ let buildPayStructure = function (payment_object, callback) {
     let self = this;
     let plan_arr = ['name', 'amount', 'currency', 'interval', 'interval_count', 'statement_descriptor', 'trial_period_days'];
     let random_code = Math.random().toString(36).substring(10, 12) + Math.random().toString(36).substring(10, 12);
-    console.log(payment_object);
+    
     let default_plan = {
         'id': `${payment_object.name.replace(/ +/g, '-')}-ID${self.get("id")}-${random_code}`,
         'currency': 'usd',

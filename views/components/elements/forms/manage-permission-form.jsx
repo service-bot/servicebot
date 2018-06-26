@@ -79,7 +79,6 @@ class ManagePermissionForm extends React.Component {
         let self = this;
        return Fetcher(self.state.managePermissionsUrl).then(function (response) {
             if(!response.error){
-                console.log("RESPONSE", response)
                 self.setState({permissionMap: response});
                 return response;
             }else{
@@ -94,7 +93,6 @@ class ManagePermissionForm extends React.Component {
         return Fetcher(self.state.getPermissionsUrl).then(function (response) {
 
             if(!response.error){
-                console.log("RESPONSE2", response)
 
                 self.setState({permissions: response});
                 return response;
@@ -170,7 +168,7 @@ class ManagePermissionForm extends React.Component {
             let roles = this.state.roles;
             let permissions = this.state.permissions;
             let permissionMap = this.state.managePermissions;
-            console.log("PERMISSIONS", permissions, roles, permissionMap);
+
             let renderRoles = ()=>{
                 return (roles.map((role)=>
                         <th key={`role-${role.id}`} className={`capitalize role-${role.id}`}>{role.role_name}</th>));

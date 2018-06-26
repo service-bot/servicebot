@@ -89,7 +89,7 @@ Charge.prototype.cancel = function (callback) {
         }
     ], function (err, result) {
         if(!err){
-            console.log(`Charge has been removed! - ${result}`);
+            
             callback(result);
         } else {
             callback(err);

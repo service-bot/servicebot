@@ -15,8 +15,8 @@ EventLog.logEvent = function (userId, logMessage, logType = 'CORE', logLevel = '
     let eventData = EventLog.getLogObj(userId, logMessage, logType, logLevel);
     let newEvent = new EventLog(eventData);
     newEvent.create(function(err, result){
-        console.log("log created: ");
-        console.log(result.data);
+
+
     });
 
 };

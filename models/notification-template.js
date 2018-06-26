@@ -21,7 +21,7 @@ NotificationTemplate.prototype.getRoles = function (callback) {
     }).then(function (result) {
         callback(result.map(p => new Role(p)));
     }).catch(function (err) {
-        console.log(err);
+        console.error(err);
     })
 };
 
@@ -57,7 +57,7 @@ NotificationTemplate.prototype.build = function (map, callback) {
 
 let createNotifications = function(recipients, message, subject, notificationTemplate){
     if(notificationTemplate.get('create_notification')) {
-        console.log("CREATING A NOTIFICATION!");
+
         return Promise.all(recipients.map(recipient => {
             return new Promise((resolve, reject) => {
                 let notificationAttributes = {
@@ -69,14 +69,14 @@ let createNotifications = function(recipients, message, subject, notificationTem
                 let newNotification = new Notification(notificationAttributes);
                 newNotification.create(function (err, notification) {
                     if (!err) {
-                        console.log("notification created: " + notification.get("id"));
+
                         return resolve(notification);
                     } else {
                         return reject(err);
                     }
                 });
             }).catch(e => {
-                console.log('error when creating notification: ', e)
+                console.error('error when creating notification: ', e)
             })
         }))
     }
@@ -91,15 +91,15 @@ let createEmailNotifications = function(recipients, message, subject, notificati
         let additionalRecipients = notificationTemplate.get('additional_recipients');
         let emailArray = recipients.map(recipient => recipient.get('email'));
         emailArray = _.union(emailArray, additionalRecipients);
-        console.log("email array")
-        console.log(emailArray)
+
+
         return Promise.all(emailArray.map(email => {
             return new Promise(resolve => {
                 mailer(email, message, subject);
                 return resolve();
             })
         })).catch(e => {
-            console.log("error sending email notifications", e)
+            console.error("error sending email notifications", e)
         })
     }
     else{
@@ -145,7 +145,7 @@ let getNotificationContents = function(template, targetObject){
         return new Promise(function (resolve, reject) {
             //Build Message and Subject from template
             template.build(updatedObject, function (message, subject) {
-                console.log("Built Notification message")
+
                 return resolve({message: message, subject: subject})
             });
         });

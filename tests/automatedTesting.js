@@ -19,8 +19,6 @@ form.submit('http://localhost:3000/user/login', function(err, res) {
         //json: true,   // <--Very important!!!
         //body: myJSONObject
     }, function (error, response, body){
-        console.log(response);
-        console.log("body: " + body)
     });
 });
 

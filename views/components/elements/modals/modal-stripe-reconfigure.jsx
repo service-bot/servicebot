@@ -23,7 +23,7 @@ class ModalConfirm extends React.Component {
         let formData = {};
         if(self.props.formData) {
             formData = JSON.parse(self.props.formData).form;
-            console.log(formData)
+
         }
 
         return(

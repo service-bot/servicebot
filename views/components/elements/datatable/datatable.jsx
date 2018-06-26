@@ -191,7 +191,7 @@ class DataTable extends React.Component {
                             <tbody>
                             {this.state.resObjs.map((resObj, index) => (
                                 <tr key={"row-" + index} className={this.rowClasses(resObj) || ''}>
-                                    {/*{console.log("The resObj: ", resObj)}*/}
+                                    {/*{}*/}
                                     {this.state.col.map(column => (
                                         <td key={`row-${index}-cell-${column}`}>
 

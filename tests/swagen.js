@@ -19,7 +19,7 @@ let Transactions = require("../models/transaction");
 let SystemOptions = require("../models/system-options");
 let Files = require("../models/file");
 
-console.log(knex.fn.now());
+
 
 
 function genProp(data){
@@ -51,7 +51,7 @@ function generate(model){
                 json.properties[prop] = genProp(schema[prop])
             }
         }
-        console.log(JSON.stringify(json));
+
     });
 }
 

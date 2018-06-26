@@ -150,7 +150,7 @@ class NavNotification extends React.Component{
 //         super(props);
 //     }
 //     render(){
-//         console.log("RENDING SYSTEMS")
+//
 //         let notifications = this.props.system_notifications.map(notification => {
 //             return (<li key={notification.id}><Notification {...notification} /></li>)
 //         })

@@ -222,7 +222,7 @@ class Inputs extends React.Component {
             );
         }else if(type == "color_picker"){
 
-            console.log("color picker color:", this.state.value);
+            
             return (
                 <div key={`color_picker_${this.state.name}`} id={`color_picker_${this.state.name}`}
                      className={`form-group color-picker-input ${error ? 'has-error' : ''}`}>

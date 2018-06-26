@@ -116,7 +116,7 @@ class CreditCardForm extends React.Component {
 
     async submissionPrep(values) {
         let token = await this.props.stripe.createToken({...values});
-        console.log(token);
+        
         if (token.error) {
             let message = token.error;
             if(token.error.message) {

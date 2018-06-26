@@ -40,7 +40,7 @@ class ServiceApplicationLauncher extends React.Component {
     urlLink(url){
         return function(event) {
             event.preventDefault();
-            console.log(url);
+
             window.open(url, '_blank');
         }
     }

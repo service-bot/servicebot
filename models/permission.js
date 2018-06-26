@@ -19,12 +19,12 @@ Permission.prototype.delete = function (callback) {
     knex('roles_to_permissions').where('permission_id', id).del()
         .then(callback())
         .catch(function(err){
-            console.log(err);
+            console.error(err);
         });
     knex('user_permissions').where('id', id).del()
         .then(callback())
         .catch(function(err){
-            console.log(err);
+            console.error(err);
         });
 };
 
@@ -35,11 +35,10 @@ Permission.findByName = function (name, callback) {
             if(!result){
                 result = [];
             }
-            console.log(result);
             callback(new Permission(result[0]))
         })
         .catch(function(err){
-            console.log(err);
+            console.error(err);
         });
 
 };

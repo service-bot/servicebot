@@ -7,7 +7,7 @@ var JwtStrategy = require('passport-jwt').Strategy;
 var ExtractJwt = require('passport-jwt').ExtractJwt;
 
 process.on('unhandledRejection', function (e) {
-    console.log(e.message, e.stack)
+    
 })
 
 // create the pool somewhere globally so its lifetime
@@ -82,8 +82,8 @@ module.exports = function (passport) {
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
             User.findOne('email', name.toLowerCase(), function (result) {
-                console.log("checking name");
-                console.log(result);
+                
+                
                 if (result.data) {
                     return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
 
@@ -91,7 +91,7 @@ module.exports = function (passport) {
                 else {
                     var newUser = new User({"email": name, "password": bcrypt.hashSync(password, 10), "role_id": 1});
                     newUser.createWithStripe(function (err, result) {
-                        console.log(result.get('id'));
+                        
                         return done(err, result);
                     })
                 }

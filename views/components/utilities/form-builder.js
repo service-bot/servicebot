@@ -37,7 +37,7 @@ let mapDispatchToProps = function(name, mapDispatch){
 
 let handleValidation = function(stateFormData, newFormData = null, refModel = null, refIndex = null){
 
-    // console.log("validator called");
+    //
 
     let self = this;
     let errors = false; //this is used to check and set the boolean error at the top level of formData object.
@@ -153,7 +153,7 @@ let formBuilder =  function(formName, defaultFormData=null, mapState = ()=>{}, m
 
             initializeInput(component){
                 let self = this;
-                // console.log("inputs component", self);
+                //
                 this.props.setFormData(buildFormRefsData(
                     component.props.name,
                     component.props.defaultValue ||  component.props.value || null,

@@ -66,7 +66,7 @@ Invoice.prototype.sync = function (new_invoice) {
                         });
                     });
                 })).then(function () {
-                    console.log('Invoice lines deleted');
+                    
                     return resolveall('Invoice lines deleted');
                 }).catch(function (err) {
                     return rejectall(err);
@@ -208,7 +208,7 @@ Invoice.insertInvoice = function (raw_invoice, user) {
                 if(reference_data[reference.model.table] && reference_data[reference.model.table].length > 0){
                     let referenceData = reference_data[reference.model.table];
                     invoice.createReferences(referenceData, reference, function (modifiedEntity) {
-                        //console.log('Invoice references created!');
+                        //
                     });
                 }
             }
