@@ -94,7 +94,7 @@ let PaymentStructureTemplates = function (props) {
                     )
                 })}
 
-                {plans.length < 4 && <button className="buttons _add" onClick={addPayment}><span className="icon plus"/>Add Additional Pricing</button>}
+                {plans.length < 4 && <button className="buttons _add" onClick={addPayment}><span className="icon plus"/>Add Pricing Options</button>}
                 <span className="clear"/>
             </div>
         )
