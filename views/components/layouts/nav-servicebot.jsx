@@ -293,9 +293,6 @@ class NavServiceBot extends React.Component {
                             </Link>
                         </div>
                         <div className="app-header-right">
-                            <Authorizer>
-                                <button className="buttons rounded" onClick={this.props.handleLogout}>Log Out</button>
-                            </Authorizer>
                             <div className="app-profile">
                                 <Link to="/profile">
                                     <img className="img-circle" src={`/api/v1/users/${this.props.uid}/avatar`}
@@ -304,6 +301,9 @@ class NavServiceBot extends React.Component {
                                 </Link>
                             </div>
                             <NavNotification/>
+                            <Authorizer>
+                                <button className="buttons logout" onClick={this.props.handleLogout}>Log Out</button>
+                            </Authorizer>
                         </div>
                     </div>
                     <div className="app-navigation">

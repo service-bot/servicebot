@@ -184,9 +184,7 @@ class ManageUsers extends React.Component {
     fundFormatter(cell) {
         //check if user has funds
         if(cell.funds.length > 0){
-            return ( <span className="status-badge green" ><i className="fa fa-check" /></span> );
-        } else {
-            return ( <span className="status-badge red" ><i className="fa fa-times" /></span> );
+            return ( <span className="userfund"><i class="fa fa-credit-card"></i></span>);
         }
     }
     statusFormatter(cell, row) {
@@ -387,12 +385,7 @@ class ManageUsers extends React.Component {
                                         sortOrder="desc"
                                     >
                                         <TableHeaderColumn isKey
-                                                           dataField='id'
-                                                           dataFormat={this.idFormatter}
-                                                           dataSort={ false }
-                                                           searchable={false}
-                                                           width='30'/>
-                                        <TableHeaderColumn dataField='email'
+                                                           dataField='email'
                                                            dataFormat={this.profileLinkFormatter}
                                                            dataSort={ true }
                                                            width='150'>
@@ -413,8 +406,8 @@ class ManageUsers extends React.Component {
                                         <TableHeaderColumn dataField='references'
                                                            dataFormat={this.fundFormatter}
                                                            dataSort={ true }
-                                                           width='80'>
-                                            Fund?
+                                                           width='40'>
+                                            Fund
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='references'
                                                            dataFormat={this.roleFormatter}
