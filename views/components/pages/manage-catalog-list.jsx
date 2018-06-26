@@ -98,6 +98,8 @@ class ManageCatalogList extends React.Component {
      * Formats each cell data by passing the function as the dataFormat prop in TableHeaderColumn
      */
     nameFormatter(cell, row){
+        console.log("FFFFUCK")
+        console.log(row)
         return ( <Link to={`/manage-catalog/${row.id}`}>{cell}</Link> );
     }
     priceFormatter(cell, row){
@@ -113,7 +115,7 @@ class ManageCatalogList extends React.Component {
     publishedFormatter(cell){
         let color_class = 'status-badge ';
         color_class += cell ? 'green' : 'red';
-        return ( `<span class="${color_class}" >${cell ? 'Published' : 'Unpublished'}</span>` );
+        return ( `<span class="${color_class}" >${cell ? 'Live' : 'Draft'}</span>` );
         // return ( cell ? 'Published' : 'Unpublished' );
     }
     createdFormatter(cell){
@@ -204,7 +206,7 @@ class ManageCatalogList extends React.Component {
                         <ServiceBotTableBase
                             rows={this.state.rows}
                             createItemAction={ () => {browserHistory.push('/manage-catalog/create')} }
-                            createItemLabel={'Create Product / Service'}
+                            createItemLabel={'Create Service'}
                             fetchRows={this.fetchData}
                             sortColumn="updated_at"
                             sortOrder="desc"
@@ -214,7 +216,7 @@ class ManageCatalogList extends React.Component {
                                                dataSort={ true }
                                                dataFormat={ this.nameFormatter }
                                                width={200}>
-                                Product / Service Name
+                                Service Name
                             </TableHeaderColumn>
                             {/*<TableHeaderColumn dataField='amount'*/}
                                                {/*dataSort={ true }*/}

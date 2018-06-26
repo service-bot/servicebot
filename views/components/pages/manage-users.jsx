@@ -406,8 +406,8 @@ class ManageUsers extends React.Component {
                                         <TableHeaderColumn dataField='references'
                                                            dataFormat={this.fundFormatter}
                                                            dataSort={ true }
+                                                           searchable={false}
                                                            width='40'>
-                                            Fund
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='references'
                                                            dataFormat={this.roleFormatter}
