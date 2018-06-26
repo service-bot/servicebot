@@ -364,7 +364,7 @@ class Webhooks extends React.Component {
         }
         let formHTML;
         if (this.state.selectedTemplate === null || this.state.selectedTemplate == 0) {
-            formHTML = "Select a template from the list to embed"
+            formHTML = "Select a service from the list to embed"
         } else {
             formHTML = `<div id="servicebot-request-form"></div>
 <script src="https://js.stripe.com/v3/"></script>
@@ -387,7 +387,7 @@ Servicebot.init({
         let formEmbed = (<div>
             <span>Paste the generated HTML on the page you want to embed a request form. You can find more detailed documentation <a href="https://docs.servicebot.io/embed">here</a></span>
             <select onChange={this.changeTemplate}>
-                <option key={"default-0"} value="0">Select a template</option>
+                <option key={"default-0"} value="0">Select a service</option>
                 {this.state.templates.map(template => {
                     return (<option key={template.id} value={template.id}>{template.name}</option>)
                 })}

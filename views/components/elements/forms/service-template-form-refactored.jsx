@@ -162,10 +162,10 @@ class TemplateForm extends React.Component {
                         {error && <div className="form-error">{error}</div>}
                     </div>
                     <div className="form-level-warnings"/>
-                    <h3><span className="form-step-count">1</span>SaaS Offering Name</h3>
+                    <h3><span className="form-step-count">1</span>Service Name</h3>
                     <div className="_indented">
                         <div className="_form-field-group _form-field-name_software_name">
-                            <Field name="name" type="text" component={inputField} label="Offering Name" validate={[required()]}/>
+                            <Field name="name" type="text" component={inputField} label="Service Name" validate={[required()]}/>
                         </div>
                     </div>
                 </div>

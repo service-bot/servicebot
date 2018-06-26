@@ -340,7 +340,7 @@ class CheckoutPage extends React.Component {
         }
 
         if (selectedTemplate === null || selectedTemplate == 0) {
-            formHTML = "Select a template from the list to embed"
+            formHTML = "Select a service from the list to embed"
         }
         let  submissionRequest = {
             'method': 'PUT',
@@ -351,10 +351,10 @@ class CheckoutPage extends React.Component {
             <div id="plugin_embeddable-checkout" className="plugin_container">
                 <div id="_section-1" className="_section _active">
                     <span className="caret"/>
-                    <h3><span className="form-step-count">1</span>Select a template</h3>
+                    <h3><span className="form-step-count">1</span>Select a service</h3>
                     <div className="_indented">
                         <select className="form-control" onChange={this.changeTemplate}>
-                            <option key={"default-0"} value="0">Select a template</option>
+                            <option key={"default-0"} value="0">Select a service</option>
                             {this.state.templates.map(template => {
                                 return (<option key={template.id} value={template.id}>{template.name}</option>)
                             })}

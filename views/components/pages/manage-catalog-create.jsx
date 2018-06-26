@@ -11,7 +11,7 @@ class ManageCatalogCreate extends React.Component {
         return(
             <div className="app-content">
                 <div className="_title-container">
-                    <h1 className="_heading">Create a new SaaS offering</h1>
+                    <h1 className="_heading">Create a new service</h1>
                 </div>
                 <ServiceTemplateForm params = {{'templateId': null}}/>
             </div>
