@@ -70,17 +70,18 @@ class ManagePermissionForm extends React.Component {
     }
 
     async componentDidMount(){
-        this.fetchManagePermissions();
-        this.fetchPermissions();
-        this.fetchRoles();
+        await this.fetchManagePermissions();
+        await this.fetchPermissions();
+        await this.fetchRoles();
     }
 
     fetchManagePermissions(){
         let self = this;
-        Fetcher(self.state.managePermissionsUrl).then(function (response) {
+       return Fetcher(self.state.managePermissionsUrl).then(function (response) {
             if(!response.error){
                 console.log("RESPONSE", response)
                 self.setState({permissionMap: response});
+                return response;
             }else{
                 console.error("ERRRR");
                 self.setState({loading: false});
@@ -90,12 +91,13 @@ class ManagePermissionForm extends React.Component {
 
     fetchPermissions(){
         let self = this;
-        Fetcher(self.state.getPermissionsUrl).then(function (response) {
+        return Fetcher(self.state.getPermissionsUrl).then(function (response) {
 
             if(!response.error){
                 console.log("RESPONSE2", response)
 
                 self.setState({permissions: response});
+                return response;
             }else{
                 console.error("permissions response obj error", response);
                 self.setState({loading: false});
@@ -105,9 +107,10 @@ class ManagePermissionForm extends React.Component {
 
     fetchRoles(){
         let self = this;
-        Fetcher(self.state.getRolesUrl).then(function (response) {
+        return Fetcher(self.state.getRolesUrl).then(function (response) {
             if(!response.error){
                 self.setState({loading: false, roles: response});
+                return response
             }else{
                 console.error("roles response obj error", response);
                 self.setState({loading: false});
