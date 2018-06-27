@@ -56,6 +56,7 @@ class NavBootstrap extends React.Component {
         this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
         this.getLivemode = this.getLivemode.bind(this);
         this.getPluginItems = this.getPluginItems.bind(this);
+        this.getSettingsMenus = this.getSettingsMenus.bind(this);
 
 
     }
@@ -107,11 +108,22 @@ class NavBootstrap extends React.Component {
     getPluginItems(){
         let user = this.props.user;
         return this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
-            if(route.isVisible(user)) {
+            if(route.isVisible(user) && route.navType === "main") {
                 acc.push(<li><Link key={index} to={route.path}>{route.name}</Link></li>)
             }
             return acc;
         }, [])
+
+    }
+    getSettingsMenus(){
+        let user = this.props.user;
+        return this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
+            if(route.isVisible(user) && route.navType === "settings") {
+                acc.push(<li><Link key={index} to={route.path}>{route.name}</Link></li>)
+            }
+            return acc;
+        }, [])
+
 
     }
 
@@ -139,6 +151,7 @@ class NavBootstrap extends React.Component {
                             <li><Link to="/notification-templates">Email Settings</Link></li>
                             <li><Link to="/manage-permission">Permission Settings</Link></li>
                             <li><Link to="/system-settings">System Settings</Link></li>
+                            {this.getSettingsMenus()}
                         </ul>
                     </li>
                     {this.getPluginItems()}

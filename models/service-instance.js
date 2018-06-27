@@ -365,24 +365,24 @@ ServiceInstance.prototype.changePaymentPlan = async function (newPlan, ignorePla
     let updatedInstance = await this.createPayPlan(planStructure);
     if (this.data.subscription_id !== null) {
         let payload = {plan: updatedInstance.data.payment_plan.id};
-        if (ignorePlanTrial) {
+        if (ignorePlanTrial || newPlan.trial_period_days == null) {
             payload.trial_from_plan = false;
         }
         let stripeSubscription = await Stripe().connection.subscriptions.update(this.data.subscription_id, payload);
         let oldTrial = updatedInstance.data.trial_end;
         updatedInstance.data.trial_end = stripeSubscription.trial_end;
-        if (newPlan.id) {
-            updatedInstance.data.payment_structure_template_id = newPlan.id
-        }
+        // if (newPlan.id) {
+        //     updatedInstance.data.payment_structure_template_id = newPlan.id
+        // }
         if (oldTrial !== stripeSubscription.trial_end) {
-
+            updatedInstance = await updatedInstance.update()
             //todo: handle this better,  don't like dispatching here.
             store.dispatchEvent("service_instance_trial_change", updatedInstance);
         }
 
     }
-    updatedInstance.data.type = updatedInstance.data.payment_plan.amount > 0 ? "subscription" : "custom";
-    return await updatedInstance.update();
+    // updatedInstance.data.type = updatedInstance.data.payment_plan.amount > 0 ? "subscription" : "custom";
+    return updatedInstance;
 };
 
 ServiceInstance.prototype.unsubscribe = async function () {

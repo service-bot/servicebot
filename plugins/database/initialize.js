@@ -161,7 +161,7 @@ let buildTables = async function (knex) {
     await create("tiers", table => {
         table.increments();
         table.string("name").notNullable();
-        table.specificType('features', 'text[]');
+        table.specificType('features', 'text[]').defaultTo("{}");
         table.integer('service_template_id').notNullable().references('service_templates.id').onDelete('cascade');
         table.unique(['service_template_id', "name"]);
         table.timestamps(true, true);

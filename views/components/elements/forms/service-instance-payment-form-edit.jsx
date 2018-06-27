@@ -4,7 +4,26 @@ import Load from '../../utilities/load.jsx';
 // import {DataForm} from "../../utilities/data-form.jsx";
 import Buttons from "../buttons.jsx";
 import Alerts from "../alerts.jsx";
+import {ServicebotBaseForm, priceField, inputField} from "servicebot-base-form"
+import {change, Field, FieldArray, FormSection, formValueSelector, getFormValues} from 'redux-form'
+import {numericality} from "redux-form-validators";
 
+
+function PaymentPlanForm(props){
+    return(<form onSubmit={props.handleSubmit}>
+        <Field
+            name={"amount"}
+            component={priceField}
+            isCents={true}
+            label="New Price"
+            validate={numericality({'>=': 0})}
+
+        />
+        <button className="btn btn-rounded btn-primary" type="submit">
+            Submit
+        </button>
+    </form>)
+}
 class ServiceInstanceFormEdit extends React.Component {
 
     constructor(props){
@@ -92,7 +111,7 @@ class ServiceInstanceFormEdit extends React.Component {
             const instance = this.state.instance;
 
             if(this.state.instance.payment_plan != null){
-                const paymentPlan = this.state.instance.payment_plan;
+                let paymentPlan = this.state.instance.payment_plan;
 
                 let getAlerts = ()=> {
 
@@ -103,11 +122,21 @@ class ServiceInstanceFormEdit extends React.Component {
                     }
 
                 };
-
+                paymentPlan.trial_period_days = null;
+                let submissionRequest = {
+                    'method': 'POST',
+                    'url': `/api/v1/service-instances/${instance.id}/change-price`
+                };
                 return (
                     <div>
                         {getAlerts()}
-
+                        <ServicebotBaseForm
+                            form={PaymentPlanForm}
+                            formName={"PAYMENT_PLAN_FORM"}
+                            initialValues={paymentPlan}
+                            submissionRequest={submissionRequest}
+                            handleResponse={this.handleResponse}
+                        />
                         {/*<DataForm validators={this.getValidators(null)} handleResponse={this.handleResponse} url={`/api/v1/service-instances/${instance.id}/change-price`} method={'POST'}>*/}
 
                             {/*<div className="p-20">*/}

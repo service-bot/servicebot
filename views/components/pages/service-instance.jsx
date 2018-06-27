@@ -86,6 +86,8 @@ class ServiceInstance extends React.Component {
         this.getAdditionalCharges = this.getAdditionalCharges.bind(this);
         this.handleAddFund = this.handleAddFund.bind(this);
         this.onAddFundClose = this.onAddFundClose.bind(this);
+        this.getInitialState = this.getInitialState.bind(this);
+
     }
 
     async componentDidMount() {
@@ -96,14 +98,16 @@ class ServiceInstance extends React.Component {
         $(this.refs.dropdownToggle3).dropdown();
 
         let self = this;
-        self.fetchUserFund();
-        let instance = await self.fetchInstance();
-        let token = (await self.fetchToken(instance.user_id)).token
-        this.setState({instance, loading: false, token})
-
+        this.getInitialState()
 
     }
 
+    async getInitialState(){
+        this.fetchUserFund();
+        let instance = await this.fetchInstance();
+        let token = (await this.fetchToken(instance.user_id)).token
+        this.setState({instance, loading: false, token})
+    }
 
     componentDidUpdate(){
         $(this.refs.dropdownToggle3).dropdown();
@@ -139,7 +143,7 @@ class ServiceInstance extends React.Component {
 
     handleComponentUpdating(){
         let self = this;
-        self.fetchInstance();
+        self.getInitialState();
     }
 
     handleApprove(event){
@@ -279,8 +283,8 @@ class ServiceInstance extends React.Component {
                             Actions <span className="caret"/>
                         </button>
                         <ul className="dropdown-menu dropdown-menu-right">
-                            <li><Link to="#" onClick={self.handleEditInstanceModal}>Edit Instance</Link></li>
-                            <li><Link to="#" onClick={self.handleEditPropertiesModal}>Edit Properties</Link></li>
+                            <li><Link to="#" onClick={self.handleEditInstanceModal}>Edit Trial</Link></li>
+                            {/*<li><Link to="#" onClick={self.handleEditPropertiesModal}>Edit Properties</Link></li>*/}
                             <li><Link to="#" onClick={self.handleEditPaymentModal}>Edit Payment Plan</Link></li>
                             {instance.payment_plan && instance.status !== 'cancelled' &&
                             <li><Link to="#" onClick={self.handleAddChargeItemModal}>Add Charge</Link></li>
@@ -406,6 +410,7 @@ class ServiceInstance extends React.Component {
                                     <ServicebotBillingSettingsEmbed
                                         url=""
                                         token={self.state.token}
+                                        key={self.state.token}
 
                                 />
                                     <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
