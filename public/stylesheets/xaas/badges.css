@@ -7,6 +7,11 @@
     position: relative;
 }
 
+.micro-badge {
+    font-size: 11px;
+    margin-right: 1px;
+}
+
 .badge .loader{
     position: absolute;
     left: 50%;
@@ -108,7 +113,7 @@
 }
 
 .status-badge.navy {
-    background: #143ab1;
+    background: #0a1e49;
 }
 
 .status-badge.purple {
@@ -123,4 +128,19 @@
     background: #FFFFFF;
     color: #000000;
     border: 1px solid #000000;
+}
+
+.status-badge.faded {
+    background: #f5f5f5;
+    color: #a7a7a7;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+}
+
+
+.micro-badge.black {
+    color: black;
+}
+.micro-badge.grey {
+    color: #dadada;
 }

@@ -20,6 +20,7 @@ import ModalEditUserRole from "../elements/modals/modal-edit-user-role.jsx";
 import Modal from '../utilities/modal.jsx';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
+import {getFormattedDate} from "../utilities/date-format.jsx";
 
 let _ = require("lodash");
 
@@ -224,20 +225,26 @@ class ManageUsers extends React.Component {
         }
         return "Error";
     }
-    lastLoginFormatter(cell, row){
+    lastLoginFormater(cell, row){
         if(row.last_login != null){
-            return (
-                <DateFormat time={true} date={row.last_login}/>
-            );
+            return (<div className="datatable-date">
+                <span data-tip={getFormattedDate(cell, {time: true})} data-for='date-updated'>{getFormattedDate(cell)}</span>
+                <ReactTooltip id="date-updated" aria-haspopup='true' delayShow={400}
+                              role='date' place="left" effect="solid"/>
+            </div>);
         }else{
             return 'Never';
         }
     }
-    createdAtFormatter(cell, row){
-        return (
-            <DateFormat date={row.created_at} time={true}/>
-        );
+
+    createdAtFormater(cell){
+        return (<div className="datatable-date">
+            <span data-tip={getFormattedDate(cell, {time: true})} data-for='date-updated'>{getFormattedDate(cell)}</span>
+            <ReactTooltip id="date-updated" aria-haspopup='true' delayShow={400}
+                          role='date' place="left" effect="solid"/>
+        </div>);
     }
+
     profileLinkFormatter(cell, row){
         return (
             <Link to={`/manage-users/${row.id}`}>{cell}</Link>
@@ -417,14 +424,14 @@ class ManageUsers extends React.Component {
                                             Role
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='last_login'
-                                                           dataFormat={this.lastLoginFormatter}
+                                                           dataFormat={this.lastLoginFormater}
                                                            dataSort={ true }
                                                            searchable={false}
                                                            width='100'>
                                             Last Login
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='created_at'
-                                                           dataFormat={this.createdAtFormatter}
+                                                           dataFormat={this.createdAtFormater}
                                                            dataSort={ true }
                                                            searchable={false}
                                                            width='100'>

@@ -307,7 +307,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 .table>thead>tr>th, .table>tbody>tr>td{
   border: none;
   font-size: 15px;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 .table thead {
   color: #ffffff;
@@ -394,4 +394,14 @@ table.dataTable thead .sorting_desc_disabled:after {
 }
 .servicebot-table-base thead input:hover {
   background: #33466f;
+}
+
+.datatable-date {
+  color: #898c92;
+  font-size: 14px;
+}
+
+.mc-badge {
+  font-size: 12px;
+  font-weight: 700;
 }

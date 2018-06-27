@@ -16,6 +16,8 @@ import ModalManageCancellation from "../elements/modals/modal-manage-cancellatio
 import ModalDeleteInstance from "../elements/modals/modal-delete-instance.jsx";
 import getSymbolFromCurrency from 'currency-symbol-map';
 let _ = require("lodash");
+import {getFormattedDate} from "../utilities/date-format.jsx";
+import ReactTooltip from 'react-tooltip';
 
 class ManageSubscriptions extends React.Component {
 
@@ -129,36 +131,54 @@ class ManageSubscriptions extends React.Component {
         //null check for the payment plan
         if(cell) {
             let interval = cell.interval;
-            if(interval == 'day') { interval = 'Daily'; }
-            else if (interval == 'week') { interval = 'Weekly'; }
-            else if (interval == 'month') { interval = 'Monthly'; }
-            else if (interval == 'year') { interval = 'Yearly'; }
+            if(interval === 'day') { interval = 'Daily'; }
+            else if (interval === 'week') { interval = 'Weekly'; }
+            else if (interval === 'month') { interval = 'Monthly'; }
+            else if (interval === 'year') { interval = 'Yearly'; }
 
             let type = row.type.toLowerCase();
             switch(type){
                 case 'subscription':
                     //return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
-                    return ( <div><span className="status-badge black" >{interval}</span></div> );
+                    return ( <span className="mc-badge"><i class="fa fa-circle micro-badge black" /> {interval}</span> );
                 case 'custom':
-                    return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+                    return ( <span className="mc-badge"><i class="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span> );
                 case 'one_time':
-                    return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+                    return ( <span className="mc-badge"><i class="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span> );
                 case 'split':
-                    return ( <span className="status-badge neutral">{getBillingType(row)}</span> );
+                    return ( <span className="mc-badge"><i class="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span> );
                 default:
-                    return ( <span className="status-badge grey">{getBillingType(row)}</span> );
+                    return ( <span className="mc-badge"><i class="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span> );
             }
         } else {
-            return ( <span className="status-badge grey">Missing</span> );
+            return ( <span className="mc-badge"><i class="fa fa-circle micro-badge grey" /> Missing</span> );
         }
 
     }
     typeDataValue(cell, row){
         if(cell) {
-            return (row.type);
+            let interval = row.payment_plan.interval;
+            if(interval === 'day') { interval = 'Daily'; }
+            else if (interval === 'week') { interval = 'Weekly'; }
+            else if (interval === 'month') { interval = 'Monthly'; }
+            else if (interval === 'year') { interval = 'Yearly'; }
+            return (interval);
         } else {
             return 'N/A';
         }
+    }
+    statusDataValue(cell, row){
+        let status = cell;
+        if(status === 'running'){
+            let currentDate = new Date();
+            let trialEnd = new Date(row.trial_end * 1000);
+            if(currentDate < trialEnd) {
+                status = 'Trialing';
+            } else {
+                status = 'active';
+            }
+        }
+        return status;
     }
     amountFormatter(cell, row){
         if(cell) {
@@ -171,12 +191,22 @@ class ManageSubscriptions extends React.Component {
     emailDataValue(cell){
         return cell.users[0].email;
     }
-    statusFormatter(cell){
+    statusFormatter(cell, row){
         switch (cell) {
             case 'requested':
-                return ( <span className='status-badge blue' >Requested</span> );
+                return ( <span className='status-badge yellow' >Requested</span> );
             case 'running':
-                return ( <span className='status-badge green' >Running</span> );
+                //Get trial detail
+                let color = 'status-badge green';
+                let str = 'Active';
+                let currentDate = new Date();
+                let trialEnd = new Date(row.trial_end * 1000);
+                //Service is trialing if the expiration is after current date
+                if(currentDate < trialEnd) {
+                    str = 'Trialing';
+                    color = 'status-badge blue';
+                }
+                return ( <span className={color} >{str}</span> );
             case 'waiting_cancellation':
                 return ( <span className='status-badge yellow' >Waiting Cancellation</span> );
             case 'cancelled':
@@ -186,7 +216,11 @@ class ManageSubscriptions extends React.Component {
         }
     }
     createdFormatter(cell){
-        return ( <DateFormat date={cell} time/> );
+        return (<div className="datatable-date">
+            <span data-tip={getFormattedDate(cell, {time: true})} data-for='date-updated'>{getFormattedDate(cell)}</span>
+            <ReactTooltip id="date-updated" aria-haspopup='true' delayShow={400}
+                          role='date' place="left" effect="solid"/>
+        </div>);
     }
     requestedByFormatter(cell){
         if(cell && cell != null){
@@ -347,6 +381,7 @@ class ManageSubscriptions extends React.Component {
                                         <TableHeaderColumn dataField='status'
                                                            dataFormat={this.statusFormatter}
                                                            dataSort={ true }
+                                                           filterValue={this.statusDataValue}
                                                            width='100'>
                                             Status
                                         </TableHeaderColumn>
