@@ -106,11 +106,13 @@ module.exports = {
                                 let currentDate = new Date();
                                 let trialEndDate = new Date(trialEnd * 1000);
                                 let userFunding = getFunding(users, funds, instance);
+                                //If user is paying, then add to ARR
+                                if(userFunding.fundingCount > 0) {
+                                    arr += getARR(payPlan);
+                                }
                                 //Service is trialing if the expiration is after current date
                                 if(trial > 0 && currentDate < trialEndDate) {
                                     inTrial++;
-                                    //Get actual ARR
-                                    arr += getARR(payPlan);
                                     inTrialPaying += userFunding.fundingCount;
                                 }
                                 //Check if account is paid
