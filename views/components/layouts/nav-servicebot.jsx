@@ -189,12 +189,12 @@ class NavServiceBot extends React.Component {
                     <li>
                         <Link to="/manage-subscriptions" style={style}
                               className={getLinkClass('manage-subscriptions', 'parent')}>
-                            <span className="nav-icons icon-manage"/>Subscriptions
+                            <span className="nav-icons icon-subscriptions"/>Subscriptions
                         </Link>
                     </li>
                     <li>
                         <Link to="/manage-users" style={style} className={getLinkClass('manage-users', 'parent')}>
-                            <span className="nav-icons icon-manage"/>Users
+                            <span className="nav-icons icon-users"/>Users
                         </Link>
                     </li>
                     {this.getPluginItems('integrations')}

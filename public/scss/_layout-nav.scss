@@ -226,12 +226,22 @@
               }
               &.icon-manage {
                 &:before {
-                  background-image: url('/assets/SB_Icon_Menu/Manage.png');
+                  background-image: url('/assets/SB_Icon_Menu/Subscriptions.png');
                 }
               }
               &.icon-settings {
                 &:before {
                   background-image: url('/assets/SB_Icon_Menu/Settings.png');
+                }
+              }
+              &.icon-subscriptions {
+                &:before {
+                  background-image: url('/assets/SB_Icon_Menu/Manage.png');
+                }
+              }
+              &.icon-users {
+                &:before {
+                  background-image: url('/assets/SB_Icon_Menu/Users.png');
                 }
               }
             }
