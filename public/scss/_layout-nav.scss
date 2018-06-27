@@ -152,6 +152,86 @@
         li {
           padding: 0;
 
+          &.fake {
+            display: block;
+            width: 100%;
+            padding: $gutter + 1;
+            padding-left: 80px;
+            font-family: $nav-font-family;
+            font-size: 16px;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: $color-white;
+            position: relative;
+            letter-spacing: 1px;
+            opacity: .6;
+
+            .nav-icons {
+              position: absolute;
+
+              &:before {
+                content: '';
+                width: 28px;
+                height: 28px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                position: absolute;
+                left: -46px;
+              }
+
+              &.icon-home {
+                &:before {
+                  background-image: $dashboard;
+                }
+              }
+              &.icon-integrations {
+                &:before {
+                  background-image: $integrations;
+                }
+              }
+              &.icon-manage {
+                &:before {
+                  background-image: $services;
+                }
+              }
+              &.icon-settings {
+                &:before {
+                  background-image: $settings;
+                }
+              }
+              &.icon-subscriptions {
+                &:before {
+                  background-image: $subscriptions;
+                }
+              }
+              &.icon-users {
+                &:before {
+                  background-image: $users;
+                }
+              }
+            }
+
+            .title {
+              background: #a8adb9;
+              width: 100px;
+              height: 20px;
+              margin: 5px 0;
+              border-radius: 10px;
+
+              &.micro {
+                width: 60px;
+              }
+
+              &.small {
+                width: 90px;
+              }
+
+              &.large {
+                width: 150px;
+              }
+            }
+          }
+
           a {
             display: block;
             width: 100%;
@@ -167,6 +247,51 @@
 
             &:hover {
               background: #374a75;
+            }
+
+            .nav-icons {
+              position: absolute;
+
+              &:before {
+                content: '';
+                width: 28px;
+                height: 28px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                position: absolute;
+                left: -46px;
+              }
+
+              &.icon-home {
+                &:before {
+                  background-image: $dashboard;
+                }
+              }
+              &.icon-integrations {
+                &:before {
+                  background-image: $integrations;
+                }
+              }
+              &.icon-manage {
+                &:before {
+                  background-image: $services;
+                }
+              }
+              &.icon-settings {
+                &:before {
+                  background-image: $settings;
+                }
+              }
+              &.icon-subscriptions {
+                &:before {
+                  background-image: $subscriptions;
+                }
+              }
+              &.icon-users {
+                &:before {
+                  background-image: $users;
+                }
+              }
             }
 
             &.nav-link-parent {
@@ -201,51 +326,10 @@
               }
             }
 
-            .nav-icons {
-              position: absolute;
 
-              &:before {
-                content: '';
-                width: 28px;
-                height: 28px;
-                background-size: contain;
-                background-repeat: no-repeat;
-                position: absolute;
-                left: -46px;
-              }
-
-              &.icon-home {
-                &:before {
-                  background-image: url('/assets/SB_Icon_Menu/Home.png');
-                }
-              }
-              &.icon-integrations {
-                &:before {
-                  background-image: url('/assets/SB_Icon_Menu/Integrations.png');
-                }
-              }
-              &.icon-manage {
-                &:before {
-                  background-image: url('/assets/SB_Icon_Menu/Subscriptions.png');
-                }
-              }
-              &.icon-settings {
-                &:before {
-                  background-image: url('/assets/SB_Icon_Menu/Settings.png');
-                }
-              }
-              &.icon-subscriptions {
-                &:before {
-                  background-image: url('/assets/SB_Icon_Menu/Manage.png');
-                }
-              }
-              &.icon-users {
-                &:before {
-                  background-image: url('/assets/SB_Icon_Menu/Users.png');
-                }
-              }
-            }
           }
+
+
 
           .app-dropdown {
             padding: 0;

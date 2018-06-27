@@ -13,7 +13,7 @@ import ModalPublishingTemplate from "../elements/modals/modal-publishing-templat
 import ModalDeleteTemplate from "../elements/modals/modal-delete-template.jsx";
 import ModalEmbedTemplate from "../elements/modals/modal-embed-template.jsx";
 import ReactTooltip from 'react-tooltip';
-
+import ContentTitle from "../layouts/content-title.jsx";
 import getSymbolFromCurrency from 'currency-symbol-map'
 import {connect} from "react-redux";
 
@@ -202,6 +202,7 @@ class ManageCatalogList extends React.Component {
             return (
                 <div className="page-service-instance row m-b-20">
                     <div className="col-xs-12">
+                        <ContentTitle title="Manage Services"/>
                         <ServiceBotTableBase
                             rows={this.state.rows}
                             createItemAction={ () => {browserHistory.push('/manage-catalog/create')} }

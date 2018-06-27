@@ -71,8 +71,8 @@ class ServiceOverTimeChart extends React.Component {
                         {
                             label: 'New Subscriptions',
                             data: serviceCountByMonthRunning,
-                            backgroundColor: "rgba(0, 230, 118)",
-                            borderColor: 'rgba(0, 230, 118, 1)',
+                            backgroundColor: "rgba(33, 84, 207)",
+                            borderColor: 'rgba(33, 84, 207, 1)',
                             pointBorderWidth: 0
                         }
                     ]
@@ -197,8 +197,8 @@ class SalesOverTimeChart extends React.Component {
                         {
                             label: 'New Subscriptions ($)',
                             data: serviceCountByMonthRunning,
-                            backgroundColor: "rgba(0, 230, 118)",
-                            borderColor: 'rgba(0, 230, 118, 1)',
+                            backgroundColor: "rgba(33, 84, 207)",
+                            borderColor: 'rgba(33, 84, 207, 1)',
                             pointBorderWidth: 0
                         }
                     ]

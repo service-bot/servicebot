@@ -28,7 +28,7 @@ class ManagePermission extends React.Component {
                     <Jumbotron pageName={pageName} subtitle={subtitle}/>
                     <div className="page-service-instance">
                         <Content>
-                            <div className="row m-b-20">
+                            <div className="row m-b-20 servicebot-table-base">
                                 <ManagePermissionForm />
                             </div>
                         </Content>

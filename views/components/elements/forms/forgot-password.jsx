@@ -80,7 +80,7 @@ class ForgotPassword extends React.Component {
         else {
             return (
                 <Authorizer anonymous={true}>
-                    <Content primary={true}>
+                    <Content>
                         <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
                             <form className="sign-in">
                                 <h3>Forgot Password?</h3>
@@ -89,17 +89,16 @@ class ForgotPassword extends React.Component {
                                     password reset instructions.
                                 </p>
                                 <div className={`form-group ${!this.state.form.email && this.state.submitted && 'has-error'}`}>
-                                    <label htmlFor="sign-in-2-email" className="bmd-label-floating">Email address</label>
                                     <input onChange={this.handleInputChange} id="email" type="text" name="email"
-                                           className="form-control"/>
+                                           className="form-control" placeholder="Email Address"/>
                                     {!this.state.form.email && this.state.submitted ?
                                     <span className="help-block">Email is required</span> : <span/>}
                                 </div>
                                 <button onClick={this.handleReset} type='submit'
-                                        className="btn btn-raised btn-lg btn-primary btn-block">Reset Password
+                                        className="buttons _default _right">Reset Password
                                 </button>
-                                <p className="sign-up-link">Back to <Link
-                                    to={{pathname: "/login", state: {fromLogin: true}}}>Login</Link></p>
+                                <p className="forgot-password"><Link
+                                    to={{pathname: "/login", state: {fromLogin: true}}}>Back to Login</Link></p>
                             </form>
                         </div>
                     </Content>

@@ -51,7 +51,7 @@ class Login extends React.Component {
                     if (self.props.location.state && self.props.location.state.fromSignup) {
                         return browserHistory.go(-2);
                     } else if(result.permissions.includes("can_administrate", "can_manage")){
-                        return browserHistory.push("/dashboard");
+                        return browserHistory.push("/");
                     } else {
                         return browserHistory.push("/my-services");
                     }
@@ -116,7 +116,7 @@ class Login extends React.Component {
         }else{
             if (this.props.modal && this.props.email) {
                 return (
-                    <Content primary={true}>
+                    <Content>
                         <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
                             <form className="sign-in">
                                 {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
@@ -142,7 +142,7 @@ class Login extends React.Component {
                                         {this.state.errors && <span className="help-block">{this.state.errors}</span>}
                                     </div>
                                     <button onClick={this.handleLogin} type='submit'
-                                            className="btn btn-raised btn-lg btn-primary btn-block">Sign in
+                                            className="buttons _default _right">Sign in
                                     </button>
                                     <p className="sign-up-link"><Link
                                         to={{pathname: "/forgot-password", state: {fromLogin: false}}}> Forgot
@@ -156,13 +156,13 @@ class Login extends React.Component {
             } else {
                 return (
                     <Authorizer anonymous={true}>
-                        <Content primary={true}>
+                        <Content>
                             {/*<div className="left-panel col-md-6">adsf</div>*/}
                             <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
                                 <form className="sign-in">
                                     {/*<Alert stack={{limit: 3}} position='bottom'/>*/}
                                     {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
-                                    <h3>Login</h3>
+                                    <h3><i class="fa fa-lock"/> Login</h3>
 
                                     <div className="form-group">
                                         <input onChange={this.handleInputChange} id="email" type="text" name="email"
@@ -173,9 +173,9 @@ class Login extends React.Component {
                                                name="password" className="form-control" placeholder="Password"/>
                                     </div>
                                     <button onClick={this.handleLogin} type='submit'
-                                            className="btn btn-raised btn-lg btn-primary btn-block">Sign in
+                                            className="buttons _default _right">Sign in
                                     </button>
-                                    <p className="sign-up-link">
+                                    <p className="forgot-password">
                                         <Link to={{pathname: "/forgot-password", state: {fromLogin: false}}}> Forgot
                                             Password</Link>
                                     </p>

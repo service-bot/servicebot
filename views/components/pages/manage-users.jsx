@@ -378,7 +378,7 @@ class ManageUsers extends React.Component {
                         <Content>
                             <div className="row m-b-20">
                                 <div className="col-xs-12">
-                                    <ContentTitle icon="cog" title="Manage all your users here"/>
+                                    <ContentTitle title="Manage Users"/>
                                     <ServiceBotTableBase
                                         createItemProps={!this.props.stripe_publishable_key && {disabled : true}}
                                         createItemAction={this.props.stripe_publishable_key ? this.openInviteUserModal : () => {}}

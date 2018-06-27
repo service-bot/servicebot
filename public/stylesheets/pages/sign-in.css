@@ -1,13 +1,16 @@
 .sign-in, .sign-up {
-  position: relative;
-  background: #fff;
-  padding: 40px;
-  border-radius: 5px;
+  background: white;
+  box-shadow: 0px 2px 3px 0px rgba(216, 216, 216, 0.5);
+  padding: 20px 40px;
 }
 
 .sign-in h3 {
   font-size: 24px;
-  margin-bottom: 10px;
+  text-align: center;
+  margin-bottom: 30px;
+  margin-top: 10px;
+  color: #596a90;
+  letter-spacing: 0.5px;
 }
 
 .sign-in p {
@@ -60,3 +63,8 @@ body.login .featured{
   }
 }
 
+
+.forgot-password a{
+  font-size: 13px;
+  color: #7789af;
+}

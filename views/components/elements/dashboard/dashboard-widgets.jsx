@@ -86,6 +86,10 @@ class Widget extends React.Component {
                 //The label is based on the theme
                 style.widgetLabel.backgroundColor = rgbToHex(31,85,207);
                 style.widgetData.backgroundColor = rgbToHex(76,130,252);
+            } else if(this.props.wcolor === 'dblue') {
+                //The label is based on the theme
+                style.widgetLabel.backgroundColor = rgbToHex(33,84,207);
+                style.widgetData.backgroundColor = rgbToHex(33,84,207);
             } else if(this.props.wcolor === 'navy') {
                 //The label is based on the theme
                 style.widgetLabel.backgroundColor = rgbToHex(8,28,73);
@@ -160,13 +164,13 @@ class DashboardWidgets extends React.Component {
                 <div className="m-t-25"><ContentTitle title="Subscription Metrics"/></div>
                 <div className="row dashboard-widgets">
                     <div className="col-md-4 p-0 section-wrapper">
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Total Subscribers', value: this.state.data.salesStats.subscriptionStats.all}} wcolor="navy-rev" minimize={true}/></div>
+                        <div className="col-md-12 p-0"><Widget data={{label: 'Total Subscribers', value: this.state.data.salesStats.subscriptionStats.all}} wcolor="dblue" minimize={true}/></div>
                         <div className="col-md-12 p-0"><Widget data={{label: 'In Trial', value: this.state.data.salesStats.subscriptionStats.trials}} wcolor="grey" minimize={true}/></div>
                         <div className="col-md-12 p-0"><Widget data={{label: 'Active Subscribers', value: this.state.data.salesStats.subscriptionStats.active}} wcolor="grey" minimize={true}/></div>
                         <div className="col-md-12 p-0"><Widget data={{label: 'Cancelled Subscribers', value: this.state.data.salesStats.subscriptionStats.cancelled}} wcolor="grey" minimize={true}/></div>
                     </div>
                     <div className="col-md-4 p-0 section-wrapper">
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Paying Subscribers', value: this.state.data.salesStats.subscriptionStats.paying}} wcolor="green" minimize={true}/></div>
+                        <div className="col-md-12 p-0"><Widget data={{label: 'Paying Subscribers', value: this.state.data.salesStats.subscriptionStats.paying}} wcolor="dblue" minimize={true}/></div>
                         <div className="col-md-12 p-0"><Widget data={{label: 'Paying During Trial', value: this.state.data.salesStats.subscriptionStats.trialPaying}} wcolor="grey" minimize={true}/></div>
                         <div className="col-md-12 p-0"><Widget data={{label: 'Flagged Subscribers', value: this.state.data.salesStats.subscriptionStats.flagged}} wcolor="grey" minimize={true}/></div>
                         <div className="col-md-12 p-0"><Widget data={{label: 'Cancelled while paying', value: this.state.data.salesStats.subscriptionStats.payingCancelled}} wcolor="grey" minimize={true}/></div>
@@ -174,7 +178,7 @@ class DashboardWidgets extends React.Component {
                     <div className="col-md-4 p-0 section-wrapper">
                         <div className="col-md-12 p-0"><Widget data={{label: 'Average Conversion', value: this.state.data.salesStats.subscriptionStats.averageConversion}} postFix="%" wcolor="blue" minimize={true}/></div>
                         <div className="col-md-12 p-0"><Widget data={{label: 'ARPA', value: this.state.data.salesStats.subscriptionStats.arpa}} type="price" wcolor="grey" minimize={true}/></div>
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Churn Rate', value: this.state.data.salesStats.subscriptionStats.churn}} postFix="%" wcolor="yellow" minimize={true}/></div>
+                        <div className="col-md-12 p-0"><Widget data={{label: 'Churn Rate', value: this.state.data.salesStats.subscriptionStats.churn}} postFix="%" wcolor="navy" minimize={true}/></div>
                         <div className="col-md-12 p-0"><Widget data={{label: 'ARR Forecast', value: this.state.data.salesStats.subscriptionStats.arrForecast}} postFix="/yr" type="price" wcolor="navy-rev" minimize={true}/></div>
                     </div>
                 </div>

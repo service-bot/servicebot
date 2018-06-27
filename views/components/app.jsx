@@ -55,20 +55,12 @@ class App extends React.Component {
         return(
             <div className="app-container" style={{backgroundColor: background}}>
                 {this.props.modal && this.props.modal}
-                {this.isDashboardView() ?
-                    <div className="app-dashboard">
-                        <NavServiceBot currentPath={this.props.location.pathname} handleLogout={this.handleLogout}/>
-                        <div className="app-body">
-                            {self.props.children}
-                        </div>
-                    </div> :
-                    <div className="app-public">
-                        <NavBoostrap/>
-                        <div className="app-body">
-                            {self.props.children}
-                        </div>
+                <div className="app-dashboard">
+                    <NavServiceBot currentPath={this.props.location.pathname} handleLogout={this.handleLogout}/>
+                    <div className="app-body">
+                        {self.props.children}
                     </div>
-                }
+                </div>
             </div>
         );
     }

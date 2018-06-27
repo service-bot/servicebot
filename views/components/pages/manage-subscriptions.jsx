@@ -15,9 +15,9 @@ import ModalRequestCancellation from "../elements/modals/modal-request-cancellat
 import ModalManageCancellation from "../elements/modals/modal-manage-cancellation.jsx";
 import ModalDeleteInstance from "../elements/modals/modal-delete-instance.jsx";
 import getSymbolFromCurrency from 'currency-symbol-map';
-let _ = require("lodash");
 import {getFormattedDate} from "../utilities/date-format.jsx";
 import ReactTooltip from 'react-tooltip';
+let _ = require("lodash");
 
 class ManageSubscriptions extends React.Component {
 
@@ -343,7 +343,7 @@ class ManageSubscriptions extends React.Component {
                         <Content>
                             <div className="row m-b-20">
                                 <div className="col-xs-12">
-                                    <ContentTitle icon="cog" title={pageTitle}/>
+                                    <ContentTitle title={pageTitle}/>
                                     <ServiceBotTableBase
                                         rows={this.state.rows}
                                         fetchRows={this.fetchData}

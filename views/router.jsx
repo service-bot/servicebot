@@ -5,7 +5,7 @@ import PluginbotProvider from "pluginbot-react/dist/provider"
 
 // App
 import App from "./components/app.jsx";
-import Home from "./components/pages/home.jsx";
+// import Home from "./components/pages/home.jsx";
 import AllServices from "./components/pages/all-services.jsx";
 // Dashboard (My Services)
 import MyServices from './components/pages/my-services.jsx';
@@ -63,9 +63,9 @@ class AppRouter extends React.Component {
         return (
             <Router history={browserHistory}>
                 <Route name="Home" path="/" component={App}>
-                    <IndexRoute component={Home}/>
+                    <IndexRoute component={Dashboard}/>
 
-                    <Route name="Home" path="home" component={Home}/>
+                    <Route name="Home" path="home" component={Dashboard}/>
                     <Route name="All Services" path="all-services" component={AllServices}/>
                     <Route name="User Login" path="login" component={Login}/>
                     <Route name="Forgot Password" path="forgot-password" component={ForgotPassword}/>

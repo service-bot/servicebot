@@ -17,11 +17,23 @@ import $ from "jquery";
 let _ = require("lodash");
 
 const AnonymousLinks = ({signUpEnabled}) => (
-    <ul className="nav navbar-nav navbar-right">
-        <li><Link to="login">Log In</Link></li>
-        {signUpEnabled &&
-        <li><Link to="signup">Sign up</Link></li>
-        }
+    <ul className="app-links">
+        <li className="fake">
+            <span className="nav-icons icon-home"/>
+            <div className="title" />
+        </li>
+        <li className="fake">
+            <span className="nav-icons icon-manage"/>
+            <div className="title small" />
+        </li>
+        <li className="fake">
+            <span className="nav-icons icon-subscriptions"/>
+            <div className="title large" />
+        </li>
+        <li className="fake">
+            <span className="nav-icons icon-users"/>
+            <div className="title micro" />
+        </li>
     </ul>
 );
 
@@ -177,7 +189,7 @@ class NavServiceBot extends React.Component {
                         {getSetupSteps()}
                     </li>
                     <li>
-                        <Link to="/dashboard" style={style} className={getLinkClass('dashboard', 'parent')}>
+                        <Link to="/" style={style} className={getLinkClass('', 'parent')}>
                             <span className="nav-icons icon-home"/>Dashboard
                         </Link>
                     </li>
@@ -292,19 +304,19 @@ class NavServiceBot extends React.Component {
                                 <img className="app-logo" src="/api/v1/system-options/file/brand_logo"/>
                             </Link>
                         </div>
-                        <div className="app-header-right">
-                            <div className="app-profile">
-                                <Link to="/profile">
-                                    <img className="img-circle" src={`/api/v1/users/${this.props.uid}/avatar`}
-                                         ref="avatar" alt="profile image"/>
-                                    {this.state.loadingImage && <Load/>}
-                                </Link>
-                            </div>
-                            <NavNotification/>
-                            <Authorizer>
+                        <Authorizer>
+                            <div className="app-header-right">
+                                <div className="app-profile">
+                                    <Link to="/profile">
+                                        <img className="img-circle" src={`/api/v1/users/${this.props.uid}/avatar`}
+                                             ref="avatar" alt="profile image"/>
+                                        {this.state.loadingImage && <Load/>}
+                                    </Link>
+                                </div>
+                                <NavNotification/>
                                 <button className="buttons logout" onClick={this.props.handleLogout}>Log Out</button>
-                            </Authorizer>
-                        </div>
+                            </div>
+                        </Authorizer>
                     </div>
                     <div className="app-navigation">
                         <nav className="app-links-container" onMouseEnter={this.toggleOnEditingGear}
