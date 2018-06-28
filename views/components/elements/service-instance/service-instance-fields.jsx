@@ -5,11 +5,11 @@ class ServiceInstanceFields extends React.Component {
 
     render () {
         return (
-            <div className="service-instance-box">
+            <div className="service-instance-box p-0">
                 <div className="service-instance-box-title">
                     <span>Request Details</span>
                 </div>
-                <div className="service-instance-box-content">
+                <div className="service-instance-box-content p-b-30">
                     <span className="m-b-20 block label color-grey-600">These fields were selected during the request process of this item. They are
                     shown exactly as entered initially.</span>
                     <div className="row">

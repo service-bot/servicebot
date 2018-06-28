@@ -81,11 +81,11 @@ class ServiceInstanceApprovedCharges extends React.Component {
 
         if(approveItems.length > 0) {
             return (
-                <div className="service-instance-box">
+                <div className="service-instance-actions p-0">
                     <div className="service-instance-box-title">
                         <span>Approved Charges - Current Billing Cycle</span>
                     </div>
-                    <div className="service-instance-box-content">
+                    <div className="service-instance-box-content p-b-30">
                         <p>Following charges are one time charges that have been approved for the current billing cycle.</p>
                         <Datatable dataObj={approveItems}
                                    col={['description', 'amount', 'updated_at', 'approved']}

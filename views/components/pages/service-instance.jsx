@@ -7,7 +7,6 @@ import Fetcher from '../utilities/fetcher.jsx';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Jumbotron from "../layouts/jumbotron.jsx";
 import Content from "../layouts/content.jsx";
-import ServiceInstancePaymentPlan from "../elements/service-instance/service-instance-payment-plan.jsx";
 import ServiceInstanceWaitingCharges from "../elements/service-instance/service-instance-waiting-charges.jsx";
 import ServiceInstanceFields from "../elements/service-instance/service-instance-fields.jsx";
 import ServiceInstanceApprovedCharges from "../elements/service-instance/service-instance-approved-charges.jsx";
@@ -24,12 +23,13 @@ import ModalCancelChargeItem from '../elements/modals/modal-cancel-charge-item.j
 import ModalPayAllCharges from '../elements/modals/modal-pay-all-charges.jsx';
 import ModalPaymentSetup from '../elements/modals/modal-payment-setup.jsx';
 import {ModalEditProperties} from "../elements/forms/edit-instance-properties-form.jsx"
-import ServiceInstanceFiles from '../elements/service-instance/service-instance-files.jsx';
 import DateFormat from "../utilities/date-format.jsx";
 import $ from "jquery";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import _ from "lodash";
 import {ServicebotBillingSettingsEmbed} from "servicebot-billing-settings-embed"
+import ContentTitle from "../layouts/content-title.jsx";
+
 class ServiceInstance extends React.Component {
 
     constructor(props){
@@ -260,38 +260,37 @@ class ServiceInstance extends React.Component {
         let status = false;
         if(self.state.instance && self.state.instance.payment_plan){
             status = self.state.instance.status;
-            if(status == 'requested'){
-                return (<li><Link to="#" onClick={self.handleApprove}>Approve Service</Link></li>);
-            }else if(status == 'running'){
-                return (<li><Link to="#" onClick={self.handleCancel}>Request Cancellation</Link></li>);
-            }else if(status == 'waiting_cancellation'){
-                return (<li><Link to="#" onClick={self.handleUndoCancel}>View Cancellation Request</Link></li>);
-            }else if(status == 'cancelled'){
-                return (<li><Link to="#" onClick={self.handleApprove}>Restart Service</Link></li>);
+            if(status === 'requested'){
+                <span className="buttons _primary">Edit Trial</span>
+                return (<Link to="#" onClick={self.handleApprove}><span className="buttons _primary _green m-l-5">Approve Service</span></Link>);
+            }else if(status === 'running'){
+                return (<Link to="#" onClick={self.handleCancel}><span className="buttons _primary _navy m-l-5">Cancel Service</span></Link>);
+            }else if(status === 'waiting_cancellation'){
+                return (<Link to="#" onClick={self.handleUndoCancel}><span className="buttons _primary m-l-5">View Cancellation Request</span></Link>);
+            }else if(status === 'cancelled'){
+                return (<Link to="#" onClick={self.handleApprove}><span className="buttons _primary m-l-5">Restart Service</span></Link>);
             }
         }
     }
 
-    getActionButtons(instance){
+    getActionButtons(instance, instanceCharges){
         let self = this;
         //Only view actions for non-suspended users
         if(instance.references.users[0].status != "suspended") {
             return (
                 <Authorizer permissions="can_administrate">
-                    <div className="btn-group pull-right">
-                        <button type="button" ref="dropdownToggle3" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Actions <span className="caret"/>
-                        </button>
-                        <ul className="dropdown-menu dropdown-menu-right">
-                            <li><Link to="#" onClick={self.handleEditInstanceModal}>Edit Trial</Link></li>
-                            {/*<li><Link to="#" onClick={self.handleEditPropertiesModal}>Edit Properties</Link></li>*/}
-                            <li><Link to="#" onClick={self.handleEditPaymentModal}>Edit Payment Plan</Link></li>
-                            {instance.payment_plan && instance.status !== 'cancelled' &&
-                            <li><Link to="#" onClick={self.handleAddChargeItemModal}>Add Charge</Link></li>
+                    <div className="service-instance-actions">
+                        <div className="pull-right">
+                            {instanceCharges.false && instanceCharges.false.length > 0 &&
+                                <span  onClick={self.handlePayAllChargesModal}><span className="buttons _primary _green m-r-5">Pay Charges</span></span>
                             }
-                            <li role="separator" className="divider"/>
+                            <span to="#" onClick={self.handleEditInstanceModal}><span className="buttons _primary">Edit Trial</span></span>
+                            <span to="#" onClick={self.handleEditPaymentModal}><span className="buttons _primary m-l-5">Edit Payment Plan</span></span>
+                            {instance.payment_plan && instance.status !== 'cancelled' &&
+                            <span to="#" onClick={self.handleAddChargeItemModal}><span className="buttons _primary m-l-5">Add Charge</span></span>
+                            }
                             {self.getStatusButtons()}
-                        </ul>
+                        </div>
                     </div>
                 </Authorizer>
             );
@@ -305,8 +304,8 @@ class ServiceInstance extends React.Component {
         if(myInstance.status !== 'cancelled') {
             if (myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) {
                 return (
-                    <div id="service-instance-waiting" className="row">
-                        <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
+                    <div id="service-instance-waiting" className="row m-b-30">
+                        <div className="col-md-12">
                             <ServiceInstanceWaitingCharges handlePayAllCharges={self.handlePayAllChargesModal}
                                                            handlePayChargeItem={self.handlePayChargeItemModal}
                                                            handleCancelChargeItem={self.handleCancelChargeItemModal}
@@ -330,7 +329,7 @@ class ServiceInstance extends React.Component {
             return (
                 <Authorizer>
                     <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <div className="page-service-instance">
+                    <div className="page-service-instance white">
                         <Content key={Object.id}>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'}
                                                      transitionAppear={true} transitionEnter={true} transitionLeave={true}
@@ -396,14 +395,22 @@ class ServiceInstance extends React.Component {
                 <Authorizer>
                     <Jumbotron pageName={pageName} subtitle={<span>{subtitle}<strong><DateFormat date={myInstance.updated_at} time /></strong></span>} />
                     {/*<Jumbotron pageName={pageName} subtitle={`${myInstance.description} . ${myInstance.subscription_id || ""}`} />*/}
-                    <div className="page-service-instance">
+                    <div className="page-service-instance white-bg">
                         <Content>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'} transitionAppear={true} transitionEnter={true} transitionLeave={true}
                                                      transitionAppearTimeout={1000} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
-                                <div className="row">
-                                    <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2 m-b-20">
-                                        {self.getActionButtons(myInstance)}
+                                <div className="instance-title">
+                                    <ContentTitle title="Subscription Detail"/>
+                                    <div className="instance-customer">
+                                        <div>Customer Email: <b>{owner.email}</b></div>
+                                        <div>Customer Status: <b>{owner.status}</b></div>
                                     </div>
+                                    <div className="row">
+                                        <div className="col-md-12">
+                                            {self.getActionButtons(myInstance, myInstanceChargeItems)}
+                                        </div>
+                                    </div>
+                                    {this.getAdditionalCharges(myInstance, myInstanceChargeItems)}
                                 </div>
 
                                 <div id="service-instance-detail" className="row">
@@ -413,28 +420,11 @@ class ServiceInstance extends React.Component {
                                         key={self.state.token}
 
                                 />
-                                    <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
-                                        <ServiceInstancePaymentPlan key={Object.id}
-                                                                    owner={owner}
-                                                                    service={myInstance}
-                                                                    instancePaymentPlan={myInstance.payment_plan}
-                                                                    status={myInstance.status}
-                                                                    approval={self.handleApprove}
-                                                                    cancel={self.handleCancel}
-                                                                    cancelUndo={self.handleUndoCancel}
-                                                                    allCharges={myInstanceChargeItems}
-                                                                    handleAllCharges={self.handlePayAllChargesModal}
-                                                                    userFunds={self.state.userFunds}
-                                                                    fundModal={self.handleAddFund}
-                                        />
-                                    </div>
                                 </div>
-
-                                {this.getAdditionalCharges(myInstance, myInstanceChargeItems)}
 
                                 {(myInstanceChargeItems.true && myInstanceChargeItems.true.length > 0) &&
                                 <div id="service-instance-approved-charges" className="row">
-                                    <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
+                                    <div className="col-md-12">
                                         <ServiceInstanceApprovedCharges instanceApprovedItems={myInstanceChargeItems.true}/>
                                     </div>
                                 </div>
@@ -442,14 +432,14 @@ class ServiceInstance extends React.Component {
 
                                 {myInstance.references.service_instance_properties.length > 0 &&
                                 <div id="service-instance-fields" className="row">
-                                    <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
+                                    <div className="col-md-12">
                                         <ServiceInstanceFields instanceProperties={myInstance.references.service_instance_properties}/>
                                     </div>
                                 </div>
                                 }
 
                                 <div id="service-instance-message" className="row">
-                                    <div className="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
+                                    <div className="col-md-12">
                                         <ServiceInstanceMessage instanceId={self.state.instanceId}/>
                                     </div>
                                 </div>

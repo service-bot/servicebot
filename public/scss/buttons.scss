@@ -36,6 +36,26 @@
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.17);
   }
 
+  &._green {
+    background-color: #1ABE98;
+    color: white;
+  }
+
+  &._red {
+    background-color: #db0306;
+    color: white;
+  }
+
+  &._navy {
+    background-color: #031f5f;
+    color: white;
+  }
+
+  &._yellow {
+    background-color: #ffca00;
+    color: #484848;
+  }
+
   &._default {
     font-size: $font-size;
     background-color: $blue;

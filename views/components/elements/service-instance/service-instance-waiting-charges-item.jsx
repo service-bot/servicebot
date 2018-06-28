@@ -34,8 +34,7 @@ class ServiceInstanceWaitingChargesItem extends React.Component {
                 <div className="xaas-data xaas-price"><span><Price value={self.state.chargeItem.amount}/></span></div>
                 {isAuthorized({permissions: 'can_administrate'}) &&
                     <div className="xaas-data xaas-action">
-
-                        <Buttons btnType="primary" text="Remove Charge" onClick={self.onCancelCharge}/>
+                        <span className="buttons _navy" onClick={self.onCancelCharge}>Remove</span>
                     </div>
                 }
             </div>

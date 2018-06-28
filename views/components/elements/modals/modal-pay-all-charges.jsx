@@ -12,6 +12,7 @@ class ModalPayAllCharges extends React.Component {
 
     constructor(props){
         super(props);
+        console.log("HELLO!2");
         let uid = cookie.load("uid");
         if(this.props.ownerId){
             uid = this.props.ownerId;
@@ -105,6 +106,7 @@ class ModalPayAllCharges extends React.Component {
     }
 
     render () {
+        console.log("HELLO!");
         let self = this;
         let pageName = "Pay Charges";
         let currentModal = this.state.current_modal;

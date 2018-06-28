@@ -24,7 +24,7 @@ class ServiceInstanceWaitingCharges extends React.Component {
 
     render () {
         let self = this;
-        let title = "Outstanding charges to be paid";
+        let title = "Outstanding charges";
 
         let getTotalCharges = ()=>{
             let totalCharges = 0;
