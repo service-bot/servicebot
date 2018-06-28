@@ -279,7 +279,7 @@ class ServiceInstance extends React.Component {
         if(instance.references.users[0].status != "suspended") {
             return (
                 <Authorizer permissions="can_administrate">
-                    <div className="service-instance-actions">
+                    <div className="service-instance-actions action-items">
                         <div className="pull-right">
                             {instanceCharges.false && instanceCharges.false.length > 0 &&
                                 <span  onClick={self.handlePayAllChargesModal}><span className="buttons _primary _green m-r-5">Pay Charges</span></span>

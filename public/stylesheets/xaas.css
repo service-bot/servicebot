@@ -1300,6 +1300,9 @@ body.login .footer{
     position: relative;
     display: flow-root;
 }
+.service-instance-actions.action-items{
+    min-height: 80px;
+}
 .instance-customer {
     margin-bottom: 20px;
     font-family: "Open Sans", "Arial";
@@ -1309,4 +1312,3 @@ body.login .footer{
 .instance-title {
     margin-left: -10px;
 }
-
