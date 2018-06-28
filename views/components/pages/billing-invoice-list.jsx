@@ -144,7 +144,7 @@ class BillingInvoiceList extends React.Component {
         let self = this;
         return (
             <Authorizer permissions="can_administrate">
-                <button className="btn btn-danger" onClick={self.openRefundModal()}>Refund Invoice</button>
+                <button className="buttons _primary _red" onClick={self.openRefundModal()}>Refund Invoice</button>
             </Authorizer>
         );
     }

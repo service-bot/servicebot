@@ -284,11 +284,12 @@ class ServiceInstance extends React.Component {
                             {instanceCharges.false && instanceCharges.false.length > 0 &&
                                 <span  onClick={self.handlePayAllChargesModal}><span className="buttons _primary _green m-r-5">Pay Charges</span></span>
                             }
-                            <span to="#" onClick={self.handleEditInstanceModal}><span className="buttons _primary">Edit Trial</span></span>
-                            <span to="#" onClick={self.handleEditPaymentModal}><span className="buttons _primary m-l-5">Edit Payment Plan</span></span>
+                            <span onClick={self.handleEditInstanceModal}><span className="buttons _primary">Edit Trial</span></span>
+                            <span  onClick={self.handleEditPaymentModal}><span className="buttons _primary m-l-5">Edit Payment Plan</span></span>
                             {instance.payment_plan && instance.status !== 'cancelled' &&
-                            <span to="#" onClick={self.handleAddChargeItemModal}><span className="buttons _primary m-l-5">Add Charge</span></span>
+                            <span onClick={self.handleAddChargeItemModal}><span className="buttons _primary m-l-5">Add Charge</span></span>
                             }
+                            <Link to={`/billing-history/${instance.user_id}`}><span className="buttons _primary m-l-5">View Invoices</span></Link>
                             {self.getStatusButtons()}
                         </div>
                     </div>

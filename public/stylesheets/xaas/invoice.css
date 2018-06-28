@@ -14,15 +14,12 @@
 .invoice-header-header {
     display: flex;
     justify-content: space-between;
-    padding: 20px 15px;
+    padding: 30px;
     margin-bottom: 20px;
-    background-color: #83939E;
-    color: #FFFFFF;
+    background-color: #0a1e49;
+    color: #a9b1c1;
     font-size: 1em;
-    font-weight: 900;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+    letter-spacing: .5px;
 }
 
 .invoice-entity {
@@ -53,6 +50,11 @@
     text-transform: uppercase;
 }
 
+.invoice-entity .company-name {
+    font-size: 15px;
+    color: white;
+}
+
 .entity-info {
     display: flex;
     justify-content: space-between;
@@ -62,7 +64,6 @@
 }
 
 .Invoice > div {
-    padding: 20px 20px 0 20px;
     background: white;
 }
 

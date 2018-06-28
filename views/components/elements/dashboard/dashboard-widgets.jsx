@@ -107,6 +107,10 @@ class Widget extends React.Component {
                 style.widgetLabel.backgroundColor = rgbToHex(251,233,156);
                 style.widgetData.backgroundColor = rgbToHex(251,233,156);
                 style.widgetData.color = rgbToHex(0,0,0);
+            } else if(this.props.wcolor === 'salmon') {
+                style.widgetLabel.backgroundColor = rgbToHex(230,87,88);
+                style.widgetData.backgroundColor = rgbToHex(230,87,88);
+                style.widgetData.color = rgbToHex(255,255,255);
             }
         }
 
@@ -178,7 +182,7 @@ class DashboardWidgets extends React.Component {
                     <div className="col-md-4 p-0 section-wrapper">
                         <div className="col-md-12 p-0"><Widget data={{label: 'Average Conversion', value: this.state.data.salesStats.subscriptionStats.averageConversion}} postFix="%" wcolor="blue" minimize={true}/></div>
                         <div className="col-md-12 p-0"><Widget data={{label: 'ARPA', value: this.state.data.salesStats.subscriptionStats.arpa}} type="price" wcolor="grey" minimize={true}/></div>
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Churn Rate', value: this.state.data.salesStats.subscriptionStats.churn}} postFix="%" wcolor="navy" minimize={true}/></div>
+                        <div className="col-md-12 p-0"><Widget data={{label: 'Churn Rate', value: this.state.data.salesStats.subscriptionStats.churn}} postFix="%" wcolor="salmon" minimize={true}/></div>
                         <div className="col-md-12 p-0"><Widget data={{label: 'ARR Forecast', value: this.state.data.salesStats.subscriptionStats.arrForecast}} postFix="/yr" type="price" wcolor="navy-rev" minimize={true}/></div>
                     </div>
                 </div>
