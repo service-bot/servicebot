@@ -72,7 +72,15 @@ default_notifications.templates = [
         description: "Triggered when a payment has failed to go through. It notifies the user to update their payment method",
         model: "user",
         send_email: true
-    }
+    },
+    {name:"invitation",
+        event_name:"user_invited",
+        message:"Hello, \r\nYou have been invited to use the [[_company_name]] ServiceBot System. Please click the link to begin user <a href='[[url]]'>registration</a>.",
+        subject:"ServiceBot Invitation!",
+        description:"This notification it triggered when a user is invited to they system by an admin",
+        model:"user",
+        send_email:true
+    },
 ];
 //Setting the registration_admin role to admin
 default_notifications.templates_to_roles = [
