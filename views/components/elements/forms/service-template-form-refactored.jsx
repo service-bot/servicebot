@@ -156,9 +156,6 @@ class TemplateForm extends React.Component {
             <form className="form-offering" onSubmit={handleSubmit}>
                 <div className="_section _active">
                     <div className="form-level-errors">
-                        {!options.stripe_publishable_key &&
-                        <Link to="/stripe-settings"><br/><h4 className="form-error">Publishing Disabled Until Setup
-                            Complete - Click here to complete</h4></Link>}
                         {error && <div className="form-error">{error}</div>}
                     </div>
                     <div className="form-level-warnings"/>
@@ -325,7 +322,7 @@ class ServiceTemplateForm extends React.Component {
             else {
                 initialValues = {
                     interval: 'month',
-                    published: !!this.props.fieldState.options.stripe_publishable_key,
+                    published: true,
                     references: {
                         tiers: [
                             {
