@@ -45,12 +45,12 @@ class Modal extends React.Component {
             width: width, height: height, maxHeight: '90vh', overflowY: 'scroll' };
 
 
-        let modalBarStyle = {};
-        if(this.props.options){
-            let options = this.props.options;
-            modalBarStyle.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
-            modalBarStyle.color = _.get(options, 'primary_theme_text_color.value', '#000000');
-        }
+        // let modalBarStyle = {};
+        // if(this.props.options){
+        //     let options = this.props.options;
+        //     modalBarStyle.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
+        //     modalBarStyle.color = _.get(options, 'primary_theme_text_color.value', '#000000');
+        // }
 
         return(
             <div style={{"zIndex" : 99999}} className={`modal-wrapper`}>
@@ -59,11 +59,11 @@ class Modal extends React.Component {
                         component='div'
                         transitionAppear={true} transitionAppearTimeout={1000}
                         transitionName={'modal'} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
-                        <div key={Object.id} className="modal-dialog modal-lg" role="document" style={modalDialogStyle}>
+                        <div key={Object.id} className="servicebot-modal modal-lg" role="document" style={modalDialogStyle}>
                             <div className="modal-content">
-                                <div className="modal-header" style={modalBarStyle}>
+                                <div className="modal-header">
                                     <button onClick={this.props.hide} className="close">
-                                        <span>×</span>
+                                        <span><i class="fa fa-times" /></span>
                                     </button>
                                     <h4 className="modal-title uppercase bold" id="modal-sm-primary-label"><i className={`modal-icon fa ${this.props.icon ? this.props.icon : 'fa-cog'}`}/>{this.props.modalTitle}</h4>
                                 </div>

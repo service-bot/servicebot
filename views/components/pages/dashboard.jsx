@@ -100,7 +100,7 @@ class Dashboard extends React.Component {
                     <div className="page-service-instance">
                         <Content>
                             <div>
-                                <ContentTitle title="SaaS Live Dashboard"/>
+                                <ContentTitle title="Dashboard"/>
                                 <DashboardWidgets data={this.state.analytics}/>
                                 <div className="m-t-25"><ContentTitle title="Churn Detail"/></div>
                                 <OverallStatsWidgets data={this.state.analytics} />

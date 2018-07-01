@@ -1,0 +1,40 @@
+.servicebot-modal {
+  z-index: 9954;
+  position: fixed;
+  top: 33%;
+  left: 50%;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+
+  .modal-content {
+    background-color: #F9FCFF;
+    border-radius: 2px;
+  }
+
+  .modal-header {
+    background: #031f5f;
+    color: white;
+    padding: 15px 20px;
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: normal;
+      letter-spacing: .5px;
+    }
+
+    .modal-icon {
+      margin-right: 20px;
+    }
+
+    .close {
+      color: white;
+      opacity: 0.6;
+      font-weight: 100;
+      margin-top: 0px;
+    }
+  }
+
+  .modal-footer {
+    text-align: right;
+    padding: 15px 20px;
+  }
+}
