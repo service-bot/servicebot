@@ -142,10 +142,11 @@ label, .help-block, .bmd-help{
     color: rgba(0, 0, 0, 0.80);
 }
 .form-control.has-error{
-    border-color: #a94442;
+    border-color: #ff2e2e;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
 }
+
 
 .radio label, .is-focused .radio label, .radio-inline, .is-focused
 .radio-inline, .checkbox label, .is-focused
@@ -1311,4 +1312,55 @@ body.login .footer{
 }
 .instance-title {
     margin-left: -10px;
+}
+
+.iconToggleField {
+    border-radius: 50px;
+    display: block;
+    width: 36px !important;
+    height: 36px !important;
+    position: relative;
+    margin-top: 2px;
+    text-align: center;
+    line-height: 32px;
+    background: #f7f7f7;
+    margin-right: 8px;
+    border: 1px solid #cbcbcb;
+}
+.iconToggleField:hover{
+    cursor: pointer;
+}
+.iconToggleField.active{
+    border: none;
+}
+
+.iconToggleField .itf-icon {
+    left: 50% !important;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50px;
+    display: block;
+    width: 36px !important;
+    height: 36px !important;
+    margin-top: 2px;
+    text-align: center;
+}
+#custom-field-delete-button:hover{
+    background-color: #f7f7f7;
+    color: black;
+}
+.addon-checkbox-widget-default-value-wrapper .iconToggleField .itf-icon{
+    line-height: 35px;
+}
+
+.form-group-flex .form-error {
+    flex-basis: 100%;
+    line-height: 29px;
+    display: block;
+    background: #ff2e2e;
+    color: white;
+    padding: 0 10px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
 }

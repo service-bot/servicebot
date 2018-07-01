@@ -91,6 +91,9 @@ input.react-tagsinput-input {
     font-size: 16px !important;
     font-weight: 100 !important;
     width: 111px !important;
+    height: 30px;
+    border-radius: 5px;
+    margin: 7px 0;
 }
 
 span.react-tagsinput-tag {

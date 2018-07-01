@@ -236,6 +236,16 @@
     @include _formGroup(column);
     @include _formLabel(dark);
     @include _formInput;
+
+    input{
+
+      &.form-control {
+        &.has-error {
+          border-color: $color-error;
+        }
+      }
+
+    }
   }
 
 }
