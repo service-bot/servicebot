@@ -70,7 +70,7 @@ class SelectPricing extends React.Component {
                     let input = {
                         onChange : self.handleChange(option),
                         name : option,
-                        value :  pricingValue && pricingValue[option]
+                        value :  (pricingValue && pricingValue[option]) || 0
                     };
 
                     return (<div>{option} : <WidgetPricingInput input={input} operation={operation}/></div>);
