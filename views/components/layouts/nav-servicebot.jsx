@@ -152,7 +152,7 @@ class NavServiceBot extends React.Component {
     getSetupSteps() {
         let {options} = this.props;
         let hasOffering = options.hasOffering;
-        let hasStripeKeys = options.stripe_publishable_key.value !== "";
+        let hasStripeKeys = options.stripe_publishable_key && options.stripe_publishable_key.value !== "";
         let setupComplete = hasOffering && hasStripeKeys;
         let getSetupClass = this.getSetupClass;
 
