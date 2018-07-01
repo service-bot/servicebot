@@ -3,7 +3,7 @@ import Billing from "./embeddables/billing-settings";
 import Checkout from "./embeddables/checkout";
 module.exports = {
     run: function* (config, provide, services) {
-        yield provide({embeddable : [Billing, Checkout]});
+        yield provide({embeddable : [Checkout, Billing]});
     }
 
 };
