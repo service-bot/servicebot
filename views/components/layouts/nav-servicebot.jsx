@@ -72,6 +72,8 @@ class NavServiceBot extends React.Component {
         this.getLinkClass = this.getLinkClass.bind(this);
         this.getSetupSteps = this.getSetupSteps.bind(this);
         this.getSetupClass = this.getSetupClass.bind(this);
+        this.getSettingsMenus = this.getSettingsMenus.bind(this);
+
     }
 
     componentDidMount() {
@@ -125,14 +127,25 @@ class NavServiceBot extends React.Component {
         let self = this;
         let user = this.props.user;
         return this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
-            console.log("expected route path", route.path);
-            if (route.isVisible(user)) {
+            if (route.isVisible(user) && (route.navType === "main" || route.navType === undefined)) {
                 acc.push(<li><Link key={index} to={route.path}
                                    className={self.getLinkClass(route.path.split('/')[1], 'parent')}>{icon &&
                 <span className={`nav-icons icon-${icon}`}/>}{route.name}</Link></li>)
             }
             return acc;
         }, [])
+
+    }
+    getSettingsMenus(){
+        let user = this.props.user;
+        let self = this;
+        return this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
+            if(route.isVisible(user) && route.navType === "settings") {
+                acc.push(<li><Link className={self.getLinkClass('system-settings', 'child')} key={index} to={route.path}>{route.name}</Link></li>)
+            }
+            return acc;
+        }, [])
+
 
     }
 
@@ -209,6 +222,11 @@ class NavServiceBot extends React.Component {
                             <span className="nav-icons icon-users"/>Users
                         </Link>
                     </li>
+                    <li>
+                        <Link to="/embeddables" style={style} className={getLinkClass('embeddables', 'parent')}>
+                            <span className="nav-icons icon-embed"/>Embeds
+                        </Link>
+                    </li>
                     {this.getPluginItems('integrations')}
                     <li className="app-dropdown">
                         <Link className={getLinkClass(linkGroupSettings, 'parent')} to="/stripe-settings">
@@ -224,6 +242,7 @@ class NavServiceBot extends React.Component {
                                 Settings</Link></li>
                             <li><Link to="/system-settings" className={getLinkClass('system-settings', 'child')}>System
                                 Settings</Link></li>
+                            {this.getSettingsMenus()}
                         </ul>
                     </li>
                 </ul>

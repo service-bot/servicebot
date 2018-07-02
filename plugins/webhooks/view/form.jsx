@@ -531,7 +531,7 @@ Servicebot.init({
 
 
 let RouteDefinition = {
-    component: Webhooks, name: "Embeds", path: "/embeddables", isVisible: function (user) {
+    component: Webhooks, navType: "settings", name: "Webhook Settings", path: "/webhooks", isVisible: function (user) {
         //todo: this is dirty, need to do permission based...
         return user.role_id === 1
     }
