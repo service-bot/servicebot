@@ -123,11 +123,9 @@ class CustomField extends React.Component {
             willAutoFocus, index, typeValue, member, myValues, privateValue, requiredValue, promptValue, configValue,
             setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt, templateType
         } = props;
-        let machineName;
 
         if (myValues.prop_label) {
             willAutoFocus = false;
-            machineName = slug(myValues.prop_label, {lower: true});
 
         }
         return (
@@ -187,12 +185,6 @@ class CustomField extends React.Component {
                     }
                 </div>
                 <div id="custom-prop-widget" className="custom-property-field-group">
-                    {machineName &&
-                    <div className="form-group form-group-flex addon-options-widget-config-input-wrapper">
-                        <label className="control-label form-label-flex-md addon-options-widget-config-input-label">Machine
-                            Name</label>
-                        <pre>{machineName}</pre>
-                    </div>}
                     {typeValue && <RenderWidget
                         showPrice={(templateType !== "custom" && templateType !== "split")}
                         member={member}
