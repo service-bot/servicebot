@@ -204,7 +204,7 @@ class Webhooks extends React.Component {
             secretKey: null,
             selectedTemplate: 0,
             selectedServer: "node"
-        }
+        };
         this.fetchData = this.fetchData.bind(this);
         this.openHookForm = this.openHookForm.bind(this);
         this.closeHookForm = this.closeHookForm.bind(this);
@@ -214,10 +214,6 @@ class Webhooks extends React.Component {
         this.testHooks = this.testHooks.bind(this);
         this.showEvents = this.showEvents.bind(this);
         this.hideEvents = this.hideEvents.bind(this);
-        this.showManagement = this.showManagement.bind(this);
-        this.hideManagement = this.hideManagement.bind(this);
-        this.showForm = this.showForm.bind(this);
-        this.hideForm = this.hideForm.bind(this);
         this.changeServer = this.changeServer.bind(this);
         this.changeTemplate = this.changeTemplate.bind(this);
 
@@ -321,22 +317,6 @@ class Webhooks extends React.Component {
         this.setState({showEventsInfo: false});
     }
 
-    showForm() {
-        this.setState({showFormEmbed: true});
-    }
-
-    hideForm() {
-        this.setState({showFormEmbed: false});
-    }
-
-    showManagement() {
-        this.setState({showManagementEmbed: true});
-    }
-
-    hideManagement() {
-        this.setState({showManagementEmbed: false});
-    }
-
 
     render() {
         let self = this;
@@ -384,43 +364,12 @@ Servicebot.init({
 })
 </script>`
         }
-        let formEmbed = (<div>
-            <span>Paste the generated HTML on the page you want to embed a request form. You can find more detailed documentation <a href="https://docs.servicebot.io/embed">here</a></span>
-            <select onChange={this.changeTemplate}>
-                <option key={"default-0"} value="0">Select a service</option>
-                {this.state.templates.map(template => {
-                    return (<option key={template.id} value={template.id}>{template.name}</option>)
-                })}
-            </select>
-            <pre>{formHTML}</pre>
-        </div>)
         return (
             <div>
                 <Jumbotron pageName={pageName} subtitle={subtitle}/>
                 <div
                     className="page-servicebot-webhooks col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2"
                     id="payment-form">
-                    <h3>Embed</h3>
-                    <span>Servicebot has embeddable forms which can facilitate actions such as subscribing, adding a credit card, cancelling, and resubscribing</span>
-                    {this.state.showManagementEmbed ? <div>
-                            <ManagementEmbed
-                                value={this.state.selectedServer}
-                                onChange={this.changeServer}
-                                secretKey={this.state.secretKey}/>
-                            <button onClick={this.hideManagement}>Hide</button>
-                        </div> :
-                        <div>
-                            <button onClick={this.showManagement}>Embed to allow customers to manage thier account and
-                                billing settings
-                            </button>
-                        </div>}
-                    {this.state.showFormEmbed ? <div>{formEmbed}
-                            <button onClick={this.hideForm}>Hide</button>
-                        </div> :
-                        <div onClick={this.showForm}>
-                            <button>Embed to allow customers to request new subscriptions</button>
-                        </div>}
-
                     <h3>Webhooks</h3>
                     <span>Servicebot can send webhook events that notify your application any time an event happens.
                         This is especially useful for events—like new customer subscription or trial expiration—that
