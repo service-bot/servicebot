@@ -159,8 +159,7 @@ class SystemSettingsForm extends React.Component {
                                 <div className="title">
                                     <h3>Reconfigure your Stripe API Keys</h3>
                                     <p>
-                                        You can update your Stripe API keys. You can retrieve your Stripe keys <a className="intext-link" href="https://dashboard.stripe.com/account/apikeys" target="_blank">from Stripe</a>. You can also chose to remove the current users, subscriptions, and invoices from the existing Stripe account. By default, all customer information will remain untouched in the previous Stripe account.
-                                        If you have rolled your API keys, simply update your API keys bellow, and all your records will remain safe on your Stripe account.
+                                        You can modify your Stripe keys to go from test to live, update to newer keys, or change to a different account. Retrieve your keys <a className="intext-link" href="https://dashboard.stripe.com/account/apikeys" target="_blank">from Stripe</a>. If you are changing from test to live or entering keys to a different account, you can choose to migrate data to a new Stripe account, or clear Servicebot data and start fresh.
                                     </p>
                                 </div>
                                 :
@@ -186,7 +185,7 @@ class SystemSettingsForm extends React.Component {
                                                         onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
                                                 {self.state.stripe_settings.secret_key &&
                                                     <Inputs defaultValue="true" hideValue={true} type="select" label="Do you want to import existing customers to the new Stripe account? This option only applies if the new keys are related to a different Stripe account or if you are switching between Test/Live mode." name="full_removal"
-                                                        options={[{"Reset Servicebot and connect to the new Stripe account":true},{"Keep Servicebot data and import to the new Stripe account":false}]} onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                                        options={[{"Reset Servicebot data and connect to the new Stripe account":true},{"Keep Servicebot data and import data to the new Stripe account":false}]} onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
                                                 }
                                             </div>
                                             <div className="col-md-12 text-right">

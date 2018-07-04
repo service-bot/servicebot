@@ -77,8 +77,10 @@ class SystemSettingsForm extends React.Component {
                             <h3>Import Stripe Data</h3>
                             <p>
                                 You can import all customers, funds, payment plans, subscriptions, and invoices
-                                to ServiceBot with one click. Note that reversing this action can only be done manually.
+                                to ServiceBot with one click.
+                                <p><b>Note:</b> Reversing this action can only be done manually.</p>
                             </p>
+
                         </div>
                         {getAlerts()}
                         <div className="stripe-keys-form row">
