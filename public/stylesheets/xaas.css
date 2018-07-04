@@ -1317,7 +1317,7 @@ body.login .footer{
     margin-left: -10px;
 }
 
-.iconToggleField {
+.custom-field-item .iconToggleField {
     border-radius: 50px;
     display: block;
     width: 36px !important;
@@ -1330,14 +1330,14 @@ body.login .footer{
     margin-right: 8px;
     border: 1px solid #cbcbcb;
 }
-.iconToggleField:hover{
+.custom-field-item .iconToggleField:hover{
     cursor: pointer;
 }
-.iconToggleField.active{
+.custom-field-item .iconToggleField.active{
     border: none;
 }
 
-.iconToggleField .itf-icon {
+.custom-field-item .iconToggleField .itf-icon {
     left: 50% !important;
     position: absolute;
     top: 50%;
@@ -1353,9 +1353,9 @@ body.login .footer{
     background-color: #f7f7f7;
     color: black;
 }
-.addon-checkbox-widget-default-value-wrapper .iconToggleField .itf-icon{
-    line-height: 35px;
-}
+/*.addon-checkbox-widget-default-value-wrapper .iconToggleField .itf-icon{*/
+    /*line-height: 35px;*/
+/*}*/
 
 .form-group-flex .form-error {
     flex-basis: 100%;
