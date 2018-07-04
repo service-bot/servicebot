@@ -209,6 +209,11 @@
                   background-image: $users;
                 }
               }
+              &.icon-embed {
+                &:before {
+                  background-image: $embed;
+                }
+              }
             }
 
             .title {
@@ -290,6 +295,11 @@
               &.icon-users {
                 &:before {
                   background-image: $users;
+                }
+              }
+              &.icon-embed {
+                &:before {
+                  background-image: $embed;
                 }
               }
             }
