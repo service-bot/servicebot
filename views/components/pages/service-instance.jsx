@@ -406,15 +406,11 @@ class ServiceInstance extends React.Component {
                                         <div>Customer Email: <b>{owner.email}</b></div>
                                         <div>Customer Status: <b>{owner.status}</b></div>
                                     </div>
-                                    <div className="row">
-                                        <div className="col-md-12">
-                                            {self.getActionButtons(myInstance, myInstanceChargeItems)}
-                                        </div>
-                                    </div>
+                                    {self.getActionButtons(myInstance, myInstanceChargeItems)}
                                     {this.getAdditionalCharges(myInstance, myInstanceChargeItems)}
                                 </div>
 
-                                <div id="service-instance-detail" className="row">
+                                <div id="service-instance-detail">
                                     <ServicebotBillingSettingsEmbed
                                         url=""
                                         token={self.state.token}
@@ -432,10 +428,8 @@ class ServiceInstance extends React.Component {
                                 }
 
                                 {myInstance.references.service_instance_properties.length > 0 &&
-                                <div id="service-instance-fields" className="row">
-                                    <div className="col-md-12">
-                                        <ServiceInstanceFields instanceProperties={myInstance.references.service_instance_properties}/>
-                                    </div>
+                                <div id="service-instance-fields">
+                                    <ServiceInstanceFields instanceProperties={myInstance.references.service_instance_properties}/>
                                 </div>
                                 }
 

@@ -1313,9 +1313,9 @@ body.login .footer{
     font-size: 15px;
     color: #0033A0;
 }
-.instance-title {
-    margin-left: -10px;
-}
+/*.instance-title {*/
+    /*margin-left: -10px;*/
+/*}*/
 
 .custom-field-item .iconToggleField {
     border-radius: 50px;
