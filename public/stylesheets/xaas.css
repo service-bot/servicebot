@@ -806,7 +806,7 @@ body.login .footer{
 
 /* app messages */
 .app-messages {
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: auto;
     top: 65px;
@@ -818,14 +818,17 @@ body.login .footer{
 .app-messages p {
     margin: 0px;
 }
-.app-message{
-    background: #000000;
+.app-message {
+    background-color: #081C49;
     padding: 13px 45px;
     color: #ffffff;
-    border: 3px solid #ffffff;
+    border: 0px solid #ffffff;
     animation: displayMessage 1s;
-    margin: 0 auto;
-    width: 55%;
+    margin: 4px auto 8px;
+    width: calc(100% - 52px);
+    left: 26px;
+    display: flex;
+    justify-content: space-between;
 }
 
 #content-title{
@@ -1171,7 +1174,7 @@ body.login .footer{
         opacity: 0;
     }
     100%{
-        margin-top: 2px;
+        margin-top: 4px;
         opacity: 1;
     }
 }
