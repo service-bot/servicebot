@@ -1367,3 +1367,8 @@ body.login .footer{
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
 }
+
+._add-on-item-widget-wrapper .form-group-flex .form-error {
+    flex-basis: auto;
+    background: transparent;
+}
