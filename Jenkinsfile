@@ -21,6 +21,7 @@ pipeline {
             if (result == 0) {
                 echo ("'Version bump' spotted in git commit. Aborting.")
                 env.shouldBuild = "false"
+                throw "Bad"
             }
         }
 }
