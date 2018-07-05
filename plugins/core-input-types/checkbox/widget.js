@@ -26,9 +26,6 @@ let Price = (props) => {
         <div className={`addon-checkbox-widget-price-inputs-wrapper`}>
             <div className="form-group form-group-flex checkbox-checkbox-widget-price-inputs">
                 <WidgetPricingInput input={props.input} operation={config && config.pricing && config.pricing.operation}/>
-                {/*<CurrencyInput {...props.input} className="form-control addon-checkbox-widget-price-input"*/}
-                               {/*prefix="$" decimalSeparator="." thousandSeparator="," precision="2"*/}
-                {/*/>*/}
             </div>
         </div>
     );
