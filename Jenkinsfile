@@ -24,7 +24,7 @@ pipeline {
                 throw "Bad"
             }
         }
-        }
+       }
         }
         stage('Build, bump version') {
             when {
