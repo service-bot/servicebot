@@ -2,6 +2,9 @@ import React from 'react';
 import ServiceInstanceWaitingChargesItem from './service-instance-waiting-charges-item.jsx';
 import Buttons from "../../elements/buttons.jsx";
 import {Price} from '../../utilities/price.jsx';
+import {connect} from 'react-redux';
+import getSymbolFromCurrency from 'currency-symbol-map';
+
 
 class ServiceInstanceWaitingCharges extends React.Component {
 
@@ -25,6 +28,8 @@ class ServiceInstanceWaitingCharges extends React.Component {
     render () {
         let self = this;
         let title = "Outstanding charges to be paid";
+        let { options } = this.props;
+        let prefix = options.currency ? getSymbolFromCurrency(options.currency.value) : '';
 
         let getTotalCharges = ()=>{
             let totalCharges = 0;
@@ -44,11 +49,11 @@ class ServiceInstanceWaitingCharges extends React.Component {
                             </div>
                             <div className="service-instance-box-content">
                                 {this.props.instanceWaitingItems.map(item => (
-                                    <ServiceInstanceWaitingChargesItem key={"item-" + item.id} handleCancelChargeItem={self.onCancelCharge} chargeItem={item}/>
+                                    <ServiceInstanceWaitingChargesItem key={"item-" + item.id} handleCancelChargeItem={self.onCancelCharge} chargeItem={item} prefix={prefix}/>
                                 ))}
                                 <div className="xaas-body-row additional-charges-total">
                                     <div className="xaas-data xaas-charge"><span><strong>Total:</strong></span></div>
-                                    <div className="xaas-data xaas-price"><span><strong><Price value={getTotalCharges()}/></strong></span></div>
+                                    <div className="xaas-data xaas-price"><span><strong><Price value={getTotalCharges()} prefix={prefix}/></strong></span></div>
                                 </div>
 
                             </div>
@@ -61,5 +66,11 @@ class ServiceInstanceWaitingCharges extends React.Component {
         }
     }
 }
+
+ServiceInstanceWaitingCharges = connect(state => {
+    return {
+        options: state.options,
+    }
+})(ServiceInstanceWaitingCharges);
 
 export default ServiceInstanceWaitingCharges;

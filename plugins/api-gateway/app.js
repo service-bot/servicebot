@@ -2,6 +2,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var express = require('express');
 var expressSession = require('express-session');
+const knexSession = require("connect-session-knex")(expressSession);
 var flash = require('connect-flash');
 var swaggerJSDoc = require('swagger-jsdoc');
 var logger = require('morgan');
@@ -9,21 +10,25 @@ var passport = require('passport');
 var path = require('path');
 var helmet = require('helmet')
 let consume = require("pluginbot/effects/consume");
-let {call, put, spawn, takeEvery} = require("redux-saga/effects")
+let {call, put, spawn, takeEvery, select} = require("redux-saga/effects")
 let HOME_PATH = path.resolve(__dirname, "../../", "public");
 let createServer = require("./server");
-
-//todo: store sagas in store?
 
 module.exports = {
     run: function* (config, provide, services) {
         let appConfig = config.appConfig;
         var app = express();
-        app.use(helmet());
+        app.use(helmet({
+            frameguard: false
+        }));
         var exphbs = require('express-handlebars');
         app.engine('handlebars', exphbs({defaultLayout: 'main', layoutsDir: HOME_PATH}));
         app.set('view engine', 'handlebars');
         app.set('views', HOME_PATH);
+
+        if(appConfig.trustProxy){
+            app.enable("trust proxy");
+        }
         app.use(logger('dev'));
         app.use(bodyParser.json());
         app.use(bodyParser.urlencoded({
@@ -34,7 +39,7 @@ module.exports = {
         app.use(function(req, res, next) {
             res.header("Access-Control-Allow-Credentials", true);
             res.header("Access-Control-Allow-Origin", "*");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
             next();
         });
 
@@ -52,7 +57,7 @@ module.exports = {
         let injectProperties = require("../../middleware/property-injector");
         require('../../config/passport.js')(passport);
         yield provide({passport});
-
+        let hostname = process.env.VIRTUAL_HOST || "localhost"
 
 
 
@@ -65,7 +70,7 @@ module.exports = {
                 version: '1.0.0',
                 description: 'Rest API documentation for ServiceBot',
             },
-            host: 'localhost:3001',
+            host: `${hostname}:${appConfig.port || 3000}`,
             basePath: '/api/v1/',
         };
 
@@ -78,34 +83,28 @@ module.exports = {
         };
 
         // initialize swagger-jsdoc
-        var swaggerSpec = swaggerJSDoc(options);
-        swaggerSpec.paths = require('../../api-docs/api-paths.json');
-        swaggerSpec.definitions = require('../../api-docs/api-definitions.json');
-        swaggerSpec.securityDefinitions = require('../../api-docs/api-security-definitions.json');
         // serve swagger
+        var swaggerSpec = swaggerJSDoc(options);
+
+        swaggerSpec.paths = {...require('../../api-docs/api-paths.json'), ...require('../../api-docs/api-entity-paths.json')};
+        swaggerSpec.definitions = {...require('../../api-docs/api-model-definitions.json'), ...require('../../api-docs/api-definitions.json')};
+        swaggerSpec.securityDefinitions = require('../../api-docs/api-security-definitions.json');
+
         app.get('/swagger.json', function (req, res) {
             res.setHeader('Content-Type', 'application/json');
+
             res.send(swaggerSpec);
         });
 
-        //this is where we set routes to go through react
 
-        //this routes all requests to serve index
-
-        // view engine setup
-        // app.set('views', path.join(__dirname, '../../views'));
-        //app.set('view engine', 'jade');
-
-
-        // uncomment after placing your favicon in /public
-        //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-
-
+        let KnexStore = new knexSession({knex: database});
         //todo: move this into a plugin
         app.use(expressSession({
             secret: process.env.SECRET_KEY,
             resave: true,
-            saveUninitialized: true
+            saveUninitialized: true,
+            store: KnexStore
+
         }));
 
         app.use(passport.initialize());
@@ -115,11 +114,12 @@ module.exports = {
         app.use(injectProperties());
 
         //auth route doesn't go in express route so it doesn't need auth
-        require("../../api/auth")(app, passport);
 
         //initialize api route
         var api = express.Router();
         app.use("/api/v1", api);
+        require("../../api/auth")(api, passport);
+
         //force all requests to api route to look for token, if token is present in header the user will be logged in with taht token
         api.use(function (req, res, next) {
             passport.authenticate('jwt', function (err, user, info) {
@@ -158,6 +158,7 @@ module.exports = {
         require('../../api/notifications')(api);
         require('../../api/permissions')(api);
         require('../../api/roles')(api);
+        require('../../api/webhooks')(api);
         let routeConsumer = require("./router");
         let authService = yield consume(services.authService);
         yield spawn(routeConsumer, api, services.routeDefinition, authService);
@@ -171,6 +172,7 @@ module.exports = {
             }
         });
 
+        let store = require("../../config/redux/store");
 
         app.get('*', async function (req, res) {
             if (req.path.split("/")[3] == "embed" && req.method === 'GET') {
@@ -179,8 +181,8 @@ module.exports = {
 
             let configBuilder = require("pluginbot/config");
             let clientPlugins = Object.keys((await configBuilder.buildClientConfig(CONFIG_PATH)).plugins);
-            res.render("main", {bundle : appConfig.bundle_path, plugins : clientPlugins});
-            // res.sendFile(path.resolve(__dirname, "../..", 'public', 'index.html'))
+            let {site_title, site_description, hostname} = store.getState().options;
+            res.render("main", {bundle : appConfig.bundle_path, plugins : clientPlugins, site_title, site_description, hostname});
         })
 
 

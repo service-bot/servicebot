@@ -37,17 +37,19 @@ class App extends React.Component {
 
 
         return(
-                <div className="app-container" style={{backgroundColor: background}}>
-                    <NavBootstrap handleLogout={this.handleLogout}/>
-                    {self.props.children}
-                    <Footer/>
-                </div>
+            <div className="app-container" style={{backgroundColor: background}}>
+                {this.props.modal && this.props.modal}
+                <NavBootstrap handleLogout={this.handleLogout}/>
+                {self.props.children}
+                <Footer/>
+            </div>
         );
     }
 }
 let mapStateToProps = function(state){
     return {
         options : state.options,
+        modal: state.modal
     }
 }
 let mapDispatchToProps = function(dispatch){

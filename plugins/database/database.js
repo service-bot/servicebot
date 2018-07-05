@@ -42,13 +42,23 @@ module.exports = {
         }else{
 
             //todo: move this to a plugin
-            let migrate = require("../../config/migrations/migrate");
-            yield call(migrate);
+            let migrate = require("./migrations/migrate");
+            yield call(migrate, database);
             //todo : implement new system options?
             //check migrate
             //check new system options?
         }
 
+        database.createTableIfNotExist = function(tableName, knexCreateTable, db=database){
+            return db.schema.hasTable(tableName).then(function(exists){
+                if(!exists){
+                    return db.schema.createTable(tableName, knexCreateTable);
+                }else{
+                    console.log("Table: " + tableName + " Already Exists, no need to create")
+                    return false;
+                }
+            })
+        };
 
         yield provide({database});
 

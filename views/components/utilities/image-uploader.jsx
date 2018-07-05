@@ -127,7 +127,7 @@ class ImageUploader extends React.Component {
     removeImage(e){
         let self = this;
         e.preventDefault();
-        Fetcher(self.props.imageGETURL, "DELETE", null, null).then(function (response) {
+        Fetcher(self.props.imageURL, "DELETE", null, null).then(function (response) {
             if(!response.error){
                 self.setState({hasImage: false, image: false, imageChanged : true});
             }

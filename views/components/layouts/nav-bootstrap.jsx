@@ -5,9 +5,10 @@ import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import ModalInvoice from '../elements/modals/modal-invoice.jsx';
 import {AdminEditingGear, AdminEditingSidebar}from "./admin-sidebar.jsx";
 import {NavNotification} from "../pages/notifications.jsx";
+import SideNav from '../layouts//side-nav.jsx';
 import {AppMessage} from '../elements/app-message.jsx';
 import ReactTooltip from 'react-tooltip';
-import consume from "pluginbot-react/src/consume"
+import consume from "pluginbot-react/dist/consume"
 
 import { connect } from "react-redux";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
@@ -122,21 +123,21 @@ class NavBootstrap extends React.Component {
                     {/*<li><Link to="/service-catalog">Service Catalog</Link></li>*/}
                     <li className="dropdown">
                         <a href="#" className="dropdown-toggle" ref="dropdownToggle2" data-toggle="dropdown"
-                           role="button" aria-haspopup="true" aria-expanded="false" style={style}>Manage Store <span className="caret"/></a>
+                           role="button" aria-haspopup="true" aria-expanded="false" style={style}>Manage<span className="caret"/></a>
                         <ul className="dropdown-menu">
-                            <li><Link to="/manage-catalog/list">Manage Catalog</Link></li>
+                            <li><Link to="/manage-catalog/list">Manage Offerings</Link></li>
                             <li><Link to="/manage-categories">Manage Categories</Link></li>
+                            <li><Link to="/manage-users">Manage Users</Link></li>
                             <li><Link to="/manage-subscriptions">Manage Subscriptions</Link></li>
                         </ul>
                     </li>
                     <li className="dropdown">
                         <a href="#" className="dropdown-toggle" ref="dropdownToggle3" data-toggle="dropdown"
-                           role="button" aria-haspopup="true" aria-expanded="false" style={style}>Manage System <span className="caret"/></a>
+                           role="button" aria-haspopup="true" aria-expanded="false" style={style}>Settings<span className="caret"/></a>
                         <ul className="dropdown-menu">
-                            <li><Link to="/manage-users">Manage Users</Link></li>
-                            <li><Link to="/notification-templates">Manage Notification Templates</Link></li>
-                            <li><Link to="/manage-permission">Manage Permission</Link></li>
                             <li><Link to="/stripe-settings">Stripe Settings</Link></li>
+                            <li><Link to="/notification-templates">Email Settings</Link></li>
+                            <li><Link to="/manage-permission">Permission Settings</Link></li>
                             <li><Link to="/system-settings">System Settings</Link></li>
                         </ul>
                     </li>
@@ -191,7 +192,7 @@ class NavBootstrap extends React.Component {
                 </span> );
         }
         if(livemode.toUpperCase() === "TEST") {
-            return ( <span className="notification-badge"><strong>Test Mode Payments</strong></span> );
+            return ( <span className="notification-badge"><strong>Test Mode</strong></span> );
         } else {
             return <span/>;
         }
@@ -215,65 +216,83 @@ class NavBootstrap extends React.Component {
             linkTextStyle.color = _.get(options, 'primary_theme_text_color.value', '#000000');
         }
 
-        return (
-            <nav className="navbar navbar-default" style={navigationBarStyle} onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
-                <div className="container-fluid">
-                    <div className="navbar-header">
-                        <button type="button" className="navbar-toggle collapsed" data-toggle="collapse"
-                                data-target="#bs-example-navbar-collapse-1" aria-expanded="false" onClick={this.toggleSideBar}  >
-                            <span className="sr-only">Toggle navigation</span>
-                            <span className="icon-bar"/>
-                            <span className="icon-bar"/>
-                            <span className="icon-bar"/>
-                        </button>
-                        {}
-                        <Link to="/" className="navbar-brand nav-logo"><img src="/api/v1/system-options/file/brand_logo"/></Link>
-                    </div>
+        let embed = false;
+        if(window.location.search.substring(1) === 'embed'){
+            embed = true;
+        }
 
-                    <div className="collapse navbar-collapse">
-                        <Authorizer>
-                            {this.getMenuItems(linkTextStyle)}
-                        </Authorizer>
-                        <div className="nav navbar-nav navbar-right navvbar-badge">
-                            {this.getLivemode()}
+
+        return (
+            <div>
+                {!embed &&
+                <div>
+                    <nav className="navbar navbar-default" style={navigationBarStyle} onMouseEnter={this.toggleOnEditingGear} onMouseLeave={this.toggleOffEditingGear}>
+                        <div className="container-fluid">
+                            <div className="navbar-header">
+                                <Link to="/" className="navbar-brand nav-logo"><img src="/api/v1/system-options/file/brand_logo"/></Link>
+                                <Authorizer anonymous={true}>
+                                    <Link className="mobile-login-button" to="/login">Login</Link>
+                                </Authorizer>
+                                <Authorizer>
+                                    <button type="button" className="navbar-toggle collapsed" data-toggle="collapse"
+                                            data-target="#bs-example-navbar-collapse-1" aria-expanded="false" onClick={this.toggleSideBar}  >
+                                        <span className="sr-only">Toggle navigation</span>
+                                        <span className="icon-bar"/>
+                                        <span className="icon-bar"/>
+                                        <span className="icon-bar"/>
+                                    </button>
+                                </Authorizer>
+                                <span className="moble-live-mode">{this.getLivemode()}</span>
+                            </div>
+
+                            <div className="collapse navbar-collapse">
+                                <Authorizer>
+                                    {this.getMenuItems(linkTextStyle)}
+                                </Authorizer>
+                                <div className="nav navbar-nav navbar-right navvbar-badge">
+                                    {this.getLivemode()}
+                                </div>
+                                <Authorizer anonymous={true}>
+                                    <VisibleAnonymousLinks/>
+                                </Authorizer>
+                                <Authorizer>
+                                    <ul className="nav navbar-nav navbar-right">
+                                        <NavNotification/>
+                                        <li>
+                                            <div className="nav-profile badge badge-sm">
+                                                <Link to="/profile">
+                                                    <img id="avatar-img" src={`/api/v1/users/${this.props.uid}/avatar`}
+                                                         ref="avatar" className="img-circle" alt="badge"/>
+                                                    {this.state.loadingImage && <Load/> }
+                                                </Link>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <button className="btn btn-link btn-signout"
+                                                    onClick={this.props.handleLogout} style={linkTextStyle}>Log Out</button>
+                                        </li>
+                                    </ul>
+                                </Authorizer>
+                            </div>
                         </div>
-                        <Authorizer anonymous={true}>
-                            <VisibleAnonymousLinks/>
-                        </Authorizer>
-                        <Authorizer>
-                            <ul className="nav navbar-nav navbar-right">
-                                <NavNotification/>
-                                <li>
-                                    <div className="nav-profile badge badge-sm">
-                                        <Link to="/profile">
-                                            <img id="avatar-img" src={`/api/v1/users/${this.props.uid}/avatar`}
-                                                 ref="avatar" className="img-circle" alt="badge"/>
-                                            {this.state.loadingImage && <Load/> }
-                                        </Link>
-                                    </div>
-                                </li>
-                                <li>
-                                    <button className="btn btn-link btn-signout"
-                                            onClick={this.props.handleLogout} style={linkTextStyle}>Log Out</button>
-                                </li>
-                            </ul>
-                        </Authorizer>
-                    </div>
-                </div>
-                {/* app-wide modals */}
-                {currentModal()}
-                {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
-                {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
-                                                                filter = {[ "brand_logo",
+                        {/* app-wide modals */}
+                        {currentModal()}
+                        {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
+                        {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
+                                                                        filter = {[ "brand_logo",
                                                                             "primary_theme_background_color",
                                                                             "primary_theme_text_color",
                                                                             "button_primary_color",
                                                                             "button_primary_hover_color",
                                                                             "button_primary_text_color"]
-                                                                }/>
+                                                                        }/>
+                        }
+                        <AppMessage/>
+                    </nav>
+                    <SideNav sidebarLogout={this.props.handleLogout} toggleSidebar={this.toggleSideBar}/>
+                </div>
                 }
-                <AppMessage/>
-            </nav>
+            </div>
 
         );
     }
@@ -283,7 +302,8 @@ const mapStateToProps = (state, ownProps) => {
     return {
         uid: state.uid,
         user: state.user || null,
-        options: state.options
+        options: state.options,
+        nav_class: state.navbar.nav_class
     }
 };
 

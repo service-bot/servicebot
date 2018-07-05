@@ -1,9 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Link, browserHistory} from 'react-router';
-import {Price} from '../../utilities/price.jsx';
+import {Price, getPrice} from '../../utilities/price.jsx';
 import { connect } from 'react-redux';
 let _ = require("lodash");
+import getSymbolFromCurrency from 'currency-symbol-map'
+
 
 class ServiceListItem extends React.Component {
 
@@ -109,31 +111,13 @@ class ServiceListItem extends React.Component {
 
         let getPriceOrTrial = ()=>{
             if(_.get(this.props.options, 'show_trial.value') == 'false' || myService.trial_period_days <= 0) {
-                return getPrice();
+                return getPrice(myService);
             }
             else{
                 return <span>{myService.trial_period_days} {"Day Free Trial"}</span>;
             }
         };
 
-        let getPrice = ()=>{
-            let serType = myService.type;
-            if (serType === "subscription") {
-                return (
-                    <span>
-                    <Price value={myService.amount}/>
-                        {myService.interval_count === 1 ? ' /' : ' / ' + myService.interval_count} {' ' + myService.interval}
-                </span>
-                );
-            } else if (serType === "one_time") {
-                return (<span><Price value={myService.amount}/></span>);
-            } else if (serType === "custom") {
-                return false;
-            } else {
-                return (<span><Price value={myService.amount}/></span>)
-            }
-
-        };
 
         let getRequestText = ()=>{
             let serType = myService.type;
@@ -192,7 +176,7 @@ class ServiceListItem extends React.Component {
                         <Link to={this.props.url} className="btn btn-box">
                             <div className="btn btn-black" style={{"backgroundColor": style.header.backgroundColor, "color": style.header.color}}>
                                 <span>{getRequestText() + " "}</span>
-                                <span>{getPrice() ? getPrice() : ""}</span>
+                                <span>{getPrice(myService) ? getPrice(myService) : ""}</span>
                             </div>
                         </Link>
                     </div>

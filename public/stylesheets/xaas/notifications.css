@@ -29,7 +29,7 @@ span.notification-badge, span.notification-badge a{
 span.notification-badge {
     background: #ff0000;
     border-radius: 50px;
-    padding: 3px 10px 3px 8px;
+    padding: 3px 12px 3px 12px;
     text-align: center;
     margin-left: 5px;
     font-weight: 100;

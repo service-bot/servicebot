@@ -144,6 +144,7 @@ module.exports = function* (appConfig, initialConfig, dbConfig, app) {
 
                 try {
                     require("../../bin/setup")(config, function (env) {
+                        res.cookie("spk", publishable);
                         emitter({initialConfig: config, response: res});
                         emitter(END);
                     });

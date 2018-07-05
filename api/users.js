@@ -8,6 +8,7 @@ let File = require("../models/file");
 let path = require("path");
 let mkdirp = require("mkdirp");
 let bcrypt = require("bcryptjs");
+let jwt = require('jsonwebtoken');
 let Role = require("../models/role");
 //todo - entity posting should have correct error handling, response should tell user what is wrong like if missing column
 let avatarFilePath = "uploads/avatars";
@@ -76,7 +77,6 @@ module.exports = function (router, passport) {
         let token = req.query.token;
         if (token) {
             Invitation.findOne("token", token, function (foundInvitation) {
-                console.log(foundInvitation);
                 if (!foundInvitation.data) {
                     res.status(500).send({error: "invalid token specified"})
                 } else {
@@ -87,7 +87,6 @@ module.exports = function (router, passport) {
                         newUser.set("status", "active");
                         newUser.update(function (err, updatedUser) {
                             foundInvitation.delete(function (response) {
-                                console.log("invitation deleted");
                                 EventLogs.logEvent(updatedUser.get('id'), `user ${updatedUser.get('id')} ${updatedUser.get('email')} registered`);
                                 res.locals.json = updatedUser.data;
                                 res.locals.valid_object = updatedUser;
@@ -125,7 +124,6 @@ module.exports = function (router, passport) {
     }, function (req, res, next) {
         req.logIn(res.locals.valid_object, {session: true}, function (err) {
             if (!err) {
-                console.log("user logged in!");
                 next();
             } else {
                 console.error("Issue logging in: ", err)
@@ -156,8 +154,8 @@ module.exports = function (router, passport) {
                     let frontEndUrl = req.protocol + '://' + req.get('host') + "/invitation/" + result.get("token");
                     EventLogs.logEvent(req.user.get('id'), `users ${req.body.email} was reinvited by user ${req.user.get('email')}`);
                     res.locals.json = {token: result.get("token"), url: frontEndUrl, api: apiUrl};
-                    result.set('url', frontEndUrl);
-                    result.set('api', apiUrl);
+                    user.set('url', frontEndUrl);
+                    user.set('api', apiUrl);
                     res.locals.valid_object = result;
                     next();
                     store.dispatchEvent("user_invited", user);
@@ -263,6 +261,7 @@ module.exports = function (router, passport) {
 
     router.post("/users/:id(\\d+)/unsuspend", validate(User), auth(null, User, "id"), function (req, res) {
         let user = res.locals.valid_object;
+
         user.unsuspend(function (err, updated_user) {
             if(!err) {
                 //dispatchEvent("user_unsuspended", user);
@@ -273,11 +272,20 @@ module.exports = function (router, passport) {
         });
     });
 
+    router.post("/users/:id(\\d+)/token", validate(User), auth(null, User, "id"), function (req, res) {
+        let user = res.locals.valid_object;
+        let token = jwt.sign({  uid: user.data.id }, process.env.SECRET_KEY, { expiresIn: '3h' });
+        res.json({token:token})
+    });
+
+
     router.delete(`/users/:id(\\d+)`, validate(User), auth(null, User, "id"), function (req, res, next) {
         let user = res.locals.valid_object;
         user.deleteWithStripe(function (err, completed_msg) {
             if (!err) {
                 res.status(200).json({message: completed_msg});
+                store.dispatchEvent(`users_deleted`, user);
+
             } else {
                 res.status(400).json({error: err});
             }

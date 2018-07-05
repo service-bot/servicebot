@@ -18,9 +18,9 @@ class ModalInviteUser extends React.Component {
         let pageName = "Invite New User";
 
         return(
-            <Modal modalTitle={pageName} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
+            <Modal modalTitle={pageName} icon="fa-user-plus" hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
                 <div className="table-responsive">
-                    <InviteUserForm hide={self.props.hide}/>
+                    <InviteUserForm hide={self.props.hide} reinviteEmail={this.props.reinviteUser ? this.props.reinviteUser : null}/>
                 </div>
             </Modal>
         );

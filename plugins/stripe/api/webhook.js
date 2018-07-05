@@ -64,16 +64,16 @@ module.exports = function(knex) {
     let invoiceFailedEvent = function (event, callback) {
         async.series([
             function (callback) {
-                invoiceUpdatedEvent(event, function (result) {
-                    callback(null, result);
-                });
-            },
-            function (callback) {
                 User.findOne('customer_id', event.data.object.customer, function (user) {
                     user.data.status = 'flagged';
                     user.update(function (err, result) {
                         callback(err, result);
                     });
+                });
+            },
+            function (callback) {
+                invoiceUpdatedEvent(event, function (result) {
+                    callback(null, result);
                 });
             }
         ]);
@@ -82,7 +82,7 @@ module.exports = function(knex) {
     let customerDeletedEvent = function (event, callback) {
         User.findOne('customer_id', event.data.object.id, function (user) {
             if(user.data) {
-                user.purgeData(function (result) {
+                user.purgeData(false, function (result) {
                     user.data.status = 'suspended';
                     user.data.customer_id = null;
                     user.update(function (err, result) {
@@ -187,7 +187,7 @@ module.exports = function(knex) {
     };
 
     return {
-        endpoint : "stripe/webhook",
+        endpoint : "/stripe/webhook",
         method : "post",
         middleware : [webhook],
         permissions : [],

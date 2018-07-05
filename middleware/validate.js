@@ -20,7 +20,6 @@ var validateRequest = function (model=User, correlation_id="id", params_name="id
         model.findOne(params_name, id, function(result){
             if(result.data){
                 //If the object exist, return it as well as continuing the process:
-                console.log("Valid Request!");
                 res.locals.valid_object = result;
                 return next();
             } else {

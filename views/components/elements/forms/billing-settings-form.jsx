@@ -37,8 +37,13 @@ class CardSection extends React.Component {
 
 class BillingForm extends React.Component {
     render() {
+        if(!this.props.spk) {
+            return (
+                <div>Loading</div>
+            )
+        }
         return (
-            <StripeProvider apiKey={this.props.spk || "no_public_token"}>
+            <StripeProvider apiKey={this.props.spk}>
                 <Elements id="payment-form">
                     <CreditCardForm {...this.props}/>
                 </Elements>
@@ -163,13 +168,20 @@ class CreditCardForm extends React.Component {
     }
 
     handleSuccessResponse(response) {
-        this.setState({ alerts: {
-            type: 'success',
-            icon: 'check',
-            message: 'Your card has been updated.'
-        }});
-        //re-render
-        this.checkIfUserHasCard();
+        //If the billing form is passed in a callback, call it.
+        if(this.props.handleResponse) {
+            this.props.handleResponse(response);
+        //Otherwise, set own alert.
+        } else {
+            this.setState({ alerts: {
+                type: 'success',
+                icon: 'check',
+                message: 'Your card has been updated.'
+            }});
+            //re-render
+            this.checkIfUserHasCard();
+        }
+
     }
 
     handleFailureResponse(response) {

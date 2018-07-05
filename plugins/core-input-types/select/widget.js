@@ -86,12 +86,13 @@ class SelectPricing extends React.Component {
 
 let SelectWidget = (props) => {
     let {input, configValue, label} = props;
+    console.log(input);
     return (
         <div className="form-group form-group-flex addon-options-widget-default-value-wrapper">
             {label && <label className="control-label form-label-flex-md addon-options-widget-default-value-label">{label}</label>}
             <div className="form-input-flex">
                 <select className="form-control addon-options-widget-default-value-select" {...input}>
-                    <option value="0">Choose One</option>
+                    <option value="" key="0-default">Choose One</option>
                     { configValue && configValue.value && configValue.value.map((option, index) => {
                             let price = configValue.pricing && configValue.pricing.value && configValue.pricing.value[option];
                             return <option key={index} value={option}>

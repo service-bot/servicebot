@@ -2,6 +2,7 @@
   "internalApiKey": {
     "type": "apiKey",
     "in": "header",
-    "name": "Authorization"
+    "name": "Authorization",
+    "description": "JSON Web token, Authorization header should look like 'JWT TokenFromAuthApi', for example 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTU' Auth api can be found at /auth/token"
   }
 }

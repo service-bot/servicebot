@@ -16,12 +16,15 @@ export const SET_NOTIFICATION = "SET_NOTIFICATION";
 export const ADD_SYSTEM_NOTIFICATION = "ADD_SYSTEM_NOTIFICATION";
 export const SET_SYSTEM_NOTIFICATIONS = "SET_SYSTEM_NOTIFICATIONS";
 export const SET_SYSTEM_NOTIFICATION = "SET_SYSTEM_NOTIFICATION";
-
 export const SET_FORM_DATA = "SET_FORM_DATA";
 export const INITIALIZE = "INITIALIZE";
 export const DISMISS_ALERT = "DISMISS_ALERT";
 export const ADD_ALERT = "ADD_ALERT";
-
+export const RESET_NAV_CLASS = "RESET_NAV_CLASS";
+export const SET_NAV_CLASS = "SET_NAV_CLASS";
+export const SETUP_COMPLETE = "SETUP_COMPLETE";
+export const SHOW_MODAL = "SHOW_MODAL";
+export const HIDE_MODAL = "HIDE_MODAL";
 /*
  * other constants
  */
@@ -55,7 +58,6 @@ export function setOption(option){
     return { type: SET_OPTION, option }
 }
 
-
 export function setVersion(version){
     return { type: SET_VERSION, version }
 }
@@ -64,15 +66,14 @@ export function initializeState(initialState){
     return { type: INITIALIZE, initialState }
 }
 
-
 export function addNotification(notification, isSystem){
     return { type: ADD_NOTIFICATION, notification, isSystem }
 }
 
-
 export function setNotifications(notifications, isSystem){
     return { type: SET_NOTIFICATIONS, notifications, isSystem }
 }
+
 export function setNotification(notification, isSystem){
     return { type: SET_NOTIFICATION, notification, isSystem }
 }
@@ -81,7 +82,6 @@ export function addSystemNotification(notification, isSystem){
     return { type: ADD_NOTIFICATION, notification, isSystem }
 }
 
-
 export function setSystemNotifications(notifications, isSystem){
     return { type: SET_SYSTEM_NOTIFICATIONS, notifications, isSystem }
 }
@@ -89,7 +89,9 @@ export function setSystemNotification(notification, isSystem){
     return { type: SET_NOTIFICATION, notification, isSystem }
 }
 
-
+export function setupComplete(isComplete){
+    return { type: SETUP_COMPLETE, isComplete }
+}
 
 export function setUid(uid) {
     return { type: SET_UID, uid }
@@ -112,4 +114,20 @@ export function dismissAlert(alerts){
 }
 export function addAlert(alert){
     return { type: ADD_ALERT, alert }
+}
+
+export function resetNavClass(){
+    return {type: RESET_NAV_CLASS, navbar: {nav_class : "default"}}
+}
+
+export function setNavClass(className){
+    return {type: SET_NAV_CLASS, navbar: {nav_class : className}}
+}
+
+export function showModal(component, hide, titleText, buttonText, icon, titleColor, hideButton){
+    return {type: SHOW_MODAL, modalProps: {closeBtnText: buttonText, component, titleColor, modalTitle: titleText, hideCloseBtn: hideButton, hide, icon}}
+}
+
+export function hideModal(){
+    return {type: HIDE_MODAL}
 }

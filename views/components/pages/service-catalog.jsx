@@ -18,7 +18,7 @@ class ServiceCatalog extends React.Component {
     }
 
     render () {
-        var self = this;
+        let self = this;
         let pageName = this.props.route.name;
         let breadcrumbs = [{name:'Home', link:'home'},{name:'My Services', link:'/my-services'},{name:'Service Catalog', link:null}];
         return(

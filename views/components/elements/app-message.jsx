@@ -30,11 +30,11 @@ class Message extends React.Component {
             <div className={`app-message app-message-${alertType || 'info'}`}>
                 <p>
                     {message}
-                    <button onClick={()=>{return(this.dismiss())}} id={id}
-                            className="pull-right btn btn-rounded btn-outline btn-white btn-sm">
-                        dismiss
-                    </button>
                 </p>
+                <button onClick={()=>{return(this.dismiss())}} id={id}
+                        className="pull-right btn btn-rounded btn-outline btn-white btn-sm">
+                    dismiss
+                </button>
             </div>
         )
     }

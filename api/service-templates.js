@@ -23,6 +23,7 @@ let imageFilePath = ServiceTemplate.imageFilePath;
 let slug = require("slug");
 let validateProperties = require("../lib/handleInputs").validateProperties;
 let fileManager = store.getState(true).pluginbot.services.fileManager[0];
+let jwt = require('jsonwebtoken');
 
 
 
@@ -194,6 +195,9 @@ module.exports = function (router) {
     //middleware to validate and adjust price.. todo: move price adjjustment somewhere else
     let validateServiceRequest = async function (req, res, next) {
         try {
+            if(!store.getState().options.stripe_publishable_key){
+                throw "Cannot request, no Stripe Key";
+            }
             let serviceTemplate = res.locals.valid_object;
             let props = (await serviceTemplate.getRelated(ServiceTemplateProperty)) || null;
             let req_body = req.body;
@@ -204,13 +208,11 @@ module.exports = function (router) {
                 acc[handler.name] = handler.handler;
                 return acc;
             }, {});
-            console.log(handlers, "HANDLERS!");
             //this is true when user can override things
             let hasPermission = (permission_array.some(p => p.get("permission_name") === "can_administrate" || p.get("permission_name") === "can_manage"));
             let templatePrice = serviceTemplate.get("amount");
             let price = hasPermission ? (req_body.amount || templatePrice) : templatePrice;
             let trialPeriod = serviceTemplate.get("trial_period_days");
-            console.log("TRIAL PERIOD DAYSS " + trialPeriod)
 
             //todo: this doesn't do anthing yet, needs to check the "passed" props not the ones on the original...
             // let validationResult = props ? validateProperties(props, handlers) : [];
@@ -331,13 +333,13 @@ module.exports = function (router) {
                 if(!req_body.password) {
                     let invite = new Invitation({"user_id": createdUser.get("id")});
                     let createInvite = Promise.promisify(invite.create, {context: invite});
-
                     //create the invitation for the user.
                     let createdInvite = await createInvite();
                     responseJSON.api = req.protocol + '://' + req.get('host') + "/api/v1/users/register?token=" + createdInvite.get("token");
                     responseJSON.url = req.protocol + '://' + req.get('host') + "/invitation/" + createdInvite.get("token");
 
                 }
+                responseJSON.token = jwt.sign({  uid: createdUser.get("id") }, process.env.SECRET_KEY, { expiresIn: '1h' });
                 let user_role = new Role({id : createdUser.get("role_id")}) ;
 
                 // todo : remove this once it supports promises
@@ -413,6 +415,7 @@ module.exports = function (router) {
                 ...res.locals.overrides,
 
             });
+            newInstance = await newInstance.attachReferences();
             let postData = {};
             if(lifecycleManager) {
                 postData = await lifecycleManager.postProvision({
@@ -424,7 +427,8 @@ module.exports = function (router) {
             res.json({
                 ...responseJSON,
                 ...newInstance.data,
-                ...postData
+                ...postData,
+                request: req_body
             });
 
             try {
@@ -458,6 +462,7 @@ module.exports = function (router) {
     router.post("/service-templates", auth(), function (req, res, next) {
         req.body.created_by = req.user.get("id");
         req.body.trial_period_days = req.body.trial_period_days || 0;
+        req.body.currency = store.getState().options.currency;
         let properties = req.body.references && req.body.references.service_template_properties;
         if(properties){
             req.body.references.service_template_properties = properties.map(prop => {
@@ -478,6 +483,7 @@ module.exports = function (router) {
 
     router.put(`/service-templates/:id(\\d+)`, validate(ServiceTemplate), auth(), function(req, res, next) {
         req.body.trial_period_days = req.body.trial_period_days || 0;
+        req.body.currency = store.getState().options.currency;
         let properties = req.body.references && req.body.references.service_template_properties;
         if(properties){
             req.body.references.service_template_properties = properties.map(prop => {
@@ -499,10 +505,8 @@ module.exports = function (router) {
         new Promise((resolve, reject) => {
             //Get the list of templates and apply order from query if requested
             if (req.query.order_by) {
-                console.log(`Query sent with order by ${req.query.order_by}`);
                 let order = 'ASC';
                 if (req.query.order) {
-                    console.log(`Query sent with order ${req.query.order}`);
                     if (req.query.order.toUpperCase() === 'DESC') {
                         order = 'DESC';
                     }
@@ -531,9 +535,8 @@ module.exports = function (router) {
                 //Apply the query limit to the array of templates
                 return new Promise((resolve, reject) => {
                     if (req.query.limit) {
-                        console.log(`Query sent with limit ${req.query.limit}`);
                         if (isNaN(req.query.limit)) {
-                            console.log(`limit ${req.query.limit} is not a number`);
+                            console.error(`limit ${req.query.limit} is not a number`);
                             reject(`limit ${req.query.limit} must be a number`)
                         }
                         else {

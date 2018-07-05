@@ -1,19 +1,21 @@
 
 <p align="center">
 <a href="https://servicebot.io">
-<img width="250" heigth="250" src="https://servicebot.io/images/servicebot-logo-light.png">
+<img width="250" heigth="250" src="https://servicebot.io/images/logo/servicebot-logo-full-blue.png">
 </a>
 </p>
 
 ___
 <p align="center">
 <b>Open-source Subscription Management System</b>
-<p align="center">Manage subscriptions and automate aspects of your business.</p>
-<p align="center"><a href="https://servicebot.io"><img width="750" src="https://servicebot.io/images/adminportal.png"></a></p>
+<p align="center">Automate what happens when customers subscribe, cancel, and upgrade</p>
+<p align="center"><a href="https://servicebot.io"><img width="750" src="https://servicebot.io/newadmin.gif"></a></p>
 </p>
 
 ## Overview
 Servicebot is an XaaS (Anything-as-a-service) platform. You can define requestable service templates with an advanced service designer that supports many input types, pricing models, and even develop plugins which can run code when these services are requested. The goal being Servicebot manages the lifecycle of any type of service a business can offer.
+
+[![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=/servicebot/latest)
 
 ## Features
 - **Automate Billing:** Create and sell anything as a service in minutes.

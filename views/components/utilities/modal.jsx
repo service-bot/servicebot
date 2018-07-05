@@ -1,13 +1,34 @@
 import React from 'react';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connect } from "react-redux";
+import {hideModal} from "./actions"
 let _ = require("lodash");
 
 class Modal extends React.Component {
 
     constructor(props){
         super(props);
+        this.hide = this.hide.bind(this);
+        this.escFunction = this.escFunction.bind(this);
     }
+
+    escFunction(event){
+        if(event.keyCode === 27) {
+            this.props.hide && this.props.hide(event);
+            this.props.hideModal();
+        }
+    }
+    componentDidMount(){
+        document.addEventListener("keydown", this.escFunction, false);
+    }
+    componentWillUnmount(){
+        document.removeEventListener("keydown", this.escFunction, false);
+    }
+    hide(event){
+        this.props.hide && this.props.hide(event);
+        this.props.hideModal();
+    }
+
 
     render () {
         let top = this.props.top || '50%';
@@ -48,10 +69,11 @@ class Modal extends React.Component {
                                 </div>
                                 <div className="modal-body">
                                     {this.props.children}
+                                    {this.props.component}
                                 </div>
                                 <div className={`modal-footer ${this.props.hideFooter ? 'hide' : ''}`}>
                                     { !this.props.hideCloseBtn &&
-                                    <button onClick={this.props.hide} className="btn btn-default btn-rounded">Close</button>
+                                    <button onClick={this.hide} className="btn btn-default btn-rounded">{this.props.closeBtnText || "Close"}</button>
                                     }
                                 </div>
                             </div>
@@ -64,5 +86,6 @@ class Modal extends React.Component {
         );
     }
 }
-
-export default connect((state) => {return {options:state.options}})(Modal);
+let mapStateToProps = (state) => {return {options:state.options}};
+let mapDispatchtoProps = (dispatch) => {return {hideModal: () => dispatch(hideModal())}};
+export default connect(mapStateToProps,mapDispatchtoProps)(Modal);

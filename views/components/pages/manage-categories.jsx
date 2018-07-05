@@ -117,6 +117,7 @@ class ManageCategories2 extends React.Component {
 
     render() {
         let pageName = this.props.route.name;
+        let subtitle = 'Categorize your offerings. Once a category is created, an offering can be placed on that category.';
 
         let renderModals = () => {
             if (this.state.openAddCategoryModal) {
@@ -147,7 +148,7 @@ class ManageCategories2 extends React.Component {
 
             return (
                 <Authorizer permissions="can_administrate">
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                    <Jumbotron pageName={pageName} subtitle={subtitle}/>
                     <div className="page-service-instance">
                         <Content>
                             <div className="row m-b-20">

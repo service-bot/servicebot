@@ -5,8 +5,8 @@ let Role = require('./role');
 let Fund = require('./fund');
 let promisifyProxy = require("../lib/promiseProxy");
 let references = [
-    { "model": Role, "referenceField": "role_id", "direction":"to", "readOnly": true },
-    { "model": Fund, "referenceField": "user_id", "direction":"from", "readOnly": true}
+    {"model": Role, "referenceField": "role_id", "direction": "to", "readOnly": true},
+    {"model": Fund, "referenceField": "user_id", "direction": "from", "readOnly": true}
 ];
 let User = require('./base/entity')("users", references);
 
@@ -16,14 +16,14 @@ let User = require('./base/entity')("users", references);
 User.prototype.promiseValid = function () {
     let self = this;
     return new Promise(function (resolve, reject) {
-        if(!self.data.customer_id) {
-            return reject ('ERROR: User does not have a Stripe ID!');
+        if (!self.data.customer_id) {
+            return reject('ERROR: User does not have a Stripe ID!');
         } else {
-            Stripe().connection.customers.retrieve(self.data.customer_id, function(err, customer) {
-                if(err) {
-                    return reject ('ERROR: User does not exist in Stripe!');
+            Stripe().connection.customers.retrieve(self.data.customer_id, function (err, customer) {
+                if (err) {
+                    return reject('ERROR: User does not exist in Stripe!');
                 }
-                return resolve (customer.id);
+                return resolve(customer.id);
             });
         }
     });
@@ -38,7 +38,7 @@ User.prototype.promiseStripeRemoval = function () {
         .then(function (customer_id) {
             return new Promise(function (resolve, reject) {
                 Stripe().connection.customers.del(customer_id, function (err, confirmation) {
-                    if(!err) {
+                    if (!err) {
                         console.log(`User ${self.data.id} was removed from Stripe!`);
                         return resolve(confirmation);
                     } else {
@@ -54,22 +54,21 @@ User.prototype.promiseStripeRemoval = function () {
  * This function will remove the customer reference in Stripe AND the database.
  * Use this function if need to completely disconnect the user from the Stripe account.
  */
-User.prototype.promiseStripeDisconnect = function () {
+User.prototype.promiseStripeDisconnect = async function () {
     let self = this;
-    return self.promiseStripeRemoval()
-        .then(function () {
-            return new Promise(function (resolve, reject) {
-                self.data.customer_id = null;
-                self.data.status = 'disconnected';
-                self.update(function (err, result) {
-                    if(!err) {
-                        return resolve(`User ${self.data.id} was disconnected from Stripe`);
-                    } else {
-                        return reject(`ERROR while disconnecting user ${self.data.id} from Stripe`);
-                    }
-                })
-            });
-        });
+    //Never remove the record from Stripe. Just internally
+    return new Promise(function (resolve, reject) {
+        self.data.customer_id = null;
+        //To keep the users with the same status, we will not disconnect the user.
+        //self.data.status = 'disconnected';
+        self.update(function (err, result) {
+            if (!err) {
+                return resolve(`User ${self.data.id} was disconnected from Stripe`);
+            } else {
+                return reject(`ERROR while disconnecting user ${self.data.id} from Stripe`);
+            }
+        })
+    });
 };
 
 /**
@@ -79,13 +78,13 @@ User.prototype.promiseStripeDisconnect = function () {
 User.prototype.promiseStripeReconnect = function () {
     let self = this;
     return new Promise(function (resolve, reject) {
-        if(!self.data.customer_id) {
+        if (!self.data.customer_id) {
             let customer_obj = {
                 email: self.data.email,
                 description: `ServiceBot User: ${self.data.email}`
             };
-            Stripe().connection.customers.create(customer_obj, function(err, customer) {
-                if(!err){
+            Stripe().connection.customers.create(customer_obj, function (err, customer) {
+                if (!err) {
                     return resolve(customer.id);
                 } else {
                     return reject(`ERROR cannot reconnect user ${self.data.id} to Stripe!`)
@@ -98,7 +97,7 @@ User.prototype.promiseStripeReconnect = function () {
         return new Promise(function (resolve, reject) {
             self.data.customer_id = customer_id;
             self.update(function (err, result) {
-                if(!err) {
+                if (!err) {
                     console.log(`User ${self.data.id} is now reconnected to Stripe`);
                     return resolve(`User ${self.data.id} is now reconnected to Stripe`);
                 } else {
@@ -122,18 +121,18 @@ let createWithStripe = function (options, callback) {
     };
 
     //Create Stripe Customer:
-    Stripe(options).connection.customers.create(customer_obj, function(err, customer) {
-        if(!err){
+    Stripe(options).connection.customers.create(customer_obj, function (err, customer) {
+        if (!err) {
             console.log(`Stripe Customer Created: ${customer.id}`);
             self.data.customer_id = customer.id;
-            Role.findOne("role_name", "user", function(role){
-                if(!self.data.role_id){
+            Role.findOne("role_name", "user", function (role) {
+                if (!self.data.role_id) {
                     self.data.role_id = role.get("id");
                 }
                 //Use the Entity create to create the user
                 self.create(function (err, created_user) {
-                   console.log(`Create User: ${created_user}`);
-                   callback(err, created_user);
+                    console.log(`Create User: ${created_user}`);
+                    callback(err, created_user);
                 });
             })
         } else {
@@ -145,61 +144,49 @@ let createWithStripe = function (options, callback) {
 
 //allows to pass option override, no longer relying 100% on store.
 User.prototype.createWithStripe = new Proxy(createWithStripe, {
-    apply : function(target, thisArg, argList){
-        if(argList.length === 2){
+    apply: function (target, thisArg, argList) {
+        if (argList.length === 2) {
             target.bind(thisArg)(...argList)
-        }else{
+        } else {
             target.bind(thisArg)(undefined, ...argList);
         }
     }
 });
 
-let updateWithStripe = function (callback) {
+User.prototype.updateWithStripe = async function () {
     let self = this;
     let store = require("../config/redux/store");
     self.data.email = self.data.email.toLowerCase();
-    self.promiseValid()
-        .then(function (customer_id) {
-            return new Promise(function (resolve, reject) {
-                Stripe().connection.customers.update(customer_id, {email: self.data.email}, function (err, user) {
-                    if(err) {
-                        return reject('User cannot be deleted, must be suspended. User has connected records!');
-                    }
-                    return resolve(customer_id);
-                });
-            });
-        })
-        .then(function (customer_id) {
-            self.update(function (err, result) {
-                callback(err, result);
-                if(!err){
-                    store.dispatchEvent("user_updated", result);
-                }
+    try {
+        let customer_id = await this.promiseValid();
 
-            });
-        })
-        .catch(function (err) {
-            callback(err);
-        });
+        //todo: if stripe update fails to update email, the whole function should fail
+        await Stripe().connection.customers.update(customer_id, {email: self.data.email});
+    } catch (e) {
+        console.error(e);
+    }
+    let updatedUser = await self.update();
+    store.dispatchEvent("user_updated", updatedUser);
+    return updatedUser;
 };
 
 User.prototype.deleteWithStripe = function (callback) {
     let self = this;
     new Promise(function (resolve, reject) {
         self.delete(function (err, deleted_user) {
-            if(err) {
+            if (err) {
                 return reject('User cannot be deleted, must be suspended. User has connected records!');
             }
             return resolve(`User ${self.data.id} has been deleted from database!`);
         });
-    }).then(function() {
+    }).then(function () {
         return self.promiseStripeRemoval()
     }).then(function () {
         callback(null, `User ID: ${self.data.id} has been removed.`);
     })
-    .catch(function (err) {
-        callback(err, null);
-    });
+        .catch(function (err) {
+            callback(err, null);
+        });
 };
 
 /**
@@ -211,7 +198,7 @@ User.prototype.deleteWithStripe = function (callback) {
  * @param callback
  * @returns {Promise.<TResult>}
  */
-User.prototype.purgeData = function (callback) {
+User.prototype.purgeData = function (fullRemoval = false, callback) {
     let self = this;
     return Promise.resolve(self.promiseStripeDisconnect()).catch(function (err) {
         console.log(`User ID: ${self.data.id} - ${err}`);
@@ -222,7 +209,7 @@ User.prototype.purgeData = function (callback) {
                 Promise.all(invoices.map(function (invoice) {
                     return new Promise(function (resolve, reject) {
                         invoice.delete(function (err, result) {
-                            if(!err) {
+                            if (!err) {
                                 console.log(`Invoice Removed: ${invoice.data.id}`);
                                 return resolve(`Invoice Removed: ${invoice.data.id}`);
                             } else {
@@ -243,13 +230,13 @@ User.prototype.purgeData = function (callback) {
             ServiceInstance.findAll('user_id', self.data.id, function (services) {
                 Promise.all(services.map(function (service) {
                     return new Promise(function (resolve, reject) {
-                        service.deleteFiles(function(err){
-                            if(err){
+                        service.deleteFiles(function (err) {
+                            if (err) {
                                 console.log(`ERROR removing files for Instance: ${service.data.id} - ${err}`);
                             }
                         });
                         service.delete(function (err, result) {
-                            if(!err) {
+                            if (!err) {
                                 console.log(`Service Removed: ${service.data.id}`);
                                 return resolve(`Service Removed: ${service.data.id}`);
                             } else {
@@ -274,7 +261,7 @@ User.prototype.purgeData = function (callback) {
                 Promise.all(funds.map(function (fund) {
                     return new Promise(function (resolve, reject) {
                         fund.delete(function (err, result) {
-                            if(!err) {
+                            if (!err) {
                                 console.log(`Fund Removed: ${fund.data.id}`);
                                 return resolve(`Fund Removed: ${fund.data.id}`);
                             } else {
@@ -291,6 +278,20 @@ User.prototype.purgeData = function (callback) {
                     return rejectall(`FAILED => All User ${self.data.id} funds have been removed!`);
                 });
             });
+        });
+    }).then(function () {
+        return new Promise(function (resolve, reject) {
+            //Make sure to not remove any admins.
+            if (fullRemoval === 'true' && self.data.role_id === 3 && self.data.id !== 1) {
+                self.delete(function (err, deleted_user) {
+                    if (err) {
+                        return reject('User cannot be deleted, must be suspended. User has connected records!');
+                    }
+                    return resolve(`User ${self.data.id} has been deleted from the internal database!`);
+                });
+            } else {
+                return resolve(`User ${self.data.id} was not deleted internally. Record kept.`)
+            }
         });
     }).then(function () {
         callback(new Promise(function (resolve, reject) {
@@ -312,7 +313,7 @@ User.prototype.purgeData = function (callback) {
 User.prototype.suspend = async function () {
     let self = this;
     console.log('User status: ', self.data.status);
-    if(self.data.status !== 'invited' && self.data.status !== 'suspended') {
+    if (self.data.status !== 'invited' && self.data.status !== 'suspended') {
         let ServiceInstances = require('./service-instance');
         let CancellationRequest = require("./service-instance-cancellation");
         await CancellationRequest.batchDelete({
@@ -320,17 +321,17 @@ User.prototype.suspend = async function () {
         });
 
         let instancesToCancel = await ServiceInstances.find({
-            "user_id" : self.data.id
+            "user_id": self.data.id
         });
 
-        for(let instance of instancesToCancel){
+        for (let instance of instancesToCancel) {
             await instance.unsubscribe();
         }
         self.data.status = "suspended";
         return await self.update();
 
     }
-    else{
+    else {
         throw 'User can not be invited or already suspended'
     }
 };
@@ -341,7 +342,7 @@ User.prototype.suspend = async function () {
  */
 User.prototype.unsuspend = function (callback) {
     let self = this;
-    if(self.data.status === 'suspended') {
+    if (self.data.status === 'suspended' && self.data.customer_id) {
         self.data.status = 'active';
         self.update(function (err, user) {
             if (!err) {
@@ -351,8 +352,12 @@ User.prototype.unsuspend = function (callback) {
             }
         });
     }
-    else{
-        callback('User is not suspended', null);
+    else {
+        if (!self.data.customer_id) {
+            callback('User is deleted in Stripe', null);
+        } else {
+            callback('User is not suspended', null);
+        }
     }
 };
 
@@ -362,9 +367,9 @@ User.prototype.unsuspend = function (callback) {
  * Override of the "findOnRelative" function to filter out passwords for users.
  */
 //TODO maybe have to override all FInds for user if we never want password. (Maybe use a solution similar to next() for filtering)
-User.findOnRelative = function(key, value, callback){
-    User.findAll(key, value, function(result){
-        let noPassword = result.map(function(entity){
+User.findOnRelative = function (key, value, callback) {
+    User.findAll(key, value, function (result) {
+        let noPassword = result.map(function (entity) {
             delete entity.data.password;
             return entity
         });
@@ -373,6 +378,5 @@ User.findOnRelative = function(key, value, callback){
 };
 
 
-User.prototype.updateWithStripe = promisifyProxy(updateWithStripe, false);
 
 module.exports = User;

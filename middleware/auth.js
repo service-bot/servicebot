@@ -1,6 +1,6 @@
 let Role = require("../models/role.js");
 let _ = require("lodash");
-let swaggerJSON = require("../api-docs/api-paths.json");
+let swaggerJSON = {...require("../api-docs/api-entity-paths.json"), ...require("../api-docs/api-paths.json")};
 
 
 //todo:  allow for multiple permissions

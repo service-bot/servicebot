@@ -27,8 +27,7 @@ class ServiceInstancePaymentPlan extends React.Component {
             let trial = self.props.service.payment_plan.trial_period_days;
             if(self.props.service.status === "running" && trial > 0) {
                 let currentDate = new Date(self.props.service.subscribed_at * 1000);
-                let trialEnd = new Date(self.props.service.subscribed_at * 1000);
-                trialEnd.setDate(trialEnd.getDate() + trial);
+                let trialEnd = new Date(self.props.service.trial_end * 1000);
                 //Service is trialing if the expiration is after current date
                 if(currentDate < trialEnd) {
                     inTrial = true;
@@ -54,6 +53,33 @@ class ServiceInstancePaymentPlan extends React.Component {
             }
         } else {
             return (<DashboardWidget widgetColor="#da0304" widgetIcon="ban" widgetData="Suspended" widgetClass="col-xs-12 col-sm-6 col-md-4 col-xl-4 p-r-5"/>);
+        }
+    }
+
+    getSplitPayments(){
+        let self = this;
+        let serviceInstance = self.props.service;
+        let splitPayments = serviceInstance.split_configuration;
+        if(serviceInstance.type === 'split' && splitPayments) {
+            return(
+                <div className="service-instance-box black">
+                    <div className="service-instance-box-title black">
+                        <span>Scheduled Payment Details</span>
+                    </div>
+                    <div className="service-instance-box-content">
+                        {splitPayments.splits.map((splitItem) => (
+                            <div className="split-wrapper">
+                                <div className="subscription-pricing row m-r-0 m-l-0 p-0">
+                                    <div className="col-md-6 p-r-0 p-l-0">{(splitItem.charge_day === 0) ? (<span>Paid Instantly</span>) : (<span>After {splitItem.charge_day} Days</span>)}</div>
+                                    <div className="col-md-6 p-r-0 p-l-0 text-right"><b><Price value={splitItem.amount}/></b></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        } else {
+            return null;
         }
     }
 
@@ -154,12 +180,24 @@ class ServiceInstancePaymentPlan extends React.Component {
                         </div>
 
                     </div>
+                    {this.getSplitPayments()}
                     {this.getCustomerInfo()}
                 </div>
             );
         }else{
             return (
-                <div>Error: Payment Plan not set.</div>
+                <div>
+                    <div className="row m-b-10">
+                        <div className="col-xs-12 col-sm-6 col-md-8 col-lg-8 col-xl-8 p-r-5">
+                            <h1>{this.props.service.name}</h1>
+                            <p>{this.props.service.description} <br/> Purchased <strong><DateFormat date={this.props.service.created_at} time /></strong></p>
+                            {this.getLinkActionButton()}
+                        </div>
+
+                    </div>
+                    <div className="alert-box red"><strong>This service currently has no payment information attached to it. Contact the administrator.</strong></div>
+                    {this.getCustomerInfo()}
+                </div>
             );
         }
     }

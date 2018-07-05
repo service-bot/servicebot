@@ -2,20 +2,104 @@ import React from 'react';
 import {Link, browserHistory} from 'react-router';
 import 'react-tagsinput/react-tagsinput.css';
 import './css/template-create.css';
-import {Field, Fields, FormSection, FieldArray, reduxForm, formValueSelector, change, unregisterField, getFormValues, Form} from 'redux-form'
+import {
+    Field,
+    Fields,
+    FormSection,
+    FieldArray,
+    reduxForm,
+    formValueSelector,
+    change,
+    unregisterField,
+    getFormValues,
+    Form
+} from 'redux-form'
 import {connect} from "react-redux";
 import {RenderWidget, WidgetList, PriceBreakdown, widgets} from "../../utilities/widgets";
 import {WysiwygRedux} from "../../elements/wysiwyg.jsx";
 import FileUploadForm from "./file-upload-form.jsx";
-import {inputField, selectField, OnOffToggleField, iconToggleField,priceField, priceToCents} from "./servicebot-base-field.jsx";
+import {
+    inputField,
+    selectField,
+    OnOffToggleField,
+    iconToggleField,
+    priceField,
+    priceToCents
+} from "./servicebot-base-field.jsx";
 import {addAlert, dismissAlert} from "../../utilities/actions";
 import ServiceBotBaseForm from "./servicebot-base-form.jsx";
 import SVGIcons from "../../utilities/svg-icons.jsx";
 import Load from "../../utilities/load.jsx";
+
 let _ = require("lodash");
-import { required, email, numericality, length } from 'redux-form-validators'
+import {required, email, numericality, length} from 'redux-form-validators'
+import slug from "slug"
+
 const TEMPLATE_FORM_NAME = "serviceTemplateForm"
 const selector = formValueSelector(TEMPLATE_FORM_NAME); // <-- same as form name
+
+
+function renderSplits({fields, meta: {error, submitFailed}}) {
+
+    function onAdd(e) {
+        e.preventDefault();
+        let number_of_payments = e.target.value
+        let number_of_fields = fields.length
+
+        while (number_of_fields < number_of_payments) {
+            fields.push({});
+            number_of_fields++;
+        }
+        while (number_of_fields > number_of_payments) {
+            fields.pop()
+            number_of_fields--;
+        }
+        return (fields);
+
+    }
+
+
+    return (
+        <div>
+            <div className="form-group form-group-flex">
+                <lable className="control-label form-label-flex-md">Number of payments</lable>
+                <div className="form-input-flex">
+                    <input className="form-control" type="number" defaultValue={fields.length} onChange={onAdd}/>
+                    {submitFailed && error && <span>{error}</span>}
+                </div>
+            </div>
+
+            <ul className="split-payment-items">
+                {fields.map((member, index) => (
+                    <li className="split-payment-item" key={index}>
+                        <button className="btn btn-rounded custom-field-button iconToggleField"
+                                id="split-payment-delete-button" onClick={() => fields.remove(index)}
+                                type="button" title="Remove Payment"><span className="itf-icon"><i
+                            className="fa fa-close"/></span></button>
+
+                        <h4>Payment #{index + 1}</h4>
+                        <label>Days to charge customer after subscribed</label>
+                        <Field
+                            name={`${member}.charge_day`}
+                            type="number"
+                            component={inputField}
+                            validate={numericality({'>=': 0.00})}
+
+                        />
+                        <Field name={`${member}.amount`} type="number"
+                               component={priceField}
+                               isCents={true}
+                               label="Amount"
+                               validate={numericality({'>=': 0.00})}
+                        />
+                    </li>
+                ))}
+            </ul>
+        </div>
+    )
+}
+
+
 class CustomField extends React.Component {
 
     constructor(props) {
@@ -29,7 +113,7 @@ class CustomField extends React.Component {
             props.clearConfig();
             props.clearValue();
         }
-        if((props.templateType && nextProps.templateType !== props.templateType)){
+        if ((props.templateType && nextProps.templateType !== props.templateType)) {
             props.clearPricing();
         }
     }
@@ -41,8 +125,12 @@ class CustomField extends React.Component {
             willAutoFocus, index, typeValue, member, myValues, privateValue, requiredValue, promptValue, configValue,
             setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt, templateType
         } = props;
+        let machineName;
+
         if (myValues.prop_label) {
             willAutoFocus = false;
+            machineName = slug(myValues.prop_label, {lower: true});
+
         }
         return (
             <div className="custom-property-fields">
@@ -100,10 +188,15 @@ class CustomField extends React.Component {
                     />
                     }
                 </div>
-
                 <div id="custom-prop-widget" className="custom-property-field-group">
+                    {machineName &&
+                    <div className="form-group form-group-flex addon-options-widget-config-input-wrapper">
+                        <label className="control-label form-label-flex-md addon-options-widget-config-input-label">Machine
+                            Name</label>
+                        <pre>{machineName}</pre>
+                    </div>}
                     {typeValue && <RenderWidget
-                        showPrice={templateType !== "custom"}
+                        showPrice={(templateType !== "custom" && templateType !== "split")}
                         member={member}
                         configValue={configValue}
                         widgetType={typeValue}/>
@@ -182,6 +275,7 @@ CustomField = connect((state, ownProps) => {
     }
 })(CustomField);
 
+
 //Custom property
 class renderCustomProperty extends React.Component {
 
@@ -259,7 +353,7 @@ class TemplateForm extends React.Component {
                 props.setIntervalCount();
                 props.setInterval();
             }
-            else if (newValue === 'custom') {
+            else if (newValue === 'custom' || newValue === 'split') {
                 props.setIntervalCount();
                 props.setInterval();
                 props.clearAmount();
@@ -285,11 +379,14 @@ class TemplateForm extends React.Component {
                 <div className="row">
                     <div className="col-md-8">
                         <div className="form-level-errors">
-                            { !options.stripe_publishable_key && <Link to="/stripe-settings"><br/><h4 className="form-error">Publishing Disabled Until Setup Complete - Click here to complete</h4></Link>}
+                            {!options.stripe_publishable_key &&
+                            <Link to="/stripe-settings"><br/><h4 className="form-error" style={{padding:'10px',paddingLeft:'30px'}}>
+                                The Request Of This Service Disabled Until Setup Complete - Click here to complete</h4>
+                            </Link>}
                             {error && <div className="form-error">{error}</div>}
                         </div>
                         <div className="form-level-warnings"/>
-                        <h3>Basic Info</h3>
+                        <h3>Service Info</h3>
                         <Field name="name" type="text"
                                component={inputField} label="Product / Service Name"
                                validate={[required()]}
@@ -298,15 +395,16 @@ class TemplateForm extends React.Component {
                                component={inputField} label="Summary"
                                validate={[required()]}
                         />
-                        <Field name="details" type="text"
-                               component={WysiwygRedux} label="Details"
-                               validate={[required()]}
-                        />
+                        <div className="form-group form-group-flex">
+                            <Field name="details" type="text"
+                                   component={WysiwygRedux} label="Details"
+                            />
+                        </div>
 
-                        {options.stripe_publishable_key && <Field name="published" type="checkbox"
+                        <Field name="published" type="checkbox"
                                defaultValue={true} color="#0091EA" faIcon="check"
                                component={OnOffToggleField} label="Published?"
-                        /> }
+                        />
                         <Field name="category_id" type="select"
                                component={selectField} label="Category" options={formJSON ? formJSON._categories : []}
                                validate={[required()]}
@@ -337,10 +435,8 @@ class TemplateForm extends React.Component {
                                 <rect x="176" y="120" width="16" height="16"/>
                             </SVGIcons>
                         </div>
-                        <p className="help-block">Enter the basic information about your service. Summary will
-                            be
-                            shown to users in the product / service listing pages, such as the home page
-                            featured
+                        <p className="help-block">Enter the basic information about your service. Summary will be
+                            shown to users in the product / service listing pages, such as the home page featured
                             items. Details will be shown on each individual products / services page.</p>
                     </div>
                 </div>
@@ -357,8 +453,9 @@ class TemplateForm extends React.Component {
                                        component={selectField} label="Billing Type" onChange={changeServiceType}
                                        options={[
                                            {id: "subscription", name: "Subscription"},
+                                           {id: "split", name: "Scheduled Payments"},
                                            {id: "one_time", name: "One Time"},
-                                           {id: "custom", name: "Custom"},
+                                           {id: "custom", name: "Quote"}
                                        ]}
                                 />
                                 {(serviceTypeValue === 'subscription' || serviceTypeValue === 'one_time') &&
@@ -366,7 +463,7 @@ class TemplateForm extends React.Component {
                                        component={priceField}
                                        isCents={true}
                                        label="Amount"
-                                       validate={numericality({ '>=': 0.00 })}
+                                       validate={numericality({'>=': 0.00})}
                                 />
                                 }
 
@@ -397,11 +494,28 @@ class TemplateForm extends React.Component {
 
                                 {(serviceTypeValue === 'custom') &&
                                 <div>
-                                    <p>You will be able to add custom service charges after an instance of
-                                        this service as been created for a customer.
+                                    <p>Quotes are built for services that are customer specific. If your service is
+                                        priced
+                                        based on the customer's use-case, use this option. Once the quote service has
+                                        been
+                                        requested by the customer, you can add charges to the service at anytime.
                                     </p>
                                 </div>
                                 }
+
+                                {(serviceTypeValue === 'split') &&
+                                <div>
+
+                                    <FormSection name="split_configuration">
+                                        <FieldArray name="splits"
+                                                    props={{templateType: serviceTypeValue}}
+                                                    component={renderSplits}/>
+
+                                    </FormSection>
+
+                                </div>
+                                }
+
                             </div>
                             <div className="col-md-4">
                                 <div style={sectionDescriptionStyle}>
@@ -425,8 +539,7 @@ class TemplateForm extends React.Component {
                                     {/*<img id="custom-fields-svg" src="/assets/custom_icons/custom_fields.svg"/>*/}
                                 </div>
                                 <p className="help-block">Setup payment details. This will be how your customers
-                                    will be charged. For example, you can setup a recurring charge for your
-                                    product
+                                    will be charged. For example, you can setup a recurring charge for your product
                                     / service by setting Billing Type to Subscription and define how often your
                                     customer will get charged automatically.</p>
                             </div>
@@ -441,7 +554,7 @@ class TemplateForm extends React.Component {
                                 <h3>Custom Fields</h3>
                                 <FormSection name="references">
                                     <FieldArray name="service_template_properties"
-                                                props={{templateType : serviceTypeValue}}
+                                                props={{templateType: serviceTypeValue}}
                                                 component={renderCustomProperty}/>
                                 </FormSection>
                                 {/*{props.formJSON.references && props.formJSON.references.service_template_properties &&*/}
@@ -451,7 +564,7 @@ class TemplateForm extends React.Component {
                                 <div id="service-submission-box" className="button-box right">
                                     <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>Go
                                         Back</Link>
-                                    <button  className="btn btn-rounded btn-primary" type="submit">
+                                    <button className="btn btn-rounded btn-primary" type="submit">
                                         Submit
                                     </button>
                                 </div>
@@ -494,11 +607,6 @@ class TemplateForm extends React.Component {
         )
     };
 }
-
-
-
-
-
 
 
 class ServiceTemplateForm extends React.Component {
@@ -545,13 +653,13 @@ class ServiceTemplateForm extends React.Component {
         browserHistory.push(`/manage-catalog/list`);
     }
 
-    submissionPrep(values){
+    submissionPrep(values) {
         //remove id's for duplicate template operation
         if (this.props.params.duplicate) {
             console.log("We have a duplicate and we want to remove id");
             delete values.id;
             values.references.service_template_properties = values.references.service_template_properties.map(prop => {
-                if(prop.id){
+                if (prop.id) {
                     delete prop.id;
                 }
                 return prop;
@@ -562,9 +670,9 @@ class ServiceTemplateForm extends React.Component {
 
     render() {
         //Todo change this. this is how we are currently making sure the redux store is populated
-        if(!this.props.company_name){
+        if (!this.props.company_name) {
             return (<Load/>);
-        }else {
+        } else {
             let initialValues = {};
             let initialRequests = [];
             let submissionRequest = {};
@@ -573,7 +681,10 @@ class ServiceTemplateForm extends React.Component {
             let iconUploadURL = `/api/v1/service-templates/${this.state.newTemplateId}/icon`;
 
             if (this.props.params.templateId) {
-                initialRequests.push({'method': 'GET', 'url': `/api/v1/service-templates/${this.props.params.templateId}`},
+                initialRequests.push({
+                        'method': 'GET',
+                        'url': `/api/v1/service-templates/${this.props.params.templateId}`
+                    },
                     {'method': 'GET', 'url': `/api/v1/service-categories`, 'name': '_categories'},
                 );
                 if (this.props.params.duplicate) {
@@ -598,10 +709,10 @@ class ServiceTemplateForm extends React.Component {
                     type: 'subscription',
                     category_id: 1,
                     trial_period_days: 0,
-                    statement_descriptor: this.props.company_name.value,
+                    statement_descriptor: this.props.company_name.value.substring(0, 22),
                     interval: 'month',
                     interval_count: 1,
-                    published : !!this.props.fieldState.options.stripe_publishable_key,
+                    published: !!this.props.fieldState.options.stripe_publishable_key,
                     amount: 0
                 };
                 initialRequests.push(
@@ -665,7 +776,7 @@ function mapStateToProps(state) {
     return {
         alerts: state.alerts,
         company_name: state.options.company_name,
-        fieldState : {
+        fieldState: {
             "options": state.options,
             "serviceTypeValue": selector(state, `type`),
             formJSON: getFormValues(TEMPLATE_FORM_NAME)(state),
@@ -681,12 +792,12 @@ const mapDispatchToProps = (dispatch) => {
         dismissAlert: (alert) => {
             return dispatch(dismissAlert(alert))
         },
-        fieldDispatches : {
+        fieldDispatches: {
             'setIntervalCount': () => {
                 dispatch(change(TEMPLATE_FORM_NAME, `interval_count`, 1))
             },
             'setInterval': () => {
-                dispatch(change( TEMPLATE_FORM_NAME, `interval`, 'day'))
+                dispatch(change(TEMPLATE_FORM_NAME, `interval`, 'day'))
             },
             'clearAmount': () => {
                 dispatch(change(TEMPLATE_FORM_NAME, `amount`, 0))

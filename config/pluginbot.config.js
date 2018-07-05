@@ -113,7 +113,7 @@ let basePlugins = function() {
         {"path" : `${PLUGIN_DIRECTORY}/client-plugins/ga`},
         {"path" : `${PLUGIN_DIRECTORY}/updates`, "interval" : 86400000, "master" : "https://hub.serviceshop.io/api/v1/announcements"},
         {"path" : `${PLUGIN_DIRECTORY}/file-manager`},
-
+        {"path" : `${PLUGIN_DIRECTORY}/webhooks`}
     ];
 };
 

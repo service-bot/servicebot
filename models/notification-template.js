@@ -110,7 +110,7 @@ let createEmailNotifications = function(recipients, message, subject, notificati
 
 
 NotificationTemplate.prototype.createNotification =  function* (object) {
-    let self = this;
+    let self = (yield call(NotificationTemplate.find, {id : this.get("id")}))[0];
     let notificationContent = yield call(getNotificationContents, self, object);
     let usersToNotify = yield call(getRoleUsers, self);
 
@@ -135,7 +135,6 @@ let getNotificationContents = function(template, targetObject){
     return new Promise(function (resolve, reject) {
         //Attach references
         targetObject.attachReferences(updatedObject => {
-            console.log("UPDATED STUFF!", updatedObject);
             let store = require('../config/redux/store');
             let globalProps = store.getState().options;
             let map = {...updatedObject.data};

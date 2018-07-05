@@ -1,4 +1,3 @@
-
 let async = require('async');
 let Logger = require('../models/logger');
 let User = require('../../../models/user');
@@ -352,7 +351,7 @@ module.exports = function(knex) {
                 endpoint : "/stripe/import",
                 method : "post",
                 middleware : [importMiddleware],
-                permissions : [],
+                permissions : ["can_administrate"],
                 description : "Imports data from stripe"
     };
 };

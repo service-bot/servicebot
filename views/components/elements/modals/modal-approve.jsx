@@ -9,6 +9,8 @@ import {Price} from '../../utilities/price.jsx';
 import Alerts from '../alerts.jsx';
 import Buttons from '../buttons.jsx';
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
+import {connect} from 'react-redux';
+import getSymbolFromCurrency from 'currency-symbol-map';
 let _ = require("lodash");
 
 class ModalApprove extends React.Component {
@@ -130,6 +132,8 @@ class ModalApprove extends React.Component {
         let charges = instance.references.charge_items;
         let unpaidCharges = _.filter(charges, (item)=> {return (!item.approved)});
         let totalCharges = 0;
+        let { options } = this.props;
+        let prefix = options.currency ? getSymbolFromCurrency(options.currency.value) : '';
         unpaidCharges.map((charge)=>{ totalCharges+= charge.amount; });
 
         let getAlerts = ()=>{
@@ -146,7 +150,7 @@ class ModalApprove extends React.Component {
 
         let getSubscriptionPrice = ()=>{
             if(instance.payment_plan.amount > 0) {
-                return (<Price value={price}/> / {interval});
+                return (<Price value={price} prefix={prefix}/> / {interval});
             }
         }
 
@@ -162,8 +166,8 @@ class ModalApprove extends React.Component {
                                     <p>Item Name: {name}</p>
                                     <p><strong>Total Charges: &nbsp;
                                         <ul>
-                                            <li>{instance.payment_plan.amount > 0 && <span><Price value={price}/> / {interval}</span>}</li>
-                                            <li>{totalCharges > 0 && <span><Price value={totalCharges}/></span>}</li>
+                                            <li>{instance.payment_plan.amount > 0 && <span><Price value={price} prefix={prefix}/> / {interval}</span>}</li>
+                                            <li>{totalCharges > 0 && <span><Price value={totalCharges} prefix={prefix}/></span>}</li>
                                         </ul>
 
                                     </strong></p>
@@ -199,5 +203,11 @@ class ModalApprove extends React.Component {
 
     }
 }
+
+ModalApprove = connect(state => {
+    return {
+        options: state.options,
+    }
+})(ModalApprove);
 
 export default ModalApprove;

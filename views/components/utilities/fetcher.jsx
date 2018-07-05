@@ -26,7 +26,6 @@ let Fetcher = function(path, method="GET", body, init=null){
 
     return fetch(path, init)
         .then(function(response){
-
             if(response.status == 404){
                 throw response;
             }

@@ -31,9 +31,16 @@ class ServiceOverTimeChart extends React.Component {
 
             if(!response.error) {
                 let servicesRunning = _.filter(response, {status:'running'});
+                let servicesCancelled = _.filter(response, {status:'cancelled'});
+
                 let months = _.uniq(_.map(servicesRunning, (instance) => instance.created_at.substring(0,7)));
+                 months = _.uniq([...months, ..._.map(servicesCancelled, (instance) => instance.updated_at.substring(0,7))]);
+
                 let groupByMonthRunning = _.groupBy(servicesRunning, (instance) => {
                     return instance.created_at.substring(0,7);
+                });
+                let groupByMonthCancelled = _.groupBy(servicesCancelled, (instance) => {
+                    return instance.updated_at.substring(0,7);
                 });
                 let sortMonthsRunning = months.sort(function(a, b){
                     if(a > b){ return 1; }
@@ -41,18 +48,34 @@ class ServiceOverTimeChart extends React.Component {
                     else{ return 0;}
                 });
                 let sortedGroups = sortMonthsRunning.map((month)=>{
-                   return groupByMonthRunning[month];
-                });
+                   return groupByMonthRunning[month] || [];
+                })
                 let serviceCountByMonthRunning = _.map(sortedGroups, (group)=>{return(group.length)});
+
+
+                let sortedCancelledGroups = sortMonthsRunning.map((month)=>{
+                    return groupByMonthCancelled[month] || [];
+                })
+
+                let serviceCountByMonthCancelled = _.map(sortedCancelledGroups, (group)=>{return(group.length)});
                 let data = {
                     labels: months,
-                    datasets: [{
-                        label: 'Running Services',
-                        data: serviceCountByMonthRunning,
-                        backgroundColor: "rgba(0, 230, 118, 1)",
-                        borderColor: 'rgba(0, 230, 118, 1)',
-                        pointBorderWidth: 0
-                    }]
+                    datasets: [
+                        {
+                            label: 'Cancelled Services',
+                            data: serviceCountByMonthCancelled,
+                            backgroundColor: "rgba(230, 0, 0, .5)",
+                            borderColor: 'rgba(240, 0, 118, 1)',
+                            pointBorderWidth: 0
+                        },
+                        {
+                            label: 'New Services',
+                            data: serviceCountByMonthRunning,
+                            backgroundColor: "rgba(0, 230, 118, .5)",
+                            borderColor: 'rgba(0, 230, 118, 1)',
+                            pointBorderWidth: 0
+                        }
+                    ]
                 };
                 let options = {
                     animation: {
@@ -81,7 +104,6 @@ class ServiceOverTimeChart extends React.Component {
         }else{
             return(
                 <div className={`service-created-cancelled-overtime-chart ${this.props.className}`}>
-                    <h3 className="chart-title">Running Services Over Time</h3>
                     <RC2 data={this.state.chartData} options={this.state.chartOptions} type='line'/>
                 </div>
             );
@@ -160,4 +182,32 @@ class ServiceStatusChart extends React.Component {
 
 }
 
-export {ServiceOverTimeChart, ServiceStatusChart};
+
+
+class BuildChart extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            containerWidth: this.props.containerWidth,
+        };
+    }
+
+    render(){
+        if(this.props.chartData && this.props.chartData.datasets.length === 0 && this.props.chartData.datasets.data.length === 0){
+            return(
+                <div>
+                    <Load/>
+                </div>
+            );
+        }else{
+            return(
+                <div className={`customer-status-chart ${this.props.className}`}>
+                    <RC2 data={this.props.chartData} options={this.props.chartOptions} type='pie'/>
+                </div>
+            );
+        }
+    }
+
+}
+
+export {ServiceOverTimeChart, ServiceStatusChart, BuildChart};

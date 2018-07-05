@@ -2,13 +2,12 @@ let semver = require("semver")
 let semver_sort = require("semver-sort")
 let glob = require("glob");
 let Promise = require("bluebird");
-let SystemOptions = require("../../models/system-options");
 
 
 
 
-async function migrate(){
-    let knex = require("../db");
+async function migrate(knex){
+    let SystemOptions = require("../../../models/system-options");
     console.log(process.env.npm_package_version);
     let migrations = await getMigrations()
     let appVersion = (await SystemOptions.getOptions()).app_version;

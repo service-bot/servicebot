@@ -42,22 +42,17 @@ module.exports = function(router) {
     router.delete(`/service-instances/:id(\\d+)`, validate(ServiceInstance), auth(), function(req,res,next){
         let instance_object = res.locals.valid_object;
         //Only allow removal if the instance is cancelled.
-        if(instance_object.data.status === 'cancelled') {
+        if(instance_object.data.status === 'cancelled' || !instance_object.data.payment_plan) {
             next();
         } else {
             res.json({error: 'Deleting services is not permitted for security reasons!'});
         }
     });
 
-    router.post('/service-instances/:id/approve', validate(ServiceInstance), auth(), function(req, res, next) {
+    router.post('/service-instances/:id/approve', validate(ServiceInstance), auth(), async function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        instance_object.subscribe(function (err, callback) {
-            if(!err){
-                res.json(callback);
-            } else {
-                res.json(err);
-            }
-        });
+        let updatedInstance = await instance_object.subscribe();
+        res.json(updatedInstance);
     });
 
 
@@ -65,39 +60,53 @@ module.exports = function(router) {
         let instance_object = res.locals.valid_object;
         if(instance_object.get("status") === "cancelled") {
             let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;
+            instance_object = await instance_object.attachReferences();
             if(lifecycleManager) {
                 lifecycleManager = lifecycleManager[0];
                 await lifecycleManager.preReactivate({
                     instance: instance_object
                 });
             }
-
-            instance_object.subscribe(function (err, callback) {
-                if (!err) {
-                    res.json(callback);
-                    if(lifecycleManager) {
-                        lifecycleManager.postReactivate({
-                            instance: instance_object
-                        });
-                    }
-
-                } else {
-                    res.json(err);
+            try {
+                let paymentPlan = instance_object.get("payment_plan");
+                paymentPlan.trial_period_days = 0;
+                let updatedInstance = await instance_object.subscribe(paymentPlan);
+                res.json(updatedInstance);
+                if(lifecycleManager) {
+                    lifecycleManager.postReactivate({
+                        instance: instance_object
+                    });
                 }
-            });
+            }catch(error){
+                res.status(500).json({error});
+            }
+        }else{
+            res.status(400).json({"error" : "Instance is not cancelled, cannot be reactivated"})
         }
     });
 
 
     router.post('/service-instances/:id/change-price', validate(ServiceInstance), auth(), function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        instance_object.changePrice(req.body).then(function (updated_subscription) {
+        instance_object.changePaymentPlan(req.body).then(function (updated_subscription) {
             res.json(updated_subscription);
             store.dispatchEvent("service_instance_updated", updated_subscription);
-            next();
-        }).catch(function (err) {
-            res.json(err);
+        }).catch(function (error) {
+            res.json({error});
         });
+    });
+
+    router.post('/service-instances/:id/change-properties', validate(ServiceInstance),auth(), async function(req, res, next) {
+        let instance_object = res.locals.valid_object;
+        try {
+            let updatedInstance = await instance_object.changeProperties(req.body.service_instance_properties);
+            let attached = await updatedInstance.attachReferences()
+            res.json(attached.data);
+            store.dispatchEvent("service_instance_updated", updatedInstance);
+        }catch(error){
+            console.error(error);
+            res.status(500).json(error)
+        }
     });
 
     router.post('/service-instances/:id/cancel', validate(ServiceInstance), auth(), async function(req, res, next) {
@@ -160,7 +169,6 @@ module.exports = function(router) {
     });
 
     router.post('/service-instances/:id/files', validate(ServiceInstance), auth(null, ServiceInstance), upload().array('files'), function(req, res, next) {
-        console.log(req.files);
         let filesToInsert = req.files.map(function(file){
             if(req.user) {
                 file.user_id = req.user.data.id;
@@ -170,9 +178,7 @@ module.exports = function(router) {
             file.name = file.originalname;
             return file
         });
-        console.log(filesToInsert);
         File.batchCreate(filesToInsert, function(files){
-            console.log(files);
             EventLogs.logEvent(req.user.get('id'), `service-instances ${req.params.id} had files added by user ${req.user.get('email')}`);
             res.json(files);
         });
@@ -180,7 +186,6 @@ module.exports = function(router) {
 
     router.get('/service-instances/:id/files',auth(null, ServiceInstance), function(req, res, next) {
         File.findFile(serviceFilePath, req.params.id, function(files){
-            console.log(files);
             res.json(files);
         })
     });

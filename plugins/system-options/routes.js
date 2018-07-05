@@ -19,6 +19,9 @@ module.exports = function*(configurationManager){
         yield call([res, "json"], reduced);
         yield put(triggerEvent("system_options_updated", reduced));
     }
+    function getSecret(req, res){
+        res.json({secret: process.env.SECRET_KEY})
+    }
 
     //todo: maybe api gateway can make saga middleware?
     let getPublicMiddleware = yield call(sagaMiddleware, getPublic);
@@ -40,7 +43,15 @@ module.exports = function*(configurationManager){
             permissions : ["put_system_options"],
             description : "Updates public system options"
 
-        }
+        },
+        {
+            endpoint : "/system-options/secret",
+            method : "get",
+            middleware : [getSecret],
+            permissions : ["can_administrate"],
+            description : "Get Secret Key"
+
+        },
     ];
 
     return routeDefinition;
