@@ -34,7 +34,6 @@ pipeline {
                     return env.shouldBuild != "false"
                 }
 
-
             }
           steps {
 
