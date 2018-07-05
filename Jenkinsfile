@@ -26,6 +26,7 @@ pipeline {
         }
        }
         }
+
         stage('Build, bump version') {
             when {
                 branch 'tiers'
