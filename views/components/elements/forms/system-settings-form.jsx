@@ -229,7 +229,7 @@ class SystemSettingsForm extends React.Component {
             }else { // for system settings page
 
                 let tabStyle = (type) => {
-                    let tabColor = this.props.options.button_primary_color.value;
+                    let tabColor = this.state.system_settings.button_primary_color.value;
                     if(type == self.state.currentTabType){
                         return({borderColor: tabColor});
                     }else{
