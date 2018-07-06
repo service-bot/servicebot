@@ -43,9 +43,9 @@ let buildPayStructure = function (payment_object, callback) {
     let self = this;
     let plan_arr = ['name', 'amount', 'currency', 'interval', 'interval_count', 'statement_descriptor', 'trial_period_days'];
     let random_code = Math.random().toString(36).substring(10, 12) + Math.random().toString(36).substring(10, 12);
-    
     let default_plan = {
-        'id': `${payment_object.name.replace(/ +/g, '-')}-ID${self.get("id")}-${random_code}`,
+        'name' : "servicebot-subscription",
+        'id': `${(payment_object.name || "sb-subscription").replace(/ +/g, '-')}-ID${self.get("id")}-${random_code}`,
         'currency': 'usd',
         'interval': 'month',
         'interval_count': 1,
@@ -67,7 +67,7 @@ ServiceInstance.prototype.createPayPlan = async function (plan = null) {
         let paymentStructure = (await PaymentStructureTemplate.find({id: this.data.payment_structure_template_id}))[0];
 
         // let template = (await ServiceTemplates.find({"id": this.data.service_id}))[0];
-        plan = await this.buildPayStructure(paymentStructure.data);
+        plan = await this.buildPayStructure({...paymentStructure.data, name:this.data.name});
     }
     if (plan.trial_period_days === null) {
         plan.trial_period_days = 0;
