@@ -164,7 +164,7 @@ class NavServiceBot extends React.Component {
 
     getSetupSteps() {
         let {options} = this.props;
-        let hasOffering = options.hasOffering;
+        let hasOffering = this.props.hasOffering;
         let hasStripeKeys = options.stripe_publishable_key && options.stripe_publishable_key.value !== "";
         let setupComplete = hasOffering && hasStripeKeys;
         let getSetupClass = this.getSetupClass;
@@ -413,7 +413,8 @@ const mapStateToProps = (state, ownProps) => {
         uid: state.uid,
         user: state.user || null,
         options: state.options,
-        nav_class: state.navbar.nav_class
+        nav_class: state.navbar.nav_class,
+        hasOffering: state.hasOffering
     }
 };
 

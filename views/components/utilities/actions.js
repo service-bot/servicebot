@@ -25,6 +25,8 @@ export const SET_NAV_CLASS = "SET_NAV_CLASS";
 export const SETUP_COMPLETE = "SETUP_COMPLETE";
 export const SHOW_MODAL = "SHOW_MODAL";
 export const HIDE_MODAL = "HIDE_MODAL";
+export const SET_HAS_OFFERING = "SET_HAS_OFFERING";
+
 /*
  * other constants
  */
@@ -130,4 +132,7 @@ export function showModal(component, hide, titleText, buttonText, icon, titleCol
 
 export function hideModal(){
     return {type: HIDE_MODAL}
+}
+export function setHasOffering(hasOffering){
+    return {type: SET_HAS_OFFERING, hasOffering}
 }

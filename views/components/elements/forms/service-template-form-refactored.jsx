@@ -6,7 +6,7 @@ import consume from "pluginbot-react/dist/consume"
 import {change, Field, FieldArray, FormSection, formValueSelector, getFormValues} from 'redux-form'
 import {connect} from "react-redux";
 import {iconToggleField, inputField, priceField, ServicebotBaseForm} from "servicebot-base-form";
-import {addAlert, dismissAlert} from "../../utilities/actions";
+import {addAlert, dismissAlert, setHasOffering} from "../../utilities/actions";
 // import ServiceBotBaseForm from "./servicebot-base-form2.jsx";
 import Load from "../../utilities/load.jsx";
 import {numericality, required} from 'redux-form-validators'
@@ -232,6 +232,7 @@ class ServiceTemplateForm extends React.Component {
             autoDismiss: 4000,
         };
         this.props.addAlert(successMessage);
+        this.props.setHasOffering(true);
         browserHistory.push(`/embeddables`);
     }
 
@@ -395,6 +396,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         dismissAlert: (alert) => {
             return dispatch(dismissAlert(alert))
+        },
+        setHasOffering: (option) => {
+          return dispatch(setHasOffering(option))
         },
         fieldDispatches: {
             'setIntervalCount': () => {

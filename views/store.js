@@ -21,6 +21,7 @@ import {
     SET_NAV_CLASS,
     SHOW_MODAL,
     HIDE_MODAL,
+    SET_HAS_OFFERING,
     initializeState
 } from "./components/utilities/actions"
 import cookie from 'react-cookie';
@@ -192,7 +193,16 @@ function modalReducer(state =(<div></div>), action) {
     }
 }
 
-
+function hasOfferingReducer(state=false, action){
+    switch (action.type) {
+        case INITIALIZE :
+            return action.initialState.hasOffering
+        case SET_HAS_OFFERING :
+            return action.hasOffering;
+        default:
+            return state;
+    }
+}
 function historyReducer(state = browserHistory, action) {
     switch (action.type) {
         default:
@@ -213,7 +223,8 @@ const rootReducer = {
     history: historyReducer,
     modal: modalReducer,
     form: formReducer,
-    routing: routerReducer
+    routing: routerReducer,
+    hasOffering: hasOfferingReducer
 };
 
 
@@ -234,15 +245,15 @@ let initializedState = function (initialOptions = null) {
             uid: cookie.load("uid"),
         };
         initialState.options = initialOptions || await Fetcher("/api/v1/system-options/public");
+        let templates = await Fetcher("/api/v1/service-templates/public");
+        initialState.hasOffering = templates.length > 0;
         try {
             if (cookie.load("uid")) { // if user is logged in
                 initialState.user = (await Fetcher("/api/v1/users/own"))[0];
                 //Set the version of the application if the user is logged in
                 let version = await Fetcher("/api/v1/system-options/version");
-                let templates = await Fetcher("/api/v1/service-templates/public");
-                let hasOffering = templates.length > 0;
 
-                initialState.options = {...initialState.options, version: version.version, hasOffering};
+                initialState.options = {...initialState.options, version: version.version};
                 if (initialState.user.status === 'invited') {
                     initialState.alerts = [...initialState.alerts, {
                         id: '1',

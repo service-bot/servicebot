@@ -90,7 +90,7 @@ class SystemSettingsForm extends React.Component {
         }
         Fetcher(self.state.stripe_configure, 'POST', fData).then(function (response) {
             if(!response.error){
-                self.props.setKey(self.state.stripe_settings.publishable_key);
+                self.props.setKey(fData.stripe_public);
                 self.fetchSettings();
                 self.setState({
                     loading: false,
