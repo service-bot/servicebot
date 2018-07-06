@@ -83,9 +83,10 @@ default_notifications.templates = [
     },
 ];
 //Setting the registration_admin role to admin
+//todo: no more hardcoded id...
 default_notifications.templates_to_roles = [
     {
-        notification_template_id: 12,
+        notification_template_id: 6,
         role_id: 1
     },
 ];
