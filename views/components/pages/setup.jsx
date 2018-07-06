@@ -152,13 +152,13 @@ class Setup extends React.Component {
         this.setState({steps});
         document.getElementById('servicebot-loader').classList.add('move-out');
         if(this.props.options.text_size){
-            browserHistory.push("home");
+            browserHistory.push("/");
         }
     }
     componentDidUpdate(previousState, prevProps){
 
         if(this.props.options.text_size){
-            browserHistory.push("home");
+            browserHistory.push("/");
         }
 
     }
