@@ -88,7 +88,7 @@ class Widget extends React.Component {
                 style.widgetData.backgroundColor = rgbToHex(76,130,252);
             } else if(this.props.wcolor === 'dblue') {
                 //The label is based on the theme
-                style.widgetLabel.backgroundColor = rgbToHex(33,84,207);
+                style.widgetLabel.backgroundColor = rgbToHex(76,130,252);
                 style.widgetData.backgroundColor = rgbToHex(33,84,207);
             } else if(this.props.wcolor === 'navy') {
                 //The label is based on the theme
@@ -162,7 +162,7 @@ class DashboardWidgets extends React.Component {
                 <div className="row dashboard-widgets">
                     <div className="col-md-3 p-0 fx"><Widget data={{label: 'ARR', value: this.state.data.salesStats.subscriptionStats.arr}} postFix="/yr" type="price" wcolor="blue"/></div>
                     <div className="col-md-3 p-0 fx"><Widget data={{label: 'MRR', value: this.state.data.salesStats.subscriptionStats.mrr}} postFix="/mo" type="price" wcolor="blue"/></div>
-                    <div className="col-md-3 p-0 fx"><Widget data={{label: 'Total Invoiced', value: this.state.data.totalInvoiced}} type="price" wcolor="navy"/></div>
+                    <div className="col-md-3 p-0 fx"><Widget data={{label: 'One-time Charges', value: this.state.data.salesStats.oneTimeStats.approvedCharges}} type="price" wcolor="dblue"/></div>
                     <div className="col-md-3 p-0 fx"><Widget data={{label: 'Total Received', value: this.state.data.totalSales}} type="price" wcolor="navy-rev"/></div>
                 </div>
                 <div className="m-t-25"><ContentTitle title="Subscription Metrics"/></div>
