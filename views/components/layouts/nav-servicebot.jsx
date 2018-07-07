@@ -141,7 +141,7 @@ class NavServiceBot extends React.Component {
         let self = this;
         return this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
             if(route.isVisible(user) && route.navType === "settings") {
-                acc.push(<li><Link className={self.getLinkClass('system-settings', 'child')} key={index} to={route.path}>{route.name}</Link></li>)
+                acc.push(<li><Link className={self.getLinkClass(route.path.substr(1), 'child')} key={index} to={route.path}>{route.name}</Link></li>)
             }
             return acc;
         }, [])
@@ -190,7 +190,15 @@ class NavServiceBot extends React.Component {
 
         //todo: do this dynamically somehow
         let linkGroupManage = ['manage-catalog', 'manage-categories', 'manage-users', 'manage-subscriptions'];
-        let linkGroupSettings = ['stripe-settings', 'notification-templates', 'manage-permission', 'system-settings'];
+        let defaultSettingLinks = ['stripe-settings', 'notification-templates', 'manage-permission', 'system-settings'];
+        let customSettingRoutes = this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
+            if(route.navType === "settings") {
+                acc.push(route.path.substr(1))
+            }
+            return acc;
+        }, []);
+        let linkGroupSettings = defaultSettingLinks.concat(customSettingRoutes);
+        console.log("this.props.services.routeDefinition", linkGroupSettings);
         let getLinkClass = this.getLinkClass;
         let getSetupSteps = this.getSetupSteps;
         let currentDropdown = '';
@@ -233,16 +241,12 @@ class NavServiceBot extends React.Component {
                             <span className="nav-icons icon-settings"/>Settings<span className="caret"/>
                         </Link>
                         <ul className="app-dropdown">
-                            <li><Link to="/stripe-settings" className={getLinkClass('stripe-settings', 'child')}>Stripe
-                                Settings</Link></li>
-                            <li><Link to="/notification-templates"
-                                      className={getLinkClass('notification-templates', 'child')}>Email Settings</Link>
-                            </li>
-                            <li><Link to="/manage-permission" className={getLinkClass('manage-permission', 'child')}>Permission
-                                Settings</Link></li>
-                            <li><Link to="/system-settings" className={getLinkClass('system-settings', 'child')}>System
-                                Settings</Link></li>
+                            <li><Link to="/stripe-settings" className={getLinkClass('stripe-settings', 'child')}>Stripe Settings</Link></li>
+                            <li><Link to="/notification-templates" className={getLinkClass('notification-templates', 'child')}>Email Settings</Link></li>
+                            <li><Link to="/manage-permission" className={getLinkClass('manage-permission', 'child')}>Permission Settings</Link></li>
+                            <li><Link to="/system-settings" className={getLinkClass('system-settings', 'child')}>System Settings</Link></li>
                             {this.getSettingsMenus()}
+                            <li><Link href="https://api-docs.servicebot.io/" target="_blank" className={'nav-link-child'}>API Reference</Link></li>
                         </ul>
                     </li>
                 </ul>

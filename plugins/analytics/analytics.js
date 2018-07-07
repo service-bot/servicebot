@@ -91,6 +91,7 @@ module.exports = {
                     let subActive = subAnnual  = subTotalCharges = subPaidCharges = 0;
                     let singleActive = singleAllCharges = singleApproved = singleWaiting = 0;
                     let customActive = customTotalAmt = customTotalPaidAmt = 0;
+                    let allCharges = allChargesApproved = 0;
                     instances.map(instance => {
                         //Currently most analytical data is from the active instances.
                         if(instance.data.subscription_id !== null) {
@@ -122,21 +123,6 @@ module.exports = {
                             else if(instance.data.type === 'one_time') { singleActive++; }
                             else if(instance.data.type === 'custom') { customActive++; }
                         }
-                        charges.map(charge => {
-                            if(instance.data.id === charge.data.service_instance_id) {
-                                if(instance.data.type === 'one_time') {
-                                    singleAllCharges += charge.data.amount;
-                                    if(charge.data.item_id !== null) { singleApproved += charge.data.amount; }
-                                    else { singleWaiting += charge.data.amount; }
-                                } else if(instance.data.subscription_id !== null && instance.data.type === 'custom') {
-                                    customTotalAmt += charge.data.amount;
-                                    if(charge.data.item_id !== null) { customTotalPaidAmt += charge.data.amount; }
-                                } else if(instance.data.subscription_id !== null && instance.data.type === 'subscription') {
-                                    subTotalCharges += charge.data.amount;
-                                    if(charge.data.item_id !== null) { subPaidCharges += charge.data.amount; }
-                                }
-                            }
-                        });
                         //Check for types
                         if(instance.data.status === 'requested') { requested++; }
                         else if(instance.data.status === 'waiting_cancellation') { waitingCancellation++; }
@@ -147,6 +133,12 @@ module.exports = {
                             }
                             //Find the paying cancelled accounts
                             inPayingCancelled += (getFunding(users, funds, instance)).fundingCount;
+                        }
+                    });
+                    charges.map(charge => {
+                        allCharges += charge.data.amount;
+                        if(charge.data.item_id !== null) {
+                            allChargesApproved += charge.data.amount;
                         }
                     });
                     //Calculate multi-level metrics
@@ -191,15 +183,8 @@ module.exports = {
                     stats.subscriptionStats.totaPaidCharges = subPaidCharges;
                     stats.subscriptionStats.totalRemainingCharges = subTotalCharges - subPaidCharges;
                     stats.oneTimeStats = {};
-                    stats.oneTimeStats.active = singleActive;
-                    stats.oneTimeStats.allCharges = singleAllCharges;
-                    stats.oneTimeStats.singleApprove = singleApproved;
-                    stats.oneTimeStats.singleWaiting = singleWaiting;
-                    stats.quote = {};
-                    stats.quote.active = customActive;
-                    stats.quote.customTotalAmt = customTotalAmt;
-                    stats.quote.customTotalPaidAmt = customTotalPaidAmt;
-                    stats.quote.customTotalRemaining = customTotalAmt - customTotalPaidAmt;
+                    stats.oneTimeStats.allCharges = allCharges;
+                    stats.oneTimeStats.approvedCharges = allChargesApproved;
                     callback(null, stats);
                 },
                 hasStripeKeys:function(callback){

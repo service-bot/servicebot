@@ -89,7 +89,7 @@ class ServiceOverTimeChart extends React.Component {
                         }],
                         yAxes: [{
                             ticks: {
-                                stepSize: 1,
+                                // stepSize: 1,
                                 // fontColor: '#ffffff'
                             }
                         }]
