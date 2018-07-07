@@ -1,6 +1,6 @@
 {
   "name": "servicebot",
-  "version": "0.10.19",
+  "version": "0.10.20",
   "license": "GPL-3.0",
   "scripts": {
     "start": "node ./bin/start",
