@@ -371,10 +371,9 @@ Servicebot.init({
                     className="page-servicebot-webhooks col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2"
                     id="payment-form">
                     <h3>Webhooks</h3>
-                    <span>Servicebot can send webhook events that notify your application any time an event happens.
-                        This is especially useful for events—like new customer subscription or trial expiration—that
-                        your SaaS product needs to know about. You can integrate your SaaS with Servicebot by listening
-                        to API calls sent from your Servicebot instance to your SaaS product.</span>
+                    <span>Servicebot can send webhook events that notify your application or third-party system any time an event happens.
+                        Use it for events, like new customer subscription or trial expiration, that
+                        your SaaS needs to know about.</span>
 
                     <div className="hook-actions m-b-15">
                         <button className="btn btn-default m-r-5" onClick={self.testHooks} type="submit"
