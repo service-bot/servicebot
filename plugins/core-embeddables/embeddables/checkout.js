@@ -202,26 +202,32 @@ class renderCustomProperty extends React.Component {
     render() {
         let props = this.props;
         const {templateType, privateValue, fields, meta: {touched, error}} = props;
+
         return (
             <div>
                 <ul className="custom-fields-list">
-                    {fields.map((customProperty, index) =>
-                        <li className="custom-field-item" key={index}>
-                            <div className="custom-field-name">
-                                {/*{fields.get(index).prop_label ?*/}
-                                {/*<p>{fields.get(index).prop_label}</p> : <p>Field #{index + 1}</p>*/}
-                                {/*}*/}
-                                <button className="btn btn-rounded custom-field-button iconToggleField"
-                                        id="custom-field-delete-button"
-                                        type="button"
-                                        title="Remove Field"
-                                        onClick={() => fields.remove(index)}>
-                                    <span className="itf-icon"><i className="fa fa-close"/></span>
-                                </button>
-                            </div>
-                            <CustomField templateType={templateType} member={customProperty} index={index}
-                                         willAutoFocus={fields.length - 1 == index}/>
-                        </li>
+                    {fields.map((customProperty, index) =>{
+                            let property = fields.get(index);
+                            if(property.name && property.name.slice(0, 2) === "__"){
+                                return <div/>
+                            }
+                            return (<li className="custom-field-item" key={index}>
+                                <div className="custom-field-name">
+                                    {/*{fields.get(index).prop_label ?*/}
+                                    {/*<p>{fields.get(index).prop_label}</p> : <p>Field #{index + 1}</p>*/}
+                                    {/*}*/}
+                                    <button className="btn btn-rounded custom-field-button iconToggleField"
+                                            id="custom-field-delete-button"
+                                            type="button"
+                                            title="Remove Field"
+                                            onClick={() => fields.remove(index)}>
+                                        <span className="itf-icon"><i className="fa fa-close"/></span>
+                                    </button>
+                                </div>
+                                <CustomField templateType={templateType} member={customProperty} index={index}
+                                             willAutoFocus={fields.length - 1 == index}/>
+                            </li>)
+                        }
                     )}
                     <li className="custom-field-item">
                         <div className="form-group form-group-flex">
@@ -241,8 +247,8 @@ let CheckoutForm = function(props){
     return <div>
         <FormSection name="references">
             <FieldArray name="service_template_properties"
-            props={{templateType: props.serviceTypeValue}}
-            component={renderCustomProperty}
+                        props={{templateType: props.serviceTypeValue}}
+                        component={renderCustomProperty}
             />
             <button className="buttons _primary _right" onClick={props.handleSubmit} >Save Checkout Form</button>
             <span class="clear"/>

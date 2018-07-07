@@ -24,7 +24,7 @@ let RenderWidget = (props) => {
     const {showPrice, member, widgetType, configValue, defaultWidgetValue} = props;
     const widget = props.services && props.services.widget && props.services.widget.find(widgetToCheck => widgetToCheck.type === widgetType);
     if (!widget) {
-        console.error("widget does not exist ", widgetType);
+        return <div/>
     }
     return (
         <div>
@@ -34,13 +34,13 @@ let RenderWidget = (props) => {
                 <div className="addon-widget-has-pricing">
                     <FormSection name={`pricing`}>
 
-                    <Field name="operation" component={selectField} label="Apply Price Change"
-                           options={[
-                               {id: "add", name: "Add to base price"},
-                               {id: "subtract", name: "Subtract from base price"},
-                               {id: "multiply", name: "Percent add to base price"},
-                               {id: "divide", name: "Percent off from base price"},
-                           ]}/>
+                        <Field name="operation" component={selectField} label="Apply Price Change"
+                               options={[
+                                   {id: "add", name: "Add to base price"},
+                                   {id: "subtract", name: "Subtract from base price"},
+                                   {id: "multiply", name: "Percent add to base price"},
+                                   {id: "divide", name: "Percent off from base price"},
+                               ]}/>
 
                         <div className="form-group form-group-flex addon-widget-pricing-inputs-wrapper">
                             <label className="control-label form-label-flex-md addon-widget-pricing-input-label">Add-On Pricing</label>
