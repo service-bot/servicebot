@@ -280,11 +280,11 @@ class CheckoutPage extends React.Component {
         let {selectedPlan, selectedTemplate} = this.state;
         return `<div id="servicebot-request-form"></div>
                 <script src="https://js.stripe.com/v3/"></script>
-                <script src="https://servicebot.io/js/servicebot-embed.js" type="text/javascript"></script>
+                <script src="https://servicebot.io/js/servicebot-checkout-embed.js" type="text/javascript"></script>
                 <script  type="text/javascript">
                     Servicebot.Checkout({
                         templateId : ${selectedTemplate},
-                        planId: ${selectedPlan},
+                        paymentStructureTemplateId: ${selectedPlan},
                         url : "${window.location.origin}",
                         selector : document.getElementById('servicebot-request-form'),
                         handleResponse : (response) => {
