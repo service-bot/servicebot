@@ -246,7 +246,7 @@ class NavServiceBot extends React.Component {
                             <li><Link to="/manage-permission" className={getLinkClass('manage-permission', 'child')}>Permission Settings</Link></li>
                             <li><Link to="/system-settings" className={getLinkClass('system-settings', 'child')}>System Settings</Link></li>
                             {this.getSettingsMenus()}
-
+                            <li><Link href="https://api-docs.servicebot.io/" target="_blank" className={'nav-link-child'}>API Reference</Link></li>
                         </ul>
                     </li>
                 </ul>
