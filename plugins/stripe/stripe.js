@@ -21,25 +21,30 @@ let run = function* (config, provide, services) {
 
 
     yield provide({routeDefinition});
-
-    //Update customer invoices every hour
-    setInterval(async () => {
+    let updateCustomers = async () => {
+        const delay = time => new Promise(res=>setTimeout(()=>res(),time));
         let User = require("../../models/user");
         let Invoice = require("../../models/invoice");
         let users = (await User.find());
-        users.map(user => {
-            //Fetch all invoices
-            Invoice.fetchUserInvoices(user).then(function (updated_invoices) {
+        await delay(50000);
+        for(let user of users){
+            await Invoice.fetchUserInvoices(user).then(function (updated_invoices) {
                 console.log(`Invoices Updated for user: ${user.data.email}`);
             }).catch(function (err) {
                 console.log(`Invoice Skipped for user: ${user.data.email}`);
                 console.log(err);
             });
+            await delay(200)
             Invoice.fetchUpcomingInvoice(user, function (upcoming_invoice) {
                 console.log(`Upcoming Invoice Updated for user: ${user.data.email}`);
             });
-        })
-    }, 3600000);
+
+        }
+        console.log("Fetching invoices done");
+    };
+    //Update customer invoices every hour
+    setInterval(updateCustomers, 18000000);
+    updateCustomers();
 };
 
 module.exports = {run};
