@@ -36,6 +36,12 @@
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.17);
   }
 
+  &._text{
+    background: none !important;
+    color: $color-blue-gray !important;
+    box-shadow: none !important;
+  }
+
   &._green {
     background-color: #1ABE98;
     color: white;
