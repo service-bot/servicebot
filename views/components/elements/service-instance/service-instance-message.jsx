@@ -49,7 +49,7 @@ class ServiceInstanceMessage extends React.Component {
             return (
                 <div id="service-instance-message" className="row">
                     <div className="col-xs-12 service-comments service-block">
-                        <h5 className="m-b-20">History Logs</h5>
+                        <h5 className="m-b-20">Logs</h5>
                             <Load/>
                     </div>
                 </div>);
@@ -66,7 +66,7 @@ class ServiceInstanceMessage extends React.Component {
                 return (
                     <div className="service-instance-actions p-0">
                         <div className="service-instance-box-title">
-                            <span>History Logs</span>
+                            <span>Logs</span>
                         </div>
                         <div className="service-instance-box-content p-b-30">
                             <div className="comments">
@@ -97,7 +97,7 @@ class ServiceInstanceMessage extends React.Component {
                 return(
                     <div className="service-instance-actions p-0">
                         <div className="service-instance-box-title">
-                            <span>History Logs</span>
+                            <span>Logs</span>
                         </div>
                         <div className="service-instance-box-content p-b-30">
                             <div>

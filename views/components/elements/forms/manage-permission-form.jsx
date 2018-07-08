@@ -191,7 +191,7 @@ class ManagePermissionForm extends React.Component {
 
             return (
                 <div className="col-xs-12">
-                    <ContentTitle icon="cog" title="Manage all your permissions here"/>
+                    <ContentTitle icon="cog" title="Manage permissions"/>
 
                     <table className="table table-striped table-hover">
                         <thead>

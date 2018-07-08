@@ -260,7 +260,7 @@ class SystemSettingsForm extends React.Component {
                                 </ul>
                             </div>
                             <div className="col-md-9 system-settings-page-form">
-                                <ContentTitle icon="cog" title="Customize your system options here."/>
+                                <ContentTitle icon="cog" title="System settings"/>
 
                                 {this.state.currentTabType == "branding" ?
                                     <div>

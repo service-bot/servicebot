@@ -157,14 +157,14 @@ class SystemSettingsForm extends React.Component {
                         <div className="basic-info col-md-12">
                             {settings.secret_key !== "" ?
                                 <div className="title">
-                                    <h3>Reconfigure your Stripe API Keys</h3>
+                                    <h3>Reconfigure Stripe API Keys</h3>
                                     <p>
                                         You can modify your Stripe keys to go from test to live, update to newer keys, or change to a different account. Retrieve your keys <a className="intext-link" href="https://dashboard.stripe.com/account/apikeys" target="_blank">from Stripe</a>. If you are changing from test to live or entering keys to a different account, you can choose to migrate data to a new Stripe account, or clear Servicebot data and start fresh.
                                     </p>
                                 </div>
                                 :
                                 <div className="title">
-                                    <h3>Add your Stripe API Keys</h3>
+                                    <h3>Add Stripe API Keys</h3>
                                     <p>
                                         Copy your Standard API keys <a className="intext-link" href="https://dashboard.stripe.com/account/apikeys" target="_blank">from Stripe</a> and paste them
                                         in the Secret key and Publishable key below. Once you enter your keys, you can import your Stripe account to your Servicebot.
