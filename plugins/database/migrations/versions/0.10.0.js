@@ -35,7 +35,7 @@ module.exports = {
             }
         });
 
-        let createdTiers = await knex("tiers").insert(tiers).returning("*");
+        let createdTiers = await knex("tiers").insert(tiers).returning("*") || [];
         let templateMap = templates.reduce((acc, template) => {
             acc[template.data.id] = template.data;
             return acc;
