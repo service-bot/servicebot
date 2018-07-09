@@ -1,0 +1,51 @@
+@mixin mediaQueryByDevice($device){
+
+  @if($device == iPad){
+    @media only screen
+    and (min-device-width: 768px)
+    and (max-device-width: 1024px)
+    and (-webkit-min-device-pixel-ratio: 1) {
+
+    }
+  }
+
+}
+
+@mixin mediaQuery($type, $screenSize){
+
+  $width: 800px;
+
+  @if $screenSize == 'iPhone4' {
+    $width: 320px;
+  }
+  @else if $screenSize == 'iPhone' {
+    $width: 414px;
+  }
+  @else if $screenSize == 'iPad' {
+    $width: 768px;
+  }
+  @else if $screenSize == 'laptop' {
+    $width: 1280px;
+  }
+  @else if $screenSize == 'HD' {
+    $width: 1440px;
+  }
+  @else if $screenSize == 'Retina' {
+    $width: 1680px;
+  }
+  @else if $screenSize == 'UltraWide' {
+    $width: 2560px;
+  }
+
+  @if $type == 'max'{
+    @media only screen and (max-width: $width) {
+      @content;
+    }
+  }
+  @else if $type == 'min'{
+    @media only screen and (min-width: $width) {
+      @content;
+    }
+  }
+
+}

@@ -9,6 +9,10 @@
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.23);
   z-index: $z-nav-header;
 
+  @include mediaQuery(max, iPad){
+    padding: $gutter/2 20px;
+  }
+
   .app-header-left, .app-header-right{
     display: flex;
     align-content: flex-end;
@@ -128,6 +132,11 @@
   background-color: $color-blue-gray;
   height: 100%;
   z-index: $z-nav-panel;
+  transition: width 300ms;
+
+  @include mediaQuery(max, iPad){
+    width: $nav-panel-width-collapsed;
+  }
 
   .app-links-container {
     height: 100%;
@@ -177,6 +186,10 @@
                 background-repeat: no-repeat;
                 position: absolute;
                 left: -46px;
+
+                @include mediaQuery(max, iPad){
+                  left: -53px;
+                }
               }
 
               &.icon-home {
@@ -265,6 +278,10 @@
                 background-repeat: no-repeat;
                 position: absolute;
                 left: -46px;
+
+                @include mediaQuery(max, iPad){
+                  left: -53px;
+                }
               }
 
               &.icon-home {
@@ -449,6 +466,10 @@
 .app-dashboard .app-body{
   padding-top: $nav-header-height;
   padding-left: $nav-panel-width;
+
+  @include mediaQuery(max, iPad){
+    padding-left: $nav-panel-width-collapsed;
+  }
 }
 
 .caret{
