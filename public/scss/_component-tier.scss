@@ -143,6 +143,10 @@
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
     padding: 26px 16px;
 
+    .form-group{
+      padding-bottom: $gutter;
+    }
+
     $_max-tier-fields-width: 50%;
     $_min-tier-fields-width: 300px;
     ._tier-name_name {

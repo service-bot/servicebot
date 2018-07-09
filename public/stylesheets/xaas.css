@@ -125,7 +125,7 @@ span.btn-link:hover{
 }
 
 /* forms */
-.form-control, .StripeElement{
+.form-control{
     box-shadow: none;
 }
 label, .help-block, .bmd-help{
@@ -611,14 +611,11 @@ ul.custom-fields-list {
 .service-request-form label {
     font-weight: normal;
 }
-.service-request-form .form-control, .StripeElement {
+.service-request-form .form-control{
     border-color: #F0F0F0;
     border-radius: 8px !important;
     padding: 19px 10px !important;
     box-shadow: none !important;
-}
-.StripeElement{
-    border-color: #F0F0F0 !important;
 }
 .service-request-form .icon-heading h3, .service-request-details .icon-heading h3{
     margin-bottom: 23px;
