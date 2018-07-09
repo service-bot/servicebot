@@ -331,7 +331,7 @@
 
               & ~ ul {
                 @include defaultTransition(130ms);
-                height: 238px;
+                height: auto;
                 overflow: hidden;
               }
             }
