@@ -29,7 +29,7 @@ class SelectPricing extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         let self = this;
-        if (prevProps.configValue && prevProps.configValue.value && prevProps.configValue.value.length > this.props.configValue.value.length) {
+        if (this.props.configValue.value && prevProps.configValue && prevProps.configValue.value && prevProps.configValue.value.length > this.props.configValue.value.length) {
             let propsToRemove = prevProps.configValue.value.filter(prop => self.props.configValue.value.indexOf(prop) < 0);
             let newState = propsToRemove.reduce((acc, prop) => {
                 acc[prop] = undefined;
@@ -84,7 +84,6 @@ class SelectPricing extends React.Component {
 
 let SelectWidget = (props) => {
     let {input, configValue, label} = props;
-    console.log(input);
     return (
         <div className="form-group form-group-flex addon-options-widget-default-value-wrapper">
             {label && <label className="control-label form-label-flex-md addon-options-widget-default-value-label">{label}</label>}

@@ -21,7 +21,7 @@ class CustomField extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         let props = this.props;
-        if (nextProps.myValues.type !== props.myValues.type) {
+        if ((nextProps.myValues.type !== props.myValues.type) && (nextProps.length === props.length)) {
             props.clearConfig();
             props.clearValue();
         }
@@ -40,6 +40,9 @@ class CustomField extends React.Component {
 
         if (myValues.prop_label) {
             willAutoFocus = false;
+        }
+        if(typeValue === "metric"){
+            return <div/>
         }
         return (
             <div className="custom-property-fields">
@@ -207,27 +210,27 @@ class renderCustomProperty extends React.Component {
             <div>
                 <ul className="custom-fields-list">
                     {fields.map((customProperty, index) =>{
-                            let property = fields.get(index);
-                            if(property.name && property.name.slice(0, 2) === "__"){
-                                return <div/>
-                            }
-                            return (<li className="custom-field-item" key={index}>
-                                <div className="custom-field-name">
-                                    {/*{fields.get(index).prop_label ?*/}
-                                    {/*<p>{fields.get(index).prop_label}</p> : <p>Field #{index + 1}</p>*/}
-                                    {/*}*/}
-                                    <button className="btn btn-rounded custom-field-button iconToggleField"
-                                            id="custom-field-delete-button"
-                                            type="button"
-                                            title="Remove Field"
-                                            onClick={() => fields.remove(index)}>
-                                        <span className="itf-icon"><i className="fa fa-close"/></span>
-                                    </button>
-                                </div>
-                                <CustomField templateType={templateType} member={customProperty} index={index}
-                                             willAutoFocus={fields.length - 1 == index}/>
-                            </li>)
+                        let property = fields.get(index);
+                        if(property.name && property.name.slice(0, 2) === "__"){
+                            return <div/>
                         }
+                        return (<li className="custom-field-item" key={index}>
+                            <div className="custom-field-name">
+                                {/*{fields.get(index).prop_label ?*/}
+                                {/*<p>{fields.get(index).prop_label}</p> : <p>Field #{index + 1}</p>*/}
+                                {/*}*/}
+                                <button className="btn btn-rounded custom-field-button iconToggleField"
+                                        id="custom-field-delete-button"
+                                        type="button"
+                                        title="Remove Field"
+                                        onClick={() => fields.remove(index)}>
+                                    <span className="itf-icon"><i className="fa fa-close"/></span>
+                                </button>
+                            </div>
+                            <CustomField length={fields.length} templateType={templateType} member={customProperty} index={index}
+                                         willAutoFocus={fields.length - 1 == index}/>
+                        </li>)
+                    }
                     )}
                     <li className="custom-field-item">
                         <div className="form-group form-group-flex">
@@ -296,7 +299,6 @@ class CheckoutPage extends React.Component {
                         handleResponse : (response) => {
                             //Response function, you can put redirect logic or app integration logic here
                         },
-                        spk: "${cookie.load("spk")}",
                         forceCard : false, //set to true if you want credit card to be a required field for the customer
                         setPassword : false //set to true if you want customer to fill out a password
                     })
