@@ -190,7 +190,7 @@ class NavServiceBot extends React.Component {
 
         //todo: do this dynamically somehow
         let linkGroupManage = ['manage-catalog', 'manage-categories', 'manage-users', 'manage-subscriptions'];
-        let defaultSettingLinks = ['stripe-settings', 'notification-templates', 'manage-permission', 'system-settings'];
+        let defaultSettingLinks = ['stripe-settings', 'notification-templates', 'system-settings'];
         let customSettingRoutes = this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
             if(route.navType === "settings") {
                 acc.push(route.path.substr(1))
@@ -243,7 +243,6 @@ class NavServiceBot extends React.Component {
                         <ul className="app-dropdown">
                             <li><Link to="/stripe-settings" className={getLinkClass('stripe-settings', 'child')}>Stripe Settings</Link></li>
                             <li><Link to="/notification-templates" className={getLinkClass('notification-templates', 'child')}>Email Settings</Link></li>
-                            <li><Link to="/manage-permission" className={getLinkClass('manage-permission', 'child')}>Permission Settings</Link></li>
                             <li><Link to="/system-settings" className={getLinkClass('system-settings', 'child')}>System Settings</Link></li>
                             {this.getSettingsMenus()}
                             <li><Link href="https://api-docs.servicebot.io/" target="_blank" className={'nav-link-child'}>API Reference</Link></li>
