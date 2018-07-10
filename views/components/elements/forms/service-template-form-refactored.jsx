@@ -218,6 +218,13 @@ class ServiceTemplateForm extends React.Component {
             iconSuccess: true
         });
     }
+    handleFailure(result){
+        if(result.error === "service_instances_payment_structure_template_id_foreign"){
+            result.error = "Unable to delete payment structures that are being used by existing subscriptions"
+        }
+    }
+
+
 
     handleResponse(response) {
         this.setState({
@@ -364,6 +371,7 @@ class ServiceTemplateForm extends React.Component {
                             submissionRequest={submissionRequest}
                             successMessage={successMessage}
                             handleResponse={this.handleResponse}
+                            handleFailure={this.handleFailure}
                             initializer={initializer}
                             formProps={{
                                 ...this.props.fieldDispatches,
