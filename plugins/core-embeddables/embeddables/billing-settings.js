@@ -119,20 +119,21 @@ userToken = generateJWT(user[:email], SECRET_KEY)
             default:
                 break;
         }
-        let clientCode = `<div id="servicebot-management-form"></div>
+        let clientCode = `<div id="servicebot-request-form"></div>
 <script src="https://js.stripe.com/v3/"></script>
-<script src="https://servicebot.io/js/servicebot-embed.js" type="text/javascript"></script>
+<script src="https://servicebot.io/js/servicebot-billing-settings-embed.js" type="text/javascript"></script>
 <script  type="text/javascript">
-    Servicebot.init({
+    Servicebot.BillingSettings({
         url : "${window.location.origin}",
-        selector : document.getElementById('servicebot-management-form'),
-        type : "manage",
-        token: "INSERT_TOKEN_HERE",
-        handleResponse: (response) => {
+        selector : document.getElementById('servicebot-request-form'),
+        handleResponse : (response) => {
+            console.log(response);
             //determine what to do on certain events...
-        }
+        },
+        token: "INSERT_TOKEN_HERE"
     })
-</script>`;
+</script>
+`;
 
         let {copied, selectedServer} = this.state;
 
