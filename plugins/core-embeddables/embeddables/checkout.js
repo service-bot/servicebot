@@ -366,19 +366,12 @@ class CheckoutPage extends React.Component {
                     <div className="_indented">
                         { selectedTemplate ?
                             <ServicebotBaseForm key={"base-"+selectedTemplate}
-                                             form={CheckoutForm}
-                                             formName={CHECKOUT_FORM}
-                                             initialValues={currentTemplate}
-                                             // initialRequests={initialRequests}
-                                             // submissionPrep={this.submissionPrep}
-                                             submissionRequest={submissionRequest}
-                                             // successMessage={successMessage}
-                                             // handleResponse={this.handleResponse}
-                                             // initializer={initializer}
-                                             // formProps={{
-                                             //     ...this.props.fieldDispatches,
-                                             //     ...this.props.fieldState
-                                             // }}
+                                                form={CheckoutForm}
+                                                formName={CHECKOUT_FORM}
+                                                initialValues={currentTemplate}
+                                                reShowForm={true}
+                                                submissionRequest={submissionRequest}
+                                                successMessage={"Checkout form updated"}
                             /> :
                             <div className="_inactive"/>
                         }
