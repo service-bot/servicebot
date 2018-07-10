@@ -2,7 +2,37 @@ import React from 'react';
 import Load from '../../utilities/load.jsx';
 import Inputs from "../../utilities/inputs.jsx";
 import {DataForm} from "../../utilities/data-form.jsx";
+import {ServicebotBaseForm,inputField, priceField} from "servicebot-base-form"
+import {Field} from "redux-form"
 import Buttons from "../buttons.jsx";
+import {numericality, required} from "redux-form-validators";
+
+
+function ChargeForm(props){
+    return(<form onSubmit={props.handleSubmit}>
+        <Field
+            name={"amount"}
+            component={priceField}
+            type={"number"}
+            isCents={true}
+            label="Charge Amount"
+            validate={numericality({'>': 50, msg: "must be greater than $0.50"})}
+
+        />
+        <Field
+            name={"description"}
+            component={inputField}
+            type={"text"}
+            label="Charge Description"
+            validate={required()}
+
+        />
+
+        <button className="btn btn-rounded btn-primary" type="submit">
+            Submit
+        </button>
+    </form>)
+}
 
 class ServiceInstanceFormEdit extends React.Component {
 
@@ -85,33 +115,46 @@ class ServiceInstanceFormEdit extends React.Component {
             const instance = this.state.instance;
 
             //TODO: Add validation functions and pass into DataForm as props
+            let submissionRequest = {
+                'method': 'POST',
+                'url': `/api/v1/service-instances/${instance.id}/add-charge`
+            };
 
             return (
                 <div>
-                    <DataForm validators={this.getValidators(null)} handleResponse={this.handleResponse} url={`/api/v1/service-instances/${instance.id}/add-charge`} method={'POST'}>
 
-                        <div className="p-20">
-                            <div className="row">
-                                <div className="basic-info col-md-12">
-                                    <p><strong>Add A Line Item For {instance.name}</strong></p>
-                                    <p>{instance.description}</p>
+                    <ServicebotBaseForm
+                        form={ChargeForm}
+                        formName={"CHARGE_FORM"}
+                        // initialValues={{...paymentPlan, trial_period_days: 0}}
+                        submissionRequest={submissionRequest}
+                        handleResponse={this.handleResponse}
+                    />
 
-                                    <Inputs type="text" name="description" label="Description" defaultValue={''}
-                                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                    {/*<DataForm validators={this.getValidators(null)} handleResponse={this.handleResponse} url={`/api/v1/service-instances/${instance.id}/add-charge`} method={'POST'}>*/}
 
-                                    <Inputs type="price" name="amount" label="Price" defaultValue={0}
-                                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                </div>
-                            </div>
-                        </div>
+                    {/*<div className="p-20">*/}
+                    {/*<div className="row">*/}
+                    {/*<div className="basic-info col-md-12">*/}
+                    {/*<p><strong>Add A Line Item For {instance.name}</strong></p>*/}
+                    {/*<p>{instance.description}</p>*/}
 
-                        <div id="request-submission-box" className="modal-footer text-right">
-                            <Buttons containerClass="inline" btnType="primary" text="Submit" onClick={this.loading}
-                                     type="submit" value="submit" loading={this.state.ajaxLoad}/>
-                            <Buttons containerClass="inline" btnType="default" text="Close" onClick={this.props.onHide}/>
-                        </div>
+                    {/*<Inputs type="text" name="description" label="Description" defaultValue={''}*/}
+                    {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
 
-                    </DataForm>
+                    {/*<Inputs type="price" name="amount" label="Price" defaultValue={0}*/}
+                    {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
+                    {/*</div>*/}
+                    {/*</div>*/}
+                    {/*</div>*/}
+
+                    {/*<div id="request-submission-box" className="modal-footer text-right">*/}
+                    {/*<Buttons containerClass="inline" btnType="primary" text="Submit" onClick={this.loading}*/}
+                    {/*type="submit" value="submit" loading={this.state.ajaxLoad}/>*/}
+                    {/*<Buttons containerClass="inline" btnType="default" text="Close" onClick={this.props.onHide}/>*/}
+                    {/*</div>*/}
+
+                    {/*</DataForm>*/}
                 </div>
             );
 
