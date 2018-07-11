@@ -299,14 +299,13 @@ module.exports = function (router, passport) {
     //Strip passwords from all user things
     router.all("*", function (req, res, next) {
         if (res.locals.json) {
-            if (res.locals.json.password) {
-                delete res.locals.json.password;
-
-            } else if (Array.isArray(res.locals.json)) {
+            if (Array.isArray(res.locals.json)) {
                 res.locals.json = res.locals.json.map(user => {
                     delete user.password;
                     return user;
                 })
+            }else{
+                delete res.locals.json.password
             }
         }
         next();
