@@ -50,25 +50,39 @@ let Tiers = function (props) {
             type:"subscription"
         });
     }
+
+    let mappedFields = fields.map((field, index) => {
+        let liClass = "_tier";
+        let tier = fields.get(index);
+        if (index === selected) {
+            liClass = liClass + " _selected";
+        }
+        return {component: (<li key={"tier-" + index} className={liClass} id={"tier-" + index}>
+                <div className="_tier-heading" >
+                    <h2 className={"_tier-name"} onClick={selectTier(index)} >{tier.name}</h2>
+                    {fields.length > 1 && <button className="_tier-delete" aria-label="delete tier" onClick={deleteTier(index)}/>}
+                </div>
+                <div onClick={selectTier(index)} className={"_tier-preview"}>
+                </div>
+            </li>), amount: tier.amount, type: tier.type}
+    }).sort((tier1, tier2) => {
+        if((tier1.type === "custom" && tier2.type === "custom")){
+            return 0;
+        }
+        if(tier1.type === "custom" || ((tier1.amount > tier2.amount) && tier2.type !== "custom")){
+            return 1
+        }
+        if(tier2.type === "custom" || tier2.amount > tier1.amount){
+            return -1;
+        }
+        return 0;
+    }).map(tier => tier.component);
+
     return (
         <div className="tiers">
             <div className="_container">
                 <ul className="_tier-list">
-                    {fields.map((field, index) => {
-                        let liClass = "_tier";
-                        let tier = fields.get(index);
-                        if (index === selected) {
-                            liClass = liClass + " _selected";
-                        }
-                        return (<li key={"tier-" + index} className={liClass} id={"tier-" + index}>
-                            <div className="_tier-heading" >
-                                <h2 className={"_tier-name"} onClick={selectTier(index)} >{tier.name}</h2>
-                                {fields.length > 1 && <button className="_tier-delete" aria-label="delete tier" onClick={deleteTier(index)}/>}
-                                </div>
-                                <div onClick={selectTier(index)} className={"_tier-preview"}>
-                            </div>
-                        </li>)
-                    })}
+                    {mappedFields}
                     <li id={"_tier-add"} onClick={onAdd}>
                         <button className="buttons _add _tier-add-button" aria-label="add new tier"/>
                     </li>
@@ -293,7 +307,8 @@ class ServiceTemplateForm extends React.Component {
                             return {
                                 ...tier,
                                 trial_period_days: paymentPlans[0].trial_period_days,
-                                type: paymentPlans[0].type
+                                type: paymentPlans[0].type,
+                                amount: paymentPlans[0].amount
                             }
                         }else{
                             return tier;
@@ -335,6 +350,8 @@ class ServiceTemplateForm extends React.Component {
                         tiers: [
                             {
                                 trial_period_days: 0,
+                                amount: 0,
+                                type: "subscription",
                                 references: {
                                     payment_structure_templates: [{
                                         interval: 'month',
@@ -406,7 +423,7 @@ const mapDispatchToProps = (dispatch) => {
             return dispatch(dismissAlert(alert))
         },
         setHasOffering: (option) => {
-          return dispatch(setHasOffering(option))
+            return dispatch(setHasOffering(option))
         },
         fieldDispatches: {
             'setIntervalCount': () => {
