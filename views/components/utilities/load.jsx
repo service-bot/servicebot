@@ -21,7 +21,7 @@ class Load extends React.Component {
                 self.setState({
                     show: true
                 })
-            }, 1000)
+            }, 300)
         }
 
         if(this.props.timeout !== false ){
@@ -39,35 +39,6 @@ class Load extends React.Component {
     render () {
 
         let {timeout, delayed, show} = this.state;
-        // let style={};
-        // let loadingStyle={};
-        // if (this.state.type == 'content' || this.state.type == 'dataform'){
-        //     if(this.state.loadState == 'loading'){
-        //         loadingStyle={
-        //             position: 'absolute',
-        //             top: '50%',
-        //             left: '47%',
-        //             transform: 'translate(-50%,-50%)',
-        //             height: '80px',
-        //             width: '80px',
-        //             zIndex: 999999
-        //         };
-        //     }
-        // }else if(this.state.type == 'button'){
-        //     if(this.state.loadState == 'loading'){
-        //         loadingStyle={
-        //             height: '20px',
-        //             width: '20px'
-        //         };
-        //     }
-        // }else if(this.state.type == 'avatar'){
-        //     if(this.state.loadState == 'loading'){
-        //         loadingStyle={
-        //             height: '83px',
-        //             width: '83px'
-        //         };
-        //     }
-        // }
         if(show){
             return(
                 <div className="loader"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>
