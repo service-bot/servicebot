@@ -465,20 +465,42 @@
 
 .app-dashboard .app-body{
   padding-top: $nav-header-height;
-  padding-left: $nav-panel-width;
+  //padding-left: $nav-panel-width;
   min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  width: calc(100% - 280px);
+  margin-right: 0;
+  margin-left: auto;
 
   @include mediaQuery(max, iPad){
-    padding-left: $nav-panel-width-collapsed;
+    //padding-left: $nav-panel-width-collapsed;
+    width: calc(100% - 80px);
   }
 
-  .loader{
+  .loader, .page-loader{
     height: calc( 100vh - 60px );
+    width: calc( 100vw - 280px );
+    max-width: 100%;
     margin-top: 0;
+
+    @include mediaQuery(max, iPad){
+      width: calc(100% - 80px);
+    }
 
     .lds-ellipsis{
       margin-top: 0;
     }
+  }
+
+  .page-loader{
+    left: $nav-panel-width;
+    top: $nav-header-height;
+
+    @include mediaQuery(max, iPad){
+      left: $nav-panel-width-collapsed;
+    }
+
   }
 }
 
