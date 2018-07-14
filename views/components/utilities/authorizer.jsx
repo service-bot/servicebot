@@ -72,7 +72,7 @@ let Authorizer = function(props) {
         if(required_perms.every(permission => user_perms.includes(permission)) || user_perms.includes("can_administrate") || user_perms.includes("can_manage")){
             //renders inner content if authorized
             if(Array.isArray(props.children)){
-                return (<span>{props.children}</span>);
+                return (<div>{props.children}</div>);
             }
             return props.children;
         }
@@ -88,7 +88,7 @@ let Authorizer = function(props) {
     else{
         if(props.anonymous){
             if(Array.isArray(props.children)){
-                return (<span>{props.children}</span>);
+                return (<div>{props.children}</div>);
             }
             return props.children;
         }

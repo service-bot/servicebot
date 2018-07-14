@@ -473,6 +473,20 @@
   margin-right: 0;
   margin-left: auto;
 
+  &>div, &>span{
+    animation: fadeIn 600ms;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
   @include mediaQuery(max, iPad){
     //padding-left: $nav-panel-width-collapsed;
     width: calc(100% - 80px);
