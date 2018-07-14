@@ -466,9 +466,19 @@
 .app-dashboard .app-body{
   padding-top: $nav-header-height;
   padding-left: $nav-panel-width;
+  min-height: 100vh;
 
   @include mediaQuery(max, iPad){
     padding-left: $nav-panel-width-collapsed;
+  }
+
+  .loader{
+    height: calc( 100vh - 60px );
+    margin-top: 0;
+
+    .lds-ellipsis{
+      margin-top: 0;
+    }
   }
 }
 
