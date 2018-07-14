@@ -52,6 +52,8 @@
     justify-content: center;
     position: relative;
 
+    @include fadeInContent;
+
     i{
       color: $color-white;
     }
@@ -473,19 +475,7 @@
   margin-right: 0;
   margin-left: auto;
 
-  &>div, &>span{
-    animation: fadeIn 600ms;
-    animation-fill-mode: forwards;
-  }
-
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
+  @include fadeInContent;
 
   @include mediaQuery(max, iPad){
     //padding-left: $nav-panel-width-collapsed;

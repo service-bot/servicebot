@@ -1,9 +1,22 @@
+.modal-wrapper{
+  z-index: $z-modal;
+
+  @include fadeInContent;
+
+  .modal{
+    max-width: 100%;
+  }
+}
+
 .servicebot-modal {
-  z-index: 9954;
+  z-index: $z-modal + 1;
   position: fixed;
   top: 33%;
   left: 50%;
+  transform: translateX(-50%);
+  margin-left: $nav-panel-width /2;
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
+  max-width: 70%;
 
   .modal-content {
     background-color: #F9FCFF;

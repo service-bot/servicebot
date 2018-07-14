@@ -12,6 +12,8 @@
       margin-bottom: 27px;
       overflow-y: visible;
 
+      @include fadeInContent;
+
       ._tier {
 
         @include _tier_box;
@@ -162,6 +164,8 @@
       min-width: $_min-tier-fields-width;
     }
     .payment-structures{
+
+      @include fadeInContent;
 
       .buttons._add{
         float: right;

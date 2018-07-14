@@ -53,17 +53,14 @@ class Modal extends React.Component {
         // }
 
         return(
-            <div style={{"zIndex" : 99999}} className={`modal-wrapper`}>
+            <div className={`modal-wrapper`}>
                 <div className={`modal ${this.props.titleColor ? this.props.titleColor : 'modal-primary'}`} id="modal" tabIndex="-1" role="dialog">
-                    <ReactCSSTransitionGroup
-                        component='div'
-                        transitionAppear={true} transitionAppearTimeout={1000}
-                        transitionName={'modal'} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
-                        <div key={Object.id} className="servicebot-modal modal-lg" role="document" style={modalDialogStyle}>
+
+                        <div key={Object.id} className="servicebot-modal modal-lg" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <button onClick={this.props.hide} className="close">
-                                        <span><i class="fa fa-times" /></span>
+                                        <span><i className="fa fa-times" /></span>
                                     </button>
                                     <h4 className="modal-title uppercase bold" id="modal-sm-primary-label"><i className={`modal-icon fa ${this.props.icon ? this.props.icon : 'fa-cog'}`}/>{this.props.modalTitle}</h4>
                                 </div>
@@ -78,7 +75,7 @@ class Modal extends React.Component {
                                 </div>
                             </div>
                         </div>
-                    </ReactCSSTransitionGroup>
+
                     <div onClick={this.props.hide} className="modal-backdrop fade in"/>
                 </div>
             </div>
