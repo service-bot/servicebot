@@ -35,6 +35,7 @@
     ._content {
       flex-grow: 1;
       width: calc(100vw - 300px - 300px - 20px);
+      min-height: calc( 100vh - 57px );
 
       ._section{
 
