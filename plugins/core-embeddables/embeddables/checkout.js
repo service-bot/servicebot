@@ -11,6 +11,7 @@ const selector = formValueSelector(CHECKOUT_FORM); // <-- same as form name
 import { duotoneDark } from 'react-syntax-highlighter/styles/prism';
 import SyntaxHighlighter from 'react-syntax-highlighter/prism';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import Load from '../../../views/components/utilities/load.jsx';
 
 class CustomField extends React.Component {
 
@@ -335,7 +336,7 @@ class CheckoutPage extends React.Component {
         let formHTML;
         let {loading, selectedTemplate, templates, selectedPlan, selectedTier, tier, copied} = this.state;
         if(loading){
-            return <div>LOADING</div>;
+            return <Load/>;
         }
 
         if (selectedTemplate === null || selectedTemplate == 0) {

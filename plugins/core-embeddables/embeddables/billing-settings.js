@@ -3,6 +3,7 @@ import {Fetcher} from "servicebot-base-form";
 import { duotoneDark } from 'react-syntax-highlighter/styles/prism';
 import SyntaxHighlighter from 'react-syntax-highlighter/prism';
 import {CopyToClipboard} from 'react-copy-to-clipboard';
+import Load from '../../../views/components/utilities/load.jsx';
 
 class ManagementEmbed extends React.Component {
     constructor(props){
@@ -31,7 +32,7 @@ class ManagementEmbed extends React.Component {
     }
     render() {
         if(this.state.loading){
-            return <p>LOADING</p>;
+            return <Load/>;
         }
         let server;
         switch (this.state.selectedServer) {
