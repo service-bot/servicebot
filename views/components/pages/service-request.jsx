@@ -14,6 +14,7 @@ const selector = formValueSelector(REQUEST_FORM_NAME); // <-- same as form name
 import {setNavClass, resetNavClass} from "../utilities/actions";
 import { StickyContainer, Sticky } from 'react-sticky';
 import getSymbolFromCurrency from 'currency-symbol-map'
+import Load from '../utilities/load.jsx';
 
 
 class RequestPage extends React.Component {
@@ -52,7 +53,7 @@ class RequestPage extends React.Component {
         let formHTML;
         let {loading, selectedTemplate,template, selectedPlan, selectedTier, tier} = this.state;
         if(loading){
-            return <div>LOADING</div>;
+            return <Load/>;
         }
         let currentTemplate = template;
         let formEmbed = (<div>

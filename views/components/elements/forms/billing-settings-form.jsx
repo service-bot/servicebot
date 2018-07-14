@@ -7,6 +7,7 @@ import {required} from 'redux-form-validators'
 import {Field,} from 'redux-form'
 import Collapsible from 'react-collapsible';
 import Buttons from "../buttons.jsx";
+import Load from "../../utilities/load.jsx";
 
 class CardSection extends React.Component {
     render() {
@@ -37,7 +38,7 @@ class BillingForm extends React.Component {
     render() {
         if(!this.props.spk) {
             return (
-                <div>Loading</div>
+                <Load/>
             )
         }
         return (
