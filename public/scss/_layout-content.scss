@@ -47,6 +47,10 @@
           padding-top: $gutter * 1.5;
         }
 
+        &:last-child{
+          margin-bottom: $gutter * 5;
+        }
+
         .caret{
           @include defaultTransition;
           display: block;
