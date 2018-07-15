@@ -124,6 +124,6 @@
     @media (max-width: 768px) { @content; }
   }
   @else if $point == iPhone {
-    @media (max-width: 411px) { @content; }
+    @media (max-width: 414px) { @content; }
   }
 }
