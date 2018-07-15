@@ -69,7 +69,7 @@ class Login extends React.Component {
                 }
 
             }else{
-                let loginErrorAlert = {id: '112', message: 'Your user name or password is not correct.', show: true};
+                let loginErrorAlert = {id: '112', message: 'Your user name or password is not correct.', show: true, autoDismiss: 5000};
                 self.props.addAlert(loginErrorAlert);
                 self.setState({errors: result.error, alerts: [ ...self.state.alerts, loginErrorAlert ]});
             }
