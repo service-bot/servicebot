@@ -1,6 +1,6 @@
 {
   "name": "servicebot",
-  "version": "0.10.71",
+  "version": "0.10.74",
   "license": "GPL-3.0",
   "scripts": {
     "start": "node ./bin/start",
@@ -94,7 +94,7 @@
     "serve-favicon": "^2.5.0",
     "server-destroy": "^1.0.1",
     "servicebot-base-form": "^0.0.16",
-    "servicebot-billing-settings-embed": "^0.2.32",
+    "servicebot-billing-settings-embed": "^0.2.34",
     "servicebot-checkout-embed": "^0.2.76",
     "slug": "^0.9.1",
     "stripe": "^4.25.0",
