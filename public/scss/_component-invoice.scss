@@ -1,15 +1,35 @@
-.invoice{
+.Invoice{
+  @include text;
 
   .invoice-header{
+    background-color: $color-dark-blue;
 
     .invoice-header-header{
+      padding: $gutter;
 
       .invoice-entity{
 
       }
 
       .invoice-no{
+        font-size: 0.8rem;
+        line-height: 1.2rem;
+      }
+    }
+  }
 
+  .xaas-dashboard{
+
+    .xaas-row{
+      margin-bottom: 0;
+      border: none;
+      -webkit-border-radius: 0;
+      -moz-border-radius: 0;
+      border-radius: 0;
+
+      .xaas-title{
+        background-color: $color-blue-gray;
+        color: $color-white;
       }
     }
   }
@@ -18,19 +38,22 @@
 
     .invoice-entity-details{
 
-      .invoice-form-header{
-
-        h3{
-
-        }
+      h3{
+        font-size: 1.2rem;
+        margin: $gutter / 2;
       }
 
-      .invoice-form-body{
+      .invoice-form-header{
+
+      }
+
+      .invoice-from-body, .invoice-to-body, .invoice-status-body{
 
         ul{
 
           li{
-
+            font-size: 0.9rem;
+            line-height: 1.5rem;
           }
         }
       }
@@ -46,7 +69,7 @@
         tr{
 
           th{
-
+            background-color: $color-blue-gray;
           }
         }
       }
