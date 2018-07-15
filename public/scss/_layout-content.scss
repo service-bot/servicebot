@@ -41,6 +41,8 @@
 
       ._section{
 
+        @include fadeInContent;
+
         background-color: $color-extra-light-gray;
         margin: $gutter;
         padding: $gutter $gutter * 1.5;
