@@ -19,7 +19,7 @@ function PaymentPlanForm(props){
             validate={numericality({'>=': 0})}
 
         />
-        <button className="btn btn-rounded btn-primary" type="submit">
+        <button className="buttons _primary" type="submit">
             Submit
         </button>
     </form>)

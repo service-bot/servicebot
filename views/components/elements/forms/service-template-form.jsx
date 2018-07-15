@@ -553,7 +553,7 @@ class TemplateForm extends React.Component {
                                 <div id="service-submission-box" className="button-box right">
                                     <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>Go
                                         Back</Link>
-                                    <button className="btn btn-rounded btn-primary" type="submit">
+                                    <button className="buttons _primary" type="submit">
                                         Submit
                                     </button>
                                 </div>

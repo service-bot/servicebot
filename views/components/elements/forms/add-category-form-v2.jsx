@@ -9,7 +9,7 @@ function Category(props){
             <Field name="name" type="text" component={inputField} label="Name" validate={required()}/>
             <Field name="description" type="text" component={inputField} label="Description (Optional)"/>
             <div id="service-submission-box" className="button-box right">
-                <button  className="btn btn-rounded btn-primary" type="submit">
+                <button  className="buttons _primary" type="submit">
                     Submit
                 </button>
             </div>

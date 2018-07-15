@@ -79,8 +79,8 @@ class ModalRequestCancellation extends React.Component {
                                 </div>
                             </div>
                             <div className={`modal-footer text-right p-b-20`}>
-                                <button className="btn btn-default btn-rounded" onClick={self.props.hide}>Nevermind</button>
-                                <button className="btn btn-danger btn-rounded" onClick={self.onCancel}>Cancel Service</button>
+                                <button className="buttons _primary _text" onClick={self.props.hide}>Nevermind</button>
+                                <button className="buttons _primary _red" onClick={self.onCancel}>Cancel Service</button>
                             </div>
                         </div>
                     </Modal>
@@ -100,8 +100,8 @@ class ModalRequestCancellation extends React.Component {
                                 </div>
                             </div>
                             <div className={`modal-footer text-right p-b-20`}>
-                                <button className="btn btn-default btn-rounded" onClick={self.props.hide}>Nevermind</button>
-                                <button className="btn btn-danger btn-rounded" onClick={self.onCancelRequest}>Request Cancellation</button>
+                                <button className="buttons _primary _text" onClick={self.props.hide}>Nevermind</button>
+                                <button className="buttons _primary _red" onClick={self.onCancelRequest}>Request Cancellation</button>
                             </div>
                         </div>
                     </Modal>

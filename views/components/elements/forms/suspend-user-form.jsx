@@ -63,7 +63,7 @@ class SuspendUserForm extends React.Component {
 
                     <div className={`modal-footer text-right p-b-20`}>
                         <Buttons containerClass="inline" btnType="primary" text="Suspend User" success={this.state.success} onClick={this.fetchSuspendUser}/>
-                        <Buttons containerClass="inline" btnType="default" text="Cancel" onClick={this.props.hide} />
+                        <Buttons className="_text" containerClass="inline" btnType="default" text="Cancel" onClick={this.props.hide} />
                     </div>
                 </div>
             );

@@ -87,7 +87,7 @@ class UserFormEditRole extends React.Component {
                         <div className={`modal-footer text-right p-b-20`}>
                             <Buttons containerClass="inline" size="md" btnType="primary" text="Save User" value="submit"
                                      onClick={this.handleSubmission} loading={this.state.ajaxLoad}/>
-                            <Buttons containerClass="inline" size="md" btnType="default" text="Cancel" onClick={this.props.hide} />
+                            <Buttons buttonClass="_text" containerClass="inline" size="md" btnType="default" text="Cancel" onClick={this.props.hide} />
                         </div>
                     </div>
                 )

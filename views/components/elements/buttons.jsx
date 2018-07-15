@@ -129,7 +129,7 @@ class Buttons extends React.Component {
             <div className={`react-buttons ${this.state.position} ${this.state.containerClass}`}>
                 {this.state.loading === true && <Load type="button"/>}
                 {this.state.success === true && this.success()}
-                <button className={`${this.state.buttonClass} btn-${this.state.size}`}
+                <button className={`buttons _primary ${this.state.buttonClass}`}
                         disabled={this.state.loading}
                         style={this.state.style ? _.merge(this.state.style, btnStyle) : btnStyle}
                         onClick={this.handleClick}

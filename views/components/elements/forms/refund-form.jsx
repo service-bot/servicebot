@@ -137,7 +137,7 @@ class RefundForm extends React.Component {
 
                         <div className={`modal-footer text-right p-b-20`}>
                             <Buttons containerClass="inline" btnType="primary" type="submit" value="submit" text="Issue Refund" success={this.state.success}/>
-                            <Buttons containerClass="inline" btnType="default" text="Later" onClick={this.props.hide} />
+                            <Buttons containerClass="inline" btnType="default" text="Later" onClick={this.props.hide} buttonClass={"_text"}/>
                         </div>
                     </DataForm>
                 </div>

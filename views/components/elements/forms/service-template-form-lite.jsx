@@ -231,7 +231,7 @@ class TemplateForm extends React.Component {
                     </div>
                 </div>
                 <div id="service-submission-box" className="button-box right">
-                    <button className="btn btn-rounded btn-primary btn-block" type="submit">
+                    <button className="buttons _primary" type="submit">
                         Next
                     </button>
                 </div>
