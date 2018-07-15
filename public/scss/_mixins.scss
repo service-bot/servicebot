@@ -106,3 +106,24 @@
     }
   }
 }
+
+@mixin breakpoint($point) {
+  @if $point == FourK {
+    @media (max-width: 1600px) { @content; }
+  }
+  @else if $point == TwoK {
+    @media (max-width: 1250px) { @content; }
+  }
+  @else if $point == Retina {
+    @media (max-width: 650px)  { @content; }
+  }
+  @else if $point == FullHD {
+    @media (max-width: 1080px) { @content; }
+  }
+  @else if $point == iPad {
+    @media (max-width: 768px) { @content; }
+  }
+  @else if $point == iPhone {
+    @media (max-width: 411px) { @content; }
+  }
+}
