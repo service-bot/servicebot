@@ -37,19 +37,32 @@
   .entity-info{
 
     .invoice-entity-details{
+      display: flex;
+
+      &>div{
+        flex-grow: 1;
+      }
+      &>div:first-child{
+        padding-left: $gutter;
+      }
+      &>div:last-child{
+        padding-right: $gutter;
+      }
 
       h3{
         font-size: 1.2rem;
-        margin: $gutter / 2;
+        margin: $gutter / 2 0;
       }
 
-      .invoice-form-header{
-
+      .invoice-from-header, .invoice-to-header, .invoice-status-header{
+        border-bottom: 1px solid $color-dark-blue;
+        padding: $gutter/2 0;
       }
 
       .invoice-from-body, .invoice-to-body, .invoice-status-body{
 
         ul{
+          padding: $gutter/2 0;
 
           li{
             font-size: 0.9rem;
@@ -95,5 +108,12 @@
       }
     }
 
+  }
+
+  .invoice-actions{
+    background-color: transparent;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
   }
 }

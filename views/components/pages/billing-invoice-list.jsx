@@ -168,14 +168,9 @@ class BillingInvoiceList extends React.Component {
             };
 
             return (
-                <div className="col-xs-12">
-                    <div className="row">
-                        <div className="col-xs-10">
-                            <ContentTitle icon="cog" title={`Invoice ID:${invoice.invoice_id}`}/>
-                        </div>
-                        <div className="col-xs-2">
-                            {this.getActionButtons()}
-                        </div>
+                <div>
+                    <div>
+                        <ContentTitle icon="cog" title={`Invoice ID:${invoice.invoice_id}`}/>
                     </div>
                     <div className="Invoice">
                         <div className="invoice-header">
@@ -194,28 +189,28 @@ class BillingInvoiceList extends React.Component {
                         </div>
                         <div className="entity-info">
                             <div className="invoice-entity-details">
-                                <div className="col-xs-12 col-md-4">
+                                <div>
                                     <div className="invoice-from-header"><h3>From</h3></div>
                                     <div className="invoice-from-body">
                                         <ul>
                                             <li className="entity-name">{options.company_name && options.company_name.value}</li>
                                             <li>{options.company_address && options.company_address.value}</li>
-                                            {options.company_email && <li><i className="fa fa-envelope"/> {options.company_email.value}</li>}
-                                            {options.company_phone_number && <li><i className="fa fa-phone"/> {options.company_phone_number.value}</li>}
+                                            {options.company_email && <li>{options.company_email.value}</li>}
+                                            {options.company_phone_number && <li>{options.company_phone_number.value}</li>}
                                         </ul>
                                     </div>
                                 </div>
-                                <div className="col-xs-12 col-md-4">
+                                <div>
                                     <div className="invoice-to-header"><h3>To</h3></div>
                                     <div className="invoice-to-body">
                                         <ul>
-                                            {invoiceOwner.name && <li className="entity-name"><i className="fa fa-user"/> {invoiceOwner.name}</li> }
-                                            {invoiceOwner.email && <li><i className="fa fa-envelope"/> {invoiceOwner.email}</li> }
-                                            {invoiceOwner.phone && <li><i className="fa fa-phone"/> {invoiceOwner.phone}</li> }
+                                            {invoiceOwner.name && <li className="entity-name">{invoiceOwner.name}</li> }
+                                            {invoiceOwner.email && <li>{invoiceOwner.email}</li> }
+                                            {invoiceOwner.phone && <li>{invoiceOwner.phone}</li> }
                                         </ul>
                                     </div>
                                 </div>
-                                <div className="col-xs-12 col-md-4">
+                                <div>
                                     <div className="invoice-status-header"><h3>Details</h3></div>
                                     <div className="invoice-status-body">
                                         <ul>
@@ -273,6 +268,10 @@ class BillingInvoiceList extends React.Component {
                         </div>
                         <div className="invoice-footer">
 
+                        </div>
+
+                        <div className={`invoice-actions`}>
+                            {this.getActionButtons()}
                         </div>
                     </div>
                     {currentModal()}
