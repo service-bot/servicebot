@@ -8,6 +8,36 @@ import {Price} from "../../utilities/price.jsx";
 import DateFormat from "../../utilities/date-format.jsx";
 import {Fetcher} from "servicebot-base-form";
 let _ = require("lodash");
+import {ServicebotBaseForm,inputField, priceField} from "servicebot-base-form"
+import {Field} from "redux-form"
+import {numericality, required} from "redux-form-validators";
+
+
+function Refund(props){
+    return(<form onSubmit={props.handleSubmit}>
+        <Field
+            name={"amount"}
+            component={priceField}
+            type={"number"}
+            isCents={true}
+            label="Refund Amount"
+            validate={numericality({'>': 50, msg: "must be greater than $0.50"})}
+
+        />
+        <Field
+            name={"reason"}
+            component={inputField}
+            type={"text"}
+            label="Refund Reason"
+            validate={required()}
+
+        />
+
+        <button className="buttons _primary" type="submit">
+            Submit
+        </button>
+    </form>)
+}
 
 class RefundForm extends React.Component {
 
@@ -39,7 +69,7 @@ class RefundForm extends React.Component {
     }
 
     handleResponse(response){
-
+        console.log(response);
         if(_.has(response,'data.status') && _.get(response, 'data.status') == "succeeded"){
             this.setState({
                 success: true,
@@ -63,6 +93,10 @@ class RefundForm extends React.Component {
     }
 
     render () {
+        let submissionRequest = {
+            'method': 'POST',
+            'url': this.state.refundURL
+        };
 
         if(this.state.loading){
             return ( <Load/> );
@@ -119,27 +153,34 @@ class RefundForm extends React.Component {
                         </div>
                     }
 
-                    <DataForm handleResponse={this.handleResponse} url={this.state.refundURL} method={'POST'}>
+                    <ServicebotBaseForm
+                        form={Refund}
+                        formName={"REFUND_FORM"}
+                        // initialValues={{...paymentPlan, trial_period_days: 0}}
+                        submissionRequest={submissionRequest}
+                        handleResponse={this.handleResponse}
+                    />
+                    {/*<DataForm handleResponse={this.handleResponse} url={this.state.refundURL} method={'POST'}>*/}
 
-                        <div className="p-20">
-                            <p><strong>You can issue a partial or full refund. If you leave the amount 0 and submit, full refund will be applied.
-                            Total amount of refunds cannot exceed the total transaction amount.</strong></p>
-                            <Inputs type="price" name="amount" label="Refund Amount" defaultValue={0}
-                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                            <Inputs type="select" name="reason" label="What is the reason for this refund?" defaultValue="requested_by_customer"
-                                    options={[
-                                        {'Requested by customer': 'requested_by_customer'},
-                                        {'Duplicate': 'duplicate'},
-                                        {'Fraudulent': 'fraudulent'}
-                                    ]}
-                                    onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                        </div>
+                        {/*<div className="p-20">*/}
+                            {/*<p><strong>You can issue a partial or full refund. If you leave the amount 0 and submit, full refund will be applied.*/}
+                            {/*Total amount of refunds cannot exceed the total transaction amount.</strong></p>*/}
+                            {/*<Inputs type="price" name="amount" label="Refund Amount" defaultValue={0}*/}
+                                    {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
+                            {/*<Inputs type="select" name="reason" label="What is the reason for this refund?" defaultValue="requested_by_customer"*/}
+                                    {/*options={[*/}
+                                        {/*{'Requested by customer': 'requested_by_customer'},*/}
+                                        {/*{'Duplicate': 'duplicate'},*/}
+                                        {/*{'Fraudulent': 'fraudulent'}*/}
+                                    {/*]}*/}
+                                    {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
+                        {/*</div>*/}
 
-                        <div className={`modal-footer text-right p-b-20`}>
-                            <Buttons containerClass="inline" btnType="primary" type="submit" value="submit" text="Issue Refund" success={this.state.success}/>
-                            <Buttons containerClass="inline" btnType="default" text="Later" onClick={this.props.hide} buttonClass={"_text"}/>
-                        </div>
-                    </DataForm>
+                        {/*<div className={`modal-footer text-right p-b-20`}>*/}
+                            {/*<Buttons containerClass="inline" btnType="primary" type="submit" value="submit" text="Issue Refund" success={this.state.success}/>*/}
+                            {/*<Buttons containerClass="inline" btnType="default" text="Later" onClick={this.props.hide} buttonClass={"_text"}/>*/}
+                        {/*</div>*/}
+                    {/*</DataForm>*/}
                 </div>
             );
         }

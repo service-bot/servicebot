@@ -4,8 +4,9 @@ import Inputs from "../../utilities/inputs.jsx";
 import {DataForm} from "../../utilities/data-form.jsx";
 import {ServicebotBaseForm,inputField, priceField} from "servicebot-base-form"
 import {Field} from "redux-form"
-import Buttons from "../buttons.jsx";
 import {numericality, required} from "redux-form-validators";
+
+import Buttons from "../buttons.jsx";
 
 
 function ChargeForm(props){
