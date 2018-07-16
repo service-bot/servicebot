@@ -57,8 +57,10 @@
     </head>
     <body id="servicebotio" data-layout="top-navigation-1" data-sidebar="primary" data-navbar="primary">
         <div id="servicebot-loader" class="no-print">
-            {{#if hostname}}<img src="/api/v1/system-options/file/loader_logo" alt="ServiceBot">{{else}}<img src="/assets/logos/v1/servicebot-logo-full-blue.png" alt="ServiceBot">{{/if}}
-            <div class="loader"><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>
+            <div class="loader initial">
+                {{#if hostname}}<img src="/api/v1/system-options/file/loader_logo" alt="ServiceBot">{{else}}<img src="/assets/logos/v1/servicebot-logo-full-blue.png" alt="ServiceBot">{{/if}}
+                <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+            </div>
         </div>
         <div id="app"/>
 

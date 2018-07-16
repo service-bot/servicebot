@@ -50,6 +50,27 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.loader.initial {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    height: auto;
+}
+.initial .lds-ellipsis {
+    display: inline-block;
+    position: relative;
+    width: 64px;
+    height: 64px;
+    display: block;
+    margin: 0;
+    transform: none;
+    left: auto;
+}
+
 .lds-ellipsis div {
     position: absolute;
     top: 27px;
