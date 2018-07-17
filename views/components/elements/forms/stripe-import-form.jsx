@@ -86,13 +86,19 @@ class SystemSettingsForm extends React.Component {
                         <div className="stripe-keys-form row">
                             <div className="col-md-12">
                                 <div className="row">
-                                    <div className="stripe-import-form">
+                                    {this.state.ajaxLoad && (<div className="stripe-import-form">
+                                        <div className="p-20">
+                                            {/* Define Inputs */}
+                                           Importing...
+                                        </div>
+                                    </div>)}
+                                    {!this.state.ajaxLoad && (<div className="stripe-import-form">
                                         <div className="p-20">
                                             {/* Define Inputs */}
                                             <Inputs type="boolean" label="Notify customers by email?" name="notifyUsers" defaultValue={false}/>
                                         </div>
-                                        <Buttons containerClass="inline" size="md" btnType="danger" text="Import Stripe Data" value="submit" onClick={this.handleSubmission} loading={this.state.ajaxLoad}/>
-                                    </div>
+                                        <Buttons containerClass="inline" size="md" btnType="danger" text="Import Stripe Data" value="submit" onClick={this.handleSubmission} />
+                                    </div>)}
                                 </div>
                             </div>
                         </div>
