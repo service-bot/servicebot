@@ -61,15 +61,15 @@ input:-moz-focusring {
   margin-bottom: 30px;
 }
 
-::-moz-selection, input-moz-selection {
-  background-color: #5f5f5f;
-  color: #f3f3f3;
-}
+/*::-moz-selection, input-moz-selection {*/
+  /*background-color: #5f5f5f;*/
+  /*color: #f3f3f3;*/
+/*}*/
 
-::selection {
-  background-color: #5f5f5f;
-  color: #f3f3f3;
-}
+/*::selection {*/
+  /*background-color: #5f5f5f;*/
+  /*color: #f3f3f3;*/
+/*}*/
 
 .form-container {
   display: -webkit-box;

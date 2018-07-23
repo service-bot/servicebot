@@ -1,0 +1,14 @@
+.s-alert-wrapper {
+  position: relative;
+  z-index: $z-s-alerts;
+  top: $nav-header-height + $gutter;
+
+  .s-alert-box {
+    z-index: $z-s-alerts;
+    position: fixed;
+
+    .s-alert-show {
+
+    }
+  }
+}
