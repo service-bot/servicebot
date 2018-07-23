@@ -93,7 +93,7 @@
     "semver-sort": "0.0.4",
     "serve-favicon": "^2.5.0",
     "server-destroy": "^1.0.1",
-    "servicebot-base-form": "0.0.18",
+    "servicebot-base-form": "0.0.19",
     "servicebot-billing-settings-embed": "^0.2.40",
     "servicebot-checkout-embed": "^0.2.79",
     "slug": "^0.9.1",
