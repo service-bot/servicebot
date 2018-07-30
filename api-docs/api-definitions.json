@@ -71,6 +71,10 @@
         "type": "integer",
         "description": "Servicebot User ID, used for requesting a service instance for an existing User"
       },
+      "payment_structure_template_id": {
+        "type": "integer",
+        "description": "Payment Structure Template ID, used to select a specific payment structure to be attached to the created Service Instance"
+      },
       "references": {
         "type": "object",
         "properties": {

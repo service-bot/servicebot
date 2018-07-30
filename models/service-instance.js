@@ -270,6 +270,9 @@ ServiceInstance.prototype.changeProperties = async function (properties) {
                 return acc;
             }, {});
             let basePrice = require("../lib/handleInputs").getBasePrice(oldProperties, handlers, paymentPlan.amount);
+            if(basePrice === 0){
+                basePrice = this.data.references.payment_structure_templates[0].amount;
+            }
             let newPrice = require("../lib/handleInputs").getPrice(mergedProps, handlers, basePrice);
             paymentPlan.amount = newPrice;
             updatedInstance = await this.changePaymentPlan(paymentPlan, true);
