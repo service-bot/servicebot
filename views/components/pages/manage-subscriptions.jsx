@@ -365,9 +365,6 @@ class ManageSubscriptions extends React.Component {
                 1: 'bad',
                 2: 'unknown'
             };
-            console.log("Printing ROW:")
-            console.log(this.state.rows)
-            console.log(this.state.allUsers)
             return (
                 <Authorizer permissions={["can_administrate", "can_manage"]}>
                     <Jumbotron pageName={pageName} subtitle={subtitle}/>
