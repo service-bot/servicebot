@@ -43,7 +43,6 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
             status : "requested",
             payment_structure_template_id: paymentStructure.data.id
         };
-
         let submittedProperties = instanceRequest.references.service_template_properties;
         let ServiceInstance = require('../models/service-instance');
         let service = new ServiceInstance(await ServiceInstance.createPromise(instanceAttributes));
@@ -59,9 +58,8 @@ ServiceTemplate.prototype.requestPromise = async function (instanceRequest) {
             let charge = await  Charges.createPromise(charge_obj);
         }
         let plan = (paymentStructure.data.type === 'one_time' || paymentStructure.data.type === 'custom' || paymentStructure.data.type === "split") ? {...paymentStructure.data, amount : 0, interval : "day"} : {...paymentStructure.data, ...instanceRequest};
-        let payStructure = (instanceRequest.amount === 0 || instanceRequest.amount === undefined) ? null : (await service.buildPayStructure(plan));
+        let payStructure = ((instanceRequest.amount === 0 && paymentStructure.data.type !== "subscription") || instanceRequest.amount === undefined) ? null : (await service.buildPayStructure(plan));
         let payPlan = await service.createPayPlan(payStructure);
-
         // if (instanceAttributes.requested_by === instanceAttributes.user_id) {
         await service.subscribe();
         // }
