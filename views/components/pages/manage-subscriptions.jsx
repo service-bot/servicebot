@@ -417,7 +417,7 @@ class ManageSubscriptions extends React.Component {
                                         <TableHeaderColumn dataField='payment'
                                                            dataFormat={this.paymentFormatter}
                                                            dataSort={ true }
-                                                           filterValue={this.statusDataValue}
+                                                           searchable={false}
                                                            width='100'>
                                             Payment
                                         </TableHeaderColumn>
