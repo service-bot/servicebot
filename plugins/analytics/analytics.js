@@ -42,10 +42,12 @@ let getFunding = function (users, funds, instance) {
     let fundAvailable = funds.filter(card => card.data.user_id === instance.data.user_id);
     let user = users.filter(user => user.data.id === instance.data.user_id);
     if(fundAvailable.length > 0){
-        if(user.length > 0 && user[0].data.status !== 'flagged') {
+        //if(user.length > 0 && user[0].data.status !== 'flagged') {
+        if(user.length > 0) {
             fundingData.hasFunding = true;
             fundingData.fundingCount++;
-        } else {
+        }
+        if(user.length > 0 && user[0].data.status === 'flagged') {
             fundingData.flagged = true;
             fundingData.flagCount++;
         }
