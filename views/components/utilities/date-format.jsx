@@ -28,9 +28,9 @@ function getFormattedDate(dateString, options = {}){
     if(options.weekday){
         myDate = `${dayNames[dayOfWeek]} ${monthNames[month]} ${day}, ${year}`;
     }else if(options.time){
-        myDate = `${monthNames[month]} ${day}, ${year} - ${hour}:${min}`;
+        myDate = `${monthNames[month]} ${day}, ${year} @ ${hour}:${min}`;
     }else if(options.weekday && options.time){
-        myDate = `${dayNames[dayOfWeek]} ${monthNames[month]} ${day}, ${year} - ${hour}:${min}`;
+        myDate = `${dayNames[dayOfWeek]} ${monthNames[month]} ${day}, ${year} @ ${hour}:${min}`;
     }
 
     return myDate;
