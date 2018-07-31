@@ -55,6 +55,16 @@
       }
     }
   },
+  "metric_change": {
+    "type": "object",
+    "properties": {
+      "value": {
+        "type": "integer",
+        "format": "int32",
+        "description": "New number of metric"
+      }
+    }
+  },
   "service_instance_request": {
     "type": "object",
     "properties": {

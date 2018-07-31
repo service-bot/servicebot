@@ -2694,5 +2694,76 @@
         }
       }
     }
+  },
+  "/service-instance/{id}/metric": {
+    "get": {
+      "summary": "Gets metric",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff",
+        "user"
+      ],
+      "operationId": "get_service_instances_own",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Metric",
+          "schema": {
+            "$ref": "#/definitions/metric_change"
+          }
+        }
+      },
+      "default": {
+        "description": "Unexpected error",
+        "schema": {
+          "$ref": "#/definitions/Error"
+        }
+      }
+    },
+    "post": {
+      "summary": "Change metric",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff",
+        "user"
+      ],
+      "operationId": "get_service_instances_own",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Metric",
+          "schema": {
+            "$ref": "#/definitions/metric_change"
+          }
+        }
+      },
+      "default": {
+        "description": "Unexpected error",
+        "schema": {
+          "$ref": "#/definitions/Error"
+        }
+      }
+    }
   }
+
 }
