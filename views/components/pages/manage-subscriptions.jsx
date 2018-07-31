@@ -40,6 +40,7 @@ class ManageSubscriptions extends React.Component {
         this.onCloseActionModal = this.onCloseActionModal.bind(this);
         this.rowActionsFormatter = this.rowActionsFormatter.bind(this);
         this.requestedByFormatter = this.requestedByFormatter.bind(this);
+        this.paymentFormatter = this.paymentFormatter.bind(this);
     }
 
     componentDidMount() {
@@ -215,10 +216,38 @@ class ManageSubscriptions extends React.Component {
                 return ( <span className='status-badge grey' >{cell}</span> );
         }
     }
-    createdFormatter(cell){
+
+    paymentFormatter(cell, row) {
+        let uid = row.user_id;
+        let user = _.find(this.state.allUsers, function (user) {
+            return user.id === uid;
+        });
+        if(user.references.funds.length > 0) {
+            if(user.status === 'flagged') {
+                return (
+                    <span data-tip='Payment Failed' data-for='valid-card' className='status-badge yellow' ><i class="fa fa-credit-card"/> <i class="fa fa-flag"></i>
+                    <ReactTooltip id="flagged-card" aria-haspopup='true' delayShow={100}
+                                  role='date' place="left" effect="solid"/>
+                    </span>
+                );
+            } else {
+                return (
+                    <span data-tip='Paying - Valid Card' data-for='valid-card' className='status-badge green'><i class="fa fa-credit-card"/> <i class="fa fa-check"></i>
+                    <ReactTooltip id="valid-card" aria-haspopup='true' delayShow={100}
+                                  role='date' place="left" effect="solid"/>
+                    </span>
+                );
+            }
+        } else {
+            return ( <span className='status-badge grey'/> );
+        }
+    }
+
+    createdFormatter(cell, row){
+        let fullTime = `${getFormattedDate(cell, {time: true})} - Created: ${getFormattedDate(row.created_at, {time: true})}`;
         return (<div className="datatable-date">
-            <span data-tip={getFormattedDate(cell, {time: true})} data-for='date-updated'>{getFormattedDate(cell)}</span>
-            <ReactTooltip id="date-updated" aria-haspopup='true' delayShow={400}
+            <span data-tip={fullTime} data-for='date-updated'>{getFormattedDate(cell)}</span>
+            <ReactTooltip id="date-updated" aria-haspopup='true' delayShow={200}
                           role='date' place="left" effect="solid"/>
         </div>);
     }
@@ -384,6 +413,13 @@ class ManageSubscriptions extends React.Component {
                                                            filterValue={this.statusDataValue}
                                                            width='100'>
                                             Status
+                                        </TableHeaderColumn>
+                                        <TableHeaderColumn dataField='payment'
+                                                           dataFormat={this.paymentFormatter}
+                                                           dataSort={ true }
+                                                           filterValue={this.statusDataValue}
+                                                           width='100'>
+                                            Payment
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='updated_at'
                                                            dataFormat={this.createdFormatter}
