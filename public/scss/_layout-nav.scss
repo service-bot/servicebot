@@ -9,10 +9,6 @@
   box-shadow: 0 2px 4px 0 rgba(0,0,0,0.23);
   z-index: $z-nav-header;
 
-  @include mediaQuery(max, iPad){
-    padding: $gutter/2 20px;
-  }
-
   .app-header-left, .app-header-right{
     display: flex;
     align-content: flex-end;
@@ -125,6 +121,35 @@
   }
   /* end app-notification */
 
+  @include mediaQuery(max, iPad){
+    padding: $gutter/2 10px;
+    align-items: center;
+
+    .app-logo{
+      max-height: 100%;
+      width: 140px;
+      height: auto;
+      margin-top: -3px;
+    }
+
+    .app-header-right{
+      align-items: center;
+    }
+
+    .app-profile, .app-notification{
+      height: 29px;
+      width: 28px;
+    }
+
+    .app-notification{
+
+      .app-notification-list{
+        position: fixed;
+        width: 100%;
+      }
+    }
+  }
+
 }
 
 .app-navigation{
@@ -135,10 +160,6 @@
   height: 100%;
   z-index: $z-nav-panel;
   transition: width 300ms;
-
-  @include mediaQuery(max, iPad){
-    width: $nav-panel-width-collapsed;
-  }
 
   .app-links-container {
     height: 100%;
@@ -390,6 +411,66 @@
       }
     }
   }
+
+  @include mediaQuery(max, iPad){
+    width: $nav-panel-width-collapsed;
+
+    .app-links-container {
+
+      ._main {
+
+        .app-links {
+
+          & > li {
+
+          }
+
+          li {
+
+            &.fake {
+
+              .nav-icons {
+
+                &:before {
+                  width: 24px;
+                  height: 24px;
+                }
+              }
+            }
+
+            a{
+              padding: 14px;
+              padding-left: 67px;
+
+              .nav-icons {
+
+                &:before {
+                  width: 24px;
+                  height: 24px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .nav-footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      padding: 8px 0;
+      background: white;
+      font-size: 11px;
+      line-height: 18px;
+      box-shadow: 0 2px 4px 0 rgba(0,0,0,0.23);
+      z-index: 9900;
+
+      a{
+        font-size: 9px;
+      }
+    }
+  }
 }
 
 .nav-footer{
@@ -477,11 +558,6 @@
 
   @include fadeInContent;
 
-  @include mediaQuery(max, iPad){
-    //padding-left: $nav-panel-width-collapsed;
-    width: calc(100% - 80px);
-  }
-
   .loader, .page-loader{
     height: calc( 100vh - 60px );
     width: calc( 100vw - 280px );
@@ -504,7 +580,12 @@
     @include mediaQuery(max, iPad){
       left: $nav-panel-width-collapsed;
     }
+  }
 
+  @include mediaQuery(max, iPad){
+    //padding-left: $nav-panel-width-collapsed;
+    width: calc(100% - 50px);
+    padding-bottom: 60px;
   }
 }
 
