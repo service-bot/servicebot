@@ -94,6 +94,14 @@ function* run(config, provide, channels) {
         {
             stage: "post_property_change",
             run: sendToWebhooks("post_property_change")
+        },
+        {
+            stage: "pre_payment_structure_change",
+            run: sendToWebhooks("pre_payment_structure_change")
+        },
+        {
+            stage: "post_payment_structure_change",
+            run: sendToWebhooks("post_payment_structure_change")
         }
 
     ];
