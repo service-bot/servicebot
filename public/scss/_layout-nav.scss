@@ -559,10 +559,14 @@
   @include fadeInContent;
 
   .loader, .page-loader{
-    height: calc( 100vh - 60px );
-    width: calc( 100vw - 280px );
+    position: fixed;
+    height: 100%;
+    width: calc(100% - 280px);
     max-width: 100%;
     margin-top: 0;
+    left: $nav-panel-width;
+    top: 0;
+    z-index: $z-loader;
 
     @include mediaQuery(max, iPad){
       width: calc(100% - 80px);

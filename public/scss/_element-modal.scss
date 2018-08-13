@@ -1,10 +1,11 @@
 .modal-wrapper{
 
-  .loader{
+  .loader, .page-loader{
     position: absolute;
     height: 100% !important;
     width: 100% !important;
     background: white;
+    left: 0 !important;
   }
 
 }
