@@ -22,6 +22,7 @@ let run = function* (config, provide, services) {
 
     yield provide({routeDefinition});
     let updateCustomers = async () => {
+        console.log("Updating customers");
         const delay = time => new Promise(res=>setTimeout(()=>res(),time));
         let User = require("../../models/user");
         let Invoice = require("../../models/invoice");
@@ -29,14 +30,14 @@ let run = function* (config, provide, services) {
         await delay(50000);
         for(let user of users){
             await Invoice.fetchUserInvoices(user).then(function (updated_invoices) {
-                console.log(`Invoices Updated for user: ${user.data.email}`);
+                // console.log(`Invoices Updated for user: ${user.data.email}`);
             }).catch(function (err) {
-                console.log(`Invoice Skipped for user: ${user.data.email}`);
+                // console.log(`Invoice Skipped for user: ${user.data.email}`);
                 console.log(err);
             });
             await delay(200)
             Invoice.fetchUpcomingInvoice(user, function (upcoming_invoice) {
-                console.log(`Upcoming Invoice Updated for user: ${user.data.email}`);
+                // console.log(`Upcoming Invoice Updated for user: ${user.data.email}`);
             });
 
         }
