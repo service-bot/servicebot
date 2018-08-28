@@ -269,6 +269,11 @@ module.exports = function (router) {
 
                 let user = await User.findOne("email", req_body.email);
                 if (user.data) {
+                    if(hasPermission){
+                        req.body.client_id = user.get("id");
+                        res.locals.request_for = user;
+                        return next();
+                    }
                     let invitation = await Invitation.findOne("user_id", user.get("id"));
                     if (invitation.data) {
                         return res.status(400).json({error: 'User has already been invited'});
@@ -313,7 +318,7 @@ module.exports = function (router) {
             let user = req.user;
 
             //is the user authenticated (are they logged in)?
-            let isNew = !req.isAuthenticated() || req_body.hasOwnProperty("email");
+            let isNew = !req.isAuthenticated() || (req_body.hasOwnProperty("email") && !req_body.hasOwnProperty("client_id"));
             let store = require('../config/redux/store');
 
             //todo: once in plugin this code needs big changes
@@ -403,7 +408,7 @@ module.exports = function (router) {
             let newFund = null;
             //if token_id exists, create/update the user's fund
             if (req_body.token_id && req_body.token_id !== '') {
-                newFund = Fund.promiseFundCreateOrUpdate(user.get('id'), req_body.token_id);
+                newFund = Fund.promiseFundCreateOrUpdate(req_body.client_id || user.get('id'), req_body.token_id);
             }
 
             //create the service instance
