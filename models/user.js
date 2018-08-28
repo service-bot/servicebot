@@ -6,6 +6,7 @@ let Fund = require('./fund');
 let promisifyProxy = require("../lib/promiseProxy");
 let references = [
     {"model": Role, "referenceField": "role_id", "direction": "to", "readOnly": true},
+    {"model": require('./base/entity')("service_instances", []), "referenceField":"user_id", "direction": "from", "readOnly" : true},
     {"model": Fund, "referenceField": "user_id", "direction": "from", "readOnly": true}
 ];
 let User = require('./base/entity')("users", references);
