@@ -436,9 +436,18 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
         for(let reference of Entity.references){
             let referenceData = await getReferences(reference, filter);
             entities = entities.map(entity => {
+                let entityReferences = referenceData[entity.data[Entity.primaryKey]] || []
+
+                //todo: maybe come up with a better answer to password stripping...
+                if(reference.model.table === "users"){
+                    entityReferences = entityReferences.map(user => {
+                        delete user.password;
+                        return user;
+                    })
+                }
                 entity.data["references"] = {
                     ...entity.data["references"],
-                    [reference.model.table] : referenceData[entity.data[Entity.primaryKey]] || []
+                    [reference.model.table] : entityReferences
                 }
                 return entity;
             })
