@@ -90,6 +90,7 @@ module.exports = function(router) {
             let updatedInstance = await reactivate(instance_object);
             res.json(updatedInstance)
         }catch(e){
+            console.error(e);
             res.status(400).json({error: e});
         }
     });
