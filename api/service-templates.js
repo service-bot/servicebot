@@ -349,6 +349,9 @@ module.exports = function (router) {
                     newUser.set("password", password)
                     newUser.set("status", "active");
                 }
+                if(req_body.userName){
+                    newUser.set("name", req_body.userName);
+                }
                 //promisify the createWithStripe function
                 let createUser = Promise.promisify(newUser.createWithStripe, {context: newUser});
 
