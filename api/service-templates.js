@@ -342,7 +342,7 @@ module.exports = function (router) {
                 let globalProps = store.getState().options;
                 let roleId = globalProps['default_user_role'];
 
-                let newUser = new User({"email": req_body.email, "role_id": roleId, "status": "invited"});
+                let newUser = new User({"email": req_body.email, "role_id": roleId, "status": "active"});
                 if(req_body.password){
                     let password = require("bcryptjs").hashSync(req_body.password, 10);
 
