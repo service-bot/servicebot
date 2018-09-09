@@ -18,6 +18,7 @@ let _ = require("lodash");
 let references = [
     {"model": ServiceTemplates, "referenceField": "service_id", "direction": "to", "readOnly": true},
     {"model": ServiceInstanceProperties, "referenceField": "parent_id", "direction": "from", "readOnly": true},
+    {"model": require('./base/entity')("service_instance_seats", []), "referenceField":"service_instance_id", "direction": "from", "readOnly" : true},
     {"model": ServiceInstanceMessages, "referenceField": "service_instance_id", "direction": "from", "readOnly": true},
     {"model": ServiceInstanceCharges, "referenceField": "service_instance_id", "direction": "from", "readOnly": true},
     {

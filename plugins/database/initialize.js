@@ -47,6 +47,7 @@ let buildTables = async function (knex) {
         table.enu('status', ['active', 'suspended', 'invited', 'flagged', 'disconnected']).defaultTo('active');
         table.string('customer_id');
         table.string('phone');
+        table.string('google_user_id');
         table.timestamp('last_login');
         table.timestamps(true, true);
 
@@ -344,6 +345,16 @@ let buildTables = async function (knex) {
         table.string('hash');
         table.timestamps(true, true);
     });
+
+    await create('service_instance_seats', function (table) {
+        table.increments();
+        table.integer('user_id').references('users.id').notNullable().onDelete('cascade');
+        table.integer('service_instance_id').notNullable().references("service_instances.id").onDelete("cascade");
+        table.unique(["user_id", "service_instance_id"]);
+        table.string("type").notNullable().defaultTo("seat");
+        table.timestamps(true, true);
+    });
+
 
     console.log("***** All Tables successfully created *****");
 
