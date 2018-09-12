@@ -82,7 +82,11 @@ module.exports = function (router, passport) {
                 } else {
                     User.findById(foundInvitation.get("user_id"), function (newUser) {
                         req.body.id = newUser.get("id");
-                        req.body.password = bcrypt.hashSync(req.body.password, 10);
+                        if(req.body.password) {
+                            req.body.password = bcrypt.hashSync(req.body.password, 10);
+                        }else if(!req.body.google_user_id){
+                            return res.status(500).json({error: "No password specified"})
+                        }
                         Object.assign(newUser.data, req.body);
                         newUser.set("status", "active");
                         newUser.update(function (err, updatedUser) {
