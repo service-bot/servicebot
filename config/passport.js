@@ -7,7 +7,7 @@ var JwtStrategy = require('passport-jwt').Strategy;
 var ExtractJwt = require('passport-jwt').ExtractJwt;
 
 process.on('unhandledRejection', function (e) {
-    
+
 })
 
 // create the pool somewhere globally so its lifetime
@@ -82,8 +82,8 @@ module.exports = function (passport) {
             // find a user whose email is the same as the forms email
             // we are checking to see if the user trying to login already exists
             User.findOne('email', name.toLowerCase(), function (result) {
-                
-                
+
+
                 if (result.data) {
                     return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
 
@@ -91,7 +91,7 @@ module.exports = function (passport) {
                 else {
                     var newUser = new User({"email": name, "password": bcrypt.hashSync(password, 10), "role_id": 1});
                     newUser.createWithStripe(function (err, result) {
-                        
+
                         return done(err, result);
                     })
                 }
@@ -156,14 +156,17 @@ module.exports = function (passport) {
 
     passport.use(new JwtStrategy(opts, async function (jwt_payload, done) {
         let query = jwt_payload.email ? {email: jwt_payload.email} : {id: jwt_payload.uid};
+        if(!jwt_payload.uid && !jwt_payload.email){
+            return done("Invalid token");
+        }
         let user = (await User.find(query))[0];
-        if (user.data) {
+        if (user && user.data) {
             if (user.data.status === "suspended") {
                 return done(null, false, {"message": "account suspended"});
             }
             done(null, user);
         } else {
-            done(null, false);
+            done("User does not exist", false);
         }
     }));
 
