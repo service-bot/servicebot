@@ -122,7 +122,7 @@ userToken = generateJWT(user[:email], SECRET_KEY)
         }
         let clientCode = `<div id="servicebot-request-form"></div>
 <script src="https://js.stripe.com/v3/"></script>
-<script src="https://servicebot.io/js/servicebot-billing-settings-embed.js" type="text/javascript"></script>
+<script src="https://js.servicebot.io/js/servicebot-billing-settings-embed.js" type="text/javascript"></script>
 <script  type="text/javascript">
     Servicebot.BillingSettings({
         url : "${window.location.origin}",
