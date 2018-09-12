@@ -120,7 +120,9 @@ class AppRouter extends React.Component {
 
                     {/* Other */}
                     <Route path="service-templates/lite" component={ServiceTemplateFormLite}/>
-                    <Route name="Embeddables" path={"/embeddables"} component={Embeddables}/>
+                    <Route name="Embeddables" path={"/embeddables"} component={Embeddables}>
+                        <Route path={":embedName"} component={Embeddables}/>
+                    </Route>
                     <Route name="Manage Subscriptions" path="/service-instance" component={ManageSubscriptions}/>
                     <Route path="service-instances/:instanceId" component={ServiceInstanceForm}/>
                     {this.props.routeDefinition && this.props.routeDefinition.reduce((acc, route, index) => {

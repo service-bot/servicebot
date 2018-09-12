@@ -98,7 +98,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                 throw err
             });
     };
-    Entity.prototype.create = function (callback) {
+    let create = function (callback) {
         let self = this;
         Entity.database(Entity.table).columnInfo()
             .then(function (info) {
@@ -174,7 +174,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
     Entity.prototype.createReferences = function (referenceData, reference, callback) {
         let self = this;
         if (reference.readOnly) {
-            
+
             callback(self);
         }
         else {
@@ -202,7 +202,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
     Entity.prototype.updateReferences = async function (referenceData, reference, isTransaction=false) {
         let self = this;
         if (reference.readOnly) {
-            
+
             this;
         }
         else {
@@ -215,7 +215,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                 not: {id: {"in": ids}},
                 [reference.referenceField]: self.get(primaryKey)
             });
-            
+
             let upsertedReferences = await reference.model.batchUpdate(referenceData, true, isTransaction);
 
             //change "to" reference if it's different
@@ -518,7 +518,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                             let refsToUpdate = refValues.reduce((acc, val) => {
                                 if(val[reference.model.primaryKey]){
 
-                                     //make sure that the referenceField is pointing properly
+                                    //make sure that the referenceField is pointing properly
                                     if(reference.direction === "from" && val[reference.referenceField] === record[Entity.primaryKey]){
                                         acc.push(val);
 
@@ -527,7 +527,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                                     }
                                 }else{
                                     if(reference.direction === "from"){
-                                        
+
                                         val[reference.referenceField] = record[Entity.primaryKey];
                                         acc.push(val);
 
@@ -536,18 +536,19 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
                                 return acc;
                             }, []);
                             record.references[reference.model.table] = (await trxReference.batchUpdate(refsToUpdate, true, true)) || [];
-                            
+
 
                         }
                     }
                 }
-                
+
                 return record;
             });
         });
 
     };
     Entity.prototype.update = promiseProxy(update, false);
+    Entity.prototype.create = promiseProxy(create, false);
     Entity.findOne = promiseProxy(findOne);
     Entity.prototype.attachReferences = promiseProxy(attachReferences);
     Entity.prototype.getRelated = promiseProxy(getRelated);
