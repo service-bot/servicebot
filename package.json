@@ -96,7 +96,7 @@
     "server-destroy": "^1.0.1",
     "servicebot-base-form": "0.0.36",
     "servicebot-billing-settings-embed": "^0.2.62",
-    "servicebot-checkout-embed": "^0.2.98",
+    "servicebot-checkout-embed": "^0.2.99",
     "slug": "^0.9.1",
     "stripe": "^4.25.0",
     "style-loader": "^0.13.2",
