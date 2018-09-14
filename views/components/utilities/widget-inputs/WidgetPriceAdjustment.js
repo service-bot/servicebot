@@ -33,4 +33,33 @@ function Adjustment(props){
     );
 }
 
+function adjust(operation, price){
+    //todo: make this less hardcoded.
+    let message = "";
+    if(operation === "add" || operation === "subtract") {
+        price = (price / 100).toFixed(2)
+    }
+    switch(operation) {
+        case "add":
+            message =`${price} Add-on`;
+            break;
+        case "subtract":
+            message =`${price} Discount`;
+
+            break;
+        case "multiply" :
+            message =`${price}% Increase`;
+
+            break;
+        case "divide" :
+            message =`${price}% Discount`;
+            break;
+        default :
+            message = ` -- ${operation} : ${price}`;
+            break;
+    }
+    return message;
+}
+
 export default Adjustment;
+export {adjust}
