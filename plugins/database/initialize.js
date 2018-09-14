@@ -47,7 +47,7 @@ let buildTables = async function (knex) {
         table.enu('status', ['active', 'suspended', 'invited', 'flagged', 'disconnected']).defaultTo('active');
         table.string('customer_id');
         table.string('phone');
-        table.string('google_user_id');
+        table.string('google_user_id').unique();
         table.timestamp('last_login');
         table.timestamps(true, true);
 

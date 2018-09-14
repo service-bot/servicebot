@@ -90,11 +90,23 @@ module.exports = function (router, passport) {
                         Object.assign(newUser.data, req.body);
                         newUser.set("status", "active");
                         newUser.update(function (err, updatedUser) {
-                            foundInvitation.delete(function (response) {
-                                EventLogs.logEvent(updatedUser.get('id'), `user ${updatedUser.get('id')} ${updatedUser.get('email')} registered`);
-                                res.locals.json = updatedUser.data;
-                                res.locals.valid_object = updatedUser;
-                                next();
+                            if(err){
+                                //todo: maybe think about moving full error into this err?
+                                let message = err.match(/google_user_id/) ? "There is a user already connected to this Google account, try logging in" : "Error registering user"
+                                return res.status(500).json({error: message});
+                            }
+                            foundInvitation.delete(async function (response) {
+                                let payload = {  uid: updatedUser.data.id };
+                                await updatedUser.attachReferences();
+                                payload.user = updatedUser.data;
+                                delete payload.user.password;
+                                let token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '3h' });
+                                // res.json({token:token});
+                                //
+                                // EventLogs.logEvent(updatedUser.get('id'), `user ${updatedUser.get('id')} ${updatedUser.get('email')} registered`);
+                                return res.json({token});
+                                // res.locals.valid_object = updatedUser;
+                                // next();
                             })
                         })
 

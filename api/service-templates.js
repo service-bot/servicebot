@@ -252,7 +252,7 @@ module.exports = function (router) {
             res.locals.adjusted_price = price;
             res.locals.merged_props = mergedProps;
             res.locals.payment_structure_template = paymentStructureTemplate;
-            if (!req.isAuthenticated() || req_body.hasOwnProperty("email")) {
+            if (!req.isAuthenticated() || (req_body.hasOwnProperty("email") && req.user.data.email !== req_body.email)) {
 
                 if (req_body.hasOwnProperty("email")) {
                     let mailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -308,6 +308,9 @@ module.exports = function (router) {
             let paymentStructureTemplate = res.locals.payment_structure_template;
             let props = references ? references.service_template_properties : null;
             let req_body = req.body;
+            if(!req_body.references){
+                req_body.references = {};
+            }
             req_body.references.service_template_properties = res.locals.merged_props;
             let Promise = require("bluebird");
             let permission_array = res.locals.permissions || [];
@@ -318,7 +321,7 @@ module.exports = function (router) {
             let user = req.user;
 
             //is the user authenticated (are they logged in)?
-            let isNew = !req.isAuthenticated() || (req_body.hasOwnProperty("email") && !req_body.hasOwnProperty("client_id"));
+            let isNew = !req.isAuthenticated() || (req_body.hasOwnProperty("email") && !req_body.hasOwnProperty("client_id") && req.user.data.email !== req_body.email);
             let store = require('../config/redux/store');
 
             //todo: once in plugin this code needs big changes

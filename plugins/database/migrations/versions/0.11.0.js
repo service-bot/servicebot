@@ -11,7 +11,7 @@ module.exports = {
             table.timestamps(true, true);
         });
         await knex.schema.alterTable("users", table => {
-                table.string('google_user_id');
+                table.string('google_user_id').unique();
         });
 
 

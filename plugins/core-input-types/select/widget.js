@@ -4,7 +4,7 @@ import TagsInput from "react-tagsinput"
 //todo: all the imports from the main app will result in duplicate code.... need to fix this!
 import handler from "./widgetHandler";
 import WidgetPricingInput from '../../../views/components/utilities/widget-inputs/WidgetPricingInput.jsx';
-import PriceAdjustment from '../../../views/components/utilities/widget-inputs/WidgetPriceAdjustment';
+import {adjust} from '../../../views/components/utilities/widget-inputs/WidgetPriceAdjustment';
 
 
 let Tags = (props) => {
@@ -13,7 +13,7 @@ let Tags = (props) => {
             <label className="control-label form-label-flex-md addon-options-widget-config-input-label">Available Options</label>
             <div className="form-input-flex">
                 <TagsInput className="addon-options-widget-config-input react-tagsinput"
-                    inputProps={{placeholder: 'Add Options'}} {...props.input} value={props.input.value || []}/>
+                           inputProps={{placeholder: 'Add Options'}} {...props.input} value={props.input.value || []}/>
             </div>
         </div>
     );
@@ -93,7 +93,7 @@ let SelectWidget = (props) => {
                     { configValue && configValue.value && configValue.value.map((option, index) => {
                             let price = configValue.pricing && configValue.pricing.value && configValue.pricing.value[option];
                             return <option key={index} value={option}>
-                                {(price && configValue.pricing.operation) ? <div>{option}<PriceAdjustment price={price} operation={configValue.pricing.operation}/></div> : `${option}`}
+                                {(price && configValue.pricing.operation) ? `${option}: ${adjust(configValue.pricing.operation, price)}` : `${option}`}
                             </option>
                         }
                     )}

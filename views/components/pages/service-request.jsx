@@ -5,7 +5,7 @@ import {Fetcher} from "servicebot-base-form"
 import {Price, getPrice} from "../utilities/price.jsx";
 import {getPrice as getTotalPrice, getPriceAdjustments} from "../../../lib/handleInputs";
 import { connect } from 'react-redux';
-import {ServicebotCheckoutEmbed} from "servicebot-checkout-embed"
+import ServicebotCheckoutEmbed from "servicebot-checkout-embed"
 let _ = require("lodash");
 import {formValueSelector, getFormValues} from 'redux-form'
 import consume from "pluginbot-react/dist/consume";
@@ -71,6 +71,7 @@ class RequestPage extends React.Component {
                     })}
                 </select>}
                 {selectedPlan && <ServicebotCheckoutEmbed
+                    useAsComponent={true}
                     templateId={selectedTemplate}
                     paymentStructureTemplateId={selectedPlan}
                     url={""}
