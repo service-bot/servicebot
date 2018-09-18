@@ -15,7 +15,9 @@ function* run(config, provide, channels) {
         pre_property_change : [],
         post_property_change : [],
         pre_payment_structure_change: [],
-        post_payment_structure_change: []
+        post_payment_structure_change: [],
+        post_seat_invited: []
+
     }
 
     //collect lifecycle hooks
