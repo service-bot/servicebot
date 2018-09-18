@@ -112,7 +112,17 @@ function* run(config, provide, channels) {
             }
             return result;
 
+        },
+        postSeatInvited : async function({seat}){
+            let result = {}
+            for(let hook of lifecycles.post_seat_invited){
+                let hookresult = await hook.run({seat});
+                result = {...result, ...hookresult};
+            }
+            return result;
+
         }
+
 
 
     };

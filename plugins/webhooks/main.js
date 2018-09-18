@@ -102,6 +102,10 @@ function* run(config, provide, channels) {
         {
             stage: "post_payment_structure_change",
             run: sendToWebhooks("post_payment_structure_change")
+        },
+        {
+            stage: "post_seat_invited",
+            run: sendToWebhooks("post_seat_invited")
         }
 
     ];
