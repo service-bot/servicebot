@@ -380,12 +380,12 @@ class ManageUsers extends React.Component {
                                 <div className="col-xs-12">
                                     <ContentTitle title="Manage Users"/>
                                     <ServiceBotTableBase
-                                        createItemProps={!this.props.stripe_publishable_key && {disabled : true}}
-                                        createItemAction={this.props.stripe_publishable_key ? this.openInviteUserModal : () => {}}
-                                        createItemLabel={this.props.stripe_publishable_key ? "Invite user" : (<Link to="/stripe-settings" data-tip="Setup Incomplete - Click to finish">
-                                            Invite User
-                                            <ReactTooltip place="bottom" type="dark" effect="solid"/>
-                                        </Link>)}
+                                        // createItemProps={!this.props.stripe_publishable_key && {disabled : true}}
+                                        // createItemAction={this.props.stripe_publishable_key ? this.openInviteUserModal : () => {}}
+                                        // createItemLabel={this.props.stripe_publishable_key ? "Invite user" : (<Link to="/stripe-settings" data-tip="Setup Incomplete - Click to finish">
+                                        //     Invite User
+                                        //     <ReactTooltip place="bottom" type="dark" effect="solid"/>
+                                        // </Link>)}
                                         rows={this.state.rows}
                                         fetchRows={this.fetchData}
                                         sortColumn="created_at"
@@ -460,5 +460,5 @@ class ManageUsers extends React.Component {
 export default connect(
     (state) => {
         return ( {user: state.user,
-        stripe_publishable_key : state.options && state.options.stripe_publishable_key} );
+            stripe_publishable_key : state.options && state.options.stripe_publishable_key} );
     })(ManageUsers);
