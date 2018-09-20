@@ -183,7 +183,7 @@ userToken = generateJWT(user[:email], SECRET_KEY)
                     <span className="caret"/>
                     <h3><span className="form-step-count">3</span>Client-side Embed Code</h3>
                     <div className="_indented">
-                        <p className="form-help-text">With the token generated on the server, use this HTML on the client...(with the proper token)</p>
+                        <p className="form-help-text">With the token generated on the server, use this HTML on the client...(with the proper token) for technical documentation, see <a href="https://docs.servicebot.io/billing-settings-embed"/></p>
                         <SyntaxHighlighter showLineNumbers language='javascript' style={duotoneDark}>{clientCode}</SyntaxHighlighter>
                         <CopyToClipboard text={clientCode} onCopy={this.handleCopy}>
                             <button className="buttons _success _right __copied">{copied ? 'Copied!' : 'Copy Client Code'}</button>

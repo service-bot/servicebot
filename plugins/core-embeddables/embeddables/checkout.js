@@ -386,7 +386,7 @@ class CheckoutPage extends React.Component {
                         <div className="_indented">
                             <p className="form-help-text"> Paste the generated HTML on the page you want to embed
                                 a request form. You can find more detailed documentation
-                                <a href="https://docs.servicebot.io/embed"> here</a>
+                                <a href="https://docs.servicebot.io/checkout-embed"> here</a>
                             </p>
 
                             <div className="_embed-code-form">
