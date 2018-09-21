@@ -108,7 +108,8 @@ module.exports = function(router) {
                 res.json({error})
             }
         }else {
-            instance_object.changePaymentPlan(req.body).then(function (updated_subscription) {
+            let disableProration = req.body["trial_period_days"] > 0 || req.body.disableProration;
+            instance_object.changePaymentPlan(req.body, false, disableProration).then(function (updated_subscription) {
                 res.json(updated_subscription);
                 store.dispatchEvent("service_instance_updated", updated_subscription);
             }).catch(function (error) {

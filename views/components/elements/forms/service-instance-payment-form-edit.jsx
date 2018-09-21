@@ -6,7 +6,7 @@ import Buttons from "../buttons.jsx";
 import Alerts from "../alerts.jsx";
 import {ServicebotBaseForm, priceField, inputField} from "servicebot-base-form"
 import {change, Field, FieldArray, FormSection, formValueSelector, getFormValues} from 'redux-form'
-import {numericality} from "redux-form-validators";
+import {required, numericality} from "redux-form-validators";
 
 
 function PaymentPlanForm(props){
@@ -18,7 +18,15 @@ function PaymentPlanForm(props){
             label="New Price"
             validate={numericality({'>=': 0})}
 
+
         />
+        <Field
+            name={"disableProration"}
+            component={inputField}
+            type={"checkbox"}
+            label="Disable Proration?"
+        />
+
         <button className="buttons _primary" type="submit">
             Submit
         </button>

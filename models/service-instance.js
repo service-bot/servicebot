@@ -364,7 +364,7 @@ ServiceInstance.prototype.applyPaymentStructure = async function (paymentStructu
 
 };
 
-ServiceInstance.prototype.changePaymentPlan = async function (newPlan, ignorePlanTrial) {
+ServiceInstance.prototype.changePaymentPlan = async function (newPlan, ignorePlanTrial, disableProration) {
     await this.deletePayPlan();
     let planStructure = await this.buildPayStructure(newPlan);
     let updatedInstance = await this.createPayPlan(planStructure);
@@ -372,6 +372,9 @@ ServiceInstance.prototype.changePaymentPlan = async function (newPlan, ignorePla
         let payload = {plan: updatedInstance.data.payment_plan.id};
         if (ignorePlanTrial || newPlan.trial_period_days == null) {
             payload.trial_from_plan = false;
+        }
+        if(disableProration){
+            payload.prorate = false;
         }
         let stripeSubscription = await Stripe().connection.subscriptions.update(this.data.subscription_id, payload);
         let oldTrial = updatedInstance.data.trial_end;
