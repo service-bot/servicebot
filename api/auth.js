@@ -55,7 +55,11 @@ module.exports = function(app, passport) {
                                 hash: bcrypt.hashSync(token, 10)
                             });
                             reset.create(function(err, newReset){
+                                let resetURL = store.getState().options.reset_url;
                                 let frontEndUrl = `${req.protocol}://${req.get('host')}/reset-password/${user.get("id")}/${token}`;
+                                if(resetURL){
+                                    frontEndUrl = `${resetURL}?uid=${user.get("id")}&resetToken=${token}`
+                                }
                                 res.json({message: "Success"});
                                 user.set("token", token);
                                 user.set("url", frontEndUrl);
@@ -133,4 +137,4 @@ module.exports = function(app, passport) {
     });
 
 
-    };
+};
