@@ -2,14 +2,17 @@ $color-white: #fff;
 $color-black: #000;
 $color-extra-light-gray: #F6F8F9;
 $color-light-gray: #F7F8FA;
-$color-light-blue-gray: #EBF3F9;
+$color-light-blue-gray: #f9fdff;
 $color-medium-blue-gray: #4f6185;
 $color-blue-gray: #475981;
 $color-dark-blue: #081C49;
-$color-error: #ff2e2e;
+$gray-text: #B9BBCB;
+$green-text: #1ABE98;
+$gray-bg: #F7FAFF;
 
 //Buttons
-$color-success: #1ABE98;
+$color-success: #16cfa5;
+$blue-button: #0033A0;
 
 //headings
 $color-heading: #6F7F9F;
@@ -34,3 +37,8 @@ $color-tier-heading: $color-heading;
 
 //Pre
 $color-pre: #081C49;
+
+//Embed Checkout Client
+$color-blue: #0033A0;
+$color-gray: #6D7688;
+$color-error: #ff2e2e;
