@@ -11,6 +11,7 @@ import {addAlert, dismissAlert, setHasOffering} from "../../utilities/actions";
 import Load from "../../utilities/load.jsx";
 import {numericality, required} from 'redux-form-validators'
 import {TierBillingForm} from "./tier-billing-form.jsx"
+import DragScroll from 'react-dragscroll'
 let _ = require("lodash");
 
 const TEMPLATE_FORM_NAME = "serviceTemplateForm"
@@ -81,6 +82,7 @@ let Tiers = function (props) {
     return (
         <div className="tiers">
             <div className="_container">
+                <DragScroll width={`100%`} height={`auto`}>
                 <ul className="_tier-list">
                     {mappedFields}
                     <li id={"_tier-add"} onClick={onAdd}>
@@ -88,6 +90,7 @@ let Tiers = function (props) {
                     </li>
 
                 </ul>
+                </DragScroll>
             </div>
             {(OverrideBilling && <OverrideBilling {...props} member={"tiers[" + selected + "]"} tier={current}/>) || <TierBillingForm {...props} member={"tiers[" + selected + "]"} tier={current}/>}
         </div>

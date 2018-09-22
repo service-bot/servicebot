@@ -69,6 +69,7 @@
     "react-copy-to-clipboard": "^5.0.1",
     "react-currency-masked-input": "^2.1.0",
     "react-dom": "^16.4.0",
+    "react-dragscroll": "^2.0.1",
     "react-ga": "^2.3.5",
     "react-loadable": "^5.4.0",
     "react-multistep": "^2.2.12",
