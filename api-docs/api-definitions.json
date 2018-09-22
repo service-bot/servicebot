@@ -97,5 +97,63 @@
         }
       }
     }
+  },
+  "service_instance_request_response": {
+    "type": "object",
+    "properties": {
+      "token": {
+        "type": "string",
+        "format": "string",
+        "description": "Servicebot auth token for the user requested."
+      },
+      "request": {
+        "type": "object",
+        "description": "Service Instance request details that were made",
+        "$ref": "#/definitions/service_instance_request"
+      },
+      "webhook_responses": {
+        "type": "string",
+        "description": "Response from webhook if one is configured. Will only be there is webhook was configure to be synchronous."
+      },
+      "references": {
+        "type": "object",
+        "properties": {
+          "service_instance_properties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/service_template_properties"
+            }
+          }
+        }
+      }
+    }
+  },
+  "seat": {
+    "type": "object",
+    "properties": {
+      "user_id": {
+        "type": "integer",
+        "description": "User Id"
+      },
+      "service_instance_id": {
+        "type": "integer",
+        "description": "Service Instance Id"
+      },
+      "id": {
+        "type": "integer",
+        "description": "Seat Id"
+      },
+      "references": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        }
+      }
+    }
   }
 }

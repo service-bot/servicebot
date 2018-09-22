@@ -1,6 +1,6 @@
 {
   "name": "servicebot",
-  "version": "0.11.22",
+  "version": "0.11.31",
   "license": "GPL-3.0",
   "scripts": {
     "start": "node ./bin/start",
@@ -69,6 +69,7 @@
     "react-copy-to-clipboard": "^5.0.1",
     "react-currency-masked-input": "^2.1.0",
     "react-dom": "^16.4.0",
+    "react-dragscroll": "^2.0.1",
     "react-ga": "^2.3.5",
     "react-loadable": "^5.4.0",
     "react-multistep": "^2.2.12",
@@ -94,9 +95,9 @@
     "semver-sort": "0.0.4",
     "serve-favicon": "^2.5.0",
     "server-destroy": "^1.0.1",
-    "servicebot-base-form": "0.0.36",
-    "servicebot-billing-settings-embed": "^0.2.64",
-    "servicebot-checkout-embed": "^0.2.100",
+    "servicebot-base-form": "0.0.37",
+    "servicebot-billing-settings-embed": "^0.2.65",
+    "servicebot-checkout-embed": "^0.2.101",
     "slug": "^0.9.1",
     "stripe": "^4.25.0",
     "style-loader": "^0.13.2",

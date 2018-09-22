@@ -37,7 +37,7 @@ async function buildModelResources() {
         swaggerResources[model.table] = await buildSwagger(model);
     }
 
-    fs.writeFile('swagger.json', JSON.stringify(swaggerResources), (err) => {
+    fs.writeFile('api-model-definitions.json', JSON.stringify(swaggerResources), (err) => {
         // throws an error, you could also catch it here
         if (err) throw err;
 
@@ -208,7 +208,8 @@ function buildEntityPaths() {
         let {endpointName, resourceName, ownership, deletedRoutes} = resource;
         acc[`/${endpointName}`] = {
             get: {
-                "summary": "Get " + resourceName,
+                "summary": "Get all " + resourceName,
+                "description": "Gets all " + resourceName,
                 "tags": [
                     endpointName
                 ],
@@ -236,7 +237,8 @@ function buildEntityPaths() {
         };
         acc[`/${endpointName}/search`] = {
             get: {
-                "summary": "Get " + resourceName,
+                "summary": "Search for " + resourceName,
+                "description": "Search for " + resourceName + " with query parameters.",
                 "tags": [
                     endpointName
                 ],
@@ -282,6 +284,7 @@ function buildEntityPaths() {
         acc[`/${endpointName}/{id}`] = {
             get: {
                 "summary": "Get " + resourceName + " by id",
+                "description": "Gets " + resourceName + " by id.",
                 "tags": [
                     endpointName
                 ],
@@ -320,7 +323,8 @@ function buildEntityPaths() {
         if (ownership) {
             acc[`/${endpointName}/own`] = {
                 get: {
-                    "summary": "Get requester's " + resourceName,
+                    "summary": "Get requester's " + resourceName + "object or objects",
+                    "description": "Gets the " + resourceName + " object or objects of the authenticated user.",
                     "tags": [
                         endpointName
                     ],
@@ -351,6 +355,7 @@ function buildEntityPaths() {
         if (!deletedRoutes || !deletedRoutes.includes("post")) {
             acc[`/${endpointName}`]["post"] = {
                 "summary": "Create new " + resourceName,
+                "description": "Creates a new " + resourceName,
                 "tags": [
                     endpointName
                 ],
@@ -389,6 +394,7 @@ function buildEntityPaths() {
         if (!deletedRoutes || !deletedRoutes.includes("put")) {
             acc[`/${endpointName}/{id}`]["put"] = {
                 "summary": "Update " + resourceName,
+                "description": "Updates a " + resourceName,
                 "tags": [
                     endpointName
                 ],
@@ -435,6 +441,7 @@ function buildEntityPaths() {
         if (!deletedRoutes || !deletedRoutes.includes("delete")) {
             acc[`/${endpointName}/{id}`]["delete"] = {
                 "summary": "Delete " + resourceName + " by id",
+                "description": "Deletes a " + resourceName + " by id",
                 "tags": [
                     endpointName
                 ],
@@ -473,7 +480,7 @@ function buildEntityPaths() {
 
 
     }, {});
-    fs.writeFile('model-paths.json', JSON.stringify(modelPaths), (err) => {
+    fs.writeFile('api-entity-paths.json', JSON.stringify(modelPaths), (err) => {
         // throws an error, you could also catch it here
         if (err) throw err;
 

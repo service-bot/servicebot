@@ -56,7 +56,7 @@ class Modal extends React.Component {
             <div className={`modal-wrapper`}>
                 <div className={`modal ${this.props.titleColor ? this.props.titleColor : 'modal-primary'}`} id="modal" tabIndex="-1" role="dialog">
 
-                        <div key={Object.id} className="servicebot-modal modal-lg" role="document">
+                        <div key={Object.id} className="servicebot-in-app-modal modal-lg" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <button onClick={this.hide} className="close">

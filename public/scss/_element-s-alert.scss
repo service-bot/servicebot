@@ -5,6 +5,10 @@
   right: $gutter;
   width: 300px;
 
+  .s-alert-success{
+    background-color: $color-success;
+  }
+
   .s-alert-box {
     z-index: $z-s-alerts;
     position: absolute;

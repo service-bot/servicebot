@@ -1,7 +1,7 @@
 .tiers {
 
   ._container {
-    overflow-y: scroll;
+    overflow-y: hidden;
 
     ._tier-list {
       display: flex;
@@ -9,7 +9,7 @@
       align-items: center;
       max-width: 100%;
       padding-left: 0;
-      margin-bottom: 27px;
+      margin-bottom: 20px;
       overflow-y: visible;
 
       @include fadeInContent;

@@ -1,14 +1,17 @@
 .modal-wrapper{
   z-index: $z-modal;
 
-  @include fadeInContent;
-
   .modal{
     max-width: 100%;
+    background: rgba(255, 255, 255, 0.858824);
+  }
+
+  .modal-backdrop{
+    @include modalBackdrop;
   }
 }
 
-.servicebot-modal {
+.servicebot-in-app-modal {
   z-index: $z-modal + 1;
   position: fixed;
   top: 33%;
@@ -17,6 +20,7 @@
   margin-left: $nav-panel-width /2;
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.1);
   max-width: 70%;
+  @include fadeDownInAppModal(30%, 32%);
 
   .modal-content {
     background-color: #F9FCFF;
