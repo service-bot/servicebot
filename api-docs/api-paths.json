@@ -1,7 +1,8 @@
 {
   "/users/{id}/avatar": {
     "get": {
-      "summary": "Gets User Avatar",
+      "summary": "Get User Avatar",
+      "description": "Gets a User Avatar image file",
       "tags": [
         "users"
       ],
@@ -33,17 +34,12 @@
         "200": {
           "description": "User Avatar",
           "type": "file"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "put": {
-      "summary": "Adds a User Avatar",
+      "summary": "Add User Avatar",
+      "description": "Adds a User Avatar image file",
       "tags": [
         "users"
       ],
@@ -84,19 +80,14 @@
           "schema": {
             "$ref": "#/definitions/files"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/users/register": {
     "post": {
-      "summary": "Registers a new User",
+      "summary": "Register a new User",
+      "description": "Registers a newly created User. User must be invited to be registered. More common process for adding user is for user to be generated with a Service Request.",
       "tags": [
         "users"
       ],
@@ -134,19 +125,14 @@
               "$ref": "#/definitions/users"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/users/{id}/suspend": {
     "post": {
-      "summary": "Suspend the User",
+      "summary": "Suspend a User",
+      "description": "Suspends a User which will cancel all users services in Stripe and in Servicebot and mark the user as suspended. Users automatically become suspended if there are payment failures (like expired cards). You can also manually suspend users which will trigger a webhook which can notify your application for application access restriction.",
       "tags": [
         "users"
       ],
@@ -178,19 +164,14 @@
           "schema": {
             "$ref": "#/definitions/users"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/users/{id}/unsuspend": {
     "post": {
-      "summary": "UnSuspend the User",
+      "summary": "Unsuspend a User",
+      "description": "Unsuspends a User changing their status from 'suspended' to 'active'. It does not resubscribe User to all previous subscriptions.",
       "tags": [
         "users"
       ],
@@ -222,19 +203,14 @@
           "schema": {
             "$ref": "#/definitions/users"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/users/invite": {
     "post": {
-      "summary": "Invites a new User",
+      "summary": "Invite a new User",
+      "description": "Invites a new User responding with an invitation URL for the user to go to to complete registration. More common process for adding user is for user to be generated with a Service Request.",
       "tags": [
         "users"
       ],
@@ -264,12 +240,6 @@
         "200": {
           "description": "Invitation URL",
           "type": "string"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
@@ -277,6 +247,7 @@
   "/users/{id}/token": {
     "post": {
       "summary": "Get a token for a user",
+      "description": "As an authenticated admin, gets an auth token for a user.",
       "tags": [
         "users"
       ],
@@ -311,7 +282,8 @@
   },
   "/roles/manage-permissions": {
     "get": {
-      "summary": "Gets all roles with permissions",
+      "summary": "Gets all roles with array of permission ids",
+      "description": "Gets all the roles in the system with all the permissions in that role.",
       "tags": [
         "roles"
       ],
@@ -336,17 +308,12 @@
               "$ref": "#/definitions/roles_permissions"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "post": {
       "summary": "Update role with permission",
+      "description": "Batch update roles with permission Ids.",
       "tags": [
         "roles"
       ],
@@ -382,19 +349,14 @@
               "$ref": "#/definitions/roles_permissions"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-templates/public": {
     "get": {
-      "summary": "Gets all public service-templates",
+      "summary": "Get all public Service Templates",
+      "description": "Gets all published Service Templates. Templates default to published when created. Does not need Auth.",
       "tags": [
         "service-templates"
       ],
@@ -421,19 +383,14 @@
               "$ref": "#/definitions/service_templates"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-templates/{id}/icon": {
     "get": {
-      "summary": "Gets Service Template Icon",
+      "summary": "Get Service Template Icon",
+      "description": "Gets Service Template Icon file",
       "tags": [
         "service-templates"
       ],
@@ -465,17 +422,12 @@
         "200": {
           "description": "service-template File",
           "type": "file"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "put": {
-      "summary": "Adds a Service Template Icon",
+      "summary": "Add a Service Template Icon",
+      "description": "Adds a Service Template Icon file",
       "tags": [
         "service-templates"
       ],
@@ -515,17 +467,12 @@
           "schema": {
             "$ref": "#/definitions/files"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "delete": {
-      "summary": "Deletes Service Template Icon",
+      "summary": "Delete Service Template Icon",
+      "description": "Deletes a Service Template Icon file",
       "tags": [
         "service-templates"
       ],
@@ -556,19 +503,14 @@
         "200": {
           "description": "message",
           "type": "string"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-templates/{id}/image": {
     "get": {
-      "summary": "Gets Service Template Image",
+      "summary": "Get Service Template Image",
+      "description": "Gets a Service Template Image file",
       "tags": [
         "service-templates"
       ],
@@ -600,17 +542,12 @@
         "200": {
           "description": "service-template File",
           "type": "file"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "put": {
-      "summary": "Adds a Service Template Image",
+      "summary": "Add a Service Template Image",
+      "description": "Adds a Service Template Image file",
       "tags": [
         "service-templates"
       ],
@@ -650,17 +587,12 @@
           "schema": {
             "$ref": "#/definitions/files"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "delete": {
-      "summary": "Deletes Service Template Image",
+      "summary": "Delete Service Template Image",
+      "description": "Deletes a Service Template Image file",
       "tags": [
         "service-templates"
       ],
@@ -691,19 +623,14 @@
         "200": {
           "description": "message",
           "type": "string"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-templates/{id}/request": {
     "get": {
-      "summary": "Gets a service-template Request",
+      "summary": "Get Service Request Template",
+      "description": "Gets a request template for requesting a Service Instance of the Service Template",
       "tags": [
         "service-templates"
       ],
@@ -735,18 +662,12 @@
         "200": {
           "description": "A service-template request",
           "type": "object"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "post": {
-      "summary": "Requests a service-instance",
-      "description": "Can make this call unauthorized, but must also send 'email' and 'token_id' in the request JSON",
+      "summary": "Request a Service Instance",
+      "description": "Requests a Service Instance. Can make this call unauthorized, but must also send 'email', 'password' and 'token_id' in the request JSON. 'token_id' is a Stripe Token: https://stripe.com/docs/api#token_object Can use 'tok_visa' for testing. If using synchronous webhooks, you will find the response of the webhook in webhook_responses.",
       "tags": [
         "service-templates"
       ],
@@ -787,13 +708,7 @@
         "200": {
           "description": "The newly provisioned service instance",
           "schema": {
-              "$ref": "#/definitions/service_instances"
-          }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
+            "$ref": "#/definitions/service_instance_request_response"
           }
         }
       }
@@ -801,7 +716,8 @@
   },
   "/service-instances/{id}/approve": {
     "post": {
-      "summary": "Approves a service-instance",
+      "summary": "Approve a Service Instance",
+      "description": "If an instance was requested by an admin, for a user, they must approve of the Service request. Approving the Service Instance will proceed with charges if there are any and begin the subscription.",
       "tags": [
         "service-instances"
       ],
@@ -835,19 +751,14 @@
           "schema": {
             "$ref": "#/definitions/service_instances"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-instances/{id}/reactivate": {
     "post": {
-      "summary": "Reactivates a cancelled service-instance",
+      "summary": "Reactivate a cancelled Service Instance",
+      "description": "Reactivates a cancelled Service Instance, triggering a webhook. Once subscription is reactivated, charges will resume.",
       "tags": [
         "service-instances"
       ],
@@ -881,19 +792,14 @@
           "schema": {
             "$ref": "#/definitions/service_instances"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-instances/{id}/change-price": {
     "post": {
-      "summary": "Change a service-instance payment plan",
+      "summary": "Change a Service Instance payment plan",
+      "description": "Updates the payment plan of a Service Instance. Use to modify price, period, interval, or trial.",
       "tags": [
         "service-instances"
       ],
@@ -914,7 +820,7 @@
         {
           "name": "id",
           "in": "path",
-          "description": "service-instance id",
+          "description": "Service Instance id",
           "required": true,
           "type": "number",
           "format": "double"
@@ -937,7 +843,7 @@
               },
               "currency": {
                 "type": "string",
-                "description": "curency type"
+                "description": "Currency type"
               },
               "interval": {
                 "type": "string",
@@ -965,19 +871,14 @@
           "schema": {
             "$ref": "#/definitions/service_instances"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-instances/{id}/change-properties": {
     "post": {
-      "summary": "Changes a service instance properties, can affect instance pricing if subscription.",
+      "summary": "Change a Service Instance properties",
+      "description": "Changes a Service Instance properties, can affect instance pricing if subscription and the properties modify price.",
       "tags": [
         "service-instances"
       ],
@@ -1003,19 +904,14 @@
           "schema": {
             "$ref": "#/definitions/service_instances"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-instances/{id}/cancel": {
     "post": {
-      "summary": "Cancel a service-instance",
+      "summary": "Cancel a Service Instance",
+      "description": "Cancels a Service Instance. Can only be performed by Admin or Staff.",
       "tags": [
         "service-instances"
       ],
@@ -1048,19 +944,14 @@
           "schema": {
             "$ref": "#/definitions/service_instances"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-instances/{id}/request-cancellation": {
     "post": {
-      "summary": "Request Cancellation of a service-instance",
+      "summary": "Request Cancellation of a Service Instance",
+      "description": "Requests Cancellation a Service Instance. Can be performed by Admin and Users.",
       "tags": [
         "service-instances"
       ],
@@ -1094,19 +985,14 @@
           "schema": {
             "$ref": "#/definitions/service_instance_cancellations"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-instances/{id}/add-charge": {
     "post": {
-      "summary": "Add a charge to a service-instance",
+      "summary": "Add a charge to a Service Instance",
+      "description": "Adds a charge to a Service Instance.",
       "tags": [
         "service-instances"
       ],
@@ -1131,6 +1017,15 @@
           "required": true,
           "type": "number",
           "format": "double"
+        },
+        {
+          "name": "charge",
+          "in": "body",
+          "description": "Charge to add to Service Instance",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/charge_items"
+          }
         }
       ],
       "responses": {
@@ -1139,19 +1034,14 @@
           "schema": {
             "$ref": "#/definitions/charge_items"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-instances/{id}/awaiting-charges": {
     "get": {
-      "summary": "Get service-instance awaiting charges",
+      "summary": "Get awaiting charges of Service Instance",
+      "description": "Gets not yet paid charges of Service Instance.",
       "tags": [
         "service-instances"
       ],
@@ -1188,19 +1078,14 @@
               "$ref": "#/definitions/charge_items"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-instances/{id}/approve-charges": {
     "post": {
-      "summary": "Approve a service-instance charges",
+      "summary": "Approve Charges on a Service Instance",
+      "description": "Approves pending charges on a Service Instance.",
       "tags": [
         "service-instances"
       ],
@@ -1237,11 +1122,268 @@
               "$ref": "#/definitions/charge_items"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
+        }
+      }
+    }
+  },
+  "/service-instance/{id}/metric": {
+    "get": {
+      "summary": "Get metric",
+      "description": "Gets the value of an Instance's metric. Use this call along with the POST call to increment or set a metric from your app.",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff",
+        "user"
+      ],
+      "operationId": "get_service_id_metric",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service-instance id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Metric",
           "schema": {
-            "$ref": "#/definitions/Error"
+            "$ref": "#/definitions/metric_change"
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Change metric",
+      "description": "Modifies an Instance's metric. Automatically adjusts and prorates billing.",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff",
+        "user"
+      ],
+      "operationId": "post_service_id_metric",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service-instance id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Metric",
+          "schema": {
+            "$ref": "#/definitions/metric_change"
+          }
+        }
+      }
+    }
+  },
+  "/service-instances/{id}/seats": {
+    "get": {
+      "summary": "Get Seats on a service instance",
+      "description": "Gets the seats associated with a service instance.",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff",
+        "user"
+      ],
+      "operationId": "get_service_instances_id_seats",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service-instance id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Seat",
+          "schema": {
+            "$ref": "#/definitions/seat"
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Add a seat to an instance",
+      "description": "Adds seat to an Instance using email. If user does not exist, invitation email is set (can be turned off with notification templates), and webhook is triggered.",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff",
+        "user"
+      ],
+      "operationId": "post_service_instances_id_seats",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service-instance id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "email",
+          "in": "body",
+          "description": "Email of user to add",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Seat",
+          "schema": {
+            "$ref": "#/definitions/seat"
+          }
+        }
+      }
+    }
+  },
+  "/service-instances/{id}/seats/{seatId}": {
+    "delete": {
+      "summary": "Remove a seat from an instance",
+      "description": "Removes the seats associated with a service instance by Id.",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff",
+        "user"
+      ],
+      "operationId": "get_service_instances_id_seats",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service-instance id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "seatId",
+          "in": "path",
+          "description": "seat id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Message",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "/service-instances/{id}/seats/{seatId}/reinvite": {
+    "post": {
+      "summary": "Resend invitation for seat",
+      "description": "Resends seat invitation using Seat Id. Invitation email is set (can be turned off with notification templates), and webhook is triggered.",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff",
+        "user"
+      ],
+      "operationId": "post_service_instances_id_seats_seatid_reinvite",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "description": "service-instance id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        },
+        {
+          "name": "seatId",
+          "in": "path",
+          "description": "seat id",
+          "required": true,
+          "type": "number",
+          "format": "double"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Seat",
+          "schema": {
+            "$ref": "#/definitions/seat"
           }
         }
       }
@@ -1249,7 +1391,8 @@
   },
   "/service-instances/{id}/files": {
     "post": {
-      "summary": "Add a service-instance Files",
+      "summary": "Add a Service Instance File",
+      "description": "Adds a Service Instance File",
       "tags": [
         "service-instances"
       ],
@@ -1296,17 +1439,12 @@
               "$ref": "#/definitions/files"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "get": {
-      "summary": "Get service-instance files",
+      "summary": "Get Service Instance files",
+      "description": "Gets Service Instance files",
       "tags": [
         "service-instances"
       ],
@@ -1343,19 +1481,14 @@
               "type": "file"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-instances/{id}/files/{fid}": {
     "delete": {
-      "summary": "Add a service-instance Files",
+      "summary": "Delete a Service Instance File",
+      "description": "Deletes a Service Instance File",
       "tags": [
         "service-instances"
       ],
@@ -1395,17 +1528,12 @@
         "200": {
           "description": "Message",
           "type": "string"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "get": {
-      "summary": "Get service-instance files",
+      "summary": "Get Service Instance file by id",
+      "description": "Gets a Service Instance file by id",
       "tags": [
         "service-instances"
       ],
@@ -1445,19 +1573,14 @@
         "200": {
           "description": "Service Instance File",
           "type": "file"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-instance-cancellations/{id}/approve": {
     "post": {
-      "summary": "Approves a service-instance-cancellations",
+      "summary": "Approve a Service Instance Cancellation request",
+      "description": "Approves a Service Instance Cancellation request",
       "tags": [
         "service-instance-cancellations"
       ],
@@ -1490,19 +1613,14 @@
           "schema": {
             "$ref": "#/definitions/service_instance_cancellations"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-instance-cancellations/{id}/reject": {
     "post": {
-      "summary": "Rejects a service-instance-cancellations",
+      "summary": "Reject a Service Instance Cancellation request",
+      "description": "Rejects a Service Instance Cancellation request. For Admins.",
       "tags": [
         "service-instance-cancellations"
       ],
@@ -1535,19 +1653,14 @@
           "schema": {
             "$ref": "#/definitions/service_instance_cancellations"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/service-instance-cancellations/{id}/undo": {
     "post": {
-      "summary": "Rejects a service-instance-cancellations for the user who created it",
+      "summary": "Undo a Service Instance Cancellation request",
+      "description": "Undoes a Service Instance Cancellation request for the user who requested it.",
       "tags": [
         "service-instance-cancellations"
       ],
@@ -1581,11 +1694,36 @@
           "schema": {
             "$ref": "#/definitions/service_instance_cancellations"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
+        }
+      }
+    }
+  },
+  "/service-instance-seats/own": {
+    "get": {
+      "summary": "Get own Seats",
+      "description": "Gets the seat data of the authenticated user.",
+      "tags": [
+        "service-instances"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "x-roles": [
+        "admin",
+        "staff",
+        "user"
+      ],
+      "operationId": "get_service_instance_seats_own",
+      "security": [
+        {
+          "internalApiKey": []
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Seat",
           "schema": {
-            "$ref": "#/definitions/Error"
+            "$ref": "#/definitions/seat"
           }
         }
       }
@@ -1623,12 +1761,6 @@
         "200": {
           "description": "Template to Roles",
           "type": "object"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
@@ -1670,19 +1802,14 @@
         "200": {
           "description": "Template to Roles",
           "type": "object"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/invoices/upcoming/{id}": {
     "get": {
-      "summary": "Gets upcoming Invoices",
+      "summary": "Get upcoming Invoices",
+      "description": "Gets the upcoming invoices for a User by id",
       "tags": [
         "invoices"
       ],
@@ -1716,19 +1843,14 @@
           "schema": {
             "$ref": "#/definitions/invoices"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/invoices/{id}/refund": {
     "post": {
-      "summary": "Performs refund on Invoice",
+      "summary": "Refund Invoice",
+      "description": "Refunds an invoice by Id. Can perform partial refund by passing 'amount' field in body.",
       "tags": [
         "invoices"
       ],
@@ -1776,19 +1898,14 @@
           "schema": {
             "$ref": "#/definitions/transactions"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/system-options": {
     "get": {
-      "summary": "Gets all System Options",
+      "summary": "Get all System Options",
+      "description": "Gets all System Options",
       "tags": [
         "system-options"
       ],
@@ -1813,17 +1930,12 @@
               "$ref": "#/definitions/system_options"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "put": {
-      "summary": "Batch Updates System Options",
+      "summary": "Batch Update System Options",
+      "description": "Batch Updates System Options",
       "tags": [
         "system-options"
       ],
@@ -1862,19 +1974,14 @@
               "$ref": "#/definitions/system_options"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/system-options/public": {
     "get": {
-      "summary": "Gets all public System Options",
+      "summary": "Get all public System Options",
+      "description": "Gets all public System Options",
       "tags": [
         "system-options"
       ],
@@ -1901,19 +2008,14 @@
               "$ref": "#/definitions/system_options"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/system-options/{id}": {
     "get": {
-      "summary": "Gets a System Option",
+      "summary": "Get a System Option by Id",
+      "description": "Gets a System Option by Id",
       "tags": [
         "system-options"
       ],
@@ -1945,17 +2047,12 @@
           "schema": {
             "$ref": "#/definitions/system_options"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "put": {
-      "summary": "Updates a System Option",
+      "summary": "Update a System Option",
+      "description": "Updates a System Option",
       "tags": [
         "system-options"
       ],
@@ -1999,19 +2096,14 @@
               "$ref": "#/definitions/system_options"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/system-options/file/{id}": {
     "get": {
-      "summary": "Gets a System File Options. Ids are 'front_page_image', 'brand_logo'",
+      "summary": "Get a System File Option",
+      "description": "Gets a System File Option. Ids are 'front_page_image', 'brand_logo'.",
       "tags": [
         "system-options"
       ],
@@ -2043,17 +2135,12 @@
         "200": {
           "description": "A System Options",
           "type": "file"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "put": {
-      "summary": "Updates a System Option. Ids are 'front_page_image', 'brand_logo'",
+      "summary": "Update a System Option",
+      "description": "Updates a System File Option. Ids are 'front_page_image', 'brand_logo'.",
       "tags": [
         "system-options"
       ],
@@ -2095,19 +2182,14 @@
               "$ref": "#/definitions/files"
             }
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/system-options/version": {
     "get": {
-      "summary": "Gets System version",
+      "summary": "Get System version",
+      "description": "Gets System version",
       "tags": [
         "system-options"
       ],
@@ -2129,19 +2211,14 @@
         "200": {
           "description": "System Version",
           "type": "string"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/charge/{id}/approve": {
     "post": {
-      "summary": "Approves a Charge Item",
+      "summary": "Approve a Charge Item",
+      "description": "Approves a Charge Item added onto a Service Instance. Use POST /service-instances/{id}/add-charge to add charges and GET /service-instances/{id}/awaiting-charges to get charges for an Instance.",
       "tags": [
         "charge"
       ],
@@ -2174,19 +2251,14 @@
           "schema": {
             "$ref": "#/definitions/charge_items"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/charge/{id}/cancel": {
     "post": {
-      "summary": "Cancels a Charge Item",
+      "summary": "Cancel a Charge Item",
+      "description": "Cancels a Charge Item added onto a Service Instance. Use POST /service-instances/{id}/add-charge to add charges and GET /service-instances/{id}/awaiting-charges to get charges for an Instance.",
       "tags": [
         "charge"
       ],
@@ -2219,19 +2291,14 @@
           "schema": {
             "$ref": "#/definitions/charge_items"
           }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/auth/token": {
     "post": {
-      "summary": "Gets a Authorization Token",
+      "summary": "Get Authorization Token",
+      "description": "Gets an Authorization Token. Use to authenticate all other calls with the header 'Authorization' and value 'JWT generated_token'",
       "tags": [
         "auth"
       ],
@@ -2264,19 +2331,14 @@
         "200": {
           "description": "Authorization Token",
           "type": "string"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/auth/session/clear": {
     "post": {
-      "summary": "Clears session",
+      "summary": "Clear session",
+      "description": "Clears authorized session for token used in call made.",
       "tags": [
         "auth"
       ],
@@ -2298,12 +2360,6 @@
         "200": {
           "description": "Message",
           "type": "string"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
@@ -2311,6 +2367,7 @@
   "/auth/reset-password": {
     "post": {
       "summary": "Send Reset password email",
+      "description": "Sends Reset password email to user passed in body. No authorization needed.",
       "tags": [
         "auth"
       ],
@@ -2341,19 +2398,14 @@
         "200": {
           "description": "Message",
           "type": "string"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/auth/reset-password/{uid}/{token}": {
     "get": {
-      "summary": "Get User password reset token",
+      "summary": "Check valid password reset token",
+      "description": "Checks is the password reset token passed as parameter is valid, and returns true or false.",
       "tags": [
         "auth"
       ],
@@ -2390,19 +2442,14 @@
       ],
       "responses": {
         "200": {
-          "description": "response message",
+          "description": "is valid token",
           "type": "string"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     },
     "post": {
       "summary": "Reset user password",
+      "description": "Resets a user's password using the user's id, password reset token, and new password.",
       "tags": [
         "auth"
       ],
@@ -2448,20 +2495,14 @@
         "200": {
           "description": "response message",
           "type": "string"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/analytics/data": {
     "get": {
-      "summary": "Gets Analytics Data",
-      "description": "Gets Analytics Data from instance",
+      "summary": "Get Analytics Data",
+      "description": "Gets all Analytics Data from Servicebot instance",
       "tags": [
         "analytics"
       ],
@@ -2482,19 +2523,14 @@
         "200": {
           "description": "Analytics Data",
           "type": "object"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
   },
   "/analytics/properties/{id}": {
     "get": {
-      "summary": "Gets all instance properties based on template id",
+      "summary": "Get all instance properties from a template",
+      "description": "Get all instance properties from a template id. Gather analytics from a single Service template to see commonalities for the fields you are asking from your users in signup.",
       "tags": [
         "analytics"
       ],
@@ -2525,12 +2561,6 @@
         "200": {
           "description": "Instance properties",
           "type": "object"
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
-          }
         }
       }
     }
@@ -2561,12 +2591,6 @@
             "items": {
               "$ref": "#/definitions/permissions"
             }
-          }
-        },
-        "default": {
-          "description": "Unexpected error",
-          "schema": {
-            "$ref": "#/definitions/Error"
           }
         }
       }
@@ -2608,12 +2632,6 @@
             "$ref": "#/definitions/stripe_preconfigure"
           }
         }
-      },
-      "default": {
-        "description": "Unexpected error",
-        "schema": {
-          "$ref": "#/definitions/Error"
-        }
       }
     }
   },
@@ -2652,12 +2670,6 @@
           "type": "string",
           "name": "message"
         }
-      },
-      "default": {
-        "description": "Unexpected error",
-        "schema": {
-          "$ref": "#/definitions/Error"
-        }
       }
     }
   },
@@ -2685,12 +2697,6 @@
           "schema": {
             "$ref": "#/definitions/stripe_keys"
           }
-        }
-      },
-      "default": {
-        "description": "Unexpected error",
-        "schema": {
-          "$ref": "#/definitions/Error"
         }
       }
     }
