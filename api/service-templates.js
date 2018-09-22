@@ -237,12 +237,22 @@ module.exports = function (router) {
             // }
 
             //todo: less looping later
-            let mergedProps = props.map(prop => {
+            let metricIndex = null;
+            let mergedProps = props.map((prop, index) => {
                 let propToMerge = reqProps.find(reqProp => reqProp.id === prop.data.id);
-                return propToMerge ? {...prop.data, "data" : propToMerge.data} : prop
+                let mergedProp = propToMerge ? {...prop.data, "data" : propToMerge.data} : prop
+                if(mergedProp.type === "metric" && mergedProp.config.pricing && mergedProp.config.pricing.tiers && !mergedProp.config.pricing.tiers.includes(tier.data.name)){
+                    metricIndex = index;
+                }
+                return mergedProp;
             });
             if (props) {
-                price = require("../lib/handleInputs").getPrice(mergedProps, handlers, price);
+                let priceProps = mergedProps;
+                if(metricIndex !== null){
+                    priceProps.splice(metricIndex, 1);
+                }
+
+                price = require("../lib/handleInputs").getPrice(priceProps, handlers, price);
 
             }
 
@@ -450,6 +460,7 @@ module.exports = function (router) {
                 ...res.locals.overrides,
 
             });
+
             newInstance = await newInstance.attachReferences();
             let postData = {};
             if(lifecycleManager) {
