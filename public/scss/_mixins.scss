@@ -24,6 +24,44 @@
   list-style: none;
   margin-right: 16px;
   overflow: hidden;
+}
+
+@mixin list-boxes{
+
+  list-style: none;
+  padding: 0;
+
+  li{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 60px;
+    background: $gray-bg;
+    padding: 19px 50px;
+    margin: 7px 0;
+    @include defaultTransition(150ms);
+
+    &:hover, &:active{
+      background-color: #E0E8EE;
+      @include defaultTransition(150ms);
+    }
+
+    p, span {
+      font-size: 16px;
+      color: #000;
+      padding: 0;
+      margin: 0;
+      margin-bottom: 5px;
+    }
+
+    button.buttons{
+      background-color: transparent;
+      color: $gray-text;
+      font-weight: 400;
+      font-size: 14px;
+    }
+  }
 
 }
 
@@ -46,6 +84,7 @@
   .form-group.form-group-flex {
     width: 100%;
     flex-direction: $direction;
+    margin: 0 !important;
 
     @if($direction == 'column') {
       .form-label-flex-md{
@@ -91,6 +130,22 @@
   }
 }
 
+@mixin border{
+
+  border: 1px solid $color-light-blue-gray;
+  box-shadow: inset 1px 1px 3px 0 #CCD1D9;
+  border-radius: 1px;
+
+  &:focus{
+    border-color: $color-blue;
+  }
+}
+
+@mixin resetUl{
+  list-style: none;
+  padding-left: 0;
+}
+
 @mixin fadeInContent{
   &>div, &>span, &>li{
     animation: fadeIn 600ms;
@@ -105,6 +160,48 @@
       opacity: 1;
     }
   }
+}
+@mixin fadeUpContent($top1, $top2, $time: 400ms){
+
+  animation: moveUp $time;
+  animation-fill-mode: forwards;
+
+  @keyframes moveUp {
+    0% {
+      opacity: 0;
+      top: $top1;
+    }
+    100% {
+      opacity: 1;
+      top: $top2;
+    }
+  }
+}
+@mixin fadeDownInAppModal($top1, $top2, $time: 400ms){
+  animation: moveDown $time;
+  animation-fill-mode: forwards;
+
+  @keyframes moveDown {
+    0% {
+      opacity: 0;
+      top: $top1;
+    }
+    100% {
+      opacity: 1;
+      top: $top2;
+    }
+  }
+}
+
+/* Modals */
+@mixin modalBackdrop(){
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  z-index: 102;
 }
 
 @mixin breakpoint($point) {
