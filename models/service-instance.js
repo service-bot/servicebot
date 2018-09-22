@@ -256,12 +256,19 @@ ServiceInstance.prototype.changeProperties = async function (properties) {
             property_updates: properties
         });
     }
+    let paymentStructure = (await PaymentStructureTemplate.find({id : updatedInstance.data.payment_structure_template_id}, true))[0];
 
-    let mergedProps = oldProperties.map(prop => {
+    let metricIndexToUnprice = null;
+    let mergedProps = oldProperties.map((prop, index) => {
         let propToMerge = properties.find(reqProp => reqProp.id === prop.id);
-        return propToMerge ? {...prop, "data": propToMerge.data} : prop
+        let finalProp = propToMerge ? {...prop, "data": propToMerge.data} : prop
+        if(finalProp.type === "metric"){
+            if(!finalProp.config.pricing.tiers.includes(paymentStructure.data.references.tiers[0].name)) {
+                metricIndexToUnprice = index
+            }
+        }
+        return finalProp;
     });
-
     if (this.get("type") === "subscription") {
         let paymentPlan = this.get("payment_plan");
         if (paymentPlan === null || paymentPlan.amount === null) {
@@ -271,11 +278,18 @@ ServiceInstance.prototype.changeProperties = async function (properties) {
                 acc[handler.name] = handler.handler;
                 return acc;
             }, {});
-            let basePrice = require("../lib/handleInputs").getBasePrice(oldProperties, handlers, paymentPlan.amount);
+            let baseProps = [...oldProperties];
+            let newProps = [...mergedProps];
+            if(metricIndexToUnprice !== null){
+                baseProps.splice(metricIndexToUnprice, 1);
+                newProps.splice(metricIndexToUnprice, 1);
+            }
+
+            let basePrice = require("../lib/handleInputs").getBasePrice(baseProps, handlers, paymentPlan.amount);
             if(basePrice === 0){
                 basePrice = this.data.references.payment_structure_templates[0].amount;
             }
-            let newPrice = require("../lib/handleInputs").getPrice(mergedProps, handlers, basePrice);
+            let newPrice = require("../lib/handleInputs").getPrice(newProps, handlers, basePrice);
             paymentPlan.amount = newPrice;
             updatedInstance = await this.changePaymentPlan(paymentPlan, true);
         }

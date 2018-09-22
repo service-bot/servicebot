@@ -247,7 +247,7 @@ module.exports = function (router) {
                 return mergedProp;
             });
             if (props) {
-                let priceProps = mergedProps;
+                let priceProps = [...mergedProps];
                 if(metricIndex !== null){
                     priceProps.splice(metricIndex, 1);
                 }
