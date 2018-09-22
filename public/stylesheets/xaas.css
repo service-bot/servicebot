@@ -34,7 +34,7 @@ hr {
     margin-bottom: 16px !important;
 }
 .jumbotron h1{
-    margin-top: 0px;
+    margin-top: 0;
     margin-bottom: 5px;
 }
 .label{
@@ -1074,18 +1074,6 @@ body.login .footer{
 
 .request-form-toggle-option-wrapper {
     display: flex;
-}
-
-.request-form-price-adjustment-wrapper {
-    font-weight: bold;
-    background: #eaeaea;
-    height: 30px;
-    padding: 5px 15px;
-    line-height: 23px;
-    color: #4e4e4e;
-    border-radius: 5px;
-    margin-left: 10px;
-    width: 400%;
 }
 
 .form-box {

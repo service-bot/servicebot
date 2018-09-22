@@ -23,6 +23,9 @@
 @import "_component-notifications-list";
 @import "_component-invoice";
 
+/* embeddable in-app overrides */
+@import "_component-embeddables-billing-overrides.scss";
+
 /* layout components */
 @import "_layout-nav";
 @import "_layout-content";
