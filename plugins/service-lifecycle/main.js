@@ -19,7 +19,6 @@ function* run(config, provide, channels) {
         post_seat_created: [],
         post_seat_deleted: []
 
-
     }
 
     //collect lifecycle hooks
