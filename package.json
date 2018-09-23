@@ -96,7 +96,7 @@
     "serve-favicon": "^2.5.0",
     "server-destroy": "^1.0.1",
     "servicebot-base-form": "0.0.38",
-    "servicebot-billing-settings-embed": "^0.2.67",
+    "servicebot-billing-settings-embed": "^0.2.68",
     "servicebot-checkout-embed": "^0.2.105",
     "slug": "^0.9.1",
     "stripe": "^4.25.0",
