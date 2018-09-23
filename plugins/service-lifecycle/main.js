@@ -16,7 +16,9 @@ function* run(config, provide, channels) {
         post_property_change : [],
         pre_payment_structure_change: [],
         post_payment_structure_change: [],
-        post_seat_invited: []
+        post_seat_created: [],
+        post_seat_deleted: []
+
 
     }
 
@@ -115,15 +117,24 @@ function* run(config, provide, channels) {
             return result;
 
         },
-        postSeatInvited : async function({seat}){
+        postSeatCreated : async function({seat}){
             let result = {}
-            for(let hook of lifecycles.post_seat_invited){
+            for(let hook of lifecycles.post_seat_created){
                 let hookresult = await hook.run({seat});
                 result = {...result, ...hookresult};
             }
             return result;
 
+        },
+        postSeatDeleted : async function({seat}){
+            let result = {}
+            for(let hook of lifecycles.post_seat_deleted){
+                let hookresult = await hook.run({seat});
+                result = {...result, ...hookresult};
+            }
+            return result;
         }
+
 
 
 
