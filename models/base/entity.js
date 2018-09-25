@@ -141,7 +141,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
 
     };
 
-    Entity.prototype.delete = function (callback) {
+    let deleteE = function (callback) {
         let id = this.get('id');
         Entity.database(Entity.table).where('id', id).del()
             .then(function (res) {
@@ -548,6 +548,7 @@ var CreateEntity = function (tableName, references = [], primaryKey = 'id', data
 
     };
     Entity.prototype.update = promiseProxy(update, false);
+    Entity.prototype.delete = promiseProxy(deleteE, false);
     Entity.prototype.create = promiseProxy(create, false);
     Entity.findOne = promiseProxy(findOne);
     Entity.prototype.attachReferences = promiseProxy(attachReferences);
