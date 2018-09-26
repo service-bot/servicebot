@@ -32,7 +32,7 @@
   .app-profile{
     height: 100%;
     max-width: 50px;
-    
+
     img{
       height: 100%;
     }
@@ -250,6 +250,11 @@
                   background-image: $embed;
                 }
               }
+              &.icon-helpcenter {
+                &:before {
+                  background-image: $helpcenter;
+                }
+              }
             }
 
             .title {
@@ -342,6 +347,12 @@
                   background-image: $embed;
                 }
               }
+              &.icon-helpcenter {
+                &:before {
+                  background-image: $helpcenter;
+                }
+              }
+
             }
 
             &.nav-link-parent {

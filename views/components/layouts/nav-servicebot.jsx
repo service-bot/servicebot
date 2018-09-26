@@ -248,6 +248,12 @@ class NavServiceBot extends React.Component {
                             <li><Link href="https://api-docs.servicebot.io/" target="_blank" className={'nav-link-child'}>API Reference</Link></li>
                         </ul>
                     </li>
+                    <li>
+                        <a target="_blank" href="https://help.servicebot.io" style={style}
+                           className={getLinkClass('manage-helpcenter', 'parent')}>
+                            <span className="nav-icons icon-helpcenter"/>Help Center
+                        </a>
+                    </li>
                 </ul>
             )
         } else {
