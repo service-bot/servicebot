@@ -3,3 +3,10 @@
   transform: translateX(-140px);
   margin-top: 40px;
 }
+.servicebot--embeddable {
+
+  &.servicebot--manage-billing-form-wrapper {
+    width: auto;
+    padding: 0;
+  }
+}
