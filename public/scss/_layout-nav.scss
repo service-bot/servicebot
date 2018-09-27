@@ -198,6 +198,11 @@
             letter-spacing: 1px;
             opacity: .6;
 
+            @include mediaQuery(max, iPhone){
+              padding: 14px;
+              padding-left: 67px;
+            }
+
             .nav-icons {
               position: absolute;
 
