@@ -95,11 +95,16 @@ ServiceInstance.prototype.deletePayPlan = async function () {
     let self = this;
     if (self.data.payment_plan.id) {
         //Remove the plan from Stripe
-        await Stripe().connection.plans.del(self.data.payment_plan.id);
+        try {
+            await Stripe().connection.plans.del(self.data.payment_plan.id);
+        }catch(e){
+            console.error("Error deleting payment plan", e);
+        }
         self.data.payment_plan = null;
         return await self.update()
     } else {
-        throw('Service is has no current payment plan!');
+        return self;
+        // throw('Service is has no current payment plan!');
     }
 };
 
