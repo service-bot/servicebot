@@ -15,7 +15,7 @@ class ServiceInstanceFields extends React.Component {
                     <div className="row">
                         {this.props.instanceProperties.map( field => {
                             if(field.data) {
-                                return (<div className="form-group form-group-flex"><ServiceInstanceField key={"item-" + field.id} field={field}/></div>)
+                                return (<div className="form-group form-group-flex"><ServiceInstanceField key={"item-" + field.id} currency={(this.props.instance.payment_plan && this.props.instance.payment_plan.currency) || "USD"} field={field}/></div>)
                             }
 
                         })}

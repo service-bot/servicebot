@@ -96,7 +96,8 @@ var config = async function () {
                     minChunks: Infinity,
                     // (with more entries, this ensures that no other module
                     //  goes into the vendor chunk)
-                })
+                }),
+
 
                 // new UglifyJsPlugin(),
                 // new webpack.DefinePlugin({

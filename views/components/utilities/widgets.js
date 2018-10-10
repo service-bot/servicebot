@@ -21,7 +21,7 @@ let PriceOperation = (props) => {
 };
 
 let RenderWidget = (props) => {
-    const {showPrice, member, widgetType, configValue, defaultWidgetValue} = props;
+    const {showPrice, member, currency, widgetType, configValue, defaultWidgetValue} = props;
     const widget = props.services && props.services.widget && props.services.widget.find(widgetToCheck => widgetToCheck.type === widgetType);
     if (!widget) {
         return <div/>
@@ -44,14 +44,14 @@ let RenderWidget = (props) => {
 
                         <div className="form-group form-group-flex addon-widget-pricing-inputs-wrapper">
                             <label className="control-label form-label-flex-md addon-widget-pricing-input-label">Add-On Pricing</label>
-                            <Field name={`value`} configValue={configValue} component={widget.pricing}/>
+                            <Field name={`value`} currency={currency} configValue={configValue} component={widget.pricing}/>
                         </div>
                     </FormSection>
                 </div>}
             </FormSection>
             {widget.widget &&<div>
                 <label className="control-label form-label-flex-md addon-widget-pricing-input-label">Default Value</label>
-                <Field name={`${member}.data.value`} configValue={configValue} component={widget.widget}/>
+                <Field name={`${member}.data.value`} currency={currency} configValue={configValue} component={widget.widget}/>
             </div>}
         </div>
     );

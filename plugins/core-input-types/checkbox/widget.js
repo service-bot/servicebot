@@ -4,7 +4,8 @@ import PriceAdjustment from '../../../views/components/utilities/widget-inputs/W
 import WidgetPricingInput from '../../../views/components/utilities/widget-inputs/WidgetPricingInput.jsx';
 import {OnOffToggleField} from "servicebot-base-form";
 let Checkbox = (props) => {
-    let {input, configValue, label} = props;
+    let {input, configValue, label, currency} = props;
+     console.log(currency, "CHECKCURR");
     return (
         <div className={`addon-checkbox-widget-default-value-wrapper`}>
             <div className="form-group form-group-flex addon-checkbox-widget-default-value">
@@ -12,7 +13,7 @@ let Checkbox = (props) => {
                 <div className="form-input-flex">
                     <div className="request-form-toggle-option-wrapper">
                     <OnOffToggleField faIcon="check" color="#0091EA" input={input} type="checkbox"/>
-                    {configValue && configValue.pricing && configValue.pricing.value && <PriceAdjustment price={configValue.pricing.value} operation={configValue.pricing.operation}/>}
+                    {configValue && configValue.pricing && configValue.pricing.value && <PriceAdjustment currency={currency} price={configValue.pricing.value} operation={configValue.pricing.operation}/>}
                     </div>
                     {/*<input className="form-control addon-checkbox-widget-default-value-input" {...props.input} type="checkbox"/>*/}
                 </div>
@@ -25,7 +26,7 @@ let Price = (props) => {
     return (
         <div className={`addon-checkbox-widget-price-inputs-wrapper`}>
             <div className="form-group form-group-flex checkbox-checkbox-widget-price-inputs">
-                <WidgetPricingInput input={props.input} operation={config && config.pricing && config.pricing.operation}/>
+                <WidgetPricingInput currency={props.currency} input={props.input} operation={config && config.pricing && config.pricing.operation}/>
             </div>
         </div>
     );

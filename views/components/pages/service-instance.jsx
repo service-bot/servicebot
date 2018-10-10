@@ -430,7 +430,7 @@ class ServiceInstance extends React.Component {
 
                                 {myInstance.references.service_instance_properties.length > 0 &&
                                 <div id="service-instance-fields">
-                                    <ServiceInstanceFields instanceProperties={myInstance.references.service_instance_properties}/>
+                                    <ServiceInstanceFields instance={myInstance} instanceProperties={myInstance.references.service_instance_properties}/>
                                 </div>
                                 }
 

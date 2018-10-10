@@ -1,7 +1,7 @@
 import React from "react";
-
 function Adjustment(props){
-    let {operation, price} = props;
+    let {operation, price, currency} = props;
+    let formatter = new Intl.NumberFormat("en-US", { style: 'currency', currency: currency }).format;
     //todo: make this less hardcoded.
     let message = "";
     if(operation === "add" || operation === "subtract") {
@@ -9,18 +9,18 @@ function Adjustment(props){
     }
     switch(operation) {
         case "add":
-            message = <div className="_price"><span className="_value">${price}</span> <span className="request-form-price-adjust-discount">Add-on</span></div>;
+            message = <div className="_price"><span className="_value">{formatter(Number(price))}</span> <span className="request-form-price-adjust-discount">Add-on</span></div>;
             break;
         case "subtract":
-            message = <div className="_price"><span className="_value">${price}</span> <span className="request-form-price-adjust-discount">Discount</span></div>;
+            message = <div className="_price"><span className="_value">{formatter(Number(price))}</span> <span className="request-form-price-adjust-discount">Discount</span></div>;
 
             break;
         case "multiply" :
-            message = <div className="_price"><span className="_value">${price}</span>% <span className="request-form-price-adjust-increase">Increase</span></div>;
+            message = <div className="_price"><span className="_value">{price}</span>% <span className="request-form-price-adjust-increase">Increase</span></div>;
 
             break;
         case "divide" :
-            message = <div className="_price"><span className="_value">${price}</span>% <span className="request-form-price-adjust-decrease">Discount</span></div>;
+            message = <div className="_price"><span className="_value">{price}</span>% <span className="request-form-price-adjust-decrease">Discount</span></div>;
             break;
         default :
             message = ` -- ${operation} : ${price}`;

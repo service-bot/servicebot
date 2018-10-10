@@ -33,7 +33,7 @@ class Widget extends React.Component {
         if(this.props.type){
             if(this.props.type === 'price'){
                 let {options} = this.props;
-                return <Price value={value} currency={options.currency}/>
+                return <Price value={value} currency={(options.currency && options.currency.value) || "USD"}/>
             }
         }else{
             return value;

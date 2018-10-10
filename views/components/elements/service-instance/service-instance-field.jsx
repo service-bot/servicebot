@@ -17,6 +17,7 @@ import consume from "pluginbot-react/dist/consume";
                 <div>
                     <label className="control-label form-label-flex-md">{props.field.prop_label}</label>
                     <widget.widget
+                        currency={props.currency}
                         configValue={props.field.config}
                         input={{value : props.field.data.value, disabled : true}}
                     />

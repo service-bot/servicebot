@@ -36,7 +36,7 @@ class CustomField extends React.Component {
         let props = this.props;
         let {
             willAutoFocus, index, typeValue, member, myValues, privateValue, requiredValue, promptValue, configValue,
-            setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt, templateType
+            setPrivate, setRequired, setPrompt, changePrivate, changeRequired, changePrompt, templateType, currency
         } = props;
 
         if (myValues.prop_label) {
@@ -103,6 +103,7 @@ class CustomField extends React.Component {
                 </div>
                 <div id="custom-prop-widget" className="custom-property-field-group">
                     {typeValue && <RenderWidget
+                        currency={currency}
                         showPrice={(templateType !== "custom" && templateType !== "split")}
                         member={member}
                         configValue={configValue}
@@ -205,7 +206,7 @@ class renderCustomProperty extends React.Component {
 
     render() {
         let props = this.props;
-        const {templateType, privateValue, fields, meta: {touched, error}} = props;
+        const {templateType, currency, privateValue, fields, meta: {touched, error}} = props;
 
         return (
             <div>
@@ -228,7 +229,7 @@ class renderCustomProperty extends React.Component {
                                     <span className="itf-icon"><i className="fa fa-close"/></span>
                                 </button>
                             </div>
-                            <CustomField length={fields.length} templateType={templateType} member={customProperty} index={index}
+                            <CustomField currency={currency} length={fields.length} templateType={templateType} member={customProperty} index={index}
                                          willAutoFocus={fields.length - 1 == index}/>
                         </li>)
                     }
@@ -251,7 +252,7 @@ let CheckoutForm = function(props){
     return <div>
         <FormSection name="references">
             <FieldArray name="service_template_properties"
-                        props={{templateType: props.serviceTypeValue}}
+                        props={{currency: props.currency, templateType: props.serviceTypeValue}}
                         component={renderCustomProperty}
             />
             <button className="buttons _primary _right" onClick={props.handleSubmit} >Save Checkout Form</button>
@@ -309,9 +310,14 @@ class CheckoutPage extends React.Component {
         let templates = await Fetcher(`/api/v1/service-templates/`);
         this.setState({ templates, loading: false});
     }
-    changeTemplate(e) {
+    async changeTemplate(e) {
         const selectedTemplate = e.currentTarget.value;
-        this.setState({selectedTemplate, selectedTier: null, selectedPlan: null});
+        let currentTemplate = this.state.templates.find(template => template.id == selectedTemplate)
+
+        let selectedTier = currentTemplate.references.tiers[0].id;
+        let tier = await Fetcher(`/api/v1/tiers/${selectedTier}`);
+
+        this.setState({selectedTemplate, selectedTier, tier, selectedPlan: null});
 
     }
     async changeTier(e) {
@@ -335,6 +341,7 @@ class CheckoutPage extends React.Component {
     render(props) {
         let formHTML;
         let {loading, selectedTemplate, templates, selectedPlan, selectedTier, tier, copied} = this.state;
+        console.log(tier, "TIERRR")
         if(loading){
             return <Load/>;
         }
@@ -368,6 +375,7 @@ class CheckoutPage extends React.Component {
                         { selectedTemplate ?
                             <ServicebotBaseForm key={"base-"+selectedTemplate}
                                                 form={CheckoutForm}
+                                                formProps={{currency: (tier && tier.references.payment_structure_templates[0].currency) || "USD"}}
                                                 formName={CHECKOUT_FORM}
                                                 initialValues={currentTemplate}
                                                 reShowForm={true}

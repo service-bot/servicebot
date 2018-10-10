@@ -1,5 +1,4 @@
 import React from 'react';
-import Globalize from "globalize"
 
 /**
  * This is used to display Stripe amount values,
@@ -21,9 +20,9 @@ function formatMoney(price, c, d, t){
 };
 
 let Price = function(props){
-    let price = formatMoney((props.value/100).toFixed(2),',','.');
-    Globalize.locale( "en" );
-    let formatter = Globalize.currencyFormatter( props.currency || "USD" );
+    // let price = formatMoney((props.value/100).toFixed(2),',','.');
+    let price = props.value/100
+    let formatter = new Intl.NumberFormat("en-US", { style: 'currency', currency: props.currency }).format;
     return(
         <span>{formatter(price)}</span>
     );
