@@ -15,7 +15,6 @@ import {RenderWidget, WidgetList, widgets, SelectWidget} from "../../utilities/w
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import {inputField, selectField, widgetField, priceField} from "servicebot-base-form";
 import {CardSection} from "../../elements/forms/billing-settings-form.jsx";
-import getSymbolFromCurrency from 'currency-symbol-map'
 
 import {Price} from "../../utilities/price.jsx";
 import {Fetcher} from "servicebot-base-form";
@@ -121,7 +120,6 @@ class ServiceRequestForm extends React.Component {
         let getRequestText = () => {
             let serType = formJSON.type;
             let trial = formJSON.trial_period_days !== 0;
-            let prefix = getSymbolFromCurrency(formJSON.currency);
             if (trial) {
                 return ("Get your Free Trial")
             }
@@ -129,20 +127,20 @@ class ServiceRequestForm extends React.Component {
                 if (serType === "subscription") {
                     return (
                         <span>{"Subscribe "}
-                            <Price value={newPrice} prefix={prefix}/>
+                            <Price value={newPrice} currency={formJSON.currency}/>
                             {formJSON.interval_count == 1 ? ' /' : ' / ' + formJSON.interval_count} {' ' + formJSON.interval}
                     </span>
                     );
                 } else if (serType === "one_time") {
                     return (
-                        <span>{"Buy Now"} <Price value={newPrice} prefix={prefix}/></span>
+                        <span>{"Buy Now"} <Price value={newPrice} currency={formJSON.currency}/></span>
                     );
                 } else if (serType === "custom") {
                     return ("Request");
                 } else if (serType === "split") {
                     return ("Buy Now");
                 } else {
-                    return (<span><Price value={newPrice} prefix={prefix}/></span>)
+                    return (<span><Price value={newPrice} currency={formJSON.currency}/></span>)
                 }
             }
         };

@@ -1,6 +1,5 @@
 import React from 'react';
-import getSymbolFromCurrency from 'currency-symbol-map'
-
+import Globalize from "globalize"
 
 /**
  * This is used to display Stripe amount values,
@@ -23,29 +22,28 @@ function formatMoney(price, c, d, t){
 
 let Price = function(props){
     let price = formatMoney((props.value/100).toFixed(2),',','.');
-    let prefix = props.prefix || '$';
+    Globalize.locale( "en" );
+    let formatter = Globalize.currencyFormatter( props.currency || "USD" );
     return(
-        <span>{prefix + price}</span>
+        <span>{formatter(price)}</span>
     );
 };
 
 let getPrice = (myService, serviceType = null)=>{
     let serType = myService.type || serviceType;
-    let prefix = getSymbolFromCurrency(myService.currency);
-
     if (serType === "subscription"){
         return (
             <span>
-                <Price value={myService.amount} prefix={prefix}/>
+                <Price currency={myService.currency} value={myService.amount}/>
                 {myService.interval_count === 1 ? ' /' : ' / ' + myService.interval_count} {' '+myService.interval}
             </span>
         );
     }else if (serType === "one_time"){
-        return (<span><Price value={myService.amount} prefix={prefix}/></span>);
+        return (<span><Price currency={myService.currency} value={myService.amount} /></span>);
     }else if (serType === "custom"){
         return false;
     } else{
-        return (<span><Price value={myService.amount} prefix={prefix}/></span>)
+        return (<span><Price currency={myService.currency} value={myService.amount}/></span>)
     }
 };
 /**

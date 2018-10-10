@@ -6,7 +6,6 @@ import {Price} from "../utilities/price.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import {isAuthorized} from "../utilities/authorizer.jsx";
 import ModalRefund from "../elements/modals/modal-refund.jsx";
-import getSymbolFromCurrency from 'currency-symbol-map';
 
 
 class BillingHistoryList extends React.Component {
@@ -32,9 +31,8 @@ class BillingHistoryList extends React.Component {
         );
     }
     modAmountDue(data, resObj){
-        let prefix = getSymbolFromCurrency(resObj.currency);
         return (
-            <Price value={data} prefix={prefix}/>
+            <Price value={data} currency={resObj.currency}/>
         );
     }
     modDate(data){

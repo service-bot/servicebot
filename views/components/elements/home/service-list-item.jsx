@@ -4,7 +4,6 @@ import {Link, browserHistory} from 'react-router';
 import {Price, getPrice} from '../../utilities/price.jsx';
 import { connect } from 'react-redux';
 let _ = require("lodash");
-import getSymbolFromCurrency from 'currency-symbol-map'
 
 
 class ServiceListItem extends React.Component {

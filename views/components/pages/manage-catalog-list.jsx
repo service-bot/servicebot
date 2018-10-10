@@ -14,7 +14,6 @@ import ModalDeleteTemplate from "../elements/modals/modal-delete-template.jsx";
 import ModalEmbedTemplate from "../elements/modals/modal-embed-template.jsx";
 import ReactTooltip from 'react-tooltip';
 import ContentTitle from "../layouts/content-title.jsx";
-import getSymbolFromCurrency from 'currency-symbol-map'
 import {connect} from "react-redux";
 
 class ManageCatalogList extends React.Component {
@@ -101,16 +100,16 @@ class ManageCatalogList extends React.Component {
         }
         return ( <Link to={`/manage-catalog/${row.id}`}>{cell} <span class="status-badge faded" >{numTiers} {str}</span></Link> );
     }
-    priceFormatter(cell, row){
-        let prefix = getSymbolFromCurrency(row.currency);
-        return ( <Price value={cell} prefix={prefix}/> );
-    }
-    paymentTypeFormatter(cell, row){
-        return ( serviceTypeFormatter(row) );
-    }
-    categoryFormatter(cell){
-        return ( cell.service_categories[0].name );
-    }
+    // priceFormatter(cell, row){
+    //     let prefix = getSymbolFromCurrency(row.currency);
+    //     return ( <Price value={cell} prefix={prefix}/> );
+    // }
+    // paymentTypeFormatter(cell, row){
+    //     return ( serviceTypeFormatter(row) );
+    // }
+    // categoryFormatter(cell){
+    //     return ( cell.service_categories[0].name );
+    // }
     publishedFormatter(cell){
         let color_class = 'status-badge ';
         color_class += cell ? 'green' : 'grey';

@@ -14,7 +14,6 @@ import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-a
 import ModalRequestCancellation from "../elements/modals/modal-request-cancellation.jsx";
 import ModalManageCancellation from "../elements/modals/modal-manage-cancellation.jsx";
 import ModalDeleteInstance from "../elements/modals/modal-delete-instance.jsx";
-import getSymbolFromCurrency from 'currency-symbol-map';
 import {getFormattedDate} from "../utilities/date-format.jsx";
 import ReactTooltip from 'react-tooltip';
 let _ = require("lodash");
@@ -183,8 +182,7 @@ class ManageSubscriptions extends React.Component {
     }
     amountFormatter(cell, row){
         if(cell) {
-            let prefix = getSymbolFromCurrency(cell.currency);
-            return (<Price value={cell.amount} prefix={prefix}/>);
+            return (<Price value={cell.amount} currency={cell.currency}/>);
         } else {
             return ( <span className="status-badge red">No Plan</span> );
         }

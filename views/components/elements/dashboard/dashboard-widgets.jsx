@@ -5,7 +5,6 @@ import {Price} from '../../utilities/price.jsx';
 import { connect } from 'react-redux';
 let _ = require("lodash");
 import {hexToRgb, rgbToHex, getDarkenedRGB, getThemeHeaderRGB, getThemeContentRGB} from '../../utilities/color-converter.js';
-import getSymbolFromCurrency from 'currency-symbol-map';
 import ContentTitle from "../../layouts/content-title.jsx";
 
 
@@ -34,8 +33,7 @@ class Widget extends React.Component {
         if(this.props.type){
             if(this.props.type === 'price'){
                 let {options} = this.props;
-                let prefix = options.currency ? getSymbolFromCurrency(options.currency.value) : '';
-                return <Price value={value} prefix={prefix}/>
+                return <Price value={value} currency={options.currency}/>
             }
         }else{
             return value;
@@ -46,7 +44,6 @@ class Widget extends React.Component {
 
         let style = {widgetData:{}, widgetLabel:{}};
         let {options} = this.props;
-        let prefix = options.currency ? getSymbolFromCurrency(options.currency.value) : '';
         if(this.props.options) {
             let options = this.props.options;
             style.widgetData.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
@@ -132,7 +129,7 @@ class Widget extends React.Component {
                                 <div className="col-md-8 col-lg-9">{listing.label}</div>
                                 <div className="col-md-4 col-lg-3 text-right">
                                     {(listing.type && listing.type === 'price') ?
-                                        <Price value={listing.value} prefix={prefix}/>
+                                        <Price value={listing.value} currency={(options.currency && options.currency.value) || "USD"}/>
                                         :
                                         listing.value
                                     }</div>

@@ -2,8 +2,7 @@ import React from "react";
 import NumberFormat from 'react-number-format';
 import {toCents} from "../../../../lib/handleInputs";
 import {connect} from 'react-redux';
-import getSymbolFromCurrency from 'currency-symbol-map'
-
+import Globalize from "globalize";
 class WidgetPricingInput extends React.Component{
 
     constructor(props){
@@ -29,13 +28,14 @@ class WidgetPricingInput extends React.Component{
         let self = this;
         let props = this.props;
         let {options, operation, input: {name, value, onChange}} = props;
-        let prefix = options.currency ? getSymbolFromCurrency(options.currency.value) : '';
+        Globalize.locale( "en" );
+        let formatter = Globalize.currencyFormatter( (options.currency && options.currency.value) || "USD" );
 
         if(operation == 'add' || operation == 'subtract'){
             let price = (value/100)
             return(
                 <NumberFormat className="form-control addon-checkbox-widget-price-input" name={name}
-                                prefix={prefix} decimalSeparator="." thousandSeparator="," decimalScale="2"
+                                format={val => formatter(val)} decimalSeparator="." thousandSeparator="," decimalScale="2"
                               allowNegative={false}
                               fixedDecimalScale={false}
                               onValueChange={this.handleChange(true)} value={price}

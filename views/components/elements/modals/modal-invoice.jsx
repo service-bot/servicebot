@@ -7,7 +7,6 @@ import Modal from '../../utilities/modal.jsx';
 import DateFormat from '../../utilities/date-format.jsx';
 import {Price} from '../../utilities/price.jsx';
 import { connect } from "react-redux";
-import getSymbolFromCurrency from 'currency-symbol-map';
 let _ = require("lodash");
 
 class ModalInvoice extends React.Component {
@@ -68,7 +67,6 @@ class ModalInvoice extends React.Component {
             if(myNextInvoice){
                 let amountDue = myNextInvoice.amount_due || 0;
                 let total = myNextInvoice.total || 0;
-                let prefix = getSymbolFromCurrency(myNextInvoice.currency);
                 let nextPaymentAttempt = myNextInvoice.next_payment_attempt || '';
                 let closed = myNextInvoice.closed || false;
                 let paid = myNextInvoice.paid || false;
@@ -92,7 +90,7 @@ class ModalInvoice extends React.Component {
                             <tr key={item.id}>
                                 <td>{item_name(item)}</td>
                                 <td><DateFormat date={nextPaymentAttempt}/></td>
-                                <td><Price value={item.amount} prefix={prefix}/></td>
+                                <td><Price value={item.amount} currency={myNextInvoice.currency}/></td>
                             </tr>
                         )
                     );
@@ -121,7 +119,7 @@ class ModalInvoice extends React.Component {
                                     <div className="col-xs-12 col-sm-4">
                                         <div className="address">
                                             <strong>Amount To Be Charged</strong><br/>
-                                            <span><i className="fa fa-money"/><Price value={amountDue} perfix={prefix}/></span><br/>
+                                            <span><i className="fa fa-money"/><Price value={amountDue} currency={myNextInvoice.currency}/></span><br/>
                                         </div>
                                     </div>
                                     <div className="col-xs-12 col-sm-4">
@@ -153,7 +151,7 @@ class ModalInvoice extends React.Component {
                                     <tr>
                                         <td/>
                                         <td>Total:</td>
-                                        <td><Price value={total} perfix={prefix}/></td>
+                                        <td><Price value={total} currency={myNextInvoice.currency}/></td>
                                     </tr>
                                 </tfoot>
                             </table>

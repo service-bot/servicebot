@@ -13,7 +13,6 @@ const REQUEST_FORM_NAME = "serviceInstanceRequestForm";
 const selector = formValueSelector(REQUEST_FORM_NAME); // <-- same as form name
 import {setNavClass, resetNavClass} from "../utilities/actions";
 import { StickyContainer, Sticky } from 'react-sticky';
-import getSymbolFromCurrency from 'currency-symbol-map'
 import Load from '../utilities/load.jsx';
 
 
