@@ -46,7 +46,7 @@ class ServiceInstanceApprovedCharges extends React.Component {
         approveItems.map((charge)=>{ totalCharges+= charge.amount; });
 
         if(approveItems.length > 0) {
-            let currency = approvedItems[0].currency;
+            let currency = approveItems[0].currency;
             return (
                 <Collapsible trigger="Approved Charges - Previous Billing Cycles" openedClassName="opened">
                     <div className="service-instance-box-content">
@@ -81,7 +81,7 @@ class ServiceInstanceApprovedCharges extends React.Component {
         approveItems.map((charge)=>{ totalCharges+= charge.amount; });
 
         if(approveItems.length > 0) {
-            let currency = approvedItems[0].currency;
+            let currency = approveItems[0].currency;
 
             return (
                 <div className="service-instance-actions p-0">
