@@ -46,6 +46,7 @@ class ServiceInstanceApprovedCharges extends React.Component {
         approveItems.map((charge)=>{ totalCharges+= charge.amount; });
 
         if(approveItems.length > 0) {
+            let currency = approvedItems[0].currency;
             return (
                 <Collapsible trigger="Approved Charges - Previous Billing Cycles" openedClassName="opened">
                     <div className="service-instance-box-content">
@@ -59,7 +60,7 @@ class ServiceInstanceApprovedCharges extends React.Component {
                                    colNames={['Line Item Description', 'Amount', 'Paid On', 'Status']}
                         />
                         <div className="xaas-body-row additional-charges-total dark">
-                            <div className="xaas-data xaas-charge"><span><strong>Total Approved: <Price value={totalCharges}/></strong></span></div>
+                            <div className="xaas-data xaas-charge"><span><strong>Total Approved: <Price currency={currency} value={totalCharges}/></strong></span></div>
                         </div>
                     </div>
                 </Collapsible>
@@ -80,6 +81,8 @@ class ServiceInstanceApprovedCharges extends React.Component {
         approveItems.map((charge)=>{ totalCharges+= charge.amount; });
 
         if(approveItems.length > 0) {
+            let currency = approvedItems[0].currency;
+
             return (
                 <div className="service-instance-actions p-0">
                     <div className="service-instance-box-title">
@@ -95,7 +98,7 @@ class ServiceInstanceApprovedCharges extends React.Component {
                                    colNames={['Line Item Description', 'Amount', 'Paid On', 'Status']}
                         />
                         <div className="xaas-body-row additional-charges-total dark">
-                            <div className="xaas-data xaas-charge"><span><strong>Total Approved: <Price value={totalCharges}/></strong></span></div>
+                            <div className="xaas-data xaas-charge"><span><strong>Total Approved: <Price currency={currency} value={totalCharges}/></strong></span></div>
                         </div>
                     </div>
                 </div>

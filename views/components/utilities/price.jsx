@@ -22,7 +22,7 @@ function formatMoney(price, c, d, t){
 let Price = function(props){
     // let price = formatMoney((props.value/100).toFixed(2),',','.');
     let price = props.value/100
-    let formatter = new Intl.NumberFormat("en-US", { style: 'currency', currency: props.currency }).format;
+    let formatter = new Intl.NumberFormat("en-US", { style: 'currency', currency: props.currency || "USD" }).format;
     return(
         <span>{formatter(price)}</span>
     );
