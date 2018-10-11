@@ -73,6 +73,30 @@ module.exports = function (router, passport) {
     });
     //TODO better error handling
     //TODO use next
+    router.post("/users/create", auth(), function(req,res,next){
+    if (res.locals.permissions.some(p => p.get("permission_name") == "can_administrate")){
+            if (req.body.name && req.body.email && req.body.password) {
+                if (!req.body.email.match(mailRegex)) {
+                    res.status(400).json({error: 'Invalid email format'});
+                }
+                else {
+                    let newUser = new User(req.body);
+                    newUser.set("password", bcrypt.hashSync(req.body.password, 10));
+                    newUser.createWithStripe(function (err, result) {
+                        if (err) {
+                            res.status(403).json({error: err});
+                        } else {
+                            res.locals.json = result.data;
+                            res.locals.valid_object = result;
+                            next();
+                        }
+                    });
+                }
+            } else {
+                res.status(403).json({error: "Name, email, and password are all required!"});
+            }
+        }
+    });
     router.post("/users/register", function (req, res, next) {
         let token = req.query.token;
         if (token) {
@@ -113,7 +137,7 @@ module.exports = function (router, passport) {
                     });
                 }
             });
-        } else if (res.locals.sysprops.allow_registration == "true") {
+        } else if (res.locals.sysprops.allow_registration == "true"){
             if (req.body.name && req.body.email && req.body.password) {
                 if (!req.body.email.match(mailRegex)) {
                     res.status(400).json({error: 'Invalid email format'});

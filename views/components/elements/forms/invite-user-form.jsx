@@ -7,6 +7,39 @@ import Buttons from "../buttons.jsx";
 import Fetcher from '../../utilities/fetcher.jsx';
 let _ = require("lodash");
 
+import {required, email, numericality, length, confirmation} from 'redux-form-validators'
+import {
+    Field,
+    FormSection,
+    FieldArray,
+    formValueSelector,
+    getFormValues,
+    change
+} from 'redux-form'
+import {inputField, selectField, widgetField, priceField, ServicebotBaseForm} from "servicebot-base-form";
+
+let InviteUser = function(props){
+    return <form onSubmit={props.handleSubmit}>
+        <Field
+            name={"email"}
+            validate={[required(), email()]}
+            component={inputField}
+            type={"text"}
+            label="Email"
+        />
+        <Field
+            name={"name"}
+            validate={[required()]}
+            component={inputField}
+            type={"text"}
+            label="Name"
+        />
+        <Field name="password" type="password" component={inputField} label="Password" validate={[length({min: 8}), required()]}/>
+        <Field name="password_confirmation" type="password" label="Password confirmation" component={inputField}
+               validate={[confirmation({ field: 'password', fieldLabel: 'Password' })]} />
+        <button className="buttons _primary submit-request" type="submit" value="submit">Create User</button>
+    </form>
+}
 class InviteUserForm extends React.Component {
 
     constructor(props){
@@ -17,6 +50,7 @@ class InviteUserForm extends React.Component {
             alerts: {},
             loading: false,
             success: false,
+            toggle: false,
         };
         this.handleResponse = this.handleResponse.bind(this);
         this.reinviteUser = this.reinviteUser.bind(this);
@@ -24,7 +58,7 @@ class InviteUserForm extends React.Component {
 
     handleResponse(response){
         if(!response.error){
-            this.setState({success: true, response: response});
+            this.setState({toggle: !this.state.toggle});
         }else{
             this.setState({alerts: {type: 'danger', message: response.error}});
         }
@@ -55,27 +89,25 @@ class InviteUserForm extends React.Component {
                 this.reinviteUser();
                 return (null);
             } else {
+                let submissionRequest = {
+                    'method': 'POST',
+                    'url': `/api/v1/users/create`
+                };
+
+
                 return (
-                    <div className="invite-user-form">
-                        <DataForm handleResponse={this.handleResponse} url={this.state.url} method={'POST'}>
+                    <div className="invite-user-form" key={"form-" + this.state.toggle}>
+                        <ServicebotBaseForm
+                            form={InviteUser}
+                            formName={"invite-form"}
+                            submissionRequest={submissionRequest}
+                            successMessage={"User Created"}
+                            handleResponse={this.handleResponse}
 
-                            {(this.state.alerts && this.state.alerts.message) &&
-                            <div>
-                                <Alerts type={this.state.alerts.type} message={this.state.alerts.message}/>
-                            </div>
-                            }
 
-                            <div className="p-20">
-                                <p><strong>Please enter an email to invite a user to create an account</strong></p>
-                                <Inputs type="text" name="email" label="Email Address"
-                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                            </div>
 
-                            <div className={`modal-footer text-right p-b-20`}>
-                                <Buttons containerClass="inline" btnType="primary" type="submit" value="submit" text="Invite User" success={this.state.success}/>
-                                <Buttons containerClass="inline" btnType="default" text="Later" onClick={this.props.hide} />
-                            </div>
-                        </DataForm>
+                        />
+                        <Buttons containerClass="inline" btnType="default" text="Later" onClick={this.props.hide} />
                     </div>
                 );
             }
