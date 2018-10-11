@@ -423,7 +423,16 @@ ServiceInstance.prototype.unsubscribe = async function () {
         }
         if (this.data.subscription_id) {
             //Remove the subscription from Stripe
-            await Stripe().connection.subscriptions.del(this.data.subscription_id);
+            try {
+                await Stripe().connection.subscriptions.del(this.data.subscription_id);
+            }catch(e){
+                if(e.code === "resource_missing") {
+                    console.log("Missing stripe subscription to delete, continuing");
+                }else{
+                    console.error(e);
+                    throw e
+                }
+            }
         }
         this.data.subscription_id = null;
         this.data.status = "cancelled";

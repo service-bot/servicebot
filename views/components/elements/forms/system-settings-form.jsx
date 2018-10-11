@@ -292,7 +292,7 @@ class SystemSettingsForm extends React.Component {
                                     <div key={`setting_type_${this.state.currentTabType}`}
                                          className={`system-settings-group setting-type-${this.state.currentTabType}`}>
                                         <h4 className="system-settings-group-title text-capitalize">{this.state.currentTabType}</h4>
-                                        {group[this.state.currentTabType].map((group) => {
+                                        {group[this.state.currentTabType] && group[this.state.currentTabType].map((group) => {
                                             if (group.data_type == 'color_picker') {
                                                 return (
                                                     <div key={`option_${group.option}`}>
