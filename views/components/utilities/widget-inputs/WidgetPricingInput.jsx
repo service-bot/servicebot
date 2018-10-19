@@ -2,11 +2,10 @@ import React from "react";
 import NumberFormat from 'react-number-format';
 import {toCents} from "../../../../lib/handleInputs";
 import {connect} from 'react-redux';
-import getSymbolFromCurrency from 'currency-symbol-map'
 
-class WidgetPricingInput extends React.Component{
+class WidgetPricingInput extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {};
 
@@ -24,16 +23,21 @@ class WidgetPricingInput extends React.Component{
         }
     };
 
-    render(){
+    render() {
         //renders a number input or a currency input based on the operation type
         let self = this;
         let props = this.props;
-        let {options, operation, input: {name, value, onChange}} = props;
-        let prefix = options.currency ? getSymbolFromCurrency(options.currency.value) : '';
+        let {options, currency, operation, input: {name, value, onChange}} = props;
 
-        if(operation == 'add' || operation == 'subtract'){
-            let price = (value/100)
-            return(
+        if (operation == 'add' || operation == 'subtract') {
+            let price = (value / 100)
+            let formatParts = Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: currency || (options.currency && options.currency.value) || "USD"
+            }).formatToParts(Number(price));
+            let prefix = formatParts[1].type === "literal" ? formatParts[0].value + formatParts[1].value : formatParts[0].value;
+
+            return (
                 <NumberFormat className="form-control addon-checkbox-widget-price-input" name={name}
                               prefix={prefix} decimalSeparator="." thousandSeparator="," decimalScale="2"
                               allowNegative={false}
@@ -41,16 +45,16 @@ class WidgetPricingInput extends React.Component{
                               onValueChange={this.handleChange(true)} value={price}
                 />
             );
-        }else if(operation == 'divide' || operation == 'multiply'){
-            return(
+        } else if (operation == 'divide' || operation == 'multiply') {
+            return (
                 <NumberFormat className="form-control addon-checkbox-widget-price-input" name={name}
                               decimalSeparator="." decimalScale={0} suffix="%" allowNegative={false}
                               onValueChange={this.handleChange(false)} value={value}
                 />
                 // <input {...props.input} type="number" className="form-control addon-checkbox-widget-price-input"/>
             );
-        }else{
-            return(
+        } else {
+            return (
                 <span className="addon-widget-price-tip">Select a pricing type</span>
             )
         }

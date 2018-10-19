@@ -130,7 +130,7 @@ module.exports = function(router) {
             store.dispatchEvent("service_instance_updated", updatedInstance);
         }).catch(function (error) {
             console.error(error);
-            if(error.message === "This customer has no attached payment source"){
+            if(error.message){
                 res.status(400).json({error : error.message});
             }else {
                 res.status(500).json({error});
