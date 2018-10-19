@@ -91,7 +91,7 @@ module.exports = function(router) {
             res.json(updatedInstance)
         }catch(e){
             console.error(e);
-            res.status(400).json({error: e});
+            res.status(400).json({error: e.message || e});
         }
     });
 
