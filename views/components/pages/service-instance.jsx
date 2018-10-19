@@ -416,8 +416,9 @@ class ServiceInstance extends React.Component {
                                         url=""
                                         token={self.state.token}
                                         key={self.state.token}
+                                        serviceInstanceId={myInstance.id}
 
-                                />
+                                    />
                                 </div>
 
                                 {(myInstanceChargeItems.true && myInstanceChargeItems.true.length > 0) &&
