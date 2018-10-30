@@ -115,7 +115,7 @@ userToken = generateJWT(user[:email], SECRET_KEY)
                 server = `#Requires PyJWT package, "pip install PyJWT"
 import jwt
 def generateJWT(email, secret):
-  encoded = jwt.encode({'some': 'payload'}, 'secret')
+  encoded = jwt.encode({'email': email}, secret)
   return encoded
   
 SECRET_KEY = "${this.state.secretKey}" #Keep this key safe!
