@@ -111,6 +111,16 @@ SECRET_KEY = "${this.state.secretKey}" #Keep this key safe!
 userToken = generateJWT(user[:email], SECRET_KEY)
 `;
                 break;
+            case "python":
+                server = `#Requires PyJWT package, "pip install PyJWT"
+import jwt
+def generateJWT(email, secret):
+  encoded = jwt.encode({'some': 'payload'}, 'secret')
+  return encoded
+  
+SECRET_KEY = "${this.state.secretKey}" #Keep this key safe!
+token = generateJWT(user.email, SECRET_KEY)`;
+                break;
             case "other":
                 server = `Generate a JSON Web Token using the following specifications:
     - Algorithm: HS256
@@ -161,6 +171,7 @@ userToken = generateJWT(user[:email], SECRET_KEY)
                             <option value="node">NodeJS</option>
                             <option value="php">PHP</option>
                             <option value="ruby">Rails/Ruby</option>
+                            <option value="python">Python</option>
                             <option value="other">Other</option>
                         </select>
                     </div>
