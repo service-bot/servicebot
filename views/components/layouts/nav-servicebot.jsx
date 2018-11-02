@@ -342,7 +342,7 @@ class NavServiceBot extends React.Component {
                                     </Link>
                                 </div>
                                 <NavNotification/>
-                                <button className="buttons logout" onClick={this.props.handleLogout}>Log Out</button>
+                                <button className="buttons _text logout" onClick={this.props.handleLogout}>Log Out</button>
                             </div>
                         </Authorizer>
                     </div>

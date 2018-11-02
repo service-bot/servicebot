@@ -30,28 +30,44 @@
   }
 
   .app-profile{
-    height: 100%;
-    max-width: 50px;
-
+    height: 40px;
+    max-width: 40px;
+    line-height: 40px;
     img{
       height: 100%;
     }
   }
 
+  .buttons.logout{
+    margin-left: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+
   .app-notification{
-    height: 100%;
-    width: 50px;
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
     background: $color-blue-gray;
     border-radius: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-
     @include fadeInContent;
 
-    i{
-      color: $color-white;
+    ._toggle{
+      height: 40px;
+      width: 40px;
+      line-height: 40px;
+      text-align: center;
+      padding: 0;
+
+      svg{
+        fill: #fff;
+        margin-top: 7px;
+      }
     }
 
     .app-notification-list {
@@ -60,10 +76,14 @@
       background: white;
       right: 0;
       top: 55px;
-      border-radius: 3px;
-      z-index: $z-mini-notification;
       font-size: 14px;
       box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.06);
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid #80808026;
+      border-radius: 6px;
+      z-index: $z-mini-notification;
+      @include text;
 
       :before{
         content: '';
@@ -77,35 +97,58 @@
         right: 17px;
       }
 
-      ul {
-        padding: 0;
+      .__header, .__unread-heading, .__empty-heading{
+        @include text;
+        padding: $gutter;
+        font-size: 16px;
+        text-transform: uppercase;
+        font-weight: 600;
+        line-height: 20px;
         margin: 0;
+        letter-spacing: 1px;
+        text-rendering: optimizeLegibility;
+      }
+      .__header{
+        background-color: $color-light-gray;
+        box-shadow: 1px 1px 3px 0 #CCD1D9, 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        padding: 24px 16px 20px;
+        display: flex;
+        align-items: center;
+        svg{
+          fill: #475981;
+          margin-right: 8px;
+        }
+      }
+      .__unread-heading, .__empty-heading{
+        font-size: 14px;
+        color: gray;
+      }
+      .__unread-list{
+        padding-left: 0;
+        margin: 0;
+        list-style: none;
 
-        li {
-          list-style: none;
-          padding: 10px 20px 10px 32px;
-          line-height: 1.5em;
-          position: relative;
+        .__unread-item{
+          @include text;
+          padding: $gutter/2 $gutter;
+          border-bottom: 1px solid $color-light-gray;
+          color: #000;
+          font-weight: 400;
 
-          :hover {
-            background: #f3f3f3;
+          &:hover{
+            cursor: pointer;
+            background-color: $color-light-accent;
           }
-
-          :first-child, :last-child{
-            padding-top: $gutter;
+        }
+        ._view-all{
+          padding: $gutter/2 $gutter;
+          &:hover{
+            cursor: pointer;
+            background-color: $color-light-accent;
           }
-
-          &.unread-message:before {
-            height: 8px;
-            width: 8px;
-            background: #dc3535;
-            position: absolute;
-            left: 12px;
-            margin-top: 1px;
-            top: 44%;
-            transform: translateY(-50%);
-            border-radius: 50px;
-            content: '';
+          .buttons{
+            text-transform: uppercase;
+            letter-spacing: 1px;
           }
         }
       }

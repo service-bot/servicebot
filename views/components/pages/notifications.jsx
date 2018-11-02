@@ -10,6 +10,7 @@ import {connect} from "react-redux";
 import {setNotifications, setNotification,setSystemNotifications, addNotification} from "../utilities/actions";
 import {isAuthorized} from "../utilities/authorizer.jsx"
 import ModalNotification from "../elements/modals/modal-notification.jsx";
+import SVGIcons from '../utilities/svg-icons.jsx';
 let _ = require("lodash");
 
 class Notification extends React.Component{
@@ -116,15 +117,24 @@ class NavNotification extends React.Component{
                 <div>
                     <div className="_backdrop" onClick={()=>{self.setState({openNotificationDropdown: false})}}/>
                     <div className="app-notification-list">
-                        {totalUnread ? <li className="text-center"><strong>{`You have ${totalUnread} unread notifications`}</strong></li> : <span/>}
-                        <ul>
+                        <h3 className="__header">
+                            <SVGIcons width="24" height="24" viewBoxX="0" viewBoxY="0" viewWidth="24" viewHeight="24">
+                                <path fill="none" d="M0 0h24v24H0V0z"/><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29c-.63.63-.19 1.71.7 1.71h13.17c.89 0 1.34-1.08.71-1.71L18 16z"/>
+                            </SVGIcons>
+                            Notifications
+                        </h3>
+                        { totalUnread ? <h4 className="__unread-heading">{`You have ${totalUnread} unread notifications`}</h4> : <React.Fragment/>}
+                        { !totalUnread ? <h4 className="__empty-heading">You have no new notifications</h4> : <React.Fragment/> }
+                        <ul className={`__unread-list`}>
                             {unread.length ? unread.map(message => (
-                                    <li className="unread-message" key={`message-${message.id}`} onClick={()=>{return this.openMessageModel(message)}}
-                                        dangerouslySetInnerHTML={this.createMarkup((message.message))}>
-                                    </li>
-                                )) :  <li className="text-center">You have no new notifications</li>
+                                <li className="__unread-item" key={`message-${message.id}`} onClick={()=>{return this.openMessageModel(message)}}
+                                    dangerouslySetInnerHTML={this.createMarkup((message.message))}>
+                                </li>
+                                )) : <React.Fragment/>
                             }
-                            <li className={`_view-all`}><button className={`buttons _text`} onClick={this.viewAll}>View All</button></li>
+                            <li className={`_view-all`}>
+                                <button className={`buttons _text`} onClick={this.viewAll}>View All</button>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -140,7 +150,9 @@ class NavNotification extends React.Component{
         return (
             <div className="app-notification">
                 <span className="_toggle" onClick={this.openNotificationDropdown}>
-                    <i className="fa fa-bell nav-notification-icon" aria-hidden="true"/>
+                    <SVGIcons width="24" height="24" viewBoxX="0" viewBoxY="0" viewWidth="24" viewHeight="24">
+                        <path fill="none" d="M0 0h24v24H0V0z"/><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-1.29 1.29c-.63.63-.19 1.71.7 1.71h13.17c.89 0 1.34-1.08.71-1.71L18 16z"/>
+                    </SVGIcons>
                     {unread.length ? <span className="nav-notification-indicator"/> : <span/>}
                     {/*<span className="notification-badge">{unread.length ? unread.length : '0'}</span>*/}
                 </span>

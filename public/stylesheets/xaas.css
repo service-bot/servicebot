@@ -56,7 +56,7 @@ span.trimmed-text, .trimmed-text p {
     position: relative;
     display: inline;
 }
-span.trimmed-text:after, p.trimmed-text:after, trimmed-text p:after {
+/* span.trimmed-text:after, p.trimmed-text:after, trimmed-text p:after {
     background: -webkit-linear-gradient(0deg, rgba(249, 249, 249, 0) ,rgba(249, 249, 249, 0.73), rgb(249, 249, 249) 25px);
     content: '';
     position: absolute;
@@ -64,7 +64,7 @@ span.trimmed-text:after, p.trimmed-text:after, trimmed-text p:after {
     width: 30px;
     bottom: -1px;
     right: 0px;
-}
+} */
 span.btn-link{
     cursor: pointer;
     text-decoration: none;
