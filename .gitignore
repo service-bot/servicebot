@@ -7,3 +7,5 @@ npm-debug.log*
 /uploads/*
 env
 package-lock.json
+.flooignore
+.floo

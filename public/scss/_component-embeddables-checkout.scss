@@ -8,6 +8,49 @@
 
   #_section-2 {
 
+    .custom-property-fields{
+
+      .addon-checkbox-widget-default-value-wrapper {
+        .iconToggleField {
+
+          &::before {
+            content: "";
+            color: $color-blue;
+            position: absolute;
+            margin-left: -10px;
+            margin-top: 8px;
+            width: 21px;
+            height: 11px;
+            border-bottom: solid 3px currentColor;
+            border-left: solid 3px currentColor;
+            -webkit-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+          }
+
+          &.inactive{
+            border: 1px solid #c6cbce;
+            &::before{
+              color: #c6cbce;
+              @include defaultTransition(150ms);
+            }
+          }
+          &.active{
+            border: 1px solid $color-blue;
+            @include defaultTransition(150ms);
+          }
+          &:hover{
+            &::before{
+              color: $color-blue;
+              @include defaultTransition(150ms);
+            }
+          }
+        }
+        .itf-icon {
+          display: none;
+        }
+      }
+    }
+
   }
 
   #_section-3 {
