@@ -112,7 +112,7 @@
   }
 }
 @mixin _formInput{
-  input, .form-control{
+  input, select{
     color: $color-black;
     font-size: 16px;
     font-weight: 300;
