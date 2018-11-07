@@ -470,8 +470,8 @@ module.exports = function (router) {
                 });
             }
             if(isNew){
-                let newUser = (await User.find({id: createdUser.get("id")}, true))[0];
-                responseJSON.token = jwt.sign({ uid: createdUser.get("id"), user: newUser.data }, process.env.SECRET_KEY, { expiresIn: '1h' });
+                let newUser = (await User.find({id: user.get("id")}, true))[0];
+                responseJSON.token = jwt.sign({ uid: user.get("id"), user: newUser.data }, process.env.SECRET_KEY, { expiresIn: '1h' });
             }
             res.json({
                 ...responseJSON,
