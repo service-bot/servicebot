@@ -48,6 +48,7 @@ let buildTables = async function (knex) {
         table.string('customer_id');
         table.string('phone');
         table.string('google_user_id').unique();
+        table.string('google_refresh_token');
         table.timestamp('last_login');
         table.timestamps(true, true);
 
