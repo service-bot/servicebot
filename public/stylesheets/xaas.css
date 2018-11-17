@@ -24,7 +24,7 @@ hr {
     border-bottom: 2px dotted white;
 }
 
-#content-title h4 {
+.content-title h4 {
     font-size: 24px;
     color: #0033A0;
     letter-spacing: 1px;
@@ -828,7 +828,7 @@ body.login .footer{
     justify-content: space-between;
 }
 
-#content-title{
+.content-title{
     margin-bottom: 15px;
 }
 

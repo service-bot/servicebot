@@ -31,22 +31,13 @@ class OverallStatsWidgets extends React.Component {
         };
 
         return (
-            <div>
-                <div className="row m-0">
-                    <div className="dashboard-widgets">
-                        {/*<div className="dashboard-widget">*/}
-                            {/*<Widget data={{label: 'Customer Stats', chart: BuildChart, chartData: chartData, chartOption: chartOption}} bodyClass="full-height p-b-15" wcolor="navy-rev"/>*/}
-                        {/*</div>*/}
-                        <div className="col-md-6 p-0">
-                            <Widget data={{label: 'Number of Sales vs. Churned Subscriptions', component: ServiceOverTimeChart}} bodyClass="full-height" wcolor="navy-grey"/>
-                        </div>
-                        <div className="col-md-6 p-0">
-                            <Widget data={{label: 'Amount of Sales vs. Churned Subscriptions', component: SalesOverTimeChart}} bodyClass="full-height" wcolor="navy-grey"/>
-                        </div>
-                    </div>
-                </div>
+            <div className="dashboard-widgets __churn-widgets">
+                {/*<div className="dashboard-widget">*/}
+                    {/*<Widget data={{label: 'Customer Stats', chart: BuildChart, chartData: chartData, chartOption: chartOption}} bodyClass="full-height p-b-15" wcolor="navy-rev"/>*/}
+                {/*</div>*/}
+                <Widget data={{label: 'Number of Sales vs. Churned Subscriptions', component: ServiceOverTimeChart}} bodyClass="full-height" wcolor="navy-grey"/>
+                <Widget data={{label: 'Amount of Sales vs. Churned Subscriptions', component: SalesOverTimeChart}} bodyClass="full-height" wcolor="navy-grey"/>
             </div>
-
         );
     }
 

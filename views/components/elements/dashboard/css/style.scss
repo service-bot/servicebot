@@ -1,0 +1,45 @@
+$widget-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.17);
+
+.dashboard-widgets{
+
+  display: grid;
+  grid-gap: 8px;
+  color: white;
+  overflow: hidden;
+  border-radius: 3px;
+
+  .dashboard-widget{
+    box-shadow: $widget-shadow;
+  }
+
+  &.__top-widgets{
+    grid-template-columns: auto auto auto auto;
+  }
+
+  &.__metrics-widgets{
+    grid-template-columns: auto auto auto;
+
+    .section-wrapper{
+      color: black;
+      overflow: hidden;
+      border-radius: 3px;
+      background-color: white;
+      box-shadow: $widget-shadow;
+
+      .dashboard-widget{
+        margin: 5px;
+        box-shadow: none;
+      }
+    }
+  }
+
+  &.__churn-widgets{
+    grid-template-columns: 50% 50%;
+  }
+
+  .widget-data{
+    font-weight: 300;
+    text-rendering: optimizeLegibility;;
+  }
+
+}

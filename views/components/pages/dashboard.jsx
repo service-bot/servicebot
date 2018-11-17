@@ -99,12 +99,10 @@ class Dashboard extends React.Component {
                     <Jumbotron pageName={pageName} subtitle={sub}/>
                     <div className="page-service-instance">
                         <Content>
-                            <div>
-                                <ContentTitle title="Dashboard"/>
-                                <DashboardWidgets data={this.state.analytics}/>
-                                <div className="m-t-25"><ContentTitle title="Churn Detail"/></div>
-                                <OverallStatsWidgets data={this.state.analytics} />
-                            </div>
+                            <ContentTitle title="Dashboard"/>
+                            <DashboardWidgets data={this.state.analytics}/>
+                            <ContentTitle title="Churn Detail"/>
+                            <OverallStatsWidgets data={this.state.analytics} />
                         </Content>
                     </div>
                 </Authorizer>
