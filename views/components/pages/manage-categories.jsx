@@ -162,12 +162,12 @@ class ManageCategories2 extends React.Component {
                                         <TableHeaderColumn isKey
                                                            dataField='name'
                                                            dataSort={ true }
-                                                           width={350}>
+                                                           width={`350`}>
                                             Category Name
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataSort={ true }
                                                            dataField='description'
-                                                           width={300}>
+                                                           width={`300`}>
                                             Description
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataSort={ true }
@@ -175,7 +175,7 @@ class ManageCategories2 extends React.Component {
                                                            filterFormatted
                                                            dataFormat={ this.createdFormatter }
                                                            searchable={false}
-                                                           width={150}>
+                                                           width={`150`}>
                                             Created
                                         </TableHeaderColumn>
                                         <TableHeaderColumn dataField='Actions'
@@ -183,7 +183,7 @@ class ManageCategories2 extends React.Component {
                                                            columnClassName={'action-column'}
                                                            dataFormat={ this.rowActionsFormatter }
                                                            searchable={false}
-                                                           width={100}
+                                                           width={`100`}
                                                            filter={false}>
                                         </TableHeaderColumn>
                                     </ServiceBotTableBase>

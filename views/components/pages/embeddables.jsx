@@ -46,11 +46,11 @@ class Embeddables extends React.Component{
                 <div className="_content-container">
                     <div className="_sidebar">
                         <h2 className="_sub-heading">Embeddables</h2>
-                        {embeddables.map(embeddable => {
+                        {embeddables.map((embeddable, index)=> {
                             if(self.state.selected === slug(embeddable.name)){
-                                return (<EmbeddableCard selected={true} className={"selectedEmbed"}{...embeddable}/>)
+                                return (<EmbeddableCard key={`item-${index}`} selected={true} className={"selectedEmbed"}{...embeddable}/>)
                             }else{
-                                return (<EmbeddableCard onClick={select(slug(embeddable.name))}{...embeddable}/>)
+                                return (<EmbeddableCard key={`item-${index}`} onClick={select(slug(embeddable.name))}{...embeddable}/>)
                             }
                         })}
                     </div>

@@ -73,7 +73,7 @@ class UserForm extends React.Component {
                                 </Authorizer>
                             </div>
 
-                            <h5 class="m-20 m-t-40 m-b-10">Upload your profile picture</h5>
+                            <h5 className="m-20 m-t-40 m-b-10">Upload your profile picture</h5>
                             <form  id="imgform" encType="multipart/form-data">
                                 <input id="avatar" type="file" name="avatar"/>
                                 <button type="submit" onClick={this.handleImage}>Upload</button>

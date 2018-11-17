@@ -187,7 +187,7 @@ class NavBootstrap extends React.Component {
             return (
                 <span data-tip data-for="notification-stripe-keys" className="notification-badge">
                     <Link to="/stripe-settings">
-                        <ReactTooltip id="notification-stripe-keys" class="notification-stripe-keys"
+                        <ReactTooltip id="notification-stripe-keys" className="notification-stripe-keys"
                                       aria-haspopup='true' role='example'
                                       place="bottom" type="error" effect="solid" offset={{top: -28, left: -20}}>
                             <p><strong>You need to complete your setup to unlock certain features:</strong></p>

@@ -185,7 +185,7 @@ class ManageUsers extends React.Component {
     fundFormatter(cell) {
         //check if user has funds
         if(cell.funds.length > 0){
-            return ( <span className="userfund"><i class="fa fa-credit-card"></i></span>);
+            return ( <span className="userfund"><i className="fa fa-credit-card"></i></span>);
         }
     }
     statusFormatter(cell, row) {

@@ -128,7 +128,7 @@ class NavServiceBot extends React.Component {
         let user = this.props.user;
         return this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
             if (route.isVisible(user) && (route.navType === "main" || route.navType === undefined)) {
-                acc.push(<li><Link key={index} to={route.path}
+                acc.push(<li key={`item-${index}`}><Link key={index} to={route.path}
                                    className={self.getLinkClass(route.path.split('/')[1], 'parent')}>{icon &&
                 <span className={`nav-icons icon-${icon}`}/>}{route.name}</Link></li>)
             }
@@ -141,7 +141,7 @@ class NavServiceBot extends React.Component {
         let self = this;
         return this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
             if(route.isVisible(user) && route.navType === "settings") {
-                acc.push(<li><Link className={self.getLinkClass(route.path.substr(1), 'child')} key={index} to={route.path}>{route.name}</Link></li>)
+                acc.push(<li key={`item-${index}`}><Link className={self.getLinkClass(route.path.substr(1), 'child')} key={index} to={route.path}>{route.name}</Link></li>)
             }
             return acc;
         }, [])
@@ -276,7 +276,7 @@ class NavServiceBot extends React.Component {
             return (
                 <span data-tip data-for="notification-stripe-keys" className="notification-badge">
                     <Link to="/stripe-settings">
-                        {/*<ReactTooltip id="notification-stripe-keys" class="notification-stripe-keys"*/}
+                        {/*<ReactTooltip id="notification-stripe-keys" className="notification-stripe-keys"*/}
                         {/*aria-haspopup='true' role='example'*/}
                         {/*place="bottom" type="error" effect="solid" offset={{top: -28, left: -20}}>*/}
                         {/*<p><strong>You need to complete your setup to unlock certain features:</strong></p>*/}

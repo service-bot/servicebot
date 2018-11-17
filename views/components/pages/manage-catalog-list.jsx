@@ -98,7 +98,7 @@ class ManageCatalogList extends React.Component {
         if(numTiers === 1) {
             str = 'Tier';
         }
-        return ( <Link to={`/manage-catalog/${row.id}`}>{cell} <span class="status-badge faded" >{numTiers} {str}</span></Link> );
+        return ( <Link to={`/manage-catalog/${row.id}`}>{cell} <span className="status-badge faded" >{numTiers} {str}</span></Link> );
     }
     // priceFormatter(cell, row){
     //     let prefix = getSymbolFromCurrency(row.currency);
@@ -113,7 +113,7 @@ class ManageCatalogList extends React.Component {
     publishedFormatter(cell){
         let color_class = 'status-badge ';
         color_class += cell ? 'green' : 'grey';
-        return ( `<span class="${color_class}" >${cell ? 'Live' : 'Draft'}</span>` );
+        return ( `<span className="${color_class}" >${cell ? 'Live' : 'Draft'}</span>` );
         // return ( cell ? 'Published' : 'Unpublished' );
     }
     createdFormatter(cell){
@@ -214,7 +214,7 @@ class ManageCatalogList extends React.Component {
                                             dataField='name'
                                                dataSort={ true }
                                                dataFormat={ this.nameFormatter }
-                                               width={200}>
+                                               width={`200`}>
                                 Service Name
                             </TableHeaderColumn>
                             {/*<TableHeaderColumn dataField='Tiers'*/}
@@ -243,7 +243,7 @@ class ManageCatalogList extends React.Component {
                                                dataFormat={ this.publishedFormatter }
                                                searchable={false}
                                                filterFormatted
-                                               width={100}>
+                                               width={`100`}>
                                 Status
                             </TableHeaderColumn>
                             <TableHeaderColumn dataField='updated_at'
@@ -251,7 +251,7 @@ class ManageCatalogList extends React.Component {
                                                dataFormat={ this.createdFormatter }
                                                searchable={false}
                                                filterFormatted
-                                               width={150}>
+                                               width={`150`}>
                                 Updated At
                             </TableHeaderColumn>
                             <TableHeaderColumn dataField='Actions'
@@ -259,7 +259,7 @@ class ManageCatalogList extends React.Component {
                                                columnClassName={'action-column'}
                                                dataFormat={ this.rowActionsFormatter }
                                                searchable={false}
-                                               width={100}>
+                                               width={`100`}>
                             </TableHeaderColumn>
                         </ServiceBotTableBase>
                         {renderModals()}

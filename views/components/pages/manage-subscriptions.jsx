@@ -140,18 +140,18 @@ class ManageSubscriptions extends React.Component {
             switch(type){
                 case 'subscription':
                     //return ( <div><span className="status-badge neutral" >{getBillingType(row)}</span> <span className="status-badge black" >{interval}</span></div> );
-                    return ( <span className="mc-badge"><i class="fa fa-circle micro-badge black" /> {interval}</span> );
+                    return ( <span className="mc-badge"><i className="fa fa-circle micro-badge black" /> {interval}</span> );
                 case 'custom':
-                    return ( <span className="mc-badge"><i class="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span> );
+                    return ( <span className="mc-badge"><i className="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span> );
                 case 'one_time':
-                    return ( <span className="mc-badge"><i class="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span> );
+                    return ( <span className="mc-badge"><i className="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span> );
                 case 'split':
-                    return ( <span className="mc-badge"><i class="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span> );
+                    return ( <span className="mc-badge"><i className="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span> );
                 default:
-                    return ( <span className="mc-badge"><i class="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span> );
+                    return ( <span className="mc-badge"><i className="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span> );
             }
         } else {
-            return ( <span className="mc-badge"><i class="fa fa-circle micro-badge grey" /> Missing</span> );
+            return ( <span className="mc-badge"><i className="fa fa-circle micro-badge grey" /> Missing</span> );
         }
 
     }
@@ -223,14 +223,14 @@ class ManageSubscriptions extends React.Component {
         if(user.references.funds.length > 0) {
             if(user.status === 'flagged') {
                 return (
-                    <span data-tip='Payment Failed' data-for='valid-card' className='status-badge yellow' ><i class="fa fa-credit-card"/> <i class="fa fa-flag"></i>
+                    <span data-tip='Payment Failed' data-for='valid-card' className='status-badge yellow' ><i className="fa fa-credit-card"/> <i className="fa fa-flag"></i>
                     <ReactTooltip id="flagged-card" aria-haspopup='true' delayShow={100}
                                   role='date' place="left" effect="solid"/>
                     </span>
                 );
             } else {
                 return (
-                    <span data-tip='Paying - Valid Card' data-for='valid-card' className='status-badge green'><i class="fa fa-credit-card"/> <i class="fa fa-check"></i>
+                    <span data-tip='Paying - Valid Card' data-for='valid-card' className='status-badge green'><i className="fa fa-credit-card"/> <i className="fa fa-check"></i>
                     <ReactTooltip id="valid-card" aria-haspopup='true' delayShow={100}
                                   role='date' place="left" effect="solid"/>
                     </span>

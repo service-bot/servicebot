@@ -15,21 +15,21 @@ class Dropdown extends React.Component {
         $(this.refs.dropdownToggle).dropdown();
     }
 
-    getButton(item){
+    getButton(item, index){
 
         if(item.type == "divider"){
             return (
-                <li role="separator" className="divider"/>
+                <li key={`item-${index}`} role="separator" className="divider"/>
             )
         }else if(item.type == "button"){
             return (
-                <li>
+                <li key={`item-${index}`} >
                     <a onClick={item.action}>{item.label}</a>
                 </li>
             )
         }else if(item.type == "link"){
             return (
-                <li>
+                <li key={`item-${index}`} >
                     <a href={item.action}>{item.label}</a>
                 </li>
             )
@@ -45,7 +45,7 @@ class Dropdown extends React.Component {
                 </button>
                 <ul className={`dropdown-menu ${this.props.direction ? (this.props.direction == 'right' ? 'dropdown-menu-right' : '') : ''}`}>
                     {this.props.dropdown.map((item, index) =>
-                            this.getButton(item)
+                            this.getButton(item, index)
                     )}
                 </ul>
             </div>
