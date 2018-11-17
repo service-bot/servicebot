@@ -95,7 +95,6 @@
 
 }
 @mixin  _formLabel($color){
-
   label{
     @if($color == 'dark'){
       color: $color-heading;
@@ -121,6 +120,32 @@
     height: 42px;
   }
 }
+@mixin react-tagsinput{
+  .react-tagsinput {
+    padding: 0 4px;
+
+    &--focused{
+      border-color: $color-blue;
+    }
+
+    .react-tagsinput-tag{
+      background: #0091ea;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      font-weight: 100;
+      margin: 4px 5px 4px 0;
+    }
+    .react-tagsinput-input {
+      height: auto;
+      font-size: 16px;
+      width: auto;
+      margin: 4px 5px 4px 0;
+    }
+  }
+}
+
 @mixin defaultTransition($speed:""){
   @if($speed) {
     transition: all $speed linear;

@@ -51,6 +51,8 @@ class CustomField extends React.Component {
                     <Field
                         willAutoFocus={willAutoFocus}
                         name={`${member}.prop_label`}
+                        label={`Field Name`}
+                        className={`custom-prop-name`}
                         type="text"
                         component={inputField}
                         validate={required()}
@@ -209,7 +211,7 @@ class renderCustomProperty extends React.Component {
         const {templateType, currency, privateValue, fields, meta: {touched, error}} = props;
 
         return (
-            <div>
+            <React.Fragment>
                 <ul className="custom-fields-list">
                     {fields.map((customProperty, index) =>{
                         let property = fields.get(index);
@@ -235,21 +237,21 @@ class renderCustomProperty extends React.Component {
                     }
                     )}
                     <li className="custom-field-item">
-                        <div className="form-group form-group-flex">
-                            <input className="form-control custom-property-add-field-toggle" autoFocus={false}
+                        <div className="sb-form-group __add-a-field">
+                            <input className="_input- _input-add-a-field" autoFocus={false}
                                    placeholder="Add Custom Field ..." onClick={this.onAdd}/>
                         </div>
                         {/*<button className="btn btn-rounded" type="button" onClick={this.onAdd}>Add Field</button>*/}
                         {touched && error && <span>{error}</span>}
                     </li>
                 </ul>
-            </div>
+            </React.Fragment>
         )
     };
 }
 
 let CheckoutForm = function(props){
-    return <div>
+    return <React.Fragment>
         <FormSection name="references">
             <FieldArray name="service_template_properties"
                         props={{currency: props.currency, templateType: props.serviceTypeValue}}
@@ -258,7 +260,7 @@ let CheckoutForm = function(props){
             <button className="buttons _primary _right" onClick={props.handleSubmit} >Save Checkout Form</button>
             <span class="clear"/>
         </FormSection>
-    </div>
+    </React.Fragment>
 };
 
 
@@ -360,7 +362,7 @@ class CheckoutPage extends React.Component {
                     <span className="caret"/>
                     <h3><span className="form-step-count">1</span>Select a service</h3>
                     <div className="_indented">
-                        <select className="form-control" onChange={this.changeTemplate}>
+                        <select className="_input- _input-select-a-service" onChange={this.changeTemplate}>
                             <option key={"default-0"} value="0">Select a service</option>
                             {this.state.templates.map(template => {
                                 return (<option key={template.id} value={template.id}>{template.name}</option>)
@@ -390,7 +392,7 @@ class CheckoutPage extends React.Component {
                     <span className="caret"/>
                     <h3><span className="form-step-count">3</span>Copy and Embed your code</h3>
                 { selectedTemplate ?
-                    <div>
+                    <React.Fragment>
                         <div className="_indented">
                             <p className="form-help-text"> Paste the generated HTML on the page you want to embed
                                 a request form. You can find more detailed documentation
@@ -398,9 +400,9 @@ class CheckoutPage extends React.Component {
                             </p>
 
                             <div className="_embed-code-form">
-                                <div id="_select-a-tier" className="form-group form-group-flex">
-                                    <label className="control-label form-label-flex-md">Select a tier</label>
-                                    <select className="form-control" onChange={this.changeTier}>
+                                <div id="_select-a-tier" className="sb-form-group __select-a-tier">
+                                    <label className="_label-">Select a tier</label>
+                                    <select className="_input- _input-select-a-tier" onChange={this.changeTier}>
                                         <option key={"default-0"} value="0">Select a tier</option>
                                         {currentTemplate.references.tiers.map(tier => {
                                             return (<option key={tier.id} value={tier.id}>{tier.name}</option>)
@@ -408,9 +410,9 @@ class CheckoutPage extends React.Component {
                                     </select>
                                 </div>
                                 {selectedTier &&
-                                <div id="_select-a-plan" className="form-group form-group-flex">
-                                    <label className="control-label form-label-flex-md">Select a plan</label>
-                                    <select className="form-control" onChange={this.changePlan}>
+                                <div id="_select-a-plan" className="sb-form-group __select-a-plan">
+                                    <label className="_label-">Select a plan</label>
+                                    <select className="_input- _input-select-a-plan" onChange={this.changePlan}>
                                         <option key={"default-0"} value="0">Select a plan</option>
                                         {tier.references.payment_structure_templates.map(plan => {
                                             return (<option key={plan.id} value={plan.id}>{`${plan.amount/100} - ${plan.interval} - ${plan.type}`}</option>)
@@ -429,7 +431,7 @@ class CheckoutPage extends React.Component {
                             <div className="clear"/>
                         </div>
                         }
-                    </div> :
+                    </React.Fragment> :
                     <div className="_inactive"/>
                 }
                 </div>

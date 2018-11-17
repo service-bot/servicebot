@@ -3,8 +3,8 @@ import React from "react";
 
 let SecureString = (props) => {
     return (
-        <div className="form-group form-group-flex addon-text-widget-input-wrapper">
-            <input className="form-control addon-text-widget-input" {...props.input} type="password" placeholder={props.label}/>
+        <div className="sb-form-group __addon-secure-text-widget">
+            <input className="_input- _input-addon-secure-text-widget" {...props.input} type="password" placeholder={props.label}/>
         </div>
     );
 };

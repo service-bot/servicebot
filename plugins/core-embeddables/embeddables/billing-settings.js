@@ -167,13 +167,15 @@ token = generateJWT(user.email, SECRET_KEY)`;
                             you need to generate a token which will authenticate your users and be used by
                             the client-side javascript.
                         </p>
-                        <select className="form-control" onChange={this.changeServer} value={selectedServer}>
-                            <option value="node">NodeJS</option>
-                            <option value="php">PHP</option>
-                            <option value="ruby">Rails/Ruby</option>
-                            <option value="python">Python</option>
-                            <option value="other">Other</option>
-                        </select>
+                        <div className={`sb-form-group`}>
+                            <select className="_input- _input-select-a-framework" onChange={this.changeServer} value={selectedServer}>
+                                <option value="node">NodeJS</option>
+                                <option value="php">PHP</option>
+                                <option value="ruby">Rails/Ruby</option>
+                                <option value="python">Python</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div id="_section-2" className={`_section ${selectedServer && '_active'}`}>

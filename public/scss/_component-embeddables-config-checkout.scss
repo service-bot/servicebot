@@ -1,0 +1,152 @@
+.plugin_container{
+
+  ._section{
+
+    &#_section-1{
+
+      ._input-{
+
+        &select-a-service{
+          width: 100%;
+        }
+      }
+    }
+
+    &#_section-3{
+
+      ._embed-code-form{
+        display: grid;
+        grid-template-columns: 40% auto;
+        border-radius: 1px;
+        background-color: #FFFFFF;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+        padding: 26px $gutter;
+
+        .sb-form-group{
+          display: flex;
+          flex-direction: column;
+        }
+      }
+    }
+
+  }
+
+  .custom-fields-list{
+
+    .custom-field-item{
+      border-radius: 1px;
+      background-color: #FFFFFF;
+      box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+      padding: 26px $gutter;
+      margin-bottom: $gutter;
+
+      #custom-field-delete-button{
+        background: none;
+        border: none;
+        margin: 0;
+      }
+
+      .sb-form-group{
+        padding: 0 16px 16px 16px;
+
+        &.__add-a-field{
+
+          ._input- {
+            width: 100%;
+          }
+        }
+      }
+
+      .custom-property-fields{
+        display: grid;
+        grid-template-columns: 40% 30% 30%;
+        align-items: end;
+
+        .custom-property-field-group{
+
+          &#custom-prop-{
+
+            &name{
+              width: 100%;
+            }
+            &type{
+              width: 100%;
+            }
+            &settings{
+              display: flex;
+              flex-direction: row;
+              padding: 0 $gutter $gutter $gutter;
+
+              .iconToggleField{
+                margin: 0 5px 3px 0;
+              }
+            }
+            &widget{
+              grid-column: 1 / span 3;
+              padding: 0 0 $gutter 0;
+
+              .addon-widget-has-pricing .form-section{
+                display: grid;
+                grid-template-columns: 40% 30% 30%;
+              }
+
+              ._label-{
+
+                &.__default-value{
+                  padding-left: $gutter;
+                }
+              }
+
+              .sb-form-group{
+                padding: 0 $gutter $gutter $gutter;
+
+                &._group-addon-widget{
+                  display: grid;
+                  grid-template-columns: 50px auto;
+                  align-items: center;
+
+                  @include form-checkboxes-2;
+                }
+
+                &._group-addon-pricing{
+                  grid-column: 2 / span 3;
+                }
+              }
+
+              @include react-tagsinput;
+            }
+          }
+
+          &[id^=custom-prop-]{
+
+            ._input-{
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .request-form-price-adjustment-wrapper{
+
+    ._price{
+
+      span{
+        color: white;
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+      }
+      ._value{
+        background: #68717a;
+      }
+
+      [class^=request-form-price-adjust-]{
+        background: #0091ea;
+      }
+    }
+  }
+
+}

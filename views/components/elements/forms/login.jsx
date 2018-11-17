@@ -117,11 +117,11 @@ class Login extends React.Component {
             if (this.props.modal && this.props.email) {
                 return (
                     <Content>
-                        <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
-                            <form className="sign-in">
+                        <div className="login-container">
+                            <form className="login-form">
                                 {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
                                 {this.state.invitationExists &&
-                                <div>
+                                <React.Fragment>
                                     <h3 className="text-center">Account confirmation email is sent to {this.props.email}?</h3>
                                     <p>Please check your email to complete your account before continue.</p>
                                     <Buttons buttonClass="btn btn-link" size="md" position="center" btnType="link"
@@ -129,7 +129,7 @@ class Login extends React.Component {
                                              onClick={this.goToLogin}>
                                         <span>I already confirmed my account, continue.</span>
                                     </Buttons>
-                                </div>
+                                </React.Fragment>
                                 }
 
                                 {!this.state.invitationExists &&
@@ -157,28 +157,18 @@ class Login extends React.Component {
                 return (
                     <Authorizer anonymous={true}>
                         <Content>
-                            {/*<div className="left-panel col-md-6">adsf</div>*/}
-                            <div className="centered-box col-md-6 col-md-offset-3 col-sm-10 col-sm-offset-1 col-xs-12">
-                                <form className="sign-in">
-                                    {/*<Alert stack={{limit: 3}} position='bottom'/>*/}
-                                    {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
-                                    <h3><i class="fa fa-lock"/> Login</h3>
-
-                                    <div className="form-group">
+                            <div className="login-container">
+                                <form className="login-form">
+                                    <div className="sb-form-group">
                                         <input onChange={this.handleInputChange} id="email" type="text" name="email"
-                                               defaultValue={this.props.email || ''} className="form-control" placeholder="Email Address"/>
+                                               defaultValue={this.props.email || ''} className="_input- _input-default" placeholder="Email Address"/>
                                     </div>
-                                    <div className="form-group">
+                                    <div className="sb-form-group">
                                         <input onChange={this.handleInputChange} id="password" type="password"
-                                               name="password" className="form-control" placeholder="Password"/>
+                                               name="password" className="_input- _input-default" placeholder="Password"/>
                                     </div>
-                                    <button onClick={this.handleLogin} type='submit'
-                                            className="buttons _default _right">Sign in
-                                    </button>
-                                    <p className="forgot-password">
-                                        <Link to={{pathname: "/forgot-password", state: {fromLogin: false}}}> Forgot
-                                            Password</Link>
-                                    </p>
+                                    <button onClick={this.handleLogin} type='submit' className="buttons _default _right">Sign in</button>
+                                    <Link to={{pathname: "/forgot-password", state: {fromLogin: false}}}> Forgot Password</Link>
                                     {(this.props.options && this.props.options.allow_registration.value == 'true') &&
                                     <p className="sign-up-link">Don't have an account?
                                         <span><Link to={{
