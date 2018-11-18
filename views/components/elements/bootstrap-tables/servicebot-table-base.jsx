@@ -39,7 +39,7 @@ class ServiceBotTableBase extends React.Component {
 
     renderExportCSVButton(onClick) {
         return (
-            <button className='buttons _primary _text' onClick={ onClick }>Export</button>
+            <button className='buttons _default _gray' onClick={ onClick }>Export</button>
         );
     }
 
@@ -48,7 +48,7 @@ class ServiceBotTableBase extends React.Component {
         return (
             <ButtonGroup className='buttons-group __gap'>
                 {self.props.createItemAction &&
-                <button {...self.props.createItemProps} type='button' className={ `buttons _primary _green` } onClick={() => {
+                <button {...self.props.createItemProps} type='button' className={ `buttons _default _green` } onClick={() => {
                     self.props.createItemAction ? self.props.createItemAction() :
                         console.error('You must pass a prop "createItem" to ServiceBotTableBase component.');
                 }}><i className="fa fa-plus"/> {self.props.createItemLabel}

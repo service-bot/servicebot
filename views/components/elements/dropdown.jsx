@@ -44,7 +44,7 @@ class Dropdown extends React.Component {
         let { opened } = this.state;
         return (
             <div className={`action-dropdown ${opened ? 'open' : 'closed'}`}>
-                <button className="buttons _primary _dropdown-toggle" type="button" id="dropdownMenuButton"
+                <button className="buttons _default _navy _dropdown-toggle" type="button" id="dropdownMenuButton"
                         aria-haspopup="true" aria-expanded="false" onClick={this.toggleDropDown}>
                     Actions
                 </button>

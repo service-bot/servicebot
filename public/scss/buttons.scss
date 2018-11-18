@@ -49,32 +49,6 @@
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.17);
   }
 
-  &._text{
-    background: none !important;
-    color: $color-blue-gray !important;
-    box-shadow: none !important;
-  }
-
-  &._green {
-    background-color: #1ABE98;
-    color: white;
-  }
-
-  &._red {
-    background-color: #db0306;
-    color: white;
-  }
-
-  &._navy {
-    background-color: #031f5f;
-    color: white;
-  }
-
-  &._yellow {
-    background-color: #ffca00;
-    color: #484848;
-  }
-
   &._default {
     font-size: $font-size;
     background-color: $blue;
@@ -86,6 +60,49 @@
     &:hover {
       background-color: $dark-blue;
     }
+  }
+
+  &._text{
+    background: none !important;
+    color: $color-blue-gray !important;
+    box-shadow: none !important;
+  }
+
+  &._green {
+    background-color: #1ABE98;
+    color: white;
+    &:hover {
+      background-color: #17a886;
+    }
+  }
+
+  &._red {
+    background-color: #db0306;
+    color: white;
+    &:hover {
+      background-color: #b40305;
+    }
+  }
+
+  &._navy {
+    background-color: #031f5f;
+    color: white;
+    &:hover {
+      background-color: $dark-blue;
+    }
+  }
+
+  &._gray {
+    background-color: #eeeeee;
+    color: black;
+    &:hover {
+      background-color: #dddddd;
+    }
+  }
+
+  &._yellow {
+    background-color: #ffca00;
+    color: #484848;
   }
 
   &._right{
@@ -124,7 +141,7 @@
   .dropdown-menu{
     background: white;
     position: absolute;
-    top: 56px;
+    top: 41px;
     right: 0;
     list-style: none;
     padding: 0;
