@@ -74,9 +74,9 @@ class ResetPassword extends React.Component {
                     <p>
                         Enter your new password to reset.
                     </p>
-                    <div className="form-group">
+                    <div className="sb-form-group">
                         <label htmlFor="sign-in-2-email" className="bmd-label-floating">New Password</label>
-                        <input onChange={this.handleInputChange} id="password" type="password" name="password" className="form-control"/>
+                        <input onChange={this.handleInputChange} id="password" type="password" name="password" className="_input-"/>
                         <span className="bmd-help">Please enter your new password</span>
                     </div>
                     <button onClick={this.handleReset} type='submit' className="buttons btn-raised btn-lg btn-primary btn-block">Reset Password</button>

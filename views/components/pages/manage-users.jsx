@@ -373,81 +373,76 @@ class ManageUsers extends React.Component {
         }else {
             return (
                 <Authorizer permissions="can_administrate">
-                    <Jumbotron pageName={pageName} subtitle={subtitle}/>
-                    <div className="page-service-instance">
+                    <div className="page __manage-users">
                         <Content>
-                            <div className="row m-b-20">
-                                <div className="col-xs-12">
-                                    <ContentTitle title="Manage Users"/>
-                                    <ServiceBotTableBase
-                                        createItemProps={!this.props.stripe_publishable_key && {disabled : true}}
-                                        createItemAction={this.props.stripe_publishable_key ? this.openInviteUserModal : () => {}}
-                                        createItemLabel={this.props.stripe_publishable_key ? "New User" : (<Link to="/stripe-settings" data-tip="Setup Incomplete - Click to finish">
-                                            New User
-                                            <ReactTooltip place="bottom" type="dark" effect="solid"/>
-                                        </Link>)}
-                                        rows={this.state.rows}
-                                        fetchRows={this.fetchData}
-                                        sortColumn="created_at"
-                                        sortOrder="desc"
-                                    >
-                                        <TableHeaderColumn isKey
-                                                           dataField='email'
-                                                           dataFormat={this.profileLinkFormatter}
-                                                           dataSort={ true }
-                                                           width='150'>
-                                            Email
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='name'
-                                                           dataFormat={this.profileLinkFormatter}
-                                                           dataSort={ true }
-                                                           width='80'>
-                                            name
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='status'
-                                                           dataFormat={this.statusFormatter}
-                                                           dataSort={ true }
-                                                           width='80'>
-                                            Status
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='references'
-                                                           dataFormat={this.fundFormatter}
-                                                           dataSort={ true }
-                                                           searchable={false}
-                                                           width='40'>
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='references'
-                                                           dataFormat={this.roleFormatter}
-                                                           dataSort={ true }
-                                                           filterValue={this.roleFormatter}
-                                                           width='80'>
-                                            Role
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='last_login'
-                                                           dataFormat={this.lastLoginFormater}
-                                                           dataSort={ true }
-                                                           searchable={false}
-                                                           width='100'>
-                                            Last Login
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='created_at'
-                                                           dataFormat={this.createdAtFormater}
-                                                           dataSort={ true }
-                                                           searchable={false}
-                                                           width='100'>
-                                            Created At
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='Actions'
-                                                           className={'action-column-header'}
-                                                           columnClassName={'action-column'}
-                                                           dataFormat={ this.rowActionsFormatter }
-                                                           searchable={false}
-                                                           width='80'
-                                                           filter={false}>
-                                        </TableHeaderColumn>
-                                    </ServiceBotTableBase>
-                                </div>
-                            </div>
+                            <ContentTitle title="Manage Users"/>
+                            <ServiceBotTableBase
+                                createItemProps={!this.props.stripe_publishable_key && {disabled : true}}
+                                createItemAction={this.props.stripe_publishable_key ? this.openInviteUserModal : () => {}}
+                                createItemLabel={this.props.stripe_publishable_key ? "New User" : (<Link to="/stripe-settings" data-tip="Setup Incomplete - Click to finish">
+                                    New User
+                                    <ReactTooltip place="bottom" type="dark" effect="solid"/>
+                                </Link>)}
+                                rows={this.state.rows}
+                                fetchRows={this.fetchData}
+                                sortColumn="created_at"
+                                sortOrder="desc"
+                            >
+                                <TableHeaderColumn isKey
+                                                   dataField='email'
+                                                   dataFormat={this.profileLinkFormatter}
+                                                   dataSort={ true }
+                                                   width='150'>
+                                    Email
+                                </TableHeaderColumn>
+                                <TableHeaderColumn dataField='name'
+                                                   dataFormat={this.profileLinkFormatter}
+                                                   dataSort={ true }
+                                                   width='80'>
+                                    name
+                                </TableHeaderColumn>
+                                <TableHeaderColumn dataField='status'
+                                                   dataFormat={this.statusFormatter}
+                                                   dataSort={ true }
+                                                   width='80'>
+                                    Status
+                                </TableHeaderColumn>
+                                <TableHeaderColumn dataField='references'
+                                                   dataFormat={this.fundFormatter}
+                                                   dataSort={ true }
+                                                   searchable={false}
+                                                   width='40'>
+                                </TableHeaderColumn>
+                                <TableHeaderColumn dataField='references'
+                                                   dataFormat={this.roleFormatter}
+                                                   dataSort={ true }
+                                                   filterValue={this.roleFormatter}
+                                                   width='80'>
+                                    Role
+                                </TableHeaderColumn>
+                                <TableHeaderColumn dataField='last_login'
+                                                   dataFormat={this.lastLoginFormater}
+                                                   dataSort={ true }
+                                                   searchable={false}
+                                                   width='100'>
+                                    Last Login
+                                </TableHeaderColumn>
+                                <TableHeaderColumn dataField='created_at'
+                                                   dataFormat={this.createdAtFormater}
+                                                   dataSort={ true }
+                                                   searchable={false}
+                                                   width='100'>
+                                    Created At
+                                </TableHeaderColumn>
+                                <TableHeaderColumn dataField='Actions'
+                                                   className={'action-column-header'}
+                                                   columnClassName={'action-column'}
+                                                   dataFormat={ this.rowActionsFormatter }
+                                                   searchable={false}
+                                                   width='80'
+                                                   filter={false}>
+                                </TableHeaderColumn>
+                            </ServiceBotTableBase>
                             {getModals()}
                         </Content>
                     </div>

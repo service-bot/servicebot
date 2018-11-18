@@ -12,7 +12,7 @@ import Load from "../../utilities/load.jsx";
 class CardSection extends React.Component {
     render() {
         return (
-            <div className="form-group" id="card-element">
+            <div className="sb-form-group" id="card-element">
                 <CardElement style={{
                     base: {
                         color: '#32325d',

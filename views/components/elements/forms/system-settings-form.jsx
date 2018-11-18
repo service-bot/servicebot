@@ -4,6 +4,7 @@ import {Fetcher} from "servicebot-base-form";
 let _ = require("lodash");
 import Inputs from '../../utilities/inputs.jsx';
 import ContentTitle from '../../layouts/content-title.jsx';
+import Content from '../../layouts/content.jsx';
 import update from 'immutability-helper';
 import { connect } from 'react-redux';
 import Buttons from "../buttons.jsx";
@@ -169,8 +170,8 @@ class SystemSettingsForm extends React.Component {
                 return(
                     <div>
                         {_.indexOf(this.props.filter, 'brand_logo') != -1 &&
-                        <div className="image-upload-box form-group-flex column">
-                            <label className="control-label">Brand Logo</label>
+                        <div className="sb-form-group image-upload-box">
+                            <label className="_label">Brand Logo</label>
                             <ImageUploader name="file" elementID="brand-logo"
                                            imageURL="/api/v1/system-options/file/brand_logo"
                                            imageStyle="badge badge-lg" uploadButton={true}
@@ -180,8 +181,8 @@ class SystemSettingsForm extends React.Component {
                         }
 
                         {_.indexOf(this.props.filter, 'home_hero_image') != -1 &&
-                        <div className="image-upload-box form-group-flex column">
-                            <label className="control-label">Front Page Hero Image</label>
+                        <div className="sb-form-group image-upload-box">
+                            <label className="_label-">Front Page Hero Image</label>
                             <ImageUploader name="file" elementID="front-page-image"
                                            imageURL="/api/v1/system-options/file/front_page_image"
                                            imageStyle="badge badge-lg" uploadButton={true}
@@ -239,51 +240,40 @@ class SystemSettingsForm extends React.Component {
                 //
 
                 return (
-                    <div className="row">
-                        <div>
-                            {this.getAppVersion()}
-                        </div>
-                        <div className="form-box row m-0 p-20">
-                            <div className="col-md-3">
-                                <h4 className="text-capitalize">Setting Types</h4>
-                                <ul className="tabs">
-                                    {/*                                    <li key={`settings-type-tab-branding`} className={`tab text-capitalize ${self.state.currentTabType == 'branding' ? 'active' : ''}`}
-                                        style={tabStyle('branding')}
-                                        onClick={()=>{return this.handleTab('branding')}}><span>Branding</span></li>*/}
-                                    {types.map((type) => {
-                                        return (
-                                            <li key={`settings-type-tab-${type}`} className={`tab text-capitalize ${type == self.state.currentTabType ? 'active' : ''}`}
-                                                // style={tabStyle(type)}
-                                                onClick={()=>{return this.handleTab(type)}}><span>{type}</span></li>
-                                        );
-                                    })}
-                                </ul>
-                            </div>
-                            <div className="col-md-9 system-settings-page-form">
-                                <ContentTitle icon="cog" title="System settings"/>
+                    <React.Fragment>
+                        <p>{this.getAppVersion()}</p>
+                        <div className="form-box">
 
+                            <h4 className="text-capitalize">Setting Types</h4>
+                            <ul className="tabs">
+                                {types.map((type) => {
+                                    return (
+                                        <li key={`settings-type-tab-${type}`} className={`tab text-capitalize ${type == self.state.currentTabType ? 'active' : ''}`}
+                                            onClick={()=>{return this.handleTab(type)}}><span>{type}</span></li>
+                                    );
+                                })}
+                            </ul>
+                            <div className="system-settings-page-form">
                                 {this.state.currentTabType == "branding" ?
-                                    <div>
+                                    <div className={`__type-braning`}>
                                         <h4 className="text-capitalize">Branding</h4>
-                                        <div className="row m-b-30">
-                                            <div className="col-md-4 form-group-flex column centered">
-                                                <label className="control-label">Brand Logo</label>
-                                                <ImageUploader name="file" elementID="brand-logo"
-                                                               imageURL="/api/v1/system-options/file/brand_logo"
-                                                               imageStyle="badge badge-lg" uploadButton={true}/>
-                                            </div>
-                                            <div className="col-md-4 form-group-flex column centered">
-                                                <label className="control-label">Homepage Image</label>
-                                                <ImageUploader name="file" elementID="front-page-image"
-                                                               imageURL="/api/v1/system-options/file/front_page_image"
-                                                               imageStyle="badge badge-lg" uploadButton={true}/>
-                                            </div>
-                                            <div className="col-md-4 form-group-flex column centered">
-                                                <label className="control-label">Loader Logo</label>
-                                                <ImageUploader name="file" elementID="loader-logo"
-                                                               imageURL="/api/v1/system-options/file/loader_logo"
-                                                               imageStyle="badge badge-lg" uploadButton={true}/>
-                                            </div>
+                                        <div className="__item">
+                                            <label className="control-label">Brand Logo</label>
+                                            <ImageUploader name="file" elementID="brand-logo"
+                                                           imageURL="/api/v1/system-options/file/brand_logo"
+                                                           imageStyle="badge badge-lg" uploadButton={true}/>
+                                        </div>
+                                        <div className="__item">
+                                            <label className="control-label">Homepage Image</label>
+                                            <ImageUploader name="file" elementID="front-page-image"
+                                                           imageURL="/api/v1/system-options/file/front_page_image"
+                                                           imageStyle="badge badge-lg" uploadButton={true}/>
+                                        </div>
+                                        <div className="__item">
+                                            <label className="control-label">Loader Logo</label>
+                                            <ImageUploader name="file" elementID="loader-logo"
+                                                           imageURL="/api/v1/system-options/file/loader_logo"
+                                                           imageStyle="badge badge-lg" uploadButton={true}/>
                                         </div>
                                     </div>
 
@@ -344,8 +334,7 @@ class SystemSettingsForm extends React.Component {
                                 </div>
                             </div>
                         </div>
-
-                    </div>
+                    </React.Fragment>
                 );
             }
         }

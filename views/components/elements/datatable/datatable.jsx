@@ -173,7 +173,7 @@ class DataTable extends React.Component {
                         {this.state.searchbar &&
                             <div className="data-table-search">
                                 <label>Quick Search: </label>
-                                <input className="form-control" onChange={this.handleSearch}/>
+                                <input className="_input-" onChange={this.handleSearch}/>
                             </div>
                         }
                         <table className="table datatable table-striped table-hover">

@@ -53,11 +53,8 @@ class UserForm extends React.Component {
         }
         else {
             let user = this.state.user;
-
-            let pageName = this.props.route.name;
             return(
                 <Authorizer>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
                     <div className="page-service-instance">
                         <Content>
                             <div className="badge badge-40"><img src={this.state.url + "/avatar"} className="max-w-40 h-40 img-circle" alt="badge"/></div>

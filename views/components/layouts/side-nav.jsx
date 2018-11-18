@@ -137,9 +137,9 @@ class SideNav extends React.Component {
                         {/*<div className="left-sidebar-search">*/}
                             {/*<form className="form-inline form-custom">*/}
                                 {/*<i className="material-icons">search</i>*/}
-                                {/*<div className="form-group">*/}
+                                {/*<div className="sb-form-group">*/}
                                     {/*<label htmlFor="search" className="bmd-label-floating">Search</label>*/}
-                                    {/*<input type="text" className="form-control" id="search" />*/}
+                                    {/*<input type="text" className="_input-" id="search" />*/}
                                 {/*</div>*/}
                             {/*</form>*/}
                         {/*</div>*/}

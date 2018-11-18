@@ -21,3 +21,15 @@ $section_heading: 16px;
 ._sub-heading{
   @include sub_heading;
 }
+
+h1, h2, h3, h4, h5, h6{
+  font-family: "Avenir", "Arial";
+}
+
+.content-title{
+
+  h3, h4{
+    font-weight: 500;
+    color: #30468a;
+  }
+}

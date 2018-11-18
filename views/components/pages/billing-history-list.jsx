@@ -79,8 +79,8 @@ class BillingHistoryList extends React.Component {
         };
 
         return (
-            <div className="col-xs-12">
-                <ContentTitle icon="cog" title="View all your invoices"/>
+            <React.Fragment>
+                <ContentTitle title="View all your invoices"/>
                 {/* no ending slash for the api url */}
                 <DataTable get={ this.state.url }
                            col={['id', 'invoice_id', 'amount_due', 'date', 'closed', 'paid']}
@@ -97,7 +97,7 @@ class BillingHistoryList extends React.Component {
                            ]}]}
                            nullMessage="You do not have any invoices at the moment."/>
                 {currentModal()}
-            </div>
+            </React.Fragment>
         );
     }
 }

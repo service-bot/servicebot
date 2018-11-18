@@ -82,8 +82,7 @@ class MyServices extends React.Component {
         if(self.state.loading){
             return (
                 <div>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <div className="page-dashboard">
+                    <div className="page __dashboard">
                         <Content>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'}
                                                      transitionAppear={true} transitionAppearTimeout={1000}
@@ -136,8 +135,7 @@ class MyServices extends React.Component {
 
             return(
                 <Authorizer>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <div className="page-service-instance">
+                    <div className="page __manage-my-instance">
                         <Content>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'}
                                                      transitionAppear={true} transitionAppearTimeout={1000}

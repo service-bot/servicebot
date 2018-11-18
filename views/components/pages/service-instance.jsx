@@ -329,8 +329,7 @@ class ServiceInstance extends React.Component {
         if(this.state.loading){
             return (
                 <Authorizer>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <div className="page-service-instance white">
+                    <div className="page __view-service-instance">
                         <Content key={Object.id}>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'}
                                                      transitionAppear={true} transitionEnter={true} transitionLeave={true}
@@ -394,11 +393,9 @@ class ServiceInstance extends React.Component {
 
             return(
                 <Authorizer>
-                    <Jumbotron pageName={pageName} subtitle={<span>{subtitle}<strong><DateFormat date={myInstance.updated_at} time /></strong></span>} />
-                    {/*<Jumbotron pageName={pageName} subtitle={`${myInstance.description} . ${myInstance.subscription_id || ""}`} />*/}
-                    <div className="page-service-instance white-bg">
+                    <div className="page __view-service-instance">
                         <Content>
-                            <ReactCSSTransitionGroup component='div' transitionName={'fade'} transitionAppear={true} transitionEnter={true} transitionLeave={true}
+                            <ReactCSSTransitionGroup component={React.Fragment} transitionName={'fade'} transitionAppear={true} transitionEnter={true} transitionLeave={true}
                                                      transitionAppearTimeout={1000} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                                 <div className="instance-title">
                                     <ContentTitle title="Subscription Detail"/>

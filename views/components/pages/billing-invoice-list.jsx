@@ -164,10 +164,8 @@ class BillingInvoiceList extends React.Component {
             };
 
             return (
-                <div>
-                    <div>
-                        <ContentTitle icon="cog" title={`Invoice ID:${invoice.invoice_id}`}/>
-                    </div>
+                <React.Fragment>
+                    <ContentTitle title={`Invoice ID:${invoice.invoice_id}`}/>
                     <div className="Invoice">
                         <div className="invoice-header">
                             <div className="invoice-header-header">
@@ -271,7 +269,7 @@ class BillingInvoiceList extends React.Component {
                         </div>
                     </div>
                     {currentModal()}
-                </div>
+                </React.Fragment>
             );
         }
     }

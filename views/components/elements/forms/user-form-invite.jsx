@@ -97,11 +97,11 @@ class UserFormInvite extends React.Component {
                             <h3 className="m-b-20">Finish Your Invitation</h3>
                             <p>Please enter your information to finish your registration and access your account.</p>
                         </div>
-                        <div className="form-group">
-                            <input type="text" name="name" placeholder="Full Name" className="form-control"/>
+                        <div className="sb-form-group">
+                            <input type="text" name="name" placeholder="Full Name" className="_input-"/>
                         </div>
-                        <div className="form-group">
-                            <input type="password" name="password" placeholder="Password" className="form-control"/>
+                        <div className="sb-form-group">
+                            <input type="password" name="password" placeholder="Password" className="_input-"/>
                         </div>
                         <button className="buttons btn-raised btn-lg btn-primary btn-block" type="submit"
                                     value="submit">Finish Registration</button>

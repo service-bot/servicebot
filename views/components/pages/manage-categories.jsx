@@ -148,8 +148,7 @@ class ManageCategories2 extends React.Component {
 
             return (
                 <Authorizer permissions="can_administrate">
-                    <Jumbotron pageName={pageName} subtitle={subtitle}/>
-                    <div className="page __category">
+                    <div className="page __manage-category">
                         <Content>
 
                                     <ServiceBotTableBase

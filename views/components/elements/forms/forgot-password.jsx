@@ -88,9 +88,9 @@ class ForgotPassword extends React.Component {
                                     Please enter your email address to reset your password. You will receive an emil with
                                     password reset instructions.
                                 </p>
-                                <div className={`form-group ${!this.state.form.email && this.state.submitted && 'has-error'}`}>
+                                <div className={`sb-form-group${!this.state.form.email && this.state.submitted && 'has-error'}`}>
                                     <input onChange={this.handleInputChange} id="email" type="text" name="email"
-                                           className="form-control" placeholder="Email Address"/>
+                                           className="_input-" placeholder="Email Address"/>
                                     {!this.state.form.email && this.state.submitted ?
                                     <span className="help-block">Email is required</span> : <span/>}
                                 </div>

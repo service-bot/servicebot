@@ -7,9 +7,9 @@ class SearchDashboard extends React.Component {
             <div className="top-navigation-search">
                 <form className="form-inline form-custom">
                     {/*<i className="material-icons">search</i>*/}
-                    <div className="form-group bmd-form-group">
+                    <div className="sb-form-groupbmd-form-group">
                         <label className="dashboard-search-label">Search</label>
-                        <input type="text" className="form-control" id="top-navigation-search-input"/>
+                        <input type="text" className="_input-" id="top-navigation-search-input"/>
                     </div>
                 </form>
                 <button className="buttons btn-white color-default btn-raised m-b-0 m-l-15">Explore</button>

@@ -74,54 +74,46 @@ class ManageNotificationTemplates extends React.Component {
     }
 
     render () {
-        let pageName = this.props.route.name;
-        let subtitle = 'Manage email and notification templates'
-
         if( this.state.loading ){
             return ( <Load/> );
         }else {
             return (
                 <Authorizer permissions="can_administrate">
-                    <Jumbotron pageName={pageName} subtitle={subtitle}/>
-                    <div className="page-service-instance">
+                    <div className="page __manage-notification-templates">
                         <Content>
-                            <div className="row m-b-20">
-                                <div className="col-xs-12">
-                                    <ContentTitle icon="cog" title="Manage Notification Templates"/>
-                                    <ServiceBotTableBase
-                                        rows={this.state.rows}
-                                        fetchRows={this.fetchData}
-                                    >
-                                        <TableHeaderColumn isKey
-                                                            dataField='subject'
-                                                           dataFormat={this.subjectFormatter}
-                                                           dataSort={ true }
-                                                           width='250'>
-                                            Subject
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='description'
-                                                           dataSort={ true }
-                                                           width='350'>
-                                            Description
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='updated_at'
-                                                           dataFormat={this.updatedAtFormatter}
-                                                           dataSort={ true }
-                                                           searchable={false}
-                                                           width='150'>
-                                            Updated At
-                                        </TableHeaderColumn>
-                                        <TableHeaderColumn dataField='Actions'
-                                                           className={'action-column-header'}
-                                                           columnClassName={'action-column'}
-                                                           dataFormat={ this.rowActionsFormatter }
-                                                           searchable={false}
-                                                           width='80'
-                                                           filter={false}>
-                                        </TableHeaderColumn>
-                                    </ServiceBotTableBase>
-                                </div>
-                            </div>
+                            <ContentTitle title="Manage Notification Templates"/>
+                            <ServiceBotTableBase
+                                rows={this.state.rows}
+                                fetchRows={this.fetchData}
+                            >
+                                <TableHeaderColumn isKey
+                                                    dataField='subject'
+                                                   dataFormat={this.subjectFormatter}
+                                                   dataSort={ true }
+                                                   width='250'>
+                                    Subject
+                                </TableHeaderColumn>
+                                <TableHeaderColumn dataField='description'
+                                                   dataSort={ true }
+                                                   width='350'>
+                                    Description
+                                </TableHeaderColumn>
+                                <TableHeaderColumn dataField='updated_at'
+                                                   dataFormat={this.updatedAtFormatter}
+                                                   dataSort={ true }
+                                                   searchable={false}
+                                                   width='150'>
+                                    Updated At
+                                </TableHeaderColumn>
+                                <TableHeaderColumn dataField='Actions'
+                                                   className={'action-column-header'}
+                                                   columnClassName={'action-column'}
+                                                   dataFormat={ this.rowActionsFormatter }
+                                                   searchable={false}
+                                                   width='80'
+                                                   filter={false}>
+                                </TableHeaderColumn>
+                            </ServiceBotTableBase>
                         </Content>
                     </div>
                 </Authorizer>

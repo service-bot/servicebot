@@ -30,11 +30,11 @@ class SearchServiceBar extends React.Component {
                             <label id="search-service-label" className="flat-input flat-lg flat-bolder">Search For
                                 Services</label>
                         }
-                        <div id="search-service" className="form-group flat-input flat-rounded flat-full flat-lg flat-bolder">
-                            <input onChange={this.props.handleChange} className="form-control" type="text"/>
+                        <div id="search-service" className="sb-form-groupflat-input flat-rounded flat-full flat-lg flat-bolder">
+                            <input onChange={this.props.handleChange} className="_input-" type="text"/>
                         </div>
-                        <div id="search-category" className="form-group flat-input flat-rounded flat-lg flat-bolder float-right caret-right">
-                            <select className="form-control" defaultValue="All Services">
+                        <div id="search-category" className="sb-form-groupflat-input flat-rounded flat-lg flat-bolder float-right caret-right">
+                            <select className="_input-" defaultValue="All Services">
                                 {this.state.categories.length && this.state.categories.map((cat) =>
                                         <option key={`categories-${cat.id}`}>{cat.name}</option>
                                     )

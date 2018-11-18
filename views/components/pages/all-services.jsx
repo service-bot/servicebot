@@ -64,9 +64,9 @@ class AllServices extends React.Component {
                             </div>
                             <div className="col-md-6 col-sm-12">
                                 <div className="category-filter">
-                                    <div className="form-group">
+                                    <div className="sb-form-group">
                                         <label className="">Filter by category</label>
-                                        <select className="form-control" defaultValue="0" onChange={this.handleChange}>
+                                        <select className="_input-" defaultValue="0" onChange={this.handleChange}>
                                             <option key={`categories-0`} value="0" selected>All Services</option>
                                             {this.state.categories.length && this.state.categories.map((cat) =>
                                                 <option key={`categories-${cat.id}`} value={cat.id}>{cat.name}</option>)

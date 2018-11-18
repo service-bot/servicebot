@@ -320,22 +320,17 @@ class Notifications extends React.Component{
     render(){
         return (
             <div>
-                <Jumbotron pageName={this.props.route.name} location={this.props.location}/>
-                <div className="page-service-instance">
+                <div className="page __manage-notifications">
                     <Content>
-                        <div className="row m-b-20">
-                            <div className="col-xs-12">
-                                <ContentTitle icon="user" title="Notifications"/>
-                                {isAuthorized({permissions: "put_notification_templates_id"}) &&
-                                    <div>
-                                        <p><strong>System Notifications</strong></p>
-                                        <NotificationList notificationType="_SYSTEM"/>
-                                    </div>
-                                }
-                                <p><strong>User Notifications</strong></p>
-                                <NotificationList/>
-                            </div>
-                        </div>
+                        <ContentTitle icon="user" title="Notifications"/>
+                        {isAuthorized({permissions: "put_notification_templates_id"}) &&
+                            <React.Fragment>
+                                <p><strong>System Notifications</strong></p>
+                                <NotificationList notificationType="_SYSTEM"/>
+                            </React.Fragment>
+                        }
+                        <p><strong>User Notifications</strong></p>
+                        <NotificationList/>
                     </Content>
                 </div>
             </div>

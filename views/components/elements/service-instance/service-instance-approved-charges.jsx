@@ -84,11 +84,11 @@ class ServiceInstanceApprovedCharges extends React.Component {
             let currency = approveItems[0].currency;
 
             return (
-                <div className="service-instance-actions p-0">
+                <div className="service-instance-actions">
                     <div className="service-instance-box-title">
                         <span>Approved Charges - Current Billing Cycle</span>
                     </div>
-                    <div className="service-instance-box-content p-b-30">
+                    <div className="service-instance-box-content">
                         <p>Following charges are one time charges that have been approved for the current billing cycle.</p>
                         <Datatable dataObj={approveItems}
                                    col={['description', 'amount', 'updated_at', 'approved']}

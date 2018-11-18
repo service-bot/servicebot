@@ -136,9 +136,9 @@ class Login extends React.Component {
                                 <div>
                                     <h3>Login as: {this.props.email}</h3>
                                     <p>Please login to continue</p>
-                                    <div className={`form-group ${this.state.errors && 'has-error   '}`}>
+                                    <div className={`sb-form-group${this.state.errors && 'has-error   '}`}>
                                         <input onChange={this.handleInputChange} id="password" type="password"
-                                               name="password" className="form-control" placeholder="Password"/>
+                                               name="password" className="_input-" placeholder="Password"/>
                                         {this.state.errors && <span className="help-block">{this.state.errors}</span>}
                                     </div>
                                     <button onClick={this.handleLogin} type='submit'

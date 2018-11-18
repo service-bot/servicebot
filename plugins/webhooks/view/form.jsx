@@ -9,7 +9,7 @@ import Jumbotron from '../../../views/components/layouts/jumbotron.jsx';
 import Collapsible from 'react-collapsible';
 import '../stylesheets/webhooks.css';
 import cookie from "react-cookie";
-
+import ContentTitle from "../../../views/components/layouts/content-title.jsx";
 
 function ManagementEmbed(props) {
     let server;
@@ -366,11 +366,8 @@ Servicebot.init({
         }
         return (
             <div>
-                <Jumbotron pageName={pageName} subtitle={subtitle}/>
-                <div
-                    className="page-servicebot-webhooks col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2"
-                    id="payment-form">
-                    <h3>Webhooks</h3>
+                <div className="page __servicebot-webhooks" id="payment-form">
+                    <ContentTitle title={`Webhooks`}/>
                     <span>Servicebot can send webhook events that notify your application or third-party system any time an event happens.
                         Use it for events, like new customer subscription or trial expiration, that
                         your SaaS needs to know about.</span>
@@ -387,7 +384,7 @@ Servicebot.init({
                     </div>
 
                     <div className="webhook-info">
-                        <h4>Webhook events information</h4>
+                        <ContentTitle title={`Webhook events information`}/>
                         <div className="buttons-group">
                             {!this.state.showEventsInfo ?
                                 <button className="buttons _primary" onClick={this.showEvents}>View events</button>

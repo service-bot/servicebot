@@ -1,0 +1,74 @@
+.page{
+
+  padding: $gutter*1.5 $gutter * 3;
+
+  /* System */
+  &.__dashboard{
+
+
+  }
+
+  &.__manage-services{
+
+
+  }
+
+  &.__manage-subscriptions{
+
+
+  }
+
+  &.__manage-users{
+
+
+  }
+
+  &.__manage-notification-templates{
+
+  }
+
+  /* Settings */
+  &.__manage-system-settings{
+
+  }
+  &.__manage-stripe-settings{
+
+  }
+
+  /* Profile */
+  &.__view-my-profile{
+
+
+  }
+
+  &.__manage-my-profile{
+
+
+  }
+
+  &.__manage-my-cards{
+
+
+  }
+
+  &.__manage-my-instance{
+
+
+  }
+
+  /* Billing */
+  &.__billing-history{
+
+
+  }
+
+  &.__billing-invoice{
+
+  }
+
+  /* Notifications */
+  &.__manage-notifications{
+
+  }
+
+}

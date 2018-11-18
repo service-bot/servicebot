@@ -199,7 +199,7 @@ class ManageCatalogList extends React.Component {
             return ( <Load/> );
         } else {
             return (
-                <div className="page __service">
+                <div className="page __manage-services">
                     <ContentTitle title="Manage Services"/>
                     <ServiceBotTableBase
                         rows={this.state.rows}
