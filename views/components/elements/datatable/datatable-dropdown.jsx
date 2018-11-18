@@ -16,10 +16,6 @@ class Dropdown extends React.Component {
         this.getButton = this.getButton.bind(this);
     }
 
-    componentDidMount(){
-        $(this.refs.dropdownToggle).dropdown();
-    }
-
     processDropDownButtons(link, id){
         let myLink = _.isFunction(link) ? link(this.props.active) : link;
 
@@ -86,7 +82,8 @@ class Dropdown extends React.Component {
     render () {
         return(
             <div id="action-buttons" className="btn-group">
-                <button type="button" className="buttons btn-default dropdown-toggle" ref="dropdownToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button"
+                        className="buttons _primary _dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {this.props.name} <span className="caret"/>
                 </button>
                 <ul className={`dropdown-menu ${this.props.direction ? (this.props.direction == 'right' ? 'dropdown-menu-right' : '') : ''}`}>

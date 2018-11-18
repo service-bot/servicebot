@@ -1,18 +1,21 @@
 import React from 'react';
-import {Link, hashHistory} from 'react-router';
-import _ from "lodash";
 import $ from "jquery";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
-import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 
 class Dropdown extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            opened: false
+        };
+
+        this.toggleDropDown = this.toggleDropDown.bind(this);
+        this.getButton = this.getButton.bind(this);
     }
 
-    componentDidMount() {
-        $(this.refs.dropdownToggle).dropdown();
+    toggleDropDown(){
+        this.setState({opened: !this.state.opened});
     }
 
     getButton(item, index){
@@ -37,15 +40,17 @@ class Dropdown extends React.Component {
     }
 
     render() {
+        let { dropdown, direction } = this.props;
+        let { opened } = this.state;
         return (
-            <div className="dropdown">
-                <button className="buttons btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ref="dropdownToggle">
+            <div className={`action-dropdown ${opened ? 'open' : 'closed'}`}>
+                <button className="buttons _primary _dropdown-toggle" type="button" id="dropdownMenuButton"
+                        aria-haspopup="true" aria-expanded="false" onClick={this.toggleDropDown}>
                     Actions
                 </button>
-                <ul className={`dropdown-menu ${this.props.direction ? (this.props.direction == 'right' ? 'dropdown-menu-right' : '') : ''}`}>
-                    {this.props.dropdown.map((item, index) =>
-                            this.getButton(item, index)
+                <ul className={`dropdown-menu ${direction ? (direction === 'right' ? 'dropdown-menu-right' : '') : ''}`}>
+                    {dropdown.map((item, index) =>
+                        this.getButton(item, index)
                     )}
                 </ul>
             </div>
