@@ -149,10 +149,9 @@ class ManageCategories2 extends React.Component {
             return (
                 <Authorizer permissions="can_administrate">
                     <Jumbotron pageName={pageName} subtitle={subtitle}/>
-                    <div className="page-service-instance">
+                    <div className="page __category">
                         <Content>
-                            <div className="row m-b-20">
-                                <div className="col-xs-12">
+
                                     <ServiceBotTableBase
                                         rows={this.state.rows}
                                         createItemAction={this.openAddCategoryModal}
@@ -187,8 +186,6 @@ class ManageCategories2 extends React.Component {
                                                            filter={false}>
                                         </TableHeaderColumn>
                                     </ServiceBotTableBase>
-                                </div>
-                            </div>
                             {renderModals()}
                         </Content>
                     </div>

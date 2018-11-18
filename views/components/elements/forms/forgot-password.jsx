@@ -70,7 +70,7 @@ class ForgotPassword extends React.Component {
                         <div className="sign-in">
                             <p>Email Sent! You will receive an email with instructions to reset your password at <b>{this.state.form.email}</b></p>
                             <button onClick={() => {browserHistory.push("/login");}} type='submit'
-                                    className="btn btn-raised btn-lg btn-primary btn-block">Back to Login
+                                    className="buttons btn-raised btn-lg btn-primary btn-block">Back to Login
                             </button>
                         </div>
                     </div>

@@ -70,7 +70,7 @@ class Modal extends React.Component {
                                 </div>
                                 <div className={`modal-footer ${this.props.hideFooter ? 'hide' : ''}`}>
                                     { !this.props.hideCloseBtn &&
-                                    <button onClick={this.hide} className="btn btn-default btn-rounded">{this.props.closeBtnText || "Close"}</button>
+                                    <button onClick={this.hide} className="buttons btn-default btn-rounded">{this.props.closeBtnText || "Close"}</button>
                                     }
                                 </div>
                             </div>

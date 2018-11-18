@@ -281,7 +281,7 @@ class NavBootstrap extends React.Component {
                                             </div>
                                         </li>
                                         <li>
-                                            <button className="btn btn-link btn-signout"
+                                            <button className="buttons btn-link btn-signout"
                                                     onClick={this.props.handleLogout} style={linkTextStyle}>Log Out</button>
                                         </li>
                                     </ul>

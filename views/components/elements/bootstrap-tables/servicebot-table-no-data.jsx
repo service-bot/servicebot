@@ -16,7 +16,7 @@ class ServiceBotTableNoData extends React.Component {
                 <p className="no-data-message-text">
                     <span className="no-data-message-text-title">{title}</span>
                     <span className="no-data-message-text-body">{body}</span>
-                    <button className="btn btn-rounded btn-outline btn-info"
+                    <button className="buttons btn-rounded btn-outline btn-info"
                             onClick={buttonAction}>{buttonLabel}</button>
                 </p>
             </div>

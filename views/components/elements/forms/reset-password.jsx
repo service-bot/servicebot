@@ -79,7 +79,7 @@ class ResetPassword extends React.Component {
                         <input onChange={this.handleInputChange} id="password" type="password" name="password" className="form-control"/>
                         <span className="bmd-help">Please enter your new password</span>
                     </div>
-                    <button onClick={this.handleReset} type='submit' className="btn btn-raised btn-lg btn-primary btn-block">Reset Password</button>
+                    <button onClick={this.handleReset} type='submit' className="buttons btn-raised btn-lg btn-primary btn-block">Reset Password</button>
                 </form>
             </Authorizer>
         );

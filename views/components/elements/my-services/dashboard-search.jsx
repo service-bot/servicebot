@@ -12,7 +12,7 @@ class SearchDashboard extends React.Component {
                         <input type="text" className="form-control" id="top-navigation-search-input"/>
                     </div>
                 </form>
-                <button className="btn btn-white color-default btn-raised m-b-0 m-l-15">Explore</button>
+                <button className="buttons btn-white color-default btn-raised m-b-0 m-l-15">Explore</button>
             </div>
         );
     }

@@ -375,30 +375,25 @@ Servicebot.init({
                         Use it for events, like new customer subscription or trial expiration, that
                         your SaaS needs to know about.</span>
 
-                    <div className="hook-actions m-b-15">
-                        <button className="btn btn-default m-r-5" onClick={self.testHooks} type="submit"
+                    <div className="hook-actions buttons-group __gap">
+                        <button className="buttons _text" onClick={self.testHooks} type="submit"
                                 value="submit">{loading ? <i className="fa fa-refresh fa-spin"></i> :
                             <i className="fa fa-refresh"></i>} Re-test endpoints
                         </button>
-                        <button className="btn btn-primary m-r-5" onClick={() => {
+                        <button className="buttons _primary" onClick={() => {
                             self.openHookForm({})
                         }} type="submit" value="submit"><i className="fa fa-plus"></i> Add endpoint
                         </button>
                     </div>
 
-                    <div className="service-instance-box navy webhook-info">
-                        <div className="service-instance-box-title">
-                            <div>Webhook events information</div>
-                            <div className="pull-right">
-                                {!this.state.showEventsInfo ?
-                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher"
-                                            onClick={this.showEvents}>View events</button>
-                                    :
-                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher"
-                                            onClick={this.hideEvents}>Hide events</button>
-                                }
-
-                            </div>
+                    <div className="webhook-info">
+                        <h4>Webhook events information</h4>
+                        <div className="buttons-group">
+                            {!this.state.showEventsInfo ?
+                                <button className="buttons _primary" onClick={this.showEvents}>View events</button>
+                                :
+                                <button className="buttons _primary" onClick={this.hideEvents}>Hide events</button>
+                            }
                         </div>
                         {this.state.showEventsInfo &&
                         <div className="service-instance-box-content">
@@ -452,12 +447,12 @@ Servicebot.init({
                                             <span>{type}</span>
                                             <span>{health}</span>
                                         </div>
-                                        <div className="hook-actions col-md-4">
-                                            <button className="btn-xs m-r-5" onClick={() => {
+                                        <div className="hook-actions buttons-group __gap">
+                                            <button className="buttons _primary" onClick={() => {
                                                 self.openHookForm(hook)
                                             }} type="submit" value="submit"><i className="fa fa-pencil"></i> Edit
                                             </button>
-                                            <button className="btn-xs" onClick={() => {
+                                            <button className="buttons _primary _red" onClick={() => {
                                                 self.deleteHook(hook)
                                             }} type="submit" value="submit"><i className="fa fa-times"></i> Delete
                                             </button>

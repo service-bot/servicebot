@@ -10,7 +10,7 @@ class Buttons extends React.Component {
 
         this.state = {
             containerClass: this.props.containerClass || '',
-            buttonClass: `btn btn-default btn-rounded ${this.props.buttonClass}` || 'btn btn-default btn-rounded',
+            buttonClass: `buttons btn-default btn-rounded ${this.props.buttonClass}` || 'buttons btn-default btn-rounded',
             btnType: this.props.btnType || 'default',
             text: this.props.text || 'Button',
             size: this.props.size || 'md',

@@ -66,7 +66,7 @@ class SlideNavLinks extends React.Component {
                     { myLinks.map((link, index) => (
                         <li key={`link-${index}`}>
                             { !link.group ?
-                                <Link className="btn btn-flat" to={link.url} onClick={this.props.handleClick}>
+                                <Link className="buttons btn-flat" to={link.url} onClick={this.props.handleClick}>
                                     <span className="btn-title">{link.name}</span>
                                     <i className="material-icons pull-left icon">{link.icon}</i>
                                 </Link> :
@@ -75,7 +75,7 @@ class SlideNavLinks extends React.Component {
                                     <ul className="list-unstyled">
                                         { link.links.map((groupLink, index) => (
                                             <li key={`group-link-${index}`}>
-                                                <Link className="btn btn-flat" to={groupLink.url} onClick={this.props.handleClick}>
+                                                <Link className="buttons btn-flat" to={groupLink.url} onClick={this.props.handleClick}>
                                                     <span className="btn-title">{groupLink.name}</span>
                                                     <i className="material-icons pull-left icon">{groupLink.icon}</i>
                                                 </Link>
@@ -151,8 +151,8 @@ class SideNav extends React.Component {
                                 </div>
                                 <div className="sidebar-options">
                                     <div className="dropdown">
-                                        <Link className="btn btn-primary btn-raised dropdown-toggle" data-toggle="dropdown">{email} </Link>
-                                        <button className="btn btn-link btn-signout" onClick={logout}>Log Out</button>
+                                        <Link className="buttons btn-primary btn-raised dropdown-toggle" data-toggle="dropdown">{email} </Link>
+                                        <button className="buttons btn-link btn-signout" onClick={logout}>Log Out</button>
                                     </div>
                                 </div>
                             </div>

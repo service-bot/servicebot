@@ -199,71 +199,68 @@ class ManageCatalogList extends React.Component {
             return ( <Load/> );
         } else {
             return (
-                <div className="page-service-instance row m-b-20">
-                    <div className="col-xs-12">
-                        <ContentTitle title="Manage Services"/>
-                        <ServiceBotTableBase
-                            rows={this.state.rows}
-                            createItemAction={ () => {browserHistory.push('/manage-catalog/create')} }
-                            createItemLabel={'Create Service'}
-                            fetchRows={this.fetchData}
-                            sortColumn="updated_at"
-                            sortOrder="desc"
-                        >
-                            <TableHeaderColumn isKey
-                                            dataField='name'
-                                               dataSort={ true }
-                                               dataFormat={ this.nameFormatter }
-                                               width={`200`}>
-                                Service Name
-                            </TableHeaderColumn>
-                            {/*<TableHeaderColumn dataField='Tiers'*/}
-                                               {/*dataSort={ true }*/}
-                                               {/*dataFormat={ this.tierFormatter }*/}
-                                               {/*searchable={false}*/}
-                                               {/*width={50}>*/}
-                                {/*Tiers*/}
-                            {/*</TableHeaderColumn>*/}
-                            {/*<TableHeaderColumn dataField='type'*/}
-                                               {/*dataSort={ true }*/}
-                                               {/*dataFormat={ this.paymentTypeFormatter }*/}
-                                               {/*searchable={false}*/}
-                                               {/*width={100}>*/}
-                                {/*Type*/}
-                            {/*</TableHeaderColumn>*/}
-                            {/*<TableHeaderColumn dataField='references'*/}
-                                               {/*dataSort={ true }*/}
-                                               {/*dataFormat={ this.categoryFormatter }*/}
-                                               {/*filterFormatted*/}
-                                               {/*width={120}>*/}
-                                {/*Category*/}
-                            {/*</TableHeaderColumn>*/}
-                            <TableHeaderColumn dataField='published'
-                                               dataSort={ true }
-                                               dataFormat={ this.publishedFormatter }
-                                               searchable={false}
-                                               filterFormatted
-                                               width={`100`}>
-                                Status
-                            </TableHeaderColumn>
-                            <TableHeaderColumn dataField='updated_at'
-                                               dataSort={ true }
-                                               dataFormat={ this.createdFormatter }
-                                               searchable={false}
-                                               filterFormatted
-                                               width={`150`}>
-                                Updated At
-                            </TableHeaderColumn>
-                            <TableHeaderColumn dataField='Actions'
-                                               className={'action-column-header'}
-                                               columnClassName={'action-column'}
-                                               dataFormat={ this.rowActionsFormatter }
-                                               searchable={false}
-                                               width={`100`}>
-                            </TableHeaderColumn>
-                        </ServiceBotTableBase>
-                        {renderModals()}
-                    </div>
+                <div className="page __service">
+                    <ContentTitle title="Manage Services"/>
+                    <ServiceBotTableBase
+                        rows={this.state.rows}
+                        createItemAction={ () => {browserHistory.push('/manage-catalog/create')} }
+                        createItemLabel={'Create Service'}
+                        fetchRows={this.fetchData}
+                        sortColumn="updated_at"
+                        sortOrder="desc">
+                        <TableHeaderColumn isKey
+                                        dataField='name'
+                                           dataSort={ true }
+                                           dataFormat={ this.nameFormatter }
+                                           width={`200`}>
+                            Service Name
+                        </TableHeaderColumn>
+                        {/*<TableHeaderColumn dataField='Tiers'*/}
+                                           {/*dataSort={ true }*/}
+                                           {/*dataFormat={ this.tierFormatter }*/}
+                                           {/*searchable={false}*/}
+                                           {/*width={50}>*/}
+                            {/*Tiers*/}
+                        {/*</TableHeaderColumn>*/}
+                        {/*<TableHeaderColumn dataField='type'*/}
+                                           {/*dataSort={ true }*/}
+                                           {/*dataFormat={ this.paymentTypeFormatter }*/}
+                                           {/*searchable={false}*/}
+                                           {/*width={100}>*/}
+                            {/*Type*/}
+                        {/*</TableHeaderColumn>*/}
+                        {/*<TableHeaderColumn dataField='references'*/}
+                                           {/*dataSort={ true }*/}
+                                           {/*dataFormat={ this.categoryFormatter }*/}
+                                           {/*filterFormatted*/}
+                                           {/*width={120}>*/}
+                            {/*Category*/}
+                        {/*</TableHeaderColumn>*/}
+                        <TableHeaderColumn dataField='published'
+                                           dataSort={ true }
+                                           dataFormat={ this.publishedFormatter }
+                                           searchable={false}
+                                           filterFormatted
+                                           width={`100`}>
+                            Status
+                        </TableHeaderColumn>
+                        <TableHeaderColumn dataField='updated_at'
+                                           dataSort={ true }
+                                           dataFormat={ this.createdFormatter }
+                                           searchable={false}
+                                           filterFormatted
+                                           width={`150`}>
+                            Updated At
+                        </TableHeaderColumn>
+                        <TableHeaderColumn dataField='Actions'
+                                           className={'action-column-header'}
+                                           columnClassName={'action-column'}
+                                           dataFormat={ this.rowActionsFormatter }
+                                           searchable={false}
+                                           width={`100`}>
+                        </TableHeaderColumn>
+                    </ServiceBotTableBase>
+                    {renderModals()}
                 </div>
             );
         }

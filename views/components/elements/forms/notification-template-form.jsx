@@ -199,7 +199,7 @@ class NotificationTemplateForm extends React.Component {
                                                                     {Object.keys(references[reference]).map(referenceColumn => {
                                                                         return (
                                                                         <li key={referenceColumn} className="column reference-column list-unstyled">
-                                                                            <button className="btn btn-sm btn-info" onClick={this.insertString(`[[references.${reference}.${referenceColumn}]]`)}>{referenceColumn}</button>
+                                                                            <button className="buttons btn-sm btn-info" onClick={this.insertString(`[[references.${reference}.${referenceColumn}]]`)}>{referenceColumn}</button>
                                                                         </li>)
                                                                     })}
                                                                 </ul>
@@ -209,7 +209,7 @@ class NotificationTemplateForm extends React.Component {
                                                         return (
                                                             <div>
                                                                 <li key={field} className="column list-unstyled">
-                                                                    <button className="btn btn-sm btn-info" onClick={this.insertString(`[[${field}]]`)}>{field}</button>
+                                                                    <button className="buttons btn-sm btn-info" onClick={this.insertString(`[[${field}]]`)}>{field}</button>
                                                                 </li>
                                                             </div>
                                                         )

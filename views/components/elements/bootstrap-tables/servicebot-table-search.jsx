@@ -17,18 +17,11 @@ class ServiceBotTableSearch extends React.Component {
 
     render() {
         return (
-            <div>
-                <div className='input-group servicebot-search-btns'>
-                    { this.props.searchField }
-                    <span className="input-group-btn">
-                        { this.props.clearBtn }
-                        <button
-                            className='btn btn-default'
-                            type='button'
-                            onClick={ this.toggleAdvanced }>
-                            Advanced Search
-                        </button>
-                    </span>
+            <div className='sb-form-group __base-table-search-bar'>
+                { this.props.searchField }
+                <div className="buttons-group">
+                    { this.props.clearbuttons }
+                    <button className='buttons _primary' type='button' onClick={ this.toggleAdvanced }>Advanced Search</button>
                 </div>
             </div>
         );
@@ -58,7 +51,7 @@ class ServiceBotSearchField extends React.Component {
     render() {
         return (
             <input
-                className="form-control servicebot-search-input"
+                className="_input- servicebot-search-input"
                 type='text'
                 defaultValue={ this.props.defaultValue }
                 placeholder={ this.props.placeholder || "Search"}

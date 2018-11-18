@@ -124,7 +124,7 @@ class Login extends React.Component {
                                 <React.Fragment>
                                     <h3 className="text-center">Account confirmation email is sent to {this.props.email}?</h3>
                                     <p>Please check your email to complete your account before continue.</p>
-                                    <Buttons buttonClass="btn btn-link" size="md" position="center" btnType="link"
+                                    <Buttons buttonClass="buttons btn-link" size="md" position="center" btnType="link"
                                              value="submit"
                                              onClick={this.goToLogin}>
                                         <span>I already confirmed my account, continue.</span>

@@ -209,7 +209,7 @@ class ServiceRequestForm extends React.Component {
                                     formJSON={formJSON.references.service_template_properties}/>
                     </FormSection>
 
-                    <button className="btn btn-rounded btn-primary btn-bar submit-request" type="submit" value="submit">
+                    <button className="buttons btn-rounded btn-primary btn-bar submit-request" type="submit" value="submit">
                         {getRequestText()}
                     </button>
                     {error &&

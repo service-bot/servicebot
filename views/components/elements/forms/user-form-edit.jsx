@@ -60,7 +60,7 @@ class UserFormEdit extends React.Component {
                 <div className="alert alert-success" role="alert">
                     <i className="fa fa-check-circle"/>
                     <Authorizer permissions="can_administrate">
-                        <Link to="/manage-users" className="btn btn-success btn-outline btn-rounded btn-sm pull-right">Back to Manage Users</Link>
+                        <Link to="/manage-users" className="buttons btn-success btn-outline btn-rounded btn-sm pull-right">Back to Manage Users</Link>
                     </Authorizer>
                     Your user profile has been updated.
                 </div>

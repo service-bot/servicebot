@@ -61,7 +61,7 @@ function renderSplits({fields, meta: {error, submitFailed}}) {
             <ul className="split-payment-items">
                 {fields.map((member, index) => (
                     <li className="split-payment-item" key={index}>
-                        <button className="btn btn-rounded custom-field-button iconToggleField"
+                        <button className="buttons btn-rounded custom-field-button iconToggleField"
                                 id="split-payment-delete-button" onClick={() => fields.remove(index)}
                                 type="button" title="Remove Payment"><span className="itf-icon"><i
                             className="fa fa-close"/></span></button>

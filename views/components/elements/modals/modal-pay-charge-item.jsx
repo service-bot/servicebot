@@ -162,8 +162,8 @@ class ModalPayChargeItem extends React.Component {
                             </div>
                         </div>
                         <div className={`modal-footer text-right p-b-20`}>
-                            <button className="btn btn-primary btn-rounded" onClick={self.onPay}>Pay Now</button>
-                            <button className="btn btn-default btn-rounded" onClick={self.props.hide}>Later</button>
+                            <button className="buttons btn-primary btn-rounded" onClick={self.onPay}>Pay Now</button>
+                            <button className="buttons btn-default btn-rounded" onClick={self.props.hide}>Later</button>
                         </div>
                     </div>
                 </Modal>
@@ -183,7 +183,7 @@ class ModalPayChargeItem extends React.Component {
                             </div>
                         </div>
                         <div className={`modal-footer text-right p-b-20`}>
-                            <button className="btn btn-default btn-rounded" onClick={self.props.hide}>Close</button>
+                            <button className="buttons btn-default btn-rounded" onClick={self.props.hide}>Close</button>
                         </div>
                     </div>
                 </Modal>

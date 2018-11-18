@@ -1,3 +1,16 @@
+.buttons-group{
+
+  &.__gap{
+
+    .buttons {
+      &:not(:last-child) {
+        margin-right: $gutter/2;
+      }
+    }
+  }
+
+}
+
 .buttons{
   padding: 6px 12px;
   margin-bottom: 0;

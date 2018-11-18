@@ -52,7 +52,7 @@ class ServiceInstanceDescription extends React.Component {
                     { this.state.descriptionHeight > 315 &&
                         <div className="instance-details-toggle">
                             <span onClick={this.handleToggle}
-                              className="btn btn-info btn-outline btn-rounded btn-sm">{!this.state.opened ? 'Show More' : 'Show Less'}</span>
+                              className="buttons btn-info btn-outline btn-rounded btn-sm">{!this.state.opened ? 'Show More' : 'Show Less'}</span>
                         </div>
                     }
                 </div>

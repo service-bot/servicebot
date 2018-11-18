@@ -103,7 +103,7 @@ class UserFormInvite extends React.Component {
                         <div className="form-group">
                             <input type="password" name="password" placeholder="Password" className="form-control"/>
                         </div>
-                        <button className="btn btn-raised btn-lg btn-primary btn-block" type="submit"
+                        <button className="buttons btn-raised btn-lg btn-primary btn-block" type="submit"
                                     value="submit">Finish Registration</button>
                     </DataForm>
                 </div>

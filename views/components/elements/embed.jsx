@@ -169,7 +169,7 @@ class Embed extends React.Component {
                             </span>
                             }
 
-                            <Link style={textColor} to={`/service-catalog/${this.props.params.serviceId}/request`} className="btn btn-white btn-flat pull-right" target="_blank">{requestButton}</Link>
+                            <Link style={textColor} to={`/service-catalog/${this.props.params.serviceId}/request`} className="buttons btn-white btn-flat pull-right" target="_blank">{requestButton}</Link>
                         </div>
                     </div>
                 </div>

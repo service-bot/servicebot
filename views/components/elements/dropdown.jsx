@@ -39,7 +39,7 @@ class Dropdown extends React.Component {
     render() {
         return (
             <div className="dropdown">
-                <button className="btn btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
+                <button className="buttons btn-default dropdown-toggle" type="button" id="dropdownMenuButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ref="dropdownToggle">
                     Actions
                 </button>

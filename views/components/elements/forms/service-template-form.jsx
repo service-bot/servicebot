@@ -70,7 +70,7 @@ function renderSplits({fields, meta: {error, submitFailed}}) {
             <ul className="split-payment-items">
                 {fields.map((member, index) => (
                     <li className="split-payment-item" key={index}>
-                        <button className="btn btn-rounded custom-field-button iconToggleField"
+                        <button className="buttons btn-rounded custom-field-button iconToggleField"
                                 id="split-payment-delete-button" onClick={() => fields.remove(index)}
                                 type="button" title="Remove Payment"><span className="itf-icon"><i
                             className="fa fa-close"/></span></button>
@@ -298,7 +298,7 @@ class renderCustomProperty extends React.Component {
                                 {/*{fields.get(index).prop_label ?*/}
                                 {/*<p>{fields.get(index).prop_label}</p> : <p>Field #{index + 1}</p>*/}
                                 {/*}*/}
-                                <button className="btn btn-rounded custom-field-button iconToggleField"
+                                <button className="buttons btn-rounded custom-field-button iconToggleField"
                                         id="custom-field-delete-button"
                                         type="button"
                                         title="Remove Field"
@@ -315,7 +315,7 @@ class renderCustomProperty extends React.Component {
                             <input className="form-control custom-property-add-field-toggle" autoFocus={false}
                                    placeholder="Add Custom Field ..." onClick={this.onAdd}/>
                         </div>
-                        {/*<button className="btn btn-rounded" type="button" onClick={this.onAdd}>Add Field</button>*/}
+                        {/*<button className="buttons btn-rounded" type="button" onClick={this.onAdd}>Add Field</button>*/}
                         {touched && error && <span>{error}</span>}
                     </li>
                 </ul>
@@ -551,7 +551,7 @@ class TemplateForm extends React.Component {
                                 {/*inputs={props.formJSON.references.service_template_properties}/>*/}
                                 {/*}*/}
                                 <div id="service-submission-box" className="button-box right">
-                                    <Link className="btn btn-rounded btn-default" to={'/manage-catalog/list'}>Go
+                                    <Link className="buttons btn-rounded btn-default" to={'/manage-catalog/list'}>Go
                                         Back</Link>
                                     <button className="buttons _primary" type="submit">
                                         Submit

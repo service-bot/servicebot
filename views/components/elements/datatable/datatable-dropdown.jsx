@@ -86,7 +86,7 @@ class Dropdown extends React.Component {
     render () {
         return(
             <div id="action-buttons" className="btn-group">
-                <button type="button" className="btn btn-default dropdown-toggle" ref="dropdownToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" className="buttons btn-default dropdown-toggle" ref="dropdownToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {this.props.name} <span className="caret"/>
                 </button>
                 <ul className={`dropdown-menu ${this.props.direction ? (this.props.direction == 'right' ? 'dropdown-menu-right' : '') : ''}`}>

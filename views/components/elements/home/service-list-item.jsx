@@ -172,8 +172,8 @@ class ServiceListItem extends React.Component {
                         </div>
                     </div>
                     <div className="request-button" style={{"backgroundColor": style.header.backgroundColor, "color": style.header.color}}>
-                        <Link to={this.props.url} className="btn btn-box">
-                            <div className="btn btn-black" style={{"backgroundColor": style.header.backgroundColor, "color": style.header.color}}>
+                        <Link to={this.props.url} className="buttons btn-box">
+                            <div className="buttons btn-black" style={{"backgroundColor": style.header.backgroundColor, "color": style.header.color}}>
                                 <span>{getRequestText() + " "}</span>
                                 <span>{getPrice(myService) ? getPrice(myService) : ""}</span>
                             </div>

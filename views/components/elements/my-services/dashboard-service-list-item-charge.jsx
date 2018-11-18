@@ -48,7 +48,7 @@ class DashboardServiceListItemCharge extends React.Component {
                             <div className="xaas-data xaas-charge"><span>{chargeItem.data.description}</span></div>
                             <div className="xaas-data xaas-price"><span><Price value={chargeItem.data.amount}/></span></div>
                             <div className="xaas-data xaas-action">
-                                <button className="btn btn-info btn-rounded btn-sm">Pay<i className="fa fa-credit-card"/></button>
+                                <button className="buttons btn-info btn-rounded btn-sm">Pay<i className="fa fa-credit-card"/></button>
                             </div>
                         </div>
                     ))}
