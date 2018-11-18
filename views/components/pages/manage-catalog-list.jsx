@@ -212,7 +212,7 @@ class ManageCatalogList extends React.Component {
                                         dataField='name'
                                            dataSort={ true }
                                            dataFormat={ this.nameFormatter }
-                                           width={`200`}>
+                                           width={`200px`}>
                             Service Name
                         </TableHeaderColumn>
                         {/*<TableHeaderColumn dataField='Tiers'*/}
@@ -241,7 +241,7 @@ class ManageCatalogList extends React.Component {
                                            dataFormat={ this.publishedFormatter }
                                            searchable={false}
                                            filterFormatted
-                                           width={`100`}>
+                                           width={`100px`}>
                             Status
                         </TableHeaderColumn>
                         <TableHeaderColumn dataField='updated_at'
@@ -249,7 +249,7 @@ class ManageCatalogList extends React.Component {
                                            dataFormat={ this.createdFormatter }
                                            searchable={false}
                                            filterFormatted
-                                           width={`150`}>
+                                           width={`150px`}>
                             Updated At
                         </TableHeaderColumn>
                         <TableHeaderColumn dataField='Actions'
@@ -257,7 +257,7 @@ class ManageCatalogList extends React.Component {
                                            columnClassName={'action-column'}
                                            dataFormat={ this.rowActionsFormatter }
                                            searchable={false}
-                                           width={`100`}>
+                                           width={`100px`}>
                         </TableHeaderColumn>
                     </ServiceBotTableBase>
                     {renderModals()}

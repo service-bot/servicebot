@@ -1,0 +1,37 @@
+.servicebot-table-base{
+
+  .table{
+    width: 100%;
+  }
+
+  .react-bs-table-tool-bar{
+
+    .__base-table-search-bar{
+      padding: 0;
+      padding-top: $gutter*2;
+      display: grid;
+      grid-template-columns: auto 170px;
+
+      ._input-{
+
+        &.servicebot-search-input{
+          height: 100%;
+        }
+      }
+    }
+  }
+
+  .react-bs-table{
+
+    th{
+
+      &.sort-column{
+
+        .text-filter{
+          width: 100%;
+        }
+      }
+    }
+  }
+
+}
