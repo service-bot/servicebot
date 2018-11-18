@@ -53,6 +53,7 @@ class Dropdown extends React.Component {
                         this.getButton(item, index)
                     )}
                 </ul>
+                <div className={`__close`} onClick={this.toggleDropDown}/>
             </div>
         );
     }

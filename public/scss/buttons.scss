@@ -109,6 +109,16 @@
       z-index: $z-dropdown;
       box-shadow: $shadow-small;
     }
+
+    .__close{
+      z-index: $z-dropdown - 1;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: transparent;
+    }
   }
 
   .dropdown-menu{
