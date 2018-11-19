@@ -18,4 +18,8 @@
   }
 
   &.red{ background-color: $color-error; color: white; }
+  &.green{ background-color: $color-success; color: white; }
+  &.blue{ background-color: $color-blue; color: white; }
+  &.grey, &.gray{ background-color: $color-gray; color: white; }
+  &.yellow{ background-color: $color-warning; color: white; }
 }

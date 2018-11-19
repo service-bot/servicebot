@@ -113,7 +113,7 @@ class ManageCatalogList extends React.Component {
     publishedFormatter(cell){
         let color_class = 'status-badge ';
         color_class += cell ? 'green' : 'grey';
-        return ( `<span className="${color_class}" >${cell ? 'Live' : 'Draft'}</span>` );
+        return ( `<span class="${color_class}" >${cell ? 'Live' : 'Draft'}</span>` );
         // return ( cell ? 'Published' : 'Unpublished' );
     }
     createdFormatter(cell){
