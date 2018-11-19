@@ -544,6 +544,17 @@
 
   .navvbar-badge{
     padding: 0;
+
+    .stripe{
+      background: #4553ff;
+      padding: 6px 12px 5px 12px;
+      text-align: center;
+      font-size: 0.9em;
+      line-height: 20px;
+      border-radius: 5px;
+      color: white;
+      font-weight: 600;
+    }
   }
 
   a{
