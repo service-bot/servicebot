@@ -128,7 +128,7 @@ class SystemSettingsForm extends React.Component {
         let version = this.props.options.version;
         if(version) {
             return(
-                <div className="alert alert-info"><i className="fa fa-info-circle"/>ServiceBot Version: {version}</div>
+                <div className="status-badge"><i className="fa fa-info-circle"/>ServiceBot Version: {version}</div>
             )
         } else {
             return (<span />);

@@ -24,11 +24,7 @@ class ModalEditInstance extends React.Component {
         return(
             <Modal modalTitle={pageName} hideCloseBtn={true} show={self.props.show} hide={self.props.hide} hideFooter={true}>
                 <div className="table-responsive">
-                    <div className="row">
-                        <div className="col-xs-12">
-                            <ServiceInstanceFormEdit myInstance={self.state.instance} templateId={self.state.instance.service_id} onHide={self.props.hide}/>
-                        </div>
-                    </div>
+                    <ServiceInstanceFormEdit myInstance={self.state.instance} templateId={self.state.instance.service_id} onHide={self.props.hide}/>
                 </div>
             </Modal>
         );

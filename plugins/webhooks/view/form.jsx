@@ -143,11 +143,13 @@ function WebhookForm(props) {
             <Field name="endpoint_url" type="text" validate={[required(), url()]} component={inputField}
                    placeholder="Endpoint URL: https://"/>
             {/*<Field name="async_lifecycle" type="select" component={inputField} placeholder="Asynchronous"/>*/}
-            <Field className="form-control" name="async_lifecycle" component="select">
-                <option value="True">Asynchronous</option>
-                <option value="False">Synchronous</option>
-            </Field>
-            <div className="text-right m-t-15">
+            <div className={`sb-form-group`}>
+                <Field className="_input-" name="async_lifecycle" component="select">
+                    <option value="True">Asynchronous</option>
+                    <option value="False">Synchronous</option>
+                </Field>
+            </div>
+            <div className="sb-form-group buttons-group">
                 <Buttons btnType="primary" text="Add endpoint" onClick={props.handleSubmit} type="submit"
                          value="submit"/>
             </div>

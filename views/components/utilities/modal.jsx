@@ -56,25 +56,25 @@ class Modal extends React.Component {
             <div className={`modal-wrapper`}>
                 <div className={`modal ${this.props.titleColor ? this.props.titleColor : 'modal-primary'}`} id="modal" tabIndex="-1" role="dialog">
 
-                        <div key={Object.id} className="servicebot-in-app-modal modal-lg" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header">
-                                    <button onClick={this.hide} className="close">
-                                        <span><i className="fa fa-times" /></span>
-                                    </button>
-                                    <h4 className="modal-title uppercase bold" id="modal-sm-primary-label"><i className={`modal-icon fa ${this.props.icon ? this.props.icon : 'fa-cog'}`}/>{this.props.modalTitle}</h4>
-                                </div>
-                                <div className="modal-body">
-                                    {this.props.children}
-                                    {this.props.component}
-                                </div>
-                                <div className={`modal-footer ${this.props.hideFooter ? 'hide' : ''}`}>
-                                    { !this.props.hideCloseBtn &&
-                                    <button onClick={this.hide} className="buttons btn-default btn-rounded">{this.props.closeBtnText || "Close"}</button>
-                                    }
-                                </div>
+                    <div key={Object.id} className="servicebot-in-app-modal" role="document">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <button onClick={this.hide} className="close">
+                                    <span><i className="fa fa-times" /></span>
+                                </button>
+                                <h4 className="modal-title uppercase bold" id="modal-sm-primary-label"><i className={`modal-icon fa ${this.props.icon ? this.props.icon : 'fa-cog'}`}/>{this.props.modalTitle}</h4>
+                            </div>
+                            <div className="modal-body">
+                                {this.props.children}
+                                {this.props.component}
+                            </div>
+                            <div className={`modal-footer ${this.props.hideFooter ? 'hide' : ''}`}>
+                                { !this.props.hideCloseBtn &&
+                                <button onClick={this.hide} className="buttons btn-default btn-rounded">{this.props.closeBtnText || "Close"}</button>
+                                }
                             </div>
                         </div>
+                    </div>
 
                     <div onClick={this.hide} className="modal-backdrop fade in"/>
                 </div>

@@ -20,6 +20,7 @@
 
   &.__manage-users{
 
+    padding-bottom: 160px;
 
   }
 
@@ -55,13 +56,18 @@
         }
       }
 
-      ._hook {
+      .hooks-list {
         display: grid;
-        grid-template-columns: auto auto auto auto;
-        align-items: center;
+        grid-row-gap: $gutter / 2;
 
-        .buttons-group{
-          margin: 0;
+        ._hook {
+          display: grid;
+          grid-template-columns: auto auto auto auto;
+          align-items: center;
+
+          .buttons-group {
+            margin: 0;
+          }
         }
       }
     }

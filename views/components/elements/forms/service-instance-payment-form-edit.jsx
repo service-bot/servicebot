@@ -11,25 +11,11 @@ import {required, numericality} from "redux-form-validators";
 
 function PaymentPlanForm(props){
     return(<form onSubmit={props.handleSubmit}>
-        <Field
-            name={"amount"}
-            component={priceField}
-            isCents={true}
-            label="New Price"
-            validate={numericality({'>=': 0})}
-
-
-        />
-        <Field
-            name={"disableProration"}
-            component={inputField}
-            type={"checkbox"}
-            label="Disable Proration?"
-        />
-
-        <button className="buttons _primary" type="submit">
-            Submit
-        </button>
+        <Field name={"amount"} component={priceField} isCents={true} label="New Price" validate={numericality({'>=': 0})}/>
+        <Field name={"disableProration"} component={inputField} type={"checkbox"} label="Disable Proration?"/>
+        <div className={`sb-form-group`}>
+            <button className="buttons _primary" type="submit">Submit</button>
+        </div>
     </form>)
 }
 class ServiceInstanceFormEdit extends React.Component {
