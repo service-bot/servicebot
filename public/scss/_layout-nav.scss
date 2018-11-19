@@ -30,9 +30,13 @@
   }
 
   .app-profile{
-    height: 40px;
-    max-width: 40px;
+    height: 44px;
+    max-width: 44px;
     line-height: 40px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    overflow: hidden;
     img{
       height: 100%;
     }
@@ -46,9 +50,9 @@
   }
 
   .app-notification{
-    height: 40px;
-    width: 40px;
-    line-height: 40px;
+    height: 44px;
+    width: 44px;
+    line-height: 44px;
     background: $color-blue-gray;
     border-radius: 50px;
     display: flex;
@@ -66,7 +70,7 @@
 
       svg{
         fill: #fff;
-        margin-top: 7px;
+        margin-top: -5px;
       }
     }
 
