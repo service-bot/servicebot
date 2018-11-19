@@ -280,16 +280,15 @@ class ServiceInstance extends React.Component {
             return (
                 <Authorizer permissions="can_administrate">
                     <div className="service-instance-actions action-items">
-                        <div className="pull-right">
+                        <div className={`buttons-group __gap`}>
                             {instanceCharges.false && instanceCharges.false.length > 0 &&
-                                <span  onClick={self.handlePayAllChargesModal}><span className="buttons _primary _green m-r-5">Pay Charges</span></span>
+                                <span onClick={self.handlePayAllChargesModal} className="buttons _primary _green">Pay Charges</span>
                             }
-                            <span onClick={self.handleEditInstanceModal}><span className="buttons _primary">Edit Trial</span></span>
-                            <span  onClick={self.handleEditPaymentModal}><span className="buttons _primary m-l-5">Edit Payment Plan</span></span>
+                            <span onClick={self.handleEditInstanceModal} className="buttons _primary">Edit Trial</span>
+                            <span onClick={self.handleEditPaymentModal} className="buttons _primary">Edit Payment Plan</span>
                             {instance.payment_plan && instance.status !== 'cancelled' &&
-                            <span onClick={self.handleAddChargeItemModal}><span className="buttons _primary m-l-5">Add Charge</span></span>
-                            }
-                            <Link to={`/billing-history/${instance.user_id}`}><span className="buttons _primary m-l-5">View Invoices</span></Link>
+                            <span onClick={self.handleAddChargeItemModal} className="buttons _primary">Add Charge</span>}
+                            <Link className="buttons _primary" to={`/billing-history/${instance.user_id}`}>View Invoices</Link>
                             {self.getStatusButtons()}
                         </div>
                     </div>

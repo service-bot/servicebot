@@ -28,6 +28,17 @@
 
   }
 
+  &.__view-service-instance{
+
+    .service-instance-actions{
+
+      .buttons-group{
+        line-height: 80px;
+        margin-right: $gutter * 2;
+      }
+    }
+  }
+
   /* Settings */
   &.__manage-system-settings{
 
