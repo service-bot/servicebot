@@ -13,8 +13,8 @@ class Content extends React.Component {
             style.backgroundColor = this.props.bgColor.value;
         }
         return (
-            <div id="content" style={style}>
-                <div className="main">
+            <div id="content" className={`_content-container`} style={style}>
+                <div className="main _content">
                     {this.props.children}
                 </div>
             </div>

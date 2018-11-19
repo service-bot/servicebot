@@ -24,9 +24,11 @@ class StripeSettings extends React.Component {
     render () {
         return(
             <Authorizer permissions="can_administrate">
-                <div className="page __manage-stripe-settings">
+                <div className="app-content __manage-stripe-settings">
                     <Content>
-                        <ContentTitle title={`Manage Stripe Settings`}/>
+                        <div className={`_title-container`}>
+                            <h1 className={`_heading`}>Manage Stripe Settings</h1>
+                        </div>
                         <StripeSettingsForm/>
                     </Content>
                 </div>

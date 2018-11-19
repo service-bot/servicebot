@@ -152,71 +152,60 @@ class SystemSettingsForm extends React.Component {
             };
             const settings = this.state.stripe_settings;
             return (
-                <div>
-                    <div className="row">
-                        <div className="basic-info col-md-12">
-                            {settings.secret_key !== "" ?
-                                <div className="title">
-                                    <h3>Reconfigure Stripe API Keys</h3>
-                                    <p>
-                                        You can modify your Stripe keys to go from test to live, update to newer keys, or change to a different account. Retrieve your keys <a className="intext-link" href="https://dashboard.stripe.com/account/apikeys" target="_blank">from Stripe</a>. If you are changing from test to live or entering keys to a different account, you can choose to migrate data to a new Stripe account, or clear Servicebot data and start fresh.
-                                    </p>
-                                </div>
-                                :
-                                <div className="title">
-                                    <h3>Add Stripe API Keys</h3>
-                                    <p>
-                                        Copy your Standard API keys <a className="intext-link" href="https://dashboard.stripe.com/account/apikeys" target="_blank">from Stripe</a> and paste them
-                                        in the Secret key and Publishable key below. Once you enter your keys, you can import your Stripe account to your Servicebot.
-                                    </p>
-                                </div>
-                            }
+                <React.Fragment>
+                    <div className={`_section`}>
+                        {settings.secret_key !== "" ?
+                            <React.Fragment>
+                                <h3><span className="form-step-count">1</span>Reconfigure Stripe API Keys</h3>
+                                <p className={`_indented form-help-text`}>You can modify your Stripe keys to go from test to live, update to newer keys, or change to a different account. Retrieve your keys <a className="intext-link" href="https://dashboard.stripe.com/account/apikeys" target="_blank">from Stripe</a>. If you are changing from test to live or entering keys to a different account, you can choose to migrate data to a new Stripe account, or clear Servicebot data and start fresh.</p>
+                            </React.Fragment>
+                            :
+                            <React.Fragment>
+                                <h3><span className="form-step-count">1</span>Add Stripe API Keys</h3>
+                                <p>Copy your Standard API keys <a className="intext-link" href="https://dashboard.stripe.com/account/apikeys" target="_blank">from Stripe</a> and paste them in the Secret key and Publishable key below. Once you enter your keys, you can import your Stripe account to your Servicebot.</p>
+                            </React.Fragment>
+                        }
+                        {getAlerts()}
+                        <div className="_indented tiers">
+                            <div className="_tier-details">
+                                <DataForm handleResponse={this.handleResponse} onUpdate={this.onUpdate} url={this.state.stripe_preconfigure} method={'POST'}>
+                                    <Inputs type="text" label="Stripe Publishable API Key" name="stripe_public" value={self.state.stripe_settings.publishable_key}
+                                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
 
-                            {getAlerts()}
-                            <div className="stripe-keys-form row">
-                                <div className="col-md-12">
-                                    <div className="row">
-                                        <DataForm handleResponse={this.handleResponse} onUpdate={this.onUpdate} url={this.state.stripe_preconfigure} method={'POST'}>
-                                            <div className="col-md-12">
-                                                <Inputs type="text" label="Stripe Publishable API Key" name="stripe_public" value={self.state.stripe_settings.publishable_key}
-                                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-
-                                                <Inputs type="text" label="Stripe Secret API Key" name="stripe_secret" value={self.state.stripe_settings.secret_key}
-                                                        onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                                {self.state.stripe_settings.secret_key &&
-                                                    <Inputs defaultValue="true" hideValue={true} type="select" label="Do you want to import existing customers to the new Stripe account? This option only applies if the new keys are related to a different Stripe account or if you are switching between Test/Live mode." name="full_removal"
-                                                        options={[{"Reset Servicebot data and connect to the new Stripe account":true},{"Keep Servicebot data and import data to the new Stripe account":false}]} onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
-                                                }
-                                            </div>
-                                            <div className="col-md-12 text-right">
-                                                <Buttons btnType="primary" text="Update Stripe API Keys" type="submit" value="submit"/>
-                                            </div>
-                                        </DataForm>
+                                    <Inputs type="text" label="Stripe Secret API Key" name="stripe_secret" value={self.state.stripe_settings.secret_key}
+                                            onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                    {self.state.stripe_settings.secret_key &&
+                                        <Inputs defaultValue="true" hideValue={true} type="select" label="Do you want to import existing customers to the new Stripe account? This option only applies if the new keys are related to a different Stripe account or if you are switching between Test/Live mode." name="full_removal"
+                                            options={[{"Reset Servicebot data and connect to the new Stripe account":true},{"Keep Servicebot data and import data to the new Stripe account":false}]} onChange={function(){}} receiveOnChange={true} receiveValue={true}/>
+                                    }
+                                    <div className={`sb-form-group`}>
+                                        <Buttons btnType="buttons _primary" text="Update Stripe API Keys" type="submit" value="submit"/>
                                     </div>
-                                </div>
-                                {confirm_reconfigure()}
+                                </DataForm>
                             </div>
-                            {!self.props.initialize &&
-                                <div>
-                                    <hr/>
-                                    <div className="stripe-webhook-setup">
-                                        <div className="title">
-                                            <h3>Connect to Stripe Webhooks</h3>
-                                            <p>
-                                                Copy your Servicebot webhook URL below and paste it as a new <a className="intext-link" href="https://dashboard.stripe.com/account/webhooks" target="_blank">Stripe endpoint</a> in your Stripe account.
-                                            </p>
-                                            <div className="stripe-webhook">{`https://${window.location.hostname}/api/v1/stripe/webhook`}</div>
-                                        </div>
-                                    </div>
-                                    <hr/>
-                                    {settings.secret_key !== "" && <StripeImportForm/> }
-                                </div>
-                            }
-
+                            {confirm_reconfigure()}
                         </div>
                     </div>
-                </div>
+                    {!self.props.initialize &&
+                    <div className={`_section`}>
+                        <h3><span className="form-step-count">2</span>Connect to Stripe Webhooks</h3>
+                        <p className={`_indented form-help-text`}>Copy your Servicebot webhook URL below and paste it as a new <a
+                            className="intext-link" href="https://dashboard.stripe.com/account/webhooks"
+                            target="_blank">Stripe endpoint</a> in your Stripe account.</p>
+                        <div className="_indented tiers stripe-webhook-setup">
+                            <div className="_tier-details">
+                                <div className="stripe-webhook">{`https://${window.location.hostname}/api/v1/stripe/webhook`}</div>
+                            </div>
+                        </div>
+                    </div>
+                    }
 
+                    <div className={`_section`}>
+                        <h3><span className="form-step-count">3</span>Import Stripe Data</h3>
+                        {settings.secret_key !== "" && <StripeImportForm/> }
+                    </div>
+
+                </React.Fragment>
             );
         }
     }
