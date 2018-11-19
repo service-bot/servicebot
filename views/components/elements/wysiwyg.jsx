@@ -1,21 +1,15 @@
 import React from 'react';
-import $ from "jquery";
-
 import "../../../public/js/scripts/redactor/redactor.min.css";
 import "../../../public/js/scripts/redactor/redactor.min.js";
 
-
 class Wysiwyg extends React.Component {
     constructor(props){
-        super(props)
+        super(props);
         this.insert = this.insert.bind(this);
-
-        this.state = {
-        }
+        this.state = {}
     }
 
     insert(content){
-        // $R(this.refs.wysiwygArea, "buffer.set");
         $R(this.refs.wysiwygArea, "insertion.insertRaw", content);
     }
 

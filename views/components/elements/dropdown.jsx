@@ -1,5 +1,4 @@
 import React from 'react';
-import $ from "jquery";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 
 class Dropdown extends React.Component {

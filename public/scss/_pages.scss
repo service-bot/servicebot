@@ -102,6 +102,10 @@
       margin: auto;
       padding: $gutter * 3 $gutter * 4;
       background: white;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
 
   }

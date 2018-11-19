@@ -23,8 +23,6 @@ import ModalCancelChargeItem from '../elements/modals/modal-cancel-charge-item.j
 import ModalPayAllCharges from '../elements/modals/modal-pay-all-charges.jsx';
 import ModalPaymentSetup from '../elements/modals/modal-payment-setup.jsx';
 import {ModalEditProperties} from "../elements/forms/edit-instance-properties-form.jsx"
-import DateFormat from "../utilities/date-format.jsx";
-import $ from "jquery";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import _ from "lodash";
 import ServicebotBillingSettingsEmbed from "servicebot-billing-settings-embed"
@@ -94,10 +92,6 @@ class ServiceInstance extends React.Component {
         if(!isAuthorized({})){
             return browserHistory.push("/login");
         }
-
-        $(this.refs.dropdownToggle3).dropdown();
-
-        let self = this;
         this.getInitialState()
 
     }
@@ -107,10 +101,6 @@ class ServiceInstance extends React.Component {
         let instance = await this.fetchInstance();
         let token = (await this.fetchToken(instance.user_id)).token
         this.setState({instance, loading: false, token})
-    }
-
-    componentDidUpdate(){
-        $(this.refs.dropdownToggle3).dropdown();
     }
 
     fetchInstance(){

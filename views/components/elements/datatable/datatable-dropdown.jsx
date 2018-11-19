@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link, hashHistory} from 'react-router';
 import _ from "lodash";
-import $ from "jquery";
 import '../../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 

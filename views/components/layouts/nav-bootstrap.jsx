@@ -9,10 +9,8 @@ import SideNav from '../layouts//side-nav.jsx';
 import {AppMessage} from '../elements/app-message.jsx';
 import ReactTooltip from 'react-tooltip';
 import consume from "pluginbot-react/dist/consume"
-
 import { connect } from "react-redux";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
-import $ from "jquery";
 let _ = require("lodash");
 
 const AnonymousLinks = ({signUpEnabled}) => (
@@ -59,18 +57,6 @@ class NavBootstrap extends React.Component {
         this.getSettingsMenus = this.getSettingsMenus.bind(this);
 
 
-    }
-
-    componentDidMount(){
-        $(this.refs.dropdownToggle).dropdown();
-        $(this.refs.dropdownToggle2).dropdown();
-        $(this.refs.dropdownToggle3).dropdown();
-    }
-
-    componentDidUpdate(){
-        $(this.refs.dropdownToggle).dropdown();
-        $(this.refs.dropdownToggle2).dropdown();
-        $(this.refs.dropdownToggle3).dropdown();
     }
 
     onOpenInvoiceModal(){
