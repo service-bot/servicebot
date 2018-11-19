@@ -7,6 +7,11 @@
     min-width: $_min-fields-width;
 
     &._form-field-name_software_name{
+
+      ._group-default{
+        padding-left: 0;
+      }
+
       label{
         display: none;
       }

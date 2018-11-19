@@ -200,7 +200,6 @@ class TemplateForm extends React.Component {
                         </FormSection>
                     </div>
                 </div>
-                <hr/>
                 <button className="buttons _save" type="submit">Save & Embed</button>
             </form>
         )
