@@ -128,10 +128,7 @@ class SystemSettingsForm extends React.Component {
         let version = this.props.options.version;
         if(version) {
             return(
-                <div className="alert alert-info">
-                    <i className="fa fa-info-circle"></i>
-                    ServiceBot Version: {version}
-                </div>
+                <div className="alert alert-info"><i className="fa fa-info-circle"/>ServiceBot Version: {version}</div>
             )
         } else {
             return (<span />);
@@ -158,7 +155,7 @@ class SystemSettingsForm extends React.Component {
             let types = ["system"];
             console.log("TYPES", types);
             let colorSettings = _.map(this.state.system_settings, (s)=> {
-                if(s.data_type == 'color_picker' && s.value != "undefined" && s.value != undefined){
+                if(s.data_type === 'color_picker' && s.value !== "undefined" && s.value !== undefined){
                     return s.value
                 }else{
                     return null
@@ -169,7 +166,7 @@ class SystemSettingsForm extends React.Component {
             if(this.props.filter){
                 return(
                     <div>
-                        {_.indexOf(this.props.filter, 'brand_logo') != -1 &&
+                        {_.indexOf(this.props.filter, 'brand_logo') !== -1 &&
                         <div className="sb-form-group image-upload-box">
                             <label className="_label">Brand Logo</label>
                             <ImageUploader name="file" elementID="brand-logo"
@@ -180,7 +177,7 @@ class SystemSettingsForm extends React.Component {
                         </div>
                         }
 
-                        {_.indexOf(this.props.filter, 'home_hero_image') != -1 &&
+                        {_.indexOf(this.props.filter, 'home_hero_image') !== -1 &&
                         <div className="sb-form-group image-upload-box">
                             <label className="_label-">Front Page Hero Image</label>
                             <ImageUploader name="file" elementID="front-page-image"
@@ -195,8 +192,8 @@ class SystemSettingsForm extends React.Component {
                             return (
                                 <div key={`setting_type_${type}`} className={`system-settings-group setting-type-${type}`}>
                                     {group[type].map((group) => {
-                                        if (this.props.filter && _.indexOf(this.props.filter, group.option) != -1) {
-                                            if (group.data_type == 'color_picker') {
+                                        if (this.props.filter && _.indexOf(this.props.filter, group.option) !== -1) {
+                                            if (group.data_type === 'color_picker') {
                                                 return (
                                                     <div key={`option_${group.option}`}>
                                                         <Inputs type={group.data_type} name={group.option}
@@ -241,97 +238,93 @@ class SystemSettingsForm extends React.Component {
 
                 return (
                     <React.Fragment>
-                        <p>{this.getAppVersion()}</p>
-                        <div className="form-box">
 
-                            <h4 className="text-capitalize">Setting Types</h4>
-                            <ul className="tabs">
-                                {types.map((type) => {
-                                    return (
-                                        <li key={`settings-type-tab-${type}`} className={`tab text-capitalize ${type == self.state.currentTabType ? 'active' : ''}`}
-                                            onClick={()=>{return this.handleTab(type)}}><span>{type}</span></li>
-                                    );
-                                })}
-                            </ul>
-                            <div className="system-settings-page-form">
-                                {this.state.currentTabType == "branding" ?
-                                    <div className={`__type-braning`}>
-                                        <h4 className="text-capitalize">Branding</h4>
-                                        <div className="__item">
-                                            <label className="control-label">Brand Logo</label>
-                                            <ImageUploader name="file" elementID="brand-logo"
-                                                           imageURL="/api/v1/system-options/file/brand_logo"
-                                                           imageStyle="badge badge-lg" uploadButton={true}/>
-                                        </div>
-                                        <div className="__item">
-                                            <label className="control-label">Homepage Image</label>
-                                            <ImageUploader name="file" elementID="front-page-image"
-                                                           imageURL="/api/v1/system-options/file/front_page_image"
-                                                           imageStyle="badge badge-lg" uploadButton={true}/>
-                                        </div>
-                                        <div className="__item">
-                                            <label className="control-label">Loader Logo</label>
-                                            <ImageUploader name="file" elementID="loader-logo"
-                                                           imageURL="/api/v1/system-options/file/loader_logo"
-                                                           imageStyle="badge badge-lg" uploadButton={true}/>
+                        <div className={`_section`}>
+                            <p>{this.getAppVersion()}</p>
+
+                            <div className={`tiers`}>
+                                <div className={`_tier-detail`}>
+                                <h3>{this.state.currentTabType}</h3>
+
+                                    <div className="system-settings-page-form">
+                                        {this.state.currentTabType === "branding" ?
+                                            <div className={`__type-branding`}>
+                                                <h4 className="text-capitalize">Branding</h4>
+                                                <div className="__item">
+                                                    <label className="control-label">Brand Logo</label>
+                                                    <ImageUploader name="file" elementID="brand-logo"
+                                                                   imageURL="/api/v1/system-options/file/brand_logo"
+                                                                   imageStyle="badge badge-lg" uploadButton={true}/>
+                                                </div>
+                                                <div className="__item">
+                                                    <label className="control-label">Homepage Image</label>
+                                                    <ImageUploader name="file" elementID="front-page-image"
+                                                                   imageURL="/api/v1/system-options/file/front_page_image"
+                                                                   imageStyle="badge badge-lg" uploadButton={true}/>
+                                                </div>
+                                                <div className="__item">
+                                                    <label className="control-label">Loader Logo</label>
+                                                    <ImageUploader name="file" elementID="loader-logo"
+                                                                   imageURL="/api/v1/system-options/file/loader_logo"
+                                                                   imageStyle="badge badge-lg" uploadButton={true}/>
+                                                </div>
+                                            </div>
+
+                                            :
+
+                                            <div key={`setting_type_${this.state.currentTabType}`} className={`system-settings-group setting-type-${this.state.currentTabType}`}>
+                                                {group[this.state.currentTabType] && group[this.state.currentTabType].map((group) => {
+                                                    if (group.data_type === 'color_picker') {
+                                                        return (
+                                                            <div key={`option_${group.option}`}>
+                                                                <Inputs type={group.data_type} name={group.option}
+                                                                        label={group.option.replace(/_+/g, ' ')}
+                                                                        colors={colorSettings} defaultValue={group.value}
+                                                                        onChange={self.handleOnChange}/>
+                                                            </div>
+                                                        );
+                                                    } else if (group.data_type === 'user_role') {
+                                                        return ( //this is special case
+                                                            <div key={`option_${group.option}`}>
+                                                                <Inputs type="select" name={group.option}
+                                                                        label={group.option.replace(/_+/g, ' ')}
+                                                                        value={group.value}
+                                                                        options={self.state.roles}
+                                                                        onChange={self.handleOnChange}/>
+                                                            </div>
+                                                        )
+                                                    } else if (group.data_type === 'currency') {
+                                                        return ( //this is special case for currency
+                                                            <div key={`option_${group.option}`}>
+                                                                <Inputs type="select" name={group.option}
+                                                                        label={group.option.replace(/_+/g, ' ')}
+                                                                        value={group.value}
+                                                                        options={stripeCurrencies}
+                                                                        onChange={self.handleOnChange}/>
+                                                            </div>
+                                                        )
+                                                    } else {
+                                                        return (
+                                                            <div key={`option_${group.option}`}>
+                                                                <Inputs type={group.data_type} name={group.option}
+                                                                        label={group.option.replace(/_+/g, ' ')}
+                                                                        defaultValue={group.value}
+                                                                        onChange={self.handleOnChange}/>
+                                                            </div>
+                                                        );
+                                                    }
+                                                })}
+                                                <div className="clearfix"/>
+                                            </div>
+
+                                        }
+
+                                        <div className="text-right">
+                                            <Buttons btnType="primary" buttonClass="_primary" text="Update Settings" onClick={self.handleUpdateSettings}
+                                                     loading={this.state.ajaxLoad} success={this.state.success}/>
                                         </div>
                                     </div>
-
-                                    :
-
-                                    <div key={`setting_type_${this.state.currentTabType}`}
-                                         className={`system-settings-group setting-type-${this.state.currentTabType}`}>
-                                        <h4 className="system-settings-group-title text-capitalize">{this.state.currentTabType}</h4>
-                                        {group[this.state.currentTabType] && group[this.state.currentTabType].map((group) => {
-                                            if (group.data_type == 'color_picker') {
-                                                return (
-                                                    <div key={`option_${group.option}`}>
-                                                        <Inputs type={group.data_type} name={group.option}
-                                                                label={group.option.replace(/_+/g, ' ')}
-                                                                colors={colorSettings} defaultValue={group.value}
-                                                                onChange={self.handleOnChange}/>
-                                                    </div>
-                                                );
-                                            } else if (group.data_type == 'user_role') {
-                                                return ( //this is special case
-                                                    <div key={`option_${group.option}`}>
-                                                        <Inputs type="select" name={group.option}
-                                                                label={group.option.replace(/_+/g, ' ')}
-                                                                value={group.value}
-                                                                options={self.state.roles}
-                                                                onChange={self.handleOnChange}/>
-                                                    </div>
-                                                )
-                                            } else if (group.data_type == 'currency') {
-                                                return ( //this is special case for currency
-                                                    <div key={`option_${group.option}`}>
-                                                        <Inputs type="select" name={group.option}
-                                                                label={group.option.replace(/_+/g, ' ')}
-                                                                value={group.value}
-                                                                options={stripeCurrencies}
-                                                                onChange={self.handleOnChange}/>
-                                                    </div>
-                                                )
-                                            } else {
-                                                return (
-                                                    <div key={`option_${group.option}`}>
-                                                        <Inputs type={group.data_type} name={group.option}
-                                                                label={group.option.replace(/_+/g, ' ')}
-                                                                defaultValue={group.value}
-                                                                onChange={self.handleOnChange}/>
-                                                    </div>
-                                                );
-                                            }
-                                        })}
-                                        <div className="clearfix"/>
-                                    </div>
-
-                                }
-
-                                <div className="text-right">
-                                    <Buttons btnType="primary" text="Update Settings" onClick={self.handleUpdateSettings}
-                                             loading={this.state.ajaxLoad} success={this.state.success}/>
-                                </div>
+                            </div>
                             </div>
                         </div>
                     </React.Fragment>
@@ -348,6 +341,6 @@ let mapDispatch = function(dispatch){
             })
         }
     }
-}
+};
 
 export default connect(mapStateToProps, mapDispatch)(SystemSettingsForm);

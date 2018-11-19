@@ -22,9 +22,11 @@ class SystemSettings extends React.Component {
     render () {
         return(
             <Authorizer permissions="can_administrate">
-                <div className="page __manage-system-settings">
+                <div className="app-content __manage-system-settings">
                     <Content>
-                        <ContentTitle title="System settings"/>
+                        <div className={`_title-container`}>
+                            <h1 className={`_heading`}>Manage System Settings</h1>
+                        </div>
                         <SystemSettingsForm/>
                     </Content>
                 </div>

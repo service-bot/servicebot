@@ -75,7 +75,7 @@ class SystemSettingsForm extends React.Component {
                         {!this.state.ajaxLoad && (<div className="stripe-import-form">
                             <Inputs type="boolean" label="Notify customers by email?" name="notifyUsers" defaultValue={false}/>
                             <div className={`sb-form-group`}>
-                                <Buttons size="md" btnType="danger" text="Import Stripe Data" value="submit" onClick={this.handleSubmission} />
+                                <Buttons size="md" btnType="danger" buttonClass={`_red`} text="Import Stripe Data" value="submit" onClick={this.handleSubmission} />
                             </div>
                         </div>)}
                     </div>
