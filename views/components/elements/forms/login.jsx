@@ -10,6 +10,7 @@ import Buttons from '../buttons.jsx';
 import {connect} from "react-redux";
 import {setUid, setUser, fetchUsers, setVersion, addAlert, dismissAlert, setPermissions} from "../../utilities/actions";
 import cookie from 'react-cookie';
+import ContentTitle from "../../layouts/content-title.jsx";
 let _ = require("lodash");
 
 class Login extends React.Component {
@@ -116,70 +117,76 @@ class Login extends React.Component {
         }else{
             if (this.props.modal && this.props.email) {
                 return (
-                    <Content>
-                        <div className="login-container">
-                            <form className="login-form">
-                                {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
-                                {this.state.invitationExists &&
-                                <React.Fragment>
-                                    <h3 className="text-center">Account confirmation email is sent to {this.props.email}?</h3>
-                                    <p>Please check your email to complete your account before continue.</p>
-                                    <Buttons buttonClass="buttons btn-link" size="md" position="center" btnType="link"
-                                             value="submit"
-                                             onClick={this.goToLogin}>
-                                        <span>I already confirmed my account, continue.</span>
-                                    </Buttons>
-                                </React.Fragment>
-                                }
-
-                                {!this.state.invitationExists &&
-                                <div>
-                                    <h3>Login as: {this.props.email}</h3>
-                                    <p>Please login to continue</p>
-                                    <div className={`sb-form-group${this.state.errors && 'has-error   '}`}>
-                                        <input onChange={this.handleInputChange} id="password" type="password"
-                                               name="password" className="_input-" placeholder="Password"/>
-                                        {this.state.errors && <span className="help-block">{this.state.errors}</span>}
-                                    </div>
-                                    <button onClick={this.handleLogin} type='submit'
-                                            className="buttons _default _right">Sign in
-                                    </button>
-                                    <p className="sign-up-link"><Link
-                                        to={{pathname: "/forgot-password", state: {fromLogin: false}}}> Forgot
-                                        Password</Link></p>
-                                </div>
-                                }
-                            </form>
-                        </div>
-                    </Content>
-                )
-            } else {
-                return (
-                    <Authorizer anonymous={true}>
+                    <div className={`page __app-login`}>
                         <Content>
                             <div className="login-container">
                                 <form className="login-form">
-                                    <div className="sb-form-group">
-                                        <input onChange={this.handleInputChange} id="email" type="text" name="email"
-                                               defaultValue={this.props.email || ''} className="_input- _input-default" placeholder="Email Address"/>
-                                    </div>
-                                    <div className="sb-form-group">
-                                        <input onChange={this.handleInputChange} id="password" type="password"
-                                               name="password" className="_input- _input-default" placeholder="Password"/>
-                                    </div>
-                                    <button onClick={this.handleLogin} type='submit' className="buttons _default _right">Sign in</button>
-                                    <Link to={{pathname: "/forgot-password", state: {fromLogin: false}}}> Forgot Password</Link>
-                                    {(this.props.options && this.props.options.allow_registration.value == 'true') &&
-                                    <p className="sign-up-link">Don't have an account?
-                                        <span><Link to={{
-                                            pathname: "/signup",
-                                            state: {fromLogin: true}
-                                        }}> Sign up here</Link></span>
-                                    </p>
+                                    {this.state.invitationExists &&
+                                    <React.Fragment>
+                                        <h3 className="text-center">Account confirmation email is sent to {this.props.email}?</h3>
+                                        <p>Please check your email to complete your account before continue.</p>
+                                        <Buttons buttonClass="buttons btn-link" size="md" position="center" btnType="link"
+                                                 value="submit"
+                                                 onClick={this.goToLogin}>
+                                            <span>I already confirmed my account, continue.</span>
+                                        </Buttons>
+                                    </React.Fragment>
+                                    }
+
+                                    {!this.state.invitationExists &&
+                                    <React.Fragment>
+                                        <h3>Login as: {this.props.email}</h3>
+                                        <p>Please login to continue</p>
+                                        <div className={`sb-form-group${this.state.errors && 'has-error   '}`}>
+                                            <input onChange={this.handleInputChange} id="password" type="password"
+                                                   name="password" className="_input-" placeholder="Password"/>
+                                            {this.state.errors && <span className="help-block">{this.state.errors}</span>}
+                                        </div>
+                                        <div className={`sb-form-group buttons-group __gap`}>
+                                            <button onClick={this.handleLogin} type='submit' className="buttons _default _right">
+                                                Sign in</button>
+                                            <Link className={`buttons _default _text`} to={{pathname: "/forgot-password", state: {fromLogin: false}}}>
+                                                Forgot Password</Link>
+                                        </div>
+                                    </React.Fragment>
                                     }
                                 </form>
                             </div>
                         </Content>
+                    </div>
+                )
+            } else {
+                return (
+                    <Authorizer anonymous={true}>
+                        <div className={`page __app-login`}>
+                            <Content>
+                                <div className="login-container">
+                                    <form className="login-form">
+                                        <div className="sb-form-group">
+                                            <ContentTitle title={`Login`}/>
+                                            <input onChange={this.handleInputChange} id="email" type="text" name="email"
+                                                   defaultValue={this.props.email || ''} className="_input- _input-default" placeholder="Email Address"/>
+                                        </div>
+                                        <div className="sb-form-group">
+                                            <input onChange={this.handleInputChange} id="password" type="password"
+                                                   name="password" className="_input- _input-default" placeholder="Password"/>
+                                        </div>
+                                        <div className={`sb-form-group buttons-group __gap`}>
+                                            <button className={`buttons _default`} onClick={this.handleLogin} type='submit'>Sign in</button>
+                                            <Link className={`buttons _default _text`} to={{pathname: "/forgot-password", state: {fromLogin: false}}}>Forgot Password</Link>
+                                        </div>
+                                        {(this.props.options && this.props.options.allow_registration.value === 'true') &&
+                                        <p className="sign-up-link">Don't have an account?
+                                            <span><Link to={{
+                                                pathname: "/signup",
+                                                state: {fromLogin: true}
+                                            }}> Sign up here</Link></span>
+                                        </p>
+                                        }
+                                    </form>
+                                </div>
+                            </Content>
+                        </div>
                     </Authorizer>
                 );
             }

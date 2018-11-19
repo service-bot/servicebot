@@ -94,6 +94,17 @@
   }
 
   /* Profile */
+  &.__app-login, &.__app-login-forgot-password, &.__app-login-password-reset{
+
+    ._content-container{
+      width: 500px;
+      max-width: 100%;
+      margin: auto;
+      padding: $gutter * 3 $gutter * 4;
+      background: white;
+    }
+
+  }
   &.__view-my-profile{
 
 
