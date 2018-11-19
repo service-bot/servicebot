@@ -16,6 +16,11 @@
 @import "modals";
 @import "_element-modal";
 @import "_element-s-alert";
+@import "_element-badges.scss";
+
+/* layout components */
+@import "_layout-nav";
+@import "_layout-content";
 
 /* component */
 @import "_component-base-table.scss";
@@ -33,10 +38,6 @@
 
 /* embeddable in-app overrides */
 @import "_component-embeddables-billing-overrides.scss";
-
-/* layout components */
-@import "_layout-nav";
-@import "_layout-content";
 
 
 body {

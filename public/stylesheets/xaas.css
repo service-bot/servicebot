@@ -850,6 +850,8 @@ body.login .footer{
     border-radius: 5px;
     font-size: 13px;
     font-weight: bold;
+    word-break: keep-all;
+    white-space: nowrap;
 }
 .intext-link:hover {
     background: #000000;

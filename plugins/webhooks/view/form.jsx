@@ -10,6 +10,7 @@ import Collapsible from 'react-collapsible';
 import '../stylesheets/webhooks.css';
 import cookie from "react-cookie";
 import ContentTitle from "../../../views/components/layouts/content-title.jsx";
+import Content from "../../../views/components/layouts/content.jsx";
 
 function ManagementEmbed(props) {
     let server;
@@ -366,102 +367,117 @@ Servicebot.init({
         }
         return (
             <div>
-                <div className="page __servicebot-webhooks" id="payment-form">
-                    <ContentTitle title={`Webhooks`}/>
-                    <span>Servicebot can send webhook events that notify your application or third-party system any time an event happens.
-                        Use it for events, like new customer subscription or trial expiration, that
-                        your SaaS needs to know about.</span>
+                <div className="app-content __servicebot-webhooks" id="payment-form">
+                    <Content>
+                        <div className={`_title-container`}>
+                            <h1 className={`_heading`}>Webhooks</h1>
+                        </div>
+                        <div className={`_section`}>
 
-                    <div className="hook-actions buttons-group __gap">
-                        <button className="buttons _text" onClick={self.testHooks} type="submit"
-                                value="submit">{loading ? <i className="fa fa-refresh fa-spin"></i> :
-                            <i className="fa fa-refresh"></i>} Re-test endpoints
-                        </button>
-                        <button className="buttons _primary" onClick={() => {
-                            self.openHookForm({})
-                        }} type="submit" value="submit"><i className="fa fa-plus"></i> Add endpoint
-                        </button>
-                    </div>
+                            <h3><span className="form-step-count">1</span>Add endpoints</h3>
+                            <div className="tiers">
+                                <div className={`_tier-details`}>
+                                    <span>Servicebot can send webhook events that notify your application or third-party system any time an event happens.
+                                        Use it for events, like new customer subscription or trial expiration, that
+                                        your SaaS needs to know about.</span>
+                                </div>
+                            </div>
+                            <div className="hook-actions buttons-group __gap">
+                                <button className="buttons _text" onClick={self.testHooks} type="submit"
+                                        value="submit">{loading ? <i className="fa fa-refresh fa-spin"></i> :
+                                    <i className="fa fa-refresh"></i>} Re-test endpoints
+                                </button>
+                                <button className="buttons _primary" onClick={() => {
+                                    self.openHookForm({})
+                                }} type="submit" value="submit"><i className="fa fa-plus"></i> Add endpoint
+                                </button>
+                            </div>
+                        </div>
 
-                    <div className="webhook-info">
-                        <ContentTitle title={`Webhook events information`}/>
-                        <div className="buttons-group">
-                            {!this.state.showEventsInfo ?
-                                <button className="buttons _primary" onClick={this.showEvents}>View events</button>
-                                :
-                                <button className="buttons _primary" onClick={this.hideEvents}>Hide events</button>
+                        <div className="_section __webhook-event-info">
+                            <h3><span className="form-step-count">2</span>Webhook events information</h3>
+
+                            <div className="buttons-group">
+                                {!this.state.showEventsInfo ?
+                                    <button id="button-view-events" className="buttons _primary" onClick={this.showEvents}>View events</button> :
+                                    <button id="button-view-events" className="buttons _primary" onClick={this.hideEvents}>Hide events</button>}
+                            </div>
+
+                            {this.state.showEventsInfo &&
+                            <div className="tiers">
+                                <div className={`_tier-details`}>
+                                    <p>The webhook system can notify your SaaS application if any of the following events
+                                        occour: <a href="https://docs.servicebot.io/webhooks/" target="_BLANK">See documentation for payload
+                                            information</a></p>
+                                    <ul>
+                                        <li><b>Pre-subscription:</b> This event happens right after the customer subscribes to
+                                            your service, prior to the subscription request completion.
+                                        </li>
+                                        <li><b>Post-subscription:</b> This event happens after the subscription has been
+                                            successfully completed.
+                                        </li>
+                                        <li><b>Pre-trial expiration:</b> This event happens right after the trial expires, prior
+                                            to any expiration processes.
+                                        </li>
+                                        <li><b>Post-trial expiration:</b> This event happens after the trial expiration has been
+                                            completed.
+                                        </li>
+                                        <li><b>Pre-reactivation:</b> This event happens right after the reactivation event
+                                            happens, prior to any reactivation processes.
+                                        </li>
+                                        <li><b>Post-reactivation:</b> This event happens after eactivation event has been
+                                            completed.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                             }
                         </div>
-                        {this.state.showEventsInfo &&
-                        <div className="service-instance-box-content">
-                            <p>The webhook system can notify your SaaS application if any of the following events
-                                occour:</p>
-                            <a href="https://docs.servicebot.io/webhooks/" target="_BLANK">See documentation for payload
-                                information</a>
-                            <ul>
-                                <li><b>Pre-subscription:</b> This event happens right after the customer subscribes to
-                                    your service, prior to the subscription request completion.
-                                </li>
-                                <li><b>Post-subscription:</b> This event happens after the subscription has been
-                                    successfully completed.
-                                </li>
-                                <li><b>Pre-trial expiration:</b> This event happens right after the trial expires, prior
-                                    to any expiration processes.
-                                </li>
-                                <li><b>Post-trial expiration:</b> This event happens after the trial expiration has been
-                                    completed.
-                                </li>
-                                <li><b>Pre-reactivation:</b> This event happens right after the reactivation event
-                                    happens, prior to any reactivation processes.
-                                </li>
-                                <li><b>Post-reactivation:</b> This event happens after eactivation event has been
-                                    completed.
-                                </li>
-                            </ul>
-                        </div>
-                        }
-                    </div>
-                    <div className="form-row">
-                        {hooks.map((hook, index) => {
-                            //Set health check
-                            let health = <span><span className="status-badge red"><i
-                                className="fa fa-times"></i></span> {hook.health}</span>;
-                            if (!hook.health) {
-                                health = <span className="status-badge neutral">Test Endpoints</span>;
-                            } else if (hook.health === 'OK') {
-                                health = <span className="status-badge green"><i className="fa fa-check"></i></span>;
-                            }
-                            //Set Type
-                            let type = <span className="status-badge blue m-r-5">Asynchronous</span>;
-                            if (hook.async_lifecycle === false) {
-                                type = <span className="status-badge purple m-r-5">Synchronous</span>;
-                            }
-                            return (
-                                <div className="hook" key={"hook-" + index}>
-                                    <div className="url">{hook.endpoint_url}</div>
-                                    <div className="row">
-                                        <div className="col-md-8">
-                                            <span>{type}</span>
-                                            <span>{health}</span>
-                                        </div>
-                                        <div className="hook-actions buttons-group __gap">
-                                            <button className="buttons _primary" onClick={() => {
-                                                self.openHookForm(hook)
-                                            }} type="submit" value="submit"><i className="fa fa-pencil"></i> Edit
-                                            </button>
-                                            <button className="buttons _primary _red" onClick={() => {
-                                                self.deleteHook(hook)
-                                            }} type="submit" value="submit"><i className="fa fa-times"></i> Delete
-                                            </button>
-                                        </div>
 
+
+                        <div className="_section">
+                            <h3><span className={`form-step-count`}>3</span>Manage Webhooks</h3>
+                            <div className="tiers">
+                                <div className={`_tier-details`}>
+                                    <div className={`hooks-list`}>
+                                    {hooks.map((hook, index) => {
+                                        //Set health check
+                                        let health = <span><span className="status-badge red"><i
+                                            className="fa fa-times"></i></span> {hook.health}</span>;
+                                        if (!hook.health) {
+                                            health = <span className="status-badge neutral">Test Endpoints</span>;
+                                        } else if (hook.health === 'OK') {
+                                            health = <span className="status-badge green"><i className="fa fa-check"></i></span>;
+                                        }
+                                        //Set Type
+                                        let type = <span className="status-badge blue m-r-5">Asynchronous</span>;
+                                        if (hook.async_lifecycle === false) {
+                                            type = <span className="status-badge purple m-r-5">Synchronous</span>;
+                                        }
+                                        return (
+                                            <div className="_hook" key={"hook-" + index}>
+                                                <span className={`status-badge`}>{hook.endpoint_url}</span>{type}{health}
+                                                <div className="hook-actions buttons-group __gap">
+                                                    <button className="buttons _default" onClick={() => {
+                                                        self.openHookForm(hook)
+                                                    }} type="submit" value="submit"><i className="fa fa-pencil"></i> Edit
+                                                    </button>
+                                                    <button className="buttons _default _red" onClick={() => {
+                                                        self.deleteHook(hook)
+                                                    }} type="submit" value="submit"><i className="fa fa-times"></i> Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
                                     </div>
                                 </div>
-                            )
-                        })}
+                            </div>
 
-                    </div>
-                    {endpointModals()}
+                        </div>
+                            {endpointModals()}
+
+                    </Content>
                 </div>
             </div>
 

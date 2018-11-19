@@ -1,10 +1,10 @@
 .page{
-
   padding: $gutter*1.5 $gutter * 3;
+}
+.page, .app-content{
 
   /* System */
   &.__dashboard{
-
 
   }
 
@@ -33,6 +33,44 @@
   }
   &.__manage-stripe-settings{
 
+  }
+  &.__servicebot-webhooks{
+
+    ._section{
+      position: relative;
+
+      & > h3{
+        margin-bottom: $gutter !important;
+      }
+
+      .buttons-group{
+        margin-top: $gutter;
+      }
+
+      &.__webhook-event-info{
+        min-height: 100px;
+
+        .tiers{
+          margin-top: $gutter * 2;
+        }
+      }
+
+      ._hook {
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        align-items: center;
+
+        .buttons-group{
+          margin: 0;
+        }
+      }
+    }
+
+    #button-view-events{
+      position: absolute;
+      right: $gutter * 1.5;
+      top: $gutter;
+    }
   }
 
   /* Profile */

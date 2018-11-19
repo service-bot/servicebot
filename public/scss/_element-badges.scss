@@ -1,0 +1,17 @@
+.status-badge{
+
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  border-radius: 20px;
+  min-width: 24px;
+  min-height: 24px;
+  line-height: 24px;
+  display: inline-block;
+  text-align: center;
+  margin: 2px;
+  padding: 0 8px;
+  background-color: #dedede;
+  color: black;
+
+  &.red{ background-color: $color-error; color: white; }
+}
