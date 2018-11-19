@@ -21,7 +21,7 @@ class ServiceBotTableSearch extends React.Component {
                 { this.props.searchField }
                 <div className="buttons-group">
                     { this.props.clearbuttons }
-                    <button className='buttons _primary' type='button' onClick={ this.toggleAdvanced }>Advanced Search</button>
+                    <button className='buttons _primary _navy' type='button' onClick={ this.toggleAdvanced }>Advanced Search</button>
                 </div>
             </div>
         );

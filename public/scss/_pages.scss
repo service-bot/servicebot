@@ -1,6 +1,28 @@
+@mixin pageActions{
+  ._content{
+    position: relative;
+  }
+  .servicebot-table-base {
+    .react-bs-table-tool-bar {
+      .row {
+        &>div:nth-child(1) {
+          .buttons-group {
+            position: absolute;
+            top: -9px;
+            right: 0;
+            width: auto;
+          }
+        }
+      }
+    }
+  }
+}
+$page-datatable-extra-bottom-padding: 160px;
+
 .page{
   padding: $gutter*1.5 $gutter * 3;
 }
+
 .page, .app-content{
 
   /* System */
@@ -10,23 +32,29 @@
 
   &.__manage-services{
 
-    padding-bottom: 160px;
+    padding-bottom: $page-datatable-extra-bottom-padding;
+    @include pageActions;
 
   }
 
   &.__manage-subscriptions{
 
-    padding-bottom: 160px;
+    padding-bottom: $page-datatable-extra-bottom-padding;
+    @include pageActions;
 
   }
 
   &.__manage-users{
 
-    padding-bottom: 160px;
+    padding-bottom: $page-datatable-extra-bottom-padding;
+    @include pageActions;
 
   }
 
   &.__manage-notification-templates{
+
+    padding-bottom: $page-datatable-extra-bottom-padding;
+    @include pageActions;
 
   }
 

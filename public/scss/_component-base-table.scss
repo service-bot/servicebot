@@ -34,4 +34,40 @@
     }
   }
 
+  .react-bs-table-pagination {
+
+    .row{
+      display: grid;
+      grid-template-columns: auto auto;
+    }
+
+    .pagination {
+      list-style: none;
+      display: flex;
+      flex-direction: row;
+      padding: 0;
+      margin: 0;
+
+      .page-item {
+        background: white;
+        border-radius: 3px;
+        min-width: 30px;
+        padding: 0 $gutter / 2;
+        text-align: center;
+
+        &:not(:last-child){
+          margin-right: $gutter / 2 ;
+        }
+
+        a{color: $color-dark-blue};
+
+        &.active {
+          background-color: $color-dark-blue;
+
+          a{color: white};
+        }
+      }
+    }
+  }
+
 }
