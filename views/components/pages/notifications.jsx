@@ -12,6 +12,10 @@ import {isAuthorized} from "../utilities/authorizer.jsx"
 import ModalNotification from "../elements/modals/modal-notification.jsx";
 import SVGIcons from '../utilities/svg-icons.jsx';
 let _ = require("lodash");
+import {TableHeaderColumn} from 'react-bootstrap-table';
+import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
+import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
+
 
 class Notification extends React.Component{
 
@@ -163,22 +167,7 @@ class NavNotification extends React.Component{
         )
     }
 }
-// class SystemNotificationList extends React.Component{
-//     constructor(props){
-//         super(props);
-//     }
-//     render(){
-//
-//         let notifications = this.props.system_notifications.map(notification => {
-//             return (<li key={notification.id}><Notification {...notification} /></li>)
-//         })
-//
-//         return (<ul>
-//             {notifications}
-//         </ul>)
-//     }
-//
-// }
+
 class NotificationList extends React.Component{
 
     constructor(props){
@@ -218,14 +207,15 @@ class NotificationList extends React.Component{
         }
     }
     modMessage(data, dataObj){
+        console.log("message", data);
         if(data.length <= 90){
             return (
-                <span className="btn-link" onClick={()=>{return (this.openMessageModel(dataObj))}}>{data}</span>
+                <span className="buttons _default _text __message-link" onClick={()=>{return (this.openMessageModel(dataObj))}}>{data || 'Empty message body.'}</span>
             );
         }else {
             let trimmedHTML = this.createMarkup(this.trimText(data, 90).props.children);
             return (
-                <span className="trimmed-text btn-link" onClick={()=>{return (this.openMessageModel(dataObj))}} dangerouslySetInnerHTML={trimmedHTML}/>
+                <span className="buttons _default _text __message-link-trimmed" onClick={()=>{return (this.openMessageModel(dataObj))}} dangerouslySetInnerHTML={trimmedHTML}/>
             );
         }
     }
@@ -269,24 +259,28 @@ class NotificationList extends React.Component{
 
         let notificationType = this.props.notificationType;
         let notifications = notificationType == '_SYSTEM' ? this.props.system_notifications : this.props.notifications;
-        let notificationsNullMessage = notificationType == '_SYSTEM' ? "No system notifications at this time" : "No notifications at this time";
+        let notificationsNullMessage = notificationType == '_SYSTEM' ? "There are no system notifications at this time" : "There are no notifications at this time";
 
+        if(notifications.length){
+            return (
+                <React.Fragment>
+                    <ServiceBotTableBase
+                        rows={notifications}
+                        sortColumn="created_at"
+                        sortOrder="desc">
+                        <TableHeaderColumn isKey dataField='subject' dataSort={ true } dataFormat={this.modSubject} width={`200px`}>Subject</TableHeaderColumn>
+                        <TableHeaderColumn dataField='message' dataSort={ true } dataFormat={this.modMessage} width={`200px`}>Message</TableHeaderColumn>
+                        <TableHeaderColumn dataField='created_at' dataSort={ true } dataFormat={this.modCreatedAt} width={`200px`}>Notification Time</TableHeaderColumn>
+                    </ServiceBotTableBase>
+                    {this.state.viewMessage != null && <ModalNotification key="notification-modal" hide={this.closeMessageModel} notification={this.state.viewMessage}/>}
+                </React.Fragment>
+            )
+        }else{
+            return (
+                <p>{notificationsNullMessage}</p>
+            )
+        }
 
-        return (
-            <div>
-                <DataTable
-                    dataObj={notifications}
-                    col={['subject', 'message', 'created_at']}
-                    colNames={['Subject', 'Message', 'Created At']}
-                    mod_message={this.modMessage}
-                    mod_created_at={this.modCreatedAt}
-                    rowClasses={this.rowClasses}
-                    nullMessage={notificationsNullMessage}
-                    lastFetch={this.state.lastFetch}
-                />
-                {this.state.viewMessage != null && <ModalNotification key="notification-modal" hide={this.closeMessageModel} notification={this.state.viewMessage}/>}
-            </div>
-        )
     }
 }
 class Notifications extends React.Component{
@@ -320,17 +314,21 @@ class Notifications extends React.Component{
     render(){
         return (
             <div>
-                <div className="page __manage-notifications">
+                <div className="app-content __manage-notifications">
                     <Content>
-                        <ContentTitle icon="user" title="Notifications"/>
+                        <div className={`_title-container`}>
+                            <h1 className={`_heading`}>Notification Center</h1>
+                        </div>
                         {isAuthorized({permissions: "put_notification_templates_id"}) &&
-                            <React.Fragment>
-                                <p><strong>System Notifications</strong></p>
+                            <div className={`_section`}>
+                                <h3>System Notifications</h3>
                                 <NotificationList notificationType="_SYSTEM"/>
-                            </React.Fragment>
+                            </div>
                         }
-                        <p><strong>User Notifications</strong></p>
-                        <NotificationList/>
+                        <div className={`_section`}>
+                            <h3>User Notifications</h3>
+                            <NotificationList/>
+                        </div>
                     </Content>
                 </div>
             </div>
