@@ -376,8 +376,8 @@ Servicebot.init({
                         </div>
                         <div className={`_section`}>
 
-                            <h3><span className="form-step-count">1</span>Add endpoints</h3>
-                            <div className="tiers _indented">
+                            <h3>Add endpoints</h3>
+                            <div className="tiers">
                                 <div className={`_tier-details`}>
                                     <span>Servicebot can send webhook events that notify your application or third-party system any time an event happens.
                                         Use it for events, like new customer subscription or trial expiration, that
@@ -397,7 +397,7 @@ Servicebot.init({
                         </div>
 
                         <div className="_section __webhook-event-info">
-                            <h3><span className="form-step-count">2</span>Webhook events information</h3>
+                            <h3>Webhook events information</h3>
 
                             <div className="buttons-group">
                                 {!this.state.showEventsInfo ?
@@ -406,7 +406,7 @@ Servicebot.init({
                             </div>
 
                             {this.state.showEventsInfo &&
-                            <div className="tiers _indented">
+                            <div className="tiers">
                                 <div className={`_tier-details`}>
                                     <p>The webhook system can notify your SaaS application if any of the following events
                                         occour: <a href="https://docs.servicebot.io/webhooks/" target="_BLANK">See documentation for payload
@@ -438,8 +438,8 @@ Servicebot.init({
 
 
                         <div className="_section">
-                            <h3><span className={`form-step-count`}>3</span>Manage Webhooks</h3>
-                            <div className="tiers _indented">
+                            <h3>Manage Webhooks</h3>
+                            <div className="tiers">
                                 <div className={`_tier-details`}>
                                     <div className={`hooks-list`}>
                                     {hooks.map((hook, index) => {

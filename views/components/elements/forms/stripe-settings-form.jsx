@@ -156,17 +156,17 @@ class SystemSettingsForm extends React.Component {
                     <div className={`_section`}>
                         {settings.secret_key !== "" ?
                             <React.Fragment>
-                                <h3><span className="form-step-count">1</span>Reconfigure Stripe API Keys</h3>
-                                <p className={`_indented form-help-text`}>You can modify your Stripe keys to go from test to live, update to newer keys, or change to a different account. Retrieve your keys <a className="intext-link" href="https://dashboard.stripe.com/account/apikeys" target="_blank">from Stripe</a>. If you are changing from test to live or entering keys to a different account, you can choose to migrate data to a new Stripe account, or clear Servicebot data and start fresh.</p>
+                                <h3>Reconfigure Stripe API Keys</h3>
+                                <p className={`form-help-text`}>You can modify your Stripe keys to go from test to live, update to newer keys, or change to a different account. Retrieve your keys <a className="intext-link" href="https://dashboard.stripe.com/account/apikeys" target="_blank">from Stripe</a>. If you are changing from test to live or entering keys to a different account, you can choose to migrate data to a new Stripe account, or clear Servicebot data and start fresh.</p>
                             </React.Fragment>
                             :
                             <React.Fragment>
-                                <h3><span className="form-step-count">1</span>Add Stripe API Keys</h3>
+                                <h3>Add Stripe API Keys</h3>
                                 <p>Copy your Standard API keys <a className="intext-link" href="https://dashboard.stripe.com/account/apikeys" target="_blank">from Stripe</a> and paste them in the Secret key and Publishable key below. Once you enter your keys, you can import your Stripe account to your Servicebot.</p>
                             </React.Fragment>
                         }
                         {getAlerts()}
-                        <div className="_indented tiers">
+                        <div className="tiers">
                             <div className="_tier-details">
                                 <DataForm handleResponse={this.handleResponse} onUpdate={this.onUpdate} url={this.state.stripe_preconfigure} method={'POST'}>
                                     <Inputs type="text" label="Stripe Publishable API Key" name="stripe_public" value={self.state.stripe_settings.publishable_key}
@@ -188,11 +188,11 @@ class SystemSettingsForm extends React.Component {
                     </div>
                     {!self.props.initialize &&
                     <div className={`_section`}>
-                        <h3><span className="form-step-count">2</span>Connect to Stripe Webhooks</h3>
-                        <p className={`_indented form-help-text`}>Copy your Servicebot webhook URL below and paste it as a new <a
+                        <h3>Connect to Stripe Webhooks</h3>
+                        <p className={`form-help-text`}>Copy your Servicebot webhook URL below and paste it as a new <a
                             className="intext-link" href="https://dashboard.stripe.com/account/webhooks"
                             target="_blank">Stripe endpoint</a> in your Stripe account.</p>
-                        <div className="_indented tiers stripe-webhook-setup">
+                        <div className="tiers stripe-webhook-setup">
                             <div className="_tier-details">
                                 <div className="stripe-webhook">{`https://${window.location.hostname}/api/v1/stripe/webhook`}</div>
                             </div>
@@ -201,7 +201,7 @@ class SystemSettingsForm extends React.Component {
                     }
 
                     <div className={`_section`}>
-                        <h3><span className="form-step-count">3</span>Import Stripe Data</h3>
+                        <h3>Import Stripe Data</h3>
                         {settings.secret_key !== "" && <StripeImportForm/> }
                     </div>
 

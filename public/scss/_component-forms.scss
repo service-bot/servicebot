@@ -12,6 +12,10 @@
 .sb-form-group{
   padding: 0 $gutter $gutter $gutter;
 
+  &.hidden, &._hidden{
+    display: none;
+  }
+
   ._input-container-{
     position: relative;
 

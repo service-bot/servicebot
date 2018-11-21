@@ -65,7 +65,7 @@ class SystemSettingsForm extends React.Component {
             return <p><strong>Success! Stripe data has been imported!</strong></p>;
         }else{
             return (
-                <div className="_indented tiers __basic-info">
+                <div className="tiers __basic-info">
                     <p className={`form-help-text`}>You can import all customers, funds, payment plans, subscriptions, and invoices to ServiceBot with one click.
                         <p><b>Note:</b> Reversing this action can only be done manually.</p>
                     </p>

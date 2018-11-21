@@ -207,7 +207,6 @@ class NotificationList extends React.Component{
         }
     }
     modMessage(data, dataObj){
-        console.log("message", data);
         if(data.length <= 90){
             return (
                 <span className="buttons _default _text __message-link" onClick={()=>{return (this.openMessageModel(dataObj))}}>{data || 'Empty message body.'}</span>
