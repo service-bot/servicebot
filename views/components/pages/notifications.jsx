@@ -1,10 +1,7 @@
 import React from 'react';
 import {Fetcher} from "servicebot-base-form"
-import DataTable from "../elements/datatable/datatable.jsx";
-import Jumbotron from "../layouts/jumbotron.jsx";
 import {Link, browserHistory} from 'react-router';
 import Content from "../layouts/content.jsx";
-import ContentTitle from "../layouts/content-title.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import {connect} from "react-redux";
 import {setNotifications, setNotification,setSystemNotifications, addNotification} from "../utilities/actions";

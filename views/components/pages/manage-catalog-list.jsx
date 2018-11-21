@@ -38,7 +38,6 @@ class ManageCatalogList extends React.Component {
         this.onOpenDeleteModal = this.onOpenDeleteModal.bind(this);
         this.onCloseDeleteModal = this.onCloseDeleteModal.bind(this);
         this.onCloseEmbedModal = this.onCloseEmbedModal.bind(this);
-
         this.rowActionsFormatter = this.rowActionsFormatter.bind(this);
     }
 
