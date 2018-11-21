@@ -156,6 +156,11 @@ $page-datatable-extra-bottom-padding: 160px;
 
   &.__manage-my-instance{
 
+    .account-status{
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: $gutter;
+    }
 
   }
 

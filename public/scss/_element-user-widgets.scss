@@ -1,0 +1,50 @@
+.text-widget{
+
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  overflow: hidden;
+  color: white;
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
+  &:not(:last-child){
+    margin-right: $gutter;
+  }
+
+  .__item-icon{
+    background-color: $color-dark-blue;
+    padding: $gutter * 2;
+  }
+  .__item-body{
+    background-color: #0B265F;
+    padding: $gutter * 2;
+    flex-grow: 1;
+
+    .__title{
+      font-size: 1.75em;
+      color: white;
+    }
+    .__sub-title{
+      font-size: 1.5em;
+      color: white;
+      .__data{
+
+      }
+    }
+
+  }
+
+  &._upcoming-invoice{
+    cursor: pointer;
+  }
+  &._account-status{
+    .__item-icon{
+      background-color: #18A784;
+    }
+    .__item-body{
+      background-color: $color-success;
+    }
+  }
+
+}
