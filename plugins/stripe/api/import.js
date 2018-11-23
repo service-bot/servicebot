@@ -73,15 +73,15 @@ module.exports = function(knex) {
                         // }
                         // )
                         // ).then(function () {
-                            // Check for more, and recursively call importStripePlans
-                            if (plans.has_more) {
-                                let last_plan = plans.data[plans.data.length - 1].id;
-                                console.log(`Parsed all plans until Plan ID ${last_plan}`);
-                                return setTimeout(resolve,1000,importStripePlans(last_plan));
-                            } else {
-                                console.log(`All plans have been imported.`);
-                                return resolve(true);
-                            }
+                        // Check for more, and recursively call importStripePlans
+                        if (plans.has_more) {
+                            let last_plan = plans.data[plans.data.length - 1].id;
+                            console.log(`Parsed all plans until Plan ID ${last_plan}`);
+                            return setTimeout(resolve,1000,importStripePlans(last_plan));
+                        } else {
+                            console.log(`All plans have been imported.`);
+                            return resolve(true);
+                        }
 
                     } else {
                         console.log(err);
@@ -109,15 +109,15 @@ module.exports = function(knex) {
                         await importServiceInstance(subscription).catch(err => {console.error(err)})
                     }
 
-                        // Check for more, and recursively call importStripePlans
-                        if (subscriptions.has_more) {
-                            let last_subscription = subscriptions["data"][subscriptions["data"].length - 1].id;
-                            console.log(`Parsed all subscriptions until Plan ID ${last_subscription}`);
-                            return setTimeout(resolve,1000,importStripeSubscriptions(last_subscription));
-                        } else {
-                            console.log(`All subscriptions have been imported.`);
-                            return resolve(true);
-                        }
+                    // Check for more, and recursively call importStripePlans
+                    if (subscriptions.has_more) {
+                        let last_subscription = subscriptions["data"][subscriptions["data"].length - 1].id;
+                        console.log(`Parsed all subscriptions until Plan ID ${last_subscription}`);
+                        return setTimeout(resolve,1000,importStripeSubscriptions(last_subscription));
+                    } else {
+                        console.log(`All subscriptions have been imported.`);
+                        return resolve(true);
+                    }
                 } else {
                     return reject('Cannot make the API call to retrieve Plans.');
                 }
@@ -237,7 +237,7 @@ module.exports = function(knex) {
                             tier_id: newTier.id,
                             type: "subscription"
                         });
-                        resolve(template);
+                        resolve({template, newTier, newPaymentStructure});
                     } catch (e) {
                         console.error("error while creating template", e);
                         reject(e);
@@ -264,7 +264,7 @@ module.exports = function(knex) {
             });
         });
     };
-    
+
     let importServiceInstance = function (subscription) {
         return new Promise(function (resolve, reject) {
             //Make sure service does not already exist
@@ -310,12 +310,16 @@ module.exports = function(knex) {
             return new Promise(async function (resolve, reject) {
                 let plan = service.payment_plan;
                 let template =  (await ServiceTemplate.find({'name': plan.name || plan.nickname || plan.id}, true))[0];
-                    if(template.data) {
-                        let paymentStructureTemplate = (await PaymentStructureTemplate.find({'tier_id': template.data.references.tiers[0].id}))[0];
-                        service.service_id = template.data.id;
-                        service.payment_structure_template_id = paymentStructureTemplate.data.id;
-                    }
-                    return resolve(service);
+                if(template && template.data) {
+                    let paymentStructureTemplate = (await PaymentStructureTemplate.find({'tier_id': template.data.references.tiers[0].id}))[0];
+                    service.service_id = template.data.id;
+                    service.payment_structure_template_id = paymentStructureTemplate.data.id;
+                }else{
+                    let {template, newTier, newPaymentStructure} = await importServiceTemplate("Uncategorized", plan);
+                    service.service_id = template.data.id;
+                    service.payment_structure_template_id = newPaymentStructure.data.id;
+                }
+                return resolve(service);
             });
         }).then(function (service) {
             return new Promise(function (resolve, reject) {
@@ -366,10 +370,10 @@ module.exports = function(knex) {
     };
 
     return {
-                endpoint : "/stripe/import",
-                method : "post",
-                middleware : [importMiddleware],
-                permissions : ["can_administrate"],
-                description : "Imports data from stripe"
+        endpoint : "/stripe/import",
+        method : "post",
+        middleware : [importMiddleware],
+        permissions : ["can_administrate"],
+        description : "Imports data from stripe"
     };
 };
