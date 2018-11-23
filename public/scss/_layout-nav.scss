@@ -30,9 +30,13 @@
   }
 
   .app-profile{
-    height: 40px;
-    max-width: 40px;
+    height: 44px;
+    max-width: 44px;
     line-height: 40px;
+    -webkit-border-radius: 50px;
+    -moz-border-radius: 50px;
+    border-radius: 50px;
+    overflow: hidden;
     img{
       height: 100%;
     }
@@ -46,9 +50,9 @@
   }
 
   .app-notification{
-    height: 40px;
-    width: 40px;
-    line-height: 40px;
+    height: 44px;
+    width: 44px;
+    line-height: 44px;
     background: $color-blue-gray;
     border-radius: 50px;
     display: flex;
@@ -66,7 +70,7 @@
 
       svg{
         fill: #fff;
-        margin-top: 7px;
+        margin-top: -5px;
       }
     }
 
@@ -540,6 +544,17 @@
 
   .navvbar-badge{
     padding: 0;
+
+    .stripe{
+      background: #4553ff;
+      padding: 6px 12px 5px 12px;
+      text-align: center;
+      font-size: 0.9em;
+      line-height: 20px;
+      border-radius: 5px;
+      color: white;
+      font-weight: 600;
+    }
   }
 
   a{

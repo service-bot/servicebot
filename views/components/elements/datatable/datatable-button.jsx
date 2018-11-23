@@ -41,7 +41,7 @@ class Buttons extends React.Component {
                 <Link to={this.processButton(this.props.link, this.props.id)}
                       onClick={this.handleClick}
                       type="button"
-                      className="btn btn-default btn-rounded">
+                      className="buttons btn-default btn-rounded">
                         { _.isFunction(this.props.name) ? this.props.name(this.props.active) : this.props.name }</Link>
             </div>
         );

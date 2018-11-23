@@ -16,7 +16,7 @@ class FileInputForm extends Component {
 
     render() {
         return (
-            <div className="form-group form-group-flex column">
+            <div className="sb-form-groupform-group-flex column">
                 <label>{this.props.label}</label>
                 <ImageUploader elementID={this.props.name} imageStyle="template-image-upload"
                                imageURL={this.props.imageUploadURL}

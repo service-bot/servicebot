@@ -32,7 +32,7 @@ class Message extends React.Component {
                     {message}
                 </p>
                 <button onClick={()=>{return(this.dismiss())}} id={id}
-                        className="pull-right btn btn-rounded btn-outline btn-white btn-sm">
+                        className="pull-right buttons btn-rounded btn-outline btn-white btn-sm">
                     dismiss
                 </button>
             </div>

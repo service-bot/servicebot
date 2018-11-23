@@ -84,8 +84,7 @@ class Dashboard extends React.Component {
 
         if (this.state.loading) {
             return (
-                <div className="page-service-instance">
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
+                <div className="page __dashboard">
                     <Content>
                         <div className="row">
                             <Load/>
@@ -96,15 +95,12 @@ class Dashboard extends React.Component {
         } else {
             return (
                 <Authorizer permissions={["can_administrate", "can_manage"]}>
-                    <Jumbotron pageName={pageName} subtitle={sub}/>
-                    <div className="page-service-instance">
+                    <div className="page __dashboard">
                         <Content>
-                            <div>
-                                <ContentTitle title="Dashboard"/>
-                                <DashboardWidgets data={this.state.analytics}/>
-                                <div className="m-t-25"><ContentTitle title="Churn Detail"/></div>
-                                <OverallStatsWidgets data={this.state.analytics} />
-                            </div>
+                            <ContentTitle title="Dashboard"/>
+                            <DashboardWidgets data={this.state.analytics}/>
+                            <ContentTitle title="Churn Detail"/>
+                            <OverallStatsWidgets data={this.state.analytics} />
                         </Content>
                     </div>
                 </Authorizer>

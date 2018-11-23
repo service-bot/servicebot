@@ -38,7 +38,7 @@ class WidgetPricingInput extends React.Component {
             let prefix = formatParts[1].type === "literal" ? formatParts[0].value + formatParts[1].value : formatParts[0].value;
 
             return (
-                <NumberFormat className="form-control addon-checkbox-widget-price-input" name={name}
+                <NumberFormat className="_input- addon-checkbox-widget-price-input" name={name}
                               prefix={prefix} decimalSeparator="." thousandSeparator="," decimalScale="2"
                               allowNegative={false}
                               fixedDecimalScale={false}
@@ -47,7 +47,7 @@ class WidgetPricingInput extends React.Component {
             );
         } else if (operation == 'divide' || operation == 'multiply') {
             return (
-                <NumberFormat className="form-control addon-checkbox-widget-price-input" name={name}
+                <NumberFormat className="_input- addon-checkbox-widget-price-input" name={name}
                               decimalSeparator="." decimalScale={0} suffix="%" allowNegative={false}
                               onValueChange={this.handleChange(false)} value={value}
                 />

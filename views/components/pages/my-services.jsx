@@ -82,8 +82,7 @@ class MyServices extends React.Component {
         if(self.state.loading){
             return (
                 <div>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <div className="page-dashboard">
+                    <div className="page __dashboard">
                         <Content>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'}
                                                      transitionAppear={true} transitionAppearTimeout={1000}
@@ -136,22 +135,21 @@ class MyServices extends React.Component {
 
             return(
                 <Authorizer>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <div className="page-service-instance">
+                    <div className="page __manage-my-instance">
                         <Content>
-                            <ReactCSSTransitionGroup component='div' transitionName={'fade'}
+                            <ReactCSSTransitionGroup component={React.Fragment} transitionName={'fade'}
                                                      transitionAppear={true} transitionAppearTimeout={1000}
                                                      transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
-                                <div className="row account-status-row">
-                                    <DashboardWidget widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-3 col-md-offset-2 col-lg-offset-3" widgetIcon="credit-card" widgetName="Upcoming Invoice" clickAction={self.onOpenInvoiceModal} iconPadding={10} borderRadius={50} />
-                                    <DashboardWidget widgetClass="col-xs-12 col-sm-6 col-md-4 col-lg-3" widgetIcon={widgetIcon()} widgetName={`Status: ${userStatus}`} widgetColor={widgetColor()} iconPadding={10} borderRadius={50}/>
+                                <div className="account-status">
+                                    <DashboardWidget widgetClass="_upcoming-invoice" widgetIcon="credit-card" widgetName="Upcoming Invoice" clickAction={self.onOpenInvoiceModal} iconPadding={10} borderRadius={50} />
+                                    <DashboardWidget widgetClass="_account-status" widgetIcon={widgetIcon()} widgetName={`Status: ${userStatus}`} widgetColor={widgetColor()} iconPadding={10} borderRadius={50}/>
                                 </div>
-                                <div className="row">
+                                <div className="active-services">
                                     <DashboardServiceList handleComponentUpdating={self.handleComponentUpdating} services={self.state.services}/>
                                 </div>
                             </ReactCSSTransitionGroup>
                         </Content>
-                        <ReactCSSTransitionGroup component={'div'} transitionName={'fade'}
+                        <ReactCSSTransitionGroup component={React.Fragment} transitionName={'fade'}
                                                  transitionAppear={true} transitionEnter={true} transitionLeave={true}
                                                  transitionAppearTimeout={1000} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                             {currentModal()}

@@ -19,30 +19,30 @@ class SetupDB extends React.Component{
 
     render(){
         return(
-            <div>
+            <div className="_section">
                 <p>
                     Enter your PostgreSQL database information. If you don't have access to a database, you can try the instant
                     <a href="https://servicebot.io/pricing" target="_blank"> ServiceBot cloud hosted solution</a>.
                 </p>
-                <div className="row">
-                        <label className="control-label">Database Host:</label>
-                        <input className="form-control" value={this.props.state.db_host} onChange={this.props.inputChange} name="db_host" placeholder="localhost"/>
+                <div className="sb-form-group">
+                        <label className="control-label">Database Host</label>
+                        <input className="_input-" value={this.props.state.db_host} onChange={this.props.inputChange} name="db_host" placeholder="localhost"/>
                 </div>
-                <div className="row">
-                    <label className="control-label">Database Name:</label>
-                    <input className="form-control" value={this.props.state.db_name} onChange={this.props.inputChange} name="db_name"/>
+                <div className="sb-form-group">
+                    <label className="control-label">Database Name</label>
+                    <input className="_input-" value={this.props.state.db_name} onChange={this.props.inputChange} name="db_name"/>
                 </div>
-                <div className="row">
-                    <label className="control-label">Database User:</label>
-                    <input className="form-control" value={this.props.state.db_user} onChange={this.props.inputChange} name="db_user"/>
+                <div className="sb-form-group">
+                    <label className="control-label">Database User</label>
+                    <input className="_input-" value={this.props.state.db_user} onChange={this.props.inputChange} name="db_user"/>
                 </div>
-                <div className="row">
-                    <label className="control-label">Database Password:</label>
-                    <input className="form-control" type="password" value={this.props.state.db_password} onChange={this.props.inputChange} name="db_password"/>
+                <div className="sb-form-group">
+                    <label className="control-label">Database Password</label>
+                    <input className="_input-" type="password" value={this.props.state.db_password} onChange={this.props.inputChange} name="db_password"/>
                 </div>
-                <div className="row">
-                    <label className="control-label">Database Port:</label>
-                    <input className="form-control" value={this.props.state.db_port} onChange={this.props.inputChange} name="db_port" placeholder="5432"/>
+                <div className="sb-form-group">
+                    <label className="control-label">Database Port</label>
+                    <input className="_input-" value={this.props.state.db_port} onChange={this.props.inputChange} name="db_port" placeholder="5432"/>
                 </div>
             </div>
         )
@@ -62,36 +62,36 @@ class SetupAdmin extends React.Component{
                 <p>
                     Enter your ServiceBot site configuration.
                 </p>
-                <div className="row">
-                    <label className="control-label">Admin Email:</label>
-                    <input required type="email" className="form-control" value={this.props.state.admin_user} onChange={this.props.inputChange} name="admin_user" />
+                <div className="sb-form-group">
+                    <label className="control-label">Admin Email</label>
+                    <input required type="email" className="_input-" value={this.props.state.admin_user} onChange={this.props.inputChange} name="admin_user" />
                 </div>
 
-                <div className="row">
-                    <label className="control-label">Admin Password:</label>
-                    <input minLength="4" required className="form-control" type="password" value={this.props.state.admin_password} onChange={this.props.inputChange} name="admin_password"/>
+                <div className="sb-form-group">
+                    <label className="control-label">Admin Password</label>
+                    <input minLength="4" required className="_input-" type="password" value={this.props.state.admin_password} onChange={this.props.inputChange} name="admin_password"/>
                 </div>
                 <hr/>
 
-                <div className="row">
-                    <label className="control-label">Business Name:</label>
-                    <input className="form-control" value={this.props.state.company_name} onChange={this.props.inputChange} name="company_name"/>
+                <div className="sb-form-group">
+                    <label className="control-label">Business Name</label>
+                    <input className="_input-" value={this.props.state.company_name} onChange={this.props.inputChange} name="company_name"/>
                 </div>
-                <div className="row">
-                    <label className="control-label">Business Address:</label>
-                    <input className="form-control" value={this.props.state.company_address} onChange={this.props.inputChange} name="company_address"/>
+                <div className="sb-form-group">
+                    <label className="control-label">Business Address</label>
+                    <input className="_input-" value={this.props.state.company_address} onChange={this.props.inputChange} name="company_address"/>
                 </div>
-                <div className="row">
-                    <label className="control-label">Business Phone #:</label>
-                    <input type="tel" className="form-control" value={this.props.state.company_phone_number} onChange={this.props.inputChange} name="company_phone_number"/>
+                <div className="sb-form-group">
+                    <label className="control-label">Business Phone #</label>
+                    <input type="tel" className="_input-" value={this.props.state.company_phone_number} onChange={this.props.inputChange} name="company_phone_number"/>
                 </div>
-                <div className="row">
-                    <label className="control-label">Business Email:</label>
-                    <input type="email" className="form-control" value={this.props.state.company_email} onChange={this.props.inputChange} name="company_email"/>
+                <div className="sb-form-group">
+                    <label className="control-label">Business Email</label>
+                    <input type="email" className="_input-" value={this.props.state.company_email} onChange={this.props.inputChange} name="company_email"/>
                 </div>
-                <div className="row">
-                    <label className="control-label">Site URL:</label>
-                    <input className="form-control" value={this.props.state.hostname} onChange={this.props.inputChange} name="hostname"/>
+                <div className="sb-form-group">
+                    <label className="control-label">Site URL</label>
+                    <input className="_input-" value={this.props.state.hostname} onChange={this.props.inputChange} name="hostname"/>
                 </div>
             </div>
         )
@@ -117,13 +117,13 @@ class SetupStripe extends React.Component{
                         </p>
                     </div>
                 </p>
-                <div className="row">
+                <div className="sb-form-group">
                     <label className="control-label">Stripe Publishable API Key</label>
-                    <input required className="form-control" value={this.props.state.stripe_public} onChange={this.props.inputChange} name="stripe_public"/>
+                    <input required className="_input-" value={this.props.state.stripe_public} onChange={this.props.inputChange} name="stripe_public"/>
                 </div>
-                <div className="row">
+                <div className="sb-form-group">
                     <label className="control-label">Stripe Secret API Key</label>
-                    <input required className="form-control" value={this.props.state.stripe_secret} onChange={this.props.inputChange} name="stripe_secret"/>
+                    <input required className="_input-" value={this.props.state.stripe_secret} onChange={this.props.inputChange} name="stripe_secret"/>
                 </div>
             </div>
         )

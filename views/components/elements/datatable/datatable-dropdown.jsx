@@ -1,7 +1,6 @@
 import React from 'react';
 import {Link, hashHistory} from 'react-router';
 import _ from "lodash";
-import $ from "jquery";
 import '../../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 
@@ -14,10 +13,6 @@ class Dropdown extends React.Component {
         this.processDropDownButtons = this.processDropDownButtons.bind(this);
         this.processLink = this.processLink.bind(this);
         this.getButton = this.getButton.bind(this);
-    }
-
-    componentDidMount(){
-        $(this.refs.dropdownToggle).dropdown();
     }
 
     processDropDownButtons(link, id){
@@ -86,7 +81,8 @@ class Dropdown extends React.Component {
     render () {
         return(
             <div id="action-buttons" className="btn-group">
-                <button type="button" className="btn btn-default dropdown-toggle" ref="dropdownToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button"
+                        className="buttons _primary _dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {this.props.name} <span className="caret"/>
                 </button>
                 <ul className={`dropdown-menu ${this.props.direction ? (this.props.direction == 'right' ? 'dropdown-menu-right' : '') : ''}`}>

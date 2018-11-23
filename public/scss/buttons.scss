@@ -1,3 +1,16 @@
+.buttons-group{
+
+  &.__gap{
+
+    .buttons {
+      &:not(:last-child) {
+        margin-right: $gutter/2;
+      }
+    }
+  }
+
+}
+
 .buttons{
   padding: 6px 12px;
   margin-bottom: 0;
@@ -36,32 +49,6 @@
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.17);
   }
 
-  &._text{
-    background: none !important;
-    color: $color-blue-gray !important;
-    box-shadow: none !important;
-  }
-
-  &._green {
-    background-color: #1ABE98;
-    color: white;
-  }
-
-  &._red {
-    background-color: #db0306;
-    color: white;
-  }
-
-  &._navy {
-    background-color: #031f5f;
-    color: white;
-  }
-
-  &._yellow {
-    background-color: #ffca00;
-    color: #484848;
-  }
-
   &._default {
     font-size: $font-size;
     background-color: $blue;
@@ -75,12 +62,107 @@
     }
   }
 
+  &._text{
+    background: none !important;
+    color: $color-blue-gray !important;
+    box-shadow: none !important;
+  }
+
+  &._green {
+    background-color: #1ABE98;
+    color: white;
+    &:hover {
+      background-color: #17a886;
+    }
+  }
+
+  &._red {
+    background-color: #db0306;
+    color: white;
+    &:hover {
+      background-color: #b40305;
+    }
+  }
+
+  &._navy {
+    background-color: #031f5f;
+    color: white;
+    &:hover {
+      background-color: $dark-blue;
+    }
+  }
+
+  &._gray {
+    background-color: #eeeeee;
+    color: black;
+    &:hover {
+      background-color: #dddddd;
+    }
+  }
+
+  &._yellow {
+    background-color: #ffca00;
+    color: #484848;
+  }
+
   &._right{
     float: right;
   }
 
 }
 
+
+.action-column{
+  overflow: visible !important;
+  text-align: right !important;
+}
+.action-dropdown{
+  position: relative;
+  
+  &.open{
+    
+    .dropdown-menu{
+      display: block;
+      z-index: $z-dropdown;
+      box-shadow: $shadow-small;
+    }
+
+    .__close{
+      z-index: $z-dropdown - 1;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: transparent;
+    }
+  }
+
+  .dropdown-menu{
+    background: white;
+    position: absolute;
+    top: 41px;
+    right: 0;
+    list-style: none;
+    padding: 0;
+    border-radius: 6px;
+    display: none;
+
+    li{
+      cursor: pointer;
+      padding: 4px 24px;
+
+      &:hover{
+        background-color: #f2f2f2;
+      }
+
+      &.divider{
+        padding: 0;
+        border-bottom: 1px solid #e6e6e6;
+      }
+    }
+  }
+}
 
 
 .clear{

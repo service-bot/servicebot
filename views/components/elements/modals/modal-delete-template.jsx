@@ -103,10 +103,10 @@ class ModalDeleteTemplate extends React.Component {
                                 </div>
                             </div>
                             <div className={`modal-footer text-right p-b-20`}>
-                                <button className="btn btn-primary btn-rounded" onClick={actionFunction}>
+                                <button className="buttons btn-primary btn-rounded" onClick={actionFunction}>
                                     <span className="capitalize">{pageMessage}</span>
                                 </button>
-                                <button className="btn btn-default btn-rounded" onClick={self.props.hide}>Nevermind</button>
+                                <button className="buttons btn-default btn-rounded" onClick={self.props.hide}>Nevermind</button>
                             </div>
                         </div>
                     </Modal>

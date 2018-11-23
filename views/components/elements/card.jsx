@@ -19,7 +19,7 @@ class Card extends React.Component {
                     <div className="card-block">
                         <h4 className="card-title">{this.props.name}</h4>
                         <p className="card-text">{_.truncate(this.props.description, {length: 200, omission: '...'})}</p>
-                        <Link to={`service-catalog/${this.props.id}/request`} className="btn btn-primary btn-flat btn-rounded pull-right btn-request-service">
+                        <Link to={`service-catalog/${this.props.id}/request`} className="buttons btn-primary btn-flat btn-rounded pull-right btn-request-service">
                             <i className="fa fa-check m-r-10"/>
                             Request</Link>
                         <div className="clearfix"/>

@@ -55,26 +55,6 @@
 
   #_section-3 {
 
-    ._embed-code-form {
-      display: flex;
-
-      .form-group {
-        flex-basis: 30%;
-        margin-right: $gutter;
-
-        &#_select-a-tier {
-          margin-right: $gutter !important;
-        }
-
-        &#_select-a-plan {
-          flex-grow: 1;
-        }
-
-        &:last-child{
-          margin-right: 0;
-        }
-      }
-    }
 
   }
 

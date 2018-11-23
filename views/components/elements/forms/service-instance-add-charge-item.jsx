@@ -11,27 +11,12 @@ import Buttons from "../buttons.jsx";
 
 function ChargeForm(props){
     return(<form onSubmit={props.handleSubmit}>
-        <Field
-            name={"amount"}
-            component={priceField}
-            type={"number"}
-            isCents={true}
-            label="Charge Amount"
-            validate={numericality({'>': 50, msg: "must be greater than $0.50"})}
-
-        />
-        <Field
-            name={"description"}
-            component={inputField}
-            type={"text"}
-            label="Charge Description"
-            validate={required()}
-
-        />
-
-        <button className="buttons _primary" type="submit">
-            Submit
-        </button>
+        <Field name={"amount"} component={priceField} type={"number"} isCents={true} label="Charge Amount"
+            validate={numericality({'>': 50, msg: "must be greater than $0.50"})}/>
+        <Field name={"description"} component={inputField} type={"text"} label="Charge Description" validate={required()}/>
+        <div className={`sb-form-group`}>
+            <button className="buttons _primary" type="submit">Submit</button>
+        </div>
     </form>)
 }
 

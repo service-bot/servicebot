@@ -7,7 +7,6 @@ import {change, Field, FieldArray, FormSection, formValueSelector, getFormValues
 import {connect} from "react-redux";
 import {iconToggleField, inputField, priceField, ServicebotBaseForm} from "servicebot-base-form";
 import {addAlert, dismissAlert, setHasOffering} from "../../utilities/actions";
-// import ServiceBotBaseForm from "./servicebot-base-form2.jsx";
 import Load from "../../utilities/load.jsx";
 import {numericality, required} from 'redux-form-validators'
 import {TierBillingForm} from "./tier-billing-form.jsx"
@@ -159,15 +158,6 @@ class TemplateForm extends React.Component {
 
         const {handleSubmit, pristine, reset, submitting, error, serviceTypeValue, invalid, formJSON, options} = props;
 
-        const sectionDescriptionStyle = {
-            background: _.get(options, 'service_template_icon_background_color.value', '#000000'),
-            height: "100px",
-            width: "100px",
-            padding: "30px",
-            marginLeft: "50%",
-            transform: "translateX(-50%)",
-            borderRadius: "50%",
-        };
         return (
 
             <form className="form-offering" onSubmit={handleSubmit}>
@@ -200,7 +190,6 @@ class TemplateForm extends React.Component {
                         </FormSection>
                     </div>
                 </div>
-                <hr/>
                 <button className="buttons _save" type="submit">Save & Embed</button>
             </form>
         )

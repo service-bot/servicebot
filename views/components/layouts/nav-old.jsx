@@ -64,11 +64,11 @@ class Nav extends React.Component {
                     </div>
                     <span className="welcome">
                         <Authorizer>
-                            <button className="btn btn-rounded btn-outline btn-white btn-signout" onClick={this.props.handleLogout}>Log Out</button>
+                            <button className="buttons btn-rounded btn-outline btn-white btn-signout" onClick={this.props.handleLogout}>Log Out</button>
                         </Authorizer>
                         <Authorizer anonymous={true}>
-                            <Link to="login" className="btn btn-rounded btn-flat btn-login">Log In</Link>
-                            <Link to="signup" className="btn btn-rounded btn-outline btn-white btn-signup">Sign up</Link>
+                            <Link to="login" className="buttons btn-rounded btn-flat btn-login">Log In</Link>
+                            <Link to="signup" className="buttons btn-rounded btn-outline btn-white btn-signup">Sign up</Link>
                         </Authorizer>
                     </span>
                     <Authorizer>

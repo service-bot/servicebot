@@ -53,11 +53,8 @@ class UserForm extends React.Component {
         }
         else {
             let user = this.state.user;
-
-            let pageName = this.props.route.name;
             return(
                 <Authorizer>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
                     <div className="page-service-instance">
                         <Content>
                             <div className="badge badge-40"><img src={this.state.url + "/avatar"} className="max-w-40 h-40 img-circle" alt="badge"/></div>
@@ -73,7 +70,7 @@ class UserForm extends React.Component {
                                 </Authorizer>
                             </div>
 
-                            <h5 class="m-20 m-t-40 m-b-10">Upload your profile picture</h5>
+                            <h5 className="m-20 m-t-40 m-b-10">Upload your profile picture</h5>
                             <form  id="imgform" encType="multipart/form-data">
                                 <input id="avatar" type="file" name="avatar"/>
                                 <button type="submit" onClick={this.handleImage}>Upload</button>

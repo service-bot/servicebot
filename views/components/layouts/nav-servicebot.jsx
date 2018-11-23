@@ -7,12 +7,9 @@ import {AdminEditingGear, AdminEditingSidebar} from "./admin-sidebar.jsx";
 import {NavNotification} from "../pages/notifications.jsx";
 import SideNav from '../layouts//side-nav.jsx';
 import {AppMessage} from '../elements/app-message.jsx';
-import ReactTooltip from 'react-tooltip';
 import consume from "pluginbot-react/dist/consume"
-
 import {connect} from "react-redux";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
-import $ from "jquery";
 
 let _ = require("lodash");
 
@@ -76,18 +73,6 @@ class NavServiceBot extends React.Component {
 
     }
 
-    componentDidMount() {
-        $(this.refs.dropdownToggle).dropdown();
-        $(this.refs.dropdownToggle2).dropdown();
-        $(this.refs.dropdownToggle3).dropdown();
-    }
-
-    componentDidUpdate() {
-        $(this.refs.dropdownToggle).dropdown();
-        $(this.refs.dropdownToggle2).dropdown();
-        $(this.refs.dropdownToggle3).dropdown();
-    }
-
     onOpenInvoiceModal() {
         this.setState({InvoiceModal: true});
     }
@@ -128,7 +113,7 @@ class NavServiceBot extends React.Component {
         let user = this.props.user;
         return this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
             if (route.isVisible(user) && (route.navType === "main" || route.navType === undefined)) {
-                acc.push(<li><Link key={index} to={route.path}
+                acc.push(<li key={`item-${index}`}><Link key={index} to={route.path}
                                    className={self.getLinkClass(route.path.split('/')[1], 'parent')}>{icon &&
                 <span className={`nav-icons icon-${icon}`}/>}{route.name}</Link></li>)
             }
@@ -141,7 +126,7 @@ class NavServiceBot extends React.Component {
         let self = this;
         return this.props.services.routeDefinition && this.props.services.routeDefinition.reduce((acc, route, index) => {
             if(route.isVisible(user) && route.navType === "settings") {
-                acc.push(<li><Link className={self.getLinkClass(route.path.substr(1), 'child')} key={index} to={route.path}>{route.name}</Link></li>)
+                acc.push(<li key={`item-${index}`}><Link className={self.getLinkClass(route.path.substr(1), 'child')} key={index} to={route.path}>{route.name}</Link></li>)
             }
             return acc;
         }, [])
@@ -276,18 +261,6 @@ class NavServiceBot extends React.Component {
             return (
                 <span data-tip data-for="notification-stripe-keys" className="notification-badge">
                     <Link to="/stripe-settings">
-                        {/*<ReactTooltip id="notification-stripe-keys" class="notification-stripe-keys"*/}
-                        {/*aria-haspopup='true' role='example'*/}
-                        {/*place="bottom" type="error" effect="solid" offset={{top: -28, left: -20}}>*/}
-                        {/*<p><strong>You need to complete your setup to unlock certain features:</strong></p>*/}
-                        {/*<ul>*/}
-                        {/*<li>User Invites</li>*/}
-                        {/*<li>Publishing Service Templates</li>*/}
-                        {/*<li>Adding funds</li>*/}
-                        {/*<li>Receiving Payments</li>*/}
-                        {/*</ul>*/}
-                        {/*<p>Click to complete</p>*/}
-                        {/*</ReactTooltip>*/}
                         <strong>No Stripe Connection</strong>
                     </Link>
 
@@ -350,22 +323,6 @@ class NavServiceBot extends React.Component {
                         <nav className="app-links-container" onMouseEnter={this.toggleOnEditingGear}
                              onMouseLeave={this.toggleOffEditingGear}>
 
-                            {/*<div className="navbar-header">*/}
-                            {/*<Authorizer anonymous={true}>*/}
-                            {/*<Link className="mobile-login-button" to="/login">Login</Link>*/}
-                            {/*</Authorizer>*/}
-                            {/*<Authorizer>*/}
-                            {/*<button type="button" className="navbar-toggle collapsed" data-toggle="collapse"*/}
-                            {/*data-target="#bs-example-navbar-collapse-1" aria-expanded="false" onClick={this.toggleSideBar}  >*/}
-                            {/*<span className="sr-only">Toggle navigation</span>*/}
-                            {/*<span className="icon-bar"/>*/}
-                            {/*<span className="icon-bar"/>*/}
-                            {/*<span className="icon-bar"/>*/}
-                            {/*</button>*/}
-                            {/*</Authorizer>*/}
-                            {/*<span className="moble-live-mode">{this.getLivemode()}</span>*/}
-                            {/*</div>*/}
-
                             <div className="_main">
                                 <Authorizer>
                                     {this.getMenuItems(linkTextStyle)}
@@ -373,11 +330,7 @@ class NavServiceBot extends React.Component {
                                 <Authorizer anonymous={true}>
                                     <VisibleAnonymousLinks/>
                                 </Authorizer>
-                                {/*<Authorizer>*/}
-                                {/*<ul className="nav navbar-nav navbar-right">*/}
 
-                                {/*</ul>*/}
-                                {/*</Authorizer>*/}
                                 <div className="nav-footer">
                                     <div className="navvbar-badge">
                                         {this.getLivemode()}

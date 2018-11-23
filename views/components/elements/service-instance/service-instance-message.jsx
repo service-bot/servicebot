@@ -64,11 +64,11 @@ class ServiceInstanceMessage extends React.Component {
             };
             if(messages.length > 0){
                 return (
-                    <div className="service-instance-actions p-0">
+                    <div className="service-instance-actions">
                         <div className="service-instance-box-title">
                             <span>Logs</span>
                         </div>
-                        <div className="service-instance-box-content p-b-30">
+                        <div className="service-instance-box-content">
                             <div className="comments">
                                 <ul className="comments-list">
                                     {messages.map((message)=>{
@@ -95,11 +95,11 @@ class ServiceInstanceMessage extends React.Component {
                 );
             }else{
                 return(
-                    <div className="service-instance-actions p-0">
+                    <div className="service-instance-actions">
                         <div className="service-instance-box-title">
                             <span>Logs</span>
                         </div>
-                        <div className="service-instance-box-content p-b-30">
+                        <div className="service-instance-box-content">
                             <div>
                                 {/*<ServiceInstanceMessageForm instanceId={self.state.instanceId} handleComponentUpdating={self.handleComponentUpdating}/>*/}
                             </div>

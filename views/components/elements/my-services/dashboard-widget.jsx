@@ -11,90 +11,31 @@ class DashboardWidget extends React.Component {
     }
 
     render () {
-        let self = this;
-
-        let style = {widget:{}, widgetDark:{}};
-
-        if(this.props.options) {
-            let options = this.props.options;
-            style.widget.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
-            let darkened = getDarkenedRGB(hexToRgb(_.get(options, 'primary_theme_background_color.value', '#000000')));
-            let darkenedHex = rgbToHex(darkened.r, darkened.g, darkened.b);
-
-            if(self.props.widgetColor){
-                style.widget.backgroundColor = self.props.widgetColor;
-                darkened = getDarkenedRGB(hexToRgb(self.props.widgetColor));
-                darkenedHex = rgbToHex(darkened.r, darkened.g, darkened.b);
-            }
-
-            style.widgetDark.backgroundColor = darkenedHex;
-            style.widgetDark.color = _.get(options, 'primary_theme_text_color.value', '#ffffff');
-        }
-
-        if(this.props.borderRadius) {
-            style.widgetDark.borderRadius = this.props.borderRadius;
-        }
-
-        if(this.props.iconPadding) {
-            style.widget.paddingTop = this.props.iconPadding;
-            style.widget.paddingBottom = this.props.iconPadding;
-        }
-
-
-        const widgetContent = (
-
-            <div className={`text-widget-1 color-white ${self.props.reversed && "reversed"} ${self.props.margins}`} style={style.widgetDark}>
-                {!self.props.plain &&
-                <div className={`text-widget-wrapper ${self.props.widgetHoverClass}`} style={style.widgetDark}>
-                    {!self.props.reversed &&
-                    <div className={`text-widget-item col-xs-4 ${self.props.small && "small"}`} style={style.widget}>
-                        <i className={`fa fa-${self.props.widgetIcon} fa-2x`} />
-                    </div>
-                    }
-                    <div className="text-widget-item col-xs-8">
-                        <div className="title">{self.props.widgetName}</div>
-                        <div className={self.props.small ? "subtitle small" : "subtitle"}><span
-                            className="">{self.props.widgetData || this.props.children}</span></div>
-                    </div>
-                    {self.props.reversed &&
-                    <div className={`text-widget-item col-xs-4 ${self.props.small && "small"}`} style={style.widget}>
-                        <i className={`fa fa-${self.props.widgetIcon} fa-2x`} />
-                    </div>
-                    }
+        let {clickAction, widgetClass, widgetIcon, widgetName, widgetData, children} = this.props;
+        const WidgetContent = () => {
+            return <React.Fragment>
+                <div className="__item-icon">
+                    <i className={`fa fa-${widgetIcon} fa-2x`}/>
                 </div>
-                ||
-                <div className={`text-widget-wrapper plain ${self.props.widgetHoverClass}`} style={style.widget}>
-                    <div className="text-widget-item col-xs-12">
-                        <div className="title">{self.props.widgetName}</div>
-                        <div className="subtitle"><span
-                            className="">{self.props.widgetData || this.props.children}</span></div>
+                <div className="__item-body">
+                    <div className="__title">{widgetName}</div>
+                    <div className="__sub-title">
+                        <span className="__data">{widgetData || children}</span>
                     </div>
                 </div>
-                }
-            </div>
+            </React.Fragment>;
+        };
 
-        );
-
-        if(this.props.link){
-            return (
-                <div className={self.props.widgetClass || "col-xs-12 col-sm-6 col-md-3 col-xl-3"}>
-                    <Link to={self.props.link} target="_Blank" >
-                        {widgetContent}
-                    </Link>
-                </div>
-            );
-        }else if(this.props.clickAction){
+        if(clickAction){
             return(
-                <div className={self.props.widgetClass || "col-xs-12 col-sm-6 col-md-3 col-xl-3"}>
-                    <Link to='' onClick={self.props.clickAction}>
-                        {widgetContent}
-                    </Link>
+                <div className={`text-widget ${widgetClass}`} onClick={clickAction}>
+                    <WidgetContent/>
                 </div>
             );
         }else{
             return (
-                <div className={self.props.widgetClass || "col-xs-12 col-sm-6 col-md-3 col-xl-3"}>
-                    {widgetContent}
+                <div className={`text-widget ${widgetClass}`}>
+                    <WidgetContent/>
                 </div>
             );
         }

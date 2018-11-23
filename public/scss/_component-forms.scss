@@ -9,6 +9,46 @@
   margin-bottom: $gutter;
 }
 
+.sb-form-group{
+  padding: 0 $gutter $gutter $gutter;
+
+  &.hidden, &._hidden{
+    display: none;
+  }
+
+  ._input-container-{
+    position: relative;
+
+    ._form-error-{
+      position: absolute;
+      top: -30px;
+      right: 0;
+      width: auto;
+      border-radius: 4px;
+      background: $color-error;
+      color: white;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      line-height: 1.3rem;
+    }
+  }
+
+  ._label-{
+
+  }
+
+  ._input-{
+    padding: $gutter/2 $gutter;
+    width: 100%;
+
+    &.has-error{
+      border-color: $color-error;
+      border-width: 2px;
+    }
+  }
+}
+
 /* @mixins */
 @mixin form-checkboxes{
   .iconToggleField {
@@ -53,5 +93,51 @@
     input {
       display: none;
     }
+  }
+}
+@mixin form-checkboxes-2{
+  .iconToggleField {
+    cursor: pointer;
+    position: relative;
+    border: 1px solid #0033A0;
+    background: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 1px;
+
+    &::before {
+      content: "";
+      color: $color-blue;
+      position: absolute;
+      margin-left: -10px;
+      margin-top: 8px;
+      width: 21px;
+      height: 11px;
+      border-bottom: solid 3px currentColor;
+      border-left: solid 3px currentColor;
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+    }
+
+    &.inactive{
+      border: 1px solid #c6cbce;
+      &::before{
+        color: #c6cbce;
+        @include defaultTransition(150ms);
+      }
+    }
+    &.active{
+      border: 1px solid $color-blue;
+      @include defaultTransition(150ms);
+    }
+    &:hover{
+      &::before{
+        color: $color-blue;
+        @include defaultTransition(150ms);
+      }
+    }
+  }
+  .itf-icon {
+    display: none;
   }
 }

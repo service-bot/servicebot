@@ -7,7 +7,6 @@ import Modal from '../../utilities/modal.jsx';
 import DateFormat from '../../utilities/date-format.jsx';
 import {Price} from '../../utilities/price.jsx';
 import { connect } from "react-redux";
-let _ = require("lodash");
 
 class ModalInvoice extends React.Component {
 
@@ -55,22 +54,19 @@ class ModalInvoice extends React.Component {
     }
 
     render () {
-        let self = this;
-        let pageName = "Upcoming Invoice";
+        let { loading, nextInvoice, currentUser } = this.state;
+        let { icon, show, hide } = this.props;
 
-        if(self.state.loading){
-            return(
-                <Load/>
-            );
+        if(loading){
+            return <Load/>;
         }else{
-            let myNextInvoice = self.state.nextInvoice;
+            let myNextInvoice = nextInvoice;
             if(myNextInvoice){
                 let amountDue = myNextInvoice.amount_due || 0;
                 let total = myNextInvoice.total || 0;
                 let nextPaymentAttempt = myNextInvoice.next_payment_attempt || '';
                 let closed = myNextInvoice.closed || false;
                 let paid = myNextInvoice.paid || false;
-
                 let lineItemCount = myNextInvoice.lines.total_count || 0;
                 let lineItems = myNextInvoice.lines.data; //data is an array of objects
 
@@ -98,45 +94,31 @@ class ModalInvoice extends React.Component {
 
                 let last4, fund = null;
 
-                if(self.state.currentUser) {
-                    fund = self.state.currentUser.references.funds;
+                if(currentUser) {
+                    fund = currentUser.references.funds;
                     if(fund && fund.length > 0){
                         last4 = fund[0].source.card.last4;
                     }
                 }
 
-                let modalHeadingStyle = {};
-                if(this.props.options){
-                    let options = this.props.options;
-                    modalHeadingStyle.backgroundColor = _.get(options, 'primary_theme_background_color.value', '#000000');
-                }
-
                 return(
-                    <Modal modalTitle={pageName} icon="fa-credit-card-alt" show={this.props.show} hide={this.props.hide}>
-                        <div id="invoice-modal" className="table-responsive">
-                            <div className="invoice-widget" style={modalHeadingStyle}>
-                                <div className="row">
-                                    <div className="col-xs-12 col-sm-4">
-                                        <div className="address">
-                                            <strong>Amount To Be Charged</strong><br/>
-                                            <span><i className="fa fa-money"/><Price value={amountDue} currency={myNextInvoice.currency}/></span><br/>
-                                        </div>
-                                    </div>
-                                    <div className="col-xs-12 col-sm-4">
-                                        <div className="address">
-                                            <strong>Charge Date</strong><br/>
-                                            <span><i className="fa fa-calendar-o"/><DateFormat date={nextPaymentAttempt}/></span><br/>
-                                        </div>
-                                    </div>
-                                    <div className="col-xs-12 col-sm-4">
-                                        <div className="payment-method">
-                                            <strong>Using Payment Method</strong><br/>
-                                            <span><i className="fa fa-credit-card"/>*** *** *** {last4}</span><br/>
-                                        </div>
-                                    </div>
+                    <Modal modalTitle="Upcoming Invoice" icon="fa-credit-card-alt" show={show} hide={hide}>
+                        <div className="__modal __upcoming-invoice">
+                            <div className="__invoice-information">
+                                <div className="__amount">
+                                    <strong>Amount</strong><br/>
+                                    <span><i className="fa fa-money"/><Price value={amountDue} currency={myNextInvoice.currency}/></span><br/>
+                                </div>
+                                <div className="__date">
+                                    <strong>On Date</strong><br/>
+                                    <span><i className="fa fa-calendar-o"/><DateFormat date={nextPaymentAttempt}/></span><br/>
+                                </div>
+                                <div className="__payment-method">
+                                    <strong>Method</strong><br/>
+                                    <span><i className="fa fa-credit-card"/>*** *** *** {last4}</span><br/>
                                 </div>
                             </div>
-                            <table id="invoice-table" className="table table-striped table-hover">
+                            <table className="table __invoice-table">
                                 <thead>
                                     <tr>
                                         <td className="service-description"><strong>Service Item</strong></td>
@@ -147,7 +129,7 @@ class ModalInvoice extends React.Component {
                                 <tbody>
                                     {items()}
                                 </tbody>
-                                <tfoot className="invoice-footer">
+                                <tfoot className="__invoice-footer">
                                     <tr>
                                         <td/>
                                         <td>Total:</td>
@@ -160,14 +142,10 @@ class ModalInvoice extends React.Component {
                 );
             }else{
                 return(
-                    <Modal modalTitle={pageName} icon={this.props.icon} show={this.props.show} hide={this.props.hide}>
-                        <div className="table-responsive">
-                            <div className="invoice-widget">
-                                <div className="row">
-                                    <div className="col-xs-12">
-                                        <h4>You do not have any invoice at the moment.</h4>
-                                    </div>
-                                </div>
+                    <Modal modalTitle="Upcoming Invoice" icon={icon} show={show} hide={hide}>
+                        <div className="invoice-modal">
+                            <div className="__invoice-information">
+                                <p className="__no-invoice">You do not have any invoice at the moment.</p>
                             </div>
                         </div>
                     </Modal>

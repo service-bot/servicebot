@@ -17,6 +17,8 @@
     overflow: scroll;
     padding: 20px 25px;
     border-radius: 5px;
+    max-width: 500px;
+    margin: auto;
 }
 
 .installation h1{

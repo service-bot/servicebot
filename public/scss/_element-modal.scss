@@ -7,5 +7,31 @@
     background: white;
     left: 0 !important;
   }
+}
+
+/* Individual Modals */
+.__modal{
+
+  &.__upcoming-invoice{
+    .__invoice-information{
+      display: flex;
+      justify-content: space-between;
+      i{
+        margin-right: $gutter/2;
+      }
+    }
+    .table{
+      margin-top: $gutter;
+      font-size: 0.9rem;
+      thead{
+        color: #051f60;
+        background: #ececec;
+      }
+      td{
+        padding: 4px !important;
+        font-size: 13px;
+      }
+    }
+  }
 
 }

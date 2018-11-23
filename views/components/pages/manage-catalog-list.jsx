@@ -1,11 +1,10 @@
 import React from 'react';
 import {Link, browserHistory} from 'react-router';
-import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
+import {isAuthorized} from "../utilities/authorizer.jsx";
 import Load from "../utilities/load.jsx";
 import Fetcher from '../utilities/fetcher.jsx';
 import Dropdown from "../elements/dropdown.jsx";
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
-import {Price, serviceTypeFormatter} from "../utilities/price.jsx";
+import {TableHeaderColumn} from 'react-bootstrap-table';
 import {getFormattedDate} from "../utilities/date-format.jsx";
 import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
@@ -14,6 +13,7 @@ import ModalDeleteTemplate from "../elements/modals/modal-delete-template.jsx";
 import ModalEmbedTemplate from "../elements/modals/modal-embed-template.jsx";
 import ReactTooltip from 'react-tooltip';
 import ContentTitle from "../layouts/content-title.jsx";
+import Content from "../layouts/content.jsx";
 import {connect} from "react-redux";
 
 class ManageCatalogList extends React.Component {
@@ -38,7 +38,6 @@ class ManageCatalogList extends React.Component {
         this.onOpenDeleteModal = this.onOpenDeleteModal.bind(this);
         this.onCloseDeleteModal = this.onCloseDeleteModal.bind(this);
         this.onCloseEmbedModal = this.onCloseEmbedModal.bind(this);
-
         this.rowActionsFormatter = this.rowActionsFormatter.bind(this);
     }
 
@@ -98,23 +97,13 @@ class ManageCatalogList extends React.Component {
         if(numTiers === 1) {
             str = 'Tier';
         }
-        return ( <Link to={`/manage-catalog/${row.id}`}>{cell} <span class="status-badge faded" >{numTiers} {str}</span></Link> );
+        return ( <Link to={`/manage-catalog/${row.id}`}>{cell} <span className="status-badge faded" >{numTiers} {str}</span></Link> );
     }
-    // priceFormatter(cell, row){
-    //     let prefix = getSymbolFromCurrency(row.currency);
-    //     return ( <Price value={cell} prefix={prefix}/> );
-    // }
-    // paymentTypeFormatter(cell, row){
-    //     return ( serviceTypeFormatter(row) );
-    // }
-    // categoryFormatter(cell){
-    //     return ( cell.service_categories[0].name );
-    // }
+
     publishedFormatter(cell){
         let color_class = 'status-badge ';
         color_class += cell ? 'green' : 'grey';
         return ( `<span class="${color_class}" >${cell ? 'Live' : 'Draft'}</span>` );
-        // return ( cell ? 'Published' : 'Unpublished' );
     }
     createdFormatter(cell){
         return (<div className="datatable-date">
@@ -169,7 +158,6 @@ class ManageCatalogList extends React.Component {
     }
 
     render () {
-        let pageName = this.props.route.name;
         let renderModals = ()=> {
             if (this.state.embedModal) {
                 return(
@@ -199,8 +187,8 @@ class ManageCatalogList extends React.Component {
             return ( <Load/> );
         } else {
             return (
-                <div className="page-service-instance row m-b-20">
-                    <div className="col-xs-12">
+                <div className="page __manage-services">
+                    <Content>
                         <ContentTitle title="Manage Services"/>
                         <ServiceBotTableBase
                             rows={this.state.rows}
@@ -208,13 +196,12 @@ class ManageCatalogList extends React.Component {
                             createItemLabel={'Create Service'}
                             fetchRows={this.fetchData}
                             sortColumn="updated_at"
-                            sortOrder="desc"
-                        >
+                            sortOrder="desc">
                             <TableHeaderColumn isKey
                                             dataField='name'
                                                dataSort={ true }
                                                dataFormat={ this.nameFormatter }
-                                               width={200}>
+                                               width={`200px`}>
                                 Service Name
                             </TableHeaderColumn>
                             {/*<TableHeaderColumn dataField='Tiers'*/}
@@ -243,7 +230,7 @@ class ManageCatalogList extends React.Component {
                                                dataFormat={ this.publishedFormatter }
                                                searchable={false}
                                                filterFormatted
-                                               width={100}>
+                                               width={`100px`}>
                                 Status
                             </TableHeaderColumn>
                             <TableHeaderColumn dataField='updated_at'
@@ -251,7 +238,7 @@ class ManageCatalogList extends React.Component {
                                                dataFormat={ this.createdFormatter }
                                                searchable={false}
                                                filterFormatted
-                                               width={150}>
+                                               width={`150px`}>
                                 Updated At
                             </TableHeaderColumn>
                             <TableHeaderColumn dataField='Actions'
@@ -259,11 +246,11 @@ class ManageCatalogList extends React.Component {
                                                columnClassName={'action-column'}
                                                dataFormat={ this.rowActionsFormatter }
                                                searchable={false}
-                                               width={100}>
+                                               width={`100px`}>
                             </TableHeaderColumn>
                         </ServiceBotTableBase>
                         {renderModals()}
-                    </div>
+                    </Content>
                 </div>
             );
         }

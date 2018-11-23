@@ -141,11 +141,11 @@ class Inputs extends React.Component {
 
         if(type == "text" || type == "number" || type == "hidden"){
             return (
-                <div className={`form-group ${error ? 'has-error' : ''} ${type == 'hidden' ? 'hidden' : ''}`}>
+                <div className={`sb-form-group${error ? 'has-error' : ''} ${type == 'hidden' ? 'hidden' : ''}`}>
                     {label &&
                     <label className="control-label text-capitalize">{label}</label>
                     }
-                    <input className="form-control"
+                    <input className="_input-"
                            maxLength={maxLength}
                            type={type}
                            placeholder={placeholder}
@@ -159,7 +159,7 @@ class Inputs extends React.Component {
         }else if(type == "price"){
             //TODO: Handle on load, change the price mask for editing forms
             return(
-                <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''} ${type == 'hidden' ? 'hidden' : ''}`}>
+                <div className={`sb-form-group${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''} ${type == 'hidden' ? 'hidden' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}
                     <div className="price-input">
                         <span className="price-mask">{!isNaN(this.state.priceValue) && this.state.priceValue >= 0 ?
@@ -173,17 +173,17 @@ class Inputs extends React.Component {
         }else if(type == "textarea"){
             let row  = this.props.row? this.props.row : 4;
             return (
-                <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''}`}>
+                <div className={`sb-form-group${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}
-                    <textarea className="form-control" name={name} defaultValue={defaultValue} rows={row} onChange={this.handleChange}/>
+                    <textarea className="_input-" name={name} defaultValue={defaultValue} rows={row} onChange={this.handleChange}/>
                     {error && <span className="help-block">{error}</span> }
                 </div>
             )
         }else if(type == "select"){
             return (
-                <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''}`}>
+                <div className={`sb-form-group${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}
-                    <select className="form-control" disabled={disabled} defaultValue={defaultValue} name={name} onChange={this.handleChange}>
+                    <select className="_input-" disabled={disabled} defaultValue={defaultValue} name={name} onChange={this.handleChange}>
                         {this.props.value == null && defaultValue == null ?
                             <option value={null}>{''}</option> : ''
                         }
@@ -202,9 +202,9 @@ class Inputs extends React.Component {
         }else if(type == "bool" || type == "boolean") {
 
             return (
-                <div className={`form-group ${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''}`}>
+                <div className={`sb-form-group${warning ? 'has-warning' : ''} ${error ? 'has-error' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}
-                    <select className="form-control" disabled={disabled} defaultValue={defaultValue} name={name} onChange={this.handleChange}>
+                    <select className="_input-" disabled={disabled} defaultValue={defaultValue} name={name} onChange={this.handleChange}>
                         <option value={true}>True</option>
                         <option value={false}>False</option>
                     </select>
@@ -214,9 +214,9 @@ class Inputs extends React.Component {
 
         }else if(type == "checkbox"){
             return (
-                <div className={`form-group ${error ? 'has-error' : ''}`}>
+                <div className={`sb-form-group${error ? 'has-error' : ''}`}>
                     {label && <label className="control-label">{label}</label>}
-                    <input className="form-control" type={type} name={this.props.name} defaultChecked={this.props.defaultValue == 'true'} onChange={this.handleChange}/>
+                    <input className="_input-" type={type} name={this.props.name} defaultChecked={this.props.defaultValue == 'true'} onChange={this.handleChange}/>
                     {this.props.error && <span className="help-block">{this.props.error}</span> }
                 </div>
             );
@@ -225,13 +225,13 @@ class Inputs extends React.Component {
             
             return (
                 <div key={`color_picker_${this.state.name}`} id={`color_picker_${this.state.name}`}
-                     className={`form-group color-picker-input ${error ? 'has-error' : ''}`}>
+                     className={`sb-form-groupcolor-picker-input ${error ? 'has-error' : ''}`}>
                     {label && <label className="control-label text-capitalize">{label}</label>}
                     <div className="ColorPickerPreview"
                          style={{backgroundColor: this.state.value, width: 50+'px', height: 50+'px', cursor: 'pointer', borderRadius: 5+'px'}}
                          onClick={this.handleShowPicker}/>
                     <span className="custom-color-picker" onClick={this.handleShowCustomPicker}><i className="fa fa-edit"/></span>
-                    <input id={`color_picker_${this.state.name}_input`} className="form-control"
+                    <input id={`color_picker_${this.state.name}_input`} className="_input-"
                            type="text" name={this.state.name} style={{display: 'none'}}
                            value={this.state.value} onFocus={this.handleShowPicker} onChange={this.props.onChange}/>
                     { this.state.showPicker &&

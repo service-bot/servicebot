@@ -121,7 +121,7 @@ class UserFormRegister extends React.Component {
 
                         {!this.state.token ?
                             <div>
-                                <button className="btn btn-raised btn-lg btn-primary btn-block" type="submit"
+                                <button className="buttons btn-raised btn-lg btn-primary btn-block" type="submit"
                                         value="submit">Sign Up
                                 </button>
                                 <p className="sign-up-link p-t-15">I have an account <Link className="sign-up-link"
@@ -131,7 +131,7 @@ class UserFormRegister extends React.Component {
                                                                                            }}>Login Here</Link></p>
                             </div> :
 
-                            <button className="btn btn-raised btn-lg btn-primary btn-block" type="submit"
+                            <button className="buttons btn-raised btn-lg btn-primary btn-block" type="submit"
                                     value="submit">
                                 Finish</button>
                         }

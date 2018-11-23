@@ -1,0 +1,182 @@
+@mixin pageActions{
+  ._content{
+    position: relative;
+  }
+  .servicebot-table-base {
+    .react-bs-table-tool-bar {
+      .row {
+        &>div:nth-child(1) {
+          .buttons-group {
+            position: absolute;
+            top: -9px;
+            right: 0;
+            width: auto;
+          }
+        }
+      }
+    }
+  }
+}
+$page-datatable-extra-bottom-padding: 160px;
+
+.page{
+  padding: $gutter*1.5 $gutter * 3;
+}
+
+.page, .app-content{
+
+  /* System */
+  &.__dashboard{
+
+  }
+
+  &.__manage-services{
+
+    padding-bottom: $page-datatable-extra-bottom-padding;
+    @include pageActions;
+
+  }
+
+  &.__manage-subscriptions{
+
+    padding-bottom: $page-datatable-extra-bottom-padding;
+    @include pageActions;
+
+  }
+
+  &.__manage-users{
+
+    padding-bottom: $page-datatable-extra-bottom-padding;
+    @include pageActions;
+
+  }
+
+  &.__manage-notification-templates{
+
+    padding-bottom: $page-datatable-extra-bottom-padding;
+    @include pageActions;
+
+  }
+
+  &.__view-service-instance{
+
+    .service-instance-actions{
+
+      .buttons-group{
+        line-height: 80px;
+        margin-right: $gutter * 2;
+      }
+    }
+  }
+
+  /* Settings */
+  &.__manage-system-settings{
+
+  }
+  &.__manage-stripe-settings{
+
+    .form-help-text{
+      line-height: 1.8rem;
+    }
+  }
+  &.__servicebot-webhooks{
+
+    ._section{
+      position: relative;
+
+      & > h3{
+        margin-bottom: $gutter !important;
+      }
+
+      .buttons-group{
+        margin-top: $gutter;
+      }
+
+      &.__webhook-event-info{
+        min-height: 100px;
+
+        .tiers{
+          margin-top: $gutter * 2;
+        }
+      }
+
+      .hooks-list {
+        display: grid;
+        grid-row-gap: $gutter / 2;
+
+        ._hook {
+          display: grid;
+          grid-template-columns: auto auto auto auto;
+          align-items: center;
+
+          .buttons-group {
+            margin: 0;
+          }
+        }
+      }
+    }
+
+    #button-view-events{
+      position: absolute;
+      right: $gutter * 1.5;
+      top: $gutter;
+    }
+  }
+
+  /* Profile */
+  &.__app-login, &.__app-login-forgot-password, &.__app-login-password-reset{
+
+    ._content-container{
+      width: 500px;
+      max-width: 100%;
+      margin: auto;
+      padding: $gutter * 3 $gutter * 4;
+      background: white;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+  }
+  &.__view-my-profile{
+
+
+  }
+
+  &.__manage-my-profile{
+
+
+  }
+
+  &.__manage-my-cards{
+
+
+  }
+
+  &.__manage-my-instance{
+
+    .account-status{
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: $gutter;
+    }
+
+  }
+
+  /* Billing */
+  &.__billing-history{
+
+
+  }
+
+  &.__billing-invoice{
+
+  }
+
+  /* Notifications */
+  &.__manage-notifications{
+
+  }
+
+}

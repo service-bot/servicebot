@@ -71,7 +71,7 @@ let renderCustomProperty = (props) => {
                     } else {
                         if (formJSON[index].data && formJSON[index].data.value) {
                             return (
-                                <div className={`form-group form-group-flex`}>
+                                <div className={`sb-form-groupform-group-flex`}>
                                     {(formJSON[index].prop_label && formJSON[index].type !== 'hidden') && <label
                                         className="control-label form-label-flex-md">{formJSON[index].prop_label}</label>}
                                     <div className="form-input-flex">
@@ -209,7 +209,7 @@ class ServiceRequestForm extends React.Component {
                                     formJSON={formJSON.references.service_template_properties}/>
                     </FormSection>
 
-                    <button className="btn btn-rounded btn-primary btn-bar submit-request" type="submit" value="submit">
+                    <button className="buttons btn-rounded btn-primary btn-bar submit-request" type="submit" value="submit">
                         {getRequestText()}
                     </button>
                     {error &&

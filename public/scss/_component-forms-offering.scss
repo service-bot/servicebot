@@ -2,11 +2,20 @@
 
 .form-offering{
 
+  ._section > h3{
+    margin-bottom: 0 !important;
+  }
+
   ._form-field-group{
     max-width: $_max-fields-width;
     min-width: $_min-fields-width;
 
     &._form-field-name_software_name{
+
+      ._group-default{
+        padding-left: 0;
+      }
+
       label{
         display: none;
       }

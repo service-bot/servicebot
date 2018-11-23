@@ -110,9 +110,9 @@ class ModalManageCancellation extends React.Component {
                                 </div>
                             </div>
                             <div className={`modal-footer text-right p-b-20`}>
-                                <button className="btn btn-default btn-rounded" onClick={self.props.hide}>Close</button>
-                                <button className="btn btn-danger btn-rounded" onClick={self.onRejectCancel}>Reject</button>
-                                <button className="btn btn-primary btn-rounded" onClick={self.onConfirmCancel}>Approve</button>
+                                <button className="buttons btn-default btn-rounded" onClick={self.props.hide}>Close</button>
+                                <button className="buttons btn-danger btn-rounded" onClick={self.onRejectCancel}>Reject</button>
+                                <button className="buttons btn-primary btn-rounded" onClick={self.onConfirmCancel}>Approve</button>
                             </div>
                         </div>
                     </Modal>
@@ -130,8 +130,8 @@ class ModalManageCancellation extends React.Component {
                                 </div>
                             </div>
                             <div className={`modal-footer text-right p-b-20`}>
-                                <button className="btn btn-default btn-rounded" onClick={self.props.hide}>Close</button>
-                                <button className="btn btn-default btn-rounded" onClick={self.onUndoCancel}>Undo Request</button>
+                                <button className="buttons btn-default btn-rounded" onClick={self.props.hide}>Close</button>
+                                <button className="buttons btn-default btn-rounded" onClick={self.onUndoCancel}>Undo Request</button>
                             </div>
                         </div>
                     </Modal>

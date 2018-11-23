@@ -50,10 +50,10 @@ function renderSplits({fields, meta: {error, submitFailed}}) {
 
     return (
         <div>
-            <div className="form-group form-group-flex">
+            <div className="sb-form-groupform-group-flex">
                 <lable className="control-label form-label-flex-md">Number of payments</lable>
                 <div className="form-input-flex">
-                    <input className="form-control" type="number" defaultValue={fields.length} onChange={onAdd}/>
+                    <input className="_input-" type="number" defaultValue={fields.length} onChange={onAdd}/>
                     {submitFailed && error && <span>{error}</span>}
                 </div>
             </div>
@@ -61,7 +61,7 @@ function renderSplits({fields, meta: {error, submitFailed}}) {
             <ul className="split-payment-items">
                 {fields.map((member, index) => (
                     <li className="split-payment-item" key={index}>
-                        <button className="btn btn-rounded custom-field-button iconToggleField"
+                        <button className="buttons btn-rounded custom-field-button iconToggleField"
                                 id="split-payment-delete-button" onClick={() => fields.remove(index)}
                                 type="button" title="Remove Payment"><span className="itf-icon"><i
                             className="fa fa-close"/></span></button>
@@ -183,7 +183,7 @@ class TemplateForm extends React.Component {
                                            component={inputField} label="Trial Period (Days)"
                                            validate={required()}
                                     />
-                                    <div className="form-group form-group-flex">
+                                    <div className="sb-form-groupform-group-flex">
                                         <label className="control-label form-label-flex-md" htmlFor="type">Bill
                                             Customer Every</label>
                                         <Field name="interval_count" type="number"

@@ -1,5 +1,6 @@
 import React from 'react';
 import './css/style.css';
+import './css/style.scss';
 import {browserHistory} from 'react-router';
 import {Price} from '../../utilities/price.jsx';
 import { connect } from 'react-redux';
@@ -123,11 +124,11 @@ class Widget extends React.Component {
                     </div>
                 }
                 {this.state.data.list && this.state.data.list.length > 0 &&
-                    <div className="p-t-10 p-b-10">
+                    <React.Fragment>
                         {this.state.data.list.map(( listing, index) =>
-                            <div key={"price-" + index} className="dash-widget-list row p-l-20 p-r-20 p-t-5 p-b-5">
-                                <div className="col-md-8 col-lg-9">{listing.label}</div>
-                                <div className="col-md-4 col-lg-3 text-right">
+                            <div key={"price-" + index} className="dash-widget-list">
+                                <div className="__label">{listing.label}</div>
+                                <div className="__value">
                                     {(listing.type && listing.type === 'price') ?
                                         <Price value={listing.value} currency={(options.currency && options.currency.value) || "USD"}/>
                                         :
@@ -135,7 +136,7 @@ class Widget extends React.Component {
                                     }</div>
                             </div>
                         )}
-                    </div>
+                    </React.Fragment>
                 }
                 {this.state.data.chart && <this.state.data.chart chartData={this.props.data.chartData} chartOption={this.props.data.chartOption}/>}
                 {this.state.data.component && <this.state.data.component />}
@@ -155,35 +156,35 @@ class DashboardWidgets extends React.Component {
 
     render(){
         return (
-            <div>
-                <div className="row dashboard-widgets">
-                    <div className="col-md-3 p-0 fx"><Widget data={{label: 'ARR', value: this.state.data.salesStats.subscriptionStats.arr}} postFix="/yr" type="price" wcolor="blue"/></div>
-                    <div className="col-md-3 p-0 fx"><Widget data={{label: 'MRR', value: this.state.data.salesStats.subscriptionStats.mrr}} postFix="/mo" type="price" wcolor="blue"/></div>
-                    <div className="col-md-3 p-0 fx"><Widget data={{label: 'One-time Charges', value: this.state.data.salesStats.oneTimeStats.approvedCharges}} type="price" wcolor="dblue"/></div>
-                    <div className="col-md-3 p-0 fx"><Widget data={{label: 'Total Received', value: this.state.data.totalSales}} type="price" wcolor="navy-rev"/></div>
+            <React.Fragment>
+                <div className="dashboard-widgets __top-widgets">
+                    <Widget data={{label: 'ARR', value: this.state.data.salesStats.subscriptionStats.arr}} postFix="/yr" type="price" wcolor="blue"/>
+                    <Widget data={{label: 'MRR', value: this.state.data.salesStats.subscriptionStats.mrr}} postFix="/mo" type="price" wcolor="blue"/>
+                    <Widget data={{label: 'One-time Charges', value: this.state.data.salesStats.oneTimeStats.approvedCharges}} type="price" wcolor="dblue"/>
+                    <Widget data={{label: 'Total Received', value: this.state.data.totalSales}} type="price" wcolor="navy-rev"/>
                 </div>
-                <div className="m-t-25"><ContentTitle title="Subscription Metrics"/></div>
-                <div className="row dashboard-widgets">
-                    <div className="col-md-4 p-0 section-wrapper">
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Total Subscribers', value: this.state.data.salesStats.subscriptionStats.all}} wcolor="dblue" minimize={true}/></div>
-                        <div className="col-md-12 p-0"><Widget data={{label: 'In Trial', value: this.state.data.salesStats.subscriptionStats.trials}} wcolor="grey" minimize={true}/></div>
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Active Subscribers', value: this.state.data.salesStats.subscriptionStats.active}} wcolor="grey" minimize={true}/></div>
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Cancelled Subscribers', value: this.state.data.salesStats.subscriptionStats.cancelled}} wcolor="grey" minimize={true}/></div>
+                <ContentTitle title="Subscription Metrics"/>
+                <div className="dashboard-widgets __metrics-widgets">
+                    <div className="section-wrapper">
+                        <Widget data={{label: 'Total Subscribers', value: this.state.data.salesStats.subscriptionStats.all}} wcolor="dblue" minimize={true}/>
+                        <Widget data={{label: 'In Trial', value: this.state.data.salesStats.subscriptionStats.trials}} wcolor="grey" minimize={true}/>
+                        <Widget data={{label: 'Active Subscribers', value: this.state.data.salesStats.subscriptionStats.active}} wcolor="grey" minimize={true}/>
+                        <Widget data={{label: 'Cancelled Subscribers', value: this.state.data.salesStats.subscriptionStats.cancelled}} wcolor="grey" minimize={true}/>
                     </div>
-                    <div className="col-md-4 p-0 section-wrapper">
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Paying Subscribers', value: this.state.data.salesStats.subscriptionStats.paying}} wcolor="dblue" minimize={true}/></div>
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Paying During Trial', value: this.state.data.salesStats.subscriptionStats.trialPaying}} wcolor="grey" minimize={true}/></div>
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Flagged Subscribers', value: this.state.data.salesStats.subscriptionStats.flagged}} wcolor="grey" minimize={true}/></div>
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Cancelled while paying', value: this.state.data.salesStats.subscriptionStats.payingCancelled}} wcolor="grey" minimize={true}/></div>
+                    <div className="section-wrapper">
+                        <Widget data={{label: 'Paying Subscribers', value: this.state.data.salesStats.subscriptionStats.paying}} wcolor="dblue" minimize={true}/>
+                        <Widget data={{label: 'Paying During Trial', value: this.state.data.salesStats.subscriptionStats.trialPaying}} wcolor="grey" minimize={true}/>
+                        <Widget data={{label: 'Flagged Subscribers', value: this.state.data.salesStats.subscriptionStats.flagged}} wcolor="grey" minimize={true}/>
+                        <Widget data={{label: 'Cancelled while paying', value: this.state.data.salesStats.subscriptionStats.payingCancelled}} wcolor="grey" minimize={true}/>
                     </div>
-                    <div className="col-md-4 p-0 section-wrapper">
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Average Conversion', value: this.state.data.salesStats.subscriptionStats.averageConversion}} postFix="%" wcolor="blue" minimize={true}/></div>
-                        <div className="col-md-12 p-0"><Widget data={{label: 'ARPA', value: this.state.data.salesStats.subscriptionStats.arpa}} type="price" wcolor="grey" minimize={true}/></div>
-                        <div className="col-md-12 p-0"><Widget data={{label: 'Churn Rate', value: this.state.data.salesStats.subscriptionStats.churn}} postFix="%" wcolor="salmon" minimize={true}/></div>
-                        <div className="col-md-12 p-0"><Widget data={{label: 'ARR Forecast', value: this.state.data.salesStats.subscriptionStats.arrForecast}} postFix="/yr" type="price" wcolor="navy-rev" minimize={true}/></div>
+                    <div className="section-wrapper">
+                        <Widget data={{label: 'Average Conversion', value: this.state.data.salesStats.subscriptionStats.averageConversion}} postFix="%" wcolor="blue" minimize={true}/>
+                        <Widget data={{label: 'ARPA', value: this.state.data.salesStats.subscriptionStats.arpa}} type="price" wcolor="grey" minimize={true}/>
+                        <Widget data={{label: 'Churn Rate', value: this.state.data.salesStats.subscriptionStats.churn}} postFix="%" wcolor="salmon" minimize={true}/>
+                        <Widget data={{label: 'ARR Forecast', value: this.state.data.salesStats.subscriptionStats.arrForecast}} postFix="/yr" type="price" wcolor="navy-rev" minimize={true}/>
                     </div>
                 </div>
-            </div>
+            </React.Fragment>
 
         );
     }

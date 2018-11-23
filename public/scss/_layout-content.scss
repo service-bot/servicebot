@@ -11,9 +11,10 @@
     ._heading{
 
       font-size: 1.2rem;
-      font-weight: normal;
+      font-weight: 600;
+      text-transform: uppercase;
       color: $color-blue-gray;
-      padding: 23px 27px 22px;
+      padding: 18px $gutter*2 18px;
       margin-bottom: 0;
 
     }
@@ -44,7 +45,7 @@
         @include fadeInContent;
 
         background-color: $color-extra-light-gray;
-        margin: $gutter;
+        margin: $gutter $gutter*2;
         padding: $gutter $gutter * 1.5;
         box-shadow: 0 2px 4px 0 rgba(0,0,0,0.06);
 
@@ -65,7 +66,7 @@
 
         & > h3{
           @include _section_heading;
-          margin-bottom: 0;
+          margin-bottom: $gutter;
 
           & > .form-step-count{
             @include steps;

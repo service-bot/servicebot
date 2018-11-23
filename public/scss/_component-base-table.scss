@@ -1,0 +1,73 @@
+.servicebot-table-base{
+
+  .table{
+    width: 100%;
+  }
+
+  .react-bs-table-tool-bar{
+
+    .__base-table-search-bar{
+      padding: 0;
+      padding-top: $gutter*2;
+      display: grid;
+      grid-template-columns: auto 170px;
+
+      ._input-{
+
+        &.servicebot-search-input{
+          height: 100%;
+        }
+      }
+    }
+  }
+
+  .react-bs-table{
+
+    th{
+
+      &.sort-column{
+
+        .text-filter{
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .react-bs-table-pagination {
+
+    .row{
+      display: grid;
+      grid-template-columns: auto auto;
+    }
+
+    .pagination {
+      list-style: none;
+      display: flex;
+      flex-direction: row;
+      padding: 0;
+      margin: 0;
+
+      .page-item {
+        background: white;
+        border-radius: 3px;
+        min-width: 30px;
+        padding: 0 $gutter / 2;
+        text-align: center;
+
+        &:not(:last-child){
+          margin-right: $gutter / 2 ;
+        }
+
+        a{color: $color-dark-blue};
+
+        &.active {
+          background-color: $color-dark-blue;
+
+          a{color: white};
+        }
+      }
+    }
+  }
+
+}

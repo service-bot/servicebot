@@ -77,7 +77,7 @@ class ServiceInstanceFiles extends React.Component {
                 <div className="service-instance-box">
                     <div className="service-instance-box-title">
                         <div>Files</div>
-                        <div className="react-buttons right ">
+                        <div className="buttons-group">
                             <FileUploader elementID="service-file"
                                           fileStyle="service-file"
                                           name="files"

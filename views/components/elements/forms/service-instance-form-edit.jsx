@@ -22,9 +22,9 @@ function TrialForm(props){
             validate={numericality({'>=': 0})}
 
         />
-        <button className="buttons _primary" type="submit">
-            Submit
-        </button>
+        <div className={`sb-form-group`}>
+            <button className="buttons _primary" type="submit">Submit</button>
+        </div>
     </form>)
 }
 

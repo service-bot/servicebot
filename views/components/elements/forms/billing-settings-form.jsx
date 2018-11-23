@@ -12,7 +12,7 @@ import Load from "../../utilities/load.jsx";
 class CardSection extends React.Component {
     render() {
         return (
-            <div className="form-group" id="card-element">
+            <div className="sb-form-group" id="card-element">
                 <CardElement style={{
                     base: {
                         color: '#32325d',
@@ -266,9 +266,9 @@ class CreditCardForm extends React.Component {
                             {getCard()}
                             <div className="pull-right">
                                 {!this.state.showForm ?
-                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.showPaymentForm}>Update Payment</button>
+                                    <button className="buttons btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.showPaymentForm}>Update Payment</button>
                                     :
-                                    <button className="btn btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.hidePaymentForm}>Cancel</button>
+                                    <button className="buttons btn-default btn-rounded btn-sm m-r-5 application-launcher" onClick={this.hidePaymentForm}>Cancel</button>
                                 }
 
                             </div>

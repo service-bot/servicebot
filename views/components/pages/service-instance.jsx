@@ -23,8 +23,6 @@ import ModalCancelChargeItem from '../elements/modals/modal-cancel-charge-item.j
 import ModalPayAllCharges from '../elements/modals/modal-pay-all-charges.jsx';
 import ModalPaymentSetup from '../elements/modals/modal-payment-setup.jsx';
 import {ModalEditProperties} from "../elements/forms/edit-instance-properties-form.jsx"
-import DateFormat from "../utilities/date-format.jsx";
-import $ from "jquery";
 import '../../../public/js/bootstrap-3.3.7-dist/js/bootstrap.js';
 import _ from "lodash";
 import ServicebotBillingSettingsEmbed from "servicebot-billing-settings-embed"
@@ -94,10 +92,6 @@ class ServiceInstance extends React.Component {
         if(!isAuthorized({})){
             return browserHistory.push("/login");
         }
-
-        $(this.refs.dropdownToggle3).dropdown();
-
-        let self = this;
         this.getInitialState()
 
     }
@@ -107,10 +101,6 @@ class ServiceInstance extends React.Component {
         let instance = await this.fetchInstance();
         let token = (await this.fetchToken(instance.user_id)).token
         this.setState({instance, loading: false, token})
-    }
-
-    componentDidUpdate(){
-        $(this.refs.dropdownToggle3).dropdown();
     }
 
     fetchInstance(){
@@ -280,16 +270,15 @@ class ServiceInstance extends React.Component {
             return (
                 <Authorizer permissions="can_administrate">
                     <div className="service-instance-actions action-items">
-                        <div className="pull-right">
+                        <div className={`buttons-group __gap`}>
                             {instanceCharges.false && instanceCharges.false.length > 0 &&
-                                <span  onClick={self.handlePayAllChargesModal}><span className="buttons _primary _green m-r-5">Pay Charges</span></span>
+                                <span onClick={self.handlePayAllChargesModal} className="buttons _primary _green">Pay Charges</span>
                             }
-                            <span onClick={self.handleEditInstanceModal}><span className="buttons _primary">Edit Trial</span></span>
-                            <span  onClick={self.handleEditPaymentModal}><span className="buttons _primary m-l-5">Edit Payment Plan</span></span>
+                            <span onClick={self.handleEditInstanceModal} className="buttons _primary">Edit Trial</span>
+                            <span onClick={self.handleEditPaymentModal} className="buttons _primary">Edit Payment Plan</span>
                             {instance.payment_plan && instance.status !== 'cancelled' &&
-                            <span onClick={self.handleAddChargeItemModal}><span className="buttons _primary m-l-5">Add Charge</span></span>
-                            }
-                            <Link to={`/billing-history/${instance.user_id}`}><span className="buttons _primary m-l-5">View Invoices</span></Link>
+                            <span onClick={self.handleAddChargeItemModal} className="buttons _primary">Add Charge</span>}
+                            <Link className="buttons _primary" to={`/billing-history/${instance.user_id}`}>View Invoices</Link>
                             {self.getStatusButtons()}
                         </div>
                     </div>
@@ -329,8 +318,7 @@ class ServiceInstance extends React.Component {
         if(this.state.loading){
             return (
                 <Authorizer>
-                    <Jumbotron pageName={pageName} location={this.props.location}/>
-                    <div className="page-service-instance white">
+                    <div className="page __view-service-instance">
                         <Content key={Object.id}>
                             <ReactCSSTransitionGroup component='div' transitionName={'fade'}
                                                      transitionAppear={true} transitionEnter={true} transitionLeave={true}
@@ -394,11 +382,9 @@ class ServiceInstance extends React.Component {
 
             return(
                 <Authorizer>
-                    <Jumbotron pageName={pageName} subtitle={<span>{subtitle}<strong><DateFormat date={myInstance.updated_at} time /></strong></span>} />
-                    {/*<Jumbotron pageName={pageName} subtitle={`${myInstance.description} . ${myInstance.subscription_id || ""}`} />*/}
-                    <div className="page-service-instance white-bg">
+                    <div className="page __view-service-instance">
                         <Content>
-                            <ReactCSSTransitionGroup component='div' transitionName={'fade'} transitionAppear={true} transitionEnter={true} transitionLeave={true}
+                            <ReactCSSTransitionGroup component={React.Fragment} transitionName={'fade'} transitionAppear={true} transitionEnter={true} transitionLeave={true}
                                                      transitionAppearTimeout={1000} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                                 <div className="instance-title">
                                     <ContentTitle title="Subscription Detail"/>

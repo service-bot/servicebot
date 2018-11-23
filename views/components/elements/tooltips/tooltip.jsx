@@ -32,7 +32,7 @@ class ToolTip extends React.Component {
         // let delay = this.props.delay || 0;
         return(
             <button type="button" ref="tooltip" style={style}
-                    className={`btn ${cssClass}`} data-placement={placement}
+                    className={`buttons ${cssClass}`} data-placement={placement}
                     title={title} onClick={clickAction}>
                 {getText()}
             </button>

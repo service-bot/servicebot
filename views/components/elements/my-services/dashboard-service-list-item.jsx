@@ -171,18 +171,18 @@ class DashboardServiceListItem extends React.Component {
 
             let getActionButton = ()=>{
                 if(status === "requested" && (myService.payment_plan.amount > 0 || myService.outstanding_charges_total)) {
-                    return (<button className="btn btn-default btn-rounded btn-sm" onClick={self.handleApprove}><i className="fa fa-credit-card" /> Pay Now</button>);
+                    return (<button className="buttons btn-default btn-rounded btn-sm" onClick={self.handleApprove}><i className="fa fa-credit-card" /> Pay Now</button>);
                 } else if(myService.outstanding_charges_total) {
-                    return (<button className="btn btn-default btn-rounded btn-sm" onClick={self.handlePayCharges}><i className="fa fa-credit-card" /> Pay Now</button>);
+                    return (<button className="buttons btn-default btn-rounded btn-sm" onClick={self.handlePayCharges}><i className="fa fa-credit-card" /> Pay Now</button>);
                 } else if(status === "requested" && myService.payment_plan.amount === 0 && !myService.outstanding_charges_total) {
                     return (null);
                 } else if(status === "waiting_cancellation") {
-                    return (<button to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleUndoCancel}>Undo Cancellation</button>);
+                    return (<button to="" className="buttons btn-default btn-rounded btn-sm" onClick={self.handleUndoCancel}>Undo Cancellation</button>);
                 } else if(status === "cancelled") {
                     return (null);
                 } else {
                     //Taking out the cancellation request for now.
-                    //return (<button to="" className="btn btn-default btn-rounded btn-sm" onClick={self.handleCancel}>Request Cancellation</button>);
+                    //return (<button to="" className="buttons btn-default btn-rounded btn-sm" onClick={self.handleCancel}>Request Cancellation</button>);
                     return (null);
                 }
             };

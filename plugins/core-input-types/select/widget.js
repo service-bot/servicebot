@@ -9,12 +9,10 @@ import {adjust} from '../../../views/components/utilities/widget-inputs/WidgetPr
 
 let Tags = (props) => {
     return (
-        <div className="form-group form-group-flex addon-options-widget-config-input-wrapper">
-            <label className="control-label form-label-flex-md addon-options-widget-config-input-label">Available Options</label>
-            <div className="form-input-flex">
-                <TagsInput className="addon-options-widget-config-input react-tagsinput"
-                           inputProps={{placeholder: 'Add Options'}} {...props.input} value={props.input.value || []}/>
-            </div>
+        <div className="sb-form-group __addon-options-widget-config">
+            <label className="_label-">Available Options</label>
+            <TagsInput className="_input- react-tagsinput"
+                       inputProps={{placeholder: 'Add Options'}} {...props.input} value={props.input.value || []}/>
         </div>
     );
 };
@@ -85,10 +83,10 @@ class SelectPricing extends React.Component {
 let SelectWidget = (props) => {
     let {input, configValue, label} = props;
     return (
-        <div className="form-group form-group-flex addon-options-widget-default-value-wrapper">
-            {label && <label className="control-label form-label-flex-md addon-options-widget-default-value-label">{label}</label>}
+        <div className="sb-form-group __addon-options-widget">
+            {label && <label className="_label-">{label}</label>}
             <div className="form-input-flex">
-                <select className="form-control addon-options-widget-default-value-select" {...input}>
+                <select className="_input- __input-addon-options-widget" {...input}>
                     <option value="" key="0-default">Choose One</option>
                     { configValue && configValue.value && configValue.value.map((option, index) => {
                             let price = configValue.pricing && configValue.pricing.value && configValue.pricing.value[option];
