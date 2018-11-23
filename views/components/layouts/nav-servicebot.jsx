@@ -360,7 +360,6 @@ class NavServiceBot extends React.Component {
                             }
                             <AppMessage/>
                         </nav>
-                        <SideNav sidebarLogout={this.props.handleLogout} toggleSidebar={this.toggleSideBar}/>
                     </div>
                 </div>
             );
