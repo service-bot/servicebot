@@ -60,10 +60,7 @@ class NavServiceBot extends React.Component {
         this.onOpenInvoiceModal = this.onOpenInvoiceModal.bind(this);
         this.onClose = this.onClose.bind(this);
         this.getMenuItems = this.getMenuItems.bind(this);
-        this.toggleEditingMode = this.toggleEditingMode.bind(this);
         this.toggleSideBar = this.toggleSideBar.bind(this);
-        this.toggleOnEditingGear = this.toggleOnEditingGear.bind(this);
-        this.toggleOffEditingGear = this.toggleOffEditingGear.bind(this);
         this.getLivemode = this.getLivemode.bind(this);
         this.getPluginItems = this.getPluginItems.bind(this);
         this.getLinkClass = this.getLinkClass.bind(this);
@@ -79,22 +76,6 @@ class NavServiceBot extends React.Component {
 
     onClose() {
         this.setState({InvoiceModal: false});
-    }
-
-    toggleEditingMode() {
-        if (this.state.editingMode) {
-            this.setState({editingMode: false})
-        } else {
-            this.setState({editingMode: true})
-        }
-    }
-
-    toggleOnEditingGear() {
-        this.setState({editingGear: true})
-    }
-
-    toggleOffEditingGear() {
-        this.setState({editingGear: false})
     }
 
     toggleSideBar() {
@@ -320,8 +301,7 @@ class NavServiceBot extends React.Component {
                         </Authorizer>
                     </div>
                     <div className="app-navigation">
-                        <nav className="app-links-container" onMouseEnter={this.toggleOnEditingGear}
-                             onMouseLeave={this.toggleOffEditingGear}>
+                        <nav className="app-links-container">
 
                             <div className="_main">
                                 <Authorizer>
@@ -348,16 +328,6 @@ class NavServiceBot extends React.Component {
 
                             {/* app-wide modals */}
                             {currentModal()}
-                            {this.state.editingGear && <AdminEditingGear toggle={this.toggleEditingMode}/>}
-                            {this.state.editingMode && <AdminEditingSidebar toggle={this.toggleEditingMode}
-                                                                            filter={["brand_logo",
-                                                                                "primary_theme_background_color",
-                                                                                "primary_theme_text_color",
-                                                                                "button_primary_color",
-                                                                                "button_primary_hover_color",
-                                                                                "button_primary_text_color"]
-                                                                            }/>
-                            }
                             <AppMessage/>
                         </nav>
                     </div>
