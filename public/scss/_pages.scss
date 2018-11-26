@@ -20,7 +20,7 @@
 $page-datatable-extra-bottom-padding: 160px;
 
 .page{
-  padding: $gutter*1.5 $gutter * 3;
+  padding: 0 $gutter * 3 $gutter*1.5;
 }
 
 .page, .app-content{
@@ -28,6 +28,11 @@ $page-datatable-extra-bottom-padding: 160px;
   /* System */
   &.__dashboard{
 
+    .content-title h4{
+      font-size: 16px;
+      margin-top: $gutter * 2;
+      margin-bottom: $gutter !important;
+    }
   }
 
   &.__manage-services{
