@@ -246,7 +246,7 @@ class ManageSubscriptions extends React.Component {
 
     render () {
         let self = this;
-        let {rows, allUsers, currentDataObject, currentDataObject: {status, payment_plan}, actionModal} = this.state;
+        let {loading, rows, allUsers, currentDataObject, currentDataObject: {status, payment_plan}, actionModal} = this.state;
 
         const renderModals = (currentDataObject, payment_plan, status) => {
             //change the status to cancelled if no payment plan is detected
@@ -277,19 +277,17 @@ class ManageSubscriptions extends React.Component {
                 return user.id === row.user_id;
             });
             if (user.references.funds.length) {
-                if (user.status === 'flagged') {
+                if (user.status === 'flagged')
                     return 'failed';
-                } else {
+                else
                     return 'paying';
-                }
-            } else {
-                return 'no payment';
             }
+            return 'no payment';
         };
 
         let extractedData = [];
 
-        _.mapValues(rows, (row) => {
+        _.mapValues(rows, row => {
             extractedData = [...extractedData, {
                 id: _.get(row, 'id'),
                 email: _.get(row, 'references.users[0].email'),
@@ -306,7 +304,7 @@ class ManageSubscriptions extends React.Component {
             }];
         });
 
-        if (this.state.loading)
+        if (loading)
             return <Load/>;
         else
             return <Authorizer permissions={["can_administrate", "can_manage"]}>
@@ -317,7 +315,7 @@ class ManageSubscriptions extends React.Component {
                                     rows={extractedData}
                                     fetchRows={this.fetchData}
                                     sortColumn="updated_at"
-                                    sortOrder="desc">
+                                    sortOrder="desc" >
                                     <TableHeaderColumn isKey
                                                        dataField='email'
                                                        dataSort={true}
@@ -354,7 +352,8 @@ class ManageSubscriptions extends React.Component {
                                                        columnClassName={'action-column'}
                                                        dataFormat={this.rowActionsFormatter}
                                                        width='80'
-                                                       searchable={false}/>
+                                                       searchable={false}
+                                                       export={ false } />
                                 </ServiceBotTableBase>
 
                                 {renderModals(currentDataObject, payment_plan, status)}
