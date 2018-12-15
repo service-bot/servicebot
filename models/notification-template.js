@@ -95,6 +95,7 @@ let createEmailNotifications = function(recipients, message, subject, notificati
 
         return Promise.all(emailArray.map(email => {
             return new Promise(resolve => {
+                console.log("sending email");
                 mailer(email, message, subject);
                 return resolve();
             })
