@@ -17,7 +17,8 @@ function* run(config, provide, channels) {
         pre_payment_structure_change: [],
         post_payment_structure_change: [],
         post_seat_created: [],
-        post_seat_deleted: []
+        post_seat_deleted: [],
+        post_cancellation_pending: []
 
     }
 
