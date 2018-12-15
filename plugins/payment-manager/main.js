@@ -8,6 +8,8 @@ function* run(config, provide, channels) {
     let database = yield consume(channels.database);
     yield call(scheduleTrials);
     yield call(scheduleSplits);
+    yield call(scheduleCancellations);
+
     //process split payments
 
     //todo: reduce duplicate code - this chunk is in a bunch of places :(
@@ -138,7 +140,17 @@ function trialExpiration(instance) {
         }
     }
 }
-
+async function scheduleCancellationForInstance(instance){
+    console.log("Scheduling cancellation for " + instance.data.id);
+    return await instance.scheduleCancellation();
+}
+function* scheduleCancellations(){
+    let ServiceInstance = require("../../models/service-instance");
+    let instances = yield call(ServiceInstance.find, {status : "cancellation_pending"});
+    for(let instance of instances){
+        yield call(scheduleCancellationForInstance, instance)
+    }
+}
 function* scheduleSplits() {
     let ServiceInstance = require("../../models/service-instance");
     let Fund = require('../../models/fund');

@@ -9,3 +9,4 @@ env
 package-lock.json
 .flooignore
 .floo
+.o11n

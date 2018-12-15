@@ -132,7 +132,16 @@ function* run(config, provide, channels) {
                 result = {...result, ...hookresult};
             }
             return result;
+        },
+        postCancellationPending : async function({instance, end_date}){
+            let result = {}
+            for(let hook of lifecycles.post_cancellation_pending){
+                let hookresult = await hook.run({seat});
+                result = {...result, ...hookresult};
+            }
+            return result;
         }
+
 
 
 

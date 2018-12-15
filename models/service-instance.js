@@ -14,6 +14,7 @@ let store = require("../config/redux/store");
 let promisify = require("bluebird").promisify;
 let promisifyProxy = require("../lib/promiseProxy");
 let User = require('./user');
+let schedule = require("node-schedule");
 let _ = require("lodash");
 let references = [
     {"model": ServiceTemplates, "referenceField": "service_id", "direction": "to", "readOnly": true},
@@ -412,6 +413,43 @@ ServiceInstance.prototype.changePaymentPlan = async function (newPlan, ignorePla
     return updatedInstance;
 };
 
+ServiceInstance.prototype.getSubscription = async function(){
+    return await Stripe().connection.subscriptions.retrieve(this.data.subscription_id);
+}
+ServiceInstance.prototype.finishCancellation = async function (){
+    let current = (await ServiceInstance.find({id: this.data.id}))[0];
+    if(current.data.status === "cancellation_pending"){
+        await current.unsubscribe();        
+    }
+}
+ServiceInstance.prototype.scheduleCancellation = async function(endDate){
+    let subscription = await this.getSubscription();
+    console.log(subscription);
+    if(subscription && subscription.status !== "canceled"){
+        if(endDate){
+                
+        }else{
+            endDate = new Date(subscription.current_period_end * 1000);
+            await Stripe().connection.subscriptions.update(this.data.subscription_id, {cancel_at_period_end: true});
+            this.data.status = "cancellation_pending";
+            await this.update();
+            console.log("scheduling canellation for ", endDate);
+            var job = schedule.scheduleJob(endDate, this.finishCancellation.bind(this));
+            let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;
+            if (lifecycleManager) {
+                lifecycleManager = lifecycleManager[0];
+                await lifecycleManager.postCancellationPending({
+                    instance: this,
+                    end_date: endDate
+                })
+            }
+            return this.data;
+        
+        }
+    }else{
+        this.unsubscribe();
+    }
+}
 ServiceInstance.prototype.unsubscribe = async function () {
     try {
         let lifecycleManager = store.getState(true).pluginbot.services.lifecycleManager;

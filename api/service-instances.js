@@ -47,6 +47,15 @@ async function reactivate(instance_object, trialDays=0){
         }
         return updatedInstance;
 
+    }else if (instance_object.get("status") === "cancellation_pending"){
+        let sub = await instance_object.getSubscription();
+        if(sub){
+            let Stripe = require("../config/stripe");
+            await Stripe().connection.subscriptions.update(instance_object.data.subscription_id, {cancel_at_period_end: false});
+            instance_object.data.status = "running"
+            await instance_object.update();
+            return instance_object;
+        }
     }else{
         throw "Instance is not cancelled, cannot be reactivated"
     }
@@ -155,7 +164,7 @@ module.exports = function(router) {
     router.post('/service-instances/:id/cancel', validate(ServiceInstance), auth(), async function(req, res, next) {
         let instance_object = res.locals.valid_object;
         try {
-            let result = await instance_object.unsubscribe();
+            let result = await instance_object.scheduleCancellation();
             res.json(result);
 
         } catch (err) {
@@ -168,10 +177,12 @@ module.exports = function(router) {
 
     router.post('/service-instances/:id/request-cancellation', validate(ServiceInstance), auth(), function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        instance_object.requestCancellation(function(result){
+        instance_object.scheduleCancellation().then(result => {
             res.locals.json = result;
             next();
             store.dispatchEvent("service_instance_cancellation_requested", instance_object);
+        }).catch(e => {
+            console.error("Error cancelling", e);
         });
     });
 

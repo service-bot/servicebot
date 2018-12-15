@@ -111,6 +111,10 @@ function* run(config, provide, channels) {
             stage: "post_seat_deleted",
             run: sendToWebhooks("post_seat_deleted")
         },
+        {
+            stage: "post_cancellation_pending",
+            run: sendToWebhooks("post_cancellation_pending")
+        },
 
 
     ];
