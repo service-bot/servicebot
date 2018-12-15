@@ -1,5 +1,5 @@
 import React from 'react';
-import {browserHistory} from 'react-router';
+import {Link, browserHistory} from 'react-router';
 import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
 import Load from "../utilities/load.jsx";
 import Fetcher from '../utilities/fetcher.jsx';
@@ -233,12 +233,18 @@ class ManageSubscriptions extends React.Component {
     }
 
     dropdownStatusFormatter(dataObject){
+        // console.log('dropdown',dataObject);
         let status = dataObject.status;
         const statusString = _.toLower(status);
         if(statusString === "waiting_cancellation"){
+            console.log('waiting_cancellation stuff', dataObject);
             return "Manage Cancellation";
-        }else if(statusString === "cancelled" || !dataObject.payment_plan){
+        }else if(statusString === "cancelled" || !dataObject.payment_plan) {
+            console.log('cancelled stuff', dataObject);
             return "Delete Service";
+        }else if(statusString === 'running'){
+            console.log('running stuff', dataObject);
+            return "Cancel Service";
         }else {
             return "Cancel Service";
         }
@@ -248,29 +254,9 @@ class ManageSubscriptions extends React.Component {
         let self = this;
         let {loading, rows, allUsers, currentDataObject, currentDataObject: {status, payment_plan}, actionModal} = this.state;
 
-        const renderModals = (currentDataObject, payment_plan, status) => {
-            //change the status to cancelled if no payment plan is detected
-            if (!payment_plan) {
-                status = 'cancelled';
-            }
-            //Show the proper cancellation modal
-            if (actionModal) {
-                switch (status) {
-                    case 'waiting_cancellation':
-                        return <ModalManageCancellation myInstance={currentDataObject}
-                                                        show={actionModal}
-                                                        hide={self.onCloseActionModal}/>;
-                    case 'cancelled':
-                        return <ModalDeleteInstance myInstance={currentDataObject}
-                                                    show={actionModal}
-                                                    hide={self.onCloseActionModal}/>;
-                    default:
-                        return <ModalRequestCancellation myInstance={currentDataObject}
-                                                         show={actionModal}
-                                                         hide={self.onCloseActionModal}/>;
-                }
-            }
-        };
+        if(!payment_plan){
+            status = 'cancelled';
+        }
 
         const getPaymentData = (row, users) => {
             let user = _.find(users, function (user) {
@@ -286,10 +272,12 @@ class ManageSubscriptions extends React.Component {
         };
 
         let extractedData = [];
+        console.log({rows});
 
         _.mapValues(rows, row => {
             extractedData = [...extractedData, {
                 id: _.get(row, 'id'),
+                name: _.get(row, 'name'),
                 email: _.get(row, 'references.users[0].email'),
                 user_id: _.get(row, 'user_id'),
                 subscribed_to: _.get(row, 'name'),
@@ -299,6 +287,7 @@ class ManageSubscriptions extends React.Component {
                 type: _.get(row, 'references.payment_structure_templates[0].type'),
                 status: _.get(row, 'status'),
                 payment: getPaymentData(row, allUsers),
+                payment_plan: _.get(row, 'payment_plan'),
                 updated_at: _.get(row, 'updated_at'),
                 created_at: _.get(row, 'created_at'),
             }];
@@ -318,6 +307,7 @@ class ManageSubscriptions extends React.Component {
                                     sortOrder="desc" >
                                     <TableHeaderColumn isKey
                                                        dataField='email'
+                                                       dataFormat={(cell, row)=>{return <Link to={`/service-instance/${row.id}`}>{cell}</Link>}}
                                                        dataSort={true}
                                                        searchable={true}
                                                        width='150'> Customer </TableHeaderColumn>
@@ -356,7 +346,18 @@ class ManageSubscriptions extends React.Component {
                                                        export={ false } />
                                 </ServiceBotTableBase>
 
-                                {renderModals(currentDataObject, payment_plan, status)}
+                                { actionModal && status === 'waiting_cancellation' &&
+                                    <ModalManageCancellation myInstance={currentDataObject}
+                                                             show={actionModal}
+                                                             hide={self.onCloseActionModal}/> }
+                                { actionModal && status === 'cancelled' &&
+                                    <ModalDeleteInstance myInstance={currentDataObject}
+                                                         show={actionModal}
+                                                         hide={self.onCloseActionModal}/> }
+                                { actionModal && status === 'running' &&
+                                    <ModalRequestCancellation myInstance={currentDataObject}
+                                                              show={actionModal}
+                                                              hide={self.onCloseActionModal}/> }
                             </Content>
                         </div>
                     </Authorizer>;
