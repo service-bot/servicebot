@@ -41,7 +41,7 @@ module.exports = function(app, passport) {
 
     app.post("/auth/reset-password", function(req, res, next){
         User.findOne("email", req.body.email, function(user){
-            if(user.data && user.data.status !== "invited"){
+            if(user.data){
                 ResetRequest.findAll("user_id", user.get("id"), function(requests){
                     async.each(requests, function(request, callback){
                         request.delete(function(result){

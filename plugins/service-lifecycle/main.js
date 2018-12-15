@@ -137,7 +137,7 @@ function* run(config, provide, channels) {
         postCancellationPending : async function({instance, end_date}){
             let result = {}
             for(let hook of lifecycles.post_cancellation_pending){
-                let hookresult = await hook.run({seat});
+                let hookresult = await hook.run({instance, end_date});
                 result = {...result, ...hookresult};
             }
             return result;
