@@ -38,7 +38,7 @@ module.exports = function(app, passport) {
         req.logout();
         res.json({"message" : "successful logout"});
     });
-
+    
     app.post("/auth/reset-password", function(req, res, next){
         User.findOne("email", req.body.email, function(user){
             if(user.data){

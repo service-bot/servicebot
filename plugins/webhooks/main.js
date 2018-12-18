@@ -32,14 +32,12 @@ function* run(config, provide, channels) {
             let eventPayload = JSON.stringify({event_name : eventName, event_data : parsedEvent});
             let hmac = generateHmac(eventPayload, process.env.SECRET_KEY);
             let webhookRequest = fetch(webhook.endpoint_url, {method: "POST", body: eventPayload, headers: {...headers, "X-Servicebot-Signature" : hmac}})
-                .then(response => {
+                .then(async response => {
                     if (!response.ok) {
                         console.error("error making webhook request", response.statusText);
                     }
-                    db("webhooks").where("id", webhook.id).update({health: response.statusText}).then(result => {
-
-                    })
-                    return response
+                    let statusText = (response.status >= 200 && response.status <= 299) ? "OK" : response.statusText;
+                    await db("webhooks").where("id", webhook.id).update({health: statusText});
                 })
                 .catch(error => {
                     let health = error.errno || error
