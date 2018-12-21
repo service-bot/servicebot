@@ -195,7 +195,7 @@ let buildTables = async function (knex) {
         table.bigInteger('subscribed_at');
         table.bigInteger('trial_end');
         table.integer('payment_structure_template_id').references('payment_structure_templates.id');
-        table.enu('status', ['running', 'requested', 'in_progress', 'waiting_cancellation', 'missing_payment', 'cancelled', 'completed']).defaultTo('missing_payment');
+        table.enu('status', ['running', 'requested', 'in_progress', 'waiting_cancellation', 'missing_payment', 'cancelled', 'completed', 'cancellation_pending']).defaultTo('missing_payment');
         table.enu('type', ['subscription', 'one_time', 'custom', "split"]).defaultTo('subscription');
         table.jsonb('split_configuration');
         table.timestamps(true, true);
