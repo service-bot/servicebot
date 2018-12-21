@@ -135,6 +135,8 @@ class ManageSubscriptions extends React.Component {
                 status = 'trialing';
             else
                 status = 'active';
+        } else if(status === 'cancellation_pending') {
+            status = 'cancel pending';
         }
         return status;
     }
@@ -163,6 +165,8 @@ class ManageSubscriptions extends React.Component {
                 return ( <span className={color} >{str}</span> );
             case 'waiting_cancellation':
                 return ( <span className='status-badge yellow' >Waiting Cancellation</span> );
+            case 'cancellation_pending':
+                return ( <span className='status-badge yellow' >Cancel Pending</span> );
             case 'cancelled':
                 return ( <span className='status-badge grey' >Cancelled</span> );
             default:
@@ -183,7 +187,7 @@ class ManageSubscriptions extends React.Component {
                             <ReactTooltip id="valid-card" aria-haspopup='true' delayShow={100} role='date' place="left" effect="solid"/>
                         </span>
                       </React.Fragment>,
-            'no payment': <span className='status-badge grey'/>
+            'no payment': <span className='status-badge grey'><i className="fa fa-times m-0"/></span>
         };
         return formattedPayment[cell];
     }

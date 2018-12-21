@@ -13,8 +13,8 @@
   background-color: #dedede;
   color: black;
 
-  .fa{
-    margin-right: $gutter / 2;
+  .fa:not(:first-child){
+    margin-left: 8px;
   }
 
   &.red{ background-color: $color-error; color: white; }
