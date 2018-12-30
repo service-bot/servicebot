@@ -694,7 +694,17 @@ color: black
         description:"Sent when a user is invited to they system by an admin",
         model:"user",
         send_email:true
-    }
+    },
+    {
+      name: "welcome",
+      event_name: "service_instance_requested_by_user",
+      message: "Welcome to the new service, [[name]]",
+      subject: "Welcome",
+      description: "Sent to users when they sign up",
+      model: "service-instance",
+      send_email: false,
+      send_to_owner: true
+  }
 ];
 //Setting the registration_admin role to admin
 //todo: no more hardcoded id...
