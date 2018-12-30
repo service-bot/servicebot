@@ -355,10 +355,10 @@ default_notifications.templates = [
     {
         name: "registration_admin",
         event_name: "user_registered",
-        message: "You have gained a new user! [[name]] - [[email]] has signed up.",
-        subject: "New User",
-        description: "Sent for an admin when a new user has signed up",
-        model: "user",
+        message: "You have gained a new user! [[references.users.name]] - [[references.users.email]] has signed up for service [[name]], click <a href='https://[[_hostname]]/service-instance/[[id]]>here</a> to view the subscription",
+        subject: "New Sign up",
+        description: "Sent to admins when a new user has signed up",
+        model: "service_instance",
         send_email: true,
         send_to_owner: false
     },
