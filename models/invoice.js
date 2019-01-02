@@ -12,6 +12,7 @@ let references = [
     {"model": Transactions, "referenceField": "invoice_id", "direction":"from"}
 ];
 let Invoice = require("./base/entity")("user_invoices", references);
+let store = require("../config/redux/store");
 
 
 Invoice.prototype.refund = function (amount=null, reason=null, callback) {
@@ -212,6 +213,12 @@ Invoice.insertInvoice = function (raw_invoice, user) {
                     });
                 }
             }
+            if(invoice.data.amount_due > 0){
+                let currMap = require("currency-symbol-map");
+                invoice.data.parsed_amount_due = `${currMap(store.getState().options.currency || "USD")}${(invoice.data.amount_due/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`; 
+                store.dispatchEvent("new_invoice", invoice);
+            }
+            // invoice = await invoice.attachReferences();
             return resolve(invoice);
         });
     });

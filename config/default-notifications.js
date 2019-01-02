@@ -1,14 +1,15 @@
 let default_notifications = {};
 default_notifications.templates = [
-    {
-        name: "service_cancellation_submitted",
-        event_name: "service_instance_cancellation_requested",
-        message: "Your cancellation request for [[name]] has been submitted. You will receive another notification when it has been approved.",
-        subject: "Service cancellation submitted",
-        description: "Sent when a service cancellation has been requested by a user",
-        model: "service-instance",
-        send_email: true
-    },
+  {
+    name: "service_cancellation",
+    event_name: "service_instance_cancellation_requested",
+    message: "Cancellation by [[references.users.email]] for [[name]] has been submitted.",
+    subject: "Servicebot Notification - Subscription cancellation",
+    description: "Sent when a service cancellation has been requested by a user",
+    model: "service-instance",
+    send_email: false,
+    send_to_owner: false
+},
     {
         name: "service_instance_update",
         event_name: "service_instance_updated",
@@ -16,24 +17,6 @@ default_notifications.templates = [
         subject: "Subscription updated",
         description: "Sent when a service has been updated",
         model: "service-instance",
-        send_email: true
-    },
-    {
-        name: "instance_cancellation_approved",
-        event_name: "service_instance_cancellation_approved",
-        message: "Your cancellation request has been approved.",
-        subject: "Service cancellation request approved",
-        description: "Sent when a service cancellation request has been approved",
-        model: "service-instance-cancellation",
-        send_email: true
-    },
-    {
-        name: "instance_cancellation_rejected",
-        event_name: "service_instance_cancellation_rejected",
-        message: "Your cancellation request has been rejected. ",
-        subject: "Service cancellation request rejected",
-        description: "Sent when a service cancellation request has been rejected",
-        model: "service-instance-cancellation",
         send_email: true
     },
     {
@@ -353,15 +336,15 @@ default_notifications.templates = [
         send_email: true
     },
     {
-        name: "registration_admin",
-        event_name: "service_instance_requested_by_user",
-        message: "You have gained a new user! [[references.users.name]] - [[references.users.email]] has signed up for service [[name]], click <a href='https://[[_hostname]]/service-instance/[[id]]>here</a> to view the subscription",
-        subject: "New Sign up",
-        description: "Sent to admins when a new user has signed up",
-        model: "service-instance",
-        send_email: true,
-        send_to_owner: false
-    },
+      name: "registration_admin",
+      event_name: "service_instance_requested_by_user",
+      message: "You have gained a new user! [[references.users.name]] - [[references.users.email]] has signed up for service [[name]], click <a href='https://[[_hostname]]/service-instance/[[id]]'>here</a> to view the subscription",
+      subject: "Servicebot Notification - New Sign up",
+      description: "Sent to admins when a new user has signed up",
+      model: "service-instance",
+      send_email: true,
+      send_to_owner: false
+  },
     {
         name: "user_suspension",
         event_name: "user_suspended",
@@ -696,7 +679,7 @@ color: black
         send_email:true
     },
     {
-      name: "welcome",
+      name: "registration_user",
       event_name: "service_instance_requested_by_user",
       message: "Welcome to the new service, [[name]]",
       subject: "Welcome",
@@ -704,14 +687,60 @@ color: black
       model: "service-instance",
       send_email: false,
       send_to_owner: true
+  },
+  {
+      name: "new_invoice",
+      event_name: "new_invoice",
+      message: `Invoice Summary - [[parsed_amount_due]]`,
+      subject: "You have a new Invoice from [[_company_name]]",
+      description: "Sent to users when a new invoice is generated",
+      model: "invoice",
+      send_email: false,
+      send_to_owner: true
+  },
+  {
+      name: "resubscribe_notification_admin",
+      event_name: "service_instance_resubscribed",
+      message: `[[references.users.email]] resubscribed to [[name]]`,
+      subject: "Servicebot Notification - [[references.users.email]] Resubscribed",
+      description: "Sent to admins when a user resubscribed",
+      model: "service-instance",
+      send_email: false,
+      send_to_owner: false
+  },
+  {
+      name: "resubscribe_notification_user",
+      event_name: "service_instance_resubscribed",
+      message: `Welcome Back!`,
+      subject: "Welcome Back",
+      description: "Sent to users when they resubscribe",
+      model: "service-instance",
+      send_email: false,
+      send_to_owner: true
+  },
+  {
+      name: "service_cancellation_goodbye",
+      event_name: "service_instance_cancellation_requested",
+      message: "Goodbye message",
+      subject: "Sorry to see you go",
+      description: "Sent to a user after they cancel their subscription",
+      model: "service-instance-cancellation",
+      send_email: false
   }
 ];
 //Setting the registration_admin role to admin
 //todo: no more hardcoded id...
 default_notifications.templates_to_roles = [
     {
-        notification_template_id: 6,
+        notification_template_id: 4,
         role_id: 1
     },
+    {
+      notification_template_id: 1,
+      role_id: 1
+  },{
+    notification_template_id: 4,
+    role_id: 1
+},
 ];
 module.exports = default_notifications;

@@ -45,6 +45,8 @@ async function reactivate(instance_object, trialDays=0){
                 instance: instance_object
             });
         }
+        store.dispatchEvent("service_instance_resubscribed", instance_object);
+
         return updatedInstance;
 
     }else if (instance_object.get("status") === "cancellation_pending"){
@@ -166,6 +168,7 @@ module.exports = function(router) {
         try {
             let result = await instance_object.scheduleCancellation();
             res.json(result);
+            store.dispatchEvent("service_instance_cancellation_requested", instance_object);
 
         } catch (err) {
             console.error(err);

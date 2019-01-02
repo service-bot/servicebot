@@ -481,13 +481,16 @@ module.exports = function (router) {
             });
 
             try {
+                newInstance.data.properties = newInstance.data.references.service_instance_properties.reduce((acc, prop) => {
+                    acc[prop.name] = prop.data && prop.data.value;
+                    return acc;
+                }, {});
                 if (isNew && req_body.password === undefined) {
 
                     // newInstance.set("api", responseJSON.api);
                     // newInstance.set("url", responseJSON.url);
                     // store.dispatchEvent("service_instance_requested_new_user", newInstance);
                     store.dispatchEvent("service_instance_requested_by_user", newInstance);
-
 
                 }else if(isNew){
 
