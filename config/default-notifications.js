@@ -17,7 +17,7 @@ default_notifications.templates = [
         subject: "Subscription updated",
         description: "Sent when a service has been updated",
         model: "service-instance",
-        send_email: true
+        send_email: false
     },
     {
         name: "password_reset",
@@ -739,7 +739,7 @@ default_notifications.templates_to_roles = [
       notification_template_id: 1,
       role_id: 1
   },{
-    notification_template_id: 4,
+    notification_template_id: 10,
     role_id: 1
 },
 ];
