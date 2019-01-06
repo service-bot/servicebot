@@ -26,6 +26,13 @@
 
   .sb-form-group{
     padding: 0 0 $gutter 0;
+
+    &._group-email-subject{
+      input{
+        width: 100%;
+        padding: 0 $gutter;
+      }
+    }
   }
 
   button {

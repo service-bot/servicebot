@@ -5,7 +5,7 @@ import {Fetcher} from "servicebot-base-form"
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx"
 import Content from "../../layouts/content.jsx"
 import {DataForm} from "../../utilities/data-form.jsx"
-import {WysiwygTemplater} from "../wysiwyg.jsx"
+import {Wysiwyg, WysiwygTemplater} from "../wysiwyg.jsx"
 import 'react-tagsinput/react-tagsinput.css'
 import Buttons from "../buttons.jsx"
 import { Section } from "../../layouts/section.jsx"
@@ -88,14 +88,13 @@ class NotificationTemplateForm extends React.Component {
     }
 
     handleResetSuccess(){
-        let self = this
-        self.setState({success: false})
+        this.setState({success: false})
     }
 
-    handleImage(url, id){
-        //This function is unused
-        var self = this
-    }
+    // handleImage(url, id){
+    //     //This function is unused
+    //     var self = this
+    // }
 
 
     insertString(html) {
@@ -121,36 +120,6 @@ class NotificationTemplateForm extends React.Component {
             let allRoles = this.state.allRoles
             let references = template.schema.references
 
-            let valueTokens = <React.Fragment>
-                    <h4 className="text-capitalize">{this.humanString(`Available fields for ${template.data.name}`, true)}</h4>
-                    <span className="form-help-text">Available data fields, you can insert data fields related to this event ({this.humanString(template.data.name)}) into the body of your notification.</span>
-                    <ul className = "templateList">
-                        {Object.keys(template.schema).map(field => {
-                            if(field === "references"){
-                                return Object.keys(references).map(reference => {
-                                    return (
-                                        <div className={`__reference-fields`}>
-                                            <h4 className="text-capitalize">{this.humanString(`${reference} fields`, true)}</h4>
-                                            <ul key={reference} className="templateList">
-                                                {Object.keys(references[reference]).map(referenceColumn => {
-                                                    return (
-                                                        <li key={referenceColumn} className="column reference-column">
-                                                            <button className="buttons btn-sm btn-info" onClick={this.insertString(`[[references.${reference}.${referenceColumn}]]`)}>{this.humanString(referenceColumn, true)}</button>
-                                                        </li>)
-                                                })}
-                                            </ul>
-                                        </div>
-                                    )
-                                })
-                            }else{
-                                return <li key={field} className="column">
-                                    <button className="buttons btn-sm btn-info" onClick={this.insertString(`[[${field}]]`)}>{this.humanString(field, true)}</button>
-                                </li>
-                            }
-                        })}
-                    </ul>
-                </React.Fragment>;
-
             return <React.Fragment>
                     <Authorizer permissions={["can_administrate", "can_manage"]}>
                         <div className="app-content __edit-email-templates">
@@ -158,6 +127,7 @@ class NotificationTemplateForm extends React.Component {
                                 <div className={`_title-container`}>
                                     <h1 className={`_heading`}>Edit Notification Template</h1>
                                 </div>
+                                <DataForm handleResponse={this.handleResponse} url={this.state.url} method="PUT">
                                 <Columns>
                                     <Rows>
                                         <Section className={`__email-description`}>
@@ -182,7 +152,6 @@ class NotificationTemplateForm extends React.Component {
                                                     })}
                                         </Section>
                                         <Section className={`__email-notification-settings`}>
-                                            <DataForm handleResponse={this.handleResponse} url={this.state.url} method="PUT">
                                                 <h3>Notification Settings</h3>
                                                 <div className={`sb-form-group`}>
                                                     <input className={`_input- checkbox`} name="create_notification" type="checkbox" defaultChecked={template.data.create_notification}/>
@@ -196,17 +165,44 @@ class NotificationTemplateForm extends React.Component {
                                                     <input className={`_input- checkbox`} name="send_to_owner" type="checkbox" defaultChecked={template.data.send_to_owner}/>
                                                     <label className="_label-"> Send Email To Owner</label>
                                                 </div>
-                                            </DataForm>
                                         </Section>
                                     </Rows>
                                     <Rows>
                                         <Section>
                                             <h3>Email Content</h3>
                                             <h4>Subject</h4>
-                                            <div className={`sb-form-group _group-default`}>
-                                                <input className={`default-input _input- _input-default`} type="text" name="subject" defaultValue={template.data.subject}/>
+                                            <div className={`sb-form-group _group-email-subject`}>
+                                                <input className={`default-input _input- _input-email-subject`} type="text" name="subject" defaultValue={template.data.subject}/>
                                             </div>
-                                            {valueTokens}
+                                            <React.Fragment>
+                                                <h4 className="text-capitalize">{this.humanString(`Available fields for ${template.data.name}`, true)}</h4>
+                                                <span className="form-help-text">Available data fields, you can insert data fields related to this event ({this.humanString(template.data.name)}) into the body of your notification.</span>
+                                                <ul className = "templateList">
+                                                    {Object.keys(template.schema).map(field => {
+                                                        if(field === "references"){
+                                                            return Object.keys(references).map(reference => {
+                                                                return (
+                                                                    <div className={`__reference-fields`}>
+                                                                        <h4 className="text-capitalize">{this.humanString(`${reference} fields`, true)}</h4>
+                                                                        <ul key={reference} className="templateList">
+                                                                            {Object.keys(references[reference]).map(referenceColumn => {
+                                                                                return (
+                                                                                    <li key={referenceColumn} className="column reference-column">
+                                                                                        <button className="buttons btn-sm btn-info" onClick={this.insertString(`[[references.${reference}.${referenceColumn}]]`)}>{this.humanString(referenceColumn, true)}</button>
+                                                                                    </li>)
+                                                                            })}
+                                                                        </ul>
+                                                                    </div>
+                                                                )
+                                                            })
+                                                        }else{
+                                                            return <li key={field} className="column">
+                                                                <button className="buttons btn-sm btn-info" onClick={this.insertString(`[[${field}]]`)}>{this.humanString(field, true)}</button>
+                                                            </li>
+                                                        }
+                                                    })}
+                                                </ul>
+                                            </React.Fragment>
                                             <h4>Body</h4>
                                             <WysiwygTemplater receiveValue={true} receiveOnChange={true} name="message" defaultValue={template.data.message} ref="wysiwygTemplater" schema={template.schema}/>
                                             <div className="p-t-15">
@@ -216,6 +212,7 @@ class NotificationTemplateForm extends React.Component {
                                         </Section>
                                     </Rows>
                                 </Columns>
+                                </DataForm>
                             </Content>
                         </div>
                     </Authorizer>
