@@ -122,26 +122,28 @@ class NotificationTemplateForm extends React.Component {
             let references = template.schema.references
 
             let valueTokens = <React.Fragment>
-                    <h3>{this.humanString(template.data.name, true)} fields</h3>
-                    <span className="help-block">Available data fields, you can insert data fields related to this event ({this.humanString(template.data.name)}) into the body of your notification.</span>
+                    <h4 className="text-capitalize">{this.humanString(`Available fields for ${template.data.name}`, true)}</h4>
+                    <span className="form-help-text">Available data fields, you can insert data fields related to this event ({this.humanString(template.data.name)}) into the body of your notification.</span>
                     <ul className = "templateList">
                         {Object.keys(template.schema).map(field => {
                             if(field === "references"){
                                 return Object.keys(references).map(reference => {
                                     return (
-                                        <ul key={reference} className="referenceList list-group">
-                                            <span className="help-block text-capitalize">{this.humanString(reference, true)} Fields</span>
-                                            {Object.keys(references[reference]).map(referenceColumn => {
-                                                return (
-                                                    <li key={referenceColumn} className="column reference-column list-unstyled">
-                                                        <button className="buttons btn-sm btn-info" onClick={this.insertString(`[[references.${reference}.${referenceColumn}]]`)}>{referenceColumn}</button>
-                                                    </li>)
-                                            })}
-                                        </ul>
+                                        <div className={`__reference-fields`}>
+                                            <h4 className="text-capitalize">{this.humanString(`${reference} fields`, true)}</h4>
+                                            <ul key={reference} className="templateList">
+                                                {Object.keys(references[reference]).map(referenceColumn => {
+                                                    return (
+                                                        <li key={referenceColumn} className="column reference-column">
+                                                            <button className="buttons btn-sm btn-info" onClick={this.insertString(`[[references.${reference}.${referenceColumn}]]`)}>{this.humanString(referenceColumn, true)}</button>
+                                                        </li>)
+                                                })}
+                                            </ul>
+                                        </div>
                                     )
                                 })
                             }else{
-                                return <li key={field} className="column list-unstyled">
+                                return <li key={field} className="column">
                                     <button className="buttons btn-sm btn-info" onClick={this.insertString(`[[${field}]]`)}>{this.humanString(field, true)}</button>
                                 </li>
                             }
@@ -158,33 +160,42 @@ class NotificationTemplateForm extends React.Component {
                                 </div>
                                 <Columns>
                                     <Rows>
-                                        <Section>
+                                        <Section className={`__email-description`}>
                                             <h3>Email template name</h3>
                                             <p>{this.humanString(template.data.name)}</p>
                                             <h3>Description</h3>
                                             <p>{template.data.description}</p>
                                         </Section>
-                                        <Section>
+                                        <Section className={`__email-role-settings`}>
                                                     <h3>The notification will be sent to all users with the roles.</h3>
                                                     {allRoles.map(role => {
                                                         let checked = roles.some(function(checkedRole){
                                                             return role.id === checkedRole.data.id
                                                         })
                                                         return (
-                                                            <React.Fragment key={role.id}>
+                                                            <div className={`sb-form-group`} key={role.id}>
                                                                 <input onChange={this.handleRole(role.id)} type="checkbox" defaultChecked={checked}/>
-                                                                <span> {role.role_name}</span>
-                                                                <span>{role.role_name === "user" && " - email will be sent to all users"}</span>
-                                                            </React.Fragment>
+                                                                <label className={`_label-`}> {role.role_name}</label>
+                                                                <span className={`form-help-text`}>{role.role_name === "user" && " - email will be sent to all users"}</span>
+                                                            </div>
                                                         )
                                                     })}
                                         </Section>
-                                        <Section>
+                                        <Section className={`__email-notification-settings`}>
                                             <DataForm handleResponse={this.handleResponse} url={this.state.url} method="PUT">
                                                 <h3>Notification Settings</h3>
-                                                <input name="create_notification" type="checkbox" defaultChecked={template.data.create_notification}/> <span>Create Notification</span><br/>
-                                                <input name="send_email" type="checkbox" defaultChecked={template.data.send_email}/> <span className="inline"> Send Email</span><br/>
-                                                <input name="send_to_owner" type="checkbox" defaultChecked={template.data.send_to_owner}/> <span className="inline"> Send Email To Owner</span>
+                                                <div className={`sb-form-group`}>
+                                                    <input className={`_input- checkbox`} name="create_notification" type="checkbox" defaultChecked={template.data.create_notification}/>
+                                                    <label className="_label-">Create Notification</label>
+                                                </div>
+                                                <div className={`sb-form-group`}>
+                                                    <input className={`_input- checkbox`} name="send_email" type="checkbox" defaultChecked={template.data.send_email}/>
+                                                    <label className="_label-"> Send Email</label>
+                                                </div>
+                                                <div className={`sb-form-group`}>
+                                                    <input className={`_input- checkbox`} name="send_to_owner" type="checkbox" defaultChecked={template.data.send_to_owner}/>
+                                                    <label className="_label-"> Send Email To Owner</label>
+                                                </div>
                                             </DataForm>
                                         </Section>
                                     </Rows>
@@ -195,8 +206,8 @@ class NotificationTemplateForm extends React.Component {
                                             <div className={`sb-form-group _group-default`}>
                                                 <input className={`default-input _input- _input-default`} type="text" name="subject" defaultValue={template.data.subject}/>
                                             </div>
-                                            <h4>Body</h4>
                                             {valueTokens}
+                                            <h4>Body</h4>
                                             <WysiwygTemplater receiveValue={true} receiveOnChange={true} name="message" defaultValue={template.data.message} ref="wysiwygTemplater" schema={template.schema}/>
                                             <div className="p-t-15">
                                                 <Buttons buttonClass={`__save-email-template`} btnType="primary" text="Save Notification Template" type="submit" loading={this.state.ajaxLoad} success={this.state.success} reset={this.handleResetSuccess}/>

@@ -1,6 +1,7 @@
 .__edit-email-templates {
   ul.templateList {
     display: flex;
+    flex-wrap: wrap;
     padding: 0;
     list-style: none;
     margin: $gutter/2 0;
@@ -9,6 +10,13 @@
       background: $color-secondary;
       color: white;
       margin-right: $gutter/2;
+      margin-bottom: $gutter/2;
+    }
+
+    .__reference-fields {
+      flex-grow: 1;
+      flex-basis: 100%;
+      padding-top: 8px;
     }
   }
 
@@ -23,6 +31,26 @@
   button {
     &.__save-email-template {
       margin-top: $gutter;
+    }
+  }
+
+  ._content-container ._content{
+    .columns{
+      display: grid;
+      grid-template-columns: 30% 70%;
+    }
+  }
+
+  .__email-role-settings, .__email-notification-settings{
+
+    input, label{
+      display: inline-block;
+      line-height: 20px;
+      height: 16px;
+      margin: 0;
+    }
+    input{
+      margin: 0 $gutter 0 0;
     }
   }
 }
