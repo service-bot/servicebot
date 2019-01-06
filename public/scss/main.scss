@@ -22,12 +22,14 @@
 /* layout components */
 @import "_layout-nav";
 @import "_layout-content";
+@import "_layout-columns";
 
 /* component */
 @import "_component-base-table.scss";
 @import "_component-forms";
 @import "_component-tier";
 @import "_component-forms-offering";
+@import "_component-forms-email-template";
 @import "_component-embeddables-config-checkout.scss";
 @import "_component-embeddables";
 @import "_component-embeddables-checkout";

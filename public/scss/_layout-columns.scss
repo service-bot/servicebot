@@ -1,0 +1,17 @@
+
+.app-content ._content-container ._content .columns,
+.columns {
+  display: flex;
+  flex-direction: row;
+
+  & > div {
+
+    &:not(:last-child) {
+      ._section {
+        margin-right: 0;
+      }
+    }
+
+  }
+
+}

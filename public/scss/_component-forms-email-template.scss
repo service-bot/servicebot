@@ -1,0 +1,28 @@
+.__edit-email-templates {
+  ul.templateList {
+    display: flex;
+    padding: 0;
+    list-style: none;
+    margin: $gutter/2 0;
+
+    li button {
+      background: $color-secondary;
+      color: white;
+      margin-right: $gutter/2;
+    }
+  }
+
+  .redactor-styles {
+    min-height: 280px;
+  }
+
+  .sb-form-group{
+    padding: 0 0 $gutter 0;
+  }
+
+  button {
+    &.__save-email-template {
+      margin-top: $gutter;
+    }
+  }
+}
