@@ -1,0 +1,23 @@
+.__my-profile{
+
+  ._content-container ._content {
+    .columns {
+      display: grid;
+      grid-template-columns: 30% 70%;
+    }
+  }
+
+  ._section{
+
+    &.__avatar-form{
+      text-align: center;
+      .avatar{
+        margin: auto;
+      }
+    }
+    &.__edit-form{
+
+    }
+  }
+
+}

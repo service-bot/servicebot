@@ -1,0 +1,36 @@
+.avatar {
+  overflow: hidden;
+  border-radius: 50%;
+
+  &.__sm {
+    width: 100px;
+    height: 100px;
+  }
+  &.__md {
+    width: 200px;
+    height: 200px;
+  }
+  &.__lg{
+    width: 300px;
+    height: 300px;
+  }
+
+  img{
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Uploader */
+  .image-uploader & {
+    position: relative;
+
+    input#avatar{
+      position: absolute;
+      height: 100%;
+      width: 100%;
+      left: 0;
+      top: 0;
+      opacity: 0;
+    }
+  }
+}

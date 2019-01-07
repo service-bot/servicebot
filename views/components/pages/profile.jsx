@@ -1,10 +1,8 @@
 import React from 'react';
 import cookie from 'react-cookie';
 import {browserHistory} from 'react-router';
-import {Authorizer, isAuthorized} from "../utilities/authorizer.jsx";
-import Jumbotron from "../layouts/jumbotron.jsx";
+import {isAuthorized} from "../utilities/authorizer.jsx";
 import Content from "../layouts/content.jsx";
-import ContentTitle from "../layouts/content-title.jsx";
 import UserFormEdit from "../elements/forms/user-form-edit.jsx";
 import {Fetcher} from "servicebot-base-form";
 import { connect } from "react-redux";
@@ -48,40 +46,30 @@ class Profile extends React.Component {
     }
 
     getUserEditForm(){
-        let user = this.props.user;
-        if(user && user.status != "invited") {
-            return (<UserFormEdit myUser={this.state.myUser}/>);
-        } else {
-            return (
-                <div className="invited-user-profile basic-info col-md-6 col-md-offset-3">
-                    <span>Please complete your registration by following the link that was emailed to you prior to editing your profile.</span>
-                </div>
-            );
+        let {user} = this.props;
+        let {myUser} = this.state;
+
+        if(user && user.status !== "invited") {
+            return <UserFormEdit myUser={myUser}/>
         }
+        return <div className="invited-user-profile basic-info col-md-6 col-md-offset-3">
+                <span>Please complete your registration by following the link that was emailed to you prior to editing your profile.</span>
+            </div>
     }
 
     render () {
-        let pageName = this.props.route.name;
+        let {loading} = this.state;
 
-        if(this.state.loading){
-            return(
-                <div className="page __view-my-profile">
-                    <Content>
-                        <ContentTitle icon="user" title="My Profile"/>
-                        <Load/>
-                    </Content>
-                </div>
-            );
-        }else {
-            return (
-                <div className="page __view-my-profile">
-                    <Content>
-                        <ContentTitle icon="user" title="My Profile"/>
-                        {this.getUserEditForm()}
-                    </Content>
-                </div>
-            );
-        }
+        return(
+            <div className="app-content __my-profile">
+                <Content>
+                    <div className={`_title-container`}>
+                        <h1 className={`_heading`}>My Profile</h1>
+                    </div>
+                    {loading ? <Load/> : this.getUserEditForm()}
+                </Content>
+            </div>
+        );
     }
 }
 

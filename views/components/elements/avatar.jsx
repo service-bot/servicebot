@@ -11,10 +11,10 @@ class Avatar extends React.Component {
     }
 
     render(){
-
+        let {size} = this.props
         return (
-            <div className={`badge badge-${this.props.size} badge-avatar`}>
-                <img id="edit-avatar-img" src={`/api/v1/users/${this.props.uid}/avatar`} ref="avatar" className="img-circle" alt="badge"/>
+            <div className={`avatar __${size}`}>
+                <img id="edit-avatar-img" src={`/api/v1/users/${this.props.uid}/avatar`} ref="avatar" alt="avatar"/>
             </div>
         );
 

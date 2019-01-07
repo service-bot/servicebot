@@ -142,7 +142,7 @@ class ImageUploader extends React.Component {
                     <form id={`imgform${this.state.elementID}`} className="image-uploader" encType="multipart/form-data">
                         <div className={`${this.state.imageStyle}`}>
                             <img id={`edit-${this.state.elementID}-img`} className={!this.state.image && 'hidden'}
-                                 src={this.props.imageGETURL || this.state.imageURL} ref="avatar" alt="badge"/>
+                                 src={this.props.imageGETURL || this.state.imageURL} ref="avatar" alt="avatar" title={`Click to upload avatar`}/>
                             { this.state.loadingImage && <Load type="avatar"/> }
                             <input id={this.state.elementID} type="file" onChange={this.onImageSelected} name={this.props.name || 'file'}/>
                         </div>
