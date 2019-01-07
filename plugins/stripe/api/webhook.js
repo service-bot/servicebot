@@ -7,7 +7,7 @@ let User = require('../../../models/user');
 let ServiceInstance = require('../../../models/service-instance');
 let Invoice = require('../../../models/invoice');
 
-module.exports = function(knex) {
+module.exports = function (knex) {
     let stripe = require('../../../config/stripe');
     let store = require("../../../config/redux/store");
 
@@ -15,23 +15,23 @@ module.exports = function(knex) {
      * This function will retrieve an event from Stripe using the event id to validate post request
      * @param event_id - ID of the event coming from Stripe
      */
-    let validateStripeEvent = function (event_id, callback){
-        stripe().connection.events.retrieve(event_id, function(err, event) {
+    let validateStripeEvent = function (event_id, callback) {
+        stripe().connection.events.retrieve(event_id, function (err, event) {
             callback(err, event);
         });
     };
 
     let invoiceCreatedEvent = function (event, callback) {
         User.findOne('customer_id', event.data.object.customer, function (user) {
-            if(user.data) {
+            if (user.data) {
                 Invoice.findOne('invoice_id', event.data.object.id, function (invoice) {
-                    if(!invoice.data) {
+                    if (!invoice.data) {
                         Invoice.insertInvoice(event.data.object, user).then(function (result) {
-                            Logger.log(event.id,'Invoice Created - Webhook from Stripe. Insert new Invoice.');
+                            Logger.log(event.id, 'Invoice Created - Webhook from Stripe. Insert new Invoice.');
                             callback(result);
                         }).catch(function (err) {
                             console.log(err);
-                            Logger.log(event.id,'FAILED => Invoice Creation - Webhook from Stripe. Insert new Invoice.');
+                            Logger.log(event.id, 'FAILED => Invoice Creation - Webhook from Stripe. Insert new Invoice.');
                             callback(err);
                         });
                     } else {
@@ -46,13 +46,13 @@ module.exports = function(knex) {
 
     let invoiceUpdatedEvent = function (event, callback) {
         Invoice.findOne('invoice_id', event.data.object.id, function (invoice) {
-            if(invoice.data) {
+            if (invoice.data) {
                 invoice.sync(event.data.object).then(function (result) {
-                    Logger.log(event.id,'Invoice Updated - Webhook from Stripe. Invoice Updated.');
+                    Logger.log(event.id, 'Invoice Updated - Webhook from Stripe. Invoice Updated.');
                     callback(result);
                 }).catch(function (err) {
                     console.log(err);
-                    Logger.log(event.id,'FAILED => Invoice Updated - Webhook from Stripe. Invoice Updated.');
+                    Logger.log(event.id, 'FAILED => Invoice Updated - Webhook from Stripe. Invoice Updated.');
                     callback(err);
                 });
             } else {
@@ -61,19 +61,25 @@ module.exports = function(knex) {
         });
     };
 
-    let invoiceFailedEvent = function (event, callback) {
+    let invoiceFailedEvent = function (event, callbackFinal) {
         async.series([
             function (callback) {
-                User.findOne('customer_id', event.data.object.customer, function (user) {
+                User.findOne('customer_id', event.data.object.customer, async function (user) {
+                    let instance = (await ServiceInstance.find({ subscription_id: event.data.object.subscription }))[0];
+                    if (!event.data.object.next_payment_attempt) {
+                        console.log("No more payment attempts");
+                        await instance.unsubscribe();
+                    }
                     user.data.status = 'flagged';
                     user.update(function (err, result) {
+                        callbackFinal(null, instance);
                         callback(err, result);
                     });
                 });
             },
             function (callback) {
                 invoiceUpdatedEvent(event, function (result) {
-                    callback(null, result);
+                    // callback(null, result);
                 });
             }
         ]);
@@ -81,12 +87,12 @@ module.exports = function(knex) {
 
     let customerDeletedEvent = function (event, callback) {
         User.findOne('customer_id', event.data.object.id, function (user) {
-            if(user.data) {
+            if (user.data) {
                 user.purgeData(false, function (result) {
                     user.data.status = 'suspended';
                     user.data.customer_id = null;
                     user.update(function (err, result) {
-                        Logger.log(event.id,'Customer deleted - Webhook from Stripe. Set user activate to false.');
+                        Logger.log(event.id, 'Customer deleted - Webhook from Stripe. Set user activate to false.');
                         callback(result);
                     });
                 });
@@ -97,12 +103,12 @@ module.exports = function(knex) {
     }
 
     let subscriptionDeletedEvent = function (event, callback) {
-        ServiceInstance.findOne('subscription_id', event.data.object.id, function(service) {
-            if(service.data) {
+        ServiceInstance.findOne('subscription_id', event.data.object.id, function (service) {
+            if (service.data) {
                 service.data.status = 'cancelled';
                 service.data.subscription_id = null;
                 service.update(function (err, result) {
-                    Logger.log(event.id,'Subscription deleted - Webhook from Stripe.');
+                    Logger.log(event.id, 'Subscription deleted - Webhook from Stripe.');
                     callback(result);
                 });
             } else {
@@ -122,7 +128,7 @@ module.exports = function(knex) {
     // invoice.updated [Sync the invoice]
     // ping
 
-    let webhook = function(req, res, next){
+    let webhook = function (req, res, next) {
         let event_id = req.body.id;
         async.waterfall([
             function (callback) {
@@ -134,11 +140,11 @@ module.exports = function(knex) {
                     }
                 });
             },
-            function (event, callback){
-                if(event) {
+            function (event, callback) {
+                if (event) {
                     //Check if the database has not processed this event before
-                    Logger.findOne('event_id', event.id, function(found_event) {
-                        if(!found_event.data){
+                    Logger.findOne('event_id', event.id, function (found_event) {
+                        if (!found_event.data) {
                             callback(null, true, event);
                         } else {
                             res.status(200).send('Event already processed');
@@ -148,20 +154,20 @@ module.exports = function(knex) {
                 }
             },
             function (valid, event, callback) {
-                if(valid) {
+                if (valid) {
                     switch (event.type) {
                         case 'customer.deleted':
-                            customerDeletedEvent (event, function (result) {
+                            customerDeletedEvent(event, function (result) {
                                 console.log(result);
                             });
                             break;
                         case 'customer.subscription.deleted':
-                            subscriptionDeletedEvent (event, function (result) {
+                            subscriptionDeletedEvent(event, function (result) {
                                 console.log(result);
                             });
                             break;
                         case 'invoice.created':
-                            invoiceCreatedEvent (event, function (result) {
+                            invoiceCreatedEvent(event, function (result) {
                                 console.log(result);
                             });
                             break;
@@ -171,9 +177,16 @@ module.exports = function(knex) {
                             });
                             break;
                         case 'invoice.payment_failed':
-                            invoiceFailedEvent(event, function (user) {
-                                console.log(user);
-                                store.dispatchEvent("payment_failure", user);
+                            invoiceFailedEvent(req.body, function (err, instance) {
+                                let accessManager = store.getState(true).pluginbot.services.embedAccessManager
+                                if (accessManager) {
+                                    accessManager = accessManager[0];
+                                    accessManager.createToken(instance.data.user_id).then(token => {
+                                        instance.data.billing_settings_url = accessManager.createLink(instance.data.user_id, token);
+                                        store.dispatchEvent("payment_failure", instance);
+                                    });
+                                }
+
                             });
                             break;
                         default:
@@ -187,11 +200,11 @@ module.exports = function(knex) {
     };
 
     return {
-        endpoint : "/stripe/webhook",
-        method : "post",
-        middleware : [webhook],
-        permissions : [],
-        description : "Stripe Webhook"
+        endpoint: "/stripe/webhook",
+        method: "post",
+        middleware: [webhook],
+        permissions: [],
+        description: "Stripe Webhook"
 
     };
 }

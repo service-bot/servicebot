@@ -213,11 +213,12 @@ module.exports = function (router) {
                 return res.status(400).json({error: 'Payment structure template not found'});
             }
             let tier = (await Tier.find({id: paymentStructureTemplate.data.tier_id, service_template_id: serviceTemplate.data.id}))[0];
-
+            
             //check if the structure's tier belongs to the template
             if(!tier){
                 return res.status(400).json({error: 'Payment Structure does not belong to this service template'});
             }
+            res.locals.tier = tier;
             await authPromise(req, res);
             let permission_array = res.locals.permissions || [];
             let handlers = (store.getState(true).pluginbot.services.inputHandler || []).reduce((acc, handler) => {
@@ -485,7 +486,9 @@ module.exports = function (router) {
                     acc[prop.name] = prop.data && prop.data.value;
                     return acc;
                 }, {});
-                if (isNew && req_body.password === undefined) {
+                if(newInstance.data.references.payment_structure_templates[0].type === "custom"){
+                    store.dispatchEvent("service_instance_custom_requested_by_user", newInstance);
+                }else if (isNew && req_body.password === undefined) {
 
                     // newInstance.set("api", responseJSON.api);
                     // newInstance.set("url", responseJSON.url);
@@ -493,7 +496,7 @@ module.exports = function (router) {
                     store.dispatchEvent("service_instance_requested_by_user", newInstance);
 
                 }else if(isNew){
-
+                    store.dispatchEvent("service_instance_requested_by_user", newInstance);
                 }else if (req.uid !== newInstance.get("user_id")) {
                     store.dispatchEvent("service_instance_requested_by_user", newInstance);
 
