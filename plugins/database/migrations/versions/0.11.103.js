@@ -40,7 +40,7 @@ module.exports = {
     
         let updated = await knex("notification_templates").where("name", "service_cancellation");
 
-        let newRecords = await knex("notification_templates").returning('id').insert([{
+        let newRecords = await knex("notification_templates").returning('*').insert([{
             name: "registration_user",
             event_name: "service_instance_requested_by_user",
             message: "Welcome to the new service, [[name]]",
@@ -140,8 +140,9 @@ module.exports = {
           },
           
         ]);
+
         let admin = await knex("notification_templates_to_roles").returning("id").insert([{
-            notification_template_id: newRecords[2],
+            notification_template_id: newRecords[2].id,
             role_id: 1
 
         },
@@ -150,14 +151,14 @@ module.exports = {
             role_id: 1
         },
         {
-            notification_template_id: updated[6].id,
+            notification_template_id: newRecords[6].id,
             role_id: 1
         },
         {
-            notification_template_id: updated[8].id,
+            notification_template_id: newRecords[8].id,
             role_id: 1
         }])
-        await knex("notification_templates_to_roles").whereIn("name", ["service_instance_update", "instance_cancellation_rejected", "instance_cancellation_approved", "user_suspension"]).delete();
+        await knex("notification_templates").whereIn("name", ["service_instance_update", "instance_cancellation_rejected", "instance_cancellation_approved", "user_suspension"]).delete();
         return await knex;
     },
 
