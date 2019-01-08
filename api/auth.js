@@ -27,7 +27,8 @@ module.exports = function(app, passport) {
             payload.user = req.user.data;
             delete payload.user.password;
         }
-        let token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '3h' });
+        let expiration = req.body.noExpiration ? undefined : "3h"
+        let token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: expiration  });
         res.json({token:token});
     });
 
