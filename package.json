@@ -57,7 +57,7 @@
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
     "pg": "^6.4.2",
-    "pluginbot": "^0.2.0",
+    "pluginbot": "^0.2.3",
     "pluginbot-react": "^0.1.2",
     "promise-polyfill": "^6.0.2",
     "prop-types": "^15.6.2",
