@@ -34,3 +34,45 @@
     }
   }
 }
+
+.messages {
+  padding: $gutter;
+
+  .message {
+    width: 100%;
+    height: auto;
+    font-size: 1em;
+    color: white;
+    background: $color-secondary;
+    padding: $gutter $gutter;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    &.__success {
+      background: $color-success;
+    }
+
+    &.__failure {
+      background: $color-error;
+    }
+
+    &.__warning {
+      background: $color-warning;
+    }
+
+    &.__success, &.__failure, &.__warning {
+      a {
+        color: $color-white;
+      }
+    }
+
+    i {
+      margin-right: $gutter/2;
+    }
+
+    a {
+      opacity: 0.7;
+    }
+  }
+}

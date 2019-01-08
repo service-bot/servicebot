@@ -49,12 +49,14 @@ class UserFormEdit extends React.Component {
     getMessage(){
         if(this.state.success){
             return(
-                <div className="alert alert-success" role="alert">
-                    <i className="fa fa-check-circle"/>
-                    <Authorizer permissions="can_administrate">
-                        <Link to="/manage-users" className="buttons btn-success btn-outline btn-rounded btn-sm pull-right">Back to Manage Users</Link>
-                    </Authorizer>
-                    Your user profile has been updated.
+                <div className={"messages"}>
+                    <div className="message __success" role="alert">
+                        <i className="fa fa-check-circle"/>
+                        <Authorizer permissions="can_administrate">
+                            <Link to="/manage-users" className="buttons btn-success btn-outline btn-rounded btn-sm pull-right">Back to Manage Users</Link>
+                        </Authorizer>
+                        Your user profile has been updated.
+                    </div>
                 </div>
             )
         }
