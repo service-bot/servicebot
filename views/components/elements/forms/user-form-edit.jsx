@@ -145,7 +145,7 @@ function userFormElements(props){
                 component={inputField} label="Change Password"/>
             <Field name="password2" type="password"
                    component={inputField} label="Confirm Password"/>
-            <Buttons containerClass="inline" btnType="primary" text="Save Profile" type="submit" value="submit" onClick={props.handleSubmit}/>
+            <Buttons containerClass="inline sb-form-group" btnType="primary" text="Save Profile" type="submit" value="submit" onClick={props.handleSubmit}/>
         </form>
     )
 }
