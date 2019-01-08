@@ -106,6 +106,9 @@ class UserFormEdit extends React.Component {
                             </Rows>
                             <Rows>
                                 <Section className={`__edit-form`}>
+                                    <div className={`sb-form-group`}>
+                                        <h3>Account Information</h3>
+                                    </div>
                                     {this.getMessage()}
                                     <ServicebotBaseForm
                                         form={userFormElements.bind(this)}
@@ -141,9 +144,9 @@ function userFormElements(props){
                    component={inputField} label="Email"/>
             <Field name="phone" type="tel"
                    component={inputField} label="Phone Number"/>
-            <Field name="password" type="password"
+            <Field className={`password-one`} name="password" type="password"
                 component={inputField} label="Change Password"/>
-            <Field name="password2" type="password"
+            <Field className={`password-two`} name="password2" type="password"
                    component={inputField} label="Confirm Password"/>
             <Buttons containerClass="inline sb-form-group" btnType="primary" text="Save Profile" type="submit" value="submit" onClick={props.handleSubmit}/>
         </form>

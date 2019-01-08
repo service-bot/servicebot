@@ -17,6 +17,16 @@
     }
     &.__edit-form{
 
+      .sb-form-group._group-default {
+        width: 50%;
+        min-width: 300px;
+      }
+      ._group-password-one, ._group-password-two{
+        float: left;
+        width: 50%;
+        min-width: 300px;
+      }
+
     }
   }
 
