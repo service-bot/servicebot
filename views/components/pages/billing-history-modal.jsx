@@ -1,5 +1,5 @@
 import React from "react";
-import {Price} from '../utilities/price.jsx';
+import { Price } from '../utilities/price.jsx';
 import DateFormat from '../utilities/date-format.jsx';
 import ReactToPrint from "react-to-print";
 
@@ -7,8 +7,34 @@ class CustomerInvoice extends React.Component {
     constructor(props) {
         super(props)
     }
+    getRefunds(transactions) {
+        //If there is a transaction for this invoice
+        if (transactions.length > 0 && transactions[0].refunds.data.length > 0) {
+            let refunds = transactions[0].refunds.data;
+            return (
+                <div className="xaas-dashboard">
+                    <div className="xaas-row waiting">
+                        <div className="xaas-title xaas-has-child">
+                            <div className="xaas-data xaas-service"><span>Applied Refunds</span></div>
+                        </div>
+                        <div className="xaas-body">
+                            {refunds.map((refund, index) =>
+                                <div key={"refund-" + index} className="xaas-body-row">
+                                    <div className="xaas-data xaas-price"><b><Price value={refund.amount} currency={transactions[0].currency} /></b></div>
+                                    <div className="xaas-data xaas-charge"><span>{refund.reason}</span></div>
+                                    <div className="xaas-data xaas-action"><span>{refund.status}</span></div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        } else {
+            return (<span />);
+        }
+    }
     render() {
-        let {invoice, user, cancel} = this.props;
+        let { invoice, user, cancel } = this.props;
         let self = this;
         return (
             <div className={`servicebot-invoice-modal-container`} ref={el => (this.componentRef = el)}>
@@ -18,13 +44,13 @@ class CustomerInvoice extends React.Component {
                             <div className={`__left`}>
                                 <h3>{user.name || user.email}</h3>
                                 <span className={`__invoice-id`}>Invoice #: {invoice.invoice_id}</span>
-                                <span className={`__date`}><DateFormat date={invoice.date}/></span>
+                                <span className={`__date`}><DateFormat date={invoice.date} /></span>
                             </div>
                             <div className={`__right`}>
-                            <span role={`button`}
-                                  aria-label={`close invoice modal`}
-                                  className={`icon close`}
-                                  onClick={cancel}/>
+                                <span role={`button`}
+                                    aria-label={`close invoice modal`}
+                                    className={`icon close`}
+                                    onClick={cancel} />
                             </div>
                         </div>
                     </div>
@@ -39,7 +65,7 @@ class CustomerInvoice extends React.Component {
                                             <span className={`_label`}>{line.description}</span>
                                             <span className={`_value_wrap`}>
                                                 <span className={`_value`}>
-                                                    <Price value={line.amount} currency={line.currency}/>
+                                                    <Price value={line.amount} currency={line.currency} />
                                                 </span>
                                             </span>
                                         </p>
@@ -49,8 +75,12 @@ class CustomerInvoice extends React.Component {
                             <p className={`_total`}>
                                 <span className={`_label`}>Total: </span>
                                 <span className={`_value`}><Price value={invoice.total}
-                                                                  currency={invoice.currency}/></span>
+                                    currency={invoice.currency} /></span>
                             </p>
+                            <div>
+                                <p className={`_heading`}>Refunds</p>
+                                {this.getRefunds(invoice.references.transactions)}
+                            </div>
                         </div>
                     </div>
                     <div className={`__footer`}>
@@ -64,11 +94,11 @@ class CustomerInvoice extends React.Component {
                                 }} className={`buttons _primary _download-invoice`}>Print Invoice</button>}
                                 content={() => this.componentRef}
                             />
-                            <button className={`buttons _primary _red _refund-invoice`} onClick={()=>{self.props.refund(invoice)}}>Refund</button>
+                            <button className={`buttons _primary _red _refund-invoice`} onClick={() => { self.props.refund(invoice) }}>Refund</button>
                         </div>
                     </div>
                 </div>
-                <div onClick={cancel} className={`__backdrop`}/>
+                <div onClick={cancel} className={`__backdrop`} />
             </div>
         );
     }
