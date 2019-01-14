@@ -148,7 +148,7 @@ class DataForm extends React.Component {
             //todo: flag elements that should have onChange attached to them (so we wont have a hardcoded type like wysiwyg)
 
             //if child is an input, select or a component with receiveOnChange = true
-            if((child.type=="input" || child.type=="select" || (child.props && child.props.receiveOnChange)) && child.props.type != "submit"){
+            if((child.type=="input" || child.type=="select" || (child.props && child.props.receiveOnChange)) && child.props.type != "submit" && child.props.receiveOnChange !== false){
 
                 //if child is a component and has props.receiveValue (Stop looking and do stuff)
                 if(child.props && child.props.receiveValue){
@@ -170,7 +170,7 @@ class DataForm extends React.Component {
                         }
                     }
                     //setting up the props for the component
-                    newProps.onChange = self.handleInputChange(child, modelName, objectName);
+                    newProps.onChange = child.props.receiveOnChange !== false ? self.handleInputChange(child, modelName, objectName) : child.props.onChange;
                     newProps.value = _.get(self.state.form, path) || child.props.value || child.props.defaultValue;
                     newProps.error = currentError ? currentError : false;
                     newProps.className = currentError ? 'form-control has-error' : 'form-control';

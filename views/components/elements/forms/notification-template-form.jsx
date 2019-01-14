@@ -144,7 +144,7 @@ class NotificationTemplateForm extends React.Component {
                                                         })
                                                         return (
                                                             <div className={`sb-form-group`} key={role.id}>
-                                                                <input onChange={this.handleRole(role.id)} type="checkbox" defaultChecked={checked}/>
+                                                                <input receiveOnChange={false} onChange={this.handleRole(role.id)} type="checkbox" defaultChecked={checked}/>
                                                                 <label className={`_label-`}> {role.role_name}</label>
                                                                 <span className={`form-help-text`}>{role.role_name === "user" && " - email will be sent to all users"}</span>
                                                             </div>
