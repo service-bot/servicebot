@@ -16,7 +16,7 @@ default_notifications.templates = [
             </p>
             <p class="___email-body">
                 If you want to come back, your account is one click away. 
-            <a class="___action-button" target="_blank" href="https://[[_hostname]]/[[billing_settings_url_token]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Reactivate Account</a>
+            <a class="___action-button" target="_blank" href="[[billing_settings_url_token]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Reactivate Account</a>
             </p><p class="___email-body">We hope to welcome you back soon!</p>
         </div>  
 
@@ -50,7 +50,7 @@ default_notifications.templates = [
             <p class="___email-body">
                 You have updated your [[_company_name]] subscription settings.
             </p>
-            <a class="___action-button" target="_blank" href="https://[[_hostname]]/[[billing_settings_url_token]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">View Account</a>
+            <a class="___action-button" target="_blank" href="[[billing_settings_url_token]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">View Account</a>
             <p class="___email-body">
                 If you did not request this change and this message is received in error, please let us know by emailing us at [[_company_email]].
             </p>
@@ -346,7 +346,7 @@ default_notifications.templates = [
             <p class="___email-body">
                 Thank you for resubscribing to [[_company_name]].
             </p>
-            <a class="___action-button" target="_blank" href="https://[[_hostname]]/[[billing_settings_url_token]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">View Account Detail</a>
+            <a class="___action-button" target="_blank" href="[[billing_settings_url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">View Account Detail</a>
             <p class="___email-body">
                 If you have any additional questions or need assistance, please let us know by emailing us at [[_company_email]].                   
             </p>
@@ -385,7 +385,7 @@ default_notifications.templates = [
             <p class="___email-body">
                 If you did not request cancellation and this message is received in error, please click on the link below to reactivate.
             </p>
-            <a class="___action-button" target="_blank" href="[[billing_settings_url_token]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Reactivate Account</a>
+            <a class="___action-button" target="_blank" href="[[billing_settings_url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Reactivate Account</a>
             <p class="___email-body">
                 If you have any additional questions or need assistance, please let us know by emailing us at [[_company_email]].
             </p>
