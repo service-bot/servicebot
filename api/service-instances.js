@@ -139,6 +139,7 @@ module.exports = function(router) {
         instance_object.applyPaymentStructure(req.params.payment_structure_id, true).then(function (updatedInstance) {
             res.json(updatedInstance.data);
             store.dispatchEvent("service_instance_updated", updatedInstance);
+            store.dispatchEvent("service_instance_plan_change", updatedInstance);
         }).catch(function (error) {
             console.error(error);
             if(error.message){

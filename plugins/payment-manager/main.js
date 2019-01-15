@@ -131,6 +131,9 @@ function trialExpiration(instance) {
 
             if (!fund.data) {
                 console.log("TRIAL EXPIRED AND NO FUNDS, UNSUBSCRIBE!");
+                instance = await instance.attachReferences();
+                require("../../config/redux/store").dispatchEvent("service_instance_trial_expired", instance);
+
                 instance.unsubscribe()
             } else {
                 console.log("funds have been added, no unsubscribe needed");

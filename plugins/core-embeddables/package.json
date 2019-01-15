@@ -7,6 +7,10 @@
   "pluginbot": {
     "client": {
       "main" : "client.js"
+    },
+    "server": {
+      "main" : "main.js",
+      "consumes" : ["database"]
     }
   }
 }

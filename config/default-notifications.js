@@ -544,16 +544,20 @@ default_notifications.templates = [
 //Setting the registration_admin role to admin
 //todo: no more hardcoded id...
 default_notifications.templates_to_roles = [
-    {
-        notification_template_id: 4,
-        role_id: 1
-    },
-    {
-      notification_template_id: 1,
-      role_id: 1
-  },{
-    notification_template_id: 10,
+  {
+    notification_template_id: 3,
     role_id: 1
-},
+  },
+  {
+    notification_template_id: 1,
+    role_id: 1
+  }, {
+    notification_template_id: 8,
+    role_id: 1
+  },
+  {
+    notification_template_id: 12,
+    role_id: 1
+  }
 ];
 module.exports = default_notifications;

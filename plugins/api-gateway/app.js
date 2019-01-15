@@ -118,7 +118,11 @@ module.exports = {
 
         //initialize api route
         var api = express.Router();
+        var pages = express.Router();
+
         app.use("/api/v1", api);
+        app.use("/page", pages)
+        yield provide({"pageRouter" : pages});
         require("../../api/auth")(api, passport);
 
         //force all requests to api route to look for token, if token is present in header the user will be logged in with taht token

@@ -203,7 +203,7 @@ Invoice.insertInvoice = function (raw_invoice, user) {
         })
     }).then(function (invoice) {
         //Insert all line items
-        return new Promise(function (resolve, reject) {
+        return new Promise(async function (resolve, reject) {
             let reference_data = invoice.data.references;
             for (let reference of references){
                 if(reference_data[reference.model.table] && reference_data[reference.model.table].length > 0){
@@ -216,6 +216,12 @@ Invoice.insertInvoice = function (raw_invoice, user) {
             if(invoice.data.amount_due > 0){
                 let currMap = require("currency-symbol-map");
                 invoice.data.parsed_amount_due = `${currMap(store.getState().options.currency || "USD")}${(invoice.data.amount_due/100).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`; 
+                let accessManager = store.getState(true).pluginbot.services.embedAccessManager
+                if(accessManager){
+                    accessManager = accessManager[0];
+                    let token = await accessManager.createToken(invoice.data.user_id);
+                    invoice.data.billing_settings_url = accessManager.createLink(invoice.data.user_id, token);
+                }
                 store.dispatchEvent("new_invoice", invoice);
             }
             // invoice = await invoice.attachReferences();
