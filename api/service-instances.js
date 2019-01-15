@@ -45,6 +45,13 @@ async function reactivate(instance_object, trialDays=0){
                 instance: instance_object
             });
         }
+        let accessManager = store.getState(true).pluginbot.services.embedAccessManager
+        if(accessManager){
+            accessManager = accessManager[0];
+            let token = await accessManager.createToken(instance_object.data.user_id);
+            instance_object.data.billing_settings_url = accessManager.createLink(instance_object.data.user_id, token);
+        }
+
         store.dispatchEvent("service_instance_resubscribed", instance_object);
 
         return updatedInstance;
@@ -139,6 +146,12 @@ module.exports = function(router) {
         instance_object.applyPaymentStructure(req.params.payment_structure_id, true).then(function (updatedInstance) {
             res.json(updatedInstance.data);
             store.dispatchEvent("service_instance_updated", updatedInstance);
+            let accessManager = store.getState(true).pluginbot.services.embedAccessManager
+            if(accessManager){
+                accessManager = accessManager[0];
+                let token = await accessManager.createToken(instance_object.data.user_id);
+                instance_object.data.billing_settings_url = accessManager.createLink(instance_object.data.user_id, token);
+            }
             store.dispatchEvent("service_instance_plan_change", updatedInstance);
         }).catch(function (error) {
             console.error(error);
@@ -169,6 +182,12 @@ module.exports = function(router) {
         try {
             let result = await instance_object.scheduleCancellation();
             res.json(result);
+            let accessManager = store.getState(true).pluginbot.services.embedAccessManager
+            if(accessManager){
+                accessManager = accessManager[0];
+                let token = await accessManager.createToken(instance_object.data.user_id);
+                instance_object.data.billing_settings_url = accessManager.createLink(instance_object.data.user_id, token);
+            }
             store.dispatchEvent("service_instance_cancellation_requested", instance_object);
 
         } catch (err) {
@@ -184,6 +203,13 @@ module.exports = function(router) {
         instance_object.scheduleCancellation().then(result => {
             res.locals.json = result;
             next();
+            let accessManager = store.getState(true).pluginbot.services.embedAccessManager
+            if(accessManager){
+                accessManager = accessManager[0];
+                let token = await accessManager.createToken(instance_object.data.user_id);
+                instance_object.data.billing_settings_url = accessManager.createLink(instance_object.data.user_id, token);
+            }
+
             store.dispatchEvent("service_instance_cancellation_requested", instance_object);
         }).catch(e => {
             console.error("Error cancelling", e);
