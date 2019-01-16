@@ -339,7 +339,7 @@ module.exports = {
             <p class="___email-body">
                 If you want to come back, your account is one click away.
             </p>
-            <a class="___action-button" target="_blank" href="[[billing_settings_url_token]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Reactivate Account</a>
+            <a class="___action-button" target="_blank" href="[[billing_settings_url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Reactivate Account</a>
             <p class="___email-body">
                 We hope to welcome you back soon!
             </p>
@@ -435,7 +435,7 @@ module.exports = {
             <p class="___email-body">
                 You have updated your [[_company_name]] subscription settings.
             </p>
-            <a class="___action-button" target="_blank" href="https://[[_hostname]]/[[billing_settings_url_token]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">View Account</a>
+            <a class="___action-button" target="_blank" href="[[billing_settings_url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">View Account</a>
             <p class="___email-body">
                 If you did not request this change and this message is received in error, please let us know by emailing us at [[_company_email]].
             </p>
@@ -502,7 +502,7 @@ module.exports = {
             <p class="___email-body">
                 Your [[_company_name]] trial has ended, but your progress has been saved and is still available. You can reactivate your account if you wish.
             </p>
-            <a class="___action-button" target="_blank" href="https://[[_hostname]]/[[billing_settings_url_token]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Reactivate Account</a>
+            <a class="___action-button" target="_blank" href="[[billing_settings_url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Reactivate Account</a>
             <p class="__email-body">
                 Everyone gets busy and you may not have had enough time to evaluate [[_company_name]]. To extend your trial, simply email us at [[_company_email]].
             </p>
