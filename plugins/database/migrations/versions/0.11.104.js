@@ -486,7 +486,8 @@ module.exports = {
                 subject: "[[references.users.email]] has changed their plan",
                 description: "Sent to admins when a service payment plan has been changed",
                 model: "service-instance",
-                send_email: false
+                send_email: false,
+                send_to_owner: false
             },
             {
                 name: "trial_expiration",

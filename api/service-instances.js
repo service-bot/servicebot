@@ -143,7 +143,7 @@ module.exports = function(router) {
         if((instance_object.data.type === "custom" || newPaymentStructure.data.type === "custom" ) && !hasPermission){
             return res.status(403).json({error: "Unauthorized"});
         }
-        instance_object.applyPaymentStructure(req.params.payment_structure_id, true).then(function (updatedInstance) {
+        instance_object.applyPaymentStructure(req.params.payment_structure_id, true).then(async function (updatedInstance) {
             res.json(updatedInstance.data);
             store.dispatchEvent("service_instance_updated", updatedInstance);
             let accessManager = store.getState(true).pluginbot.services.embedAccessManager
@@ -200,14 +200,18 @@ module.exports = function(router) {
 
     router.post('/service-instances/:id/request-cancellation', validate(ServiceInstance), auth(), function(req, res, next) {
         let instance_object = res.locals.valid_object;
-        instance_object.scheduleCancellation().then(result => {
+        instance_object.scheduleCancellation().then(async result => {
             res.locals.json = result;
             next();
             let accessManager = store.getState(true).pluginbot.services.embedAccessManager
             if(accessManager){
                 accessManager = accessManager[0];
                 let token = await accessManager.createToken(instance_object.data.user_id);
+                console.log("OK!", token);
                 instance_object.data.billing_settings_url = accessManager.createLink(instance_object.data.user_id, token);
+                console.log(instance_object.data.billing_settings_url, "URL TIME");
+            }else{
+                console.log("NOTHING!");
             }
 
             store.dispatchEvent("service_instance_cancellation_requested", instance_object);
