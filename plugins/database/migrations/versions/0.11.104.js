@@ -105,7 +105,7 @@ module.exports = {
                 send_to_owner: false
             },
             {
-                name: "c",
+                name: "payment_failure",
                 event_name: "payment_failure",
                 message: `<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
     <div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
