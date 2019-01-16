@@ -11,23 +11,23 @@ class CustomerInvoice extends React.Component {
         //If there is a transaction for this invoice
         if (transactions.length > 0 && transactions[0].refunds.data.length > 0) {
             let refunds = transactions[0].refunds.data;
-            return (
-                <div className="xaas-dashboard">
-                    <div className="xaas-row waiting">
-                        <div className="xaas-title xaas-has-child">
-                            <div className="xaas-data xaas-service"><span>Applied Refunds</span></div>
-                        </div>
-                        <div className="xaas-body">
-                            {refunds.map((refund, index) =>
-                                <div key={"refund-" + index} className="xaas-body-row">
-                                    <div className="xaas-data xaas-price"><b><Price value={refund.amount} currency={transactions[0].currency} /></b></div>
-                                    <div className="xaas-data xaas-charge"><span>{refund.reason}</span></div>
-                                    <div className="xaas-data xaas-action"><span>{refund.status}</span></div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
+            return ( <React.Fragment>
+                {refunds.map((refund, index) =>
+                    <p key={"refund-" + index} className="_item">
+                        <span className={`_label`}><Price value={refund.amount} currency={transactions[0].currency} /></span>
+                        <span className={`_value_wrap`}>
+                            <span className={`_value`}>
+                                {refund.reason}
+                            </span>
+                        </span>
+                        <span className={`_value_wrap`}>
+                            <span className={`_value`}>
+                                {refund.status}
+                            </span>
+                        </span>
+                    </p>
+                )}
+                </React.Fragment>
             );
         } else {
             return (<span />);
@@ -55,6 +55,7 @@ class CustomerInvoice extends React.Component {
                         </div>
                     </div>
                     <div className={`__body`}>
+
                         <h4 className={`__heading`}>Summary</h4>
                         <div className={`mbf-summary`}>
                             <p className={`_heading`}>Items</p>
@@ -77,11 +78,16 @@ class CustomerInvoice extends React.Component {
                                 <span className={`_value`}><Price value={invoice.total}
                                     currency={invoice.currency} /></span>
                             </p>
-                            <div>
-                                <p className={`_heading`}>Refunds</p>
+                        </div>
+
+                        <h4 className={`__heading`}>Applied Refunds</h4>
+                        <div className={`mbf-summary`}>
+                            <p className={`_heading`}>Items</p>
+                            <div className={`_items`}>
                                 {this.getRefunds(invoice.references.transactions)}
                             </div>
                         </div>
+
                     </div>
                     <div className={`__footer`}>
                         <div className={`buttons-group __gap`}>
