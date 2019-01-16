@@ -43,11 +43,14 @@ default_notifications.templates = [
         </div>
 
         <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
-            <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">Reset Password</h2>
+            <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">Oh no, your payment failed</h2>
             <p class="___email-body">
-                    Please follow the Reset Password button below to reset your [[_company_name]] account password.
+                Unfortunately,  we couldn't collect your subscription payment. Please take a moment to review your billing information, if it looks correct, please reply to this email and let us know. Otherwise, please update your information.
             </p>
-            <a class="___action-button" target="_blank" href="[[url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Reset Password</a>
+            <a class="___action-button" target="_blank" href="[[billing_settings_url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Update credit card</a>
+            <p class="__email-body">
+                If you have any question about your subscription, email us at [[_company_email]] and let us know.
+            </p>
         </div>  
 
         <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
