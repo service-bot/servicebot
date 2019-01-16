@@ -419,7 +419,8 @@ module.exports = {
                 subject: "New pricing request",
                 description: "Sent to admins when an enterprise service is requested",
                 model: "service-instance",
-                send_email: true
+                send_email: true,
+                send_to_owner: false
             },
             {
                 name: "service_instance_plan_change_user",

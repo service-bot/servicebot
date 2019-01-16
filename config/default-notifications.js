@@ -417,7 +417,8 @@ default_notifications.templates = [
         subject: "New pricing request",
         description: "Sent to admins when an enterprise service is requested",
         model: "service-instance",
-        send_email: true
+        send_email: true,
+        send_to_owner: false
     },
     {
         name: "service_instance_plan_change_user",
@@ -486,7 +487,9 @@ default_notifications.templates = [
         subject: "[[references.users.email]] has changed their plan",
         description: "Sent to admins when a service payment plan has been changed",
         model: "service-instance",
-        send_email: false
+        send_email: false,
+        send_to_owner: false
+
     },
     {
         name: "trial_expiration",
