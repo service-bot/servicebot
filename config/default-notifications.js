@@ -111,7 +111,7 @@ default_notifications.templates = [
         <div className="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
             <h2 className="___email-subject" style="font-size: 20px; margin-bottom: 24px;">Oh no, your payment failed</h2>
             <p className="___email-body">
-                Unfortunately,  we couldn't collect your subscription payment. Please take a moment to review your billing information- if it looks correct, please reply to this email and let us know. Otherwise, please update your information.
+                Unfortunately,  we couldn't collect your subscription payment. Please take a moment to review your billing information, if it looks correct, please reply to this email and let us know. Otherwise, please update your information.
             </p>
             <a className="___action-button" target="_blank" href="[[billing_settings_url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Update credit card</a>
             <p className="__email-body">
