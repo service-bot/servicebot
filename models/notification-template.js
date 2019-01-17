@@ -43,7 +43,7 @@ NotificationTemplate.prototype.build = function (map, callback) {
             splitStr[1] += "[0]";
             replaceString = splitStr.join(".");
         }
-        let result = _.get(map, replaceString);
+        let result = _.get(map, replaceString, "");
         if( (typeof result === "object") && (result !== null) ){
             result = JSON.stringify(result);
         }
