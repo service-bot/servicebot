@@ -11,6 +11,7 @@ import {TableHeaderColumn} from 'react-bootstrap-table';
 import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
 import Fetcher from '../utilities/fetcher.jsx';
+import CustomerInvoice from "./billing-history-modal.jsx";
 
 class BillingHistoryList extends React.Component {
 
@@ -22,7 +23,8 @@ class BillingHistoryList extends React.Component {
         }
         this.state = {
             url: `/api/v1/invoices${action}`,
-            refundModal: false
+            refundModal: false,
+            invoiceToShow: null,
         };
 
         this.openRefundModal = this.openRefundModal.bind(this);
@@ -30,6 +32,24 @@ class BillingHistoryList extends React.Component {
         this.rowActionsFormatter = this.rowActionsFormatter.bind(this);
         this.openRefundModal = this.openRefundModal.bind(this);
         this.fetchData = this.fetchData.bind(this);
+        this.openInvoiceModal = this.openInvoiceModal.bind(this);
+        this.closeInvoiceModal = this.closeInvoiceModal.bind(this);
+        this.modInvoiceId = this.modInvoiceId.bind(this);
+        this.fetchUser = this.fetchUser.bind(this);
+    }
+
+    fetchUser(){
+        let self = this;
+        Fetcher(`/api/v1/users/${self.props.uid}`).then(function (response) {
+            if(!response.error){
+                self.setState({loading: false, user: response})
+                console.log('user',self.state.user)
+            }else{
+                self.setState({loading: false})
+            }
+        }).catch(function(err){
+            console.error('Failed to load user', err)
+        })
     }
 
     fetchData() {
@@ -45,13 +65,15 @@ class BillingHistoryList extends React.Component {
     }
 
     componentDidMount() {
+        this.fetchUser();
         this.fetchData();
     }
 
     modInvoiceId(data, resObj){
-        return(
-            <Link to={`/billing-history/invoice/${resObj.id}`}>{resObj.invoice_id}</Link>
-        );
+        let self = this;
+        return <span role="button"
+                     title={`view invoice`}
+                     onClick={() => {self.openInvoiceModal(resObj)}}> {resObj.invoice_id} </span>
     }
     modAmountDue(data, resObj){
         return (
@@ -72,7 +94,7 @@ class BillingHistoryList extends React.Component {
                     {
                         type: "button",
                         label: "View Invoice",
-                        action: () => {browserHistory.push(`/billing-history/invoice/${row.id}`)},
+                        action: () => {self.openInvoiceModal(row)},
                     },
                     {
                         type: "button",
@@ -95,16 +117,21 @@ class BillingHistoryList extends React.Component {
             />
         );
     }
-
+    openInvoiceModal(dataObject) {
+        this.setState({invoiceToShow: dataObject});
+    }
     openRefundModal(dataObject){
-        this.setState({refundModal: true, invoice:dataObject});
+        this.setState({refundModal: true, invoice: dataObject});
+    }
+    closeInvoiceModal(){
+        this.setState({invoiceToShow: null});
     }
     closeRefundModal(){
         this.setState({refundModal: false});
     }
 
     render () {
-        let { rows, refundModal, invoice } = this.state;
+        let { rows, refundModal, invoice, invoiceToShow, user} = this.state;
 
         let currentModal = ()=> {
             if(refundModal){
@@ -122,12 +149,12 @@ class BillingHistoryList extends React.Component {
                     rows={rows}
                     sortColumn="date"
                     sortOrder="desc">
-                    <TableHeaderColumn isKey dataField='id' dataSort={ true } width={`200px`}>ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField='invoice_id' dataSort={ true } dataFormat={this.modInvoiceId} width={`200px`}>Invoice ID</TableHeaderColumn>
-                    <TableHeaderColumn dataField='amount_due' dataSort={ true } dataFormat={this.modAmountDue} width={`200px`}>Amount Due</TableHeaderColumn>
+                    <TableHeaderColumn isKey dataField='id' dataSort={ true } width={`100px`}>ID</TableHeaderColumn>
+                    <TableHeaderColumn dataField='invoice_id' dataSort={ true } dataFormat={this.modInvoiceId} width={`300px`}>Invoice ID</TableHeaderColumn>
                     <TableHeaderColumn dataField='date' dataSort={ true } dataFormat={this.modDate} width={`200px`}>Date</TableHeaderColumn>
-                    <TableHeaderColumn dataField='closed' dataSort={ true } dataFormat={this.modSubject} width={`200px`}>Closed</TableHeaderColumn>
-                    <TableHeaderColumn dataField='paid' dataSort={ true } dataFormat={this.modSubject} width={`200px`}>Paid</TableHeaderColumn>
+                    <TableHeaderColumn dataField='amount_due' dataSort={ true } dataFormat={this.modAmountDue} width={`200px`}>Amount Due</TableHeaderColumn>
+                    <TableHeaderColumn dataField='closed' dataSort={ true } dataFormat={this.modSubject} width={`100px`}>Closed</TableHeaderColumn>
+                    <TableHeaderColumn dataField='paid' dataSort={ true } dataFormat={this.modSubject} width={`100px`}>Paid</TableHeaderColumn>
                     <TableHeaderColumn dataField='Actions'
                                        className={'action-column-header'}
                                        columnClassName={'action-column'}
@@ -136,6 +163,11 @@ class BillingHistoryList extends React.Component {
                                        width={`100px`}>Actions</TableHeaderColumn>
                 </ServiceBotTableBase>
                 {currentModal()}
+                {invoiceToShow !== null && <CustomerInvoice
+                    cancel={this.closeInvoiceModal}
+                    user={user}
+                    refund={this.openRefundModal}
+                    invoice={invoiceToShow}/>}
             </React.Fragment>
         );
     }

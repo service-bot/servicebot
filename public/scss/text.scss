@@ -22,6 +22,9 @@ $section_heading: 16px;
   @include sub_heading;
 }
 
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,600,700,800');
+$heading-font: 'Montserrat', sans-serif;
+
 body{
   font-family: "Open Sans", "Arial";
 }
