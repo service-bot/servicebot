@@ -29,7 +29,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "User just cancelled a subscription",
                 description: "Sent when a service cancellation has been requested by a user",
@@ -61,7 +61,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "Password Reset",
                 description: "Sent when a user requests a password reset",
@@ -93,7 +93,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "New signup for [[_company_name]]!",
                 description: "Sent to admins when a new user has signed up",
@@ -128,7 +128,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "Oh no, your payment failed",
                 description: "Sent when a payment has failed to go through. It notifies the user to update their payment method",
@@ -158,7 +158,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject:"Invitation",
                 description:"Sent when a user is invited to they system by an admin",
@@ -198,7 +198,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "Welcome to [[_company_name]]",
                 description: "Sent to users when they sign up",
@@ -246,7 +246,7 @@ module.exports = {
     <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">
         <span style="display: inline-block;">Powered by</span>
         <img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;">
-        <span style="display: inline-block;">SERVICEBOT</span>
+        <span style="display: inline-block;"></span>
     </div>
 </div>`,
                 subject: "Thank you for the payment",
@@ -279,7 +279,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "Account has resubscribed to [[_company_name]]!",
                 description: "Sent to admins when a user resubscribed",
@@ -314,7 +314,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "We are happy to see you back!",
                 description: "Sent to users when they resubscribe",
@@ -352,7 +352,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "We're sad to let you go",
                 description: "Sent to a user after they cancel their subscription",
@@ -382,7 +382,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "Pricing request received",
                 description: "Sent to customer when an enterprise service is requested",
@@ -414,7 +414,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "New pricing request",
                 description: "Sent to admins when an enterprise service is requested",
@@ -449,7 +449,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "Your [[_company_name]] plan has changed",
                 description: "Sent to users when a payment plan has been changed",
@@ -482,7 +482,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "[[references.users.email]] has changed their plan",
                 description: "Sent to admins when a service payment plan has been changed",
@@ -517,7 +517,7 @@ module.exports = {
             <div class="clear" style="clear: both; text-align: center;"></div>
         </div>
     </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span>SERVICEBOT</div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
                 subject: "Your free trial has expired",
                 description: "Sent when a free trial has ended",
