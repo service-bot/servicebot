@@ -548,7 +548,7 @@ module.exports = {
         }])
         var templateNamesToDelete = ["request_service_instance_admin", "request_service_instance_user", "request_service_instance_new_user", "service_requires_payment_approval", "service_instance_update", "instance_cancellation_rejected", "instance_cancellation_approved", "user_suspension"];
         let toDelete = await knex("notification_templates").returning("id").whereIn("name", templateNamesToDelete);
-        await knex("notification_templates.to_roles").whereIn("notification_template_id", toDelete).delete();
+        await knex("notification_templates_to_roles").whereIn("notification_template_id", toDelete).delete();
         await knex("notification_templates").whereIn("name", templateNamesToDelete).delete();
         return await knex;
     },
