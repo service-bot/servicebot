@@ -14,6 +14,7 @@
 /* elements */
 @import "buttons";
 @import "modals";
+@import "_elements";
 @import "_element-modal";
 @import "_element-s-alert";
 @import "_element-badges.scss";
@@ -30,6 +31,7 @@
 @import "_component-tier";
 @import "_component-forms-offering";
 @import "_component-forms-email-template";
+@import "_component-forms-user-edit";
 @import "_component-embeddables-config-checkout.scss";
 @import "_component-embeddables";
 @import "_component-embeddables-checkout";
