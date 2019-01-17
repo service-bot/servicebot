@@ -33,6 +33,14 @@ $page-datatable-extra-bottom-padding: 160px;
       margin-top: $gutter * 2;
       margin-bottom: $gutter !important;
     }
+
+    @include mediaQuery('max', 'iPhone'){
+      padding: $gutter * 1.5;
+
+      .content-title:nth-child(1n) h4{
+        margin-top: 0;
+      }
+    }
   }
 
   &.__manage-services{

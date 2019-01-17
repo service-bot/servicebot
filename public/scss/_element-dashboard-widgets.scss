@@ -10,6 +10,10 @@ $widget-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.17);
   .dashboard-widget{
     box-shadow: $widget-shadow;
     margin-right: 6px;
+
+    @include mediaQuery(max, iPhone){
+      margin-bottom: $gutter;
+    }
   }
 
   &.__top-widgets{
@@ -18,11 +22,17 @@ $widget-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.17);
 
     @include mediaQuery(max, iPhone){
       grid-template-columns: 100%;
+      margin-bottom: $gutter * 2;
     }
   }
 
   &.__metrics-widgets{
     grid-template-columns: 33.33% auto 33.33%;
+
+    @include mediaQuery(max, iPhone){
+      grid-template-columns: 100%;
+      margin-bottom: $gutter * 2;
+    }
 
     .section-wrapper{
       color: black;
@@ -31,6 +41,10 @@ $widget-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.17);
       border-radius: 3px;
       background-color: white;
       box-shadow: $widget-shadow;
+
+      @include mediaQuery(max, iPhone){
+        margin-bottom: $gutter;
+      }
 
       .dashboard-widget{
         margin: 5px;
@@ -41,6 +55,12 @@ $widget-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.17);
 
   &.__churn-widgets{
     grid-template-columns: 50% 50%;
+
+    @include mediaQuery(max, iPhone){
+      grid-template-columns: 100%;
+      grid-row-gap: $gutter;
+      margin-bottom: $gutter * 2;
+    }
   }
 
   .widget-data{
