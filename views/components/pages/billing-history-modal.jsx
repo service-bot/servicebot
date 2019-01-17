@@ -12,21 +12,27 @@ class CustomerInvoice extends React.Component {
         if (transactions.length > 0 && transactions[0].refunds.data.length > 0) {
             let refunds = transactions[0].refunds.data;
             return ( <React.Fragment>
-                {refunds.map((refund, index) =>
-                    <p key={"refund-" + index} className="_item">
-                        <span className={`_label`}><Price value={refund.amount} currency={transactions[0].currency} /></span>
-                        <span className={`_value_wrap`}>
+                <h4 className={`__heading`}>Applied Refunds</h4>
+                <div className={`mbf-summary`}>
+                    <p className={`_heading`}>Items</p>
+                    <div className={`_items`}>
+                        {refunds.map((refund, index) =>
+                                <p key={"refund-" + index} className="_item">
+                                    <span className={`_label`}><Price value={refund.amount} currency={transactions[0].currency} /></span>
+                                    <span className={`_value_wrap`}>
                             <span className={`_value`}>
                                 {refund.reason}
                             </span>
                         </span>
-                        <span className={`_value_wrap`}>
+                                    <span className={`_value_wrap`}>
                             <span className={`_value`}>
                                 {refund.status}
                             </span>
                         </span>
-                    </p>
-                )}
+                                </p>
+                        )}
+                    </div>
+                </div>
                 </React.Fragment>
             );
         } else {
@@ -80,14 +86,7 @@ class CustomerInvoice extends React.Component {
                             </p>
                         </div>
 
-                        <h4 className={`__heading`}>Applied Refunds</h4>
-                        <div className={`mbf-summary`}>
-                            <p className={`_heading`}>Items</p>
-                            <div className={`_items`}>
-                                {this.getRefunds(invoice.references.transactions)}
-                            </div>
-                        </div>
-
+                        {this.getRefunds(invoice.references.transactions)}
                     </div>
                     <div className={`__footer`}>
                         <div className={`buttons-group __gap`}>
