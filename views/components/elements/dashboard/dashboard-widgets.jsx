@@ -1,6 +1,5 @@
 import React from 'react';
 import './css/style.css';
-import './css/style.scss';
 import {browserHistory} from 'react-router';
 import {Price} from '../../utilities/price.jsx';
 import { connect } from 'react-redux';

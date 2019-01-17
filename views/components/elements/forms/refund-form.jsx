@@ -8,7 +8,7 @@ import {Price} from "../../utilities/price.jsx";
 import DateFormat from "../../utilities/date-format.jsx";
 import {Fetcher} from "servicebot-base-form";
 let _ = require("lodash");
-import {ServicebotBaseForm,inputField, priceField} from "servicebot-base-form"
+import {ServicebotBaseForm,inputField, priceField, selectField} from "servicebot-base-form"
 import {Field} from "redux-form"
 import {numericality, required} from "redux-form-validators";
 
@@ -26,8 +26,13 @@ function Refund(props){
         />
         <Field
             name={"reason"}
-            component={inputField}
-            type={"text"}
+            id={`refund-reason`}
+            component={selectField}
+            options={[
+                {id: "duplicate", name: "Duplicate"},
+                {id: "fraudulent", name: "Fraudulent"},
+                {id: "requested_by_customer", name: "Requested by customer"},
+            ]}
             label="Refund Reason"
             validate={required()}
 

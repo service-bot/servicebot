@@ -1,13 +1,16 @@
-import React from 'react';
-import {Link} from 'react-router';
-import Load from '../../utilities/load.jsx';
-import Authorizer from "../../utilities/authorizer.jsx";
-import Buttons from "../buttons.jsx";
-import DateFormat from '../../utilities/date-format.jsx';
-import ImageUploader from '../../utilities/image-uploader.jsx';
-import {ServicebotBaseForm, inputField} from "servicebot-base-form";
-import {Field,} from 'redux-form';
-import { required, email, numericality, length } from 'redux-form-validators';
+import React from 'react'
+import {Link} from 'react-router'
+import Load from '../../utilities/load.jsx'
+import Authorizer from "../../utilities/authorizer.jsx"
+import Buttons from "../buttons.jsx"
+import DateFormat from '../../utilities/date-format.jsx'
+import ImageUploader from '../../utilities/image-uploader.jsx'
+import {ServicebotBaseForm, inputField} from "servicebot-base-form"
+import {Field,} from 'redux-form'
+import { required, email, numericality, length } from 'redux-form-validators'
+import { Section } from '../../layouts/section.jsx'
+import {Columns, Rows} from '../../layouts/columns.jsx'
+import Avatar from '../../elements/avatar.jsx'
 
 class UserFormEdit extends React.Component {
 
@@ -18,7 +21,6 @@ class UserFormEdit extends React.Component {
             user: user,
             url: `/api/v1/users/${user.id}`,
             profileImage: `/api/v1/users/${user.id}/avatar`,
-            currentAction: '_VIEW',
             imageSelected: false,
             loading: false,
             ajaxLoad: false,
@@ -27,9 +29,6 @@ class UserFormEdit extends React.Component {
         };
         this.handleResponse = this.handleResponse.bind(this);
         this.getMessage = this.getMessage.bind(this);
-        this.onStartEdit = this.onStartEdit.bind(this);
-        this.onStopEdit = this.onStopEdit.bind(this);
-        // this.validatePassword = this.validatePassword.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
@@ -43,26 +42,21 @@ class UserFormEdit extends React.Component {
 
     handleResponse(response){
         if(!response.error){
-            this.setState({success: true, currentAction: '_VIEW', user: response.results.data});
+            this.setState({success: true, user: response.results.data});
         }
-    }
-
-    onStartEdit(){
-        this.setState({currentAction: '_EDITING', success: false});
-    }
-    onStopEdit(){
-        this.setState({currentAction: '_VIEW'});
     }
 
     getMessage(){
         if(this.state.success){
             return(
-                <div className="alert alert-success" role="alert">
-                    <i className="fa fa-check-circle"/>
-                    <Authorizer permissions="can_administrate">
-                        <Link to="/manage-users" className="buttons btn-success btn-outline btn-rounded btn-sm pull-right">Back to Manage Users</Link>
-                    </Authorizer>
-                    Your user profile has been updated.
+                <div className={"messages"}>
+                    <div className="message __success" role="alert">
+                        <i className="fa fa-check-circle"/>
+                        <Authorizer permissions="can_administrate">
+                            <Link to="/manage-users" className="buttons btn-success btn-outline btn-rounded btn-sm pull-right">Back to Manage Users</Link>
+                        </Authorizer>
+                        Your user profile has been updated.
+                    </div>
                 </div>
             )
         }
@@ -73,16 +67,17 @@ class UserFormEdit extends React.Component {
     }
 
     render () {
-        if(this.state.loading){
-            return ( <Load/> );
-        }else if(!this.state.loading && this.state.currentAction === '_EDITING'){
-            let user = this.state.user;
 
+        let {myUser: {id}} = this.props;
+        let {loading} = this.state;
+
+        if(loading){
+            return ( <Load/> );
+        }else{
+
+            let user = this.state.user;
             let initialRequests = [{'method': 'GET', 'url': this.state.url}];
-            let submissionRequest = {
-                'method': 'PUT',
-                'url': this.state.url,
-            };
+            let submissionRequest = {'method': 'PUT', 'url': this.state.url};
 
             let validations = values => {
                 const errors = {};
@@ -94,90 +89,40 @@ class UserFormEdit extends React.Component {
 
             if(user){
                 return (
-                    <div className="row">
-                        {this.getMessage()}
-                        <div className="basic-info col-md-6 col-md-offset-3">
-                            <div className="profile-header">
-                                <div><h3 className="p-b-20">Editing {user.email}</h3></div>
-                                <div>
-                                    <small>
-                                        Last Login: {user.last_login !== null ?
-                                        <DateFormat time={true} date={user.last_login}/> :
-                                        'Never'}
-                                    </small><br/>
-                                    <small>User Status: {user.status}</small>
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-12 form-group-flex column centered p-b-10">
-                                    <label className="control-label">Upload Avatar</label>
-                                    <ImageUploader name="avatar" elementID="avatar" imageStyle="badge badge-xl"
-                                                   imageURL={`${this.state.url}/avatar`} imageGETURL={`${this.state.url}/avatar`}
-                                                   uploadButton={true} reloadNotice="Please reload the application."/>
-                                </div>
-                                <div id="add-category-form" className="col-md-12">
-                                    <div className="row">
-                                        <ServicebotBaseForm
-                                            form={userFormElements.bind(this)}
-                                            initialRequests = {initialRequests}
-                                            validations={validations}
-                                            submissionRequest={submissionRequest}
-                                            handleResponse={this.handleResponse}
-                                        />
+                    <div className={`__user-edit-form`}>
+                        <Columns>
+                            <Rows>
+                                <Section className={`__avatar-form`}>
+                                    <h3>{user.email}</h3>
+                                    <small>Last Login: {user.last_login != null ? <DateFormat time={true} date={user.last_login}/> : 'Never'}</small><br/>
+                                    <small className="text-capitalize">User Status: {user.status}</small>
+                                    <div className="edit-profile-image">
+                                        {this.state.loadingImage ?
+                                            <Load type="avatar"/> :
+                                            <ImageUploader name="avatar" elementID="avatar" imageStyle="avatar __md"
+                                                           imageURL={`${this.state.url}/avatar`} imageGETURL={`${this.state.url}/avatar`}
+                                                           uploadButton={true} reloadNotice="Please reload the application."/>}
+                                        {/*<Avatar uid={id} size={`md`}/>*/}
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                );
-            }else{
-                return(
-                    <div>
-                        <p>Unable to load your user profile</p>
-                        <Buttons btnType="default" text="Try again" onClick={self.refresh}/>
-                    </div>
-                )
-            }
-        }else if(!this.state.loading && this.state.currentAction === '_VIEW'){
-
-            let user = this.state.user;
-
-            if(user){
-                return (
-                    <div className="p-20">
-                        {this.getMessage()}
-                        <div className="row">
-                            <div className="basic-info col-md-6 col-md-offset-3">
-                                <div className="profile-header">
-                                    <div><h3 className="p-b-20">{user.email}</h3></div>
-                                    <div>
-                                        <small>Last Login: {user.last_login != null ? <DateFormat time={true} date={user.last_login}/> : 'Never'}</small><br/>
-                                        <small className="text-capitalize">User Status: {user.status}</small>
+                                </Section>
+                            </Rows>
+                            <Rows>
+                                <Section className={`__edit-form`}>
+                                    <div className={`sb-form-group`}>
+                                        <h3>Account Information</h3>
                                     </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-12 edit-profile-image">
-                                        <div><div className="badge badge-xl">
-                                            <img id="avatar-img" src={this.state.profileImage} ref="avatar" className="max-w-40 h-40 img-circle" alt="badge"/>
-                                            {this.state.loadingImage && <Load type="avatar"/> }
-                                        </div></div>
-                                    </div>
-                                    <div className="col-md-12 profile-info">
-                                        <div>
-                                            <h3>{user.name}</h3>
-                                            <small>Name</small>
-
-                                            <h3>{user.email}</h3>
-                                            <small>Email</small>
-
-                                            <h3>{user.phone}</h3>
-                                            <small>Phone Number</small>
-                                        </div>
-                                        <Buttons btnType="default" text="Edit profile" onClick={this.onStartEdit}/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    {this.getMessage()}
+                                    <ServicebotBaseForm
+                                        form={userFormElements.bind(this)}
+                                        initialRequests = {initialRequests}
+                                        validations={validations}
+                                        submissionRequest={submissionRequest}
+                                        handleResponse={this.handleResponse}
+                                        reShowForm={true}
+                                    />
+                                </Section>
+                            </Rows>
+                        </Columns>
                     </div>
                 );
             }else{
@@ -201,12 +146,11 @@ function userFormElements(props){
                    component={inputField} label="Email"/>
             <Field name="phone" type="tel"
                    component={inputField} label="Phone Number"/>
-            <Field name="password" type="password"
+            <Field className={`password-one`} name="password" type="password"
                 component={inputField} label="Change Password"/>
-            <Field name="password2" type="password"
+            <Field className={`password-two`} name="password2" type="password"
                    component={inputField} label="Confirm Password"/>
-            <Buttons containerClass="inline" btnType="primary" text="Save Profile" type="submit" value="submit" onClick={props.handleSubmit}/>
-            <Buttons containerClass="inline" btnType="default" text="cancel" onClick={this.onStopEdit}/>
+            <Buttons containerClass="inline sb-form-group" btnType="primary" text="Save Profile" type="submit" value="submit" onClick={props.handleSubmit}/>
         </form>
     )
 }

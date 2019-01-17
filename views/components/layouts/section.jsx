@@ -7,6 +7,7 @@ const Section = (props) => {
             <div className="_tier-details">
                 {props.children}
             </div>
+            {props.outside}
         </div>
     </div>
 

@@ -21,6 +21,10 @@ $page-datatable-extra-bottom-padding: 160px;
 
 .page{
   padding: 0 $gutter * 3 $gutter*1.5;
+
+  @include mediaQuery(max, iPhone){
+    padding: 0 $gutter * 1.5;
+  }
 }
 
 .page, .app-content{
@@ -32,6 +36,14 @@ $page-datatable-extra-bottom-padding: 160px;
       font-size: 16px;
       margin-top: $gutter * 2;
       margin-bottom: $gutter !important;
+    }
+
+    @include mediaQuery('max', 'iPhone'){
+      padding: $gutter * 1.5;
+
+      .content-title:nth-child(1n) h4{
+        margin-top: 0;
+      }
     }
   }
 
@@ -143,6 +155,13 @@ $page-datatable-extra-bottom-padding: 160px;
       transform: translate(-50%, -50%);
     }
 
+  }
+  &.__password-reset{
+    ._content-container ._content ._section{
+      width: 500px;
+      max-width: 100%;
+      margin: $gutter * 2 auto;
+    }
   }
   &.__view-my-profile{
 

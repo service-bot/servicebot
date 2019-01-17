@@ -1,3 +1,39 @@
+@mixin button($type, $bg, $rounded:false, $color:''){
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: $font-size - 2;
+  font-weight: 600;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  background-image: none;
+  border-radius: 4px;
+  @if($type == 'solid'){
+    background-color: $bg;
+    color: $color;
+    border-color: $bg;
+  }@else if($type == 'border'){
+    background-color: $color-white;
+    border: 1px solid $bg;
+    color: $bg;
+  }
+  @if($rounded == true){
+    border-radius: 50px;
+  }
+}
+@mixin disabledBtn() {
+  @include defaultTransition(300);
+  &:disabled, &[disabled] {
+    background-color: #ccc;
+    cursor: default;
+    @include defaultTransition(300);
+  }
+}
+
 .buttons-group{
 
   &.__gap{
@@ -168,4 +204,8 @@
 .clear{
   display: block;
   clear: both;
+}
+
+[role="button"]{
+  cursor: pointer;
 }

@@ -6,6 +6,8 @@ import update from "immutability-helper";
 import {Authorizer, isAuthorized} from "../../utilities/authorizer.jsx";
 import {connect} from "react-redux";
 import {setPermissions} from "../../utilities/actions";
+import Content from "../../layouts/content.jsx";
+import {Section} from "../../layouts/section.jsx";
 
 class ResetPassword extends React.Component {
 
@@ -68,21 +70,26 @@ class ResetPassword extends React.Component {
     render () {
         return(
             <Authorizer anonymous={true}>
-                <form className="sign-in">
-                    {/*<img className="login-brand" src="/assets/logos/brand-logo-dark.png"/>*/}
-                    <h3>Reset Password</h3>
-                    <p>
-                        Enter your new password to reset.
-                    </p>
-                    <div className="sb-form-group">
-                        <label htmlFor="sign-in-2-email" className="bmd-label-floating">New Password</label>
-                        <input onChange={this.handleInputChange} id="password" type="password" name="password" className="_input-"/>
-                        <span className="bmd-help">Please enter your new password</span>
-                    </div>
-                    <button onClick={this.handleReset} type='submit' className="buttons btn-raised btn-lg btn-primary btn-block">Reset Password</button>
-                </form>
+                <div className="app-content __password-reset">
+                    <Content>
+                        <div className={`_title-container`}>
+                            <h1 className={`_heading`}>Password Reset</h1>
+                        </div>
+                        <Section>
+                            <form className="sign-in">
+                            <div className="sb-form-group">
+                                <label className="_label-">New Password</label>
+                                <input onChange={this.handleInputChange} id="password" type="password" name="password" className="_input-"/>
+                            </div>
+                                <div className="sb-form-group">
+                            <button onClick={this.handleReset} type='submit' className="buttons _default">Reset Password</button>
+                                </div>
+                        </form>
+                        </Section>
+                    </Content>
+                </div>
             </Authorizer>
-        );
+        )
     }
 }
 
