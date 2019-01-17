@@ -2,41 +2,10 @@ module.exports = {
 
 
     up: async function (knex) {
-
-
+        
+        
         let emails = [
-            {
-                name: "service_cancellation",
-                event_name: "service_instance_cancellation_requested",
-                message: `<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
-    <div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
-        <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
-            <div class="___logo" style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;"><h2 style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;">[[_company_name]]</h2></div>
-        </div>
-
-        <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
-            <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">User just cancelled a subscription</h2>
-            <p class="___email-body">
-                User [[references.users.email]] just canceled their subscription with [[_company_name]]
-            </p>
-            <a class="___action-button" target="_blank" href="https://[[_hostname]]/service-instance/[[id]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">View Subscription</a>
-        </div>  
-
-        <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
-            <div class="__company-info" style="text-align: center;">
-                <p style="text-align: center; opacity: 0.7;">[[_company_name]]<br style="text-align: center;">[[_company_address]]</p>
-            </div>
-            <div class="clear" style="clear: both; text-align: center;"></div>
-        </div>
-    </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
-</div>`,
-                subject: "User just cancelled a subscription",
-                description: "Sent when a service cancellation has been requested by a user",
-                model: "service-instance",
-                send_email: false,
-                send_to_owner: false
-            },
+           
             {
                 name: "password_reset",
                 event_name: "password_reset_request_created",
@@ -169,6 +138,39 @@ module.exports = {
         for(let email of emails){
             await knex("notification_templates").where("name", email.name).update(email)
         }
+
+        await knex("notification_templates").where("name", "service_cancellation_submitted").update({
+            name: "service_cancellation",
+            event_name: "service_instance_cancellation_requested",
+            message: `<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
+<div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
+    <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
+        <div class="___logo" style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;"><h2 style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;">[[_company_name]]</h2></div>
+    </div>
+
+    <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
+        <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">User just cancelled a subscription</h2>
+        <p class="___email-body">
+            User [[references.users.email]] just canceled their subscription with [[_company_name]]
+        </p>
+        <a class="___action-button" target="_blank" href="https://[[_hostname]]/service-instance/[[id]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">View Subscription</a>
+    </div>  
+
+    <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
+        <div class="__company-info" style="text-align: center;">
+            <p style="text-align: center; opacity: 0.7;">[[_company_name]]<br style="text-align: center;">[[_company_address]]</p>
+        </div>
+        <div class="clear" style="clear: both; text-align: center;"></div>
+    </div>
+</div>
+<div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 3px 4px 1px; max-height: 12px; line-height: 12px;"></span></div>
+</div>`,
+            subject: "User just cancelled a subscription",
+            description: "Sent when a service cancellation has been requested by a user",
+            model: "service-instance",
+            send_email: false,
+            send_to_owner: false
+        });
     
         let updated = await knex("notification_templates").where("name", "service_cancellation");
 
