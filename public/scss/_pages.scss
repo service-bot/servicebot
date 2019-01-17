@@ -21,6 +21,10 @@ $page-datatable-extra-bottom-padding: 160px;
 
 .page{
   padding: 0 $gutter * 3 $gutter*1.5;
+
+  @include mediaQuery(max, iPhone){
+    padding: 0 $gutter * 1.5;
+  }
 }
 
 .page, .app-content{
