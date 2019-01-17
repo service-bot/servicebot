@@ -136,7 +136,7 @@ class NotificationTemplateForm extends React.Component {
                                             <h3>Description</h3>
                                             <p>{template.data.description}</p>
                                         </Section>
-                                        <Section className={`__email-role-settings`}>
+                                        {/* <Section className={`__email-role-settings`}>
                                                     <h3>The notification will be sent to all users with the roles.</h3>
                                                     {allRoles.map(role => {
                                                         let checked = roles.some(function(checkedRole){
@@ -150,21 +150,21 @@ class NotificationTemplateForm extends React.Component {
                                                             </div>
                                                         )
                                                     })}
-                                        </Section>
+                                        </Section> */}
                                         <Section className={`__email-notification-settings`}>
                                                 <h3>Notification Settings</h3>
-                                                <div className={`sb-form-group`}>
+                                                {/* <div className={`sb-form-group`}>
                                                     <input className={`_input- checkbox`} name="create_notification" type="checkbox" defaultChecked={template.data.create_notification}/>
                                                     <label className="_label-">Create Notification</label>
-                                                </div>
+                                                </div> */}
                                                 <div className={`sb-form-group`}>
                                                     <input className={`_input- checkbox`} name="send_email" type="checkbox" defaultChecked={template.data.send_email}/>
-                                                    <label className="_label-"> Send Email</label>
+                                                    <label className="_label-"> Enabled</label>
                                                 </div>
-                                                <div className={`sb-form-group`}>
+                                                {/* <div className={`sb-form-group`}>
                                                     <input className={`_input- checkbox`} name="send_to_owner" type="checkbox" defaultChecked={template.data.send_to_owner}/>
                                                     <label className="_label-"> Send Email To Owner</label>
-                                                </div>
+                                                </div> */}
                                         </Section>
                                     </Rows>
                                     <Rows>
