@@ -3,177 +3,9 @@ module.exports = {
 
     up: async function (knex) {
         
-        
-        let emails = [
-            {
-                name: "registration_user",
-                event_name: "service_instance_requested_by_user",
-                message: `<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
-    <div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
-        <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
-            <div class="___logo" style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;"><h2 style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;">[[_company_name]]</h2></div>
-        </div>
-
-        <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
-            <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">Welcome to [[_company_name]]</h2>
-            <p class="___email-body">Hi there,</p>
-            <p class="___email-body">
-                Thanks for signing up for [[_company_name]]. Your account is ready, and you can access it using the link below. Email us at [[_company_email]] if you have any questions.
-            </p>
-            <a class="___action-button" target="_blank" href="https://[[_hostname]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Access Account</a>
-        </div>  
-
-        <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
-            <div class="__company-info" style="text-align: center;">
-                <p style="text-align: center; opacity: 0.7;">[[_company_name]]<br style="text-align: center;">[[_company_address]]</p>
-            </div>
-            <div class="clear" style="clear: both; text-align: center;"></div>
-        </div>
-    </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 0px -1px 1px; max-height: 12px; line-height: 12px;"></span></div>
-</div>`,
-                subject: "Welcome to [[_company_name]]",
-                description: "Sent to users when they sign up",
-                model: "service-instance",
-                send_email: false,
-                send_to_owner: true
-            },
-            {
-                name: "password_reset",
-                event_name: "password_reset_request_created",
-                message: `<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
-    <div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
-        <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
-            <div class="___logo" style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;"><h2 style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;">[[_company_name]]</h2></div>
-        </div>
-
-        <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
-            <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">Reset Password</h2>
-            <p class="___email-body">
-                    Please follow the Reset Password button below to reset your [[_company_name]] account password.
-            </p>
-            <a class="___action-button" target="_blank" href="[[url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Reset Password</a>
-        </div>  
-
-        <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
-            <div class="__company-info" style="text-align: center;">
-                <p style="text-align: center; opacity: 0.7;">[[_company_name]]<br style="text-align: center;">[[_company_address]]</p>
-            </div>
-            <div class="clear" style="clear: both; text-align: center;"></div>
-        </div>
-    </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 0px -1px 1px; max-height: 12px; line-height: 12px;"></span></div>
-</div>`,
-                subject: "Password Reset",
-                description: "Sent when a user requests a password reset",
-                model: "user",
-                send_email: true
-            },
-            {
-                name: "registration_admin",
-                event_name: "service_instance_requested_by_user",
-                message: `<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
-    <div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
-        <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
-            <div class="___logo" style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;"><h2 style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;">[[_company_name]]</h2></div>
-        </div>
-
-        <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
-            <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">New signup for [[_company_name]]!</h2>
-            <p class="___email-body">
-                Congratulations! You have gained new signup! [[references.users.email]] just signed up for [[name]].
-            </p>
-        
-            <a class="___action-button" target="_blank" href="https://[[_hostname]]/service-instance/[[id]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">View account detail</a>
-        </div>  
-
-        <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
-            <div class="__company-info" style="text-align: center;">
-                <p style="text-align: center; opacity: 0.7;">[[_company_name]]<br style="text-align: center;">[[_company_address]]</p>
-            </div>
-            <div class="clear" style="clear: both; text-align: center;"></div>
-        </div>
-    </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 0px -1px 1px; max-height: 12px; line-height: 12px;"></span></div>
-</div>`,
-                subject: "New signup for [[_company_name]]!",
-                description: "Sent to admins when a new user has signed up",
-                model: "service-instance",
-                send_email: true,
-                send_to_owner: false
-            },
-            {
-                name: "payment_failure",
-                event_name: "payment_failure",
-                message: `<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
-    <div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
-        <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
-            <div class="___logo" style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;"><h2 style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;">[[_company_name]]</h2></div>
-        </div>
-
-        <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
-            <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">Oh no, your payment failed</h2>
-            <p class="___email-body">
-                Unfortunately,  we couldn't collect your subscription payment. Please take a moment to review your billing information, if it looks correct, please email us at [[_company_email]] and let us know. Otherwise, please update your information.
-            </p>
-            <a class="___action-button" target="_blank" href="[[billing_settings_url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Update credit card</a>
-            <p class="__email-body">
-                If you have any question about your subscription, email us at [[_company_email]] and let us know.
-            </p>
-        </div>  
-
-        <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
-            <div class="__company-info" style="text-align: center;">
-                <p style="text-align: center; opacity: 0.7;">[[_company_name]]<br style="text-align: center;">[[_company_address]]</p>
-            </div>
-            <div class="clear" style="clear: both; text-align: center;"></div>
-        </div>
-    </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 0px -1px 1px; max-height: 12px; line-height: 12px;"></span></div>
-</div>`,
-                subject: "Oh no, your payment failed",
-                description: "Sent when a payment has failed to go through. It notifies the user to update their payment method",
-                model: "user",
-                send_email: true
-            },
-            {name:"invitation",
-                event_name:"user_invited",
-                message:`<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
-    <div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
-        <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
-            <div class="___logo" style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;"><h2 style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;">[[_company_name]]</h2></div>
-        </div>
-
-        <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
-            <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">You’ve been invited to join [[_company_name]]</h2>
-            <p class="___email-body">
-                    Click on the link below to activate your account.
-            </p>
-            <a class="___action-button" target="_blank" href="[[url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Active Account</a>
-        </div>
-
-        <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
-            <div class="__company-info" style="text-align: center;">
-                <p style="text-align: center; opacity: 0.7;">[[_company_name]]<br style="text-align: center;">[[_company_address]]</p>
-            </div>
-            <div class="clear" style="clear: both; text-align: center;"></div>
-        </div>
-    </div>
-    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 0px -1px 1px; max-height: 12px; line-height: 12px;"></span></div>
-</div>`,
-                subject:"Invitation",
-                description:"Sent when a user is invited to they system by an admin",
-                model:"user",
-                send_email:true
-            }
-        ];
-        for(let email of emails){
-            await knex("notification_templates").where("name", email.name).update(email)
-        }
-
-        await knex("notification_templates").where("name", "service_cancellation_submitted").update({
-            name: "service_cancellation",
-            event_name: "service_instance_cancellation_requested",
+        var registrationUserEmail = {
+            name: "registration_user",
+            event_name: "service_instance_requested_by_user",
             message: `<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
 <div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
     <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
@@ -181,11 +13,12 @@ module.exports = {
     </div>
 
     <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
-        <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">User just cancelled a subscription</h2>
+        <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">Welcome to [[_company_name]]</h2>
+        <p class="___email-body">Hi there,</p>
         <p class="___email-body">
-            User [[references.users.email]] just canceled their subscription with [[_company_name]]
+            Thanks for signing up for [[_company_name]]. Your account is ready, and you can access it using the link below. Email us at [[_company_email]] if you have any questions.
         </p>
-        <a class="___action-button" target="_blank" href="https://[[_hostname]]/service-instance/[[id]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">View Subscription</a>
+        <a class="___action-button" target="_blank" href="https://[[_hostname]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Access Account</a>
     </div>  
 
     <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
@@ -197,16 +30,13 @@ module.exports = {
 </div>
 <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 0px -1px 1px; max-height: 12px; line-height: 12px;"></span></div>
 </div>`,
-            subject: "User just cancelled a subscription",
-            description: "Sent when a service cancellation has been requested by a user",
+            subject: "Welcome to [[_company_name]]",
+            description: "Sent to users when they sign up",
             model: "service-instance",
             send_email: false,
-            send_to_owner: false
-        });
-    
-        let updated = await knex("notification_templates").where("name", "service_cancellation");
-
-        let newRecords = await knex("notification_templates").returning('*').insert([
+            send_to_owner: true
+        };
+        let newEmails = [
             
             {
                 name: "new_invoice",
@@ -527,7 +357,185 @@ module.exports = {
                 send_email: false,
                 send_to_owner: true
             }
-        ]);
+        ];
+        let emails = [
+            
+            {
+                name: "password_reset",
+                event_name: "password_reset_request_created",
+                message: `<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
+    <div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
+        <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
+            <div class="___logo" style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;"><h2 style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;">[[_company_name]]</h2></div>
+        </div>
+
+        <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
+            <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">Reset Password</h2>
+            <p class="___email-body">
+                    Please follow the Reset Password button below to reset your [[_company_name]] account password.
+            </p>
+            <a class="___action-button" target="_blank" href="[[url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Reset Password</a>
+        </div>  
+
+        <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
+            <div class="__company-info" style="text-align: center;">
+                <p style="text-align: center; opacity: 0.7;">[[_company_name]]<br style="text-align: center;">[[_company_address]]</p>
+            </div>
+            <div class="clear" style="clear: both; text-align: center;"></div>
+        </div>
+    </div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 0px -1px 1px; max-height: 12px; line-height: 12px;"></span></div>
+</div>`,
+                subject: "Password Reset",
+                description: "Sent when a user requests a password reset",
+                model: "user",
+                send_email: true
+            },
+            {
+                name: "registration_admin",
+                event_name: "service_instance_requested_by_user",
+                message: `<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
+    <div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
+        <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
+            <div class="___logo" style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;"><h2 style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;">[[_company_name]]</h2></div>
+        </div>
+
+        <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
+            <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">New signup for [[_company_name]]!</h2>
+            <p class="___email-body">
+                Congratulations! You have gained new signup! [[references.users.email]] just signed up for [[name]].
+            </p>
+        
+            <a class="___action-button" target="_blank" href="https://[[_hostname]]/service-instance/[[id]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">View account detail</a>
+        </div>  
+
+        <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
+            <div class="__company-info" style="text-align: center;">
+                <p style="text-align: center; opacity: 0.7;">[[_company_name]]<br style="text-align: center;">[[_company_address]]</p>
+            </div>
+            <div class="clear" style="clear: both; text-align: center;"></div>
+        </div>
+    </div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 0px -1px 1px; max-height: 12px; line-height: 12px;"></span></div>
+</div>`,
+                subject: "New signup for [[_company_name]]!",
+                description: "Sent to admins when a new user has signed up",
+                model: "service-instance",
+                send_email: true,
+                send_to_owner: false
+            },
+            {
+                name: "payment_failure",
+                event_name: "payment_failure",
+                message: `<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
+    <div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
+        <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
+            <div class="___logo" style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;"><h2 style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;">[[_company_name]]</h2></div>
+        </div>
+
+        <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
+            <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">Oh no, your payment failed</h2>
+            <p class="___email-body">
+                Unfortunately,  we couldn't collect your subscription payment. Please take a moment to review your billing information, if it looks correct, please email us at [[_company_email]] and let us know. Otherwise, please update your information.
+            </p>
+            <a class="___action-button" target="_blank" href="[[billing_settings_url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Update credit card</a>
+            <p class="__email-body">
+                If you have any question about your subscription, email us at [[_company_email]] and let us know.
+            </p>
+        </div>  
+
+        <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
+            <div class="__company-info" style="text-align: center;">
+                <p style="text-align: center; opacity: 0.7;">[[_company_name]]<br style="text-align: center;">[[_company_address]]</p>
+            </div>
+            <div class="clear" style="clear: both; text-align: center;"></div>
+        </div>
+    </div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 0px -1px 1px; max-height: 12px; line-height: 12px;"></span></div>
+</div>`,
+                subject: "Oh no, your payment failed",
+                description: "Sent when a payment has failed to go through. It notifies the user to update their payment method",
+                model: "user",
+                send_email: true
+            },
+            {name:"invitation",
+                event_name:"user_invited",
+                message:`<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
+    <div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
+        <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
+            <div class="___logo" style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;"><h2 style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;">[[_company_name]]</h2></div>
+        </div>
+
+        <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
+            <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">You’ve been invited to join [[_company_name]]</h2>
+            <p class="___email-body">
+                    Click on the link below to activate your account.
+            </p>
+            <a class="___action-button" target="_blank" href="[[url]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">Active Account</a>
+        </div>
+
+        <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
+            <div class="__company-info" style="text-align: center;">
+                <p style="text-align: center; opacity: 0.7;">[[_company_name]]<br style="text-align: center;">[[_company_address]]</p>
+            </div>
+            <div class="clear" style="clear: both; text-align: center;"></div>
+        </div>
+    </div>
+    <div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 0px -1px 1px; max-height: 12px; line-height: 12px;"></span></div>
+</div>`,
+                subject:"Invitation",
+                description:"Sent when a user is invited to they system by an admin",
+                model:"user",
+                send_email:true
+            }
+        ];
+
+        let regUser = await knex("notification_templates").where("name", "registration_user");
+        if(regUser.length > 0){
+            emails.push(registrationUserEmail);
+        }else{
+            newEmails.push(registrationUserEmail);
+        }
+        for(let email of emails){
+            await knex("notification_templates").where("name", email.name).update(email)
+        }
+
+        await knex("notification_templates").where("name", "service_cancellation_submitted").update({
+            name: "service_cancellation",
+            event_name: "service_instance_cancellation_requested",
+            message: `<div id="servicebot-notification-email" style="background-color: #F4F6F9; padding: 60px 20px; font-family: 'Open Sans', sans-serif; font-size: 12px;">
+<div class="___email-content" style="height: auto; width: 600px; max-width: 100%; margin: auto; line-height: 1.8rem; color: #49575F; background-color: #fff;">
+    <div class="___header" style="padding: 60px 0px 12px 0px; line-height: 50px; height: 50px; margin: 0;">
+        <div class="___logo" style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;"><h2 style="text-align: center; font-size: 18px; color: #0097D7; line-height: 50px; height: 50px; margin: 0;">[[_company_name]]</h2></div>
+    </div>
+
+    <div class="___body" style="padding: 32px 0px 20px 0px; width: 80%; margin: auto;">
+        <h2 class="___email-subject" style="font-size: 20px; margin-bottom: 24px;">User just cancelled a subscription</h2>
+        <p class="___email-body">
+            User [[references.users.email]] just canceled their subscription with [[_company_name]]
+        </p>
+        <a class="___action-button" target="_blank" href="https://[[_hostname]]/service-instance/[[id]]" style="display: inline-block; color: #ffffff; background-color: #0097D7; margin-top: 36px; padding: 11px 60px 15px 60px; width: auto; border-radius: 2px; border: none; font-size: 14px; height: auto;">View Subscription</a>
+    </div>  
+
+    <div class="___footer" style="font-size: 10px; line-height: 1.2rem; color: #FFFFFF; background-color: #24282A; padding: 36px 0px; margin-top: 40px;">
+        <div class="__company-info" style="text-align: center;">
+            <p style="text-align: center; opacity: 0.7;">[[_company_name]]<br style="text-align: center;">[[_company_address]]</p>
+        </div>
+        <div class="clear" style="clear: both; text-align: center;"></div>
+    </div>
+</div>
+<div class="___power-by" style="font-size: 10px; line-height: 16px; text-align: center; color: #9B9B9B; margin-top: 11px;">Powered by <span style="display: inline-block;"><img class="___footer-logo" alt="servicebot-logo" src="https://[[_hostname]]/assets/email-templates/footer-logo.png" style="display: inline-block; width: auto; margin: auto 0px -1px 1px; max-height: 12px; line-height: 12px;"></span></div>
+</div>`,
+            subject: "User just cancelled a subscription",
+            description: "Sent when a service cancellation has been requested by a user",
+            model: "service-instance",
+            send_email: false,
+            send_to_owner: false
+        });
+    
+        let updated = await knex("notification_templates").where("name", "service_cancellation");
+
+        let newRecords = await knex("notification_templates").returning('*').insert(newEmails);
 
         let admin = await knex("notification_templates_to_roles").returning("id").insert([{
             notification_template_id: newRecords[1].id,
