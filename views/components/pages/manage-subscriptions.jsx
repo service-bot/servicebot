@@ -141,7 +141,7 @@ class ManageSubscriptions extends React.Component {
         return status;
     }
     amountFormatter(cell, row){
-        if(cell) {
+        if(cell >= 0) {
             return <Price value={cell} currency={row.currency}/>;
         } else {
             return <span className="status-badge red">No Plan</span>;
