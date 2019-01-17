@@ -144,6 +144,13 @@ $page-datatable-extra-bottom-padding: 160px;
     }
 
   }
+  &.__password-reset{
+    ._content-container ._content ._section{
+      width: 500px;
+      max-width: 100%;
+      margin: $gutter * 2 auto;
+    }
+  }
   &.__view-my-profile{
 
 
