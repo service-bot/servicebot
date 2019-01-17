@@ -1,0 +1,39 @@
+.__request-for-user{
+  .servicebot--rf-embeddable{
+
+    .rf--form-wrapper{
+
+      border: none;
+      box-shadow: none;
+
+      .rf--form{
+        .rf--form-content{
+          .rf--form-elements{
+            .rf--body{
+              form{
+                .rf--form-inner{
+                  ._heading-wrapper{
+                    display: none;
+                  }
+                }
+              }
+            }
+          }
+
+        }
+      }
+    }
+
+    ._success-ui{
+      .fa.fa-check{
+        display: none;
+      }
+    }
+    .google-login-container{
+      display: none;
+    }
+    .servicebot-logo-footer{
+      display: none;
+    }
+  }
+}
