@@ -149,8 +149,8 @@ module.exports = function(router) {
             let accessManager = store.getState(true).pluginbot.services.embedAccessManager
             if(accessManager){
                 accessManager = accessManager[0];
-                let token = await accessManager.createToken(instance_object.data.user_id);
-                instance_object.data.billing_settings_url = accessManager.createLink(instance_object.data.user_id, token);
+                let token = await accessManager.createToken(updatedInstance.data.user_id);
+                updatedInstance.data.billing_settings_url = accessManager.createLink(instance_object.data.user_id, token);
             }
             store.dispatchEvent("service_instance_plan_change", updatedInstance);
         }).catch(function (error) {
