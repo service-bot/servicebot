@@ -6,6 +6,10 @@
     width: 100% !important;
     background: white;
     left: 0 !important;
+
+    &.servicebot-embed-custom-loader{
+      @include embedLoader;
+    }
   }
 }
 

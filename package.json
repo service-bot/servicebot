@@ -1,6 +1,6 @@
 {
   "name": "servicebot",
-  "version": "0.11.122",
+  "version": "0.11.124",
   "license": "GPL-3.0",
   "scripts": {
     "start": "node ./bin/start",
@@ -8,7 +8,8 @@
     "dev-client": "./node_modules/.bin/webpack-dev-server --port 3002 --content-base public/",
     "fullStart": "./node_modules/.bin/webpack && node ./bin/start",
     "debug": "node $NODE_DEBUG_OPTION ./bin/start",
-    "test": "jest"
+    "test": "jest",
+    "linked": "npm-list-linked"
   },
   "repository": {
     "type": "git",
