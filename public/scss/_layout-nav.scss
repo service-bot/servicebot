@@ -642,6 +642,10 @@
     top: 0;
     z-index: $z-loader;
 
+    &.servicebot-embed-custom-loader{
+      @include embedLoader;
+    }
+
     @include mediaQuery(max, iPad){
       width: calc(100% - 80px);
     }
@@ -654,6 +658,10 @@
   .page-loader{
     left: $nav-panel-width;
     top: $nav-header-height;
+
+    &.servicebot-embed-custom-loader{
+      @include embedLoader;
+    }
 
     @include mediaQuery(max, iPad){
       left: $nav-panel-width-collapsed;
