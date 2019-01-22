@@ -5,6 +5,7 @@ import {Fetcher} from "servicebot-base-form";
 import Content from "../layouts/content.jsx";
 import ContentTitle from "../layouts/content-title.jsx";
 import UserFormEdit from "../elements/forms/user-form-edit.jsx";
+import Load from '../utilities/load.jsx';
 
 class UserEdit extends React.Component {
 
@@ -37,30 +38,18 @@ class UserEdit extends React.Component {
     }
 
     render () {
-        let pageName = this.props.route.name;
+        let {myUser, myUser: {email, name}, loading} = this.state;
 
-        if(this.state.loading){
-            return(
-                <Authorizer permissions="can_administrate">
-                    <div className="page __manage-my-profile">
+        return <Authorizer permissions="can_administrate">
+                    <div className="app-content __my-profile">
                         <Content>
-                            <ContentTitle icon="cog" title="Edit User"/>
-                            <Load/>
+                            <div className={`_title-container`}>
+                                <h1 className={`_heading`}>Editing {name || email}</h1>
+                            </div>
+                            {loading ? <Load/> : <UserFormEdit myUser={myUser}/>}
                         </Content>
                     </div>
                 </Authorizer>
-            );
-        }else {
-            return (
-                <Authorizer permissions="can_administrate">
-                    <div className="page __manage-my-profile">
-                        <Content>
-                            <UserFormEdit myUser={this.state.myUser}/>
-                        </Content>
-                    </div>
-                </Authorizer>
-            );
-        }
     }
 }
 

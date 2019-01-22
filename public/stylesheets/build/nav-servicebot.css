@@ -1,0 +1,9 @@
+.app-header {
+  color: black;
+  height: 80px;
+}
+.app-header .app-logo img {
+  width: 200px;
+}
+
+/*# sourceMappingURL=stylesheets/build/nav-servicebot.css.map */
