@@ -23,6 +23,10 @@
   transform: translate(-50%);
   @include fadeDownInAppModal(30%, 32%);
 
+  &.__invoice{
+    width: 100%;
+  }
+
   .modal-content {
     background-color: #F9FCFF;
     border-radius: 2px;

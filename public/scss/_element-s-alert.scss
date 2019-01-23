@@ -19,3 +19,20 @@
     }
   }
 }
+
+//normal alert
+.alert{
+  padding: $gutter/2 $gutter;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+
+  &.alert-success{
+    background: $color-success;
+    color: white;
+  }
+  .fa{
+    margin-right: $gutter;
+  }
+
+}

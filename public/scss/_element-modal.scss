@@ -1,3 +1,26 @@
+@mixin modalTables{
+  .table{
+    margin-top: $gutter;
+    font-size: 0.9rem;
+    width: 100%;
+    thead{
+      color: #051f60;
+      background: #ececec;
+    }
+    td{
+      padding: 4px !important;
+      font-size: 13px;
+
+      &.__right{
+        text-align: right;
+      }
+      &.__center{
+        text-align: center;
+      }
+    }
+  }
+}
+
 .modal-wrapper{
 
   .loader, .page-loader{
@@ -13,6 +36,15 @@
   }
 }
 
+.servicebot-in-app-modal{
+
+  &.__invoice{
+    @include modalTables;
+  }
+}
+
+
+
 /* Individual Modals */
 .__modal{
 
@@ -24,18 +56,7 @@
         margin-right: $gutter/2;
       }
     }
-    .table{
-      margin-top: $gutter;
-      font-size: 0.9rem;
-      thead{
-        color: #051f60;
-        background: #ececec;
-      }
-      td{
-        padding: 4px !important;
-        font-size: 13px;
-      }
-    }
+    @include modalTables;
   }
 
 }
