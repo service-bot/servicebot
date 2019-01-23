@@ -40,19 +40,20 @@ class ManageSubscriptions extends React.Component {
         this.paymentFormatter = this.paymentFormatter.bind(this);
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         if (!isAuthorized({permissions: "can_administrate"})) {
             return browserHistory.push("/login");
         }
-        this.fetchAllUsers();
-        this.fetchData();
+        await this.fetchAllUsers();
+        console.log('after fetch all users');
+        await this.fetchData();
     }
 
     /**
      * Fetches Table Data
      * Sets the state with the fetched data for use in ServiceBotTableBase's props.row
      */
-    fetchData() {
+    async fetchData() {
         let self = this;
         let { params, params: {status}, location: {query: {uid} } } = this.props;
         let url = '/api/v1/service-instances';
@@ -66,12 +67,15 @@ class ManageSubscriptions extends React.Component {
             }
         }
         if(uid) {
+            console.log("got uid from query", uid)
             url = `/api/v1/service-instances/search?key=user_id&value=${uid}`;
         }
 
-        Fetcher(url).then(function (response) {
+        await Fetcher(url).then(function (response) {
             if (!response.error) {
                 self.setState({rows: response});
+            }else{
+                console.error(response.error);
             }
         });
     }
@@ -79,13 +83,17 @@ class ManageSubscriptions extends React.Component {
     /**
      * Fetches Other Data
      */
-    fetchAllUsers(){
+    async fetchAllUsers(){
         let self = this;
-        Fetcher('/api/v1/users').then((response) => {
+        console.log('fetching all users');
+
+        await Fetcher('/api/v1/users').then((response) => {
             if(!response.error){
                 self.setState({loading: false, allUsers: response});
+                console.log('fetched all users', this.state.allUsers);
             }else{
                 self.setState({loading: false});
+                console.error('failed to fetch all users', response);
             }
         })
     }
@@ -237,17 +245,13 @@ class ManageSubscriptions extends React.Component {
     }
 
     dropdownStatusFormatter(dataObject){
-        // console.log('dropdown',dataObject);
         let status = dataObject.status;
         const statusString = _.toLower(status);
         if(statusString === "waiting_cancellation"){
-            console.log('waiting_cancellation stuff', dataObject);
             return "Manage Cancellation";
         }else if(statusString === "cancelled" || !dataObject.payment_plan) {
-            console.log('cancelled stuff', dataObject);
             return "Delete Service";
         }else if(statusString === 'running'){
-            console.log('running stuff', dataObject);
             return "Cancel Service";
         }else {
             return "Cancel Service";
@@ -256,7 +260,8 @@ class ManageSubscriptions extends React.Component {
 
     render () {
         let self = this;
-        let {loading, rows, allUsers, currentDataObject, currentDataObject: {status, payment_plan}, actionModal} = this.state;
+        let { loading, rows, allUsers, currentDataObject,
+              currentDataObject: {status, payment_plan}, actionModal } = this.state;
 
         if(!payment_plan){
             status = 'cancelled';
@@ -276,7 +281,7 @@ class ManageSubscriptions extends React.Component {
         };
 
         let extractedData = [];
-        console.log({rows});
+        // console.log({rows});
 
         _.mapValues(rows, row => {
             extractedData = [...extractedData, {
