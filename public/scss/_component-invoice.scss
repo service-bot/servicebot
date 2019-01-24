@@ -117,3 +117,12 @@
     width: 100%;
   }
 }
+
+//Print invoice style within the app dashboard
+.servicebot--embeddable--print { //targets the print window body class
+
+  .servicebot-invoice-modal-container .__modal {
+    margin-left: auto;
+    transform: none;
+  }
+}
