@@ -313,6 +313,8 @@ module.exports = function (router) {
      */
 
     router.post("/service-templates/:id/request", validate(ServiceTemplate), validateServiceRequest, async function (req, res, next) {
+        let isNew;
+        let user;
         try {
             let serviceTemplate = res.locals.valid_object;
             let references = serviceTemplate.references;
@@ -329,10 +331,10 @@ module.exports = function (router) {
 
             let responseJSON = {};
             //using promiseProxy for non-standard callbacks
-            let user = req.user;
+            user = req.user;
 
             //is the user authenticated (are they logged in)?
-            let isNew = !req.isAuthenticated() || (req_body.hasOwnProperty("email") && !req_body.hasOwnProperty("client_id") && req.user.data.email !== req_body.email);
+            isNew = !req.isAuthenticated() || (req_body.hasOwnProperty("email") && !req_body.hasOwnProperty("client_id") && req.user.data.email !== req_body.email);
             let store = require('../config/redux/store');
 
             //todo: once in plugin this code needs big changes
@@ -509,6 +511,11 @@ module.exports = function (router) {
 
         } catch (error) {
             console.error(error);
+            if(isNew && user){
+                user.deleteWithStripe(function(err, result){
+                    console.log("deleted user: ", result, err);
+                });
+            }
             return res.status(500).json({error});
         }
 
