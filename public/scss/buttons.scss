@@ -102,6 +102,10 @@
     background: none !important;
     color: $color-blue-gray !important;
     box-shadow: none !important;
+
+    &.__white{
+      color: $color-white !important;
+    }
   }
 
   &._green {
