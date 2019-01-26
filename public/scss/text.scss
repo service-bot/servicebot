@@ -37,6 +37,12 @@ h1, h2, h3, h4, h5, h6{
   h3, h4{
     font-weight: 500;
     color: #30468a;
+    padding: 4px 0;
+    margin: 0 !important;
+
+    @include mediaQuery(max, iPhone){
+      font-size: 18px;
+    }
   }
 }
 

@@ -1,5 +1,9 @@
 .servicebot-table-base{
 
+  @include mediaQuery(max, iPhone){
+    margin-top: 40px;
+  }
+
   .table{
     width: 100%;
   }
@@ -12,10 +16,22 @@
       display: grid;
       grid-template-columns: auto 170px;
 
+      @include mediaQuery(max, iPhone){
+        grid-template-columns: auto;
+
+        .buttons-group{
+          display: none;
+        }
+      }
+
       ._input-{
 
         &.servicebot-search-input{
           height: 100%;
+          
+          @include mediaQuery(max, iPhone){
+            border-radius: 5px;
+          }
         }
       }
     }
@@ -23,12 +39,95 @@
 
   .react-bs-table{
 
-    th{
+    table{
 
-      &.sort-column{
+      @include mediaQuery(max, iPhone){
+        display: block;
+      }
 
-        .text-filter{
-          width: 100%;
+    }
+
+    thead{
+      @include mediaQuery(max, iPhone){
+        display: none;
+      }
+
+      th{
+
+        &.sort-column{
+
+          .text-filter{
+            width: 100%;
+          }
+        }
+      }
+    }
+    tbody{
+
+      @include mediaQuery(max, iPhone){
+        display: flex;
+        flex-direction: column;
+      }
+
+      tr{
+
+        @include mediaQuery(max, iPhone){
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          position: relative;
+          margin: $gutter/2 0 ;
+        }
+
+        td{
+
+          @include mediaQuery(max, iPhone){
+            padding: 6px 8px;
+
+            .status-badge{
+              font-size: 0.7em;
+            }
+
+            &:nth-child(1){
+              flex-basis: 100%;
+              font-weight: 600;
+            }
+            &:not(:first-child){
+              flex-basis: auto;
+              padding: 2px 2px 2px 8px;
+              font-size: 0.7em;
+
+              * {
+                font-size: 0.7em;
+              }
+            }
+            &:last-child, .action-dropdown, .action-dropdown ._dropdown-toggle{
+              position: absolute;
+              display: block;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              font-size: 0.95em;
+
+              * {
+                font-size: 0.95em;
+              }
+
+              ._dropdown-toggle{
+                opacity: 0;
+              }
+
+              .dropdown-menu{
+                position: absolute;
+                top: calc(100% + 5px);
+
+                li{
+                  line-height: 2em;
+                }
+              }
+            }
+          }
         }
       }
     }

@@ -8,9 +8,15 @@
         &>div:nth-child(1) {
           .buttons-group {
             position: absolute;
-            top: -9px;
+            top: 0;
             right: 0;
             width: auto;
+
+            @include mediaQuery(max, iPhone){
+              top: 46px;
+              left: 0;
+              right: auto;
+            }
           }
         }
       }
@@ -20,10 +26,10 @@
 $page-datatable-extra-bottom-padding: 160px;
 
 .page{
-  padding: 0 $gutter * 3 $gutter*1.5;
+  padding: $gutter $gutter * 3 $gutter*1.5;
 
   @include mediaQuery(max, iPhone){
-    padding: 0 $gutter * 1.5;
+    padding: $gutter;
   }
 }
 
@@ -39,7 +45,7 @@ $page-datatable-extra-bottom-padding: 160px;
     }
 
     @include mediaQuery('max', 'iPhone'){
-      padding: $gutter * 1.5;
+      //padding: $gutter * 1.5;
 
       .content-title:nth-child(1n) h4{
         margin-top: 0;

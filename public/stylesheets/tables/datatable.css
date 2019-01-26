@@ -279,7 +279,7 @@ table.dataTable thead .sorting_desc_disabled:after {
 }
 
 .table th, .table td{
-    padding: 10px 15px !important;
+    padding: 10px 15px;
 }
 
 #tables-datatable{
