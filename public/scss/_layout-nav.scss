@@ -647,7 +647,8 @@
     }
 
     @include mediaQuery(max, iPad){
-      width: calc(100% - 80px);
+      width: calc(100% - 50px);
+      left: $nav-panel-width-collapsed;
     }
 
     .lds-ellipsis{
