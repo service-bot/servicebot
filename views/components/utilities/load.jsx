@@ -38,10 +38,16 @@ class Load extends React.Component {
 
     render () {
 
-        let {timeout, delayed, show} = this.state;
+        let {show} = this.state;
+        let {className} = this.props;
+
+        if(this.props.show === false){
+            show = false;
+        }
+
         if(show){
             return(
-                <div className="loader"><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>
+                <div className={`loader ${className}`}><div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>
             );
         }else{
             return(

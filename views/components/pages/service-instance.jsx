@@ -35,26 +35,27 @@ class ServiceInstance extends React.Component {
         let uid = cookie.load("uid");
         let id = this.props.params.instanceId;
         this.state = {  instanceId: id,
-                        instance: false,
-                        url: `/api/v1/service-instances/${id}`,
-                        fundUrl: `/api/v1/users/${uid}`,
-                        userFunds: [],
-                        loading:true,
-                        approveModal : false,
-                        cancelModal: false,
-                        undoCancelModal: false,
-                        viewPaymentModal: false,
-                        editInstanceModal: false,
-                        editPaymentModal: false,
-                        addChargeItemModal: false,
-                        payChargeItemModal: false,
-                        cancelChargeItemModal: false,
-                        payChargeItemId: false,
-                        cancelChargeItemId: false,
-                        cancelChargeItem: false,
-                        payAllChargesModal: false,
-                        fundModal: false,
-                        editPropertyModal: false
+            instance: false,
+            url: `/api/v1/service-instances/${id}`,
+            fundUrl: `/api/v1/users/${uid}`,
+            userFunds: [],
+            loading:true,
+            embedLoading: true,
+            approveModal : false,
+            cancelModal: false,
+            undoCancelModal: false,
+            viewPaymentModal: false,
+            editInstanceModal: false,
+            editPaymentModal: false,
+            addChargeItemModal: false,
+            payChargeItemModal: false,
+            cancelChargeItemModal: false,
+            payChargeItemId: false,
+            cancelChargeItemId: false,
+            cancelChargeItem: false,
+            payAllChargesModal: false,
+            fundModal: false,
+            editPropertyModal: false
         };
         this.fetchInstance = this.fetchInstance.bind(this);
         this.handleApprove = this.handleApprove.bind(this);
@@ -85,19 +86,18 @@ class ServiceInstance extends React.Component {
         this.handleAddFund = this.handleAddFund.bind(this);
         this.onAddFundClose = this.onAddFundClose.bind(this);
         this.getInitialState = this.getInitialState.bind(this);
-
+        this.finishLoading = this.finishLoading.bind(this);
     }
 
     async componentDidMount() {
         if(!isAuthorized({})){
             return browserHistory.push("/login");
         }
-        this.getInitialState()
-
+        await this.getInitialState()
     }
 
     async getInitialState(){
-        this.fetchUserFund();
+        await this.fetchUserFund();
         let instance = await this.fetchInstance();
         let token = (await this.fetchToken(instance.user_id)).token
         this.setState({instance, loading: false, token})
@@ -116,12 +116,12 @@ class ServiceInstance extends React.Component {
         })
     }
     fetchToken(uid){
-      return Fetcher("/api/v1/users/" + uid + "/token", "POST", {});
+        return Fetcher("/api/v1/users/" + uid + "/token", "POST", {});
     }
 
     fetchUserFund(){
         let self = this;
-        Fetcher(self.state.fundUrl).then(function (response) {
+        return Fetcher(self.state.fundUrl).then(function (response) {
             if (!response.error) {
                 if (response.references.funds.length > 0) {
                     self.setState({userFunds : response.references.funds});
@@ -130,10 +130,11 @@ class ServiceInstance extends React.Component {
         });
     }
 
-
+    finishLoading(){
+        this.setState({embedLoading: false});
+    }
     handleComponentUpdating(){
-        let self = this;
-        self.getInitialState();
+        this.getInitialState();
     }
 
     handleApprove(event){
@@ -171,7 +172,7 @@ class ServiceInstance extends React.Component {
         this.setState({ viewPaymentModal: false });
         this.handleComponentUpdating();
     }
-    
+
     handleEditInstanceModal(event){
         event.preventDefault();
         this.setState({ editInstanceModal: true});
@@ -266,13 +267,13 @@ class ServiceInstance extends React.Component {
     getActionButtons(instance, instanceCharges){
         let self = this;
         //Only view actions for non-suspended users
-        if(instance.references.users[0].status != "suspended") {
+        if(instance.references.users[0].status !== "suspended") {
             return (
                 <Authorizer permissions="can_administrate">
                     <div className="service-instance-actions action-items">
                         <div className={`buttons-group __gap`}>
                             {instanceCharges.false && instanceCharges.false.length > 0 &&
-                                <span onClick={self.handlePayAllChargesModal} className="buttons _primary _green">Pay Charges</span>
+                            <span onClick={self.handlePayAllChargesModal} className="buttons _primary _green">Pay Charges</span>
                             }
                             <span onClick={self.handleEditInstanceModal} className="buttons _primary">Edit Trial</span>
                             <span onClick={self.handleEditPaymentModal} className="buttons _primary">Edit Payment Plan</span>
@@ -294,16 +295,14 @@ class ServiceInstance extends React.Component {
         if(myInstance.status !== 'cancelled') {
             if (myInstanceChargeItems.false && myInstanceChargeItems.false.length > 0) {
                 return (
-                    <div id="service-instance-waiting" className="row m-b-30">
-                        <div className="col-md-12">
-                            <ServiceInstanceWaitingCharges handlePayAllCharges={self.handlePayAllChargesModal}
-                                                           handlePayChargeItem={self.handlePayChargeItemModal}
-                                                           handleCancelChargeItem={self.handleCancelChargeItemModal}
-                                                           instanceWaitingItems={myInstanceChargeItems.false}
-                                                           serviceInstance={myInstance}
-                                                           serviceInstanceCharges={myInstanceChargeItems}
-                            />
-                        </div>
+                    <div id="service-instance-waiting">
+                        <ServiceInstanceWaitingCharges handlePayAllCharges={self.handlePayAllChargesModal}
+                                                       handlePayChargeItem={self.handlePayChargeItemModal}
+                                                       handleCancelChargeItem={self.handleCancelChargeItemModal}
+                                                       instanceWaitingItems={myInstanceChargeItems.false}
+                                                       serviceInstance={myInstance}
+                                                       serviceInstanceCharges={myInstanceChargeItems}
+                        />
                     </div>
                 );
             } else { return null; }
@@ -312,19 +311,14 @@ class ServiceInstance extends React.Component {
 
     render () {
         let self = this;
-        let pageName = `My Account > Purchased Item`;
-        let subtitle = `Updated: `;
+        let {loading, embedLoading} = this.state;
 
-        if(this.state.loading){
+        if(loading){
             return (
                 <Authorizer>
                     <div className="page __view-service-instance">
                         <Content key={Object.id}>
-                            <ReactCSSTransitionGroup component='div' transitionName={'fade'}
-                                                     transitionAppear={true} transitionEnter={true} transitionLeave={true}
-                                                     transitionAppearTimeout={1000} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
-                                <Load/>
-                            </ReactCSSTransitionGroup>
+                            <Load className={`__instance-loading`} delay/>
                         </Content>
                     </div>
                 </Authorizer>
@@ -376,14 +370,13 @@ class ServiceInstance extends React.Component {
                 } else if(self.state.editPropertyModal){
                     return( <ModalEditProperties instance={self.state.instance} modalCallback={self.onEditPropertiesModalClose} ownerId={self.state.instance.user_id} show={self.state.editPropertyModal} hide={self.onEditPropertiesModalClose}/> );
                 }
-
-
             };
 
             return(
                 <Authorizer>
                     <div className="page __view-service-instance">
                         <Content>
+                            <Load show={embedLoading} delay className={embedLoading ? `__embed-still-loading` : `__embed-finished-loading`}/>
                             <ReactCSSTransitionGroup component={React.Fragment} transitionName={'fade'} transitionAppear={true} transitionEnter={true} transitionLeave={true}
                                                      transitionAppearTimeout={1000} transitionEnterTimeout={1000} transitionLeaveTimeout={1000}>
                                 <div className="instance-title">
@@ -395,23 +388,19 @@ class ServiceInstance extends React.Component {
                                     {self.getActionButtons(myInstance, myInstanceChargeItems)}
                                     {this.getAdditionalCharges(myInstance, myInstanceChargeItems)}
                                 </div>
-
                                 <div id="service-instance-detail">
-                                    <ServicebotBillingSettingsEmbed
-                                        useAsComponent={true}
-                                        url=""
-                                        token={self.state.token}
-                                        key={self.state.token}
-                                        serviceInstanceId={myInstance.id}
-
-                                    />
+                                    <ServicebotBillingSettingsEmbed useAsComponent={true}
+                                                                    disableLoader={true}
+                                                                    url=""
+                                                                    token={self.state.token}
+                                                                    key={self.state.token}
+                                                                    finishLoading={this.finishLoading}
+                                                                    serviceInstanceId={myInstance.id} />
                                 </div>
 
                                 {(myInstanceChargeItems.true && myInstanceChargeItems.true.length > 0) &&
-                                <div id="service-instance-approved-charges" className="row">
-                                    <div className="col-md-12">
-                                        <ServiceInstanceApprovedCharges instanceApprovedItems={myInstanceChargeItems.true}/>
-                                    </div>
+                                <div id="service-instance-approved-charges">
+                                    <ServiceInstanceApprovedCharges instanceApprovedItems={myInstanceChargeItems.true}/>
                                 </div>
                                 }
 
@@ -421,10 +410,8 @@ class ServiceInstance extends React.Component {
                                 </div>
                                 }
 
-                                <div id="service-instance-message" className="row">
-                                    <div className="col-md-12">
-                                        <ServiceInstanceMessage instanceId={self.state.instanceId}/>
-                                    </div>
+                                <div id="service-instance-message">
+                                    <ServiceInstanceMessage instanceId={self.state.instanceId}/>
                                 </div>
                             </ReactCSSTransitionGroup>
                         </Content>
