@@ -52,6 +52,10 @@
             text-align: center;
             padding: 16px 0;
             margin: 0;
+
+            @include mediaQuery(max, iPhone){
+              padding: 10px 0;
+            }
           }
 
           ._tier-delete {
@@ -121,6 +125,10 @@
           padding: 24px;
           transition: all 0.3s;
 
+          @include mediaQuery(max, iPhone){
+            margin-left: 5px;
+          }
+
           &:before{
             left: 50%;
             transform: translateX(-50%) rotate(90deg);
@@ -148,23 +156,45 @@
     flex-wrap: wrap;
     flex-direction: column;
 
-    .form-group{
+    @include mediaQuery(max, iPhone){
+      background-color: transparent;
+      box-shadow: none;
+      padding: 0;
+    }
+
+    .sb-form-group{
       padding-bottom: $gutter;
+
+      @include mediaQuery(max, iPhone){
+        padding: 0;
+        padding-bottom: $gutter/2;
+      }
     }
 
     $_max-tier-fields-width: 50%;
     $_min-tier-fields-width: 300px;
+
+    @mixin TierFieldsMobileWidth(){
+      @include mediaQuery(max, iPhone) {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+      }
+    }
     ._tier-name_name {
       max-width: $_max-tier-fields-width;
       min-width: $_min-tier-fields-width;
+      @include TierFieldsMobileWidth;
     }
     ._tier-name_type {
       max-width: $_max-tier-fields-width;
       min-width: $_min-tier-fields-width;
+      @include TierFieldsMobileWidth;
     }
     ._tier-name_billing_period {
       max-width: $_max-tier-fields-width;
       min-width: $_min-tier-fields-width;
+      @include TierFieldsMobileWidth;
     }
     .payment-structures{
 
@@ -172,6 +202,10 @@
 
       .buttons._add{
         float: right;
+
+        @include mediaQuery(max, iPhone){
+          margin-top: $gutter;
+        }
 
         .icon{
           color: $color-white;
@@ -241,6 +275,11 @@
           color: $color-heading;
           display: block;
           padding: 33px 22px 0px;
+
+          @include mediaQuery(max, iPhone){
+            padding: 43px 12px 0px;
+            font-size: 0.7em;
+          }
         }
       }
     }

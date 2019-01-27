@@ -19,6 +19,7 @@
 
       @include mediaQuery(max, iPhone){
         font-size: 18px;
+        padding: 15px 12px 15px;
       }
 
     }
@@ -55,10 +56,19 @@
 
         &:first-child{
           padding-top: $gutter * 1.5;
+
+          @include mediaQuery(max, iPhone){
+            padding-top: 12px;
+          }
         }
 
         &:last-child{
           margin-bottom: $gutter * 6;
+        }
+
+        @include mediaQuery(max, iPhone){
+          margin: 0;
+          padding: 12px;
         }
 
         .caret{
@@ -91,6 +101,10 @@
           ._indented {
             padding-top: $gutter;
             padding-bottom: $gutter / 2;
+
+            @include mediaQuery(max, iPhone){
+              padding-left: 0;
+            }
           }
         }
 

@@ -10,6 +10,16 @@
     max-width: $_max-fields-width;
     min-width: $_min-fields-width;
 
+    @include mediaQuery(max, iPhone){
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+
+      .sb-form-group{
+        padding: 0;
+      }
+    }
+
     &._form-field-name_software_name{
 
       ._group-default{
@@ -26,7 +36,7 @@
   ._save{
     float: right;
     margin: $gutter;
-    margin-right: 35px;
+    margin-right: 12px;
   }
 
 }
