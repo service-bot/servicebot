@@ -21,18 +21,18 @@ class Dropdown extends React.Component {
 
         if(item.type == "divider"){
             return (
-                <li key={`item-${index}`} role="separator" className="divider"/>
+                <li tabIndex={-1} key={`item-${index}`} role="separator" className="divider"/>
             )
         }else if(item.type == "button"){
             return (
                 <li key={`item-${index}`} >
-                    <a onClick={item.action}>{item.label}</a>
+                    <a role="button" tabIndex={0} onClick={item.action}>{item.label}</a>
                 </li>
             )
         }else if(item.type == "link"){
             return (
                 <li key={`item-${index}`} >
-                    <a href={item.action}>{item.label}</a>
+                    <a role="button" tabIndex={0} href={item.action}>{item.label}</a>
                 </li>
             )
         }
