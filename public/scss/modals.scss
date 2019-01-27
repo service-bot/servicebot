@@ -23,6 +23,13 @@
   transform: translate(-50%);
   @include fadeDownInAppModal(30%, 32%);
 
+  @include mediaQuery(max, iPhone){
+    margin-left: $nav-panel-width-collapsed / 2;
+    max-width: calc(100% - 74px);
+    top: 80px;
+    @include fadeDownInAppModal(75px, 85px);
+  }
+
   &.__invoice{
     width: 100%;
   }
@@ -62,6 +69,14 @@
 
   .modal-body{
     padding: $gutter;
+
+    @include mediaQuery(max, iPhone){
+      padding: 12px;
+
+      .sb-form-group{
+        padding: 6px 0;
+      }
+    }
   }
 
   .modal-footer {
