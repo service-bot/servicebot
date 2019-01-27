@@ -10,7 +10,6 @@ import Dropdown from "../elements/dropdown.jsx";
 import DateFormat from "../utilities/date-format.jsx";
 import {ServiceBotTableBase} from '../elements/bootstrap-tables/servicebot-table-base.jsx';
 import '../../../node_modules/react-bootstrap-table/dist/react-bootstrap-table-all.min.css';
-
 import ModalInviteUser from "../elements/modals/modal-invite-user.jsx";
 import ModalSuspendUser from "../elements/modals/modal-suspend-user.jsx";
 import ModalUnsuspendUser from "../elements/modals/modal-unsuspend-user.jsx";
@@ -21,6 +20,7 @@ import Modal from '../utilities/modal.jsx';
 import { connect } from 'react-redux';
 import ReactTooltip from 'react-tooltip';
 import {getFormattedDate} from "../utilities/date-format.jsx";
+import Badge from "../elements/badge.jsx";
 
 let _ = require("lodash");
 
@@ -185,7 +185,7 @@ class ManageUsers extends React.Component {
     fundFormatter(cell) {
         //check if user has funds
         if(cell.funds.length > 0){
-            return ( <span className="userfund"><i className="fa fa-credit-card"></i></span>);
+            return ( <Badge type="default userfund"><i className="fa fa-credit-card"/></Badge>);
         }
     }
     statusFormatter(cell, row) {
@@ -204,14 +204,14 @@ class ManageUsers extends React.Component {
         }
         //If the customer_id from Stripe doesn't exist, mark user as disconnected
         if(!row.customer_id) {
-            return ( <span className="status-badge grey" >Disconnected</span> );
+            return ( <Badge type={`grey`}>Disconnected</Badge> );
         } else {
-            return ( <span className={color} >{cell}</span> );
+            return ( <Badge type={color} >{cell}</Badge> );
         }
 
     }
     roleFormatter(cell){
-        return ( cell.user_roles[0].role_name );
+        return <Badge type={`default`}>{cell.user_roles[0].role_name}</Badge>;
     }
 
 

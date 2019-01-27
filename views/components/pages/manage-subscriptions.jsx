@@ -14,6 +14,7 @@ import ModalManageCancellation from "../elements/modals/modal-manage-cancellatio
 import ModalDeleteInstance from "../elements/modals/modal-delete-instance.jsx";
 import {getFormattedDate} from "../utilities/date-format.jsx";
 import ReactTooltip from 'react-tooltip';
+import Badge from '../elements/badge.jsx';
 let _ = require("lodash");
 
 class ManageSubscriptions extends React.Component {
@@ -118,14 +119,14 @@ class ManageSubscriptions extends React.Component {
         if(cell) {
             const label = { 'day': 'Daily', 'week': 'Weekly', 'month': 'Monthly', 'year': 'Yearly' };
             const formattedType = {
-                'subscription': <span className="mc-badge"><i className="fa fa-circle micro-badge black" /> {label[cell]} </span>,
-                'custom': <span className="mc-badge"><i className="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span>,
-                'one_time' : <span className="mc-badge"><i className="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span>,
-                'split' : <span className="mc-badge"><i className="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span>
+                'subscription': <Badge type={`default`}><i className="fa fa-circle micro-badge black" /> {label[cell]} </Badge>,
+                'custom': <Badge type={`default`}><i className="fa fa-circle micro-badge grey" /> {getBillingType(row)}</Badge>,
+                'one_time' : <Badge type={`default`}><i className="fa fa-circle micro-badge grey" /> {getBillingType(row)}</Badge>,
+                'split' : <Badge type={`default`}><i className="fa fa-circle micro-badge grey" /> {getBillingType(row)}</Badge>
             };
-            return formattedType[row.type] || <span className="mc-badge"><i className="fa fa-circle micro-badge grey" /> {getBillingType(row)}</span>;
+            return formattedType[row.type] || <Badge type={`default`}><i className="fa fa-circle micro-badge grey" /> {getBillingType(row)}</Badge>;
         }
-        return <span className="mc-badge"><i className="fa fa-circle micro-badge grey" />Missing</span>;
+        return <Badge type={`default`}><i className="fa fa-circle micro-badge grey" />Missing</Badge>;
     }
     typeDataValue(cell){
         if(cell) {
@@ -150,9 +151,9 @@ class ManageSubscriptions extends React.Component {
     }
     amountFormatter(cell, row){
         if(cell >= 0) {
-            return <Price value={cell} currency={row.currency}/>;
+            return <Badge type={`default`}><Price value={cell} currency={row.currency}/></Badge>;
         } else {
-            return <span className="status-badge red">No Plan</span>;
+            return <Badge type={`red`}>No Plan</Badge>;
         }
     }
     statusFormatter(cell, row){
