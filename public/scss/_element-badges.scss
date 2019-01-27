@@ -13,6 +13,12 @@
   background-color: #dedede;
   color: black;
 
+  @include mediaQuery(max, iPhone){
+    min-height: 18px;
+    line-height: 18px;
+    margin: 0;
+  }
+
   .fa:not(:first-child){
     margin-left: 8px;
   }

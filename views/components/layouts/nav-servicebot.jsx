@@ -177,28 +177,32 @@ class NavServiceBot extends React.Component {
                     </li>
                     <li>
                         <Link to="/" style={style} className={getLinkClass('', 'parent')}>
-                            <span className="nav-icons icon-home"/>Dashboard
+                            <span className="nav-icons icon-home"/>
+                            <span className={`nav-text __home`}>Dashboard</span>
                         </Link>
                     </li>
                     <li>
                         <Link to="/manage-catalog" style={style} className={getLinkClass('manage-catalog', 'parent')}>
-                            <span className="nav-icons icon-manage"/>Services
+                            <span className="nav-icons icon-manage"/>
+                            <span className={`nav-text __services`}>Services</span>
                         </Link>
                     </li>
                     <li>
-                        <Link to="/manage-subscriptions" style={style}
-                              className={getLinkClass('manage-subscriptions', 'parent')}>
-                            <span className="nav-icons icon-subscriptions"/>Subscriptions
+                        <Link to="/manage-subscriptions" style={style} className={getLinkClass('manage-subscriptions', 'parent')}>
+                            <span className="nav-icons icon-subscriptions"/>
+                            <span className={`nav-text __subscriptions`}>Subscriptions</span>
                         </Link>
                     </li>
                     <li>
                         <Link to="/manage-users" style={style} className={getLinkClass('manage-users', 'parent')}>
-                            <span className="nav-icons icon-users"/>Users
+                            <span className="nav-icons icon-users"/>
+                            <span className={`nav-text __users`}>Users</span>
                         </Link>
                     </li>
                     <li>
                         <Link to="/embeddables" style={style} className={getLinkClass('embeddables', 'parent')}>
-                            <span className="nav-icons icon-embed"/>Embeds
+                            <span className="nav-icons icon-embed"/>
+                            <span className={`nav-text __embeds`}>Embeds</span>
                         </Link>
                     </li>
                     {this.getPluginItems('integrations')}
@@ -217,7 +221,8 @@ class NavServiceBot extends React.Component {
                     <li>
                         <a target="_blank" href="https://help.servicebot.io" style={style}
                            className={getLinkClass('manage-helpcenter', 'parent')}>
-                            <span className="nav-icons icon-helpcenter"/>Help Center
+                            <span className="nav-icons icon-helpcenter"/>
+                            <span className={`nav-text __help-center`}>Help Center</span>
                         </a>
                     </li>
                 </ul>

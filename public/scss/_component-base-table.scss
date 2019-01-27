@@ -77,6 +77,8 @@
           flex-wrap: wrap;
           position: relative;
           margin: $gutter/2 0 ;
+          padding-bottom: 14px;
+          background: #f9f9f9 !important;
         }
 
         td{
@@ -91,11 +93,16 @@
             &:nth-child(1){
               flex-basis: 100%;
               font-weight: 600;
+              border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+              line-height: 40px;
+              margin-bottom: 6px;
+              background: #fff;
             }
             &:not(:first-child){
               flex-basis: auto;
               padding: 2px 2px 2px 8px;
               font-size: 0.7em;
+              line-height: 18px;
 
               * {
                 font-size: 0.7em;
