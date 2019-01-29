@@ -87,7 +87,7 @@
             padding: 6px 8px;
 
             .status-badge{
-              font-size: 0.7em;
+              font-size: 12px;
             }
 
             &:nth-child(1){
@@ -101,11 +101,11 @@
             &:not(:first-child){
               flex-basis: auto;
               padding: 2px 2px 2px 8px;
-              font-size: 0.7em;
+              font-size: 12px;
               line-height: 18px;
 
-              * {
-                font-size: 0.7em;
+              span, tr{
+                font-size: 12px;
               }
             }
             &:last-child, .action-dropdown, .action-dropdown ._dropdown-toggle{
@@ -118,7 +118,7 @@
               font-size: 0.95em;
 
               * {
-                font-size: 0.95em;
+                font-size: 12px;
               }
 
               ._dropdown-toggle{
