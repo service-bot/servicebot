@@ -156,6 +156,23 @@
     flex-wrap: wrap;
     flex-direction: column;
 
+    div{
+
+      &._basic-details{
+        flex-basis: 50%;
+      }
+      &._metric-settings{
+        flex-basis: 50%;
+      }
+      &.payment-structures{
+        flex-basis: 100%;
+      }
+    }
+
+    .form-group{
+      padding-bottom: $gutter;
+    }
+
     @include mediaQuery(max, iPhone){
       background-color: transparent;
       box-shadow: none;
@@ -223,6 +240,7 @@
 
       ._billing-options{
         padding: 10px 0 20px;
+        padding: $gutter*2 0 $gutter*1.5;
         display: flex;
 
         ._count{
@@ -293,6 +311,20 @@
         &.has-error {
           border-color: $color-error;
         }
+      }
+
+    }
+
+    .form-group.--metric-billing{
+      display: flex;
+      flex-wrap: wrap;
+
+      label{
+        flex-basis: 100%;
+      }
+      button{
+        width: auto;
+        display: block;
       }
 
     }
