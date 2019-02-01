@@ -19,10 +19,20 @@
     margin: 18px;
   }
 }
-.servicebot--embeddable {
+.servicebot--embeddable.custom {
 
   &.servicebot--manage-billing-form-wrapper {
     width: auto;
     padding: 0;
+
+    .mbf--form-wrapper{
+      .mbf--current-services-list{
+        .mbf--current-services-item{
+          .servicebot-subscription{
+            margin: 0;
+          }
+        }
+      }
+    }
   }
 }

@@ -82,12 +82,35 @@ $page-datatable-extra-bottom-padding: 160px;
   }
 
   &.__view-service-instance{
+    
+    @include mediaQuery(max, iPhone){
+      background: $color-extra-light-gray;
+    }
 
     .service-instance-actions{
 
       .buttons-group{
         line-height: 80px;
         margin-right: $gutter * 2;
+
+        @include mediaQuery(max, iPhone){
+          margin: 0;
+          display: flex;
+          flex-direction: row;
+          position: relative;
+          flex-wrap: wrap;
+          justify-content: space-evenly;
+          align-items: flex-start;
+          align-content: center;
+          width: 100%;
+        }
+
+        .buttons{
+          flex-basis: 50%;
+          font-size: 12px;
+          flex-grow: 1;
+          margin: 4px;
+        }
       }
     }
   }
