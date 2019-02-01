@@ -19,7 +19,7 @@
 
       @include mediaQuery(max, iPhone){
         font-size: 18px;
-        padding: 15px 12px 15px;
+        padding: 14px 12px 15px;
       }
 
     }
@@ -64,6 +64,10 @@
 
         &:last-child{
           margin-bottom: $gutter * 6;
+
+          @include mediaQuery(max, iPhone){
+            margin-bottom: $gutter * 2;
+          }
         }
 
         @include mediaQuery(max, iPhone){
