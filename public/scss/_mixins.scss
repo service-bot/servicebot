@@ -11,6 +11,11 @@
   padding-right: 1px;
   padding-top: 1px;
 
+  @include mediaQuery(max, iPhone){
+    margin-bottom: 8px;
+    margin-right: 8px;
+  }
+
 }
 
 @mixin _tier_box{

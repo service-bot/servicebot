@@ -107,6 +107,7 @@
             padding-bottom: $gutter / 2;
 
             @include mediaQuery(max, iPhone){
+              padding-top: 0;
               padding-left: 0;
             }
           }

@@ -4,6 +4,10 @@
 
   ._section > h3{
     margin-bottom: 0 !important;
+
+    @include mediaQuery(max, iPhone){
+      margin-bottom: $gutter !important;
+    }
   }
 
   ._form-field-group{
