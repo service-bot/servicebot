@@ -252,14 +252,14 @@ class ServiceInstance extends React.Component {
         if(self.state.instance && self.state.instance.payment_plan){
             status = self.state.instance.status;
             if(status === 'requested'){
-                <span className="buttons _primary">Edit Trial</span>
-                return (<Link to="#" onClick={self.handleApprove}><span className="buttons _primary _green m-l-5">Approve Service</span></Link>);
+                {/*<button className="buttons _primary">Edit Trial</button>*/}
+                return (<button className="buttons _primary _green m-l-5" onClick={self.handleApprove}>Approve Service</button>);
             }else if(status === 'running'){
-                return (<Link to="#" onClick={self.handleCancel}><span className="buttons _primary _navy m-l-5">Cancel Service</span></Link>);
+                return (<button className="buttons _primary _navy m-l-5" onClick={self.handleCancel}>Cancel Service</button>);
             }else if(status === 'waiting_cancellation'){
-                return (<Link to="#" onClick={self.handleUndoCancel}><span className="buttons _primary m-l-5">View Cancellation Request</span></Link>);
+                return (<button className="buttons _primary _navy m-l-5" onClick={self.handleUndoCancel}>View Cancellation Request</button>);
             }else if(status === 'cancelled'){
-                return (<Link to="#" onClick={self.handleApprove}><span className="buttons _primary m-l-5">Restart Service</span></Link>);
+                return (<button className="buttons _primary _navy m-l-5" onClick={self.handleApprove}>Restart Service</button>);
             }
         }
     }
@@ -273,12 +273,12 @@ class ServiceInstance extends React.Component {
                     <div className="service-instance-actions action-items">
                         <div className={`buttons-group __gap`}>
                             {instanceCharges.false && instanceCharges.false.length > 0 &&
-                            <span onClick={self.handlePayAllChargesModal} className="buttons _primary _green">Pay Charges</span>
+                            <button onClick={self.handlePayAllChargesModal} className="buttons _primary _green">Pay Charges</button>
                             }
-                            <span onClick={self.handleEditInstanceModal} className="buttons _primary">Edit Trial</span>
-                            <span onClick={self.handleEditPaymentModal} className="buttons _primary">Edit Payment Plan</span>
+                            <button onClick={self.handleEditInstanceModal} className="buttons _primary">Edit Trial</button>
+                            <button onClick={self.handleEditPaymentModal} className="buttons _primary">Edit Payment Plan</button>
                             {instance.payment_plan && instance.status !== 'cancelled' &&
-                            <span onClick={self.handleAddChargeItemModal} className="buttons _primary">Add Charge</span>}
+                            <button onClick={self.handleAddChargeItemModal} className="buttons _primary">Add Charge</button>}
                             <Link className="buttons _primary" to={`/billing-history/${instance.user_id}`}>View Invoices</Link>
                             {self.getStatusButtons()}
                         </div>
