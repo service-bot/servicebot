@@ -72,6 +72,8 @@
 }
 
 .servicebot-in-app-modal{
+  max-height: 80vh;
+  overflow: auto;
 
   &.__invoice {
     @include modalTables;
