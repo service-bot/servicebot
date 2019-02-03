@@ -124,7 +124,10 @@
       h2{
         width: 100%;
         flex-basis: 100%;
-        display: none;
+
+        @include mediaQuery(max, iPhone){
+          display: none;
+        }
       }
 
       ._sub-heading {
