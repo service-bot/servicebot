@@ -130,7 +130,7 @@ function trialExpiration(instance) {
             let fund = await Fund.findOne("user_id", currentInstance.get("user_id"));
 
             if (!fund.data) {
-                console.log("TRIAL EXPIRED AND NO FUNDS, UNSUBSCRIBE!");
+                console.log("TRIAL EXPIRED AND NO FUNDS, UNSUBSCRIBE! FOR INSTANCE " + instance.id );
                 instance = await instance.attachReferences();
                 require("../../config/redux/store").dispatchEvent("service_instance_trial_expired", instance);
 
