@@ -13,6 +13,12 @@
   background-color: #dedede;
   color: black;
 
+  @include mediaQuery(max, iPhone){
+    min-height: 18px;
+    line-height: 18px;
+    margin: 0;
+  }
+
   .fa:not(:first-child){
     margin-left: 8px;
   }
@@ -22,4 +28,10 @@
   &.blue{ background-color: $color-blue; color: white; }
   &.grey, &.gray{ background-color: $color-gray; color: white; }
   &.yellow{ background-color: $color-warning; color: white; }
+
+  @include mediaQuery(max, iPhone){
+    &.__default{
+      background-color: #dcdcdc;
+    }
+  }
 }

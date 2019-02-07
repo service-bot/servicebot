@@ -37,8 +37,20 @@
     -moz-border-radius: 50px;
     border-radius: 50px;
     overflow: hidden;
+
+    @include mediaQuery(max, iPhone){
+      display: block;
+      height: 100%;
+      width: 100%;
+      margin: 0;
+    }
+
     img{
       height: 100%;
+
+      @include mediaQuery(max, iPhone){
+        display: block;
+      }
     }
   }
 
@@ -522,12 +534,12 @@
       position: fixed;
       bottom: 0;
       width: 100%;
-      padding: 8px 0;
-      background: white;
+      padding: 8px 0 4px;
       font-size: 11px;
       line-height: 18px;
-      box-shadow: 0 2px 4px 0 rgba(0,0,0,0.23);
+      box-shadow: 2px 2px 4px 0 rgba(0,0,0,0.23);
       z-index: 9900;
+      background: #f7f8fa;
 
       a{
         font-size: 9px;
@@ -554,6 +566,10 @@
       border-radius: 5px;
       color: white;
       font-weight: 600;
+
+      @include mediaQuery(max, iPhone){
+        font-size: 0.8em;
+      }
     }
   }
 
@@ -648,6 +664,7 @@
 
     @include mediaQuery(max, iPad){
       width: calc(100% - 80px);
+      left: $nav-panel-width-collapsed;
     }
 
     .lds-ellipsis{

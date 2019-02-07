@@ -54,10 +54,13 @@ class ManageNotificationTemplates extends React.Component {
         return( <Link to={`/notification-templates/${row.id}`}>{cell}</Link>);
     }
     createdAtFormatter(cell){
-        return (<DateFormat date={cell} time/>);
+        return (<DateFormat date={cell} time/>)
     }
     updatedAtFormatter(cell){
         return (<DateFormat date={cell} time/>)
+    }
+    sendEmailFormatter(data, row){
+        return data ? <span className="status-badge green">Enabled</span> : <span className="status-badge gray">Disabled</span>
     }
     rowActionsFormatter(cell, row){
         return (
@@ -97,6 +100,13 @@ class ManageNotificationTemplates extends React.Component {
                                                    dataSort={ true }
                                                    width='350'>
                                     Description
+                                </TableHeaderColumn>
+                                <TableHeaderColumn dataField='send_email'
+                                                   dataFormat={this.sendEmailFormatter}
+                                                   dataSort={ true }
+                                                   searchable={false}
+                                                   width='150'>
+                                    Send Email
                                 </TableHeaderColumn>
                                 <TableHeaderColumn dataField='updated_at'
                                                    dataFormat={this.updatedAtFormatter}

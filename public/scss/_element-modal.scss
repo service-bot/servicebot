@@ -1,3 +1,61 @@
+@mixin modalTables{
+  .table{
+    margin-top: $gutter;
+    font-size: 0.9rem;
+    width: 100%;
+
+    @include mediaQuery(max, iPhone){
+      display: block;
+    }
+    thead{
+      color: #051f60;
+      background: #ececec;
+
+      @include mediaQuery(max, iPhone){
+        display: none;
+      }
+    }
+    tbody{
+      @include mediaQuery(max, iPhone){
+        display: flex;
+        flex-direction: column;
+      }
+      tr{
+        @include mediaQuery(max, iPhone) {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+
+          td{
+            line-height: 12px;
+            font-size: 12px;
+
+            &:first-child{
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+    td{
+      padding: 4px !important;
+      font-size: 13px;
+
+      @include mediaQuery(max, iPhone){
+        font-size: 12px;
+        line-height: 12px
+      }
+
+      &.__right{
+        text-align: right;
+      }
+      &.__center{
+        text-align: center;
+      }
+    }
+  }
+}
+
 .modal-wrapper{
 
   .loader, .page-loader{
@@ -13,6 +71,52 @@
   }
 }
 
+.servicebot-in-app-modal{
+  max-height: 80vh;
+  overflow: auto;
+
+  &.__invoice {
+    @include modalTables;
+
+    @include mediaQuery(max, iPhone) {
+      table {
+        thead {
+
+        }
+
+        tbody {
+          tr {
+            background: white;
+            padding: 6px;
+            margin: 6px 0;
+            border-radius: 5px;
+
+            td {
+              &:last-child {
+                margin-top: 4px;
+                border-top: 1px solid $color-extra-light-gray;
+              }
+            }
+          }
+        }
+
+        tfoot {
+          display: block;
+
+          tr {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 6px;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
 /* Individual Modals */
 .__modal{
 
@@ -24,18 +128,7 @@
         margin-right: $gutter/2;
       }
     }
-    .table{
-      margin-top: $gutter;
-      font-size: 0.9rem;
-      thead{
-        color: #051f60;
-        background: #ececec;
-      }
-      td{
-        padding: 4px !important;
-        font-size: 13px;
-      }
-    }
+    @include modalTables;
   }
 
 }

@@ -2,11 +2,37 @@
   margin-left: 280px;
   transform: translateX(-140px);
   margin-top: 40px;
+
+  @include mediaQuery(max, iPhone){
+    max-width: calc(100% - 76px) !important;
+    width: 100% !important;
+    left: 62px !important;
+    transform: none;
+    margin-left: 0;
+    margin-top: 0;
+  }
+
+  .__header .__inner{
+    padding: 33px 18px;
+  }
+  .__body{
+    margin: 18px;
+  }
 }
-.servicebot--embeddable {
+.servicebot--embeddable.custom {
 
   &.servicebot--manage-billing-form-wrapper {
     width: auto;
     padding: 0;
+
+    .mbf--form-wrapper{
+      .mbf--current-services-list{
+        .mbf--current-services-item{
+          .servicebot-subscription{
+            margin: 0;
+          }
+        }
+      }
+    }
   }
 }

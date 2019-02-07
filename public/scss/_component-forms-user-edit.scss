@@ -4,10 +4,18 @@
     .columns {
       display: grid;
       grid-template-columns: 30% 70%;
+
+      @include mediaQuery(max, iPhone){
+        grid-template-columns: 100%;
+      }
     }
   }
 
   ._section{
+
+    @include mediaQuery(max, iPhone){
+      margin-bottom: 0;
+    }
 
     &.__avatar-form{
       text-align: center;

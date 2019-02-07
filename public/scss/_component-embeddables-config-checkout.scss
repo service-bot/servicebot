@@ -22,9 +22,17 @@
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.06);
         padding: 26px $gutter;
 
+        @include mediaQuery(max, iPhone){
+          display: block;
+        }
+
         .sb-form-group{
           display: flex;
           flex-direction: column;
+
+          @include mediaQuery(max, iPhone){
+            padding: $gutter/2 0;
+          }
         }
       }
     }
@@ -40,14 +48,26 @@
       padding: 26px $gutter;
       margin-bottom: $gutter;
 
+      @include mediaQuery(max, iPhone){
+        padding-top: $gutter * 3;
+      }
+
       #custom-field-delete-button{
         background: none;
         border: none;
         margin: 0;
+
+        @include mediaQuery(max, iPhone){
+          top: -40px;
+        }
       }
 
       .sb-form-group{
         padding: 0 16px 16px 16px;
+
+        @include mediaQuery(max, iPhone){
+          padding: $gutter/2 0;
+        }
 
         &.__add-a-field{
 
@@ -61,6 +81,10 @@
         display: grid;
         grid-template-columns: 40% 30% 30%;
         align-items: end;
+
+        @include mediaQuery(max, iPhone){
+          display: block;
+        }
 
         .custom-property-field-group{
 
@@ -77,6 +101,10 @@
               flex-direction: row;
               padding: 0 $gutter $gutter $gutter;
 
+              @include mediaQuery(max, iPhone){
+                padding: $gutter/2 0;
+              }
+
               .iconToggleField{
                 margin: 0 5px 3px 0;
               }
@@ -88,17 +116,29 @@
               .addon-widget-has-pricing .form-section{
                 display: grid;
                 grid-template-columns: 40% 30% 30%;
+
+                @include mediaQuery(max, iPhone){
+                  display: block;
+                }
               }
 
               ._label-{
 
                 &.__default-value{
                   padding-left: $gutter;
+
+                  @include mediaQuery(max, iPhone){
+                    padding-left: 0;
+                  }
                 }
               }
 
               .sb-form-group{
                 padding: 0 $gutter $gutter $gutter;
+
+                @include mediaQuery(max, iPhone){
+                  padding: $gutter/2 0;
+                }
 
                 &._group-addon-widget{
                   display: grid;

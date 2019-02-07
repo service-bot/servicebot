@@ -1052,11 +1052,6 @@ body.login .footer{
         margin-left: 0;
     }
 
-    /* home page */
-    h1 {
-        font-size: 46px !important;
-    }
-
     /* message */
     .app-message{
         padding: 3px 15px;

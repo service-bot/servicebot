@@ -8,9 +8,15 @@
         &>div:nth-child(1) {
           .buttons-group {
             position: absolute;
-            top: -9px;
+            top: 0;
             right: 0;
             width: auto;
+
+            @include mediaQuery(max, iPhone){
+              top: 46px;
+              left: 0;
+              right: auto;
+            }
           }
         }
       }
@@ -20,10 +26,10 @@
 $page-datatable-extra-bottom-padding: 160px;
 
 .page{
-  padding: 0 $gutter * 3 $gutter*1.5;
+  padding: $gutter $gutter * 3 $gutter*1.5;
 
   @include mediaQuery(max, iPhone){
-    padding: 0 $gutter * 1.5;
+    padding: 12px;
   }
 }
 
@@ -39,7 +45,7 @@ $page-datatable-extra-bottom-padding: 160px;
     }
 
     @include mediaQuery('max', 'iPhone'){
-      padding: $gutter * 1.5;
+      //padding: $gutter * 1.5;
 
       .content-title:nth-child(1n) h4{
         margin-top: 0;
@@ -76,12 +82,35 @@ $page-datatable-extra-bottom-padding: 160px;
   }
 
   &.__view-service-instance{
+    
+    @include mediaQuery(max, iPhone){
+      background: $color-extra-light-gray;
+    }
 
     .service-instance-actions{
 
       .buttons-group{
         line-height: 80px;
         margin-right: $gutter * 2;
+
+        @include mediaQuery(max, iPhone){
+          margin: 0;
+          display: flex;
+          flex-direction: row;
+          position: relative;
+          flex-wrap: wrap;
+          justify-content: space-evenly;
+          align-items: flex-start;
+          align-content: center;
+          width: 100%;
+        }
+
+        .buttons{
+          flex-basis: 50%;
+          font-size: 12px;
+          flex-grow: 1;
+          margin: 4px;
+        }
       }
     }
   }
@@ -153,6 +182,14 @@ $page-datatable-extra-bottom-padding: 160px;
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
+
+      @include mediaQuery(max, iPhone){
+        height: 100%;
+        top: $nav-header-height;
+        left: 0;
+        padding: $gutter * 3 $gutter;
+        transform: none;
+      }
     }
 
   }

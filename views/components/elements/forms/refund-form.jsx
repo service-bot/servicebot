@@ -49,9 +49,8 @@ class RefundForm extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            invoice: this.props.invoice,
+            invoice: this.props.invoice || {},
             refundURL: `/api/v1/invoices/${this.props.invoice.id}/refund`,
-            invoice: {},
             loading: false,
             success: false,
         };
@@ -75,7 +74,7 @@ class RefundForm extends React.Component {
 
     handleResponse(response){
         console.log(response);
-        if(_.has(response,'data.status') && _.get(response, 'data.status') == "succeeded"){
+        if(_.has(response,'data.status') && _.get(response, 'data.status') === "succeeded"){
             this.setState({
                 success: true,
                 response: response.data,
@@ -85,7 +84,7 @@ class RefundForm extends React.Component {
                 }
             });
         }else{
-            if(response.type == "StripeInvalidRequestError"){
+            if(response.type === "StripeInvalidRequestError"){
                 this.setState({alerts: {type: 'danger', message: response.message, icon: 'exclamation-circle'}});
             }else if(response.error){
                 this.setState({alerts: {type: 'danger', message: response.error.message, icon: 'exclamation-circle'}});
@@ -120,7 +119,7 @@ class RefundForm extends React.Component {
                                 <td>Reason</td>
                                 <td>Status</td>
                                 <td>Date</td>
-                                <td>Amount Refunded</td>
+                                <td className={`__right`}>Amount Refunded</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -130,7 +129,7 @@ class RefundForm extends React.Component {
                                     <td>{item.reason}</td>
                                     <td>{item.status}</td>
                                     <td><DateFormat time date={item.created}/></td>
-                                    <td><Price value={item.amount}/></td>
+                                    <td className={`__right`}><Price value={item.amount}/></td>
                                 </tr>
                             )}
                         </tbody>
@@ -138,7 +137,7 @@ class RefundForm extends React.Component {
                             <tr>
                                 <td/><td/><td/>
                                 <td>Total Refunded:</td>
-                                <td><Price value={this.state.response.amount_refunded}/></td>
+                                <td className={`__right`}><Price value={this.state.response.amount_refunded}/></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -165,27 +164,6 @@ class RefundForm extends React.Component {
                         submissionRequest={submissionRequest}
                         handleResponse={this.handleResponse}
                     />
-                    {/*<DataForm handleResponse={this.handleResponse} url={this.state.refundURL} method={'POST'}>*/}
-
-                        {/*<div className="p-20">*/}
-                            {/*<p><strong>You can issue a partial or full refund. If you leave the amount 0 and submit, full refund will be applied.*/}
-                            {/*Total amount of refunds cannot exceed the total transaction amount.</strong></p>*/}
-                            {/*<Inputs type="price" name="amount" label="Refund Amount" defaultValue={0}*/}
-                                    {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
-                            {/*<Inputs type="select" name="reason" label="What is the reason for this refund?" defaultValue="requested_by_customer"*/}
-                                    {/*options={[*/}
-                                        {/*{'Requested by customer': 'requested_by_customer'},*/}
-                                        {/*{'Duplicate': 'duplicate'},*/}
-                                        {/*{'Fraudulent': 'fraudulent'}*/}
-                                    {/*]}*/}
-                                    {/*onChange={function(){}} receiveOnChange={true} receiveValue={true}/>*/}
-                        {/*</div>*/}
-
-                        {/*<div className={`modal-footer text-right p-b-20`}>*/}
-                            {/*<Buttons containerClass="inline" btnType="primary" type="submit" value="submit" text="Issue Refund" success={this.state.success}/>*/}
-                            {/*<Buttons containerClass="inline" btnType="default" text="Later" onClick={this.props.hide} buttonClass={"_text"}/>*/}
-                        {/*</div>*/}
-                    {/*</DataForm>*/}
                 </div>
             );
         }

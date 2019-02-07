@@ -1,6 +1,6 @@
 {
   "name": "servicebot",
-  "version": "0.11.124",
+  "version": "0.11.153",
   "license": "GPL-3.0",
   "scripts": {
     "start": "node ./bin/start",
@@ -98,9 +98,9 @@
     "semver-sort": "0.0.4",
     "serve-favicon": "^2.5.0",
     "server-destroy": "^1.0.1",
-    "servicebot-base-form": "0.0.45",
-    "servicebot-billing-settings-embed": "^0.2.89",
-    "servicebot-checkout-embed": "^0.2.111",
+    "servicebot-base-form": "0.0.48",
+    "servicebot-billing-settings-embed": "^0.2.100",
+    "servicebot-checkout-embed": "^0.2.114",
     "slug": "^0.9.1",
     "stripe": "^4.25.0",
     "style-loader": "^0.13.2",

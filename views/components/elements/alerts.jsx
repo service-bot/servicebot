@@ -69,7 +69,7 @@ class Alerts extends React.Component {
             return(
                 <div className={`alert alert-${type}`} role="alert" style={style}>
                     <i className={`fa fa-${icon}`}/>
-                    <a className={`buttons btn-${type} btn-outline btn-rounded btn-sm pull-right`}
+                    <a className={`buttons __alert-${type} _text __white _right`}
                        onClick={this.props.action || this.dismiss}>{this.props.actionName || 'Dismiss'}</a>
                     <span>{message}</span>
                 </div>

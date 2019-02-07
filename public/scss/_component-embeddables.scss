@@ -13,7 +13,7 @@
   border-radius: 3px;
   margin: 0 auto $gutter / 2 + 2;
   height: $gutter * 9;
-  width: $gutter * 9;;
+  width: $gutter * 9;
   @include defaultTransition();
 
   &:hover, &.selected{
@@ -27,8 +27,19 @@
     }
   }
 
+  @include mediaQuery(max, iPhone){
+    margin: $gutter/2;
+    padding: $gutter/2;
+    height: 114px;
+    width: 114px;
+  }
+
   &:first-of-type{
     margin-top: $gutter * 1.5;
+
+    @include mediaQuery(max, iPhone){
+      margin: $gutter/2;
+    }
   }
 
   & ._icon {
@@ -61,11 +72,21 @@
   max-width: 400px;
   margin: auto;
 
+  @include mediaQuery(max, iPhone){
+    min-height: 0;
+    padding: $gutter $gutter/2;
+  }
+
   ._content-image{
     background-color: #F9FCFF;
     border-radius: 390px;
     padding: 60px;
     height: 410px;
+
+    @include mediaQuery(max, iPhone){
+      width: 280px;
+      height: 280px;
+    }
 
     img{
       max-width: 100%;
@@ -81,11 +102,46 @@
 // Page Overrides
 #app-embeddables{
 
-  ._sidebar{
-    flex-basis: auto;
+  ._content-container {
 
-    ._sub-heading{
-      font-weight: 500;
+    @include mediaQuery(max, iPhone){
+      display: flex;
+      flex-direction: column;
+    }
+
+    ._sidebar {
+      flex-basis: auto;
+
+      @include mediaQuery(max, iPhone){
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow: auto;
+        max-width: none;
+        padding: $gutter/2 0;
+      }
+
+      h2{
+        width: 100%;
+        flex-basis: 100%;
+
+        @include mediaQuery(max, iPhone){
+          display: none;
+        }
+      }
+
+      ._sub-heading {
+        font-weight: 500;
+      }
+    }
+
+    ._content {
+
+      @include mediaQuery(max, iPhone) {
+        width: 100%;
+      }
+
+
     }
   }
 

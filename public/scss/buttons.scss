@@ -63,6 +63,10 @@
   border: 1px solid transparent;
   border-radius: 4px;
 
+  @include mediaQuery(max, iPhone){
+    padding: 4px 8px;
+  }
+
   &.rounded{
     border-radius: 50px;
   }
@@ -74,6 +78,10 @@
     color: $color-white;
     border-radius: 1px;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.17);
+
+    @include mediaQuery(max, iPhone){
+      padding: 8px 16px;
+    }
   }
 
   &._save, &._success{
@@ -102,6 +110,10 @@
     background: none !important;
     color: $color-blue-gray !important;
     box-shadow: none !important;
+
+    &.__white{
+      color: $color-white !important;
+    }
   }
 
   &._green {
