@@ -26,6 +26,7 @@ module.exports = function(app, passport) {
             await req.user.attachReferences();
             payload.user = req.user.data;
             delete payload.user.password;
+            delete payload.user.references.funds;
         }
         let expiration = req.body.noExpiration ? undefined : "3h"
         let token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: expiration  });
