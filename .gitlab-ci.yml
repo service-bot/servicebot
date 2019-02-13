@@ -1,0 +1,10 @@
+deploy-api-dev:
+  image: 'google/cloud-sdk:206.0.0'
+  stage: deploy
+  script:
+  - 'PROJECT_NAME=${PROJECT_NAME_API}'
+  - 'CONTAINER_IMAGE=${GCR_PATH}/${PROJECT_NAME}'
+  - 'NAMESPACE=${CI_ENVIRONMENT_NAME}'
+  - 'if [ -n "$CI_COMMIT_TAG" ]; then IMAGE_TAG="${CONTAINER_IMAGE}:${CI_COMMIT_TAG}"; else IMAGE_TAG="${CONTAINER_IMAGE}:${CI_COMMIT_REF_NAME}-${CI_JOB_ID}"; fi'
+  - 'docker build -t "${IMAGE_TAG}" --build-arg ENV=${NAMESPACE} .'
+  - 'docker push "${IMAGE_TAG}"'
