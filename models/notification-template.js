@@ -39,7 +39,7 @@ NotificationTemplate.prototype.setRoles = function (roleIds, callback) {
 NotificationTemplate.prototype.build = function (map, callback) {
     let parseTemplate = function (match, replaceString, offset, string) {
         let splitStr = replaceString.split(".");
-        if (splitStr.length > 1) {
+        if (splitStr.length > 1 && splitStr[0] != "properties") {
             splitStr[1] += "[0]";
             replaceString = splitStr.join(".");
         }
