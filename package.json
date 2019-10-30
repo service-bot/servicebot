@@ -50,7 +50,7 @@
     "install": "^0.8.9",
     "jquery": "^3.2.1",
     "jsonwebtoken": "^7.4.3",
-    "knex": "^0.12.9",
+    "knex": "^0.20.1",
     "knex-filter-loopback": "^0.1.0",
     "kubernetes-client": "^3.16.0",
     "lodash": "^4.17.4",
