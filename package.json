@@ -60,7 +60,7 @@
     "node-fetch": "^2.1.2",
     "node-schedule": "^1.2.5",
     "nodemailer": "^2.7.2",
-    "npm": "^4.6.1",
+    "npm": "^6.13.4",
     "object.values": "^1.0.4",
     "passport": "^0.3.2",
     "passport-jwt": "^2.2.1",
