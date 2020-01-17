@@ -1,7 +1,11 @@
 
+  > ## ?? Deprecation warning:
+> As the efforts of the Servicebot team are focused on the new [Servicebot.io](https://www.servicebot.io/) version, this version is no longer under active development.
+> If you're looking for a modern integration with [Stripe](https://stripe.com/), super easy to set up, and priced for startups, check out the [new project](https://www.servicebot.io/).
+> The open source version will be available indefinitely until further notice. For inquiries on continuing development of this project, email us at team@servicebot.io.
 <p align="center">
 <a href="https://servicebot.io">
-<img width="250" heigth="250" src="https://servicebot.io/images/logo/servicebot-logo-full-blue.png">
+<img width="700" heigth="250" src="https://cdn-images-1.medium.com/max/2000/1*NrKUKTgZlEsJNctOKLctjg@2x.png">
 </a>
 </p>
 
@@ -9,11 +13,10 @@ ___
 <p align="center">
 <b>Open-source Subscription Management System</b>
 <p align="center">Automate what happens when customers subscribe, cancel, and upgrade</p>
-<p align="center"><a href="https://servicebot.io"><img width="750" src="https://servicebot.io/newadmin.gif"></a></p>
 </p>
 
 ## Overview
-Servicebot is an XaaS (Anything-as-a-service) platform. You can define requestable service templates with an advanced service designer that supports many input types, pricing models, and even develop plugins which can run code when these services are requested. The goal being Servicebot manages the lifecycle of any type of service a business can offer.
+Servicebot is an XaaS (Anything-as-a-service) platform. You can define requestable service templates with an advanced service designer that supports many input types and pricing models. You can even develop plugins which can run code when these services are requested. The goal being that Servicebot manages the lifecycle of any type of service a business can offer.
 
 [![Try in PWD](https://cdn.rawgit.com/play-with-docker/stacks/cff22438/assets/images/button.png)](http://play-with-docker.com?stack=/servicebot/latest)
 
@@ -26,12 +29,12 @@ Servicebot is an XaaS (Anything-as-a-service) platform. You can define requestab
     - **Add-ons and Upsell:** Add custom fields to your service request form which influence the final price.
     - **Adding charges:** Add one-time charges to a running service for custom work your clients want.
     - **Refunds:** You can issue partial or full refunds on your customer invoices.
-    
+
 - **Manage Customers:**.
     - **Store-front:** Let your customers order from your catalog without needing another website.
     - **Automatic invoicing:** Invoices are generated and sent to customers automatically.
     - **Service cancellations:** Customers can request cancellations.
-    - **RBAC:** Customize roles for staff 
+    - **RBAC:** Customize roles for staff
     - **Communication:** Customers can send your business messages when they have questions
 
 - **Extensibility:**
@@ -39,27 +42,13 @@ Servicebot is an XaaS (Anything-as-a-service) platform. You can define requestab
     - **Plugin framework:** Develop plugins to extend the functionality of servicebot (documentation coming soon)
 
 
-    
-## Examples
-
-[ServiceShop](https://serviceshop.io) - Request different open-source systems
-
-[Growth Writer](https://growth-writer.serviceshop.io) - Blog Writing as a service
-
-[Vampeo](https://vampeo.serviceshop.io) - Software Development as a service
-
 ## Installation
 
-**Self Hosting Solution** - Manual installation guide could be found here: [Installation Guide](https://hackernoon.com/install-and-configure-an-open-source-crm-for-your-xaas-business-f976451221f0)
+**Self Hosting Solution** &mdash; Manual installation guide could be found here: [Installation Guide](https://hackernoon.com/install-and-configure-an-open-source-crm-for-your-xaas-business-f976451221f0)
 
-**Managed Solution** - You can order a Servicebot instance online from [servicebot.io](https://servicebot.io)
+## API
 
-
-## Usage Guide
-
-Documentation: <https://docs.servicebot.io/> 
-
-API reference: <https://api-docs.servicebot.io/>
+**API reference** &mdash; <https://api-docs.servicebot.io/>
 
 
 ## Built With
@@ -74,8 +63,13 @@ ServiceBot is **open source** and accepts contributions from the public
 
 We look forward to working with you!
 
+## Get the Latest News
+
+- **Twitter** - Follow [Servicebot](https://twitter.com/servicebot_io)
+- **Blog** - Get the latest updates from the [Servicebot Blog](https://blog.servicebot.io/)
+
 ## Credit
-- Maintained by [Vampeo](http://vampeo.com)
+- Built by [Servicebot Team](https://www.servicebot.io/)
 - Supported by [BrowserStack](https://www.browserstack.com/)
 
 ## License
