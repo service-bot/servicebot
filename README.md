@@ -1,9 +1,9 @@
 
 >## &#x26A0; Deprecation warning:
 >As the efforts of the Servicebot team are focused on the new [Servicebot.io](https://www.servicebot.io/) version, this version is no longer under active development.
-
+>
 >If you're looking for a modern integration with [Stripe](https://stripe.com/), super easy to set up, and priced for startups, check out the [new project](https://www.servicebot.io/).
-
+>
 >The open source version will be available indefinitely until further notice. For inquiries on continuing development of this project, email us at team@servicebot.io.
 <p align="center">
 <a href="https://servicebot.io">
