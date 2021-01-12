@@ -1,12 +1,12 @@
 
 >## &#x26A0; Deprecation warning:
->As the efforts of the Servicebot team are focused on the new [Servicebot.io](https://www.servicebot.io/) version, this version is no longer under active development.
+>As the efforts of the Servicebot team are focused on the new [Billflow.io](https://www.billflow.io/) version, this version is no longer under active development.
 >
->If you're looking for a modern integration with [Stripe](https://stripe.com/), super easy to set up, and priced for startups, check out the [new project](https://www.servicebot.io/).
+>If you're looking for a modern integration with [Stripe](https://stripe.com/), super easy to set up, and priced for startups, check out the [new project](https://www.billflow.io/).
 >
->The open source version will be available indefinitely until further notice. For inquiries on continuing development of this project, email us at team@servicebot.io.
+>The open source version will be available indefinitely until further notice. For inquiries on continuing development of this project, email us at team@billflow.io.
 <p align="center">
-<a href="https://servicebot.io">
+<a href="https://billflow.io">
 <img width="700" heigth="250" src="https://cdn-images-1.medium.com/max/2000/1*NrKUKTgZlEsJNctOKLctjg@2x.png">
 </a>
 </p>
@@ -67,15 +67,14 @@ We look forward to working with you!
 
 ## Get the Latest News
 
-- **Twitter** - Follow [Servicebot](https://twitter.com/servicebot_io)
-- **Blog** - Get the latest updates from the [Servicebot Blog](https://blog.servicebot.io/)
+- **Twitter** - Follow [Billflow](https://twitter.com/getbillflow)
+- **Blog** - Get the latest updates from the [Billflow Blog](https://blog.billflow.io/)
 
 ## Credit
-- Built by [Servicebot Team](https://www.servicebot.io/)
-- Supported by [BrowserStack](https://www.browserstack.com/)
+- Built by [Billflow Team](https://www.billflow.io/)
 
 ## License
-Copyright (C) 2018 ServiceBot
+Copyright (C) 2021 Billflow
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
