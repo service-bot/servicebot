@@ -1,0 +1,11 @@
+{
+  "name": "paythefly",
+  "version": "1.0.0",
+  "description": "PayTheFly crypto payment gateway integration for ServiceBot",
+  "main": "paythefly.js",
+  "private": true,
+  "pluginbot": {
+    "main": "paythefly.js",
+    "consumes": ["database"]
+  }
+}
